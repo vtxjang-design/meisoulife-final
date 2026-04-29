@@ -1,0 +1,37 @@
+{
+  "name": "meisoulife",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Japan-first premium meditation membership platform built with Next.js, Supabase, Stripe, and OpenAI.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "check": "next build"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.49.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.511.0",
+    "next": "^15.3.1",
+    "openai": "^5.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "stripe": "^18.1.1",
+    "tailwind-merge": "^3.3.0",
+    "zod": "^3.24.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.8.3"
+  }
+}
