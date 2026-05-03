@@ -1,4 +1,4 @@
-// File: /Users/taeksujang/Documents/Codex/2026-04-18-40-60-1-2-3-4/app/api/cron/weekly-report/route.ts
+// File: /Users/taeksujang/Documents/Codex/2026-04-18-40-60-1-2-3-4/meisoulife-final/app/api/cron/weekly-report/route.ts
 import * as entry from '../../../../../../app/api/cron/weekly-report/route.js'
 import type { NextRequest } from 'next/server.js'
 

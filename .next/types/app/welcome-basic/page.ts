@@ -1,4 +1,4 @@
-// File: /Users/taeksujang/Documents/Codex/2026-04-18-40-60-1-2-3-4/app/welcome-basic/page.tsx
+// File: /Users/taeksujang/Documents/Codex/2026-04-18-40-60-1-2-3-4/meisoulife-final/app/welcome-basic/page.tsx
 import * as entry from '../../../../app/welcome-basic/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

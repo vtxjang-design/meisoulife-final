@@ -1,4 +1,4 @@
-// File: /Users/taeksujang/Documents/Codex/2026-04-18-40-60-1-2-3-4/app/api/challenge/route.ts
+// File: /Users/taeksujang/Documents/Codex/2026-04-18-40-60-1-2-3-4/meisoulife-final/app/api/challenge/route.ts
 import * as entry from '../../../../../app/api/challenge/route.js'
 import type { NextRequest } from 'next/server.js'
 
