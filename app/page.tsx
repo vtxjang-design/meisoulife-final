@@ -1,7 +1,8 @@
 "use client";
 
+import OneMinuteMeditation from "@/components/one-minute-meditation";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 
 type Language = "ja" | "ko" | "en";
 type Mood = "😀" | "🙂" | "😐" | "😔" | "😣";
@@ -36,8 +37,6 @@ type PricingCardProps = {
 
 const basicCheckoutUrl =
   process.env.NEXT_PUBLIC_STRIPE_BASIC_CHECKOUT_URL || "https://buy.stripe.com/fZu5kC443bVL4gWfMa43S05";
-const meditationEmbedUrl = "https://www.youtube.com/embed/5RTxWODbmak?autoplay=1&mute=1&playsinline=1";
-const meditationDuration = 60;
 
 const languageButtons: { key: Language; label: string }[] = [
   { key: "ja", label: "JP" },
@@ -65,14 +64,7 @@ const translations = {
     finalPrimary: "Today's 1 min Meditation",
     finalSecondary: "Become Member",
     finalTertiary: "Free Join",
-    meditationOpen: "今すぐ1分瞑想",
-    meditationEyebrow: "1 Minute Meditation",
-    meditationTitle: "今この1分で、呼吸を整えましょう",
-    meditationComplete: "完了しました",
-    meditationDoneMessage: "今日も素晴らしい1分でした",
-    meditationContinue: "明日も続ける",
-    meditationFinished: "完了しました。今日のリズムが整いました。",
-    meditationRestart: "もう一度1分"
+    meditationOpen: "今すぐ1分瞑想"
   },
   ko: {
     heroEyebrow: "Coexistence Meditation Ecosystem",
@@ -91,14 +83,7 @@ const translations = {
     finalPrimary: "Today's 1 min Meditation",
     finalSecondary: "Become Member",
     finalTertiary: "Free Join",
-    meditationOpen: "지금 바로 1분 명상",
-    meditationEyebrow: "1 Minute Meditation",
-    meditationTitle: "지금 이 1분, 호흡을 정리해보세요",
-    meditationComplete: "완료했습니다",
-    meditationDoneMessage: "오늘도 멋진 1분이었습니다",
-    meditationContinue: "내일도 이어가기",
-    meditationFinished: "완료했습니다. 오늘의 리듬이 정돈되었습니다.",
-    meditationRestart: "다시 1분"
+    meditationOpen: "지금 바로 1분 명상"
   },
   en: {
     heroEyebrow: "Coexistence Meditation Ecosystem",
@@ -117,14 +102,7 @@ const translations = {
     finalPrimary: "Today's 1 min Meditation",
     finalSecondary: "Become Member",
     finalTertiary: "Free Join",
-    meditationOpen: "Start 1-Min Meditation Now",
-    meditationEyebrow: "1 Minute Meditation",
-    meditationTitle: "Take this one minute to settle your breath",
-    meditationComplete: "Completed",
-    meditationDoneMessage: "It was another beautiful one minute today",
-    meditationContinue: "Continue Tomorrow",
-    meditationFinished: "Completed. Today’s rhythm is now settled.",
-    meditationRestart: "One More Minute"
+    meditationOpen: "Start 1-Min Meditation Now"
   }
 } as const;
 
@@ -289,55 +267,12 @@ function PricingCard({ name, price, description, features, cta, href, featured =
 export default function HomePage() {
   const [language, setLanguage] = useState<Language>("ja");
   const [selectedMood, setSelectedMood] = useState<Mood | null>(null);
-  const [isMeditationOpen, setIsMeditationOpen] = useState(false);
-  const [isMeditationComplete, setIsMeditationComplete] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(meditationDuration);
-  const [videoSrc, setVideoSrc] = useState("");
-  const meditationSectionRef = useRef<HTMLElement | null>(null);
+  const [meditationOpen, setMeditationOpen] = useState(false);
   const t = useMemo(() => translations[language], [language]);
-
-  useEffect(() => {
-    if (!isMeditationOpen || isMeditationComplete) {
-      return;
-    }
-
-    const timer = window.setInterval(() => {
-      setSecondsLeft((current) => {
-        if (current <= 1) {
-          window.clearInterval(timer);
-          setIsMeditationComplete(true);
-          return 0;
-        }
-
-        return current - 1;
-      });
-    }, 1000);
-
-    return () => window.clearInterval(timer);
-  }, [isMeditationOpen, isMeditationComplete]);
-
-  function startMeditation() {
-    meditationSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    setSecondsLeft(meditationDuration);
-    setIsMeditationComplete(false);
-    setVideoSrc(meditationEmbedUrl);
-    setIsMeditationOpen(true);
-  }
-
-  function openMeditationFlow() {
-    startMeditation();
-  }
-
-  function closeMeditationFlow() {
-    setIsMeditationOpen(false);
-    setIsMeditationComplete(false);
-    setSecondsLeft(meditationDuration);
-    setVideoSrc("");
-  }
 
   return (
     <div className="pb-24">
-      <section ref={meditationSectionRef} id="one-minute-meditation" className="section-shell pt-16 sm:pt-24">
+      <section className="section-shell pt-16 sm:pt-24">
         <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div className="space-y-6">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -368,7 +303,7 @@ export default function HomePage() {
             <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <button
                 type="button"
-                onClick={startMeditation}
+                onClick={() => setMeditationOpen(true)}
                 className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
               >
                 {t.heroPrimary}
@@ -391,7 +326,7 @@ export default function HomePage() {
 
             <button
               type="button"
-              onClick={openMeditationFlow}
+              onClick={() => setMeditationOpen(true)}
               className="inline-flex min-h-[58px] w-full items-center justify-center rounded-full bg-emerald-600 px-6 py-4 text-base font-semibold text-white shadow-[0_16px_40px_rgba(5,150,105,0.22)] transition duration-300 hover:scale-[1.01] hover:bg-emerald-500 sm:w-auto sm:min-w-[260px]"
             >
               {t.meditationOpen}
@@ -622,7 +557,7 @@ export default function HomePage() {
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap">
             <button
               type="button"
-              onClick={startMeditation}
+              onClick={() => setMeditationOpen(true)}
               className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
             >
               {t.finalPrimary}
@@ -645,76 +580,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div
-        className={`fixed inset-0 z-50 flex items-center justify-center bg-[#07111f]/70 px-4 py-6 transition-all duration-300 ${
-          isMeditationOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
-        }`}
-      >
-        <div
-          className={`w-full max-w-2xl rounded-[28px] border border-white/15 bg-[#0b1728] p-4 shadow-[0_28px_80px_rgba(7,17,31,0.42)] transition-all duration-300 sm:p-6 ${
-            isMeditationOpen ? "translate-y-0 scale-100" : "translate-y-4 scale-[0.98]"
-          }`}
-        >
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="text-sm uppercase tracking-[0.28em] text-gold">{t.meditationEyebrow}</p>
-              <h2 className="mt-2 text-2xl font-semibold text-white">{t.meditationTitle}</h2>
-            </div>
-            <button
-              type="button"
-              onClick={closeMeditationFlow}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-lg text-white/80 transition hover:bg-white/10"
-              aria-label="Close meditation modal"
-            >
-              ×
-            </button>
-          </div>
-
-          <div className="mt-5 overflow-hidden rounded-[20px] border border-white/10 bg-black">
-            <div className="border-b border-white/10 px-5 py-4 text-center">
-              <p className="text-3xl font-semibold text-white transition-all duration-300 sm:text-4xl">{secondsLeft}</p>
-            </div>
-            <div className="aspect-video w-full">
-              {isMeditationOpen && videoSrc ? (
-                <iframe
-                  className="h-full w-full"
-                  src={videoSrc}
-                  title="1 minute meditation"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
-                />
-              ) : null}
-            </div>
-          </div>
-
-          <div className="mt-5 flex flex-col gap-3">
-            {!isMeditationComplete ? (
-              <button
-                type="button"
-                onClick={() => {
-                  setSecondsLeft(0);
-                  setIsMeditationComplete(true);
-                }}
-                className="inline-flex min-h-[54px] w-full items-center justify-center rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-emerald-500"
-              >
-                {t.meditationComplete}
-              </button>
-            ) : (
-              <div className="rounded-[20px] border border-emerald-400/25 bg-emerald-400/10 px-5 py-5 text-center text-white transition duration-300">
-                <p className="text-lg font-semibold">{t.meditationFinished}</p>
-                <button
-                  type="button"
-                  onClick={startMeditation}
-                  className="mt-4 inline-flex min-h-[50px] items-center justify-center rounded-full border border-white/15 bg-white px-5 py-3 text-sm font-semibold text-ink transition duration-300 hover:bg-stone-100"
-                >
-                  {t.meditationRestart}
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
+      <OneMinuteMeditation open={meditationOpen} onClose={() => setMeditationOpen(false)} />
     </div>
   );
 }
