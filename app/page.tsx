@@ -1,6 +1,5 @@
 "use client";
 
-import OneMinuteMeditation from "@/components/one-minute-meditation";
 import {
   CHALLENGE_RHYTHM_EVENT,
   getChallengeRhythmProgress,
@@ -56,7 +55,7 @@ const moods: Mood[] = ["😀", "🙂", "😐", "😔", "😣"];
 const translations = {
   ja: {
     heroEyebrow: "Coexistence Meditation Ecosystem",
-    heroPrimary: "今すぐ1分瞑想",
+    heroPrimary: "今すぐ始める",
     heroSecondary: "7日間、共に始める",
     heroTertiary: "メンバーとして続ける",
     checkInTitle: "今日の心チェックイン",
@@ -68,14 +67,14 @@ const translations = {
     challengeDescription: "まずはDay 1から。短くても、毎日戻ってこられる習慣をつくります。",
     challengeProgress: "Day 1 / 7",
     challengeButton: "7日間、共に始める",
-    finalPrimary: "今すぐ1分瞑想",
+    finalPrimary: "今すぐ始める",
     finalSecondary: "7日間、共に始める",
     finalTertiary: "メンバーとして続ける",
     meditationOpen: "今すぐ1分瞑想"
   },
   ko: {
     heroEyebrow: "Coexistence Meditation Ecosystem",
-    heroPrimary: "지금 1분 명상",
+    heroPrimary: "지금 시작하기",
     heroSecondary: "7일 함께 시작하기",
     heroTertiary: "멤버로 이어가기",
     checkInTitle: "오늘 마음 체크인",
@@ -87,14 +86,14 @@ const translations = {
     challengeDescription: "우선 Day 1부터. 짧아도 매일 다시 돌아오는 습관을 만듭니다.",
     challengeProgress: "Day 1 / 7",
     challengeButton: "7일 함께 시작하기",
-    finalPrimary: "지금 1분 명상",
+    finalPrimary: "지금 시작하기",
     finalSecondary: "7일 함께 시작하기",
     finalTertiary: "멤버로 이어가기",
     meditationOpen: "지금 바로 1분 명상"
   },
   en: {
     heroEyebrow: "Coexistence Meditation Ecosystem",
-    heroPrimary: "Today's 1 min Meditation",
+    heroPrimary: "Start Now",
     heroSecondary: "Begin 7 Days Together",
     heroTertiary: "Continue as a Member",
     checkInTitle: "Today’s Mind Check-in",
@@ -106,7 +105,7 @@ const translations = {
     challengeDescription: "Start with Day 1. Even a short practice can become a daily returning rhythm.",
     challengeProgress: "Day 1 / 7",
     challengeButton: "Begin 7 Days Together",
-    finalPrimary: "Today's 1 min Meditation",
+    finalPrimary: "Start Now",
     finalSecondary: "Begin 7 Days Together",
     finalTertiary: "Continue as a Member",
     meditationOpen: "Start 1-Min Meditation Now"
@@ -269,7 +268,6 @@ function PricingCard({ name, price, description, features, cta, href, featured =
 export default function HomePage() {
   const [language, setLanguage] = useState<Language>("ja");
   const [selectedMood, setSelectedMood] = useState<Mood | null>(null);
-  const [meditationOpen, setMeditationOpen] = useState(false);
   const [challengeProgress, setChallengeProgress] = useState<ChallengeRhythmProgress>({
     currentDay: 1,
     completedDays: []
@@ -339,15 +337,14 @@ export default function HomePage() {
             </p>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <button
-                type="button"
-                onClick={() => setMeditationOpen(true)}
+              <Link
+                href="/welcome-member"
                 className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
               >
                 {t.heroPrimary}
-              </button>
+              </Link>
               <Link
-                href="/challenge"
+                href="/welcome-member"
                 className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-white/15 px-6 py-4 text-sm font-semibold text-white transition duration-300 hover:scale-[1.02] hover:bg-white/10"
               >
                 {t.heroSecondary}
@@ -390,13 +387,12 @@ export default function HomePage() {
                 </>
               )}
             </div>
-            <button
-              type="button"
-              onClick={() => setMeditationOpen(true)}
+            <Link
+              href="/welcome-member"
               className="inline-flex min-h-[50px] items-center justify-center rounded-full border border-gold/35 bg-gold/10 px-5 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/15"
             >
               今日のリズムを始める
-            </button>
+            </Link>
           </div>
         </div>
       </section>
@@ -417,13 +413,12 @@ export default function HomePage() {
               <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-white/62">
                 {returnRhythm.streakCount > 0 ? `${returnRhythm.streakCount}日つづいています` : "今日から静かに始められます"}
               </div>
-              <button
-                type="button"
-                onClick={() => setMeditationOpen(true)}
+              <Link
+                href="/welcome-member"
                 className="inline-flex min-h-[50px] items-center justify-center rounded-full border border-gold/35 bg-gold/10 px-5 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/15"
               >
                 今日の1分を始める
-              </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -503,7 +498,7 @@ export default function HomePage() {
             1分の静けさを7日間重ねると、呼吸、感情、睡眠、感謝、関係、集中、人生の方向性までゆっくり整い始めます。
           </p>
           <Link
-            href="/challenge"
+            href="/welcome-member"
             className="mt-6 inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:scale-[1.02] hover:bg-navy sm:w-auto sm:min-w-[220px]"
           >
             {t.challengeButton}
@@ -600,12 +595,12 @@ export default function HomePage() {
           description="無料チャレンジから自然に有料継続へ移れるよう、価値と導線をシンプルに設計しています。"
         />
         <div className="mt-6 flex justify-start">
-          <a
-            href={basicCheckoutUrl}
+          <Link
+            href="/welcome-member"
             className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-gold/40 px-5 py-3 text-sm font-semibold text-gold transition duration-300 hover:scale-[1.02] hover:bg-gold/10"
           >
             Become Member
-          </a>
+          </Link>
         </div>
         <div className="mt-10 grid gap-6 xl:grid-cols-4">
           {planCards.map((plan) => (
@@ -660,21 +655,20 @@ export default function HomePage() {
             朝3分の呼吸から、LINEコミュニティ、AIコーチ、月額会員、リーダー育成まで。自分を整えることが、周りと共に生きる力につながる設計です。
           </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap">
-            <button
-              type="button"
-              onClick={() => setMeditationOpen(true)}
+            <Link
+              href="/welcome-member"
               className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
             >
               {t.finalPrimary}
-            </button>
+            </Link>
             <Link
-              href="/challenge"
+              href="/welcome-member"
               className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-white/15 px-6 py-4 text-sm font-semibold text-white transition duration-300 hover:scale-[1.02] hover:bg-white/10"
             >
               {t.finalSecondary}
             </Link>
             <Link
-              href="/pricing"
+              href="/welcome-member"
               className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-400/10 px-6 py-4 text-sm font-semibold text-emerald-200 transition duration-300 hover:scale-[1.02] hover:bg-emerald-400/15"
             >
               {t.finalTertiary}
@@ -682,8 +676,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      <OneMinuteMeditation open={meditationOpen} onClose={() => setMeditationOpen(false)} />
     </div>
   );
 }

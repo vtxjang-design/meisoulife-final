@@ -36,7 +36,7 @@ export function SiteHeader() {
             ログイン
           </Link>
           <Link
-            href="/challenge"
+            href="/welcome-member"
             className="rounded-md bg-gold px-4 py-2 text-sm font-semibold text-ink transition hover:bg-[#e7cd92]"
           >
             無料参加
