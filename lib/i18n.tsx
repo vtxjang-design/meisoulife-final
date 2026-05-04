@@ -223,6 +223,23 @@ export const siteCopy = {
           description: "疲れた、不安、眠れない。そんな日のために、3分で呼吸と気持ちを整えるAIコーチを用意しました。"
         }
       ],
+      founder: {
+        eyebrow: "Founder Philosophy",
+        title: "静けさは、日常を変える力になる",
+        intro: "瞑想lifeの土台には、日常の中で自己認識を育てるための、実践的で現代的なアプローチがあります。",
+        founderName: "Ilchi Lee",
+        founderDescription:
+          "Ilchi Leeは、自己認識と内面のバランスを日常の習慣として育てる方法を長く探究してきた教育者であり実践家です。",
+        contributionsTitle: "Brain Education (脳教育)",
+        contributions: [
+          "Brain Education（脳教育）は、呼吸、身体感覚、意識のつながりを通して、自分の状態に気づき、整え、選び直す力を育てる実践システムです。",
+          "Dahn Yogaは、その感覚を身体から日常へ落とし込み、無理なく続けられる生活リズムへとつなぐ実践の流れとして広がってきました。"
+        ],
+        philosophyTitle: "Why it matters here",
+        philosophyDescription:
+          "瞑想lifeは、その考え方を現代の生活リズムに合わせて再構成した場です。1分の静けさから始まり、自己認識、習慣、つながり、成長へと自然に続いていく設計にしています。",
+        cta: "今すぐ1分瞑想"
+      },
       platformFlow: {
         eyebrow: "Platform Flow",
         title: "共生リズム・プラットフォームの流れ",
@@ -585,6 +602,23 @@ export const siteCopy = {
           description: "피곤함, 불안, 잠들기 어려운 밤을 위해 3분 안에 호흡과 마음을 정리해주는 AI 코치를 준비했습니다."
         }
       ],
+      founder: {
+        eyebrow: "Founder Philosophy",
+        title: "고요함은 일상을 바꾸는 힘이 됩니다",
+        intro: "명상life의 바탕에는 일상 속에서 자기인식을 기를 수 있도록 돕는 실천적이고 현대적인 접근이 있습니다.",
+        founderName: "Ilchi Lee",
+        founderDescription:
+          "Ilchi Lee는 자기인식과 내면의 균형을 일상의 습관으로 길러가는 방법을 오랫동안 탐구해 온 교육자이자 실천가입니다.",
+        contributionsTitle: "Brain Education (뇌교육)",
+        contributions: [
+          "Brain Education(뇌교육)은 호흡, 신체 감각, 의식의 연결을 통해 자신의 상태를 알아차리고, 정돈하고, 다시 선택하는 힘을 기르는 실천 시스템입니다.",
+          "Dahn Yoga는 그 감각을 몸에서 일상으로 자연스럽게 이어가며, 무리 없이 계속할 수 있는 생활 리듬으로 확장해 온 실천 흐름입니다."
+        ],
+        philosophyTitle: "Why it matters here",
+        philosophyDescription:
+          "명상life는 그 접근을 오늘의 생활 리듬에 맞게 다시 구성한 공간입니다. 1분의 고요함에서 시작해 자기인식, 습관, 연결, 성장으로 자연스럽게 이어지도록 설계했습니다.",
+        cta: "지금 바로 1분 명상"
+      },
       platformFlow: {
         eyebrow: "Platform Flow",
         title: "공생 리듬 플랫폼의 흐름",
@@ -947,6 +981,23 @@ export const siteCopy = {
           description: "For days of fatigue, anxiety, or restless sleep, an AI coach helps settle breath and feeling in just three minutes."
         }
       ],
+      founder: {
+        eyebrow: "Founder Philosophy",
+        title: "Stillness can become a force that changes daily life",
+        intro: "Meisou Life is grounded in a practical, modern approach for building self-awareness in everyday life.",
+        founderName: "Ilchi Lee",
+        founderDescription:
+          "Ilchi Lee is an educator and practitioner who has spent decades exploring how self-awareness and inner balance can be cultivated as a daily way of living.",
+        contributionsTitle: "Brain Education",
+        contributions: [
+          "Brain Education is the core system: a practical method for noticing, regulating, and consciously directing one’s internal state through breath, body awareness, and attention.",
+          "Dahn Yoga extends that experience into daily life, helping people embody this awareness as a sustainable rhythm rather than a one-time exercise."
+        ],
+        philosophyTitle: "Why it matters here",
+        philosophyDescription:
+          "Meisou Life translates that system into a modern rhythm platform. It begins with one minute of stillness and continues naturally into self-awareness, habit, connection, and growth.",
+        cta: "Start 1-Min Meditation Now"
+      },
       platformFlow: {
         eyebrow: "Platform Flow",
         title: "The flow of the coexistence rhythm platform",

@@ -382,6 +382,42 @@ export default function HomePage() {
       </section>
 
       <section className="section-shell mt-24">
+        <div className="rounded-[28px] border border-white/10 bg-[#091321] px-6 py-10 text-center shadow-[0_24px_80px_rgba(7,17,31,0.24)] sm:px-10 sm:py-14">
+          <p className="text-sm uppercase tracking-[0.3em] text-gold">{home.founder.eyebrow}</p>
+          <h2 className="mx-auto mt-4 max-w-3xl font-serif text-3xl leading-tight text-white sm:text-4xl">
+            {home.founder.title}
+          </h2>
+          <p className="mx-auto mt-5 max-w-3xl text-base leading-8 text-white/72">{home.founder.intro}</p>
+
+          <div className="mx-auto mt-10 max-w-4xl rounded-[24px] border border-white/10 bg-white/[0.03] px-6 py-7 sm:px-8">
+            <p className="text-sm uppercase tracking-[0.24em] text-gold">{home.founder.founderName}</p>
+            <p className="mx-auto mt-4 max-w-3xl text-base leading-8 text-white/78">{home.founder.founderDescription}</p>
+
+            <div className="mx-auto mt-8 max-w-3xl space-y-5">
+              <p className="text-sm uppercase tracking-[0.24em] text-white/52">{home.founder.contributionsTitle}</p>
+              {home.founder.contributions.map((item) => (
+                <p key={item} className="text-sm leading-7 text-white/68 sm:text-base">
+                  {item}
+                </p>
+              ))}
+            </div>
+
+            <div className="mx-auto mt-8 max-w-3xl border-t border-white/10 pt-8">
+              <p className="text-sm uppercase tracking-[0.24em] text-white/52">{home.founder.philosophyTitle}</p>
+              <p className="mt-4 text-base leading-8 text-white/72">{home.founder.philosophyDescription}</p>
+            </div>
+          </div>
+
+          <Link
+            href="/welcome-member"
+            className="mt-8 inline-flex min-h-[56px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
+          >
+            {home.founder.cta}
+          </Link>
+        </div>
+      </section>
+
+      <section className="section-shell mt-24">
         <SectionHeading
           eyebrow={home.platformFlow.eyebrow}
           title={home.platformFlow.title}
