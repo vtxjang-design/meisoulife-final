@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { LineRhythmInvite } from "@/components/line-rhythm-invite";
 
 type OneMinuteMeditationProps = {
   open: boolean;
@@ -17,11 +16,39 @@ const BREATHING_GUIDES = [
   { text: "止めて… 3秒", duration: 3000 },
   { text: "吐いて… 5秒", duration: 5000 }
 ] as const;
-const REFLECTION_OPTIONS = ["少し落ち着いた", "呼吸が深くなった", "もう少し続けたい"] as const;
-const REFLECTION_FOLLOW_UP: Record<(typeof REFLECTION_OPTIONS)[number], string> = {
-  少し落ち着いた: "その感覚を、明日も少しだけ続けてみませんか？",
-  呼吸が深くなった: "その呼吸の深さを、少しずつ日常に広げていきましょう",
-  もう少し続けたい: "今のリズムを、このまま少しだけ伸ばしてみましょう"
+const LINE_RHYTHM_URL = process.env.NEXT_PUBLIC_LINE_FREE_URL || "https://lin.ee/z8Lzvvs";
+const LAST_REFLECTION_KEY = "meisoulife_last_reflection";
+const LAST_REFLECTION_AT_KEY = "meisoulife_last_reflection_at";
+const REFLECTION_OPTIONS = [
+  {
+    key: "calm",
+    label: "少し落ち着いた",
+    message: "その感覚を、明日も少しだけ続けてみましょう。",
+    ctaLabel: "明日もここに戻る",
+    action: "close"
+  },
+  {
+    key: "deepen",
+    label: "もう少し深めたい",
+    message: "このリズムを、もう少し深く育ててみませんか？",
+    ctaLabel: "深めるリズムを見る",
+    action: "pricing"
+  },
+  {
+    key: "together",
+    label: "ひとりでは続けにくい",
+    message: "ひとりで続けるのが難しいとき、共に戻れる場所があります。",
+    ctaLabel: "LINEで共に続ける",
+    action: "line"
+  }
+] as const;
+
+type ReflectionOption = (typeof REFLECTION_OPTIONS)[number];
+
+const REFLECTION_MAP: Record<ReflectionOption["key"], ReflectionOption> = {
+  calm: REFLECTION_OPTIONS[0],
+  deepen: REFLECTION_OPTIONS[1],
+  together: REFLECTION_OPTIONS[2]
 };
 
 export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditationProps) {
@@ -32,7 +59,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   const [breathingGuideIndex, setBreathingGuideIndex] = useState(0);
   const [isGuideVisible, setIsGuideVisible] = useState(true);
   const [isTimerVisible, setIsTimerVisible] = useState(true);
-  const [selectedReflection, setSelectedReflection] = useState<(typeof REFLECTION_OPTIONS)[number] | null>(null);
+  const [selectedReflection, setSelectedReflection] = useState<ReflectionOption["key"] | null>(null);
 
   function startMeditation() {
     setSecondsLeft(MEDITATION_DURATION);
@@ -43,6 +70,16 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
     setIsGuideVisible(true);
     setIsTimerVisible(true);
     setSelectedReflection(null);
+  }
+
+  function handleReflectionSelect(reflectionKey: ReflectionOption["key"]) {
+    setSelectedReflection(reflectionKey);
+    window.localStorage.setItem(LAST_REFLECTION_KEY, reflectionKey);
+    window.localStorage.setItem(LAST_REFLECTION_AT_KEY, new Date().toISOString());
+  }
+
+  function handleTogetherContinue() {
+    window.open(LINE_RHYTHM_URL, "_blank", "noopener,noreferrer");
   }
 
   useEffect(() => {
@@ -214,18 +251,19 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
             </p>
 
             <div className="mt-6 flex flex-col gap-3">
+              <p className="text-sm leading-7 text-white/64 sm:text-base">今の感じはどうですか？</p>
               {REFLECTION_OPTIONS.map((option) => (
                 <button
-                  key={option}
+                  key={option.key}
                   type="button"
-                  onClick={() => setSelectedReflection(option)}
+                  onClick={() => handleReflectionSelect(option.key)}
                   className={`inline-flex min-h-[50px] w-full items-center justify-center rounded-full px-5 py-3 text-sm font-medium transition duration-300 ${
-                    selectedReflection === option
+                    selectedReflection === option.key
                       ? "border border-emerald-300/30 bg-emerald-400/12 text-white"
                       : "border border-white/10 bg-white/5 text-white/78 hover:bg-white/8"
                   }`}
                 >
-                  {option}
+                  {option.label}
                 </button>
               ))}
             </div>
@@ -233,24 +271,38 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
             {selectedReflection ? (
               <div className="mt-7 border-t border-white/10 pt-6 animate-fade-in">
                 <p className="text-sm leading-7 text-white/72 sm:text-base">
-                  {REFLECTION_FOLLOW_UP[selectedReflection]}
+                  {REFLECTION_MAP[selectedReflection].message}
                 </p>
-                <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:justify-center">
-                  <Link
-                    href="/challenge"
-                    className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0b1728] transition duration-300 hover:bg-stone-100"
-                  >
-                    7日間チャレンジへ
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    className="inline-flex min-h-[50px] items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/10"
-                  >
-                    今日はここまで
-                  </button>
+                <div className="mt-4 animate-fade-in">
+                  {selectedReflection === "calm" ? (
+                    <button
+                      type="button"
+                      onClick={onClose}
+                      className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0b1728] transition duration-300 hover:bg-stone-100"
+                    >
+                      {REFLECTION_MAP[selectedReflection].ctaLabel}
+                    </button>
+                  ) : null}
+
+                  {selectedReflection === "deepen" ? (
+                    <Link
+                      href="/pricing?focus=growth"
+                      className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0b1728] transition duration-300 hover:bg-stone-100"
+                    >
+                      {REFLECTION_MAP[selectedReflection].ctaLabel}
+                    </Link>
+                  ) : null}
+
+                  {selectedReflection === "together" ? (
+                    <button
+                      type="button"
+                      onClick={handleTogetherContinue}
+                      className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0b1728] transition duration-300 hover:bg-stone-100"
+                    >
+                      {REFLECTION_MAP[selectedReflection].ctaLabel}
+                    </button>
+                  ) : null}
                 </div>
-                <LineRhythmInvite className="mt-6 border-white/8 bg-white/[0.02] p-5 sm:p-6" />
               </div>
             ) : null}
           </div>

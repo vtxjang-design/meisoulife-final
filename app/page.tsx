@@ -41,6 +41,8 @@ type PricingCardProps = {
   featured?: boolean;
 };
 
+const MOOD_STORAGE_KEY = "meisoulife_selected_mood";
+const MOOD_MESSAGE_STORAGE_KEY = "meisoulife_selected_mood_message";
 const basicCheckoutUrl =
   process.env.NEXT_PUBLIC_STRIPE_BASIC_CHECKOUT_URL || "https://buy.stripe.com/fZu5kC443bVL4gWfMa43S05";
 
@@ -60,7 +62,13 @@ const translations = {
     heroTertiary: "メンバーとして続ける",
     checkInTitle: "今日の心チェックイン",
     checkInDescription: "今の気分をひとつ選ぶだけで大丈夫です。小さな記録が、毎日のリズムを整えます。",
-    checkInConfirmation: "今日の状態を記録しました",
+    checkInReactions: {
+      "😀": "いいですね。その明るさを、今日の小さな行動にのせてみましょう。",
+      "🙂": "その穏やかさを大切に。今日は無理せず、静かに整えていきましょう。",
+      "😐": "何も感じない日もあります。それでも、1分だけ呼吸に戻れば十分です。",
+      "😔": "少し疲れているのかもしれません。今日はがんばるより、休むリズムを選びましょう。",
+      "😣": "つらさに気づけたことが、もう回復の始まりです。まずは深く吐いてみましょう。"
+    },
     liveTitle: "今、18人が一緒に瞑想中",
     liveDescription: "静かなつながりが、世界のあちこちで同時に育っています。",
     challengeTitle: "7日チャレンジ",
@@ -79,7 +87,13 @@ const translations = {
     heroTertiary: "멤버로 이어가기",
     checkInTitle: "오늘 마음 체크인",
     checkInDescription: "지금의 기분을 하나만 고르면 됩니다. 작은 기록이 매일의 리듬을 정리해줍니다.",
-    checkInConfirmation: "오늘의 상태를 기록했습니다",
+    checkInReactions: {
+      "😀": "좋습니다. 그 밝은 기운을 오늘의 작은 행동에 실어보세요.",
+      "🙂": "그 평온함을 소중히 하세요. 오늘은 무리하지 말고 조용히 정돈해봅시다.",
+      "😐": "아무 느낌이 없는 날도 있습니다. 그래도 1분만 호흡으로 돌아오면 충분합니다.",
+      "😔": "조금 지쳐 있을지도 모릅니다. 오늘은 애쓰기보다 쉬는 리듬을 선택해보세요.",
+      "😣": "힘듦을 알아차린 것만으로도 회복은 시작되었습니다. 먼저 깊게 내쉬어보세요."
+    },
     liveTitle: "지금 18명이 함께 명상 중",
     liveDescription: "조용한 연결이 세계 곳곳에서 동시에 자라고 있습니다.",
     challengeTitle: "7일 챌린지",
@@ -98,7 +112,13 @@ const translations = {
     heroTertiary: "Continue as a Member",
     checkInTitle: "Today’s Mind Check-in",
     checkInDescription: "Choose one feeling for today. A small record helps your rhythm settle each day.",
-    checkInConfirmation: "Your state has been recorded",
+    checkInReactions: {
+      "😀": "Good. Let that brightness move into one small action today.",
+      "🙂": "Honor that calm. Move through today gently.",
+      "😐": "Some days feel neutral. One minute of breathing is enough.",
+      "😔": "You may be tired. Today, choose rest over effort.",
+      "😣": "Noticing the heaviness is already the beginning of recovery. Start with one deep exhale."
+    },
     liveTitle: "18 people are meditating together now",
     liveDescription: "A quiet sense of connection is growing across the world in real time.",
     challengeTitle: "7-Day Challenge",
@@ -303,6 +323,23 @@ export default function HomePage() {
     setReturnRhythm(updateReturnRhythmVisit());
   }, []);
 
+  useEffect(() => {
+    const savedMood = window.localStorage.getItem(MOOD_STORAGE_KEY) as Mood | null;
+
+    if (savedMood && moods.includes(savedMood)) {
+      setSelectedMood(savedMood);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!selectedMood) {
+      return;
+    }
+
+    window.localStorage.setItem(MOOD_STORAGE_KEY, selectedMood);
+    window.localStorage.setItem(MOOD_MESSAGE_STORAGE_KEY, t.checkInReactions[selectedMood]);
+  }, [selectedMood, t]);
+
   return (
     <div className="pb-24">
       <section className="section-shell pt-16 sm:pt-24">
@@ -450,7 +487,13 @@ export default function HomePage() {
               </button>
             ))}
           </div>
-          <div className="mt-4 min-h-6 text-sm font-medium text-emerald-700">{selectedMood ? t.checkInConfirmation : ""}</div>
+          <div
+            className={`mt-4 min-h-12 text-sm font-medium leading-7 text-emerald-700 transition-all duration-500 ${
+              selectedMood ? "translate-y-0 opacity-100" : "translate-y-1 opacity-0"
+            }`}
+          >
+            {selectedMood ? t.checkInReactions[selectedMood] : ""}
+          </div>
         </article>
 
         <article className="rounded-[28px] border border-white/70 bg-gradient-to-br from-[#fffdf8] via-[#f7f5ee] to-[#eef6ef] p-5 text-ink shadow-[0_18px_48px_rgba(7,17,31,0.10)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_56px_rgba(7,17,31,0.14)] sm:p-6">
