@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSiteCopy } from "@/lib/i18n";
 import { getStripeCheckoutUrl } from "@/lib/site";
 
 type CheckoutButtonProps = {
@@ -10,6 +11,7 @@ type CheckoutButtonProps = {
 
 export function CheckoutButton({ plan, label }: CheckoutButtonProps) {
   const [loading, setLoading] = useState(false);
+  const copy = useSiteCopy();
 
   async function handleCheckout() {
     setLoading(true);
@@ -52,7 +54,7 @@ export function CheckoutButton({ plan, label }: CheckoutButtonProps) {
       disabled={loading}
       className="rounded-md bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:opacity-60"
     >
-      {loading ? "接続中..." : label}
+      {loading ? copy.common.connecting : label}
     </button>
   );
 }

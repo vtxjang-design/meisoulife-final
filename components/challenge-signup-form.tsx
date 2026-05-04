@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSiteCopy } from "@/lib/i18n";
 
 type ChallengeState = {
   name: string;
@@ -19,6 +20,7 @@ const initialState: ChallengeState = {
 
 export function ChallengeSignupForm() {
   const router = useRouter();
+  const copy = useSiteCopy();
   const [formState, setFormState] = useState<ChallengeState>(initialState);
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
@@ -50,7 +52,7 @@ export function ChallengeSignupForm() {
 
       router.push(`/dashboard?email=${encodeURIComponent(formState.email)}&challenge=started`);
     } catch (error) {
-      setMessage("登録に失敗しました。時間をおいてもう一度お試しください。");
+      setMessage(copy.challengeForm.error);
     } finally {
       setSubmitting(false);
     }
@@ -60,17 +62,17 @@ export function ChallengeSignupForm() {
     <form onSubmit={handleSubmit} className="premium-card rounded-lg p-6 sm:p-8">
       <div className="grid gap-5">
         <label className="grid gap-2 text-sm text-white/76">
-          <span>お名前</span>
+          <span>{copy.challengeForm.name}</span>
           <input
             required
             value={formState.name}
             onChange={(event) => setFormState((current) => ({ ...current, name: event.target.value }))}
             className="rounded-md border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition focus:border-gold/60"
-            placeholder="山田 花子"
+            placeholder={copy.challengeForm.namePlaceholder}
           />
         </label>
         <label className="grid gap-2 text-sm text-white/76">
-          <span>メールアドレス</span>
+          <span>{copy.challengeForm.email}</span>
           <input
             required
             type="email"
@@ -81,7 +83,7 @@ export function ChallengeSignupForm() {
           />
         </label>
         <label className="grid gap-2 text-sm text-white/76">
-          <span>LINE ID（任意）</span>
+          <span>{copy.challengeForm.lineId}</span>
           <input
             value={formState.lineId}
             onChange={(event) => setFormState((current) => ({ ...current, lineId: event.target.value }))}
@@ -90,7 +92,7 @@ export function ChallengeSignupForm() {
           />
         </label>
         <label className="grid gap-2 text-sm text-white/76">
-          <span>今のストレス度（1〜10）</span>
+          <span>{copy.challengeForm.stress}</span>
           <input
             required
             min={1}
@@ -108,7 +110,7 @@ export function ChallengeSignupForm() {
         disabled={submitting}
         className="mt-6 inline-flex w-full items-center justify-center rounded-md bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {submitting ? "登録しています..." : "LINEで無料参加する"}
+        {submitting ? copy.challengeForm.submitting : copy.challengeForm.submit}
       </button>
       {message ? <p className="mt-4 text-sm text-rose-300">{message}</p> : null}
     </form>

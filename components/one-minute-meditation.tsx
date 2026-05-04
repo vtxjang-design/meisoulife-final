@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSiteCopy } from "@/lib/i18n";
 
 type OneMinuteMeditationProps = {
   open: boolean;
@@ -11,47 +12,20 @@ type OneMinuteMeditationProps = {
 const MEDITATION_DURATION = 60;
 const MEDITATION_EMBED_URL = "https://www.youtube.com/embed/5RTxWODbmak?autoplay=1&mute=1&playsinline=1";
 const BREATHING_FADE_MS = 600;
-const BREATHING_GUIDES = [
-  { text: "吸って… 4秒", duration: 4000 },
-  { text: "止めて… 3秒", duration: 3000 },
-  { text: "吐いて… 5秒", duration: 5000 }
-] as const;
 const LINE_RHYTHM_URL = process.env.NEXT_PUBLIC_LINE_FREE_URL || "https://lin.ee/z8Lzvvs";
 const LAST_REFLECTION_KEY = "meisoulife_last_reflection";
 const LAST_REFLECTION_AT_KEY = "meisoulife_last_reflection_at";
-const REFLECTION_OPTIONS = [
-  {
-    key: "calm",
-    label: "少し落ち着いた",
-    message: "その感覚を、明日も少しだけ続けてみましょう。",
-    ctaLabel: "明日もここに戻る",
-    action: "close"
-  },
-  {
-    key: "deepen",
-    label: "もう少し深めたい",
-    message: "このリズムを、もう少し深く育ててみませんか？",
-    ctaLabel: "深めるリズムを見る",
-    action: "pricing"
-  },
-  {
-    key: "together",
-    label: "ひとりでは続けにくい",
-    message: "ひとりで続けるのが難しいとき、共に戻れる場所があります。",
-    ctaLabel: "LINEで共に続ける",
-    action: "line"
-  }
-] as const;
-
-type ReflectionOption = (typeof REFLECTION_OPTIONS)[number];
-
-const REFLECTION_MAP: Record<ReflectionOption["key"], ReflectionOption> = {
-  calm: REFLECTION_OPTIONS[0],
-  deepen: REFLECTION_OPTIONS[1],
-  together: REFLECTION_OPTIONS[2]
-};
+type ReflectionOption = "calm" | "deepen" | "together";
 
 export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditationProps) {
+  const copy = useSiteCopy();
+  const breathingGuides = copy.modal.breathingGuides;
+  const reflectionOptions = copy.modal.reflections;
+  const reflectionMap = {
+    calm: reflectionOptions[0],
+    deepen: reflectionOptions[1],
+    together: reflectionOptions[2]
+  } as const;
   const [secondsLeft, setSecondsLeft] = useState(MEDITATION_DURATION);
   const [isComplete, setIsComplete] = useState(false);
   const [iframeKey, setIframeKey] = useState(0);
@@ -59,7 +33,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   const [breathingGuideIndex, setBreathingGuideIndex] = useState(0);
   const [isGuideVisible, setIsGuideVisible] = useState(true);
   const [isTimerVisible, setIsTimerVisible] = useState(true);
-  const [selectedReflection, setSelectedReflection] = useState<ReflectionOption["key"] | null>(null);
+  const [selectedReflection, setSelectedReflection] = useState<ReflectionOption | null>(null);
 
   function startMeditation() {
     setSecondsLeft(MEDITATION_DURATION);
@@ -72,7 +46,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
     setSelectedReflection(null);
   }
 
-  function handleReflectionSelect(reflectionKey: ReflectionOption["key"]) {
+  function handleReflectionSelect(reflectionKey: ReflectionOption) {
     setSelectedReflection(reflectionKey);
     window.localStorage.setItem(LAST_REFLECTION_KEY, reflectionKey);
     window.localStorage.setItem(LAST_REFLECTION_AT_KEY, new Date().toISOString());
@@ -136,13 +110,13 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
       return;
     }
 
-    const currentGuide = BREATHING_GUIDES[breathingGuideIndex];
+    const currentGuide = breathingGuides[breathingGuideIndex];
     const fadeOutTimer = window.setTimeout(() => {
       setIsGuideVisible(false);
     }, Math.max(currentGuide.duration - BREATHING_FADE_MS, 1200));
 
     const timer = window.setTimeout(() => {
-      setBreathingGuideIndex((current) => (current + 1) % BREATHING_GUIDES.length);
+      setBreathingGuideIndex((current) => (current + 1) % breathingGuides.length);
       setIsGuideVisible(true);
     }, currentGuide.duration);
 
@@ -150,7 +124,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
       window.clearTimeout(fadeOutTimer);
       window.clearTimeout(timer);
     };
-  }, [open, isComplete, videoSrc, breathingGuideIndex]);
+  }, [open, isComplete, videoSrc, breathingGuideIndex, breathingGuides]);
 
   return (
     <div
@@ -165,8 +139,8 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
       >
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-sm uppercase tracking-[0.28em] text-[#d8bf83]">1分瞑想</p>
-            <h2 className="mt-2 text-2xl font-semibold text-white">今この1分で、呼吸を整えましょう</h2>
+            <p className="text-sm uppercase tracking-[0.28em] text-[#d8bf83]">{copy.modal.eyebrow}</p>
+            <h2 className="mt-2 text-2xl font-semibold text-white">{copy.modal.title}</h2>
           </div>
           <button
             type="button"
@@ -222,7 +196,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
                           isGuideVisible ? "translate-y-0 opacity-100" : "translate-y-1 opacity-0"
                         }`}
                       >
-                        {BREATHING_GUIDES[breathingGuideIndex].text}
+                        {breathingGuides[breathingGuideIndex].text}
                       </p>
                     </div>
                   </>
@@ -239,20 +213,18 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
                 }}
                 className="inline-flex min-h-[54px] w-full items-center justify-center rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-emerald-500"
               >
-                1分を終える
+                {copy.modal.endButton}
               </button>
             </div>
           </>
         ) : (
           <div className="mt-5 rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-6 text-center text-white animate-fade-in sm:px-8 sm:py-8">
-            <p className="text-xl font-semibold sm:text-2xl">今日、あなたは自分に戻りました。</p>
-            <p className="mx-auto mt-3 max-w-lg text-sm leading-7 text-white/72 sm:text-base">
-              この小さな1分が、共に目覚めるリズムの始まりです。
-            </p>
+            <p className="text-xl font-semibold sm:text-2xl">{copy.modal.completeTitle}</p>
+            <p className="mx-auto mt-3 max-w-lg text-sm leading-7 text-white/72 sm:text-base">{copy.modal.completeBody}</p>
 
             <div className="mt-6 flex flex-col gap-3">
-              <p className="text-sm leading-7 text-white/64 sm:text-base">今の感じはどうですか？</p>
-              {REFLECTION_OPTIONS.map((option) => (
+              <p className="text-sm leading-7 text-white/64 sm:text-base">{copy.modal.reflectionQuestion}</p>
+              {reflectionOptions.map((option) => (
                 <button
                   key={option.key}
                   type="button"
@@ -271,7 +243,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
             {selectedReflection ? (
               <div className="mt-7 border-t border-white/10 pt-6 animate-fade-in">
                 <p className="text-sm leading-7 text-white/72 sm:text-base">
-                  {REFLECTION_MAP[selectedReflection].message}
+                  {reflectionMap[selectedReflection].message}
                 </p>
                 <div className="mt-4 animate-fade-in">
                   {selectedReflection === "calm" ? (
@@ -280,7 +252,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
                       onClick={onClose}
                       className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0b1728] transition duration-300 hover:bg-stone-100"
                     >
-                      {REFLECTION_MAP[selectedReflection].ctaLabel}
+                      {reflectionMap[selectedReflection].ctaLabel}
                     </button>
                   ) : null}
 
@@ -289,7 +261,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
                       href="/pricing?focus=growth"
                       className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0b1728] transition duration-300 hover:bg-stone-100"
                     >
-                      {REFLECTION_MAP[selectedReflection].ctaLabel}
+                      {reflectionMap[selectedReflection].ctaLabel}
                     </Link>
                   ) : null}
 
@@ -299,7 +271,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
                       onClick={handleTogetherContinue}
                       className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0b1728] transition duration-300 hover:bg-stone-100"
                     >
-                      {REFLECTION_MAP[selectedReflection].ctaLabel}
+                      {reflectionMap[selectedReflection].ctaLabel}
                     </button>
                   ) : null}
                 </div>
