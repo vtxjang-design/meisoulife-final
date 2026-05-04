@@ -44,11 +44,11 @@ export const faqItems = [
 ] as const;
 
 export const challengeDays = [
-  { day: 1, title: "呼吸を整える", focus: "身体が軽くなる" },
+  { day: 1, title: "呼吸を整える", focus: "身体が少し軽くなる" },
   { day: 2, title: "感情を整える", focus: "反応する前に止まれる" },
-  { day: 3, title: "睡眠を回復する", focus: "夜の頭が静かになる" },
+  { day: 3, title: "眠りを整える", focus: "夜の頭が静かになる" },
   { day: 4, title: "感謝を開く", focus: "人との関係がやわらぐ" },
-  { day: 5, title: "関係を癒す", focus: "心の傷がほどける" },
+  { day: 5, title: "関係を癒す", focus: "心の緊張がほどける" },
   { day: 6, title: "集中を取り戻す", focus: "一日の中心ができる" },
   { day: 7, title: "人生の方向性", focus: "自分の道が見え始める" }
 ] as const;

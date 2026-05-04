@@ -1,94 +1,109 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { SectionHeading } from "@/components/section-heading";
-import { absoluteUrl, getWelcomeMemberLinks } from "@/lib/site";
+"use client";
 
-export const metadata: Metadata = {
-  title: "メンバーようこそ",
-  description: "瞑想lifeメンバー参加後の歓迎ページ。コミュニティ参加、1分瞑想、音声ガイド受け取りへすぐ進めます。",
-  alternates: {
-    canonical: absoluteUrl("/welcome-member")
+import { useEffect, useMemo, useState } from "react";
+import OneMinuteMeditation from "@/components/one-minute-meditation";
+
+const MEMBER_RETURNED_KEY = "meisoulife_member_returned";
+const LINE_CONNECT_URL = process.env.NEXT_PUBLIC_LINE_FREE_URL || "https://lin.ee/z8Lzvvs";
+
+type Language = "ja" | "ko" | "en";
+
+const copy = {
+  ja: {
+    eyebrow: "Welcome back",
+    firstTitle: "おかえりなさい。\nここからは、途切れないリズムです。",
+    returningTitle: "おかえりなさい。\n今日も1分だけ整えましょう。",
+    body: "何かを買ったのではなく、自分に戻る場所へ静かに帰ってきました。",
+    primary: "今すぐ1分を始める",
+    secondary: "LINEでつながる"
+  },
+  ko: {
+    eyebrow: "Welcome back",
+    firstTitle: "다시 돌아왔습니다.\n여기서부터는 끊기지 않는 리듬입니다.",
+    returningTitle: "다시 돌아오셨습니다.\n오늘도 1분만 정돈해봅시다.",
+    body: "무언가를 산 것이 아니라, 나에게 돌아오는 자리로 다시 온 것입니다.",
+    primary: "지금 1분 시작하기",
+    secondary: "LINE으로 함께 이어가기"
+  },
+  en: {
+    eyebrow: "Welcome back",
+    firstTitle: "Welcome back.\nFrom here, the rhythm continues.",
+    returningTitle: "Welcome back.\nLet’s take just one minute today.",
+    body: "You did not buy something. You simply returned to a place that helps you come back to yourself.",
+    primary: "Start your 1 minute now",
+    secondary: "Continue on LINE"
   }
-};
+} as const;
+
+function detectLanguage(): Language {
+  if (typeof window === "undefined") {
+    return "ja";
+  }
+
+  const language = window.navigator.language.toLowerCase();
+
+  if (language.startsWith("ko")) {
+    return "ko";
+  }
+
+  if (language.startsWith("en")) {
+    return "en";
+  }
+
+  return "ja";
+}
 
 export default function WelcomeMemberPage() {
-  const links = getWelcomeMemberLinks();
+  const [meditationOpen, setMeditationOpen] = useState(false);
+  const [isReturning, setIsReturning] = useState(false);
+  const [language, setLanguage] = useState<Language>("ja");
+
+  useEffect(() => {
+    setLanguage(detectLanguage());
+
+    const hasReturned = window.localStorage.getItem(MEMBER_RETURNED_KEY) === "true";
+
+    if (hasReturned) {
+      setIsReturning(true);
+    }
+
+    window.localStorage.setItem(MEMBER_RETURNED_KEY, "true");
+  }, []);
+
+  const t = useMemo(() => copy[language], [language]);
 
   return (
-    <div className="section-shell py-14 sm:py-20 lg:py-24">
-      <div className="mx-auto grid max-w-5xl gap-8">
-        <div className="premium-card overflow-hidden rounded-lg">
-          <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-stretch">
-            <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-10">
-              <p className="text-sm uppercase tracking-[0.34em] text-gold">Welcome Member</p>
-              <h1 className="mt-4 font-serif text-4xl leading-tight text-white sm:text-5xl">
-                ご参加ありがとうございます。瞑想lifeメンバーへようこそ。
-              </h1>
-              <p className="mt-5 max-w-2xl text-base leading-8 text-white/72 sm:text-lg">
-                ここから、つながり、実践、回復の流れが始まります。まずはコミュニティに入り、短い瞑想から今日のリズムを整えていきましょう。
-              </p>
-            </div>
-            <div className="relative min-h-[260px] overflow-hidden">
-              <img
-                src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=1200&q=80"
-                alt="やわらかな朝の瞑想風景"
-                className="h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/20 to-transparent" />
-            </div>
+    <div className="section-shell py-16 sm:py-24">
+      <div className="mx-auto max-w-3xl">
+        <section className="premium-card rounded-[28px] p-8 text-center sm:p-12">
+          <p className="text-sm uppercase tracking-[0.34em] text-gold">{t.eyebrow}</p>
+          <h1 className="mt-6 whitespace-pre-line font-serif text-4xl leading-tight text-white sm:text-5xl">
+            {isReturning ? t.returningTitle : t.firstTitle}
+          </h1>
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-white/72 sm:text-lg">{t.body}</p>
+
+          <div className="mt-8 flex flex-col items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setMeditationOpen(true)}
+              className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
+            >
+              {t.primary}
+            </button>
+
+            <a
+              href={LINE_CONNECT_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-[52px] min-w-[240px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
+            >
+              {t.secondary}
+            </a>
           </div>
-        </div>
-
-        <SectionHeading
-          eyebrow="Next step"
-          title="次の行動を、すぐ始められるように"
-          description="ボタン先のURLは環境変数で後から簡単に差し替えできます。まずはこの3つから動線をつなげておくと、決済後の離脱が減ります。"
-        />
-
-        <div className="grid gap-4 sm:gap-5 lg:grid-cols-3">
-          <Link
-            href={links.community}
-            className="premium-card rounded-lg p-6 transition hover:bg-white/[0.08]"
-          >
-            <p className="text-sm uppercase tracking-[0.3em] text-gold">Community</p>
-            <h2 className="mt-3 text-2xl font-semibold text-white">LINEメンバーコミュニティ参加</h2>
-            <p className="mt-4 text-sm leading-7 text-white/72">
-              会員専用のLINE導線に入り、日々のチェックインや案内を受け取れます。
-            </p>
-            <span className="mt-6 inline-flex rounded-md bg-gold px-4 py-3 text-sm font-semibold text-ink">
-              参加する
-            </span>
-          </Link>
-
-          <Link
-            href={links.meditationStart}
-            className="premium-card rounded-lg p-6 transition hover:bg-white/[0.08]"
-          >
-            <p className="text-sm uppercase tracking-[0.3em] text-gold">Meditation</p>
-            <h2 className="mt-3 text-2xl font-semibold text-white">1分瞑想スタート</h2>
-            <p className="mt-4 text-sm leading-7 text-white/72">
-              忙しい日でもすぐ始められる、短い実践からメンバー体験を始めます。
-            </p>
-            <span className="mt-6 inline-flex rounded-md border border-white/15 px-4 py-3 text-sm font-semibold text-white">
-              始める
-            </span>
-          </Link>
-
-          <Link
-            href={links.audioGuide}
-            className="premium-card rounded-lg p-6 transition hover:bg-white/[0.08]"
-          >
-            <p className="text-sm uppercase tracking-[0.3em] text-gold">Audio Guide</p>
-            <h2 className="mt-3 text-2xl font-semibold text-white">音声ガイドを受け取る</h2>
-            <p className="mt-4 text-sm leading-7 text-white/72">
-              日常で繰り返し使える音声ガイドや回復ルーティンの入口につながります。
-            </p>
-            <span className="mt-6 inline-flex rounded-md border border-gold/40 px-4 py-3 text-sm font-semibold text-gold">
-              受け取る
-            </span>
-          </Link>
-        </div>
+        </section>
       </div>
+
+      <OneMinuteMeditation open={meditationOpen} onClose={() => setMeditationOpen(false)} />
     </div>
   );
 }

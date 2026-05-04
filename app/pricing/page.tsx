@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CheckoutButton } from "@/components/checkout-button";
+import { LineRhythmInvite } from "@/components/line-rhythm-invite";
 import { SectionHeading } from "@/components/section-heading";
 
 const membershipPlans = [
@@ -8,10 +9,10 @@ const membershipPlans = [
     name: "BASIC",
     price: "¥1,000",
     dailyCost: "約¥33 / day",
-    emotionalCopy: "毎日、自分に戻るための最初の会員リズム",
+    emotionalCopy: "毎日戻るリズム",
     description: "ひとりで終わらせず、毎日静けさに戻るための基本会員",
     features: ["毎日の1分瞑想", "夜の3分ガイド", "会員コミュニティの入口", "毎朝の習慣設計"],
-    cta: "このリズムを続ける",
+    cta: "月1,000円で続ける",
     orderClass: "order-2 lg:order-1",
     accentClass: "border-white/60 bg-white/75"
   },
@@ -20,10 +21,10 @@ const membershipPlans = [
     name: "GROWTH",
     price: "¥3,000",
     dailyCost: "約¥100 / day",
-    emotionalCopy: "小さな仲間と、共に深まる実践へ",
+    emotionalCopy: "共に深めるリズム",
     description: "小さな仲間と実践を深め、共生生活を育てる成長会員",
     features: ["少人数サークル", "共生生活の実践対話", "週次の深い実践ガイド", "実践記録レビュー"],
-    cta: "このリズムを続ける",
+    cta: "月3,000円で深める",
     orderClass: "order-1 lg:order-2",
     accentClass: "border-emerald-300 bg-gradient-to-b from-white to-emerald-50/70 shadow-[0_24px_60px_rgba(5,150,105,0.12)]"
   },
@@ -32,10 +33,10 @@ const membershipPlans = [
     name: "INNER CIRCLE",
     price: "¥10,000",
     dailyCost: "約¥333 / day",
-    emotionalCopy: "共生文化と地球経営のビジョンへ",
+    emotionalCopy: "共生リーダーの場",
     description: "共生文化と地球経営のビジョンを共に実現するリーダー会員",
     features: ["月次プレミアムセッション", "リトリート優先案内", "地球経営ビジョン対話", "Inner Circle専用アクセス"],
-    cta: "このリズムを続ける",
+    cta: "月10,000円で支える",
     orderClass: "order-3 lg:order-3",
     accentClass: "border-amber-200/80 bg-white/75"
   }
@@ -69,13 +70,21 @@ export default function PricingPage() {
       <SectionHeading
         eyebrow="Membership"
         title="回復を、共に目覚める生活リズムへ"
-        description="瞑想lifeの会員は、瞑想コンテンツを買う人ではありません。毎日戻るリズムを育て、共生生活へ進む仲間です。"
+        description="瞑想lifeの会員は、瞑想コンテンツを買う人ではありません。毎日、自分に戻るリズムを静かに続けていく仲間です。"
       />
 
       <div className="mt-6 flex flex-wrap gap-3 text-sm text-white/58">
         <span className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2">Appleのように静かで明快</span>
         <span className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2">日本のウェルネスらしい余白</span>
         <span className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2">今すぐ始められる導線</span>
+      </div>
+
+      <div className="mt-8 rounded-[24px] border border-white/10 bg-white/[0.03] p-6 sm:p-7">
+        <p className="text-lg leading-8 text-white/78 sm:text-xl">
+          有料メンバーシップは、特別な商品ではありません。
+          <br className="hidden sm:block" />
+          毎日、自分に戻るリズムを途切れさせないための小さな支えです。
+        </p>
       </div>
 
       <div className="mt-10 grid gap-6 lg:grid-cols-3 lg:items-stretch">
@@ -156,6 +165,8 @@ export default function PricingPage() {
           ))}
         </div>
       </div>
+
+      <LineRhythmInvite className="mt-10" />
     </div>
   );
 }

@@ -1,9 +1,15 @@
 "use client";
 
 import OneMinuteMeditation from "@/components/one-minute-meditation";
+import {
+  CHALLENGE_RHYTHM_EVENT,
+  getChallengeRhythmProgress,
+  type ChallengeRhythmProgress
+} from "@/lib/challenge-rhythm";
 import { challengeDays } from "@/lib/content";
+import { updateReturnRhythmVisit, type ReturnRhythmSnapshot } from "@/lib/return-rhythm";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type Language = "ja" | "ko" | "en";
 type Mood = "😀" | "🙂" | "😐" | "😔" | "😣";
@@ -264,7 +270,40 @@ export default function HomePage() {
   const [language, setLanguage] = useState<Language>("ja");
   const [selectedMood, setSelectedMood] = useState<Mood | null>(null);
   const [meditationOpen, setMeditationOpen] = useState(false);
+  const [challengeProgress, setChallengeProgress] = useState<ChallengeRhythmProgress>({
+    currentDay: 1,
+    completedDays: []
+  });
+  const [returnRhythm, setReturnRhythm] = useState<ReturnRhythmSnapshot>({
+    lastVisitDate: null,
+    streakCount: 0,
+    lineConnectedAt: null,
+    isReturningToday: false
+  });
   const t = useMemo(() => translations[language], [language]);
+  const todayRhythm = challengeDays.find((day) => day.day === challengeProgress.currentDay) ?? challengeDays[0];
+  const hasStartedChallenge = challengeProgress.completedDays.length > 0;
+  const hasCompletedChallenge = challengeProgress.completedDays.length >= challengeDays.length;
+
+  useEffect(() => {
+    const syncProgress = () => {
+      setChallengeProgress(getChallengeRhythmProgress());
+    };
+
+    syncProgress();
+
+    window.addEventListener(CHALLENGE_RHYTHM_EVENT, syncProgress);
+    window.addEventListener("storage", syncProgress);
+
+    return () => {
+      window.removeEventListener(CHALLENGE_RHYTHM_EVENT, syncProgress);
+      window.removeEventListener("storage", syncProgress);
+    };
+  }, []);
+
+  useEffect(() => {
+    setReturnRhythm(updateReturnRhythmVisit());
+  }, []);
 
   return (
     <div className="pb-24">
@@ -322,6 +361,70 @@ export default function HomePage() {
               alt="静かな朝の瞑想風景"
               className="h-full min-h-[420px] w-full object-cover"
             />
+          </div>
+        </div>
+      </section>
+
+      <section className="section-shell mt-8">
+        <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-sm uppercase tracking-[0.28em] text-gold">Today's Rhythm</p>
+              {!hasCompletedChallenge ? (
+                <>
+                  <h2 className="mt-3 text-2xl font-semibold text-white">
+                    Day {todayRhythm.day} — {todayRhythm.title}
+                  </h2>
+                  <p className="mt-2 text-sm leading-7 text-white/68">
+                    {hasStartedChallenge
+                      ? todayRhythm.focus
+                      : "まだ始まっていない方も、今日は1分だけ自分に戻るところから始められます。"}
+                  </p>
+                </>
+              ) : (
+                <>
+                  <h2 className="mt-3 text-2xl font-semibold text-white">このリズムを続けています</h2>
+                  <p className="mt-2 text-sm leading-7 text-white/68">
+                    7日間を越えても、静けさは毎日の中でやさしく続いていきます。
+                  </p>
+                </>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => setMeditationOpen(true)}
+              className="inline-flex min-h-[50px] items-center justify-center rounded-full border border-gold/35 bg-gold/10 px-5 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/15"
+            >
+              今日のリズムを始める
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-shell mt-6">
+        <div className="rounded-[24px] border border-white/10 bg-white/[0.025] p-5 sm:p-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-sm uppercase tracking-[0.28em] text-gold">戻る場所</p>
+              <h2 className="mt-3 text-2xl font-semibold text-white">毎日同じ場所に戻るだけで、リズムは自然に整います</h2>
+              <p className="mt-2 text-sm leading-7 text-white/68">
+                {returnRhythm.isReturningToday
+                  ? "おかえりなさい。今日も1分だけ整えましょう"
+                  : "慌ただしい日でも、戻る場所がひとつあるだけで呼吸は静かに整っていきます。"}
+              </p>
+            </div>
+            <div className="flex flex-col items-start gap-3 sm:items-end">
+              <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-white/62">
+                {returnRhythm.streakCount > 0 ? `${returnRhythm.streakCount}日つづいています` : "今日から静かに始められます"}
+              </div>
+              <button
+                type="button"
+                onClick={() => setMeditationOpen(true)}
+                className="inline-flex min-h-[50px] items-center justify-center rounded-full border border-gold/35 bg-gold/10 px-5 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/15"
+              >
+                今日の1分を始める
+              </button>
+            </div>
           </div>
         </div>
       </section>
