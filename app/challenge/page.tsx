@@ -7,8 +7,8 @@ export default function ChallengePage() {
     <div className="section-shell py-16 sm:py-24">
       <SectionHeading
         eyebrow="Free 7-Day Challenge"
-        title="7日で心が整う朝習慣"
-        description="毎朝3分音声ガイド、LINEサポート、心が軽くなる小さな習慣。7日目には、朝の空気が少しやさしく感じられる状態を目指します。"
+        title="7日間、共に目覚めるリズムを始める"
+        description="朝の1分、夜の3分。自分に戻る小さな実践を7日重ねながら、回復からつながりへ進む土台を育てます。"
       />
       <div className="mt-10 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="grid gap-4">
@@ -21,6 +21,10 @@ export default function ChallengePage() {
           ))}
         </div>
         <ChallengeSignupForm />
+      </div>
+      <div className="mt-10 rounded-[24px] border border-gold/20 bg-gold/10 p-6 text-center">
+        <p className="text-2xl font-semibold text-white">このリズムを、ひとりで終わらせない。</p>
+        <p className="mt-3 text-base text-white/72">瞑想lifeメンバーとして続ける。</p>
       </div>
     </div>
   );

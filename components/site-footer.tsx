@@ -7,8 +7,9 @@ export function SiteFooter() {
         <div className="space-y-2">
           <p className="text-sm uppercase tracking-[0.3em] text-gold">瞑想life</p>
           <p className="max-w-xl text-sm leading-7 text-white/68">
-            頑張りすぎる人の毎日に、朝3分のやさしい瞑想習慣を。無料チャレンジ、AIコーチ、会員コミュニティ、リトリートまで一つの流れで整えます。
+            回復から共生へ。共生から地球経営へ。
           </p>
+          <p className="text-sm leading-7 text-white/52">瞑想life — 回復から共生へ。共生から地球経営へ。</p>
         </div>
         <div className="flex flex-wrap gap-4 text-sm text-white/68">
           <Link href="/challenge">無料参加</Link>

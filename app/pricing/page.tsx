@@ -8,10 +8,10 @@ const membershipPlans = [
     name: "BASIC",
     price: "¥1,000",
     dailyCost: "約¥33 / day",
-    emotionalCopy: "静かに整う最初の一歩を、やさしく始めたい人へ",
-    description: "毎日の心の回復を、無理なく続けるためのベーシックプラン。",
-    features: ["毎日の1分瞑想", "心が整う音声ガイド", "会員コミュニティの入口", "毎朝の習慣設計"],
-    cta: "BASICではじめる",
+    emotionalCopy: "毎日、自分に戻るための最初の会員リズム",
+    description: "ひとりで終わらせず、毎日静けさに戻るための基本会員",
+    features: ["毎日の1分瞑想", "夜の3分ガイド", "会員コミュニティの入口", "毎朝の習慣設計"],
+    cta: "このリズムを続ける",
     orderClass: "order-2 lg:order-1",
     accentClass: "border-white/60 bg-white/75"
   },
@@ -20,10 +20,10 @@ const membershipPlans = [
     name: "GROWTH",
     price: "¥3,000",
     dailyCost: "約¥100 / day",
-    emotionalCopy: "続ける力を、仲間との成長に変えていきたい人へ",
-    description: "最もおすすめの中心プラン。実践を深め、日々の安定をしっかり育てます。",
-    features: ["少人数サークル", "優先イベント案内", "週次の深い実践ガイド", "実践記録レビュー"],
-    cta: "GROWTHで深める",
+    emotionalCopy: "小さな仲間と、共に深まる実践へ",
+    description: "小さな仲間と実践を深め、共生生活を育てる成長会員",
+    features: ["少人数サークル", "共生生活の実践対話", "週次の深い実践ガイド", "実践記録レビュー"],
+    cta: "このリズムを続ける",
     orderClass: "order-1 lg:order-2",
     accentClass: "border-emerald-300 bg-gradient-to-b from-white to-emerald-50/70 shadow-[0_24px_60px_rgba(5,150,105,0.12)]"
   },
@@ -32,10 +32,10 @@ const membershipPlans = [
     name: "INNER CIRCLE",
     price: "¥10,000",
     dailyCost: "約¥333 / day",
-    emotionalCopy: "深い静けさと、特別なつながりを大切にしたい人へ",
-    description: "もっと深く、静かに、自分を整えるためのプレミアムプラン。",
-    features: ["月次プレミアムセッション", "リトリート優先案内", "個別サポート導線", "Inner Circle専用アクセス"],
-    cta: "INNER CIRCLEへ進む",
+    emotionalCopy: "共生文化と地球経営のビジョンへ",
+    description: "共生文化と地球経営のビジョンを共に実現するリーダー会員",
+    features: ["月次プレミアムセッション", "リトリート優先案内", "地球経営ビジョン対話", "Inner Circle専用アクセス"],
+    cta: "このリズムを続ける",
     orderClass: "order-3 lg:order-3",
     accentClass: "border-amber-200/80 bg-white/75"
   }
@@ -68,8 +68,8 @@ export default function PricingPage() {
     <div className="section-shell py-16 sm:py-24">
       <SectionHeading
         eyebrow="Membership"
-        title="あなたの今に合う、3つの会員プラン"
-        description="名前と価格はシンプルに。選びやすさと続けやすさを最優先にした、瞑想lifeのプレミアム会員設計です。"
+        title="回復を、共に目覚める生活リズムへ"
+        description="瞑想lifeの会員は、瞑想コンテンツを買う人ではありません。毎日戻るリズムを育て、共生生活へ進む仲間です。"
       />
 
       <div className="mt-6 flex flex-wrap gap-3 text-sm text-white/58">

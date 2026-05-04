@@ -44,13 +44,13 @@ export const faqItems = [
 ] as const;
 
 export const challengeDays = [
-  { day: 1, title: "呼吸を整える", focus: "Day1 breathing" },
-  { day: 2, title: "感情のリセット", focus: "Day2 emotional reset" },
-  { day: 3, title: "睡眠回復", focus: "Day3 sleep recovery" },
-  { day: 4, title: "感謝の視点", focus: "Day4 gratitude" },
-  { day: 5, title: "人間関係の癒し", focus: "Day5 relationship healing" },
-  { day: 6, title: "集中の再起動", focus: "Day6 focus reset" },
-  { day: 7, title: "人生の方向性", focus: "Day7 life direction" }
+  { day: 1, title: "呼吸を整える", focus: "身体が軽くなる" },
+  { day: 2, title: "感情を整える", focus: "反応する前に止まれる" },
+  { day: 3, title: "睡眠を回復する", focus: "夜の頭が静かになる" },
+  { day: 4, title: "感謝を開く", focus: "人との関係がやわらぐ" },
+  { day: 5, title: "関係を癒す", focus: "心の傷がほどける" },
+  { day: 6, title: "集中を取り戻す", focus: "一日の中心ができる" },
+  { day: 7, title: "人生の方向性", focus: "自分の道が見え始める" }
 ] as const;
 
 export const planCards = [

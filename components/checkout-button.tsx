@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { getBasicMembershipCheckoutUrl } from "@/lib/site";
+import { getStripeCheckoutUrl } from "@/lib/site";
 
 type CheckoutButtonProps = {
   plan: "basic" | "leader" | "premium";
@@ -13,9 +13,10 @@ export function CheckoutButton({ plan, label }: CheckoutButtonProps) {
 
   async function handleCheckout() {
     setLoading(true);
+    const directUrl = getStripeCheckoutUrl(plan);
 
-    if (plan === "basic") {
-      window.location.href = getBasicMembershipCheckoutUrl();
+    if (directUrl !== "#") {
+      window.location.href = directUrl;
       return;
     }
 

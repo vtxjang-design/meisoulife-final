@@ -113,7 +113,8 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
             </button>
           ) : (
             <div className="rounded-[20px] border border-emerald-400/25 bg-emerald-400/10 px-5 py-5 text-center text-white transition duration-300">
-              <p className="text-lg font-semibold">完了しました。今日のリズムが整いました。</p>
+              <p className="text-lg font-semibold">今日、あなたは自分に戻りました。</p>
+              <p className="mt-2 text-sm leading-7 text-white/78">この小さな1分が、共生の始まりです。</p>
               <button
                 type="button"
                 onClick={startMeditation}

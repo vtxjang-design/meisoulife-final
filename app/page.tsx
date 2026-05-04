@@ -1,6 +1,7 @@
 "use client";
 
 import OneMinuteMeditation from "@/components/one-minute-meditation";
+import { challengeDays } from "@/lib/content";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
@@ -49,9 +50,9 @@ const moods: Mood[] = ["😀", "🙂", "😐", "😔", "😣"];
 const translations = {
   ja: {
     heroEyebrow: "Coexistence Meditation Ecosystem",
-    heroPrimary: "Today's 1 min Meditation",
-    heroSecondary: "Become Member",
-    heroTertiary: "Free Join",
+    heroPrimary: "今すぐ1分瞑想",
+    heroSecondary: "7日間、共に始める",
+    heroTertiary: "メンバーとして続ける",
     checkInTitle: "今日の心チェックイン",
     checkInDescription: "今の気分をひとつ選ぶだけで大丈夫です。小さな記録が、毎日のリズムを整えます。",
     checkInConfirmation: "今日の状態を記録しました",
@@ -60,17 +61,17 @@ const translations = {
     challengeTitle: "7日チャレンジ",
     challengeDescription: "まずはDay 1から。短くても、毎日戻ってこられる習慣をつくります。",
     challengeProgress: "Day 1 / 7",
-    challengeButton: "チャレンジを始める",
-    finalPrimary: "Today's 1 min Meditation",
-    finalSecondary: "Become Member",
-    finalTertiary: "Free Join",
+    challengeButton: "7日間、共に始める",
+    finalPrimary: "今すぐ1分瞑想",
+    finalSecondary: "7日間、共に始める",
+    finalTertiary: "メンバーとして続ける",
     meditationOpen: "今すぐ1分瞑想"
   },
   ko: {
     heroEyebrow: "Coexistence Meditation Ecosystem",
-    heroPrimary: "Today's 1 min Meditation",
-    heroSecondary: "Become Member",
-    heroTertiary: "Free Join",
+    heroPrimary: "지금 1분 명상",
+    heroSecondary: "7일 함께 시작하기",
+    heroTertiary: "멤버로 이어가기",
     checkInTitle: "오늘 마음 체크인",
     checkInDescription: "지금의 기분을 하나만 고르면 됩니다. 작은 기록이 매일의 리듬을 정리해줍니다.",
     checkInConfirmation: "오늘의 상태를 기록했습니다",
@@ -79,17 +80,17 @@ const translations = {
     challengeTitle: "7일 챌린지",
     challengeDescription: "우선 Day 1부터. 짧아도 매일 다시 돌아오는 습관을 만듭니다.",
     challengeProgress: "Day 1 / 7",
-    challengeButton: "챌린지 시작하기",
-    finalPrimary: "Today's 1 min Meditation",
-    finalSecondary: "Become Member",
-    finalTertiary: "Free Join",
+    challengeButton: "7일 함께 시작하기",
+    finalPrimary: "지금 1분 명상",
+    finalSecondary: "7일 함께 시작하기",
+    finalTertiary: "멤버로 이어가기",
     meditationOpen: "지금 바로 1분 명상"
   },
   en: {
     heroEyebrow: "Coexistence Meditation Ecosystem",
     heroPrimary: "Today's 1 min Meditation",
-    heroSecondary: "Become Member",
-    heroTertiary: "Free Join",
+    heroSecondary: "Begin 7 Days Together",
+    heroTertiary: "Continue as a Member",
     checkInTitle: "Today’s Mind Check-in",
     checkInDescription: "Choose one feeling for today. A small record helps your rhythm settle each day.",
     checkInConfirmation: "Your state has been recorded",
@@ -98,46 +99,13 @@ const translations = {
     challengeTitle: "7-Day Challenge",
     challengeDescription: "Start with Day 1. Even a short practice can become a daily returning rhythm.",
     challengeProgress: "Day 1 / 7",
-    challengeButton: "Start Challenge",
+    challengeButton: "Begin 7 Days Together",
     finalPrimary: "Today's 1 min Meditation",
-    finalSecondary: "Become Member",
-    finalTertiary: "Free Join",
+    finalSecondary: "Begin 7 Days Together",
+    finalTertiary: "Continue as a Member",
     meditationOpen: "Start 1-Min Meditation Now"
   }
 } as const;
-
-const serviceFlow = [
-  {
-    step: "01",
-    title: "無料7日チャレンジ",
-    description: "朝3分の音声ガイドで、まず心が落ち着く感覚を取り戻します。",
-    href: "/challenge"
-  },
-  {
-    step: "02",
-    title: "AIコーチと毎日つながる",
-    description: "疲れ、不安、眠れなさをその日のうちに言葉にして整えます。",
-    href: "/coach"
-  },
-  {
-    step: "03",
-    title: "コミュニティで続ける",
-    description: "LINEと会員導線で、ひとりで頑張らない習慣に変えていきます。",
-    href: "/community"
-  },
-  {
-    step: "04",
-    title: "有料会員として深める",
-    description: "Basic、Growth、Inner Circleの3段階で無理なく実践を深めます。",
-    href: "/pricing"
-  },
-  {
-    step: "05",
-    title: "リーダーへ成長する",
-    description: "継続、参加、貢献が積み上がると、共同体を支える役割へ進めます。",
-    href: "/leaders"
-  }
-] as const;
 
 const testimonials = [
   {
@@ -179,6 +147,34 @@ const retreatLocations = [
   { place: "韓国 済州・国学園", title: "哲学とリーダー教育", description: "実践と思想をつなぐ、深い学びの拠点。" },
   { place: "ニュージーランド Earth Village", title: "自然治癒と共生生活", description: "自然と調和しながら、本来のリズムを思い出す。" },
   { place: "ヨーロッパ テネレフェ", title: "欧州リトリート拠点", description: "光と風の中で、静けさを取り戻す滞在型プログラム。" }
+] as const;
+
+const coexistenceSteps = [
+  {
+    step: "01",
+    title: "今日の1分瞑想",
+    description: "まずは1分、自分に戻る静けさを体験します。"
+  },
+  {
+    step: "02",
+    title: "無料7日チャレンジ",
+    description: "朝の1分、夜の3分を重ねながら、やさしい生活リズムをつくります。"
+  },
+  {
+    step: "03",
+    title: "LINEコミュニティ",
+    description: "毎日、共に目覚め直すための声かけとリマインドを受け取ります。"
+  },
+  {
+    step: "04",
+    title: "月額メンバーシップ",
+    description: "ひとりの回復を、共に生きる習慣へ育てていきます。"
+  },
+  {
+    step: "05",
+    title: "リーダー成長",
+    description: "周りを明るくし、共生文化を支える人へ成長していきます。"
+  }
 ] as const;
 
 const planCards: PricingPlan[] = [
@@ -293,11 +289,14 @@ export default function HomePage() {
               </div>
             </div>
 
-            <h1 className="max-w-3xl font-serif text-5xl leading-tight text-white sm:text-6xl">
-              朝3分から、共に生きる力を育てる。
+            <h1 className="max-w-4xl font-serif text-5xl leading-tight text-white sm:text-6xl">
+              今、静かに目覚める。
+              <br />
+              ひとりの瞑想から、共に生きる文化へ。
             </h1>
-            <p className="max-w-2xl text-lg leading-8 text-white/72 sm:text-xl">
-              頑張りすぎる毎日に、やさしい瞑想習慣を。無料7日チャレンジから始まり、AIコーチ、コミュニティ、会員制、リーダー成長までを一つの流れでつなぎ、回復から共生へ進む土台を育てます。
+            <p className="max-w-3xl text-lg leading-8 text-white/72 sm:text-xl">
+              朝の1分、夜の3分。自分に戻る小さなリズムが、共に生きる力を育てます。
+              瞑想lifeは、回復・習慣・つながり・成長・リーダーシップを一つにつなぐ共生リズムの場です。
             </p>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -308,29 +307,13 @@ export default function HomePage() {
               >
                 {t.heroPrimary}
               </button>
-              <a
-                href="#membership"
+              <Link
+                href="/challenge"
                 className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-white/15 px-6 py-4 text-sm font-semibold text-white transition duration-300 hover:scale-[1.02] hover:bg-white/10"
               >
                 {t.heroSecondary}
-              </a>
-              <a
-                href="https://line.me"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-400/10 px-6 py-4 text-sm font-semibold text-emerald-200 transition duration-300 hover:scale-[1.02] hover:bg-emerald-400/15"
-              >
-                {t.heroTertiary}
-              </a>
+              </Link>
             </div>
-
-            <button
-              type="button"
-              onClick={() => setMeditationOpen(true)}
-              className="inline-flex min-h-[58px] w-full items-center justify-center rounded-full bg-emerald-600 px-6 py-4 text-base font-semibold text-white shadow-[0_16px_40px_rgba(5,150,105,0.22)] transition duration-300 hover:scale-[1.01] hover:bg-emerald-500 sm:w-auto sm:min-w-[260px]"
-            >
-              {t.meditationOpen}
-            </button>
           </div>
 
           <div className="premium-card overflow-hidden rounded-lg">
@@ -407,13 +390,15 @@ export default function HomePage() {
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="text-sm uppercase tracking-[0.28em] text-moss">Challenge</p>
-              <h2 className="mt-3 text-2xl font-semibold text-ink">{t.challengeTitle}</h2>
+              <h2 className="mt-3 text-2xl font-semibold text-ink">7日間、共に始める</h2>
             </div>
             <div className="rounded-full border border-gold/30 bg-[#fff7e6] px-3 py-1 text-xs font-medium text-[#9a7630]">
               {t.challengeProgress}
             </div>
           </div>
-          <p className="mt-4 text-sm leading-7 text-zinc-600">{t.challengeDescription}</p>
+          <p className="mt-4 text-sm leading-7 text-zinc-600">
+            1分の静けさを7日間重ねると、呼吸、感情、睡眠、感謝、関係、集中、人生の方向性までゆっくり整い始めます。
+          </p>
           <Link
             href="/challenge"
             className="mt-6 inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:scale-[1.02] hover:bg-navy sm:w-auto sm:min-w-[220px]"
@@ -421,6 +406,27 @@ export default function HomePage() {
             {t.challengeButton}
           </Link>
         </article>
+      </section>
+
+      <section className="section-shell mt-24">
+        <SectionHeading
+          eyebrow="7-Day Rhythm"
+          title="7日間、共に目覚めるリズム"
+          description="個人の回復を、共に生きる力へ。1日ごとの小さな変化が、生活の質と周りへの光を育てます。"
+        />
+        <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {challengeDays.map((day) => (
+            <article key={day.day} className="premium-card rounded-lg p-5">
+              <p className="text-sm uppercase tracking-[0.3em] text-gold">Day {day.day}</p>
+              <h3 className="mt-3 text-2xl font-semibold text-white">{day.title}</h3>
+              <p className="mt-3 text-sm leading-7 text-white/72">{day.focus}</p>
+            </article>
+          ))}
+        </div>
+        <div className="mt-8 rounded-[24px] border border-gold/20 bg-gold/10 p-6 text-center">
+          <p className="text-2xl font-semibold text-white">このリズムを、ひとりで終わらせない。</p>
+          <p className="mt-3 text-base text-white/72">瞑想lifeメンバーとして続ける。</p>
+        </div>
       </section>
 
       <section className="section-shell mt-24 grid gap-6 md:grid-cols-3">
@@ -450,20 +456,16 @@ export default function HomePage() {
       <section className="section-shell mt-24">
         <SectionHeading
           eyebrow="Platform Flow"
-          title="1段階目のサービス構造"
-          description="瞑想lifeは、体験だけで終わらず、継続、つながり、会員化、リーダー成長までが一つの流れで見えるように設計しています。"
+          title="共生リズム・プラットフォームの流れ"
+          description="瞑想lifeは、瞑想を売る場ではありません。毎日、共に目覚める生活リズムを育て、個人の回復から共生文化、地球経営へ進む場です。"
         />
         <div className="mt-10 grid gap-4 lg:grid-cols-5">
-          {serviceFlow.map((item) => (
-            <Link
-              key={item.step}
-              href={item.href}
-              className="premium-card rounded-lg p-5 transition duration-300 hover:-translate-y-1 hover:bg-white/[0.08]"
-            >
+          {coexistenceSteps.map((item) => (
+            <article key={item.step} className="premium-card rounded-lg p-5">
               <p className="text-sm uppercase tracking-[0.3em] text-gold">{item.step}</p>
               <h2 className="mt-3 text-2xl font-semibold text-white">{item.title}</h2>
               <p className="mt-4 text-sm leading-7 text-white/72">{item.description}</p>
-            </Link>
+            </article>
           ))}
         </div>
       </section>
@@ -562,20 +564,18 @@ export default function HomePage() {
             >
               {t.finalPrimary}
             </button>
-            <a
-              href="#membership"
+            <Link
+              href="/challenge"
               className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-white/15 px-6 py-4 text-sm font-semibold text-white transition duration-300 hover:scale-[1.02] hover:bg-white/10"
             >
               {t.finalSecondary}
-            </a>
-            <a
-              href="https://line.me"
-              target="_blank"
-              rel="noreferrer"
+            </Link>
+            <Link
+              href="/pricing"
               className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-400/10 px-6 py-4 text-sm font-semibold text-emerald-200 transition duration-300 hover:scale-[1.02] hover:bg-emerald-400/15"
             >
               {t.finalTertiary}
-            </a>
+            </Link>
           </div>
         </div>
       </section>

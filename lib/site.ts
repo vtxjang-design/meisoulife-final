@@ -9,9 +9,9 @@ export function absoluteUrl(path = "/") {
 
 export function getLineInviteLinks() {
   return {
-    free: process.env.LINE_FREE_INVITE_URL || absoluteUrl("/challenge"),
+    free: process.env.NEXT_PUBLIC_LINE_FREE_URL || process.env.LINE_FREE_INVITE_URL || absoluteUrl("/challenge"),
     member: process.env.LINE_MEMBER_INVITE_URL || absoluteUrl("/community"),
-    leader: process.env.LINE_LEADER_INVITE_URL || absoluteUrl("/leaders")
+    leader: process.env.NEXT_PUBLIC_LEADER_FORM_URL || process.env.LINE_LEADER_INVITE_URL || absoluteUrl("/leaders")
   };
 }
 
@@ -26,5 +26,25 @@ export function getWelcomeMemberLinks() {
 }
 
 export function getBasicMembershipCheckoutUrl() {
-  return process.env.NEXT_PUBLIC_STRIPE_BASIC_CHECKOUT_URL || "https://buy.stripe.com/fZu5kC443bVL4gWfMa43S05";
+  return (
+    process.env.NEXT_PUBLIC_STRIPE_BASIC_URL ||
+    process.env.NEXT_PUBLIC_STRIPE_BASIC_CHECKOUT_URL ||
+    "https://buy.stripe.com/fZu5kC443bVL4gWfMa43S05"
+  );
+}
+
+export function getStripeCheckoutUrl(plan: "basic" | "leader" | "premium") {
+  if (plan === "basic") {
+    return getBasicMembershipCheckoutUrl();
+  }
+
+  if (plan === "leader") {
+    return process.env.NEXT_PUBLIC_STRIPE_GROWTH_URL || "#";
+  }
+
+  return process.env.NEXT_PUBLIC_STRIPE_INNER_URL || "#";
+}
+
+export function getLeaderFormUrl() {
+  return process.env.NEXT_PUBLIC_LEADER_FORM_URL || absoluteUrl("/leaders");
 }

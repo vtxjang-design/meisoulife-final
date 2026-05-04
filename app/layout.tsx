@@ -10,10 +10,12 @@ export const metadata: Metadata = {
     default: "瞑想life",
     template: "%s | 瞑想life"
   },
-  description: "朝3分で、心が整う。無料7日チャレンジ、AIコーチ、会員コミュニティ、リーダー成長までつながる日本向け瞑想プラットフォーム。",
+  description:
+    "1分瞑想から始まり、7日チャレンジ、LINEコミュニティ、月額会員、リーダー成長へつながる共生リズム・プラットフォーム。",
   openGraph: {
     title: "瞑想life",
-    description: "朝3分で、心が整う。無料7日チャレンジ、AIコーチ、会員コミュニティ、リーダー成長までつながる日本向け瞑想プラットフォーム。",
+    description:
+      "1分瞑想から始まり、7日チャレンジ、LINEコミュニティ、月額会員、リーダー成長へつながる共生リズム・プラットフォーム。",
     url: absoluteUrl("/"),
     siteName: "瞑想life",
     locale: "ja_JP",
@@ -22,7 +24,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "瞑想life",
-    description: "朝3分で、心が整う。無料7日チャレンジから始まる共生型の瞑想プラットフォーム。"
+    description: "毎日、共に目覚める共生リズム・プラットフォーム。"
   },
   alternates: {
     canonical: absoluteUrl("/")

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getLeaderProgress, isLeaderCandidate, leaderThresholds } from "@/lib/leader";
 import { SectionHeading } from "@/components/section-heading";
+import { getLeaderFormUrl } from "@/lib/site";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 const leaderStages = [
@@ -27,6 +28,7 @@ const leaderStages = [
 ] as const;
 
 export default async function LeadersPage() {
+  const leaderFormUrl = getLeaderFormUrl();
   const supabase = await getSupabaseServerClient();
   let paidDays = 0;
   let checkInCount = 0;
@@ -69,7 +71,7 @@ export default async function LeadersPage() {
       <SectionHeading
         eyebrow="Leader Growth"
         title="実践からリーダー成長へ"
-        description="瞑想lifeの1段階目は、ただ参加するだけで終わらず、継続、貢献、信頼を通して共同体を支える人を育てる構造です。"
+        description="瞑想lifeのリーダー成長は、参加で終わらず、継続、貢献、信頼を通して共に目覚めるリズムを支える人を育てる構造です。"
       />
 
       <div className="mt-10 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
@@ -123,9 +125,24 @@ export default async function LeadersPage() {
               >
                 コミュニティ導線を見る
               </Link>
+              <Link
+                href={leaderFormUrl}
+                className="inline-flex items-center justify-center rounded-md border border-gold/30 px-5 py-3 text-sm font-semibold text-gold transition hover:bg-gold/10"
+              >
+                リーダーフォームへ
+              </Link>
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="mt-10 rounded-[28px] border border-gold/20 bg-gold/10 p-6 sm:p-8">
+        <p className="text-sm uppercase tracking-[0.3em] text-gold">2030 Vision</p>
+        <h2 className="mt-3 text-3xl font-semibold text-white sm:text-4xl">2030年、10万人の共生人材へ</h2>
+        <p className="mt-4 max-w-4xl text-base leading-8 text-white/78">
+          瞑想lifeのリーダーとは、人を集める人ではありません。毎日、自分に戻り、周りを明るくし、共に目覚めるリズムを支える人です。
+          一人の実践が、家庭を変え、職場を変え、地域を変え、地球を変える。その静かな流れを、2030年までに10万人へ広げていきます。
+        </p>
       </div>
     </div>
   );
