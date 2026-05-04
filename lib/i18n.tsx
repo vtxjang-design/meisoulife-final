@@ -447,7 +447,8 @@ export const siteCopy = {
       secondary: "LINEでつながる"
     },
     common: {
-      connecting: "接続中..."
+      connecting: "接続中...",
+      comingSoon: "準備中です"
     }
   },
   kr: {
@@ -808,7 +809,8 @@ export const siteCopy = {
       secondary: "LINE으로 함께 이어가기"
     },
     common: {
-      connecting: "연결 중..."
+      connecting: "연결 중...",
+      comingSoon: "준비 중입니다"
     }
   },
   en: {
@@ -1169,7 +1171,8 @@ export const siteCopy = {
       secondary: "Continue on LINE"
     },
     common: {
-      connecting: "Connecting..."
+      connecting: "Connecting...",
+      comingSoon: "Coming soon"
     }
   }
 } as const;

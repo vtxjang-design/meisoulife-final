@@ -29,7 +29,7 @@ export function getBasicMembershipCheckoutUrl() {
   return (
     process.env.NEXT_PUBLIC_STRIPE_BASIC_URL ||
     process.env.NEXT_PUBLIC_STRIPE_BASIC_CHECKOUT_URL ||
-    "https://buy.stripe.com/fZu5kC443bVL4gWfMa43S05"
+    ""
   );
 }
 
@@ -39,10 +39,10 @@ export function getStripeCheckoutUrl(plan: "basic" | "leader" | "premium") {
   }
 
   if (plan === "leader") {
-    return process.env.NEXT_PUBLIC_STRIPE_GROWTH_URL || "#";
+    return process.env.NEXT_PUBLIC_STRIPE_GROWTH_URL || "";
   }
 
-  return process.env.NEXT_PUBLIC_STRIPE_INNER_URL || "#";
+  return process.env.NEXT_PUBLIC_STRIPE_INNER_URL || "";
 }
 
 export function getLeaderFormUrl() {

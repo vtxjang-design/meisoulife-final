@@ -12,49 +12,31 @@ type CheckoutButtonProps = {
 export function CheckoutButton({ plan, label }: CheckoutButtonProps) {
   const [loading, setLoading] = useState(false);
   const copy = useSiteCopy();
+  const checkoutUrl = getStripeCheckoutUrl(plan);
+  const isAvailable = Boolean(checkoutUrl);
 
   async function handleCheckout() {
-    setLoading(true);
-    const directUrl = getStripeCheckoutUrl(plan);
-
-    if (directUrl !== "#") {
-      window.location.href = directUrl;
+    if (!isAvailable) {
       return;
     }
 
-    try {
-      const response = await fetch("/api/stripe/checkout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ plan })
-      });
-      const data = await response.json();
+    setLoading(true);
 
-      if (!response.ok) {
-        throw new Error(data.error || "checkout failed");
-      }
-
-      if (data.url) {
-        window.location.href = data.url;
-        return;
-      }
-    } catch (_error) {
-      // Fall through to noop placeholder state.
-    } finally {
-      setLoading(false);
-    }
+    window.open(checkoutUrl, "_blank", "noopener,noreferrer");
+    setLoading(false);
   }
 
   return (
-    <button
-      type="button"
-      onClick={handleCheckout}
-      disabled={loading}
-      className="rounded-md bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:opacity-60"
-    >
-      {loading ? copy.common.connecting : label}
-    </button>
+    <div className="space-y-2">
+      <button
+        type="button"
+        onClick={handleCheckout}
+        disabled={loading || !isAvailable}
+        className="rounded-md bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        {loading ? copy.common.connecting : label}
+      </button>
+      {!isAvailable ? <p className="text-sm text-zinc-500">{copy.common.comingSoon}</p> : null}
+    </div>
   );
 }
