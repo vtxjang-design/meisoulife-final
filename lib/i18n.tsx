@@ -227,7 +227,7 @@ export const siteCopy = {
         eyebrow: "Founder Philosophy",
         title: "静けさは、日常を変える力になる",
         intro: "瞑想lifeの土台には、日常の中で自己認識を育てるための、実践的で現代的なアプローチがあります。",
-        founderName: "Ilchi Lee",
+        founderName: "ILCHI LEE（脳教育創始者）",
         founderDescription:
           "Ilchi Leeは、自己認識と内面のバランスを日常の習慣として育てる方法を長く探究してきた教育者であり実践家です。",
         contributionsTitle: "Brain Education (脳教育)",
@@ -606,7 +606,7 @@ export const siteCopy = {
         eyebrow: "Founder Philosophy",
         title: "고요함은 일상을 바꾸는 힘이 됩니다",
         intro: "명상life의 바탕에는 일상 속에서 자기인식을 기를 수 있도록 돕는 실천적이고 현대적인 접근이 있습니다.",
-        founderName: "Ilchi Lee",
+        founderName: "ILCHI LEE (뇌교육 창시자)",
         founderDescription:
           "Ilchi Lee는 자기인식과 내면의 균형을 일상의 습관으로 길러가는 방법을 오랫동안 탐구해 온 교육자이자 실천가입니다.",
         contributionsTitle: "Brain Education (뇌교육)",
@@ -985,7 +985,7 @@ export const siteCopy = {
         eyebrow: "Founder Philosophy",
         title: "Stillness can become a force that changes daily life",
         intro: "Meisou Life is grounded in a practical, modern approach for building self-awareness in everyday life.",
-        founderName: "Ilchi Lee",
+        founderName: "ILCHI LEE (Founder of Brain Education)",
         founderDescription:
           "Ilchi Lee is an educator and practitioner who has spent decades exploring how self-awareness and inner balance can be cultivated as a daily way of living.",
         contributionsTitle: "Brain Education",
