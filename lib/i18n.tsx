@@ -311,9 +311,9 @@ export const siteCopy = {
         title: "続けている人の声",
         description: "日本向けローンチを想定した、40〜60代中心の共感コピーで構成しています。",
         items: [
-          { name: "美香さん・49歳", quote: "朝3分だけなのに、仕事前の呼吸が整って気持ちの荒れが減りました。" },
-          { name: "健一さん・57歳", quote: "眠る前の音声があるだけで、頭の中の騒がしさがやわらぎます。" },
-          { name: "由紀さん・52歳", quote: "LINEで仲間がいるので、ひとりで頑張る感じがなく続けやすいです。" }
+          { name: "ミカ · 朝のリズム", quote: "朝3分だけなのに、仕事前の呼吸が整って気持ちの荒れが減りました。" },
+          { name: "ジス · 心のリセット", quote: "忙しい日でも一度戻る時間があるだけで、心が少し静かになります。" },
+          { name: "エマ · 集中回復", quote: "夜に短く整えるだけで、翌朝の集中がやさしく戻ってきます。" }
         ]
       },
       membership: {
@@ -743,9 +743,9 @@ export const siteCopy = {
         title: "계속 이어가는 사람들의 이야기",
         description: "지금도 누군가는 이 리듬을 이어가고 있습니다.",
         items: [
-          { name: "미카 님 · 49세", quote: "아침 3분만 했는데도 출근 전 호흡이 정리되고 마음의 거칠음이 줄었습니다." },
-          { name: "켄이치 님 · 57세", quote: "잠들기 전 음성 가이드가 있으니 머릿속 소음이 훨씬 잦아듭니다." },
-          { name: "유키 님 · 52세", quote: "LINE에서 함께하는 사람이 있어서 혼자 버티는 느낌이 없어 더 꾸준히 하게 됩니다." }
+          { name: "미카 · 아침 리듬", quote: "아침 3분만 했는데도 출근 전 호흡이 정리되고 마음의 거칠음이 줄었습니다." },
+          { name: "지수 · 마음 정리", quote: "점심에 1분만 돌아와도 하루 전체의 균형이 다시 잡히는 느낌이 듭니다." },
+          { name: "엠마 · 집중 회복", quote: "혼자 억지로 버티는 느낌보다, 조용히 이어가는 감각이 생겨서 오래 가게 됩니다." }
         ]
       },
       membership: {
@@ -1175,9 +1175,9 @@ export const siteCopy = {
         title: "Voices from people who kept going",
         description: "Written in a warm tone for adults in their 40s to 60s.",
         items: [
-          { name: "Mika, 49", quote: "Even just three minutes in the morning helps my breath settle before work and I feel less emotionally rough." },
-          { name: "Kenichi, 57", quote: "Having an audio guide before sleep softens the noise inside my head." },
-          { name: "Yuki, 52", quote: "Because people are there with me on LINE, it no longer feels like I am doing this alone." }
+          { name: "Mika · Morning Rhythm", quote: "Having a quiet rhythm at night softens the noise in my head before sleep." },
+          { name: "Jisoo · Mind Reset", quote: "Because others are continuing too, it no longer feels like I am carrying the rhythm alone." },
+          { name: "Emma · Focus Reset", quote: "A short return in the middle of the day helps me come back to steady focus without force." }
         ]
       },
       membership: {
