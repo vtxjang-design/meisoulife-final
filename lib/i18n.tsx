@@ -159,12 +159,40 @@ export const siteCopy = {
     },
     home: {
       heroEyebrow: "Coexistence Meditation Ecosystem",
-      heroTitle: "今、静かに目覚める。\nひとりの瞑想から、共に生きる文化へ。",
+      heroTitle: "今、共に目覚めるリズムを始めませんか？",
       heroDescription:
-        "朝の1分、夜の3分。自分に戻る小さなリズムが、共に生きる力を育てます。瞑想lifeは、回復・習慣・つながり・成長・リーダーシップを一つにつなぐ共生リズムの場です。",
-      heroPrimary: "今すぐ始める",
-      heroSecondary: "7日間、共に始める",
+        "瞑想lifeは、ひとりで頑張る場所ではありません。毎日の小さな実践を通して、心・身体・関係・暮らしを整え、共に目覚めて生きるための共生リズム・プラットフォームです。",
+      heroPrimary: "60秒リズムを始める",
+      heroSecondary: "メンバーになる",
       imageAlt: "静かな朝の瞑想風景",
+      rhythmExperience: {
+        eyebrow: "今日の共生リズム",
+        title: "朝・昼・夜、戻る時間をひとつずつ",
+        description: "大きく変えようとしなくて大丈夫です。同じ場所に戻る時間を一日に三つ持つだけで、心と身体の輪郭は静かに整っていきます。",
+        cards: [
+          {
+            key: "morning",
+            eyebrow: "Morning 3 min",
+            title: "朝の3分",
+            description: "起きたばかりの呼吸と身体感覚を整えて、一日の始まりを静かにそろえます。",
+            button: "朝のリズムを始める"
+          },
+          {
+            key: "daytime",
+            eyebrow: "Daytime 1 min",
+            title: "昼の1分",
+            description: "忙しさの中で一度だけ立ち止まり、自分の中心に戻る短い時間です。",
+            button: "60秒リズムを始める"
+          },
+          {
+            key: "night",
+            eyebrow: "Night 3 min",
+            title: "夜の3分",
+            description: "一日の緊張をほどき、眠りの前に心と身体をやさしく閉じていきます。",
+            button: "夜のリズムを始める"
+          }
+        ]
+      },
       todayRhythmEyebrow: "Today's Rhythm",
       todayRhythmNotStarted: "まだ始まっていない方も、今日は1分だけ自分に戻るところから始められます。",
       todayRhythmCompletedTitle: "このリズムを続けています",
@@ -177,6 +205,19 @@ export const siteCopy = {
       returnStreak: "{count}日つづいています",
       returnStart: "今日から静かに始められます",
       returnButton: "今日の1分を始める",
+      rhythmSignals: {
+        completed: "今日のリズムは整いました",
+        notCompleted: "今日のリズムはまだ始まっていません",
+        streak: "継続 {count}日",
+        practicingNow: "今、共に実践中 {count}人",
+        waiting: "The rhythm is waiting for you.",
+        milestones: ["3日", "7日", "30日"],
+        anchors: {
+          morning: "今は朝のリズム",
+          daytime: "今は昼のリズム",
+          night: "今は夜のリズム"
+        }
+      },
       dailyRhythmEyebrow: "Daily Rhythm",
       dailyRhythmBadge: "Local",
       checkInTitle: "今日の心チェックイン",
@@ -239,6 +280,18 @@ export const siteCopy = {
         philosophyDescription:
           "瞑想lifeは、その考え方を現代の生活リズムに合わせて再構成した場です。1分の静けさから始まり、自己認識、習慣、つながり、成長へと自然に続いていく設計にしています。",
         cta: "今すぐ1分瞑想"
+      },
+      platformConcept: {
+        eyebrow: "Platform Concept",
+        title: "共生リズム・プラットフォームとは",
+        description:
+          "これはコンテンツを消費するための場所ではありません。毎日戻るためのリズムが先にあり、その上にAI、支払い、コミュニティが静かに重なっていく構造です。",
+        items: [
+          "軸にあるのは、毎日戻るためのリズム設計です。",
+          "AIは答えを与えるためではなく、リズムを支える補助として使います。",
+          "支払いは商品購入ではなく、継続を支える環境づくりのためにあります。",
+          "コミュニティは集めるものではなく、リズムの上に自然に生まれるつながりです。"
+        ]
       },
       platformFlow: {
         eyebrow: "Platform Flow",
@@ -465,7 +518,7 @@ export const siteCopy = {
     },
     common: {
       connecting: "接続中...",
-      comingSoon: "準備中です"
+      comingSoon: "Checkout is not configured yet."
     }
   },
   kr: {
@@ -538,12 +591,40 @@ export const siteCopy = {
     },
     home: {
       heroEyebrow: "Coexistence Meditation Ecosystem",
-      heroTitle: "지금, 조용히 깨어납니다.\n한 사람의 명상에서, 함께 사는 문화로.",
+      heroTitle: "지금, 함께 깨어나는 리듬을 시작해볼까요?",
       heroDescription:
-        "아침 1분, 밤 3분. 자신에게 돌아오는 작은 리듬이 함께 살아가는 힘을 기릅니다. 명상life는 회복, 습관, 연결, 성장, 리더십을 하나로 잇는 공생 리듬의 장입니다.",
-      heroPrimary: "지금 시작하기",
-      heroSecondary: "7일 함께 시작하기",
+        "명상life는 혼자 애써 버티는 곳이 아닙니다. 매일의 작은 실천을 통해 마음, 몸, 관계, 삶을 정돈하고 함께 깨어 살아가기 위한 공생 리듬 플랫폼입니다.",
+      heroPrimary: "60초 리듬 시작하기",
+      heroSecondary: "멤버 되기",
       imageAlt: "고요한 아침 명상 풍경",
+      rhythmExperience: {
+        eyebrow: "오늘의 공생 리듬",
+        title: "아침 · 낮 · 밤, 돌아오는 시간을 하나씩",
+        description: "크게 바꾸려 하지 않아도 괜찮습니다. 하루에 세 번 같은 자리로 돌아오는 것만으로도 마음과 몸의 윤곽은 조용히 정돈됩니다.",
+        cards: [
+          {
+            key: "morning",
+            eyebrow: "Morning 3 min",
+            title: "아침 3분",
+            description: "깨어난 직후의 호흡과 몸 감각을 정돈해 하루의 시작을 조용히 맞춥니다.",
+            button: "아침 리듬 시작하기"
+          },
+          {
+            key: "daytime",
+            eyebrow: "Daytime 1 min",
+            title: "낮의 1분",
+            description: "바쁨 속에서 한 번 멈추고, 자신의 중심으로 돌아오는 짧은 시간입니다.",
+            button: "60초 리듬 시작하기"
+          },
+          {
+            key: "night",
+            eyebrow: "Night 3 min",
+            title: "밤의 3분",
+            description: "하루의 긴장을 풀고, 잠들기 전에 마음과 몸을 부드럽게 닫아갑니다.",
+            button: "밤 리듬 시작하기"
+          }
+        ]
+      },
       todayRhythmEyebrow: "오늘의 리듬",
       todayRhythmNotStarted: "아직 시작하지 않았더라도, 오늘은 1분만 자신에게 돌아오는 것부터 시작할 수 있습니다.",
       todayRhythmCompletedTitle: "이 리듬을 이어가고 있습니다",
@@ -556,6 +637,19 @@ export const siteCopy = {
       returnStreak: "{count}일 이어지고 있습니다",
       returnStart: "오늘부터 조용히 시작할 수 있습니다",
       returnButton: "오늘의 1분 시작하기",
+      rhythmSignals: {
+        completed: "오늘의 리듬이 정돈되었습니다",
+        notCompleted: "오늘의 리듬은 아직 시작되지 않았습니다",
+        streak: "{count}일 리듬을 이어가고 있습니다",
+        practicingNow: "지금 함께 실천 중 {count}명",
+        waiting: "리듬이 당신을 기다리고 있습니다.",
+        milestones: ["3일", "7일", "30일"],
+        anchors: {
+          morning: "지금은 아침 리듬",
+          daytime: "지금은 낮 리듬",
+          night: "지금은 밤 리듬"
+        }
+      },
       dailyRhythmEyebrow: "Daily Rhythm",
       dailyRhythmBadge: "Local",
       checkInTitle: "오늘 마음 체크인",
@@ -618,6 +712,18 @@ export const siteCopy = {
         philosophyDescription:
           "명상life는 그 접근을 오늘의 생활 리듬에 맞게 다시 구성한 공간입니다. 1분의 고요함에서 시작해 자기인식, 습관, 연결, 성장으로 자연스럽게 이어지도록 설계했습니다.",
         cta: "지금 바로 1분 명상"
+      },
+      platformConcept: {
+        eyebrow: "Platform Concept",
+        title: "공생 리듬 플랫폼이란",
+        description:
+          "이곳은 콘텐츠를 소비하는 플랫폼이 아닙니다. 먼저 매일 돌아오는 리듬이 있고, 그 위에 AI, 결제, 커뮤니티가 조용히 겹쳐지는 구조입니다.",
+        items: [
+          "중심에는 매일 돌아오기 위한 리듬 설계가 있습니다.",
+          "AI는 답을 주기보다 리듬을 지지하는 보조 역할을 합니다.",
+          "결제는 상품 구매가 아니라 지속을 가능하게 하는 환경을 지탱합니다.",
+          "커뮤니티는 사람을 모으기 위한 장치가 아니라, 리듬 위에서 자연스럽게 생겨나는 연결입니다."
+        ]
       },
       platformFlow: {
         eyebrow: "Platform Flow",
@@ -844,7 +950,7 @@ export const siteCopy = {
     },
     common: {
       connecting: "연결 중...",
-      comingSoon: "준비 중입니다"
+      comingSoon: "Checkout is not configured yet."
     }
   },
   en: {
@@ -917,12 +1023,40 @@ export const siteCopy = {
     },
     home: {
       heroEyebrow: "Coexistence Meditation Ecosystem",
-      heroTitle: "Awaken quietly now.\nFrom one person’s meditation to a culture of living together.",
+      heroTitle: "Would you like to begin a rhythm of awakening together now?",
       heroDescription:
-        "One minute in the morning, three minutes at night. A small rhythm of returning to yourself grows the power to live together. Meisou Life is a coexistence rhythm space connecting recovery, habit, connection, growth, and leadership.",
-      heroPrimary: "Start Now",
-      heroSecondary: "Begin 7 Days Together",
+        "Meisou Life is not a place to push through alone. Through small daily practice, it gently helps settle mind, body, relationships, and daily life into a calm coexistence rhythm platform.",
+      heroPrimary: "Start the 60-second rhythm",
+      heroSecondary: "Become a member",
       imageAlt: "A quiet morning meditation scene",
+      rhythmExperience: {
+        eyebrow: "Today’s Coexistence Rhythm",
+        title: "Morning, daytime, and night — one return point each",
+        description: "Nothing dramatic is required. When you return to the same place three times a day, the outline of mind and body begins to settle quietly.",
+        cards: [
+          {
+            key: "morning",
+            eyebrow: "Morning 3 min",
+            title: "Morning 3 min",
+            description: "Settle the breath and body right after waking so the day begins from a quieter place.",
+            button: "Start the morning rhythm"
+          },
+          {
+            key: "daytime",
+            eyebrow: "Daytime 1 min",
+            title: "Daytime 1 min",
+            description: "A brief pause in the middle of the day to return to your own center.",
+            button: "Start the 60-second rhythm"
+          },
+          {
+            key: "night",
+            eyebrow: "Night 3 min",
+            title: "Night 3 min",
+            description: "Release the tension of the day and soften mind and body before sleep.",
+            button: "Start the night rhythm"
+          }
+        ]
+      },
       todayRhythmEyebrow: "Today's Rhythm",
       todayRhythmNotStarted: "Even if you have not started yet, today can begin with just one minute of returning to yourself.",
       todayRhythmCompletedTitle: "You are continuing this rhythm",
@@ -935,6 +1069,19 @@ export const siteCopy = {
       returnStreak: "{count} days in rhythm",
       returnStart: "You can begin quietly today",
       returnButton: "Start your one minute today",
+      rhythmSignals: {
+        completed: "Today’s rhythm is complete",
+        notCompleted: "Today’s rhythm has not started yet",
+        streak: "{count} days in rhythm",
+        practicingNow: "Now practicing together: {count} people",
+        waiting: "The rhythm is waiting for you.",
+        milestones: ["3 days", "7 days", "30 days"],
+        anchors: {
+          morning: "Morning rhythm",
+          daytime: "Daytime rhythm",
+          night: "Night rhythm"
+        }
+      },
       dailyRhythmEyebrow: "Daily Rhythm",
       dailyRhythmBadge: "Local",
       checkInTitle: "Today’s Mind Check-in",
@@ -997,6 +1144,18 @@ export const siteCopy = {
         philosophyDescription:
           "Meisou Life translates that system into a modern rhythm platform. It begins with one minute of stillness and continues naturally into self-awareness, habit, connection, and growth.",
         cta: "Start 1-Min Meditation Now"
+      },
+      platformConcept: {
+        eyebrow: "Platform Concept",
+        title: "What is a coexistence rhythm platform?",
+        description:
+          "This is not a content platform. The rhythm comes first, and AI, payment, and community sit quietly on top of that rhythm to support continuity.",
+        items: [
+          "The core system is a rhythm people can return to every day.",
+          "AI is here to support rhythm, not to replace human inner awareness.",
+          "Payment is not about buying content, but about supporting continuity.",
+          "Community is not something we force — it emerges naturally from shared rhythm."
+        ]
       },
       platformFlow: {
         eyebrow: "Platform Flow",
@@ -1223,7 +1382,7 @@ export const siteCopy = {
     },
     common: {
       connecting: "Connecting...",
-      comingSoon: "Coming soon"
+      comingSoon: "Checkout is not configured yet."
     }
   }
 } as const;

@@ -42,7 +42,7 @@ export function getStripeCheckoutUrl(plan: "basic" | "leader" | "premium") {
     return process.env.NEXT_PUBLIC_STRIPE_GROWTH_URL || "";
   }
 
-  return process.env.NEXT_PUBLIC_STRIPE_INNER_URL || "";
+  return process.env.NEXT_PUBLIC_STRIPE_INNER_CIRCLE_URL || process.env.NEXT_PUBLIC_STRIPE_INNER_URL || "";
 }
 
 export function getLeaderFormUrl() {

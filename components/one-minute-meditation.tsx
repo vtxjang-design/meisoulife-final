@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSiteCopy } from "@/lib/i18n";
+import { markDailyRhythmCompleted } from "@/lib/return-rhythm";
 
 type OneMinuteMeditationProps = {
   open: boolean;
@@ -46,6 +47,12 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
     setSelectedReflection(null);
   }
 
+  function completeMeditation() {
+    setSecondsLeft(0);
+    setIsComplete(true);
+    markDailyRhythmCompleted();
+  }
+
   function handleReflectionSelect(reflectionKey: ReflectionOption) {
     setSelectedReflection(reflectionKey);
     window.localStorage.setItem(LAST_REFLECTION_KEY, reflectionKey);
@@ -81,6 +88,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
         if (current <= 1) {
           window.clearInterval(timer);
           setIsComplete(true);
+          markDailyRhythmCompleted();
           return 0;
         }
 
@@ -207,10 +215,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
             <div className="mt-5 flex flex-col gap-3">
               <button
                 type="button"
-                onClick={() => {
-                  setSecondsLeft(0);
-                  setIsComplete(true);
-                }}
+                onClick={completeMeditation}
                 className="inline-flex min-h-[54px] w-full items-center justify-center rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-emerald-500"
               >
                 {copy.modal.endButton}

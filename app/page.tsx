@@ -8,7 +8,12 @@ import {
   type ChallengeRhythmProgress
 } from "@/lib/challenge-rhythm";
 import { languageButtons, useLanguage, useSiteCopy } from "@/lib/i18n";
-import { updateReturnRhythmVisit, type ReturnRhythmSnapshot } from "@/lib/return-rhythm";
+import {
+  getReturnRhythmSnapshot,
+  RETURN_RHYTHM_EVENT,
+  updateReturnRhythmVisit,
+  type ReturnRhythmSnapshot
+} from "@/lib/return-rhythm";
 
 type Mood = "😀" | "🙂" | "😐" | "😔" | "😣";
 
@@ -35,7 +40,7 @@ type PricingCardProps = PricingPlan;
 const MOOD_STORAGE_KEY = "meisoulife_selected_mood";
 const MOOD_MESSAGE_STORAGE_KEY = "meisoulife_selected_mood_message";
 const basicCheckoutUrl =
-  process.env.NEXT_PUBLIC_STRIPE_BASIC_CHECKOUT_URL || "https://buy.stripe.com/fZu5kC443bVL4gWfMa43S05";
+  process.env.NEXT_PUBLIC_STRIPE_BASIC_URL || process.env.NEXT_PUBLIC_STRIPE_BASIC_CHECKOUT_URL || "";
 
 const moods: Mood[] = ["😀", "🙂", "😐", "😔", "😣"];
 
@@ -100,9 +105,13 @@ export default function HomePage() {
   });
   const [returnRhythm, setReturnRhythm] = useState<ReturnRhythmSnapshot>({
     lastVisitDate: null,
+    lastCompletedDate: null,
     streakCount: 0,
     lineConnectedAt: null,
-    isReturningToday: false
+    isReturningToday: false,
+    isCompletedToday: false,
+    inactiveDays: 0,
+    timeAnchor: "daytime"
   });
 
   const planCards: PricingPlan[] = useMemo(
@@ -117,6 +126,19 @@ export default function HomePage() {
   const challengeDay = copy.challengePage.days.find((day) => day.day === challengeProgress.currentDay) ?? copy.challengePage.days[0];
   const hasStartedChallenge = challengeProgress.completedDays.length > 0;
   const hasCompletedChallenge = challengeProgress.completedDays.length >= copy.challengePage.days.length;
+  const livePracticeCount = useMemo(() => {
+    const hour = new Date().getHours();
+
+    if (hour < 8) {
+      return 28;
+    }
+
+    if (hour < 18) {
+      return 43;
+    }
+
+    return 19;
+  }, []);
 
   useEffect(() => {
     const syncProgress = () => {
@@ -136,6 +158,18 @@ export default function HomePage() {
 
   useEffect(() => {
     setReturnRhythm(updateReturnRhythmVisit());
+
+    const syncRhythm = () => {
+      setReturnRhythm(getReturnRhythmSnapshot());
+    };
+
+    window.addEventListener(RETURN_RHYTHM_EVENT, syncRhythm);
+    window.addEventListener("storage", syncRhythm);
+
+    return () => {
+      window.removeEventListener(RETURN_RHYTHM_EVENT, syncRhythm);
+      window.removeEventListener("storage", syncRhythm);
+    };
   }, []);
 
   useEffect(() => {
@@ -191,7 +225,7 @@ export default function HomePage() {
                 {home.heroPrimary}
               </Link>
               <Link
-                href="/welcome-member"
+                href="#membership"
                 className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-white/15 px-6 py-4 text-sm font-semibold text-white transition duration-300 hover:scale-[1.02] hover:bg-white/10"
               >
                 {home.heroSecondary}
@@ -206,6 +240,29 @@ export default function HomePage() {
               className="h-full min-h-[420px] w-full object-cover"
             />
           </div>
+        </div>
+      </section>
+
+      <section className="section-shell mt-8">
+        <SectionHeading
+          eyebrow={home.rhythmExperience.eyebrow}
+          title={home.rhythmExperience.title}
+          description={home.rhythmExperience.description}
+        />
+        <div className="mt-8 grid gap-4 lg:grid-cols-3">
+          {home.rhythmExperience.cards.map((card) => (
+            <article key={card.key} className="premium-card rounded-lg p-6">
+              <p className="text-sm uppercase tracking-[0.28em] text-gold">{card.eyebrow}</p>
+              <h2 className="mt-3 text-2xl font-semibold text-white">{card.title}</h2>
+              <p className="mt-4 text-sm leading-7 text-white/72">{card.description}</p>
+              <Link
+                href="/welcome-member"
+                className="mt-6 inline-flex min-h-[50px] items-center justify-center rounded-full border border-gold/35 bg-gold/10 px-5 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/15"
+              >
+                {card.button}
+              </Link>
+            </article>
+          ))}
         </div>
       </section>
 
@@ -229,6 +286,40 @@ export default function HomePage() {
                   <p className="mt-2 text-sm leading-7 text-white/68">{home.todayRhythmCompletedDescription}</p>
                 </>
               )}
+              <div className="mt-4 flex flex-wrap gap-2 text-xs text-white/62">
+                <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2">
+                  {returnRhythm.isCompletedToday ? home.rhythmSignals.completed : home.rhythmSignals.notCompleted}
+                </span>
+                <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2">
+                  {formatTemplate(home.rhythmSignals.streak, { count: returnRhythm.streakCount })}
+                </span>
+                <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2">
+                  {formatTemplate(home.rhythmSignals.practicingNow, { count: livePracticeCount })}
+                </span>
+                <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2">
+                  {home.rhythmSignals.anchors[returnRhythm.timeAnchor]}
+                </span>
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2 text-xs text-white/54">
+                {home.rhythmSignals.milestones.map((item, index) => {
+                  const milestone = [3, 7, 30][index];
+                  const isActive = returnRhythm.streakCount >= milestone;
+
+                  return (
+                    <span
+                      key={item}
+                      className={`rounded-full border px-3 py-2 ${
+                        isActive ? "border-gold/30 bg-gold/10 text-gold" : "border-white/8 bg-white/[0.02]"
+                      }`}
+                    >
+                      {item}
+                    </span>
+                  );
+                })}
+              </div>
+              {returnRhythm.inactiveDays >= 2 ? (
+                <p className="mt-3 text-sm leading-7 text-gold">{home.rhythmSignals.waiting}</p>
+              ) : null}
             </div>
             <Link
               href="/welcome-member"
@@ -414,6 +505,21 @@ export default function HomePage() {
           >
             {home.founder.cta}
           </Link>
+        </div>
+      </section>
+
+      <section className="section-shell mt-24">
+        <SectionHeading
+          eyebrow={home.platformConcept.eyebrow}
+          title={home.platformConcept.title}
+          description={home.platformConcept.description}
+        />
+        <div className="mt-10 grid gap-4 lg:grid-cols-2">
+          {home.platformConcept.items.map((item) => (
+            <article key={item} className="premium-card rounded-lg p-6">
+              <p className="text-sm leading-8 text-white/72">{item}</p>
+            </article>
+          ))}
         </div>
       </section>
 
