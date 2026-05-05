@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { AuthCard } from "@/components/auth-card";
 import { SectionHeading } from "@/components/section-heading";
 import { languageButtons, useLanguage, useSiteCopy } from "@/lib/i18n";
@@ -35,6 +36,14 @@ export default function LoginPage() {
           align="center"
         />
         <AuthCard mode="login" />
+        <div className="flex justify-center">
+          <Link
+            href="/signup"
+            className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
+          >
+            {t.signupButton}
+          </Link>
+        </div>
       </div>
     </div>
   );

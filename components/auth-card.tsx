@@ -13,6 +13,7 @@ export function AuthCard({ mode }: AuthCardProps) {
   const router = useRouter();
   const copy = useSiteCopy();
   const supabase = getSupabaseBrowserClient();
+  const isAvailable = Boolean(supabase);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -44,7 +45,7 @@ export function AuthCard({ mode }: AuthCardProps) {
           throw error;
         }
 
-        setMessage("登録確認メールを送信しました。確認後にログインしてください。");
+        setMessage(copy.loginPage.signupSuccess);
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email,
@@ -55,12 +56,12 @@ export function AuthCard({ mode }: AuthCardProps) {
           throw error;
         }
 
-        router.push("/dashboard");
+        router.push("/program/basic");
       }
     } catch (_error) {
       setMessage(
         mode === "signup"
-          ? "Supabase接続または登録設定を確認してください。"
+          ? copy.loginPage.signupError
           : copy.loginPage.error
       );
     } finally {
@@ -73,18 +74,18 @@ export function AuthCard({ mode }: AuthCardProps) {
       <div className="grid gap-5">
         {mode === "signup" ? (
           <label className="grid gap-2 text-sm text-white/76">
-            <span>お名前</span>
+            <span>Name</span>
             <input
               required
               value={name}
               onChange={(event) => setName(event.target.value)}
               className="rounded-md border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition focus:border-gold/60"
-              placeholder="山田 花子"
+              placeholder="Hanako Yamada"
             />
           </label>
         ) : null}
         <label className="grid gap-2 text-sm text-white/76">
-          <span>{mode === "login" ? copy.loginPage.email : "メールアドレス"}</span>
+          <span>{copy.loginPage.email}</span>
           <input
             required
             type="email"
@@ -94,7 +95,7 @@ export function AuthCard({ mode }: AuthCardProps) {
           />
         </label>
         <label className="grid gap-2 text-sm text-white/76">
-          <span>{mode === "login" ? copy.loginPage.password : "パスワード"}</span>
+          <span>{copy.loginPage.password}</span>
           <input
             required
             type="password"
@@ -106,11 +107,12 @@ export function AuthCard({ mode }: AuthCardProps) {
       </div>
       <button
         type="submit"
-        disabled={loading}
+        disabled={loading || !isAvailable}
         className="mt-6 inline-flex w-full items-center justify-center rounded-md bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:opacity-60"
       >
-        {loading ? copy.loginPage.loading : mode === "signup" ? "アカウントを作成" : copy.loginPage.button}
+        {loading ? copy.loginPage.loading : mode === "signup" ? copy.loginPage.signupButton : copy.loginPage.button}
       </button>
+      {!isAvailable ? <p className="mt-4 text-sm text-white/72">{copy.loginPage.unavailable}</p> : null}
       {message ? <p className="mt-4 text-sm text-white/72">{message}</p> : null}
     </form>
   );
