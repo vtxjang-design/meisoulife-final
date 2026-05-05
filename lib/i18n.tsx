@@ -527,6 +527,9 @@ export const siteCopy = {
     welcomePage: {
       title: "ようこそ、瞑想lifeへ",
       subtitle: "あなたのリズムは、ここから始まります。",
+      memberProgramTitle: "メンバーリズムを始める",
+      memberProgramDescription: "決済が完了した方は、ここからBasicリズムプログラムを始められます。",
+      memberProgramButton: "Basicリズムプログラムへ進む",
       coachTitle: "AIリズムコーチ",
       coachDescription: "一人で続けるのが難しいとき、静かに戻るサポートをします",
       steps: [
@@ -1084,6 +1087,9 @@ export const siteCopy = {
     welcomePage: {
       title: "명상life에 오신 것을 환영합니다",
       subtitle: "당신의 리듬은 여기서부터 시작됩니다.",
+      memberProgramTitle: "멤버 리듬 시작하기",
+      memberProgramDescription: "결제가 완료되었다면, 여기서부터 Basic 리듬 프로그램을 시작할 수 있습니다.",
+      memberProgramButton: "Basic 리듬 프로그램으로 이동",
       coachTitle: "AI 리듬 코치",
       coachDescription: "혼자 이어가기 어려운 날에도 조용히 돌아오도록 도와줍니다",
       steps: [
@@ -1641,6 +1647,9 @@ export const siteCopy = {
     welcomePage: {
       title: "Welcome to Meisoulife",
       subtitle: "Your rhythm begins here.",
+      memberProgramTitle: "Begin the member rhythm",
+      memberProgramDescription: "If your payment is complete, you can begin the Basic rhythm program from here.",
+      memberProgramButton: "Go to the Basic rhythm program",
       coachTitle: "AI Rhythm Coach",
       coachDescription: "When it feels hard to continue alone, it quietly helps you return",
       steps: [

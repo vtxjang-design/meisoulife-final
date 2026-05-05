@@ -72,6 +72,18 @@ export default function WelcomePage() {
         <section className="premium-card rounded-[28px] p-8 text-center sm:p-12">
           <h1 className="font-serif text-4xl leading-tight text-white sm:text-5xl">{copy.title}</h1>
           <p className="mt-6 text-lg text-gold sm:text-xl">{copy.subtitle}</p>
+          <div className="mx-auto mt-8 max-w-2xl rounded-[24px] border border-gold/15 bg-gold/10 px-6 py-6">
+            <p className="text-xl font-semibold text-white">{copy.memberProgramTitle}</p>
+            <p className="mt-3 text-sm leading-7 text-white/68">{copy.memberProgramDescription}</p>
+            <div className="mt-5">
+              <Link
+                href="/program/basic"
+                className="inline-flex min-h-[52px] min-w-[220px] items-center justify-center rounded-full bg-gold px-6 py-3 text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
+              >
+                {copy.memberProgramButton}
+              </Link>
+            </div>
+          </div>
           <div className="mx-auto mt-8 max-w-2xl rounded-[24px] border border-white/10 bg-white/[0.03] px-6 py-6">
             <p className="text-xl font-semibold text-white">{copy.coachTitle}</p>
             <p className="mt-3 text-sm leading-7 text-white/68">{copy.coachDescription}</p>
