@@ -423,6 +423,10 @@ export const siteCopy = {
       guidanceBody: "ボタンを押したら、まずは1分だけ静かに呼吸へ戻りましょう。そのあとも、急がずこの日のテーマを心に残しておくだけで十分です。",
       bridgeMessage: "ここからは、一人で続けるより、支え合う環境があるとリズムが続きやすくなります。",
       bridgeButton: "メンバーとして続ける",
+      supportTitle: "続けたい方へ",
+      supportDescription: "LINEとAIリズムコーチで、毎日の小さな実践を支えます。",
+      lineButton: "LINEに参加する",
+      coachButton: "AIリズムコーチを開く",
       endTitle: "このリズムを、これからの日常へ",
       endDescription: "7日間で感じた小さな変化を、毎日の生活の中で続けていきませんか？",
       memberButton: "メンバーとして続ける",
@@ -519,12 +523,19 @@ export const siteCopy = {
       secondary: "LINEでつながる"
     },
     welcomePage: {
-      title: "ようこそ",
-      subtitle: "あなたは今、リズムを選びました",
-      description: "小さな一歩を、今日から静かに続けていきましょう",
-      primary: "今日の1分を始める",
-      secondary: "7日リズムを始める",
-      tertiary: "ホームへ戻る"
+      title: "ようこそ、瞑想lifeへ",
+      subtitle: "あなたのリズムは、ここから始まります。",
+      steps: [
+        "LINEでリズム通知を受け取る",
+        "AIリズムコーチを開く",
+        "今日の1分瞑想を始める"
+      ],
+      lineButton: "LINEに参加する",
+      coachButton: "AIリズムコーチを開く",
+      meditationButton: "今日の1分を始める",
+      challengeButton: "7日リズムを始める",
+      tertiary: "ホームへ戻る",
+      fallback: "リンクはまもなく準備されます。"
     },
     meditationPage: {
       topText: "今ここで、60秒だけ呼吸に戻りましょう",
@@ -883,6 +894,10 @@ export const siteCopy = {
       guidanceBody: "버튼을 누르면 먼저 1분만 조용히 호흡으로 돌아와 보세요. 그 다음에는 오늘의 주제를 마음속에 가볍게 두는 것만으로도 충분합니다.",
       bridgeMessage: "여기서부터는 혼자 계속하기보다, 서로 지지하는 환경이 있으면 리듬이 더 자연스럽게 이어집니다.",
       bridgeButton: "멤버로 이어가기",
+      supportTitle: "계속하고 싶은 분께",
+      supportDescription: "LINE과 AI 리듬 코치가 매일의 작은 실천을 도와줍니다.",
+      lineButton: "LINE에 참여하기",
+      coachButton: "AI 리듬 코치를 열기",
       endTitle: "이 리듬을, 이제 일상으로",
       endDescription: "7일 동안 느낀 작은 변화를 매일의 생활 속에서 계속 이어가 보세요.",
       memberButton: "멤버로 이어가기",
@@ -979,12 +994,19 @@ export const siteCopy = {
       secondary: "LINE으로 함께 이어가기"
     },
     welcomePage: {
-      title: "환영합니다",
-      subtitle: "당신은 지금, 이 리듬을 선택했습니다",
-      description: "작은 한 걸음을 오늘부터 조용히 이어가 봅시다",
-      primary: "오늘의 1분 시작하기",
-      secondary: "7일 리듬 시작하기",
-      tertiary: "홈으로 돌아가기"
+      title: "명상life에 오신 것을 환영합니다",
+      subtitle: "당신의 리듬은 여기서부터 시작됩니다.",
+      steps: [
+        "LINE으로 리듬 알림 받기",
+        "AI 리듬 코치 열기",
+        "오늘의 1분 명상 시작하기"
+      ],
+      lineButton: "LINE에 참여하기",
+      coachButton: "AI 리듬 코치를 열기",
+      meditationButton: "오늘의 1분을 시작하기",
+      challengeButton: "7일 리듬 시작하기",
+      tertiary: "홈으로 돌아가기",
+      fallback: "링크는 곧 준비됩니다."
     },
     meditationPage: {
       topText: "지금 여기서, 60초만 호흡으로 돌아와 봅시다",
@@ -1343,6 +1365,10 @@ export const siteCopy = {
       guidanceBody: "Press start and begin with one quiet minute of breathing. After that, simply carry today’s theme with you in a light and gentle way.",
       bridgeMessage: "From here, rhythm becomes easier to continue when you have a supportive space instead of carrying it alone.",
       bridgeButton: "Continue with membership",
+      supportTitle: "If you want to continue",
+      supportDescription: "LINE and the AI Rhythm Coach support your small daily practice.",
+      lineButton: "Join LINE",
+      coachButton: "Open AI Rhythm Coach",
       endTitle: "Carry this rhythm into daily life",
       endDescription: "Would you like to continue the small change you felt over these seven days in everyday life?",
       memberButton: "Continue with membership",
@@ -1439,12 +1465,19 @@ export const siteCopy = {
       secondary: "Continue on LINE"
     },
     welcomePage: {
-      title: "Welcome",
-      subtitle: "You have chosen the rhythm",
-      description: "Let this small step continue quietly from today",
-      primary: "Start your 1 minute today",
-      secondary: "Start the 7-day rhythm",
-      tertiary: "Return home"
+      title: "Welcome to Meisoulife",
+      subtitle: "Your rhythm begins here.",
+      steps: [
+        "Receive rhythm reminders on LINE",
+        "Open the AI Rhythm Coach",
+        "Start today’s 1-minute meditation"
+      ],
+      lineButton: "Join LINE",
+      coachButton: "Open AI Rhythm Coach",
+      meditationButton: "Start today’s 1 minute",
+      challengeButton: "Start the 7-day rhythm",
+      tertiary: "Return home",
+      fallback: "The link will be ready soon."
     },
     meditationPage: {
       topText: "Return to your breath for just 60 seconds",

@@ -13,6 +13,41 @@ import {
 } from "@/lib/challenge-rhythm";
 import { useSiteCopy } from "@/lib/i18n";
 
+const LINE_URL = process.env.NEXT_PUBLIC_LINE_URL || "";
+const AI_COACH_URL = process.env.NEXT_PUBLIC_AI_COACH_URL || "";
+
+function ExternalSupportButton({
+  href,
+  label,
+  fallback
+}: {
+  href: string;
+  label: string;
+  fallback: string;
+}) {
+  if (!href) {
+    return (
+      <div className="flex flex-col items-center gap-2">
+        <span className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white/60">
+          {label}
+        </span>
+        <p className="text-sm text-white/52">{fallback}</p>
+      </div>
+    );
+  }
+
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
+    >
+      {label}
+    </a>
+  );
+}
+
 function formatTemplate(template: string, values: Record<string, string | number>) {
   return Object.entries(values).reduce(
     (result, [key, value]) => result.replaceAll(`{${key}}`, String(value)),
@@ -181,6 +216,23 @@ export default function ChallengePage() {
             >
               {challenge.repeatButton}
             </Link>
+          </div>
+
+          <div className="mt-8 border-t border-white/10 pt-8">
+            <p className="text-xl font-semibold text-white">{challenge.supportTitle}</p>
+            <p className="mx-auto mt-3 max-w-2xl text-base leading-8 text-white/68">{challenge.supportDescription}</p>
+            <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+              <ExternalSupportButton
+                href={LINE_URL}
+                label={challenge.lineButton}
+                fallback={copy.welcomePage.fallback}
+              />
+              <ExternalSupportButton
+                href={AI_COACH_URL}
+                label={challenge.coachButton}
+                fallback={copy.welcomePage.fallback}
+              />
+            </div>
           </div>
         </div>
       ) : null}
