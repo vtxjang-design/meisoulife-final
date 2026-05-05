@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useSiteCopy } from "@/lib/i18n";
 
 const LINE_URL = process.env.NEXT_PUBLIC_LINE_URL || "";
@@ -36,7 +38,33 @@ function ExternalActionButton({
 }
 
 export default function WelcomePage() {
-  const copy = useSiteCopy().welcomePage;
+  const siteCopy = useSiteCopy();
+  const copy = siteCopy.welcomePage;
+  const router = useRouter();
+  const [plan, setPlan] = useState<string | null>(null);
+
+  useEffect(() => {
+    const nextPlan = new URLSearchParams(window.location.search).get("plan");
+
+    setPlan(nextPlan);
+
+    if (nextPlan === "basic" || nextPlan === "growth" || nextPlan === "inner") {
+      router.replace(`/program/${nextPlan}`);
+    }
+  }, [router]);
+
+  if (plan === "basic" || plan === "growth" || plan === "inner") {
+    return (
+      <div className="section-shell py-16 sm:py-24">
+        <div className="mx-auto max-w-3xl">
+          <section className="premium-card rounded-[28px] p-8 text-center sm:p-12">
+            <p className="text-sm uppercase tracking-[0.32em] text-gold/80">{copy.title}</p>
+            <p className="mt-6 text-lg text-white/72">{siteCopy.common.connecting}</p>
+          </section>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="section-shell py-16 sm:py-24">

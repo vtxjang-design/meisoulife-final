@@ -35,6 +35,13 @@ export async function POST(request: Request) {
     }
 
     const siteUrl = getSiteUrl();
+    const successPath =
+      payload.plan === "basic"
+        ? "/welcome?plan=basic"
+        : payload.plan === "leader"
+          ? "/welcome?plan=growth"
+          : "/welcome?plan=inner";
+
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       payment_method_types: ["card"],
@@ -44,7 +51,7 @@ export async function POST(request: Request) {
           quantity: 1
         }
       ],
-      success_url: `${siteUrl}/dashboard?checkout=success`,
+      success_url: `${siteUrl}${successPath}`,
       cancel_url: `${siteUrl}/pricing?checkout=canceled`,
       metadata: {
         plan: payload.plan

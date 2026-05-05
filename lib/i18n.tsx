@@ -541,6 +541,49 @@ export const siteCopy = {
       tertiary: "ホームへ戻る",
       fallback: "リンクはまもなく準備されます。"
     },
+    programPages: {
+      basic: {
+        eyebrow: "Basic Program",
+        title: "7日間のリズムを、ここから静かに続けます",
+        description: "毎日ひとつの実践に戻るだけで十分です。7日間の小さな積み重ねが、暮らしの中に静かな輪郭をつくります。",
+        cta: "今日のプログラムを始める",
+        days: [
+          { day: 1, title: "呼吸に戻る", description: "まずは一日の流れを止めずに、呼吸へ戻る感覚を思い出します。" },
+          { day: 2, title: "身体を感じる", description: "頭の中だけで頑張らず、身体の静けさにも意識を向けます。" },
+          { day: 3, title: "心をほどく", description: "小さな緊張に気づきながら、少しずつやわらかく手放していきます。" },
+          { day: 4, title: "間をつくる", description: "反応の前に一呼吸おける余白を、短い実践で育てていきます。" },
+          { day: 5, title: "整った感覚を守る", description: "整ったあとに急がず、その静けさを少しだけ保ってみます。" },
+          { day: 6, title: "日常へ広げる", description: "瞑想の時間だけでなく、日常の会話や行動にもリズムを広げます。" },
+          { day: 7, title: "自分のリズムとして受け取る", description: "ここまでの感覚を、これからも戻ってこられる自分のリズムとして受け取ります。" }
+        ]
+      },
+      growth: {
+        eyebrow: "Growth Program",
+        title: "少し深く続けるための、週ごとの導き",
+        description: "Growthでは、ひとりで抱え込まず、週ごとのガイダンスとコミュニティの気配の中でリズムを深めていきます。",
+        weeklyTitle: "Weekly Guidance",
+        weeklyItems: [
+          "週のはじめに、今の心と身体の状態を見つめる",
+          "週の途中に、呼吸と集中を整え直す",
+          "週の終わりに、変化を静かに振り返る"
+        ],
+        communityTitle: "Community Rhythm",
+        communityDescription: "ここでは、急かされることなく、同じ方向を向く人たちの気配の中で実践を続けられます。",
+        primary: "今日の1分へ戻る",
+        secondary: "コミュニティを見る"
+      },
+      inner: {
+        eyebrow: "Inner Circle",
+        title: "深い静けさとビジョンを支える、プレミアムな流れ",
+        description: "Innerでは、個人の回復を超えて、共生文化や地球経営の視点まで含めた実践の場へ入っていきます。",
+        sessionTitle: "Premium Sessions",
+        sessionDescription: "月ごとのプレミアムセッションで、自分の実践と人生の方向性を丁寧に見つめ直します。",
+        retreatTitle: "Retreat Access",
+        retreatDescription: "静かな場所に身を置き、日常では届きにくい深い整いを体験するためのリトリート案内を受け取れます。",
+        primary: "夜のリズムを始める",
+        secondary: "リトリートを見る"
+      }
+    },
     loginPage: {
       eyebrow: "Login",
       title: "会員ログイン",
@@ -1047,6 +1090,49 @@ export const siteCopy = {
       tertiary: "홈으로 돌아가기",
       fallback: "링크는 곧 준비됩니다."
     },
+    programPages: {
+      basic: {
+        eyebrow: "Basic Program",
+        title: "7일 리듬을 여기서 조용히 이어갑니다",
+        description: "하루에 하나의 실천으로 돌아오는 것만으로 충분합니다. 7일의 작은 반복이 일상 안에 조용한 윤곽을 만들어 줍니다.",
+        cta: "오늘의 프로그램 시작하기",
+        days: [
+          { day: 1, title: "호흡으로 돌아오기", description: "하루의 흐름을 멈추지 않으면서도, 다시 호흡으로 돌아오는 감각을 되살립니다." },
+          { day: 2, title: "몸 감각 느끼기", description: "머리로만 버티지 않고, 몸의 고요함에도 조용히 주의를 둡니다." },
+          { day: 3, title: "마음 풀어주기", description: "작은 긴장을 알아차리며 조금씩 부드럽게 놓아줍니다." },
+          { day: 4, title: "사이의 여백 만들기", description: "반응하기 전에 한 호흡 머무를 수 있는 여백을 짧은 실천으로 기릅니다." },
+          { day: 5, title: "정돈된 감각 지키기", description: "정돈된 뒤에 바로 흩어지지 않도록, 그 고요함을 조금 더 머물게 합니다." },
+          { day: 6, title: "일상으로 넓히기", description: "명상 시간에 그치지 않고, 대화와 행동 속으로 리듬을 넓혀갑니다." },
+          { day: 7, title: "내 리듬으로 받아들이기", description: "지금까지의 감각을 앞으로도 돌아올 수 있는 나만의 리듬으로 받아들입니다." }
+        ]
+      },
+      growth: {
+        eyebrow: "Growth Program",
+        title: "조금 더 깊게 이어가기 위한 주간 리듬",
+        description: "Growth에서는 혼자 버티지 않고, 주간 가이드와 커뮤니티의 기운 속에서 리듬을 더 깊게 키워갑니다.",
+        weeklyTitle: "주간 가이드",
+        weeklyItems: [
+          "주 초에 지금의 마음과 몸 상태를 바라봅니다",
+          "주 중간에 호흡과 집중을 다시 정돈합니다",
+          "주 끝에서 변화를 조용히 돌아봅니다"
+        ],
+        communityTitle: "커뮤니티 리듬",
+        communityDescription: "이곳에서는 재촉당하지 않고, 같은 방향을 바라보는 사람들의 기운 속에서 실천을 이어갈 수 있습니다.",
+        primary: "오늘의 1분으로 돌아가기",
+        secondary: "커뮤니티 보기"
+      },
+      inner: {
+        eyebrow: "Inner Circle",
+        title: "깊은 고요함과 비전을 함께 지키는 프리미엄 흐름",
+        description: "Inner에서는 개인의 회복을 넘어, 공생 문화와 지구경영의 비전까지 품는 실천의 장으로 들어갑니다.",
+        sessionTitle: "프리미엄 세션",
+        sessionDescription: "월별 프리미엄 세션을 통해 자신의 실천과 삶의 방향을 더 깊고 조용하게 살펴봅니다.",
+        retreatTitle: "리트릿 안내",
+        retreatDescription: "일상에서 닿기 어려운 깊은 정돈을 경험할 수 있도록, 조용한 리트릿 안내를 우선적으로 받게 됩니다.",
+        primary: "밤의 리듬 시작하기",
+        secondary: "리트릿 보기"
+      }
+    },
     loginPage: {
       eyebrow: "Login",
       title: "회원 로그인",
@@ -1552,6 +1638,49 @@ export const siteCopy = {
       challengeButton: "Start the 7-day rhythm",
       tertiary: "Return home",
       fallback: "The link will be ready soon."
+    },
+    programPages: {
+      basic: {
+        eyebrow: "Basic Program",
+        title: "Continue your 7-day rhythm quietly from here",
+        description: "Returning to one small practice each day is enough. Seven gentle days can give daily life a calmer outline.",
+        cta: "Start today’s program",
+        days: [
+          { day: 1, title: "Return to the breath", description: "Without stopping the flow of the day, begin by remembering how to return to your breath." },
+          { day: 2, title: "Feel the body", description: "Do not rely on the mind alone. Let the body’s quiet presence come back into awareness." },
+          { day: 3, title: "Soften the mind", description: "Notice small tension and let it loosen a little at a time." },
+          { day: 4, title: "Create a pause", description: "Use brief practice to grow a little space before reaction." },
+          { day: 5, title: "Protect the settled feeling", description: "Instead of rushing away, stay with that settled feeling for a little longer." },
+          { day: 6, title: "Bring it into daily life", description: "Let the rhythm move from meditation time into conversation, work, and ordinary moments." },
+          { day: 7, title: "Receive it as your own rhythm", description: "Let these seven days become a rhythm you know you can return to again." }
+        ]
+      },
+      growth: {
+        eyebrow: "Growth Program",
+        title: "A weekly structure for going a little deeper",
+        description: "Growth helps you deepen the rhythm with weekly guidance and the quiet support of shared practice.",
+        weeklyTitle: "Weekly Guidance",
+        weeklyItems: [
+          "Begin the week by noticing the state of mind and body",
+          "Reset breath and focus in the middle of the week",
+          "Close the week by quietly reflecting on change"
+        ],
+        communityTitle: "Community Rhythm",
+        communityDescription: "You are not rushed here. You continue inside the calm presence of others facing the same direction.",
+        primary: "Return to today’s one minute",
+        secondary: "See the community"
+      },
+      inner: {
+        eyebrow: "Inner Circle",
+        title: "A premium path for deep stillness and shared vision",
+        description: "Inner moves beyond personal recovery into a space for deeper practice, coexistence culture, and long-horizon vision.",
+        sessionTitle: "Premium Sessions",
+        sessionDescription: "Monthly premium sessions help you reflect on practice and life direction with greater depth and care.",
+        retreatTitle: "Retreat Access",
+        retreatDescription: "Receive retreat access that supports deeper restoration in quiet spaces beyond ordinary daily pace.",
+        primary: "Begin the night rhythm",
+        secondary: "See retreats"
+      }
     },
     loginPage: {
       eyebrow: "Login",
