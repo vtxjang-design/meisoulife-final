@@ -7,9 +7,11 @@ import { getStripeCheckoutUrl } from "@/lib/site";
 type CheckoutButtonProps = {
   plan: "basic" | "leader" | "premium";
   label: string;
+  className?: string;
+  messageClassName?: string;
 };
 
-export function CheckoutButton({ plan, label }: CheckoutButtonProps) {
+export function CheckoutButton({ plan, label, className, messageClassName }: CheckoutButtonProps) {
   const [loading, setLoading] = useState(false);
   const copy = useSiteCopy();
   const checkoutUrl = getStripeCheckoutUrl(plan);
@@ -32,11 +34,14 @@ export function CheckoutButton({ plan, label }: CheckoutButtonProps) {
         type="button"
         onClick={handleCheckout}
         disabled={loading || !isAvailable}
-        className="rounded-md bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
+        className={
+          className ||
+          "rounded-md bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
+        }
       >
         {loading ? copy.common.connecting : label}
       </button>
-      {!isAvailable ? <p className="text-sm text-zinc-500">{copy.common.comingSoon}</p> : null}
+      {!isAvailable ? <p className={messageClassName || "text-sm text-zinc-500"}>{copy.common.comingSoon}</p> : null}
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { CheckoutButton } from "@/components/checkout-button";
 import {
   CHALLENGE_RHYTHM_EVENT,
   getChallengeRhythmProgress,
@@ -25,7 +26,7 @@ type SectionHeadingProps = {
 };
 
 type PricingPlan = {
-  key: string;
+  planKey: "free" | "basic" | "leader" | "premium";
   name: string;
   price: string;
   description: string;
@@ -39,8 +40,6 @@ type PricingCardProps = PricingPlan;
 
 const MOOD_STORAGE_KEY = "meisoulife_selected_mood";
 const MOOD_MESSAGE_STORAGE_KEY = "meisoulife_selected_mood_message";
-const basicCheckoutUrl =
-  process.env.NEXT_PUBLIC_STRIPE_BASIC_URL || process.env.NEXT_PUBLIC_STRIPE_BASIC_CHECKOUT_URL || "";
 
 const moods: Mood[] = ["😀", "🙂", "😐", "😔", "😣"];
 
@@ -63,7 +62,11 @@ function SectionHeading({ eyebrow, title, description, align = "left" }: Section
   );
 }
 
-function PricingCard({ name, price, description, features, cta, href, featured = false }: PricingCardProps) {
+function PricingCard({ planKey, name, price, description, features, cta, href, featured = false }: PricingCardProps) {
+  const buttonClassName = `mt-auto inline-flex items-center justify-center rounded-md px-4 py-3 text-sm font-semibold transition ${
+    featured ? "bg-gold text-ink hover:bg-[#e7cd92]" : "border border-white/15 text-white hover:bg-white/10"
+  }`;
+
   return (
     <article
       className={`premium-card flex h-full flex-col gap-6 rounded-lg p-6 ${
@@ -82,14 +85,35 @@ function PricingCard({ name, price, description, features, cta, href, featured =
           </li>
         ))}
       </ul>
-      <Link
-        href={href}
-        className={`mt-auto inline-flex items-center justify-center rounded-md px-4 py-3 text-sm font-semibold transition ${
-          featured ? "bg-gold text-ink hover:bg-[#e7cd92]" : "border border-white/15 text-white hover:bg-white/10"
-        }`}
-      >
-        {cta}
-      </Link>
+      {planKey === "free" ? (
+        <Link href={href} className={buttonClassName}>
+          {cta}
+        </Link>
+      ) : null}
+      {planKey === "basic" ? (
+        <CheckoutButton
+          plan="basic"
+          label={cta}
+          className={buttonClassName}
+          messageClassName="text-sm text-white/58"
+        />
+      ) : null}
+      {planKey === "leader" ? (
+        <CheckoutButton
+          plan="leader"
+          label={cta}
+          className={buttonClassName}
+          messageClassName="text-sm text-white/58"
+        />
+      ) : null}
+      {planKey === "premium" ? (
+        <CheckoutButton
+          plan="premium"
+          label={cta}
+          className={buttonClassName}
+          messageClassName="text-sm text-white/58"
+        />
+      ) : null}
     </article>
   );
 }
@@ -115,11 +139,7 @@ export default function HomePage() {
   });
 
   const planCards: PricingPlan[] = useMemo(
-    () =>
-      home.membership.plans.map((plan) => ({
-        ...plan,
-        href: plan.href === "basic" ? basicCheckoutUrl : plan.href
-      })),
+    () => home.membership.plans.map((plan) => ({ ...plan, planKey: plan.key })),
     [home.membership.plans]
   );
 
@@ -576,9 +596,9 @@ export default function HomePage() {
         </div>
         <div className="mt-10 grid gap-6 xl:grid-cols-4">
           {planCards.map((plan) => {
-            const { key, ...planProps } = plan;
+            const { planKey, ...planProps } = plan;
 
-            return <PricingCard key={key} {...planProps} />;
+            return <PricingCard key={planKey} planKey={planKey} {...planProps} />;
           })}
         </div>
       </section>
