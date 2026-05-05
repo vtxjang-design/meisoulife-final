@@ -741,7 +741,7 @@ export const siteCopy = {
       testimonials: {
         eyebrow: "Testimonials",
         title: "계속 이어가는 사람들의 이야기",
-        description: "40~60대 사용자를 떠올리며 공감되는 톤으로 구성했습니다.",
+        description: "지금도 누군가는 이 리듬을 이어가고 있습니다.",
         items: [
           { name: "미카 님 · 49세", quote: "아침 3분만 했는데도 출근 전 호흡이 정리되고 마음의 거칠음이 줄었습니다." },
           { name: "켄이치 님 · 57세", quote: "잠들기 전 음성 가이드가 있으니 머릿속 소음이 훨씬 잦아듭니다." },
