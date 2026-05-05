@@ -544,18 +544,26 @@ export const siteCopy = {
     programPages: {
       basic: {
         eyebrow: "Basic Program",
-        title: "7日間のリズムを、ここから静かに続けます",
-        description: "毎日ひとつの実践に戻るだけで十分です。7日間の小さな積み重ねが、暮らしの中に静かな輪郭をつくります。",
-        cta: "今日のプログラムを始める",
+        title: "Basic リズムプログラム",
+        description: "7日間、毎日少しずつ自分のリズムに戻ります。",
+        dayLabel: "Day",
+        cta: "今日のリズムを始める",
+        openBadge: "Open",
+        completedBadge: "Completed",
         days: [
-          { day: 1, title: "呼吸に戻る", description: "まずは一日の流れを止めずに、呼吸へ戻る感覚を思い出します。" },
-          { day: 2, title: "身体を感じる", description: "頭の中だけで頑張らず、身体の静けさにも意識を向けます。" },
-          { day: 3, title: "心をほどく", description: "小さな緊張に気づきながら、少しずつやわらかく手放していきます。" },
-          { day: 4, title: "間をつくる", description: "反応の前に一呼吸おける余白を、短い実践で育てていきます。" },
-          { day: 5, title: "整った感覚を守る", description: "整ったあとに急がず、その静けさを少しだけ保ってみます。" },
-          { day: 6, title: "日常へ広げる", description: "瞑想の時間だけでなく、日常の会話や行動にもリズムを広げます。" },
-          { day: 7, title: "自分のリズムとして受け取る", description: "ここまでの感覚を、これからも戻ってこられる自分のリズムとして受け取ります。" }
-        ]
+          { day: 1, title: "Pause", description: "まず立ち止まり、呼吸と身体の感覚に戻ります。" },
+          { day: 2, title: "Breath", description: "呼吸を整え、心のざわつきを静かにほどきます。" },
+          { day: 3, title: "Body awareness", description: "身体の感覚を感じながら、今ここに戻ります。" },
+          { day: 4, title: "Emotional reset", description: "感情を抑え込まず、やさしく流していきます。" },
+          { day: 5, title: "Daily rhythm", description: "朝・昼・夜の小さなリズムを生活に戻します。" },
+          { day: 6, title: "Connection", description: "一人ではなく、共に続ける感覚を育てます。" },
+          { day: 7, title: "Integration", description: "7日間の変化を日常の中に静かに持ち帰ります。" }
+        ],
+        bottomTitle: "このリズムを続けるために",
+        bottomDescription: "毎日少しずつ戻ることで、心と身体は自然に整い始めます。",
+        bottomPrimary: "今日の1分に戻る",
+        bottomSecondary: "7日チャレンジを見る",
+        bottomTertiary: "ホームへ戻る"
       },
       growth: {
         eyebrow: "Growth Program",
@@ -1093,18 +1101,26 @@ export const siteCopy = {
     programPages: {
       basic: {
         eyebrow: "Basic Program",
-        title: "7일 리듬을 여기서 조용히 이어갑니다",
-        description: "하루에 하나의 실천으로 돌아오는 것만으로 충분합니다. 7일의 작은 반복이 일상 안에 조용한 윤곽을 만들어 줍니다.",
-        cta: "오늘의 프로그램 시작하기",
+        title: "Basic 리듬 프로그램",
+        description: "7일 동안, 매일 조금씩 자신의 리듬으로 돌아갑니다.",
+        dayLabel: "Day",
+        cta: "오늘의 리듬 시작하기",
+        openBadge: "열림",
+        completedBadge: "완료",
         days: [
-          { day: 1, title: "호흡으로 돌아오기", description: "하루의 흐름을 멈추지 않으면서도, 다시 호흡으로 돌아오는 감각을 되살립니다." },
-          { day: 2, title: "몸 감각 느끼기", description: "머리로만 버티지 않고, 몸의 고요함에도 조용히 주의를 둡니다." },
-          { day: 3, title: "마음 풀어주기", description: "작은 긴장을 알아차리며 조금씩 부드럽게 놓아줍니다." },
-          { day: 4, title: "사이의 여백 만들기", description: "반응하기 전에 한 호흡 머무를 수 있는 여백을 짧은 실천으로 기릅니다." },
-          { day: 5, title: "정돈된 감각 지키기", description: "정돈된 뒤에 바로 흩어지지 않도록, 그 고요함을 조금 더 머물게 합니다." },
-          { day: 6, title: "일상으로 넓히기", description: "명상 시간에 그치지 않고, 대화와 행동 속으로 리듬을 넓혀갑니다." },
-          { day: 7, title: "내 리듬으로 받아들이기", description: "지금까지의 감각을 앞으로도 돌아올 수 있는 나만의 리듬으로 받아들입니다." }
-        ]
+          { day: 1, title: "Pause", description: "먼저 멈추고, 호흡과 몸의 감각으로 돌아갑니다." },
+          { day: 2, title: "Breath", description: "호흡을 정돈하며 마음의 잔물결을 조용히 풀어줍니다." },
+          { day: 3, title: "Body awareness", description: "몸의 감각을 느끼며 지금 여기로 돌아옵니다." },
+          { day: 4, title: "Emotional reset", description: "감정을 억누르지 않고, 부드럽게 흘려보냅니다." },
+          { day: 5, title: "Daily rhythm", description: "아침·낮·밤의 작은 리듬을 생활 속으로 되돌립니다." },
+          { day: 6, title: "Connection", description: "혼자가 아니라 함께 이어가는 감각을 기릅니다." },
+          { day: 7, title: "Integration", description: "7일간의 변화를 일상 안으로 조용히 가져옵니다." }
+        ],
+        bottomTitle: "이 리듬을 계속하기 위해",
+        bottomDescription: "매일 조금씩 돌아오는 것만으로도 마음과 몸은 자연스럽게 정돈되기 시작합니다.",
+        bottomPrimary: "오늘의 1분으로 돌아가기",
+        bottomSecondary: "7일 챌린지 보기",
+        bottomTertiary: "홈으로 돌아가기"
       },
       growth: {
         eyebrow: "Growth Program",
@@ -1642,18 +1658,26 @@ export const siteCopy = {
     programPages: {
       basic: {
         eyebrow: "Basic Program",
-        title: "Continue your 7-day rhythm quietly from here",
-        description: "Returning to one small practice each day is enough. Seven gentle days can give daily life a calmer outline.",
-        cta: "Start today’s program",
+        title: "Basic Rhythm Program",
+        description: "Return to your rhythm a little each day for seven days.",
+        dayLabel: "Day",
+        cta: "Start today’s rhythm",
+        openBadge: "Open",
+        completedBadge: "Completed",
         days: [
-          { day: 1, title: "Return to the breath", description: "Without stopping the flow of the day, begin by remembering how to return to your breath." },
-          { day: 2, title: "Feel the body", description: "Do not rely on the mind alone. Let the body’s quiet presence come back into awareness." },
-          { day: 3, title: "Soften the mind", description: "Notice small tension and let it loosen a little at a time." },
-          { day: 4, title: "Create a pause", description: "Use brief practice to grow a little space before reaction." },
-          { day: 5, title: "Protect the settled feeling", description: "Instead of rushing away, stay with that settled feeling for a little longer." },
-          { day: 6, title: "Bring it into daily life", description: "Let the rhythm move from meditation time into conversation, work, and ordinary moments." },
-          { day: 7, title: "Receive it as your own rhythm", description: "Let these seven days become a rhythm you know you can return to again." }
-        ]
+          { day: 1, title: "Pause", description: "First pause and return to the breath and the feeling of the body." },
+          { day: 2, title: "Breath", description: "Settle the breath and gently soften the noise of the mind." },
+          { day: 3, title: "Body awareness", description: "Feel the body and return to the present moment." },
+          { day: 4, title: "Emotional reset", description: "Do not suppress emotion. Let it move through gently." },
+          { day: 5, title: "Daily rhythm", description: "Bring a small morning, daytime, and night rhythm back into daily life." },
+          { day: 6, title: "Connection", description: "Grow the feeling of continuing together, not alone." },
+          { day: 7, title: "Integration", description: "Carry the quiet change of these seven days back into ordinary life." }
+        ],
+        bottomTitle: "To keep this rhythm going",
+        bottomDescription: "When you return a little each day, mind and body begin to settle on their own.",
+        bottomPrimary: "Return to today’s one minute",
+        bottomSecondary: "See the 7-day challenge",
+        bottomTertiary: "Return home"
       },
       growth: {
         eyebrow: "Growth Program",
