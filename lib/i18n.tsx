@@ -518,6 +518,14 @@ export const siteCopy = {
       primary: "今すぐ1分を始める",
       secondary: "LINEでつながる"
     },
+    welcomePage: {
+      title: "ようこそ",
+      subtitle: "あなたは今、リズムを選びました",
+      description: "小さな一歩を、今日から静かに続けていきましょう",
+      primary: "今日の1分を始める",
+      secondary: "7日リズムを始める",
+      tertiary: "ホームへ戻る"
+    },
     meditationPage: {
       topText: "今ここで、60秒だけ呼吸に戻りましょう",
       intro: "何かを変えようとしなくて大丈夫です。ただ静かに、呼吸のリズムに戻ります。",
@@ -970,6 +978,14 @@ export const siteCopy = {
       primary: "지금 1분 시작하기",
       secondary: "LINE으로 함께 이어가기"
     },
+    welcomePage: {
+      title: "환영합니다",
+      subtitle: "당신은 지금, 이 리듬을 선택했습니다",
+      description: "작은 한 걸음을 오늘부터 조용히 이어가 봅시다",
+      primary: "오늘의 1분 시작하기",
+      secondary: "7일 리듬 시작하기",
+      tertiary: "홈으로 돌아가기"
+    },
     meditationPage: {
       topText: "지금 여기서, 60초만 호흡으로 돌아와 봅시다",
       intro: "무언가를 바꾸려 하지 않아도 됩니다. 조용히, 호흡의 리듬으로 돌아오기만 하면 됩니다.",
@@ -1421,6 +1437,14 @@ export const siteCopy = {
       body: "You did not buy something. You simply returned to a place that helps you come back to yourself.",
       primary: "Start your 1 minute now",
       secondary: "Continue on LINE"
+    },
+    welcomePage: {
+      title: "Welcome",
+      subtitle: "You have chosen the rhythm",
+      description: "Let this small step continue quietly from today",
+      primary: "Start your 1 minute today",
+      secondary: "Start the 7-day rhythm",
+      tertiary: "Return home"
     },
     meditationPage: {
       topText: "Return to your breath for just 60 seconds",
