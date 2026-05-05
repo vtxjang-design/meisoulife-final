@@ -276,7 +276,13 @@ export default function HomePage() {
               <h2 className="mt-3 text-2xl font-semibold text-white">{card.title}</h2>
               <p className="mt-4 text-sm leading-7 text-white/72">{card.description}</p>
               <Link
-                href="/welcome-member"
+                href={
+                  card.key === "morning"
+                    ? "/meditation?duration=180&type=morning"
+                    : card.key === "night"
+                      ? "/meditation?duration=180&type=night"
+                      : "/meditation?duration=60&type=day"
+                }
                 className="mt-6 inline-flex min-h-[50px] items-center justify-center rounded-full border border-gold/35 bg-gold/10 px-5 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/15"
               >
                 {card.button}

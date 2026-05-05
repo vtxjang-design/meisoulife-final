@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useSiteCopy } from "@/lib/i18n";
 
-const TOTAL_SECONDS = 60;
 const CYCLE_SECONDS = 10;
 const INHALE_SECONDS = 4;
 const HOLD_SECONDS = 2;
@@ -13,6 +12,32 @@ const AI_COACH_URL =
   "https://chatgpt.com/g/g-69f968bc9a408191a3e5f943912666c0-quiet-rhythm-guide";
 
 type BreathPhase = "inhale" | "hold" | "exhale";
+type MeditationType = "default" | "morning" | "day" | "night";
+
+function normalizeDuration(value: string | null) {
+  const parsed = Number(value);
+
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    return 60;
+  }
+
+  return parsed;
+}
+
+function normalizeMeditationType(value: string | null): MeditationType {
+  if (value === "morning" || value === "day" || value === "night") {
+    return value;
+  }
+
+  return "default";
+}
+
+function formatRemainingTime(seconds: number) {
+  const minutes = Math.floor(seconds / 60);
+  const remainder = seconds % 60;
+
+  return `${minutes}:${String(remainder).padStart(2, "0")}`;
+}
 
 function getBreathPhase(elapsedSeconds: number): BreathPhase {
   const cyclePosition = elapsedSeconds % CYCLE_SECONDS;
@@ -30,18 +55,18 @@ function getBreathPhase(elapsedSeconds: number): BreathPhase {
 
 export default function MeditationPage() {
   const copy = useSiteCopy().meditationPage;
-  const [secondsLeft, setSecondsLeft] = useState(TOTAL_SECONDS);
-  const [returnTo, setReturnTo] = useState("/challenge");
+  const [totalSeconds, setTotalSeconds] = useState(60);
+  const [secondsLeft, setSecondsLeft] = useState(60);
+  const [meditationType, setMeditationType] = useState<MeditationType>("default");
 
   useEffect(() => {
-    setSecondsLeft(TOTAL_SECONDS);
-
     const searchParams = new URLSearchParams(window.location.search);
-    const nextPath = searchParams.get("returnTo");
+    const nextDuration = normalizeDuration(searchParams.get("duration"));
+    const nextType = normalizeMeditationType(searchParams.get("type"));
 
-    if (nextPath) {
-      setReturnTo(nextPath);
-    }
+    setTotalSeconds(nextDuration);
+    setSecondsLeft(nextDuration);
+    setMeditationType(nextType);
   }, []);
 
   useEffect(() => {
@@ -58,9 +83,10 @@ export default function MeditationPage() {
     };
   }, [secondsLeft]);
 
-  const elapsedSeconds = TOTAL_SECONDS - secondsLeft;
-  const phase = useMemo(() => getBreathPhase(elapsedSeconds), [elapsedSeconds]);
+  const elapsedTotalSeconds = totalSeconds - secondsLeft;
+  const phase = useMemo(() => getBreathPhase(elapsedTotalSeconds), [elapsedTotalSeconds]);
   const isComplete = secondsLeft <= 0;
+  const content = copy.variants[meditationType];
 
   const circleScaleClass =
     phase === "inhale" ? "scale-110" : phase === "hold" ? "scale-110" : "scale-90";
@@ -71,8 +97,8 @@ export default function MeditationPage() {
         {!isComplete ? (
           <>
             <div className="space-y-4">
-              <p className="text-sm uppercase tracking-[0.32em] text-gold/80">{copy.topText}</p>
-              <p className="mx-auto max-w-2xl text-sm leading-7 text-white/60 sm:text-base">{copy.intro}</p>
+              <p className="text-sm uppercase tracking-[0.32em] text-gold/80">{content.topText}</p>
+              <p className="mx-auto max-w-2xl text-sm leading-7 text-white/60 sm:text-base">{content.intro}</p>
             </div>
 
             <div className="mt-12 flex min-h-[320px] w-full flex-col items-center justify-center">
@@ -89,7 +115,7 @@ export default function MeditationPage() {
                   className={`absolute inset-0 rounded-full border border-white/10 bg-white/[0.03] transition-transform duration-[4000] ease-in-out ${circleScaleClass}`}
                 />
                 <div className="relative z-10 text-center">
-                  <p className="text-5xl font-serif text-white/88 sm:text-6xl">{secondsLeft}</p>
+                  <p className="text-5xl font-serif text-white/88 sm:text-6xl">{formatRemainingTime(secondsLeft)}</p>
                 </div>
               </div>
             </div>
@@ -100,7 +126,7 @@ export default function MeditationPage() {
           </>
         ) : (
           <div className="animate-fade-in space-y-8">
-            <h1 className="font-serif text-4xl text-white sm:text-5xl">{copy.completionTitle}</h1>
+            <h1 className="font-serif text-4xl text-white sm:text-5xl">{content.completionTitle}</h1>
             <p className="mx-auto max-w-2xl text-base leading-8 text-white/68">{copy.completionBody}</p>
             <div className="flex flex-col items-center gap-3">
               <Link

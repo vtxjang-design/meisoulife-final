@@ -542,8 +542,28 @@ export const siteCopy = {
       fallback: "リンクはまもなく準備されます。"
     },
     meditationPage: {
-      topText: "今ここで、60秒だけ呼吸に戻りましょう",
-      intro: "何かを変えようとしなくて大丈夫です。ただ静かに、呼吸のリズムに戻ります。",
+      variants: {
+        default: {
+          topText: "今ここで、60秒だけ呼吸に戻りましょう",
+          intro: "何かを変えようとしなくて大丈夫です。ただ静かに、呼吸のリズムに戻ります。",
+          completionTitle: "60秒、今ここに戻りました。"
+        },
+        morning: {
+          topText: "朝の3分で、今日の輪郭を静かに整えましょう",
+          intro: "起きたばかりの心と身体をやさしく目覚めさせながら、今日の始まりを落ち着いて迎えます。",
+          completionTitle: "朝のリズムが整いました。今日を静かに始めましょう。"
+        },
+        day: {
+          topText: "今ここで、60秒だけ呼吸に戻りましょう",
+          intro: "忙しさの流れを一度ほどいて、自分の中心に短く戻る時間です。",
+          completionTitle: "60秒、今ここに戻りました。"
+        },
+        night: {
+          topText: "夜の3分で、今日を静かに手放しましょう",
+          intro: "一日の緊張を少しずつ緩めながら、眠りの前に心と身体をやわらかく閉じていきます。",
+          completionTitle: "夜のリズムが整いました。今日を静かに手放しましょう。"
+        }
+      },
       phases: {
         inhale: "吸って",
         hold: "止めて",
@@ -554,7 +574,6 @@ export const siteCopy = {
         hold: "止めて… 2秒",
         exhale: "吐いて… 4秒"
       },
-      completionTitle: "60秒、今ここに戻りました。",
       completionBody: "この静かなリズムを、7日間だけ続けてみませんか？",
       completionPrimary: "7日リズムを始める",
       completionSecondary: "今日はここまで",
@@ -1019,8 +1038,28 @@ export const siteCopy = {
       fallback: "링크는 곧 준비됩니다."
     },
     meditationPage: {
-      topText: "지금 여기서, 60초만 호흡으로 돌아와 봅시다",
-      intro: "무언가를 바꾸려 하지 않아도 됩니다. 조용히, 호흡의 리듬으로 돌아오기만 하면 됩니다.",
+      variants: {
+        default: {
+          topText: "지금 여기서, 60초만 호흡으로 돌아와 봅시다",
+          intro: "무언가를 바꾸려 하지 않아도 됩니다. 조용히, 호흡의 리듬으로 돌아오기만 하면 됩니다.",
+          completionTitle: "60초 동안, 지금 여기로 돌아왔습니다."
+        },
+        morning: {
+          topText: "아침 3분으로, 오늘의 결을 조용히 정돈해봅시다",
+          intro: "막 깨어난 몸과 마음을 부드럽게 깨우며 오늘의 시작을 차분하게 맞이합니다.",
+          completionTitle: "아침의 리듬이 정돈되었습니다. 오늘을 조용히 시작해봅시다."
+        },
+        day: {
+          topText: "지금 여기서, 60초만 호흡으로 돌아와 봅시다",
+          intro: "바쁨의 흐름을 잠시 풀고, 자신의 중심으로 짧게 돌아오는 시간입니다.",
+          completionTitle: "60초 동안, 지금 여기로 돌아왔습니다."
+        },
+        night: {
+          topText: "밤의 3분으로, 오늘을 조용히 놓아줍시다",
+          intro: "하루의 긴장을 조금씩 풀며 잠들기 전 마음과 몸을 부드럽게 닫아갑니다.",
+          completionTitle: "밤의 리듬이 정돈되었습니다. 오늘을 조용히 놓아줍시다."
+        }
+      },
       phases: {
         inhale: "들이쉬기",
         hold: "멈추기",
@@ -1031,7 +1070,6 @@ export const siteCopy = {
         hold: "멈추기… 2초",
         exhale: "내쉬기… 4초"
       },
-      completionTitle: "60초 동안, 지금 여기로 돌아왔습니다.",
       completionBody: "이 조용한 리듬을 7일만 더 이어가 보시겠어요?",
       completionPrimary: "7일 리듬 시작하기",
       completionSecondary: "오늘은 여기까지",
@@ -1496,8 +1534,28 @@ export const siteCopy = {
       fallback: "The link will be ready soon."
     },
     meditationPage: {
-      topText: "Return to your breath for just 60 seconds",
-      intro: "There is nothing to force. Just settle into one calm breathing rhythm.",
+      variants: {
+        default: {
+          topText: "Return to your breath for just 60 seconds",
+          intro: "There is nothing to force. Just settle into one calm breathing rhythm.",
+          completionTitle: "For 60 seconds, you returned to the present."
+        },
+        morning: {
+          topText: "Use these 3 minutes to settle into the morning",
+          intro: "Gently wake the body and mind, and let the day begin from a quieter place.",
+          completionTitle: "The morning rhythm is settled. Begin the day quietly."
+        },
+        day: {
+          topText: "Return to your breath for just 60 seconds",
+          intro: "Step out of the rush for a moment and return to your own center.",
+          completionTitle: "For 60 seconds, you returned to the present."
+        },
+        night: {
+          topText: "Use these 3 minutes to release the day",
+          intro: "Let the tension of the day soften so mind and body can close gently before sleep.",
+          completionTitle: "The night rhythm is settled. Let the day go quietly."
+        }
+      },
       phases: {
         inhale: "Inhale",
         hold: "Hold",
@@ -1508,7 +1566,6 @@ export const siteCopy = {
         hold: "Hold... 2s",
         exhale: "Exhale... 4s"
       },
-      completionTitle: "For 60 seconds, you returned to the present.",
       completionBody: "Would you like to continue this quiet rhythm for just seven days?",
       completionPrimary: "Start the 7-day rhythm",
       completionSecondary: "That’s enough for today",
