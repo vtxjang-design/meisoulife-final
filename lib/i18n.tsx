@@ -423,6 +423,8 @@ export const siteCopy = {
       guidanceBody: "ボタンを押したら、まずは1分だけ静かに呼吸へ戻りましょう。そのあとも、急がずこの日のテーマを心に残しておくだけで十分です。",
       bridgeMessage: "ここからは、一人で続けるより、支え合う環境があるとリズムが続きやすくなります。",
       bridgeButton: "メンバーとして続ける",
+      coachBridgeMessage: "ここからは、一人で続けるより、サポートがあるとリズムが続きやすくなります",
+      coachBridgeButton: "AIコーチと一緒に続ける",
       supportTitle: "続けたい方へ",
       supportDescription: "LINEとAIリズムコーチで、毎日の小さな実践を支えます。",
       lineButton: "LINEに参加する",
@@ -525,6 +527,8 @@ export const siteCopy = {
     welcomePage: {
       title: "ようこそ、瞑想lifeへ",
       subtitle: "あなたのリズムは、ここから始まります。",
+      coachTitle: "AIリズムコーチ",
+      coachDescription: "一人で続けるのが難しいとき、静かに戻るサポートをします",
       steps: [
         "LINEでリズム通知を受け取る",
         "AIリズムコーチを開く",
@@ -553,7 +557,9 @@ export const siteCopy = {
       completionTitle: "60秒、今ここに戻りました。",
       completionBody: "この静かなリズムを、7日間だけ続けてみませんか？",
       completionPrimary: "7日リズムを始める",
-      completionSecondary: "今日はここまで"
+      completionSecondary: "今日はここまで",
+      coachPrompt: "この静かな状態を、少しだけ続けてみませんか？",
+      coachButton: "AIコーチを開く"
     },
     common: {
       connecting: "接続中...",
@@ -894,6 +900,8 @@ export const siteCopy = {
       guidanceBody: "버튼을 누르면 먼저 1분만 조용히 호흡으로 돌아와 보세요. 그 다음에는 오늘의 주제를 마음속에 가볍게 두는 것만으로도 충분합니다.",
       bridgeMessage: "여기서부터는 혼자 계속하기보다, 서로 지지하는 환경이 있으면 리듬이 더 자연스럽게 이어집니다.",
       bridgeButton: "멤버로 이어가기",
+      coachBridgeMessage: "여기서부터는 혼자 계속하기보다, 도와주는 흐름이 있으면 리듬이 더 자연스럽게 이어집니다.",
+      coachBridgeButton: "AI 코치와 함께 이어가기",
       supportTitle: "계속하고 싶은 분께",
       supportDescription: "LINE과 AI 리듬 코치가 매일의 작은 실천을 도와줍니다.",
       lineButton: "LINE에 참여하기",
@@ -996,6 +1004,8 @@ export const siteCopy = {
     welcomePage: {
       title: "명상life에 오신 것을 환영합니다",
       subtitle: "당신의 리듬은 여기서부터 시작됩니다.",
+      coachTitle: "AI 리듬 코치",
+      coachDescription: "혼자 이어가기 어려운 날에도 조용히 돌아오도록 도와줍니다",
       steps: [
         "LINE으로 리듬 알림 받기",
         "AI 리듬 코치 열기",
@@ -1024,7 +1034,9 @@ export const siteCopy = {
       completionTitle: "60초 동안, 지금 여기로 돌아왔습니다.",
       completionBody: "이 조용한 리듬을 7일만 더 이어가 보시겠어요?",
       completionPrimary: "7일 리듬 시작하기",
-      completionSecondary: "오늘은 여기까지"
+      completionSecondary: "오늘은 여기까지",
+      coachPrompt: "이 조용한 상태를 조금만 더 이어가 볼까요?",
+      coachButton: "AI 코치를 열기"
     },
     common: {
       connecting: "연결 중...",
@@ -1365,6 +1377,8 @@ export const siteCopy = {
       guidanceBody: "Press start and begin with one quiet minute of breathing. After that, simply carry today’s theme with you in a light and gentle way.",
       bridgeMessage: "From here, rhythm becomes easier to continue when you have a supportive space instead of carrying it alone.",
       bridgeButton: "Continue with membership",
+      coachBridgeMessage: "From here, rhythm becomes easier to continue when support is present beside you.",
+      coachBridgeButton: "Continue with the AI coach",
       supportTitle: "If you want to continue",
       supportDescription: "LINE and the AI Rhythm Coach support your small daily practice.",
       lineButton: "Join LINE",
@@ -1467,6 +1481,8 @@ export const siteCopy = {
     welcomePage: {
       title: "Welcome to Meisoulife",
       subtitle: "Your rhythm begins here.",
+      coachTitle: "AI Rhythm Coach",
+      coachDescription: "When it feels hard to continue alone, it quietly helps you return",
       steps: [
         "Receive rhythm reminders on LINE",
         "Open the AI Rhythm Coach",
@@ -1495,7 +1511,9 @@ export const siteCopy = {
       completionTitle: "For 60 seconds, you returned to the present.",
       completionBody: "Would you like to continue this quiet rhythm for just seven days?",
       completionPrimary: "Start the 7-day rhythm",
-      completionSecondary: "That’s enough for today"
+      completionSecondary: "That’s enough for today",
+      coachPrompt: "Would you like to stay with this quiet state a little longer?",
+      coachButton: "Open the AI coach"
     },
     common: {
       connecting: "Connecting...",

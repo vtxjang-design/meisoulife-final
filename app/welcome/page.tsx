@@ -4,7 +4,9 @@ import Link from "next/link";
 import { useSiteCopy } from "@/lib/i18n";
 
 const LINE_URL = process.env.NEXT_PUBLIC_LINE_URL || "";
-const AI_COACH_URL = process.env.NEXT_PUBLIC_AI_COACH_URL || "";
+const AI_COACH_URL =
+  process.env.NEXT_PUBLIC_AI_COACH_URL ||
+  "https://chatgpt.com/g/g-69f968bc9a408191a3e5f943912666c0-quiet-rhythm-guide";
 
 function ExternalActionButton({
   href,
@@ -42,6 +44,18 @@ export default function WelcomePage() {
         <section className="premium-card rounded-[28px] p-8 text-center sm:p-12">
           <h1 className="font-serif text-4xl leading-tight text-white sm:text-5xl">{copy.title}</h1>
           <p className="mt-6 text-lg text-gold sm:text-xl">{copy.subtitle}</p>
+          <div className="mx-auto mt-8 max-w-2xl rounded-[24px] border border-white/10 bg-white/[0.03] px-6 py-6">
+            <p className="text-xl font-semibold text-white">{copy.coachTitle}</p>
+            <p className="mt-3 text-sm leading-7 text-white/68">{copy.coachDescription}</p>
+            <div className="mt-5">
+              <ExternalActionButton
+                href={AI_COACH_URL}
+                label={copy.coachButton}
+                fallback={copy.fallback}
+                className="inline-flex min-h-[52px] min-w-[220px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
+              />
+            </div>
+          </div>
           <div className="mx-auto mt-8 max-w-2xl space-y-3">
             {copy.steps.map((step, index) => (
               <p key={step} className="text-base leading-8 text-white/72 sm:text-lg">

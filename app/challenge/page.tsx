@@ -14,7 +14,9 @@ import {
 import { useSiteCopy } from "@/lib/i18n";
 
 const LINE_URL = process.env.NEXT_PUBLIC_LINE_URL || "";
-const AI_COACH_URL = process.env.NEXT_PUBLIC_AI_COACH_URL || "";
+const AI_COACH_URL =
+  process.env.NEXT_PUBLIC_AI_COACH_URL ||
+  "https://chatgpt.com/g/g-69f968bc9a408191a3e5f943912666c0-quiet-rhythm-guide";
 
 function ExternalSupportButton({
   href,
@@ -195,6 +197,16 @@ export default function ChallengePage() {
             >
               {challenge.bridgeButton}
             </Link>
+          </div>
+          <div className="mt-6 border-t border-white/10 pt-6">
+            <p className="mx-auto max-w-3xl text-base leading-8 text-white/68">{challenge.coachBridgeMessage}</p>
+            <div className="mt-5 flex justify-center">
+              <ExternalSupportButton
+                href={AI_COACH_URL}
+                label={challenge.coachBridgeButton}
+                fallback={copy.welcomePage.fallback}
+              />
+            </div>
           </div>
         </div>
       ) : null}

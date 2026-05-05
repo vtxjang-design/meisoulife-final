@@ -8,6 +8,9 @@ const TOTAL_SECONDS = 60;
 const CYCLE_SECONDS = 10;
 const INHALE_SECONDS = 4;
 const HOLD_SECONDS = 2;
+const AI_COACH_URL =
+  process.env.NEXT_PUBLIC_AI_COACH_URL ||
+  "https://chatgpt.com/g/g-69f968bc9a408191a3e5f943912666c0-quiet-rhythm-guide";
 
 type BreathPhase = "inhale" | "hold" | "exhale";
 
@@ -112,6 +115,19 @@ export default function MeditationPage() {
               >
                 {copy.completionSecondary}
               </Link>
+            </div>
+            <div className="mx-auto max-w-2xl border-t border-white/10 pt-8">
+              <p className="text-base leading-8 text-white/68">{copy.coachPrompt}</p>
+              <div className="mt-5">
+                <a
+                  href={AI_COACH_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-[52px] min-w-[220px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
+                >
+                  {copy.coachButton}
+                </a>
+              </div>
             </div>
           </div>
         )}
