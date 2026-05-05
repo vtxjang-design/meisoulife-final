@@ -573,18 +573,27 @@ export const siteCopy = {
       },
       growth: {
         eyebrow: "Growth Program",
-        title: "少し深く続けるための、週ごとの導き",
-        description: "Growthでは、ひとりで抱え込まず、週ごとのガイダンスとコミュニティの気配の中でリズムを深めていきます。",
-        weeklyTitle: "Weekly Guidance",
-        weeklyItems: [
-          "週のはじめに、今の心と身体の状態を見つめる",
-          "週の途中に、呼吸と集中を整え直す",
-          "週の終わりに、変化を静かに振り返る"
+        title: "Growth リズムプログラム",
+        description: "一人で頑張るのではなく、共に続けることでリズムを深めていきます。",
+        intro: "Growthは、毎日の小さな実践を続けながら、週ごとのテーマと仲間とのつながりを通して、安定した生活リズムを育てるプログラムです。",
+        weekLabel: "Week",
+        goalLabel: "Description",
+        practiceLabel: "Practice",
+        weeks: [
+          { week: 1, title: "整える", goal: "朝・昼・夜の基本リズムを安定させます。", practice: "毎日3分 + 週1回の振り返り", button: "Week 1を始める" },
+          { week: 2, title: "続ける", goal: "続かない原因を責めず、戻る仕組みをつくります。", practice: "1日1回のリズム記録", button: "Week 2を始める" },
+          { week: 3, title: "つながる", goal: "仲間と共に続ける感覚を育てます。", practice: "LINEコミュニティ参加 + 共有", button: "Week 3を始める" },
+          { week: 4, title: "育てる", goal: "生活の中で自然に戻れるリズムを育てます。", practice: "週次レビュー + 次の目標設定", button: "Week 4を始める" }
         ],
-        communityTitle: "Community Rhythm",
-        communityDescription: "ここでは、急かされることなく、同じ方向を向く人たちの気配の中で実践を続けられます。",
-        primary: "今日の1分へ戻る",
-        secondary: "コミュニティを見る"
+        communityTitle: "共に続ける場",
+        communityDescription: "Growthでは、一人で完璧に続けることよりも、戻れる場を持つことを大切にします。",
+        lineButton: "LINEコミュニティへ",
+        coachButton: "AIリズムコーチを開く",
+        meditationButton: "今日の1分に戻る",
+        fallback: "リンクはまもなく準備されます。",
+        bottomTitle: "さらに深めたい方へ",
+        bottomDescription: "リズムを生活だけでなく、人生と共生文化の実践へ深めたい方はInner Circleへ進めます。",
+        bottomButton: "Inner Circleを見る"
       },
       inner: {
         eyebrow: "Inner Circle",
@@ -1136,18 +1145,27 @@ export const siteCopy = {
       },
       growth: {
         eyebrow: "Growth Program",
-        title: "조금 더 깊게 이어가기 위한 주간 리듬",
-        description: "Growth에서는 혼자 버티지 않고, 주간 가이드와 커뮤니티의 기운 속에서 리듬을 더 깊게 키워갑니다.",
-        weeklyTitle: "주간 가이드",
-        weeklyItems: [
-          "주 초에 지금의 마음과 몸 상태를 바라봅니다",
-          "주 중간에 호흡과 집중을 다시 정돈합니다",
-          "주 끝에서 변화를 조용히 돌아봅니다"
+        title: "Growth 리듬 프로그램",
+        description: "혼자 애쓰는 것이 아니라, 함께 이어가며 리듬을 더 깊게 키워갑니다.",
+        intro: "Growth는 매일의 작은 실천을 이어가면서, 주간 테마와 동료와의 연결을 통해 더 안정적인 생활 리듬을 기르는 프로그램입니다.",
+        weekLabel: "Week",
+        goalLabel: "Description",
+        practiceLabel: "Practice",
+        weeks: [
+          { week: 1, title: "정돈하기", goal: "아침·낮·밤의 기본 리듬을 안정시킵니다.", practice: "매일 3분 + 주 1회 돌아보기", button: "Week 1 시작하기" },
+          { week: 2, title: "이어가기", goal: "계속되지 않는 이유를 탓하지 않고, 다시 돌아오는 구조를 만듭니다.", practice: "하루 1회 리듬 기록", button: "Week 2 시작하기" },
+          { week: 3, title: "연결되기", goal: "동료와 함께 이어가는 감각을 기릅니다.", practice: "LINE 커뮤니티 참여 + 공유", button: "Week 3 시작하기" },
+          { week: 4, title: "기르기", goal: "생활 속에서 자연스럽게 돌아올 수 있는 리듬을 기릅니다.", practice: "주간 리뷰 + 다음 목표 설정", button: "Week 4 시작하기" }
         ],
-        communityTitle: "커뮤니티 리듬",
-        communityDescription: "이곳에서는 재촉당하지 않고, 같은 방향을 바라보는 사람들의 기운 속에서 실천을 이어갈 수 있습니다.",
-        primary: "오늘의 1분으로 돌아가기",
-        secondary: "커뮤니티 보기"
+        communityTitle: "함께 이어가는 자리",
+        communityDescription: "Growth에서는 혼자 완벽하게 해내는 것보다, 다시 돌아올 수 있는 자리를 가지는 것을 더 소중히 여깁니다.",
+        lineButton: "LINE 커뮤니티로",
+        coachButton: "AI 리듬 코치 열기",
+        meditationButton: "오늘의 1분으로 돌아가기",
+        fallback: "링크는 곧 준비됩니다.",
+        bottomTitle: "더 깊게 가고 싶다면",
+        bottomDescription: "리듬을 생활을 넘어 삶과 공생 문화의 실천으로 더 깊게 키우고 싶다면 Inner Circle로 나아갈 수 있습니다.",
+        bottomButton: "Inner Circle 보기"
       },
       inner: {
         eyebrow: "Inner Circle",
@@ -1699,18 +1717,27 @@ export const siteCopy = {
       },
       growth: {
         eyebrow: "Growth Program",
-        title: "A weekly structure for going a little deeper",
-        description: "Growth helps you deepen the rhythm with weekly guidance and the quiet support of shared practice.",
-        weeklyTitle: "Weekly Guidance",
-        weeklyItems: [
-          "Begin the week by noticing the state of mind and body",
-          "Reset breath and focus in the middle of the week",
-          "Close the week by quietly reflecting on change"
+        title: "Growth Rhythm Program",
+        description: "Go deeper into rhythm by continuing together, not by forcing it alone.",
+        intro: "Growth is a weekly rhythm program for building a steadier daily life through small daily practice, shared themes, and a sense of community support.",
+        weekLabel: "Week",
+        goalLabel: "Description",
+        practiceLabel: "Practice",
+        weeks: [
+          { week: 1, title: "Stabilize", goal: "Settle the basic rhythm of morning, daytime, and night.", practice: "3 minutes each day + one weekly reflection", button: "Start Week 1" },
+          { week: 2, title: "Continue", goal: "Stop blaming what interrupts you and build a way to return.", practice: "One rhythm note each day", button: "Start Week 2" },
+          { week: 3, title: "Connect", goal: "Grow the feeling of continuing together with others.", practice: "Join and share in the LINE community", button: "Start Week 3" },
+          { week: 4, title: "Cultivate", goal: "Grow a rhythm that lets you return naturally in ordinary life.", practice: "Weekly review + set the next intention", button: "Start Week 4" }
         ],
-        communityTitle: "Community Rhythm",
-        communityDescription: "You are not rushed here. You continue inside the calm presence of others facing the same direction.",
-        primary: "Return to today’s one minute",
-        secondary: "See the community"
+        communityTitle: "A place to continue together",
+        communityDescription: "In Growth, what matters is not continuing perfectly alone, but having a place you can return to.",
+        lineButton: "Go to the LINE community",
+        coachButton: "Open the AI rhythm coach",
+        meditationButton: "Return to today’s one minute",
+        fallback: "The link will be ready soon.",
+        bottomTitle: "For those who want to go deeper",
+        bottomDescription: "If you want to deepen this rhythm beyond daily life into life vision and coexistence culture, you can move into Inner Circle.",
+        bottomButton: "See Inner Circle"
       },
       inner: {
         eyebrow: "Inner Circle",
