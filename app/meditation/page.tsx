@@ -98,15 +98,16 @@ export default function MeditationPage() {
         ) : (
           <div className="animate-fade-in space-y-8">
             <h1 className="font-serif text-4xl text-white sm:text-5xl">{copy.completionTitle}</h1>
+            <p className="mx-auto max-w-2xl text-base leading-8 text-white/68">{copy.completionBody}</p>
             <div className="flex flex-col items-center gap-3">
               <Link
-                href={returnTo}
+                href="/challenge"
                 className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
               >
                 {copy.completionPrimary}
               </Link>
               <Link
-                href="/welcome-member"
+                href="/"
                 className="inline-flex min-h-[52px] min-w-[240px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
               >
                 {copy.completionSecondary}

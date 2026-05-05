@@ -150,6 +150,20 @@ export default function ChallengePage() {
         </div>
       </div>
 
+      {completedCount >= 3 && !isComplete ? (
+        <div className="mt-8 rounded-[24px] border border-white/10 bg-white/[0.025] p-6 text-center sm:p-7">
+          <p className="mx-auto max-w-3xl text-base leading-8 text-white/72">{challenge.bridgeMessage}</p>
+          <div className="mt-5">
+            <Link
+              href="/pricing"
+              className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-gold/35 bg-gold/10 px-5 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/15"
+            >
+              {challenge.bridgeButton}
+            </Link>
+          </div>
+        </div>
+      ) : null}
+
       {isComplete ? (
         <div className="mt-10 rounded-[28px] border border-gold/20 bg-gold/10 p-6 text-center sm:p-8">
           <p className="text-2xl font-semibold text-white sm:text-3xl">{challenge.endTitle}</p>
@@ -161,13 +175,12 @@ export default function ChallengePage() {
             >
               {challenge.memberButton}
             </Link>
-            <button
-              type="button"
-              onClick={resetRhythm}
+            <Link
+              href="/"
               className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/10"
             >
               {challenge.repeatButton}
-            </button>
+            </Link>
           </div>
         </div>
       ) : null}
