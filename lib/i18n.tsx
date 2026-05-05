@@ -309,7 +309,7 @@ export const siteCopy = {
       testimonials: {
         eyebrow: "Testimonials",
         title: "続けている人の声",
-        description: "日本向けローンチを想定した、40〜60代中心の共感コピーで構成しています。",
+        description: "今この瞬間も、誰かがこのリズムを続けています。",
         items: [
           { name: "ミカ · 朝のリズム", quote: "朝3分だけなのに、仕事前の呼吸が整って気持ちの荒れが減りました。" },
           { name: "ジス · 心のリセット", quote: "忙しい日でも一度戻る時間があるだけで、心が少し静かになります。" },
@@ -741,7 +741,7 @@ export const siteCopy = {
       testimonials: {
         eyebrow: "Testimonials",
         title: "계속 이어가는 사람들의 이야기",
-        description: "지금도 누군가는 이 리듬을 이어가고 있습니다.",
+        description: "지금 이 순간에도, 누군가는 이 리듬을 이어가고 있습니다.",
         items: [
           { name: "미카 · 아침 리듬", quote: "아침 3분만 했는데도 출근 전 호흡이 정리되고 마음의 거칠음이 줄었습니다." },
           { name: "지수 · 마음 정리", quote: "점심에 1분만 돌아와도 하루 전체의 균형이 다시 잡히는 느낌이 듭니다." },
@@ -1173,7 +1173,7 @@ export const siteCopy = {
       testimonials: {
         eyebrow: "Testimonials",
         title: "Voices from people who kept going",
-        description: "Written in a warm tone for adults in their 40s to 60s.",
+        description: "Even now, someone is continuing this rhythm.",
         items: [
           { name: "Mika · Morning Rhythm", quote: "Having a quiet rhythm at night softens the noise in my head before sleep." },
           { name: "Jisoo · Mind Reset", quote: "Because others are continuing too, it no longer feels like I am carrying the rhythm alone." },
