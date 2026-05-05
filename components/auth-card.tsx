@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSiteCopy } from "@/lib/i18n";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 type AuthCardProps = {
@@ -10,6 +11,7 @@ type AuthCardProps = {
 
 export function AuthCard({ mode }: AuthCardProps) {
   const router = useRouter();
+  const copy = useSiteCopy();
   const supabase = getSupabaseBrowserClient();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -59,7 +61,7 @@ export function AuthCard({ mode }: AuthCardProps) {
       setMessage(
         mode === "signup"
           ? "Supabase接続または登録設定を確認してください。"
-          : "ログインに失敗しました。メールとパスワードを確認してください。"
+          : copy.loginPage.error
       );
     } finally {
       setLoading(false);
@@ -82,7 +84,7 @@ export function AuthCard({ mode }: AuthCardProps) {
           </label>
         ) : null}
         <label className="grid gap-2 text-sm text-white/76">
-          <span>メールアドレス</span>
+          <span>{mode === "login" ? copy.loginPage.email : "メールアドレス"}</span>
           <input
             required
             type="email"
@@ -92,7 +94,7 @@ export function AuthCard({ mode }: AuthCardProps) {
           />
         </label>
         <label className="grid gap-2 text-sm text-white/76">
-          <span>パスワード</span>
+          <span>{mode === "login" ? copy.loginPage.password : "パスワード"}</span>
           <input
             required
             type="password"
@@ -107,7 +109,7 @@ export function AuthCard({ mode }: AuthCardProps) {
         disabled={loading}
         className="mt-6 inline-flex w-full items-center justify-center rounded-md bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:opacity-60"
       >
-        {loading ? "処理中..." : mode === "signup" ? "アカウントを作成" : "ログインする"}
+        {loading ? copy.loginPage.loading : mode === "signup" ? "アカウントを作成" : copy.loginPage.button}
       </button>
       {message ? <p className="mt-4 text-sm text-white/72">{message}</p> : null}
     </form>

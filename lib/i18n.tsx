@@ -541,6 +541,16 @@ export const siteCopy = {
       tertiary: "ホームへ戻る",
       fallback: "リンクはまもなく準備されます。"
     },
+    loginPage: {
+      eyebrow: "Login",
+      title: "会員ログイン",
+      subtitle: "ログイン後、あなたのリズムを続けます",
+      email: "メールアドレス",
+      password: "パスワード",
+      button: "ログインする",
+      loading: "処理中...",
+      error: "ログインに失敗しました。メールとパスワードを確認してください。"
+    },
     meditationPage: {
       variants: {
         default: {
@@ -1037,6 +1047,16 @@ export const siteCopy = {
       tertiary: "홈으로 돌아가기",
       fallback: "링크는 곧 준비됩니다."
     },
+    loginPage: {
+      eyebrow: "Login",
+      title: "회원 로그인",
+      subtitle: "로그인 후 당신의 리듬을 이어갑니다",
+      email: "이메일",
+      password: "비밀번호",
+      button: "로그인하기",
+      loading: "처리 중...",
+      error: "로그인에 실패했습니다. 이메일과 비밀번호를 확인해 주세요."
+    },
     meditationPage: {
       variants: {
         default: {
@@ -1532,6 +1552,16 @@ export const siteCopy = {
       challengeButton: "Start the 7-day rhythm",
       tertiary: "Return home",
       fallback: "The link will be ready soon."
+    },
+    loginPage: {
+      eyebrow: "Login",
+      title: "Member Login",
+      subtitle: "Continue your rhythm after logging in",
+      email: "Email address",
+      password: "Password",
+      button: "Login",
+      loading: "Processing...",
+      error: "Login failed. Please check your email and password."
     },
     meditationPage: {
       variants: {
