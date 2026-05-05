@@ -516,6 +516,23 @@ export const siteCopy = {
       primary: "今すぐ1分を始める",
       secondary: "LINEでつながる"
     },
+    meditationPage: {
+      topText: "今ここで、60秒だけ呼吸に戻りましょう",
+      intro: "何かを変えようとしなくて大丈夫です。ただ静かに、呼吸のリズムに戻ります。",
+      phases: {
+        inhale: "吸って",
+        hold: "止めて",
+        exhale: "吐いて"
+      },
+      bottomText: {
+        inhale: "吸って… 4秒",
+        hold: "止めて… 2秒",
+        exhale: "吐いて… 4秒"
+      },
+      completionTitle: "Did you feel a small change?",
+      completionPrimary: "Start 7-day rhythm",
+      completionSecondary: "Maybe later"
+    },
     common: {
       connecting: "接続中...",
       comingSoon: "Checkout is not configured yet."
@@ -948,6 +965,23 @@ export const siteCopy = {
       primary: "지금 1분 시작하기",
       secondary: "LINE으로 함께 이어가기"
     },
+    meditationPage: {
+      topText: "지금 여기서, 60초만 호흡으로 돌아와 봅시다",
+      intro: "무언가를 바꾸려 하지 않아도 됩니다. 조용히, 호흡의 리듬으로 돌아오기만 하면 됩니다.",
+      phases: {
+        inhale: "들이쉬기",
+        hold: "멈추기",
+        exhale: "내쉬기"
+      },
+      bottomText: {
+        inhale: "들이쉬기… 4초",
+        hold: "멈추기… 2초",
+        exhale: "내쉬기… 4초"
+      },
+      completionTitle: "Did you feel a small change?",
+      completionPrimary: "Start 7-day rhythm",
+      completionSecondary: "Maybe later"
+    },
     common: {
       connecting: "연결 중...",
       comingSoon: "Checkout is not configured yet."
@@ -1379,6 +1413,23 @@ export const siteCopy = {
       body: "You did not buy something. You simply returned to a place that helps you come back to yourself.",
       primary: "Start your 1 minute now",
       secondary: "Continue on LINE"
+    },
+    meditationPage: {
+      topText: "Return to your breath for just 60 seconds",
+      intro: "There is nothing to force. Just settle into one calm breathing rhythm.",
+      phases: {
+        inhale: "Inhale",
+        hold: "Hold",
+        exhale: "Exhale"
+      },
+      bottomText: {
+        inhale: "Inhale... 4s",
+        hold: "Hold... 2s",
+        exhale: "Exhale... 4s"
+      },
+      completionTitle: "Did you feel a small change?",
+      completionPrimary: "Start 7-day rhythm",
+      completionSecondary: "Maybe later"
     },
     common: {
       connecting: "Connecting...",
