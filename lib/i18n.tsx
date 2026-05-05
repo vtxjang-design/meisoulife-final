@@ -597,14 +597,33 @@ export const siteCopy = {
       },
       inner: {
         eyebrow: "Inner Circle",
-        title: "深い静けさとビジョンを支える、プレミアムな流れ",
-        description: "Innerでは、個人の回復を超えて、共生文化や地球経営の視点まで含めた実践の場へ入っていきます。",
-        sessionTitle: "Premium Sessions",
-        sessionDescription: "月ごとのプレミアムセッションで、自分の実践と人生の方向性を丁寧に見つめ直します。",
-        retreatTitle: "Retreat Access",
-        retreatDescription: "静かな場所に身を置き、日常では届きにくい深い整いを体験するためのリトリート案内を受け取れます。",
-        primary: "夜のリズムを始める",
-        secondary: "リトリートを見る"
+        title: "Inner Circle 共生リーダープログラム",
+        description: "自分のリズムを整えるだけでなく、周りと共に目覚めて生きる文化を育てていきます。",
+        intro: "Inner Circleは、瞑想・生活リズム・共生文化・地球市民意識を深め、日常の中で静かに場を育てるリーダーのためのプログラムです。",
+        moduleLabel: "Module",
+        goalLabel: "Description",
+        practiceLabel: "Practice",
+        modules: [
+          { module: 1, title: "自己リズムの確立", goal: "自分の中心に戻る毎日のリズムを安定させます。", practice: "朝・昼・夜のリズム実践", button: "Module 1を始める" },
+          { module: 2, title: "共生コミュニケーション", goal: "人を変えようとせず、共に整う関係性を育てます。", practice: "対話と気づきの実践", button: "Module 2を始める" },
+          { module: 3, title: "場づくり", goal: "集めるのではなく、自然に人が戻ってくる場を育てます。", practice: "小さなリズム場の設計", button: "Module 3を始める" },
+          { module: 4, title: "地球市民・共生文化", goal: "個人の実践を、社会と地球のための共生文化へ広げます。", practice: "地球市民意識と実践計画", button: "Module 4を始める" }
+        ],
+        supportTitle: "Inner Circle 専用サポート",
+        supportDescription: "月次プレミアムセッション、リトリート優先案内、個別サポート導線を通して、リズムを人生と活動に深めていきます。",
+        supportCards: [
+          { title: "月次プレミアムセッション", description: "月に一度、深いテーマで整える時間を持ちます。" },
+          { title: "リトリート優先案内", description: "自然・聖地・パワースポットでの実践機会を優先的に案内します。" },
+          { title: "個別サポート導線", description: "必要に応じて、今の状態に合った次の一歩を提案します。" },
+          { title: "共生文化プロジェクト", description: "自分だけでなく、周囲と社会に広がる実践を育てます。" }
+        ],
+        actionTitle: "今日から、静かに場を育てる",
+        actionDescription: "Inner Circleは、特別な人になるための場所ではありません。自分に戻り、その静けさから周りを照らすための場です。",
+        meditationButton: "今日の3分を始める",
+        coachButton: "AIリズムコーチを開く",
+        lineButton: "LINEコミュニティへ",
+        growthButton: "Growthプログラムを見る",
+        fallback: "リンクはまもなく準備されます。"
       }
     },
     loginPage: {
@@ -1169,14 +1188,33 @@ export const siteCopy = {
       },
       inner: {
         eyebrow: "Inner Circle",
-        title: "깊은 고요함과 비전을 함께 지키는 프리미엄 흐름",
-        description: "Inner에서는 개인의 회복을 넘어, 공생 문화와 지구경영의 비전까지 품는 실천의 장으로 들어갑니다.",
-        sessionTitle: "프리미엄 세션",
-        sessionDescription: "월별 프리미엄 세션을 통해 자신의 실천과 삶의 방향을 더 깊고 조용하게 살펴봅니다.",
-        retreatTitle: "리트릿 안내",
-        retreatDescription: "일상에서 닿기 어려운 깊은 정돈을 경험할 수 있도록, 조용한 리트릿 안내를 우선적으로 받게 됩니다.",
-        primary: "밤의 리듬 시작하기",
-        secondary: "리트릿 보기"
+        title: "Inner Circle 공생 리더 프로그램",
+        description: "자신의 리듬을 정돈하는 것을 넘어, 주변과 함께 깨어 살아가는 문화를 길러갑니다.",
+        intro: "Inner Circle은 명상, 생활 리듬, 공생 문화, 지구시민 의식을 깊게 하며 일상 속에서 조용히 장을 길러가는 리더를 위한 프로그램입니다.",
+        moduleLabel: "Module",
+        goalLabel: "Description",
+        practiceLabel: "Practice",
+        modules: [
+          { module: 1, title: "자기 리듬의 확립", goal: "자신의 중심으로 돌아오는 매일의 리듬을 안정시킵니다.", practice: "아침·낮·밤 리듬 실천", button: "Module 1 시작하기" },
+          { module: 2, title: "공생 커뮤니케이션", goal: "사람을 바꾸려 하기보다, 함께 정돈되는 관계를 기릅니다.", practice: "대화와 알아차림의 실천", button: "Module 2 시작하기" },
+          { module: 3, title: "장 만들기", goal: "사람을 모으기보다, 자연스럽게 다시 돌아오는 장을 기릅니다.", practice: "작은 리듬 공간 설계", button: "Module 3 시작하기" },
+          { module: 4, title: "지구시민 · 공생 문화", goal: "개인의 실천을 사회와 지구를 위한 공생 문화로 넓혀갑니다.", practice: "지구시민 의식과 실천 계획", button: "Module 4 시작하기" }
+        ],
+        supportTitle: "Inner Circle 전용 지원",
+        supportDescription: "월간 프리미엄 세션, 리트릿 우선 안내, 개별 지원 흐름을 통해 리듬을 삶과 활동 안으로 더 깊게 키워갑니다.",
+        supportCards: [
+          { title: "월간 프리미엄 세션", description: "한 달에 한 번, 깊은 주제로 자신을 정돈하는 시간을 가집니다." },
+          { title: "리트릿 우선 안내", description: "자연, 성지, 파워스폿에서의 실천 기회를 우선적으로 안내받습니다." },
+          { title: "개별 지원 흐름", description: "필요에 따라 지금 상태에 맞는 다음 한 걸음을 제안합니다." },
+          { title: "공생 문화 프로젝트", description: "자신만이 아니라 주변과 사회로 퍼지는 실천을 길러갑니다." }
+        ],
+        actionTitle: "오늘부터, 조용히 장을 기르기",
+        actionDescription: "Inner Circle은 특별한 사람이 되기 위한 곳이 아닙니다. 자신에게 돌아오고, 그 고요함으로 주변을 비추기 위한 자리입니다.",
+        meditationButton: "오늘의 3분 시작하기",
+        coachButton: "AI 리듬 코치 열기",
+        lineButton: "LINE 커뮤니티로",
+        growthButton: "Growth 프로그램 보기",
+        fallback: "링크는 곧 준비됩니다."
       }
     },
     loginPage: {
@@ -1741,14 +1779,33 @@ export const siteCopy = {
       },
       inner: {
         eyebrow: "Inner Circle",
-        title: "A premium path for deep stillness and shared vision",
-        description: "Inner moves beyond personal recovery into a space for deeper practice, coexistence culture, and long-horizon vision.",
-        sessionTitle: "Premium Sessions",
-        sessionDescription: "Monthly premium sessions help you reflect on practice and life direction with greater depth and care.",
-        retreatTitle: "Retreat Access",
-        retreatDescription: "Receive retreat access that supports deeper restoration in quiet spaces beyond ordinary daily pace.",
-        primary: "Begin the night rhythm",
-        secondary: "See retreats"
+        title: "Inner Circle Coexistence Leadership Program",
+        description: "Go beyond settling your own rhythm and help grow a culture of awakening together with others.",
+        intro: "Inner Circle is a program for leaders who deepen meditation, life rhythm, coexistence culture, and earth-citizen awareness, and quietly cultivate space within daily life.",
+        moduleLabel: "Module",
+        goalLabel: "Description",
+        practiceLabel: "Practice",
+        modules: [
+          { module: 1, title: "Establish your own rhythm", goal: "Stabilize the daily rhythm of returning to your center.", practice: "Morning, daytime, and night rhythm practice", button: "Start Module 1" },
+          { module: 2, title: "Coexistence communication", goal: "Build relationships that settle together instead of trying to change people.", practice: "Dialogue and awareness practice", button: "Start Module 2" },
+          { module: 3, title: "Space holding", goal: "Cultivate a place people return to naturally rather than trying to gather them.", practice: "Design a small rhythm space", button: "Start Module 3" },
+          { module: 4, title: "Earth citizen and coexistence culture", goal: "Extend personal practice into a coexistence culture for society and the planet.", practice: "Earth-citizen awareness and action planning", button: "Start Module 4" }
+        ],
+        supportTitle: "Inner Circle support",
+        supportDescription: "Deepen rhythm into life and work through monthly premium sessions, retreat access, and more personal support paths.",
+        supportCards: [
+          { title: "Monthly premium sessions", description: "Once each month, spend time settling with a deeper theme." },
+          { title: "Retreat priority access", description: "Receive priority invitations for practice opportunities in nature, sacred places, and power spots." },
+          { title: "Personal support paths", description: "When needed, receive guidance toward the next step that fits your current state." },
+          { title: "Coexistence culture projects", description: "Cultivate practice that expands beyond yourself into community and society." }
+        ],
+        actionTitle: "From today, quietly cultivate the field",
+        actionDescription: "Inner Circle is not a place to become a special person. It is a place to return to yourself and let that stillness illuminate the people around you.",
+        meditationButton: "Begin today’s 3 minutes",
+        coachButton: "Open the AI rhythm coach",
+        lineButton: "Go to the LINE community",
+        growthButton: "See the Growth program",
+        fallback: "The link will be ready soon."
       }
     },
     loginPage: {
