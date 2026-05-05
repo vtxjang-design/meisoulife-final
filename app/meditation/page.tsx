@@ -28,9 +28,17 @@ function getBreathPhase(elapsedSeconds: number): BreathPhase {
 export default function MeditationPage() {
   const copy = useSiteCopy().meditationPage;
   const [secondsLeft, setSecondsLeft] = useState(TOTAL_SECONDS);
+  const [returnTo, setReturnTo] = useState("/challenge");
 
   useEffect(() => {
     setSecondsLeft(TOTAL_SECONDS);
+
+    const searchParams = new URLSearchParams(window.location.search);
+    const nextPath = searchParams.get("returnTo");
+
+    if (nextPath) {
+      setReturnTo(nextPath);
+    }
   }, []);
 
   useEffect(() => {
@@ -92,7 +100,7 @@ export default function MeditationPage() {
             <h1 className="font-serif text-4xl text-white sm:text-5xl">{copy.completionTitle}</h1>
             <div className="flex flex-col items-center gap-3">
               <Link
-                href="/challenge"
+                href={returnTo}
                 className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
               >
                 {copy.completionPrimary}

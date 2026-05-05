@@ -1,10 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { ChallengeSignupForm } from "@/components/challenge-signup-form";
-import { LineRhythmInvite } from "@/components/line-rhythm-invite";
-import OneMinuteMeditation from "@/components/one-minute-meditation";
 import { SectionHeading } from "@/components/section-heading";
 import {
   CHALLENGE_RHYTHM_EVENT,
@@ -23,9 +21,9 @@ function formatTemplate(template: string, values: Record<string, string | number
 }
 
 export default function ChallengePage() {
+  const router = useRouter();
   const copy = useSiteCopy();
   const challenge = copy.challengePage;
-  const [meditationOpen, setMeditationOpen] = useState(false);
   const [progress, setProgress] = useState<ChallengeRhythmProgress>({
     currentDay: 1,
     completedDays: []
@@ -49,7 +47,7 @@ export default function ChallengePage() {
 
   function startDay(day: number) {
     setProgress(markChallengeDayCompleted(day));
-    setMeditationOpen(true);
+    router.push(`/meditation?returnTo=${encodeURIComponent("/challenge")}&day=${day}`);
   }
 
   function resetRhythm() {
@@ -57,6 +55,8 @@ export default function ChallengePage() {
   }
 
   const completedCount = progress.completedDays.length;
+  const currentDay = challenge.days.find((item) => item.day === progress.currentDay) ?? challenge.days[0];
+  const isComplete = completedCount >= challenge.days.length;
   const completionMessage = useMemo(() => {
     if (completedCount === 0) {
       return challenge.notStarted;
@@ -85,7 +85,7 @@ export default function ChallengePage() {
         </div>
       </div>
 
-      <div className="mt-10 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+      <div className="mt-10 grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
         {challenge.days.map((item) => {
           const isCompleted = progress.completedDays.includes(item.day);
 
@@ -134,39 +134,43 @@ export default function ChallengePage() {
         })}
       </div>
 
-      <div className="mt-10 grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
-        <div className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6 sm:p-8">
-          <p className="text-sm uppercase tracking-[0.28em] text-gold">{challenge.continuationEyebrow}</p>
-          <h2 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">{challenge.continuationTitle}</h2>
-          <p className="mt-4 text-base leading-8 text-white/72">{challenge.continuationBody}</p>
-          <p className="mt-4 text-sm leading-7 text-white/58">{challenge.continuationCaption}</p>
-        </div>
-        <ChallengeSignupForm />
-      </div>
-
-      <div className="mt-10 rounded-[28px] border border-gold/20 bg-gold/10 p-6 text-center sm:p-8">
-        <p className="text-2xl font-semibold text-white sm:text-3xl">{challenge.endTitle}</p>
-        <p className="mx-auto mt-3 max-w-2xl text-base leading-8 text-white/74">{challenge.endDescription}</p>
-        <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
-          <Link
-            href="/pricing"
-            className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-ink transition duration-300 hover:bg-stone-100"
-          >
-            {challenge.memberButton}
-          </Link>
+      <div className="mt-10 rounded-[28px] border border-white/10 bg-white/[0.03] p-6 sm:p-8">
+        <p className="text-sm uppercase tracking-[0.28em] text-gold">{challenge.guidanceEyebrow}</p>
+        <h2 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">{currentDay.title}</h2>
+        <p className="mt-4 text-base leading-8 text-white/72">{challenge.guidanceTitle}</p>
+        <p className="mt-4 text-sm leading-7 text-white/58">{challenge.guidanceBody}</p>
+        <div className="mt-6">
           <button
             type="button"
-            onClick={resetRhythm}
-            className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/10"
+            onClick={() => startDay(progress.currentDay)}
+            className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
           >
-            {challenge.repeatButton}
+            {challenge.todayButton}
           </button>
         </div>
       </div>
 
-      <LineRhythmInvite className="mt-8" />
-
-      <OneMinuteMeditation open={meditationOpen} onClose={() => setMeditationOpen(false)} />
+      {isComplete ? (
+        <div className="mt-10 rounded-[28px] border border-gold/20 bg-gold/10 p-6 text-center sm:p-8">
+          <p className="text-2xl font-semibold text-white sm:text-3xl">{challenge.endTitle}</p>
+          <p className="mx-auto mt-3 max-w-2xl text-base leading-8 text-white/74">{challenge.endDescription}</p>
+          <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+            <Link
+              href="/pricing"
+              className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-ink transition duration-300 hover:bg-stone-100"
+            >
+              {challenge.memberButton}
+            </Link>
+            <button
+              type="button"
+              onClick={resetRhythm}
+              className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/10"
+            >
+              {challenge.repeatButton}
+            </button>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
