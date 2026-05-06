@@ -28,6 +28,19 @@ create table if not exists public.subscriptions (
   created_at timestamptz default now()
 );
 
+create table if not exists public.memberships (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade,
+  email text,
+  stripe_customer_id text,
+  stripe_subscription_id text unique,
+  plan text,
+  status text,
+  current_period_end timestamptz,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
 create table if not exists public.challenge_progress (
   id uuid primary key default gen_random_uuid(),
   email text not null,
@@ -76,6 +89,7 @@ create table if not exists public.leader_candidates (
 
 alter table public.users enable row level security;
 alter table public.subscriptions enable row level security;
+alter table public.memberships enable row level security;
 alter table public.challenge_progress enable row level security;
 alter table public.coach_messages enable row level security;
 alter table public.events enable row level security;
@@ -99,6 +113,11 @@ using (auth.uid() = auth_user_id);
 
 create policy if not exists "Users can read own challenge progress"
 on public.challenge_progress for select
+to authenticated
+using (auth.uid() = user_id);
+
+create policy if not exists "Users can read own memberships"
+on public.memberships for select
 to authenticated
 using (auth.uid() = user_id);
 

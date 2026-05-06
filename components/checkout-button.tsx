@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSiteCopy } from "@/lib/i18n";
+import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 type CheckoutButtonProps = {
   plan: "basic" | "leader" | "premium";
@@ -11,32 +12,63 @@ type CheckoutButtonProps = {
   messageClassName?: string;
 };
 
-const CHECKOUT_URLS = {
-  basic: "https://buy.stripe.com/fZu5kC443bVL4gWfMa43S05",
-  leader: "https://buy.stripe.com/7sYbJ07gf7Fv8xcczY43S03",
-  premium: "https://buy.stripe.com/6oU00i7gfcZP9Bg2Zo43S04"
-} as const;
-
-const START_ROUTES = {
-  basic: "/start/basic",
-  leader: "/start/growth",
-  premium: "/start/inner"
-} as const;
-
 export function CheckoutButton({ plan, label, className, messageClassName }: CheckoutButtonProps) {
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
   const router = useRouter();
   const copy = useSiteCopy();
-  const checkoutUrl = CHECKOUT_URLS[plan];
 
   async function handleCheckout() {
     setLoading(true);
+    setMessage("");
 
-    window.open(checkoutUrl, "_blank", "noopener,noreferrer");
-    window.setTimeout(() => {
-      router.push(START_ROUTES[plan]);
+    try {
+      const supabase = getSupabaseBrowserClient();
+
+      if (!supabase) {
+        setMessage(copy.loginPage.unavailable);
+        return;
+      }
+
+      const {
+        data: { session }
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        router.push("/login");
+        return;
+      }
+
+      const response = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ plan })
+      });
+
+      const data = (await response.json()) as {
+        url?: string;
+        error?: string;
+        message?: string;
+      };
+
+      if (response.status === 401) {
+        router.push("/login");
+        return;
+      }
+
+      if (!response.ok || !data.url) {
+        setMessage(data.error || data.message || copy.common.comingSoon);
+        return;
+      }
+
+      window.location.assign(data.url);
+    } catch (_error) {
+      setMessage(copy.common.comingSoon);
+    } finally {
       setLoading(false);
-    }, 3000);
+    }
   }
 
   return (
@@ -52,7 +84,9 @@ export function CheckoutButton({ plan, label, className, messageClassName }: Che
       >
         {loading ? copy.common.connecting : label}
       </button>
-      <p className={messageClassName || "text-sm text-zinc-500"}>{copy.pricingPage.checkoutNote}</p>
+      <p className={messageClassName || "text-sm text-zinc-500"}>
+        {message || copy.pricingPage.checkoutNote}
+      </p>
     </div>
   );
 }

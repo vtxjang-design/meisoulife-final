@@ -681,6 +681,28 @@ export const siteCopy = {
       coachPrompt: "この静かな状態を、少しだけ続けてみませんか？",
       coachButton: "AIコーチを開く"
     },
+    premiumPage: {
+      successBadge: "決済が完了しました",
+      title: "プレミアムアクセス",
+      subtitle: "あなたのメンバーシップが有効になりました。ここから有料リズムを続けられます。",
+      description: "リズムはすでに続いています。今日できる一歩から静かに始めましょう。",
+      currentPlan: "現在のプラン",
+      planLabels: {
+        basic: "Basic",
+        growth: "Growth",
+        inner_circle: "Inner Circle"
+      },
+      primary: "プログラムを開く",
+      secondary: "今日の瞑想を始める",
+      tertiary: "料金ページを見る"
+    },
+    membershipPage: {
+      title: "メンバーシップのご案内",
+      subtitle: "有料リズムへ進む準備ができたら、ここから続けられます。",
+      canceled: "決済は完了していません。準備ができたら、また静かに戻ってきてください。",
+      primary: "料金ページへ進む",
+      secondary: "ホームへ戻る"
+    },
     common: {
       connecting: "接続中...",
       comingSoon: "Checkout is not configured yet."
@@ -1278,6 +1300,28 @@ export const siteCopy = {
       coachPrompt: "이 조용한 상태를 조금만 더 이어가 볼까요?",
       coachButton: "AI 코치를 열기"
     },
+    premiumPage: {
+      successBadge: "결제가 완료되었습니다",
+      title: "프리미엄 접근",
+      subtitle: "멤버십이 활성화되었습니다. 이제 유료 리듬을 이어갈 수 있습니다.",
+      description: "리듬은 이미 시작되었습니다. 오늘 가능한 한 걸음부터 조용히 이어가 보세요.",
+      currentPlan: "현재 플랜",
+      planLabels: {
+        basic: "Basic",
+        growth: "Growth",
+        inner_circle: "Inner Circle"
+      },
+      primary: "프로그램 열기",
+      secondary: "오늘의 명상 시작하기",
+      tertiary: "요금 페이지 보기"
+    },
+    membershipPage: {
+      title: "멤버십 안내",
+      subtitle: "유료 리듬을 이어갈 준비가 되면 여기서 다시 시작할 수 있습니다.",
+      canceled: "결제가 완료되지 않았습니다. 준비가 되면 다시 조용히 돌아와 주세요.",
+      primary: "요금 페이지로",
+      secondary: "홈으로 돌아가기"
+    },
     common: {
       connecting: "연결 중...",
       comingSoon: "Checkout is not configured yet."
@@ -1874,6 +1918,28 @@ export const siteCopy = {
       completionSecondary: "That’s enough for today",
       coachPrompt: "Would you like to stay with this quiet state a little longer?",
       coachButton: "Open the AI coach"
+    },
+    premiumPage: {
+      successBadge: "Payment completed",
+      title: "Premium Access",
+      subtitle: "Your membership is now active. From here, you can continue the paid rhythm.",
+      description: "The rhythm is already continuing. Begin quietly from the next step that fits today.",
+      currentPlan: "Current plan",
+      planLabels: {
+        basic: "Basic",
+        growth: "Growth",
+        inner_circle: "Inner Circle"
+      },
+      primary: "Open the program",
+      secondary: "Start today’s meditation",
+      tertiary: "View pricing"
+    },
+    membershipPage: {
+      title: "Membership",
+      subtitle: "When you are ready to continue with a paid rhythm, you can return here.",
+      canceled: "Payment was not completed. You can come back quietly whenever you are ready.",
+      primary: "Go to pricing",
+      secondary: "Return home"
     },
     common: {
       connecting: "Connecting...",

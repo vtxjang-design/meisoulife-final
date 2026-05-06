@@ -60,9 +60,11 @@ OPENAI_API_KEY
 STRIPE_SECRET_KEY
 STRIPE_WEBHOOK_SECRET
 NEXT_PUBLIC_SITE_URL
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY
+SUPABASE_SERVICE_ROLE_KEY
 SUPABASE_URL
 SUPABASE_ANON_KEY
-SUPABASE_SERVICE_ROLE_KEY
 ```
 
 추가 연결:
@@ -122,11 +124,69 @@ Supabase 테이블/정책 초안:
 ```text
 users
 subscriptions
+memberships
 challenge_progress
 coach_messages
 events
 community_activity
 leader_candidates
+```
+
+## Stripe 멤버십 동기화
+
+결제 성공 후 Supabase `memberships` 테이블을 자동으로 업데이트하려면 아래 환경변수가 필요합니다.
+
+```text
+STRIPE_SECRET_KEY
+STRIPE_WEBHOOK_SECRET
+STRIPE_PRICE_BASIC
+STRIPE_PRICE_LEADER
+STRIPE_PRICE_PREMIUM
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY
+SUPABASE_SERVICE_ROLE_KEY
+NEXT_PUBLIC_SITE_URL
+```
+
+Checkout Session API는 로그인한 사용자 기준으로 Stripe 세션을 만들고, 아래 metadata를 함께 보냅니다.
+
+```text
+user_id
+plan
+```
+
+Stripe Dashboard 설정:
+
+1. Developers -> Webhooks
+2. Endpoint 추가:
+
+```text
+https://www.meisoulife.com/api/stripe/webhook
+```
+
+3. 아래 이벤트를 구독:
+
+```text
+checkout.session.completed
+invoice.paid
+customer.subscription.updated
+customer.subscription.deleted
+invoice.payment_failed
+```
+
+Payment Link / Checkout success URL 권장값:
+
+```text
+Success URL: https://www.meisoulife.com/premium?success=true
+Cancel URL:  https://www.meisoulife.com/membership?canceled=true
+```
+
+권한 동작:
+
+```text
+/premium
+  - 로그인 + memberships.status 가 active / trialing 이면 접근 허용
+  - 그 외에는 /membership 또는 /login 으로 이동
 ```
 
 ## 배포

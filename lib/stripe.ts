@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 
 export type MembershipPlan = "basic" | "leader" | "premium";
+export type MembershipRecordPlan = "basic" | "growth" | "inner_circle";
 
 export const membershipPlans: Record<MembershipPlan, { name: string; envKey: string; amount: number }> = {
   basic: { name: "Basic", envKey: "STRIPE_PRICE_BASIC", amount: 1000 },
@@ -16,4 +17,16 @@ export function getStripeClient() {
   }
 
   return new Stripe(secretKey);
+}
+
+export function mapMembershipPlan(plan: MembershipPlan): MembershipRecordPlan {
+  if (plan === "leader") {
+    return "growth";
+  }
+
+  if (plan === "premium") {
+    return "inner_circle";
+  }
+
+  return "basic";
 }
