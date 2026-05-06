@@ -14,11 +14,14 @@ export async function middleware(request: NextRequest) {
     }
   });
 
-  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
     return response;
   }
 
-  const supabase = createServerClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY, {
+  const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
       getAll() {
         return request.cookies.getAll();
@@ -36,5 +39,16 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/admin/:path*", "/community/:path*", "/login", "/signup"]
+  matcher: [
+    "/dashboard/:path*",
+    "/admin/:path*",
+    "/community/:path*",
+    "/program/:path*",
+    "/premium",
+    "/pricing",
+    "/membership",
+    "/login",
+    "/signup",
+    "/api/stripe/checkout"
+  ]
 };

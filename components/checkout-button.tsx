@@ -41,6 +41,7 @@ export function CheckoutButton({ plan, label, className, messageClassName }: Che
 
       const response = await fetch("/api/stripe/checkout", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json"
         },
@@ -54,17 +55,27 @@ export function CheckoutButton({ plan, label, className, messageClassName }: Che
       };
 
       if (response.status === 401) {
+        console.error("[checkout-button] authentication required for checkout", {
+          plan,
+          responseStatus: response.status
+        });
         router.push("/login");
         return;
       }
 
       if (!response.ok || !data.url) {
+        console.error("[checkout-button] checkout session creation failed", {
+          plan,
+          responseStatus: response.status,
+          data
+        });
         setMessage(data.error || data.message || copy.common.comingSoon);
         return;
       }
 
-      window.location.assign(data.url);
-    } catch (_error) {
+      window.location.href = data.url;
+    } catch (error) {
+      console.error("[checkout-button] unexpected checkout error", error);
       setMessage(copy.common.comingSoon);
     } finally {
       setLoading(false);

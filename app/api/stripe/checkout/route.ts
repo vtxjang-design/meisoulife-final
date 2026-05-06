@@ -52,9 +52,12 @@ export async function POST(request: Request) {
     } = await supabase.auth.getUser();
 
     if (!user) {
+      console.error("[stripe-checkout] missing authenticated user", {
+        plan: payload.plan
+      });
       return NextResponse.json(
         {
-          error: "Authentication required"
+          error: "Authentication required. Please log in again before continuing checkout."
         },
         {
           status: 401
@@ -62,8 +65,18 @@ export async function POST(request: Request) {
       );
     }
 
+    console.log("[stripe-checkout] authenticated user", {
+      userId: user.id,
+      email: user.email,
+      plan: payload.plan
+    });
+
     const siteUrl = getSiteUrl();
     const membershipPlan = mapMembershipPlan(payload.plan);
+    const metadata = {
+      user_id: user.id,
+      plan: membershipPlan
+    };
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
@@ -77,23 +90,36 @@ export async function POST(request: Request) {
       ],
       success_url: `${siteUrl}/premium?success=true`,
       cancel_url: `${siteUrl}/membership?canceled=true`,
-      metadata: {
-        user_id: user.id,
-        plan: membershipPlan
-      },
+      metadata,
       subscription_data: {
-        metadata: {
-          user_id: user.id,
-          plan: membershipPlan
-        }
+        metadata
       }
     });
+
+    console.log("[stripe-checkout] session created", {
+      userId: user.id,
+      metadata,
+      sessionId: session.id,
+      hasUrl: Boolean(session.url)
+    });
+
+    if (!session.url) {
+      return NextResponse.json(
+        {
+          error: "Stripe checkout session was created without a redirect URL."
+        },
+        {
+          status: 500
+        }
+      );
+    }
 
     return NextResponse.json({
       ok: true,
       url: session.url
     });
   } catch (error) {
+    console.error("[stripe-checkout] failed", error);
     return NextResponse.json(
       {
         error: error instanceof Error ? error.message : "Checkout failed"
