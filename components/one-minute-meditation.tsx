@@ -1,287 +1,388 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { useSiteCopy } from "@/lib/i18n";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { markDailyRhythmCompleted } from "@/lib/return-rhythm";
+import { useSiteCopy } from "@/lib/i18n";
+
+const TOTAL_SECONDS = 60;
+const INHALE_SECONDS = 4;
+const HOLD_SECONDS = 2;
+const EXHALE_SECONDS = 4;
+const BREATH_CYCLE_SECONDS = INHALE_SECONDS + HOLD_SECONDS + EXHALE_SECONDS;
+const AI_COACH_URL =
+  process.env.NEXT_PUBLIC_AI_COACH_URL ||
+  "https://chatgpt.com/g/g-69f968bc9a408191a3e5f943912666c0-quiet-rhythm-guide";
+
+type BreathPhase = "inhale" | "hold" | "exhale";
 
 type OneMinuteMeditationProps = {
   open: boolean;
   onClose: () => void;
 };
 
-const MEDITATION_DURATION = 60;
-const MEDITATION_EMBED_URL = "https://www.youtube.com/embed/5RTxWODbmak?autoplay=1&mute=1&playsinline=1";
-const BREATHING_FADE_MS = 600;
-const LINE_RHYTHM_URL = process.env.NEXT_PUBLIC_LINE_FREE_URL || "https://lin.ee/z8Lzvvs";
-const LAST_REFLECTION_KEY = "meisoulife_last_reflection";
-const LAST_REFLECTION_AT_KEY = "meisoulife_last_reflection_at";
-type ReflectionOption = "calm" | "deepen" | "together";
+function getPhase(elapsedSeconds: number): BreathPhase {
+  const cyclePosition = elapsedSeconds % BREATH_CYCLE_SECONDS;
+
+  if (cyclePosition < INHALE_SECONDS) {
+    return "inhale";
+  }
+
+  if (cyclePosition < INHALE_SECONDS + HOLD_SECONDS) {
+    return "hold";
+  }
+
+  return "exhale";
+}
+
+function getPhaseDuration(phase: BreathPhase) {
+  if (phase === "inhale") {
+    return INHALE_SECONDS;
+  }
+
+  if (phase === "hold") {
+    return HOLD_SECONDS;
+  }
+
+  return EXHALE_SECONDS;
+}
+
+function formatSeconds(seconds: number) {
+  const minutes = Math.floor(seconds / 60);
+  const remainder = seconds % 60;
+
+  return `${minutes}:${String(remainder).padStart(2, "0")}`;
+}
 
 export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditationProps) {
   const copy = useSiteCopy();
-  const breathingGuides = copy.modal.breathingGuides;
-  const reflectionOptions = copy.modal.reflections;
-  const reflectionMap = {
-    calm: reflectionOptions[0],
-    deepen: reflectionOptions[1],
-    together: reflectionOptions[2]
-  } as const;
-  const [secondsLeft, setSecondsLeft] = useState(MEDITATION_DURATION);
-  const [isComplete, setIsComplete] = useState(false);
-  const [iframeKey, setIframeKey] = useState(0);
-  const [videoSrc, setVideoSrc] = useState("");
-  const [breathingGuideIndex, setBreathingGuideIndex] = useState(0);
-  const [isGuideVisible, setIsGuideVisible] = useState(true);
-  const [isTimerVisible, setIsTimerVisible] = useState(true);
-  const [selectedReflection, setSelectedReflection] = useState<ReflectionOption | null>(null);
+  const modalCopy = copy.modal;
+  const [secondsLeft, setSecondsLeft] = useState(TOTAL_SECONDS);
+  const [soundEnabled, setSoundEnabled] = useState(false);
+  const [completionIndex, setCompletionIndex] = useState(0);
+  const [hasUserGesture, setHasUserGesture] = useState(false);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const completionHandledRef = useRef(false);
+  const previousPhaseRef = useRef<BreathPhase>("inhale");
 
-  function startMeditation() {
-    setSecondsLeft(MEDITATION_DURATION);
-    setIsComplete(false);
-    setIframeKey((current) => current + 1);
-    setVideoSrc(MEDITATION_EMBED_URL);
-    setBreathingGuideIndex(0);
-    setIsGuideVisible(true);
-    setIsTimerVisible(true);
-    setSelectedReflection(null);
-  }
-
-  function completeMeditation() {
-    setSecondsLeft(0);
-    setIsComplete(true);
-    markDailyRhythmCompleted();
-  }
-
-  function handleReflectionSelect(reflectionKey: ReflectionOption) {
-    setSelectedReflection(reflectionKey);
-    window.localStorage.setItem(LAST_REFLECTION_KEY, reflectionKey);
-    window.localStorage.setItem(LAST_REFLECTION_AT_KEY, new Date().toISOString());
-  }
-
-  function handleTogetherContinue() {
-    window.open(LINE_RHYTHM_URL, "_blank", "noopener,noreferrer");
-  }
+  const elapsedSeconds = TOTAL_SECONDS - secondsLeft;
+  const phase = useMemo(() => getPhase(elapsedSeconds), [elapsedSeconds]);
+  const isComplete = secondsLeft <= 0;
+  const completionMessage = modalCopy.completionMoments[completionIndex] || modalCopy.completeBody;
 
   useEffect(() => {
     if (!open) {
-      setSecondsLeft(MEDITATION_DURATION);
-      setIsComplete(false);
-      setVideoSrc("");
-      setBreathingGuideIndex(0);
-      setIsGuideVisible(true);
-      setIsTimerVisible(true);
-      setSelectedReflection(null);
+      setSecondsLeft(TOTAL_SECONDS);
+      setSoundEnabled(false);
+      setCompletionIndex(0);
+      setHasUserGesture(false);
+      completionHandledRef.current = false;
+      previousPhaseRef.current = "inhale";
       return;
     }
 
-    startMeditation();
-  }, [open]);
-
-  useEffect(() => {
-    if (!open || isComplete || !videoSrc) {
-      return;
-    }
-
-    const timer = window.setInterval(() => {
-      setSecondsLeft((current) => {
-        if (current <= 1) {
-          window.clearInterval(timer);
-          setIsComplete(true);
-          markDailyRhythmCompleted();
-          return 0;
-        }
-
-        return current - 1;
-      });
-    }, 1000);
-
-    return () => window.clearInterval(timer);
-  }, [open, isComplete, videoSrc, iframeKey]);
+    setSecondsLeft(TOTAL_SECONDS);
+    setHasUserGesture(true);
+    setCompletionIndex(Math.floor(Math.random() * modalCopy.completionMoments.length));
+    completionHandledRef.current = false;
+    previousPhaseRef.current = "inhale";
+  }, [open, modalCopy.completionMoments.length]);
 
   useEffect(() => {
     if (!open || isComplete) {
-      setIsTimerVisible(true);
       return;
     }
 
-    setIsTimerVisible(false);
     const timer = window.setTimeout(() => {
-      setIsTimerVisible(true);
-    }, 120);
-
-    return () => window.clearTimeout(timer);
-  }, [secondsLeft, open, isComplete]);
-
-  useEffect(() => {
-    if (!open || isComplete || !videoSrc) {
-      return;
-    }
-
-    const currentGuide = breathingGuides[breathingGuideIndex];
-    const fadeOutTimer = window.setTimeout(() => {
-      setIsGuideVisible(false);
-    }, Math.max(currentGuide.duration - BREATHING_FADE_MS, 1200));
-
-    const timer = window.setTimeout(() => {
-      setBreathingGuideIndex((current) => (current + 1) % breathingGuides.length);
-      setIsGuideVisible(true);
-    }, currentGuide.duration);
+      setSecondsLeft((current) => Math.max(current - 1, 0));
+    }, 1000);
 
     return () => {
-      window.clearTimeout(fadeOutTimer);
       window.clearTimeout(timer);
     };
-  }, [open, isComplete, videoSrc, breathingGuideIndex, breathingGuides]);
+  }, [isComplete, open, secondsLeft]);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    const phaseChanged = previousPhaseRef.current !== phase;
+
+    if (phaseChanged && hasUserGesture) {
+      if (phase === "inhale") {
+        triggerHaptic([12]);
+        playPhaseCue("inhale");
+      } else if (phase === "exhale") {
+        triggerHaptic([8]);
+        playPhaseCue("exhale");
+      } else {
+        triggerHaptic([5]);
+      }
+    }
+
+    previousPhaseRef.current = phase;
+  }, [hasUserGesture, open, phase, soundEnabled]);
+
+  useEffect(() => {
+    if (!open || !isComplete || completionHandledRef.current) {
+      return;
+    }
+
+    completionHandledRef.current = true;
+    markDailyRhythmCompleted();
+    triggerHaptic([18, 80, 18]);
+    playCompletionCue();
+  }, [isComplete, open, soundEnabled]);
+
+  useEffect(() => {
+    return () => {
+      audioContextRef.current?.close().catch(() => undefined);
+      audioContextRef.current = null;
+    };
+  }, []);
+
+  function getAudioContext() {
+    if (typeof window === "undefined" || !("AudioContext" in window || "webkitAudioContext" in window)) {
+      return null;
+    }
+
+    if (audioContextRef.current) {
+      return audioContextRef.current;
+    }
+
+    const AudioCtor = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+
+    if (!AudioCtor) {
+      return null;
+    }
+
+    audioContextRef.current = new AudioCtor();
+    return audioContextRef.current;
+  }
+
+  function playTone(frequency: number, durationMs: number, volume: number) {
+    if (!soundEnabled || !hasUserGesture) {
+      return;
+    }
+
+    const context = getAudioContext();
+
+    if (!context) {
+      return;
+    }
+
+    const oscillator = context.createOscillator();
+    const gainNode = context.createGain();
+    const startAt = context.currentTime;
+    const endAt = startAt + durationMs / 1000;
+
+    oscillator.type = "sine";
+    oscillator.frequency.setValueAtTime(frequency, startAt);
+    gainNode.gain.setValueAtTime(0.0001, startAt);
+    gainNode.gain.exponentialRampToValueAtTime(volume, startAt + 0.03);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, endAt);
+
+    oscillator.connect(gainNode);
+    gainNode.connect(context.destination);
+
+    oscillator.start(startAt);
+    oscillator.stop(endAt);
+  }
+
+  function playPhaseCue(nextPhase: BreathPhase) {
+    // TODO: Replace with a more natural ambient cue if a dedicated audio asset is added later.
+    if (nextPhase === "inhale") {
+      playTone(246.94, 220, 0.015);
+      return;
+    }
+
+    if (nextPhase === "exhale") {
+      playTone(196, 280, 0.012);
+    }
+  }
+
+  function playCompletionCue() {
+    // TODO: Replace with a very soft bell sample if audio assets are introduced later.
+    playTone(392, 320, 0.018);
+    window.setTimeout(() => playTone(523.25, 460, 0.015), 160);
+  }
+
+  function triggerHaptic(pattern: number | number[]) {
+    if (!hasUserGesture || typeof navigator === "undefined" || !("vibrate" in navigator)) {
+      return;
+    }
+
+    navigator.vibrate(pattern);
+  }
+
+  function handleClose() {
+    setSoundEnabled(false);
+    onClose();
+  }
+
+  function handleRestart() {
+    setSecondsLeft(TOTAL_SECONDS);
+    setCompletionIndex(Math.floor(Math.random() * modalCopy.completionMoments.length));
+    completionHandledRef.current = false;
+    previousPhaseRef.current = "inhale";
+    triggerHaptic([10]);
+  }
+
+  function handleSoundToggle() {
+    setHasUserGesture(true);
+    setSoundEnabled((current) => {
+      const next = !current;
+
+      if (next) {
+        playTone(329.63, 180, 0.012);
+      }
+
+      return next;
+    });
+  }
+
+  if (!open) {
+    return null;
+  }
+
+  const orbScale = phase === "inhale" ? 1.08 : phase === "hold" ? 1.08 : 0.92;
+  const orbGlowOpacity = phase === "inhale" ? 0.38 : phase === "hold" ? 0.32 : 0.26;
+  const orbWarmthOpacity = phase === "exhale" ? 0.26 : 0.16;
+  const progress = ((TOTAL_SECONDS - secondsLeft) / TOTAL_SECONDS) * 100;
+  const orbTransitionDuration = `${getPhaseDuration(phase)}s`;
 
   return (
-    <div
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-[#07111f]/70 px-4 py-6 transition-all duration-300 ${
-        open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
-      }`}
-    >
-      <div
-        className={`w-full max-w-2xl rounded-[28px] border border-white/15 bg-[#0b1728] p-4 shadow-[0_28px_80px_rgba(7,17,31,0.42)] transition-all duration-300 sm:p-6 ${
-          open ? "translate-y-0 scale-100" : "translate-y-4 scale-[0.98]"
-        }`}
-      >
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#020814]/92 px-4 py-4 backdrop-blur-xl sm:px-6">
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_28%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.14),transparent_34%),linear-gradient(180deg,rgba(4,10,19,0.96)_0%,rgba(8,18,32,0.98)_100%)] animate-meditation-ambient-breathe" />
+        <div className="absolute left-1/2 top-[12%] h-64 w-64 -translate-x-1/2 rounded-full bg-gold/10 blur-3xl animate-meditation-fog" />
+        <div className="absolute bottom-[8%] right-[14%] h-48 w-48 rounded-full bg-moss/12 blur-3xl animate-meditation-fog" />
+        {Array.from({ length: 9 }).map((_, index) => (
+          <span
+            key={index}
+            className="absolute rounded-full bg-white/18 animate-meditation-float"
+            style={{
+              left: `${10 + index * 9}%`,
+              top: `${18 + (index % 4) * 15}%`,
+              width: `${index % 3 === 0 ? 6 : 4}px`,
+              height: `${index % 3 === 0 ? 6 : 4}px`,
+              animationDelay: `${index * 0.8}s`,
+              animationDuration: `${12 + (index % 4) * 2}s`
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="relative z-10 w-full max-w-md overflow-hidden rounded-[28px] border border-white/8 bg-white/[0.04] p-5 shadow-[0_30px_80px_rgba(0,0,0,0.28)] sm:p-6">
         <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-sm uppercase tracking-[0.28em] text-[#d8bf83]">{copy.modal.eyebrow}</p>
-            <h2 className="mt-2 text-2xl font-semibold text-white">{copy.modal.title}</h2>
+          <div className="min-w-0">
+            <p className="text-[11px] uppercase tracking-[0.32em] text-gold/72">{modalCopy.eyebrow}</p>
+            <h2 className="mt-3 text-balance font-serif text-2xl leading-tight text-white/92 sm:text-[30px]">{modalCopy.title}</h2>
           </div>
+
           <button
             type="button"
-            onClick={onClose}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-lg text-white/80 transition hover:bg-white/10"
-            aria-label="Close meditation modal"
+            onClick={handleClose}
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-lg text-white/70 transition hover:bg-white/[0.08] hover:text-white"
+            aria-label="Close meditation"
           >
             ×
           </button>
         </div>
 
+        <div className="mt-5 flex items-center justify-between gap-3">
+          <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/8">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-gold/70 via-white/75 to-moss/70 transition-[width] duration-1000 ease-linear"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+
+          <button
+            type="button"
+            onClick={handleSoundToggle}
+            className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
+            aria-pressed={soundEnabled}
+          >
+            {soundEnabled ? modalCopy.soundOn : modalCopy.soundOff}
+          </button>
+        </div>
+
         {!isComplete ? (
-          <>
-            <div className="mt-5 overflow-hidden rounded-[20px] border border-white/10 bg-black">
-              <div className="border-b border-white/10 px-5 py-4 text-center">
-                <p
-                  className={`text-3xl font-medium text-white/78 transition-all duration-500 ease-in-out sm:text-4xl ${
-                    isTimerVisible ? "scale-100 opacity-100" : "scale-[0.975] opacity-55"
-                  }`}
-                >
-                  {secondsLeft}
-                </p>
-              </div>
-              <div className="relative flex min-h-[420px] w-full items-center justify-center overflow-hidden bg-[#050b14] sm:min-h-[560px]">
-                {open && videoSrc ? (
-                  <>
-                    <div className="absolute inset-0 scale-[1.8] opacity-35 blur-2xl">
-                      <iframe
-                        key={`ambient-${iframeKey}`}
-                        className="h-full w-full"
-                        src={videoSrc}
-                        title="1 minute meditation ambient"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerPolicy="strict-origin-when-cross-origin"
-                        aria-hidden="true"
-                      />
-                    </div>
-                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_18%,rgba(5,11,20,0.38)_56%,rgba(5,11,20,0.88)_100%)]" />
-                    <div className="relative z-10 aspect-[9/16] h-full max-h-[78vh] w-full max-w-[340px] overflow-hidden rounded-[24px] border border-white/10 bg-black shadow-[0_24px_60px_rgba(0,0,0,0.45)] sm:max-w-[360px]">
-                      <iframe
-                        key={iframeKey}
-                        className="h-full w-full"
-                        src={videoSrc}
-                        title="1 minute meditation"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerPolicy="strict-origin-when-cross-origin"
-                        allowFullScreen
-                      />
-                    </div>
-                    <div className="pointer-events-none absolute inset-x-0 bottom-5 z-20 flex justify-center px-6">
-                      <p
-                        className={`rounded-full bg-black/22 px-4 py-1.5 text-center text-xs font-medium tracking-[0.18em] text-white/70 backdrop-blur-[2px] transition-all duration-700 sm:text-sm ${
-                          isGuideVisible ? "translate-y-0 opacity-100" : "translate-y-1 opacity-0"
-                        }`}
-                      >
-                        {breathingGuides[breathingGuideIndex].text}
-                      </p>
-                    </div>
-                  </>
-                ) : null}
-              </div>
+          <div className="mt-8 flex flex-col items-center text-center">
+            <div className="min-h-[92px] space-y-3">
+              <p className="text-sm uppercase tracking-[0.28em] text-white/48">{modalCopy.phaseLabels[phase]}</p>
+              <p
+                aria-live="polite"
+                className="text-4xl font-medium tracking-[0.04em] text-white/88 transition-all duration-700 ease-in-out sm:text-5xl"
+              >
+                {formatSeconds(secondsLeft)}
+              </p>
             </div>
 
-            <div className="mt-5 flex flex-col gap-3">
+            <div className="relative mt-5 flex h-72 w-72 items-center justify-center sm:h-[320px] sm:w-[320px]">
+              <div
+                className="absolute inset-0 rounded-full bg-gold/18 blur-3xl transition-all ease-in-out"
+                style={{ opacity: orbGlowOpacity, transform: `scale(${orbScale + 0.1})`, transitionDuration: orbTransitionDuration }}
+              />
+              <div
+                className="absolute inset-4 rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.22),transparent_34%),radial-gradient(circle_at_70%_72%,rgba(216,191,131,0.16),transparent_42%),radial-gradient(circle_at_50%_50%,rgba(239,243,244,0.08),rgba(15,31,53,0.02))] blur-2xl transition-all ease-in-out"
+                style={{ transform: `scale(${orbScale + 0.06})`, transitionDuration: orbTransitionDuration }}
+              />
+              <div
+                className={`absolute inset-[18%] rounded-full border border-white/12 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18),rgba(255,255,255,0.03)_42%,rgba(15,31,53,0.18)_100%)] shadow-[0_18px_80px_rgba(216,191,131,0.08)] transition-all ease-in-out ${phase === "hold" ? "animate-meditation-soft-pulse" : ""}`}
+                style={{
+                  transform: `scale(${orbScale})`,
+                  transitionDuration: orbTransitionDuration,
+                  boxShadow: `0 0 90px rgba(216, 191, 131, ${orbGlowOpacity}), inset 0 0 48px rgba(255, 255, 255, ${orbWarmthOpacity})`
+                }}
+              />
+              <div
+                className="absolute inset-[24%] rounded-full border border-white/8 bg-[radial-gradient(circle_at_35%_30%,rgba(255,255,255,0.22),transparent_30%),radial-gradient(circle_at_68%_72%,rgba(216,191,131,0.18),transparent_36%),linear-gradient(180deg,rgba(255,255,255,0.08),rgba(7,17,31,0.2))] transition-all ease-in-out"
+                style={{ transform: `scale(${orbScale - 0.04})`, transitionDuration: orbTransitionDuration }}
+              />
+            </div>
+
+            <div className="mt-5 min-h-[48px] max-w-xs">
+              <p className="text-base leading-7 text-white/58">{modalCopy.breathingGuides[phase === "inhale" ? 0 : phase === "hold" ? 1 : 2]?.text}</p>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleClose}
+              className="mt-6 inline-flex min-h-[52px] w-full items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white/82 transition hover:bg-white/[0.07]"
+            >
+              {modalCopy.endButton}
+            </button>
+          </div>
+        ) : (
+          <div className="mt-10 flex flex-col items-center text-center animate-meditation-fade-up">
+            <div className="relative flex h-24 w-24 items-center justify-center">
+              <div className="absolute inset-0 rounded-full bg-gold/20 blur-2xl animate-meditation-soft-pulse" />
+              <div className="absolute inset-3 rounded-full border border-gold/30 bg-white/[0.06]" />
+            </div>
+
+            <h3 className="mt-5 text-balance font-serif text-3xl leading-tight text-white/92 sm:text-[34px]">{completionMessage}</h3>
+            <p className="mt-4 max-w-sm text-sm leading-7 text-white/62 sm:text-base">{modalCopy.completeBody}</p>
+
+            <div className="mt-8 flex w-full flex-col gap-3">
               <button
                 type="button"
-                onClick={completeMeditation}
-                className="inline-flex min-h-[54px] w-full items-center justify-center rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-emerald-500"
+                onClick={handleRestart}
+                className="inline-flex min-h-[54px] w-full items-center justify-center rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:scale-[1.01] hover:bg-[#e7cd92]"
               >
-                {copy.modal.endButton}
+                {modalCopy.breatheAgain}
               </button>
+
+              <a
+                href={AI_COACH_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-[52px] w-full items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white/84 transition hover:bg-white/[0.07]"
+              >
+                {modalCopy.tellAi}
+              </a>
             </div>
-          </>
-        ) : (
-          <div className="mt-5 rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-6 text-center text-white animate-fade-in sm:px-8 sm:py-8">
-            <p className="text-xl font-semibold sm:text-2xl">{copy.modal.completeTitle}</p>
-            <p className="mx-auto mt-3 max-w-lg text-sm leading-7 text-white/72 sm:text-base">{copy.modal.completeBody}</p>
-
-            <div className="mt-6 flex flex-col gap-3">
-              <p className="text-sm leading-7 text-white/64 sm:text-base">{copy.modal.reflectionQuestion}</p>
-              {reflectionOptions.map((option) => (
-                <button
-                  key={option.key}
-                  type="button"
-                  onClick={() => handleReflectionSelect(option.key)}
-                  className={`inline-flex min-h-[50px] w-full items-center justify-center rounded-full px-5 py-3 text-sm font-medium transition duration-300 ${
-                    selectedReflection === option.key
-                      ? "border border-emerald-300/30 bg-emerald-400/12 text-white"
-                      : "border border-white/10 bg-white/5 text-white/78 hover:bg-white/8"
-                  }`}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-
-            {selectedReflection ? (
-              <div className="mt-7 border-t border-white/10 pt-6 animate-fade-in">
-                <p className="text-sm leading-7 text-white/72 sm:text-base">
-                  {reflectionMap[selectedReflection].message}
-                </p>
-                <div className="mt-4 animate-fade-in">
-                  {selectedReflection === "calm" ? (
-                    <button
-                      type="button"
-                      onClick={onClose}
-                      className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0b1728] transition duration-300 hover:bg-stone-100"
-                    >
-                      {reflectionMap[selectedReflection].ctaLabel}
-                    </button>
-                  ) : null}
-
-                  {selectedReflection === "deepen" ? (
-                    <Link
-                      href="/pricing?focus=growth"
-                      className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0b1728] transition duration-300 hover:bg-stone-100"
-                    >
-                      {reflectionMap[selectedReflection].ctaLabel}
-                    </Link>
-                  ) : null}
-
-                  {selectedReflection === "together" ? (
-                    <button
-                      type="button"
-                      onClick={handleTogetherContinue}
-                      className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0b1728] transition duration-300 hover:bg-stone-100"
-                    >
-                      {reflectionMap[selectedReflection].ctaLabel}
-                    </button>
-                  ) : null}
-                </div>
-              </div>
-            ) : null}
           </div>
         )}
       </div>

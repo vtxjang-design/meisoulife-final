@@ -130,6 +130,19 @@ export const siteCopy = {
       endButton: "1分を終える",
       completeTitle: "今日、あなたは自分に戻りました。",
       completeBody: "この小さな1分が、共に目覚めるリズムの始まりです。",
+      completionMoments: [
+        "今日も、自分に戻る1分をありがとう。",
+        "静けさは、いつもあなたの中にあります。"
+      ],
+      breatheAgain: "もう一度呼吸する",
+      tellAi: "AIに今の状態を伝える",
+      soundOn: "音を入れる",
+      soundOff: "音を消す",
+      phaseLabels: {
+        inhale: "息を吸って",
+        hold: "そのまま",
+        exhale: "息を吐いて"
+      },
       reflectionQuestion: "今の感じはどうですか？",
       breathingGuides: [
         { text: "吸って… 4秒", duration: 4000 },
@@ -749,6 +762,19 @@ export const siteCopy = {
       endButton: "1분을 마칩니다",
       completeTitle: "오늘, 당신은 자신에게 돌아왔습니다.",
       completeBody: "이 작은 1분이 함께 깨어나는 리듬의 시작입니다.",
+      completionMoments: [
+        "오늘도 자신에게 돌아오는 1분을 고맙게 받았습니다.",
+        "고요함은 언제나 당신 안에 있습니다."
+      ],
+      breatheAgain: "한 번 더 호흡하기",
+      tellAi: "AI에게 지금 상태 전하기",
+      soundOn: "소리 켜기",
+      soundOff: "소리 끄기",
+      phaseLabels: {
+        inhale: "숨을 들이쉬고",
+        hold: "그대로 머물고",
+        exhale: "숨을 내쉽니다"
+      },
       reflectionQuestion: "지금 느낌은 어떤가요?",
       breathingGuides: [
         { text: "들이쉬기… 4초", duration: 4000 },
@@ -1368,6 +1394,19 @@ export const siteCopy = {
       endButton: "End the minute",
       completeTitle: "Today, you returned to yourself.",
       completeBody: "This one quiet minute is the beginning of a shared awakening rhythm.",
+      completionMoments: [
+        "Thank you for taking one minute to return to yourself today.",
+        "Stillness has always been within you."
+      ],
+      breatheAgain: "Breathe once more",
+      tellAi: "Tell AI how you feel now",
+      soundOn: "Sound on",
+      soundOff: "Sound off",
+      phaseLabels: {
+        inhale: "Inhale",
+        hold: "Stay here",
+        exhale: "Exhale"
+      },
       reflectionQuestion: "How do you feel right now?",
       breathingGuides: [
         { text: "Inhale... 4s", duration: 4000 },

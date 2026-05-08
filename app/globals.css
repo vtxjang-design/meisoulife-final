@@ -64,3 +64,94 @@ img {
   max-width: 100%;
   height: auto;
 }
+
+@keyframes meditation-ambient-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.92;
+  }
+
+  50% {
+    transform: scale(1.03);
+    opacity: 1;
+  }
+}
+
+@keyframes meditation-float {
+  0% {
+    transform: translate3d(0, 18px, 0) scale(0.9);
+    opacity: 0;
+  }
+
+  18% {
+    opacity: 0.3;
+  }
+
+  82% {
+    opacity: 0.16;
+  }
+
+  100% {
+    transform: translate3d(12px, -26px, 0) scale(1.08);
+    opacity: 0;
+  }
+}
+
+@keyframes meditation-fog {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.42;
+  }
+
+  50% {
+    transform: translate3d(0, -10px, 0) scale(1.08);
+    opacity: 0.56;
+  }
+}
+
+@keyframes meditation-soft-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.02);
+    opacity: 0.96;
+  }
+}
+
+@keyframes meditation-fade-up {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-meditation-ambient-breathe {
+  animation: meditation-ambient-breathe 14s ease-in-out infinite;
+}
+
+.animate-meditation-float {
+  animation: meditation-float 14s linear infinite;
+}
+
+.animate-meditation-fog {
+  animation: meditation-fog 18s ease-in-out infinite;
+}
+
+.animate-meditation-soft-pulse {
+  animation: meditation-soft-pulse 2.8s ease-in-out infinite;
+}
+
+.animate-meditation-fade-up {
+  animation: meditation-fade-up 800ms ease-out both;
+}
