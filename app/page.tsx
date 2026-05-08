@@ -117,7 +117,7 @@ export default function HomePage() {
     <div className="pb-28">
       <section className="section-shell pt-14 sm:pt-20">
         <div className="grid gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
-          <div className="space-y-7">
+          <div className="space-y-8">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm uppercase tracking-[0.34em] text-gold/85">{landing.hero.eyebrow}</p>
               <div className="inline-flex w-fit rounded-full border border-white/10 bg-white/[0.03] p-1">
@@ -136,18 +136,18 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="space-y-4">
-              <p className="whitespace-pre-line text-2xl leading-9 text-gold/88 sm:text-3xl">{landing.hero.supporting}</p>
-              <h1 className="whitespace-pre-line font-serif text-5xl leading-tight text-white sm:text-6xl lg:text-7xl">
+            <div className="space-y-5">
+              <p className="whitespace-pre-line text-2xl leading-10 text-gold/82 sm:text-[32px] sm:leading-[1.55]">{landing.hero.supporting}</p>
+              <h1 className="whitespace-pre-line font-serif text-5xl leading-[1.18] text-white sm:text-6xl sm:leading-[1.2] lg:text-7xl lg:leading-[1.18]">
                 {landing.hero.title}
               </h1>
-              <p className="max-w-3xl text-lg leading-8 text-white/72 sm:text-xl">{landing.hero.subtitle}</p>
+              <p className="max-w-3xl text-lg leading-8 text-white/68 sm:text-xl sm:leading-9">{landing.hero.subtitle}</p>
             </div>
 
-            <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="flex flex-col gap-3 pt-1 sm:flex-row">
               <Link
                 href="/challenge"
-                className="inline-flex min-h-[58px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.28)] transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
+                className="inline-flex min-h-[58px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink shadow-[0_18px_36px_rgba(212,186,117,0.22)] transition duration-300 hover:scale-[1.01] hover:bg-[#e7cd92]"
               >
                 {landing.hero.primary}
               </Link>
@@ -159,9 +159,9 @@ export default function HomePage() {
               </Link>
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 pt-1">
               {landing.hero.proof.map((item) => (
-                <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-white/64">
+                <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-white/58">
                   {item}
                 </span>
               ))}

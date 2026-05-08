@@ -112,14 +112,14 @@ export type LandingCopy = {
 export const landingCopy: Record<LandingLanguage, LandingCopy> = {
   jp: {
     hero: {
-      eyebrow: "Daily AI Coexistence Rhythm",
-      title: "1日1分から。\nAIと共に続ける瞑想習慣。",
-      supporting: "忙しい毎日に、\n戻れる場所を。",
+      eyebrow: "Quiet Daily Rhythm",
+      title: "1日1分から。\n自分に戻る静かな習慣。",
+      supporting: "一人じゃない。\n共に目覚める毎日へ。",
       subtitle:
-        "心と脳を整え、毎日のリズムを取り戻す。AI瞑想コーチと、世界の仲間と共に続ける新しい瞑想ライフ。",
+        "忙しい毎日の中でも、静かに呼吸を整え、自分の中心に戻れる場所を。瞑想lifeは、世界のどこかの誰かとやわらかくつながりながら続ける、新しい日常のリズムです。",
       primary: "無料で7日間はじめる",
       secondary: "1分瞑想を体験する",
-      proof: ["1日1分から", "AIがそっと支える", "世界と静かにつながる"]
+      proof: ["1日1分から", "静かに戻れる", "世界とやわらかくつながる"]
     },
     instant: {
       eyebrow: "Instant Calm",
@@ -301,14 +301,14 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
   },
   kr: {
     hero: {
-      eyebrow: "Daily AI Coexistence Rhythm",
-      title: "하루 1분부터.\nAI와 함께 이어가는 명상 습관.",
-      supporting: "바쁜 하루에도,\n돌아올 수 있는 자리.",
+      eyebrow: "Quiet Daily Rhythm",
+      title: "하루 1분부터.\n자신에게 돌아오는 고요한 습관.",
+      supporting: "혼자가 아닙니다.\n함께 깨어나는 일상으로.",
       subtitle:
-        "마음과 뇌를 정돈하고, 하루의 리듬을 되찾습니다. AI 명상 코치와 세계의 사람들과 함께 이어가는 새로운 명상 라이프.",
+        "바쁜 일상 속에서도 조용히 호흡을 정돈하고 자신의 중심으로 돌아올 수 있는 자리. 명상life는 세계 어딘가의 누군가와 부드럽게 연결된 채 이어가는 새로운 일상의 리듬입니다.",
       primary: "무료로 7일 시작하기",
       secondary: "1분 명상 체험하기",
-      proof: ["하루 1분부터", "AI가 조용히 곁에", "세계와 고요하게 연결"]
+      proof: ["하루 1분부터", "조용히 돌아오기", "세계와 부드럽게 연결"]
     },
     instant: {
       eyebrow: "Instant Calm",
@@ -489,14 +489,14 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
   },
   en: {
     hero: {
-      eyebrow: "Daily AI Coexistence Rhythm",
-      title: "From one minute a day.\nA meditation habit continued with AI.",
-      supporting: "A place to return,\ninside a busy day.",
+      eyebrow: "Quiet Daily Rhythm",
+      title: "From one minute a day.\nA quiet habit of returning to yourself.",
+      supporting: "You are not alone.\nToward days of awakening together.",
       subtitle:
-        "Settle the mind and brain, and return to your daily rhythm. A new meditation life continued with an AI coach and quiet companions around the world.",
+        "A place to settle your breath and return to your center, even in the middle of a busy day. Meisoulife is a new daily rhythm you continue while feeling softly connected to someone, somewhere in the world.",
       primary: "Start free for 7 days",
       secondary: "Try the 1-minute meditation",
-      proof: ["From 1 minute a day", "Gently supported by AI", "Quietly connected to the world"]
+      proof: ["From one minute a day", "A quiet place to return", "Softly connected to the world"]
     },
     instant: {
       eyebrow: "Instant Calm",
