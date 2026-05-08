@@ -138,6 +138,7 @@ export const siteCopy = {
       tellAi: "AIに今の状態を伝える",
       soundOn: "音を入れる",
       soundOff: "音を消す",
+      natureLabel: "自然のリズムとともに呼吸する",
       phaseLabels: {
         inhale: "息を吸って",
         hold: "そのまま",
@@ -770,6 +771,7 @@ export const siteCopy = {
       tellAi: "AI에게 지금 상태 전하기",
       soundOn: "소리 켜기",
       soundOff: "소리 끄기",
+      natureLabel: "자연의 리듬과 함께 호흡합니다",
       phaseLabels: {
         inhale: "숨을 들이쉬고",
         hold: "그대로 머물고",
@@ -1402,6 +1404,7 @@ export const siteCopy = {
       tellAi: "Tell AI how you feel now",
       soundOn: "Sound on",
       soundOff: "Sound off",
+      natureLabel: "Breathe with the rhythm of nature",
       phaseLabels: {
         inhale: "Inhale",
         hold: "Stay here",

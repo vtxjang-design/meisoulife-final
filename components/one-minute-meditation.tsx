@@ -9,6 +9,10 @@ const INHALE_SECONDS = 4;
 const HOLD_SECONDS = 2;
 const EXHALE_SECONDS = 4;
 const BREATH_CYCLE_SECONDS = INHALE_SECONDS + HOLD_SECONDS + EXHALE_SECONDS;
+const AMBIENT_VIDEO_SRC = "/videos/one-minute-nature-loop.mp4";
+// TODO: Add the downloaded 40-second nature video from the provided YouTube Shorts link
+// as /public/videos/one-minute-nature-loop.mp4 so the meditation can use a local looping
+// ambient background without YouTube UI, controls, or branding.
 const AI_COACH_URL =
   process.env.NEXT_PUBLIC_AI_COACH_URL ||
   "https://chatgpt.com/g/g-69f968bc9a408191a3e5f943912666c0-quiet-rhythm-guide";
@@ -60,6 +64,8 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [completionIndex, setCompletionIndex] = useState(0);
   const [hasUserGesture, setHasUserGesture] = useState(false);
+  const [ambientVideoAvailable, setAmbientVideoAvailable] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
   const completionHandledRef = useRef(false);
   const previousPhaseRef = useRef<BreathPhase>("inhale");
@@ -86,6 +92,53 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
     completionHandledRef.current = false;
     previousPhaseRef.current = "inhale";
   }, [open, modalCopy.completionMoments.length]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const syncMotionPreference = () => {
+      setPrefersReducedMotion(mediaQuery.matches);
+    };
+
+    syncMotionPreference();
+    mediaQuery.addEventListener("change", syncMotionPreference);
+
+    return () => {
+      mediaQuery.removeEventListener("change", syncMotionPreference);
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    if (!open || prefersReducedMotion) {
+      setAmbientVideoAvailable(false);
+      return;
+    }
+
+    async function checkAmbientVideo() {
+      try {
+        const response = await fetch(AMBIENT_VIDEO_SRC, { method: "HEAD" });
+
+        if (!cancelled) {
+          setAmbientVideoAvailable(response.ok);
+        }
+      } catch (_error) {
+        if (!cancelled) {
+          setAmbientVideoAvailable(false);
+        }
+      }
+    }
+
+    checkAmbientVideo();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [open, prefersReducedMotion]);
 
   useEffect(() => {
     if (!open || isComplete) {
@@ -250,10 +303,28 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   const orbWarmthOpacity = phase === "exhale" ? 0.26 : 0.16;
   const progress = ((TOTAL_SECONDS - secondsLeft) / TOTAL_SECONDS) * 100;
   const orbTransitionDuration = `${getPhaseDuration(phase)}s`;
+  const ambientVideoOpacity = isComplete ? "opacity-[0.24]" : hasUserGesture ? "opacity-[0.18]" : "opacity-[0.1]";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#020814]/92 px-4 py-4 backdrop-blur-xl sm:px-6">
       <div className="absolute inset-0 overflow-hidden">
+        {ambientVideoAvailable ? (
+          <div className={`absolute inset-0 transition-opacity duration-[1800ms] ease-out ${ambientVideoOpacity}`}>
+            <video
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover scale-[1.08] md:scale-[1.04]"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-hidden="true"
+            >
+              <source src={AMBIENT_VIDEO_SRC} type="video/mp4" />
+            </video>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02),transparent_40%),linear-gradient(180deg,rgba(2,8,20,0.52)_0%,rgba(2,8,20,0.72)_48%,rgba(2,8,20,0.88)_100%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.08),transparent_24%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.08),transparent_30%)]" />
+          </div>
+        ) : null}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_28%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.14),transparent_34%),linear-gradient(180deg,rgba(4,10,19,0.96)_0%,rgba(8,18,32,0.98)_100%)] animate-meditation-ambient-breathe" />
         <div className="absolute left-1/2 top-[12%] h-64 w-64 -translate-x-1/2 rounded-full bg-gold/10 blur-3xl animate-meditation-fog" />
         <div className="absolute bottom-[8%] right-[14%] h-48 w-48 rounded-full bg-moss/12 blur-3xl animate-meditation-fog" />
@@ -344,6 +415,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
             </div>
 
             <div className="mt-5 min-h-[48px] max-w-xs">
+              <p className="mb-2 text-[11px] uppercase tracking-[0.28em] text-white/34">{modalCopy.natureLabel}</p>
               <p className="text-base leading-7 text-white/58">{modalCopy.breathingGuides[phase === "inhale" ? 0 : phase === "hold" ? 1 : 2]?.text}</p>
             </div>
 
