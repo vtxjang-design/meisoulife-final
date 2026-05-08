@@ -1,34 +1,38 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSiteUrl } from "@/lib/env";
-import { getStripeClient, mapMembershipPlan, membershipPlans } from "@/lib/stripe";
+import { getPlanPriceId, getStripeClient, mapMembershipPlan, membershipPlans, normalizeCheckoutPlan } from "@/lib/stripe";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 const checkoutSchema = z.object({
-  plan: z.enum(["basic", "leader", "premium"])
+  plan: z.enum(["basic", "leader", "premium", "growth", "inner_circle"])
 });
 
 export async function POST(request: Request) {
   try {
     const stripe = getStripeClient();
     const payload = checkoutSchema.parse(await request.json());
-    const config = membershipPlans[payload.plan];
+    const checkoutPlan = normalizeCheckoutPlan(payload.plan);
+    const config = membershipPlans[checkoutPlan];
     const supabase = await getSupabaseServerClient();
 
     if (!stripe) {
-      return NextResponse.json({
-        ok: true,
-        placeholder: true,
-        message: "Stripe secret key is not configured yet."
-      });
-    }
-
-    const priceId = process.env[config.envKey];
-
-    if (!priceId) {
       return NextResponse.json(
         {
-          error: `Missing ${config.envKey}`
+          error: "Stripe checkout is not configured yet."
+        },
+        {
+          status: 503
+        }
+      );
+    }
+
+    const priceConfig = getPlanPriceId(checkoutPlan);
+
+    if (!priceConfig) {
+      return NextResponse.json(
+        {
+          error: `Missing Stripe price ID for ${config.name}.`
         },
         {
           status: 400
@@ -68,14 +72,17 @@ export async function POST(request: Request) {
     console.log("[stripe-checkout] authenticated user", {
       userId: user.id,
       email: user.email,
-      plan: payload.plan
+      plan: checkoutPlan
     });
 
     const siteUrl = getSiteUrl();
-    const membershipPlan = mapMembershipPlan(payload.plan);
+    const membershipPlan = mapMembershipPlan(checkoutPlan);
     const metadata = {
       user_id: user.id,
-      plan: membershipPlan
+      plan: membershipPlan,
+      tier: membershipPlan,
+      source: "meisoulife",
+      flow: "membership"
     };
 
     const session = await stripe.checkout.sessions.create({
@@ -84,12 +91,12 @@ export async function POST(request: Request) {
       customer_email: user.email,
       line_items: [
         {
-          price: priceId,
+          price: priceConfig.priceId,
           quantity: 1
         }
       ],
-      success_url: `${siteUrl}/premium?success=true`,
-      cancel_url: `${siteUrl}/membership?canceled=true`,
+      success_url: `${siteUrl}/membership/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${siteUrl}/#membership`,
       metadata,
       subscription_data: {
         metadata
@@ -100,6 +107,7 @@ export async function POST(request: Request) {
       userId: user.id,
       metadata,
       sessionId: session.id,
+      priceEnvKey: priceConfig.envKey,
       hasUrl: Boolean(session.url)
     });
 

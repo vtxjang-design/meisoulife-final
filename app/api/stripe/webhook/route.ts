@@ -14,6 +14,10 @@ type MembershipUpsert = {
   updated_at: string;
 };
 
+async function logWithoutDatabase(message: string, payload: Record<string, unknown>) {
+  console.warn(`[stripe-webhook] ${message}`, payload);
+}
+
 function toIsoDate(value?: number | null) {
   if (!value) {
     return null;
@@ -30,6 +34,10 @@ async function upsertMembership(record: MembershipUpsert) {
   const supabase = getSupabaseAdminClient();
 
   if (!supabase || !record.stripe_subscription_id) {
+    await logWithoutDatabase("memberships upsert skipped", {
+      reason: !supabase ? "missing_supabase_admin" : "missing_subscription_id",
+      subscriptionId: record.stripe_subscription_id
+    });
     return;
   }
 
@@ -89,6 +97,10 @@ async function handleInvoicePaid(stripe: Stripe, invoice: Stripe.Invoice) {
   });
 }
 
+async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
+  await handleSubscriptionUpdated(subscription);
+}
+
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   await upsertMembership({
     user_id: subscription.metadata?.user_id || null,
@@ -146,12 +158,17 @@ export async function POST(request: Request) {
   try {
     const body = await request.text();
     const event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+    console.log("[stripe-webhook] received", { type: event.type, id: event.id });
 
     switch (event.type) {
       case "checkout.session.completed":
         await handleCheckoutCompleted(stripe, event.data.object as Stripe.Checkout.Session);
         break;
+      case "customer.subscription.created":
+        await handleSubscriptionCreated(event.data.object as Stripe.Subscription);
+        break;
       case "invoice.paid":
+      case "invoice.payment_succeeded":
         await handleInvoicePaid(stripe, event.data.object as Stripe.Invoice);
         break;
       case "customer.subscription.updated":
@@ -164,11 +181,13 @@ export async function POST(request: Request) {
         await handleInvoiceFailed(stripe, event.data.object as Stripe.Invoice);
         break;
       default:
+        console.log("[stripe-webhook] unhandled", { type: event.type });
         break;
     }
 
     return NextResponse.json({ received: true });
   } catch (error) {
+    console.error("[stripe-webhook] failed", error);
     return NextResponse.json(
       {
         error: error instanceof Error ? error.message : "Webhook failed"
