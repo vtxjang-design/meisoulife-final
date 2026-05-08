@@ -94,12 +94,23 @@ export const siteCopy = {
       brand: "瞑想life",
       login: "ログイン",
       freeJoin: "無料参加",
+      menu: "メニュー",
+      close: "閉じる",
       nav: [
         { href: "/", label: "ホーム" },
         { href: "/challenge", label: "7日チャレンジ" },
         { href: "/pricing", label: "料金" },
         { href: "/community", label: "コミュニティ" },
         { href: "/leaders", label: "リーダー成長" }
+      ],
+      mobileMenu: [
+        { href: "/", label: "ホーム" },
+        { href: "/#one-minute-experience", label: "1分瞑想" },
+        { href: "/#ai-rhythm-coach", label: "AIコーチ" },
+        { href: "/pricing", label: "料金" },
+        { href: "/program/basic", label: "プログラム" },
+        { href: "/community", label: "コミュニティ" },
+        { href: "/challenge", label: "無料で始める" }
       ]
     },
     footer: {
@@ -727,12 +738,23 @@ export const siteCopy = {
       brand: "명상life",
       login: "로그인",
       freeJoin: "무료 참여",
+      menu: "메뉴",
+      close: "닫기",
       nav: [
         { href: "/", label: "홈" },
         { href: "/challenge", label: "7일 챌린지" },
         { href: "/pricing", label: "요금" },
         { href: "/community", label: "커뮤니티" },
         { href: "/leaders", label: "리더 성장" }
+      ],
+      mobileMenu: [
+        { href: "/", label: "홈" },
+        { href: "/#one-minute-experience", label: "1분 명상" },
+        { href: "/#ai-rhythm-coach", label: "AI 코치" },
+        { href: "/pricing", label: "요금" },
+        { href: "/program/basic", label: "프로그램" },
+        { href: "/community", label: "커뮤니티" },
+        { href: "/challenge", label: "무료로 시작하기" }
       ]
     },
     footer: {
@@ -1360,12 +1382,23 @@ export const siteCopy = {
       brand: "Meisou Life",
       login: "Log In",
       freeJoin: "Free Join",
+      menu: "Menu",
+      close: "Close",
       nav: [
         { href: "/", label: "Home" },
         { href: "/challenge", label: "7-Day Challenge" },
         { href: "/pricing", label: "Pricing" },
         { href: "/community", label: "Community" },
         { href: "/leaders", label: "Leader Path" }
+      ],
+      mobileMenu: [
+        { href: "/", label: "Home" },
+        { href: "/#one-minute-experience", label: "1-Minute Meditation" },
+        { href: "/#ai-rhythm-coach", label: "AI Coach" },
+        { href: "/pricing", label: "Pricing" },
+        { href: "/program/basic", label: "Programs" },
+        { href: "/community", label: "Community" },
+        { href: "/challenge", label: "Start Free" }
       ]
     },
     footer: {
