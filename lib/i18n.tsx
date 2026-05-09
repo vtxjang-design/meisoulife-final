@@ -721,6 +721,23 @@ export const siteCopy = {
       secondary: "今日の瞑想を始める",
       tertiary: "料金ページを見る"
     },
+    membershipSuccessPage: {
+      badge: "メンバーシップ有効",
+      title: "お支払いが完了しました。",
+      subtitle: "あなたの瞑想lifeメンバーシップが有効になりました。",
+      body: "自分に戻るリズムが、今日からあなたの日常に始まります。",
+      activeTierLabel: "Activated membership",
+      planLabels: {
+        basic: "Basic",
+        growth: "Growth",
+        inner_circle: "Inner Circle"
+      },
+      steps: ["LINEコミュニティに参加する", "AIリズムコーチを開く", "今日の1分リズムを続ける"],
+      lineButton: "LINEコミュニティへ",
+      coachButton: "AIコーチを開く",
+      rhythmButton: "今日のリズムへ戻る",
+      programButton: "メンバープログラムを開く"
+    },
     membershipPage: {
       title: "メンバーシップのご案内",
       subtitle: "有料リズムへ進む準備ができたら、ここから続けられます。",
@@ -1365,6 +1382,23 @@ export const siteCopy = {
       secondary: "오늘의 명상 시작하기",
       tertiary: "요금 페이지 보기"
     },
+    membershipSuccessPage: {
+      badge: "멤버십 활성화",
+      title: "결제가 완료되었습니다.",
+      subtitle: "당신의 명상life 멤버십이 활성화되었습니다.",
+      body: "자신에게 돌아오는 리듬이 오늘부터 당신의 일상 안에서 시작됩니다.",
+      activeTierLabel: "Activated membership",
+      planLabels: {
+        basic: "Basic",
+        growth: "Growth",
+        inner_circle: "Inner Circle"
+      },
+      steps: ["LINE 커뮤니티에 참여하기", "AI 리듬 코치 열기", "오늘의 1분 리듬 이어가기"],
+      lineButton: "LINE 커뮤니티로",
+      coachButton: "AI 코치 열기",
+      rhythmButton: "오늘의 리듬으로 돌아가기",
+      programButton: "멤버 프로그램 열기"
+    },
     membershipPage: {
       title: "멤버십 안내",
       subtitle: "유료 리듬을 이어갈 준비가 되면 여기서 다시 시작할 수 있습니다.",
@@ -2008,6 +2042,23 @@ export const siteCopy = {
       primary: "Open the program",
       secondary: "Start today’s meditation",
       tertiary: "View pricing"
+    },
+    membershipSuccessPage: {
+      badge: "Membership active",
+      title: "Your payment is complete.",
+      subtitle: "Your Meisoulife membership is now active.",
+      body: "A rhythm of returning to yourself begins in your daily life from today.",
+      activeTierLabel: "Activated membership",
+      planLabels: {
+        basic: "Basic",
+        growth: "Growth",
+        inner_circle: "Inner Circle"
+      },
+      steps: ["Join the LINE community", "Open the AI Rhythm Coach", "Continue today’s one-minute rhythm"],
+      lineButton: "Go to the LINE community",
+      coachButton: "Open the AI coach",
+      rhythmButton: "Return to today’s rhythm",
+      programButton: "Open the member program"
     },
     membershipPage: {
       title: "Membership",

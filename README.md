@@ -153,6 +153,9 @@ Checkout Session API는 로그인한 사용자 기준으로 Stripe 세션을 만
 ```text
 user_id
 plan
+tier
+source=meisoulife
+flow=membership
 ```
 
 Stripe Dashboard 설정:
@@ -168,17 +171,19 @@ https://www.meisoulife.com/api/stripe/webhook
 
 ```text
 checkout.session.completed
+customer.subscription.created
 invoice.paid
+invoice.payment_succeeded
 customer.subscription.updated
 customer.subscription.deleted
 invoice.payment_failed
 ```
 
-Payment Link / Checkout success URL 권장값:
+Checkout success / cancel URL:
 
 ```text
-Success URL: https://www.meisoulife.com/premium?success=true
-Cancel URL:  https://www.meisoulife.com/membership?canceled=true
+Success URL: https://www.meisoulife.com/membership/success?session_id={CHECKOUT_SESSION_ID}
+Cancel URL:  https://www.meisoulife.com/#membership
 ```
 
 권한 동작:
@@ -187,6 +192,25 @@ Cancel URL:  https://www.meisoulife.com/membership?canceled=true
 /premium
   - 로그인 + memberships.status 가 active / trialing 이면 접근 허용
   - 그 외에는 /membership 또는 /login 으로 이동
+```
+
+필요한 환경변수:
+
+```text
+NEXT_PUBLIC_SITE_URL
+STRIPE_SECRET_KEY
+STRIPE_WEBHOOK_SECRET
+STRIPE_PRICE_BASIC_MONTHLY
+STRIPE_PRICE_GROWTH_MONTHLY
+STRIPE_PRICE_INNER_CIRCLE_MONTHLY
+```
+
+기존 호환용으로 아래 키도 계속 읽습니다:
+
+```text
+STRIPE_PRICE_BASIC
+STRIPE_PRICE_LEADER
+STRIPE_PRICE_PREMIUM
 ```
 
 ## 배포
