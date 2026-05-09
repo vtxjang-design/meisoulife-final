@@ -64,9 +64,11 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [completionIndex, setCompletionIndex] = useState(0);
   const [hasUserGesture, setHasUserGesture] = useState(false);
-  const [ambientVideoAvailable, setAmbientVideoAvailable] = useState(false);
+  const [ambientVideoLoaded, setAmbientVideoLoaded] = useState(false);
+  const [ambientVideoFailed, setAmbientVideoFailed] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
+  const ambientVideoRef = useRef<HTMLVideoElement | null>(null);
   const completionHandledRef = useRef(false);
   const previousPhaseRef = useRef<BreathPhase>("inhale");
 
@@ -81,6 +83,8 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
       setSoundEnabled(false);
       setCompletionIndex(0);
       setHasUserGesture(false);
+      setAmbientVideoLoaded(false);
+      setAmbientVideoFailed(false);
       completionHandledRef.current = false;
       previousPhaseRef.current = "inhale";
       return;
@@ -112,33 +116,19 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   }, []);
 
   useEffect(() => {
-    let cancelled = false;
-
-    if (!open || prefersReducedMotion) {
-      setAmbientVideoAvailable(false);
+    if (!open || prefersReducedMotion || ambientVideoFailed || !ambientVideoRef.current) {
       return;
     }
 
-    async function checkAmbientVideo() {
-      try {
-        const response = await fetch(AMBIENT_VIDEO_SRC, { method: "HEAD" });
+    const video = ambientVideoRef.current;
+    const playPromise = video.play();
 
-        if (!cancelled) {
-          setAmbientVideoAvailable(response.ok);
-        }
-      } catch (_error) {
-        if (!cancelled) {
-          setAmbientVideoAvailable(false);
-        }
-      }
+    if (playPromise) {
+      playPromise.catch(() => {
+        setAmbientVideoFailed(true);
+      });
     }
-
-    checkAmbientVideo();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [open, prefersReducedMotion]);
+  }, [ambientVideoFailed, open, prefersReducedMotion]);
 
   useEffect(() => {
     if (!open || isComplete) {
@@ -304,25 +294,38 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   const progress = ((TOTAL_SECONDS - secondsLeft) / TOTAL_SECONDS) * 100;
   const orbTransitionDuration = `${getPhaseDuration(phase)}s`;
   const ambientVideoOpacity = isComplete ? "opacity-[0.24]" : hasUserGesture ? "opacity-[0.18]" : "opacity-[0.1]";
+  const showAmbientVideo = !prefersReducedMotion && !ambientVideoFailed;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#020814]/92 px-4 py-4 backdrop-blur-xl sm:px-6">
       <div className="absolute inset-0 overflow-hidden">
-        {ambientVideoAvailable ? (
-          <div className={`absolute inset-0 transition-opacity duration-[1800ms] ease-out ${ambientVideoOpacity}`}>
+        {showAmbientVideo ? (
+          <div
+            className={`absolute inset-0 transition-all duration-[1800ms] ease-out ${ambientVideoOpacity} ${
+              ambientVideoLoaded ? "scale-100 blur-0" : "scale-[1.02] blur-[2px]"
+            }`}
+          >
             <video
-              className="pointer-events-none absolute inset-0 h-full w-full object-cover scale-[1.08] md:scale-[1.04]"
+              ref={ambientVideoRef}
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover scale-[1.08] saturate-[0.72] contrast-[0.78] brightness-[0.68] md:scale-[1.04]"
               autoPlay
               muted
               loop
               playsInline
               preload="metadata"
               aria-hidden="true"
+              onLoadedData={() => setAmbientVideoLoaded(true)}
+              onCanPlay={() => setAmbientVideoLoaded(true)}
+              onError={() => {
+                setAmbientVideoFailed(true);
+                setAmbientVideoLoaded(false);
+              }}
             >
               <source src={AMBIENT_VIDEO_SRC} type="video/mp4" />
             </video>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02),transparent_40%),linear-gradient(180deg,rgba(2,8,20,0.52)_0%,rgba(2,8,20,0.72)_48%,rgba(2,8,20,0.88)_100%)]" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.08),transparent_24%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.08),transparent_30%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.018),transparent_42%),linear-gradient(180deg,rgba(2,8,20,0.58)_0%,rgba(2,8,20,0.78)_48%,rgba(2,8,20,0.9)_100%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.08),transparent_22%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.08),transparent_28%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(2,8,20,0.2)_0%,transparent_18%,transparent_82%,rgba(2,8,20,0.24)_100%)]" />
           </div>
         ) : null}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_28%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.14),transparent_34%),linear-gradient(180deg,rgba(4,10,19,0.96)_0%,rgba(8,18,32,0.98)_100%)] animate-meditation-ambient-breathe" />
