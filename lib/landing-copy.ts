@@ -10,6 +10,33 @@ export type LandingCopy = {
     secondary: string;
     proof: string[];
   };
+  checkIn: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    support: string;
+    returnLine: string;
+    recommendationEyebrow: string;
+    recommendationTitle: string;
+    wordLabel: string;
+    breathLabel: string;
+    meditationLabel: string;
+    supportLabel: string;
+    secondaryCta: string;
+    options: Array<{
+      key: string;
+      emoji: string;
+      label: string;
+      recommendation: {
+        type: string;
+        word: string;
+        breath: string;
+        meditation: string;
+        support: string;
+        cta: string;
+      };
+    }>;
+  };
   instant: {
     eyebrow: string;
     title: string;
@@ -120,6 +147,100 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       primary: "無料で7日間はじめる",
       secondary: "1分瞑想を体験する",
       proof: ["1日1分から", "静かに戻れる", "世界とやわらかくつながる"]
+    },
+    checkIn: {
+      eyebrow: "Today Rhythm Check-in",
+      title: "今日の状態は？",
+      description: "今のあなたに合う\n小さなリズムを見つけましょう。",
+      support: "無理をしなくて大丈夫。",
+      returnLine: "今日も戻ってきました。",
+      recommendationEyebrow: "Today Rhythm Recommendation",
+      recommendationTitle: "小さなリズムの提案",
+      wordLabel: "今日の言葉",
+      breathLabel: "呼吸リズム",
+      meditationLabel: "1分瞑想",
+      supportLabel: "静かなサポート",
+      secondaryCta: "AIコーチを見る",
+      options: [
+        {
+          key: "heavy",
+          emoji: "😔",
+          label: "心が少し重い",
+          recommendation: {
+            type: "heavy",
+            word: "今日は、少し軽くなることだけで十分です。",
+            breath: "4秒吸って、6秒吐く",
+            meditation: "気持ちをほどく1分リズム",
+            support: "まずは今の重さをそのまま受け止めましょう。",
+            cta: "静かな1分を始める"
+          }
+        },
+        {
+          key: "anxious",
+          emoji: "😟",
+          label: "不安がある",
+          recommendation: {
+            type: "anxious",
+            word: "今は答えを急がなくて大丈夫。",
+            breath: "4秒吸って、4秒吐く",
+            meditation: "不安を落ち着かせる1分リズム",
+            support: "息の出入りだけを感じれば十分です。",
+            cta: "静かな1分を始める"
+          }
+        },
+        {
+          key: "unfocused",
+          emoji: "😵",
+          label: "集中できない",
+          recommendation: {
+            type: "unfocused",
+            word: "ひとつに戻るだけで流れは変わります。",
+            breath: "4秒吸って、2秒止めて、4秒吐く",
+            meditation: "中心を取り戻す1分リズム",
+            support: "考えを整えるより、呼吸をそろえてみましょう。",
+            cta: "リズムを整える"
+          }
+        },
+        {
+          key: "tired",
+          emoji: "😴",
+          label: "少し疲れている",
+          recommendation: {
+            type: "tired",
+            word: "今日は少しゆっくりでもいい。",
+            breath: "自然に吸って、少し長く吐く",
+            meditation: "回復のための呼吸",
+            support: "休むことも、今日の大切な実践です。",
+            cta: "リズムを整える"
+          }
+        },
+        {
+          key: "calm",
+          emoji: "😌",
+          label: "落ち着いている",
+          recommendation: {
+            type: "calm",
+            word: "その静けさを、今日の土台にしましょう。",
+            breath: "4秒吸って、4秒吐く",
+            meditation: "静けさを広げる1分リズム",
+            support: "今の穏やかさを、少し長く保ってみましょう。",
+            cta: "このまま呼吸する"
+          }
+        },
+        {
+          key: "grateful",
+          emoji: "🙏",
+          label: "感謝している",
+          recommendation: {
+            type: "grateful",
+            word: "そのやわらかさは、周りにも静かに広がります。",
+            breath: "4秒吸って、6秒吐く",
+            meditation: "感謝を深める1分リズム",
+            support: "ひとつの感謝を胸の中に置いて呼吸してみましょう。",
+            cta: "やさしい1分を始める"
+          }
+        }
+      ]
     },
     instant: {
       eyebrow: "Instant Calm",
@@ -310,6 +431,100 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       secondary: "1분 명상 체험하기",
       proof: ["하루 1분부터", "조용히 돌아오기", "세계와 부드럽게 연결"]
     },
+    checkIn: {
+      eyebrow: "Today Rhythm Check-in",
+      title: "오늘의 상태는 어떤가요?",
+      description: "지금의 당신에게 맞는\n작은 리듬을 찾아봅시다.",
+      support: "무리하지 않아도 괜찮습니다.",
+      returnLine: "오늘도 다시 돌아왔습니다.",
+      recommendationEyebrow: "Today Rhythm Recommendation",
+      recommendationTitle: "작은 리듬의 제안",
+      wordLabel: "오늘의 말",
+      breathLabel: "호흡 리듬",
+      meditationLabel: "1분 명상",
+      supportLabel: "조용한 지원",
+      secondaryCta: "AI 코치 보기",
+      options: [
+        {
+          key: "heavy",
+          emoji: "😔",
+          label: "마음이 조금 무겁다",
+          recommendation: {
+            type: "heavy",
+            word: "오늘은 조금 가벼워지는 것만으로도 충분합니다.",
+            breath: "4초 들이쉬고, 6초 내쉬기",
+            meditation: "마음을 풀어주는 1분 리듬",
+            support: "먼저 지금의 무게를 그대로 받아들여 봅시다.",
+            cta: "조용한 1분 시작하기"
+          }
+        },
+        {
+          key: "anxious",
+          emoji: "😟",
+          label: "불안이 있다",
+          recommendation: {
+            type: "anxious",
+            word: "지금은 답을 서두르지 않아도 괜찮습니다.",
+            breath: "4초 들이쉬고, 4초 내쉬기",
+            meditation: "불안을 가라앉히는 1분 리듬",
+            support: "숨이 드나드는 감각만 느껴도 충분합니다.",
+            cta: "조용한 1분 시작하기"
+          }
+        },
+        {
+          key: "unfocused",
+          emoji: "😵",
+          label: "집중이 안 된다",
+          recommendation: {
+            type: "unfocused",
+            word: "하나로 돌아오는 것만으로 흐름은 달라집니다.",
+            breath: "4초 들이쉬고, 2초 멈추고, 4초 내쉬기",
+            meditation: "중심을 되찾는 1분 리듬",
+            support: "생각을 정리하기보다 호흡을 먼저 맞춰보세요.",
+            cta: "리듬을 정돈하기"
+          }
+        },
+        {
+          key: "tired",
+          emoji: "😴",
+          label: "조금 피곤하다",
+          recommendation: {
+            type: "tired",
+            word: "오늘은 조금 천천히 가도 좋습니다.",
+            breath: "자연스럽게 들이쉬고, 조금 길게 내쉬기",
+            meditation: "회복을 위한 호흡",
+            support: "쉬는 것도 오늘의 소중한 실천입니다.",
+            cta: "리듬을 정돈하기"
+          }
+        },
+        {
+          key: "calm",
+          emoji: "😌",
+          label: "차분하다",
+          recommendation: {
+            type: "calm",
+            word: "그 고요함을 오늘의 바탕으로 삼아봅시다.",
+            breath: "4초 들이쉬고, 4초 내쉬기",
+            meditation: "고요함을 넓히는 1분 리듬",
+            support: "지금의 평온함을 조금 더 길게 머물게 해보세요.",
+            cta: "이대로 호흡하기"
+          }
+        },
+        {
+          key: "grateful",
+          emoji: "🙏",
+          label: "감사하고 있다",
+          recommendation: {
+            type: "grateful",
+            word: "그 부드러움은 주변에도 조용히 퍼집니다.",
+            breath: "4초 들이쉬고, 6초 내쉬기",
+            meditation: "감사를 깊게 하는 1분 리듬",
+            support: "감사한 하나를 가슴 안에 두고 호흡해보세요.",
+            cta: "부드러운 1분 시작하기"
+          }
+        }
+      ]
+    },
     instant: {
       eyebrow: "Instant Calm",
       title: "5초 안에 시작되는 오늘의 1분 리듬",
@@ -497,6 +712,100 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       primary: "Start free for 7 days",
       secondary: "Try the 1-minute meditation",
       proof: ["From one minute a day", "A quiet place to return", "Softly connected to the world"]
+    },
+    checkIn: {
+      eyebrow: "Today Rhythm Check-in",
+      title: "How are you today?",
+      description: "Let’s find a small rhythm\nthat fits who you are right now.",
+      support: "You do not have to force anything.",
+      returnLine: "You came back again today.",
+      recommendationEyebrow: "Today Rhythm Recommendation",
+      recommendationTitle: "A small rhythm for today",
+      wordLabel: "Today’s words",
+      breathLabel: "Breathing rhythm",
+      meditationLabel: "1-minute meditation",
+      supportLabel: "Quiet support",
+      secondaryCta: "See the AI coach",
+      options: [
+        {
+          key: "heavy",
+          emoji: "😔",
+          label: "My heart feels a little heavy",
+          recommendation: {
+            type: "heavy",
+            word: "For today, becoming a little lighter is enough.",
+            breath: "Inhale for 4, exhale for 6",
+            meditation: "A one-minute rhythm to soften heaviness",
+            support: "Begin by allowing the weight to be here as it is.",
+            cta: "Begin a quiet minute"
+          }
+        },
+        {
+          key: "anxious",
+          emoji: "😟",
+          label: "I feel anxious",
+          recommendation: {
+            type: "anxious",
+            word: "You do not have to rush for an answer right now.",
+            breath: "Inhale for 4, exhale for 4",
+            meditation: "A one-minute rhythm to settle anxiety",
+            support: "It is enough to feel the breath going in and out.",
+            cta: "Begin a quiet minute"
+          }
+        },
+        {
+          key: "unfocused",
+          emoji: "😵",
+          label: "I cannot focus",
+          recommendation: {
+            type: "unfocused",
+            word: "The flow changes when you return to one thing.",
+            breath: "Inhale for 4, hold for 2, exhale for 4",
+            meditation: "A one-minute rhythm to return to center",
+            support: "Try settling the breath before trying to fix the mind.",
+            cta: "Settle the rhythm"
+          }
+        },
+        {
+          key: "tired",
+          emoji: "😴",
+          label: "I feel a little tired",
+          recommendation: {
+            type: "tired",
+            word: "It is okay to move a little more slowly today.",
+            breath: "Breathe naturally and exhale a little longer",
+            meditation: "Breathing for recovery",
+            support: "Rest is also part of today’s practice.",
+            cta: "Settle the rhythm"
+          }
+        },
+        {
+          key: "calm",
+          emoji: "😌",
+          label: "I feel calm",
+          recommendation: {
+            type: "calm",
+            word: "Let that calmness become the ground of your day.",
+            breath: "Inhale for 4, exhale for 4",
+            meditation: "A one-minute rhythm to widen calm",
+            support: "Let this steadiness stay with you a little longer.",
+            cta: "Keep breathing"
+          }
+        },
+        {
+          key: "grateful",
+          emoji: "🙏",
+          label: "I feel grateful",
+          recommendation: {
+            type: "grateful",
+            word: "That softness can quietly spread to others too.",
+            breath: "Inhale for 4, exhale for 6",
+            meditation: "A one-minute rhythm to deepen gratitude",
+            support: "Hold one small gratitude close while you breathe.",
+            cta: "Begin a gentle minute"
+          }
+        }
+      ]
     },
     instant: {
       eyebrow: "Instant Calm",
