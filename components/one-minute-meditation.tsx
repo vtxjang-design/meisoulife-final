@@ -125,6 +125,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
 
     if (playPromise) {
       playPromise.catch(() => {
+        console.warn("Ambient meditation video failed to load");
         setAmbientVideoFailed(true);
       });
     }
@@ -293,7 +294,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   const orbWarmthOpacity = phase === "exhale" ? 0.26 : 0.16;
   const progress = ((TOTAL_SECONDS - secondsLeft) / TOTAL_SECONDS) * 100;
   const orbTransitionDuration = `${getPhaseDuration(phase)}s`;
-  const ambientVideoOpacity = isComplete ? "opacity-[0.24]" : hasUserGesture ? "opacity-[0.18]" : "opacity-[0.1]";
+  const ambientVideoOpacity = isComplete ? "opacity-[0.38]" : hasUserGesture ? "opacity-[0.35]" : "opacity-[0.35]";
   const showAmbientVideo = !prefersReducedMotion && !ambientVideoFailed;
 
   return (
@@ -302,30 +303,31 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
         {showAmbientVideo ? (
           <div
             className={`absolute inset-0 transition-all duration-[1800ms] ease-out ${ambientVideoOpacity} ${
-              ambientVideoLoaded ? "scale-100 blur-0" : "scale-[1.02] blur-[2px]"
+              ambientVideoLoaded ? "scale-100" : "scale-[1.01]"
             }`}
           >
             <video
               ref={ambientVideoRef}
-              className="pointer-events-none absolute inset-0 h-full w-full object-cover scale-[1.08] saturate-[0.72] contrast-[0.78] brightness-[0.68] md:scale-[1.04]"
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover scale-[1.08] saturate-[0.76] contrast-[0.82] brightness-[0.72] md:scale-[1.04]"
               autoPlay
               muted
               loop
               playsInline
-              preload="metadata"
+              preload="auto"
               aria-hidden="true"
               onLoadedData={() => setAmbientVideoLoaded(true)}
               onCanPlay={() => setAmbientVideoLoaded(true)}
               onError={() => {
+                console.warn("Ambient meditation video failed to load");
                 setAmbientVideoFailed(true);
                 setAmbientVideoLoaded(false);
               }}
             >
               <source src={AMBIENT_VIDEO_SRC} type="video/mp4" />
             </video>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.018),transparent_42%),linear-gradient(180deg,rgba(2,8,20,0.58)_0%,rgba(2,8,20,0.78)_48%,rgba(2,8,20,0.9)_100%)]" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.08),transparent_22%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.08),transparent_28%)]" />
-            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(2,8,20,0.2)_0%,transparent_18%,transparent_82%,rgba(2,8,20,0.24)_100%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02),transparent_42%),linear-gradient(180deg,rgba(2,8,20,0.46)_0%,rgba(2,8,20,0.66)_48%,rgba(2,8,20,0.84)_100%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.07),transparent_22%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.07),transparent_28%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(2,8,20,0.14)_0%,transparent_18%,transparent_82%,rgba(2,8,20,0.18)_100%)]" />
           </div>
         ) : null}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_28%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.14),transparent_34%),linear-gradient(180deg,rgba(4,10,19,0.96)_0%,rgba(8,18,32,0.98)_100%)] animate-meditation-ambient-breathe" />
