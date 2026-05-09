@@ -64,11 +64,8 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [completionIndex, setCompletionIndex] = useState(0);
   const [hasUserGesture, setHasUserGesture] = useState(false);
-  const [ambientVideoLoaded, setAmbientVideoLoaded] = useState(false);
-  const [ambientVideoFailed, setAmbientVideoFailed] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
-  const ambientVideoRef = useRef<HTMLVideoElement | null>(null);
   const completionHandledRef = useRef(false);
   const previousPhaseRef = useRef<BreathPhase>("inhale");
 
@@ -83,8 +80,6 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
       setSoundEnabled(false);
       setCompletionIndex(0);
       setHasUserGesture(false);
-      setAmbientVideoLoaded(false);
-      setAmbientVideoFailed(false);
       completionHandledRef.current = false;
       previousPhaseRef.current = "inhale";
       return;
@@ -114,22 +109,6 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
       mediaQuery.removeEventListener("change", syncMotionPreference);
     };
   }, []);
-
-  useEffect(() => {
-    if (!open || prefersReducedMotion || ambientVideoFailed || !ambientVideoRef.current) {
-      return;
-    }
-
-    const video = ambientVideoRef.current;
-    const playPromise = video.play();
-
-    if (playPromise) {
-      playPromise.catch(() => {
-        console.warn("Ambient meditation video failed to load");
-        setAmbientVideoFailed(true);
-      });
-    }
-  }, [ambientVideoFailed, open, prefersReducedMotion]);
 
   useEffect(() => {
     if (!open || isComplete) {
@@ -294,49 +273,42 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   const orbWarmthOpacity = phase === "exhale" ? 0.26 : 0.16;
   const progress = ((TOTAL_SECONDS - secondsLeft) / TOTAL_SECONDS) * 100;
   const orbTransitionDuration = `${getPhaseDuration(phase)}s`;
-  const ambientVideoOpacity = isComplete ? "opacity-[0.38]" : hasUserGesture ? "opacity-[0.35]" : "opacity-[0.35]";
-  const showAmbientVideo = !prefersReducedMotion && !ambientVideoFailed;
+  const ambientVideoOpacity = prefersReducedMotion ? "opacity-[0.28]" : "opacity-[0.6]";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#020814]/92 px-4 py-4 backdrop-blur-xl sm:px-6">
       <div className="absolute inset-0 overflow-hidden">
-        {showAmbientVideo ? (
-          <div
-            className={`absolute inset-0 transition-all duration-[1800ms] ease-out ${ambientVideoOpacity} ${
-              ambientVideoLoaded ? "scale-100" : "scale-[1.01]"
-            }`}
-          >
-            <video
-              ref={ambientVideoRef}
-              className="pointer-events-none absolute inset-0 h-full w-full object-cover scale-[1.08] saturate-[0.76] contrast-[0.82] brightness-[0.72] md:scale-[1.04]"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
-              aria-hidden="true"
-              onLoadedData={() => setAmbientVideoLoaded(true)}
-              onCanPlay={() => setAmbientVideoLoaded(true)}
-              onError={() => {
-                console.warn("Ambient meditation video failed to load");
-                setAmbientVideoFailed(true);
-                setAmbientVideoLoaded(false);
-              }}
-            >
-              <source src={AMBIENT_VIDEO_SRC} type="video/mp4" />
-            </video>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02),transparent_42%),linear-gradient(180deg,rgba(2,8,20,0.46)_0%,rgba(2,8,20,0.66)_48%,rgba(2,8,20,0.84)_100%)]" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.07),transparent_22%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.07),transparent_28%)]" />
-            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(2,8,20,0.14)_0%,transparent_18%,transparent_82%,rgba(2,8,20,0.18)_100%)]" />
-          </div>
-        ) : null}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_28%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.14),transparent_34%),linear-gradient(180deg,rgba(4,10,19,0.96)_0%,rgba(8,18,32,0.98)_100%)] animate-meditation-ambient-breathe" />
-        <div className="absolute left-1/2 top-[12%] h-64 w-64 -translate-x-1/2 rounded-full bg-gold/10 blur-3xl animate-meditation-fog" />
-        <div className="absolute bottom-[8%] right-[14%] h-48 w-48 rounded-full bg-moss/12 blur-3xl animate-meditation-fog" />
+        <div className={`absolute inset-0 z-0 overflow-hidden ${ambientVideoOpacity}`}>
+          <video
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+            src={AMBIENT_VIDEO_SRC}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            aria-hidden="true"
+            onLoadedData={() => {
+              console.info("Ambient meditation video loaded");
+            }}
+            onCanPlay={() => {
+              console.info("Ambient meditation video can play");
+            }}
+            onError={() => {
+              console.warn("Ambient meditation video failed to load");
+            }}
+          />
+        </div>
+        <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02),transparent_42%),linear-gradient(180deg,rgba(2,8,20,0.4)_0%,rgba(2,8,20,0.58)_48%,rgba(2,8,20,0.82)_100%)]" />
+        <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.08),transparent_22%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.08),transparent_28%)]" />
+        <div className="absolute inset-0 z-10 bg-[linear-gradient(90deg,rgba(2,8,20,0.14)_0%,transparent_18%,transparent_82%,rgba(2,8,20,0.18)_100%)]" />
+        <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_28%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.14),transparent_34%),linear-gradient(180deg,rgba(4,10,19,0.76)_0%,rgba(8,18,32,0.84)_100%)] animate-meditation-ambient-breathe" />
+        <div className="absolute left-1/2 top-[12%] z-10 h-64 w-64 -translate-x-1/2 rounded-full bg-gold/10 blur-3xl animate-meditation-fog" />
+        <div className="absolute bottom-[8%] right-[14%] z-10 h-48 w-48 rounded-full bg-moss/12 blur-3xl animate-meditation-fog" />
         {Array.from({ length: 9 }).map((_, index) => (
           <span
             key={index}
-            className="absolute rounded-full bg-white/18 animate-meditation-float"
+            className="absolute z-10 rounded-full bg-white/18 animate-meditation-float"
             style={{
               left: `${10 + index * 9}%`,
               top: `${18 + (index % 4) * 15}%`,
@@ -349,11 +321,12 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
         ))}
       </div>
 
-      <div className="relative z-10 w-full max-w-md overflow-hidden rounded-[28px] border border-white/8 bg-white/[0.04] p-5 shadow-[0_30px_80px_rgba(0,0,0,0.28)] sm:p-6">
+      <div className="relative z-20 w-full max-w-md overflow-hidden rounded-[28px] border border-white/8 bg-white/[0.04] p-5 shadow-[0_30px_80px_rgba(0,0,0,0.28)] sm:p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <p className="text-[11px] uppercase tracking-[0.32em] text-gold/72">{modalCopy.eyebrow}</p>
             <h2 className="mt-3 text-balance font-serif text-2xl leading-tight text-white/92 sm:text-[30px]">{modalCopy.title}</h2>
+            <p className="mt-2 text-[11px] uppercase tracking-[0.24em] text-emerald-100/80">Nature video layer active</p>
           </div>
 
           <button
