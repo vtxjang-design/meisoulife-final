@@ -8,9 +8,9 @@ import { DailyRhythmLayer } from "@/components/daily-rhythm-layer";
 import { InstantMeditationSection } from "@/components/instant-meditation-section";
 import { LiveTogether } from "@/components/live-together";
 import { MobileCTA } from "@/components/mobile-cta";
+import { QuietCompanionMode } from "@/components/quiet-companion-mode";
 import { RhythmGarden } from "@/components/rhythm-garden";
 import { SectionHeading } from "@/components/section-heading";
-import { TodayRhythmCheckin } from "@/components/today-rhythm-checkin";
 import { TodaysRhythmCard } from "@/components/todays-rhythm-card";
 import { getChallengeRhythmProgress, type ChallengeRhythmProgress } from "@/lib/challenge-rhythm";
 import { useLanguage, languageButtons, useSiteCopy } from "@/lib/i18n";
@@ -219,7 +219,7 @@ export default function HomePage() {
 
       <TodaysRhythmCard copy={landing.todaysRhythmCard} />
 
-      <TodayRhythmCheckin copy={landing.checkIn} />
+      <QuietCompanionMode copy={landing.quietCompanion} />
 
       <InstantMeditationSection copy={landing.instant} />
 

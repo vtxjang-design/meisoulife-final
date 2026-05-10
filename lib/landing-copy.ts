@@ -20,6 +20,16 @@ export type LandingCopy = {
     actions: string[];
     cta: string;
   };
+  quietCompanion: {
+    eyebrow: string;
+    title: string;
+    cta: string;
+    options: Array<{
+      key: string;
+      label: string;
+      response: string;
+    }>;
+  };
   checkIn: {
     eyebrow: string;
     title: string;
@@ -185,6 +195,33 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       actionLabel: "今日の小さなアクション",
       actions: ["30秒、笑顔をつくる。"],
       cta: "今日の1分を始める"
+    },
+    quietCompanion: {
+      eyebrow: "今日のあなたへ",
+      title: "今のあなたは、\nどんな感じですか？",
+      cta: "1分ガイドを始める",
+      options: [
+        {
+          key: "anxiety",
+          label: "少し不安",
+          response: "大丈夫。\n今日は答えを急がなくても大丈夫です。\nまず30秒だけ呼吸を。"
+        },
+        {
+          key: "tired",
+          label: "少し疲れた",
+          response: "よくここまで来ました。\n今日は少し休みながら整えましょう。"
+        },
+        {
+          key: "focus",
+          label: "集中したい",
+          response: "全部やらなくて大丈夫。\nまず一つだけ整えましょう。"
+        },
+        {
+          key: "calm",
+          label: "心を整えたい",
+          response: "静かに戻る時間も、\n大切な前進です。"
+        }
+      ]
     },
     checkIn: {
       eyebrow: "Today Rhythm Check-in",
@@ -511,6 +548,33 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       actions: ["30초, 미소를 지어봅니다."],
       cta: "오늘의 1분 시작하기"
     },
+    quietCompanion: {
+      eyebrow: "오늘의 당신에게",
+      title: "지금 당신은,\n어떤 느낌인가요?",
+      cta: "1분 가이드 시작하기",
+      options: [
+        {
+          key: "anxiety",
+          label: "조금 불안하다",
+          response: "괜찮습니다.\n오늘은 답을 서두르지 않아도 됩니다.\n먼저 30초만 호흡해 봅시다."
+        },
+        {
+          key: "tired",
+          label: "조금 피곤하다",
+          response: "여기까지 온 것만으로도 충분합니다.\n오늘은 조금 쉬어가며 정돈해 봅시다."
+        },
+        {
+          key: "focus",
+          label: "집중하고 싶다",
+          response: "모든 걸 다 하지 않아도 됩니다.\n먼저 하나만 정돈해 봅시다."
+        },
+        {
+          key: "calm",
+          label: "마음을 정돈하고 싶다",
+          response: "조용히 돌아오는 시간도,\n중요한 한 걸음입니다."
+        }
+      ]
+    },
     checkIn: {
       eyebrow: "Today Rhythm Check-in",
       title: "오늘의 상태는 어떤가요?",
@@ -829,6 +893,33 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       actionLabel: "Today’s small action",
       actions: ["Spend 30 seconds making a soft smile."],
       cta: "Begin today’s one minute"
+    },
+    quietCompanion: {
+      eyebrow: "For you today",
+      title: "How are you feeling\nright now?",
+      cta: "Start the 1-minute guide",
+      options: [
+        {
+          key: "anxiety",
+          label: "A little anxious",
+          response: "It’s okay.\nYou do not need to rush the answer today.\nStart with just 30 seconds of breath."
+        },
+        {
+          key: "tired",
+          label: "A little tired",
+          response: "You have already made it this far.\nLet’s settle gently while giving yourself some rest."
+        },
+        {
+          key: "focus",
+          label: "Need focus",
+          response: "You do not have to do everything.\nLet’s return to just one thing first."
+        },
+        {
+          key: "calm",
+          label: "Want to settle the mind",
+          response: "A quiet return is also\nmeaningful forward movement."
+        }
+      ]
     },
     checkIn: {
       eyebrow: "Today Rhythm Check-in",
