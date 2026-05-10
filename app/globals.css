@@ -111,6 +111,17 @@ img {
   }
 }
 
+@keyframes meditation-video-breathe {
+  0%,
+  100% {
+    transform: scale(1.01);
+  }
+
+  50% {
+    transform: scale(1.04);
+  }
+}
+
 @keyframes meditation-soft-pulse {
   0%,
   100% {
@@ -146,6 +157,10 @@ img {
 
 .animate-meditation-fog {
   animation: meditation-fog 18s ease-in-out infinite;
+}
+
+.animate-meditation-video-breathe {
+  animation: meditation-video-breathe 18s ease-in-out infinite;
 }
 
 .animate-meditation-soft-pulse {

@@ -150,6 +150,7 @@ export const siteCopy = {
       soundOn: "音を入れる",
       soundOff: "音を消す",
       natureLabel: "自然のリズムとともに呼吸する",
+      natureMicrocopy: "疲れたら、\nここに戻ってきてください。",
       phaseLabels: {
         inhale: "息を吸って",
         hold: "そのまま",
@@ -811,6 +812,7 @@ export const siteCopy = {
       soundOn: "소리 켜기",
       soundOff: "소리 끄기",
       natureLabel: "자연의 리듬과 함께 호흡합니다",
+      natureMicrocopy: "지쳤다면,\n여기로 돌아오세요.",
       phaseLabels: {
         inhale: "숨을 들이쉬고",
         hold: "그대로 머물고",
@@ -1472,6 +1474,7 @@ export const siteCopy = {
       soundOn: "Sound on",
       soundOff: "Sound off",
       natureLabel: "Breathe with the rhythm of nature",
+      natureMicrocopy: "When you feel tired,\ncome back here.",
       phaseLabels: {
         inhale: "Inhale",
         hold: "Stay here",

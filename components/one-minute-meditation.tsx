@@ -273,14 +273,22 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   const orbWarmthOpacity = phase === "exhale" ? 0.26 : 0.16;
   const progress = ((TOTAL_SECONDS - secondsLeft) / TOTAL_SECONDS) * 100;
   const orbTransitionDuration = `${getPhaseDuration(phase)}s`;
-  const ambientVideoOpacity = prefersReducedMotion ? "opacity-[0.28]" : "opacity-[0.6]";
+  const ambientVideoOpacity = isComplete
+    ? prefersReducedMotion
+      ? "opacity-[0.2]"
+      : "opacity-[0.28]"
+    : prefersReducedMotion
+      ? "opacity-[0.16]"
+      : "opacity-[0.24]";
+  const ambientVideoScale = isComplete ? "scale-[1.02]" : phase === "inhale" ? "scale-[1.03]" : "scale-100";
+  const ambientVideoAnimation = prefersReducedMotion ? "" : "animate-meditation-video-breathe";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#020814]/92 px-4 py-4 backdrop-blur-xl sm:px-6">
       <div className="absolute inset-0 overflow-hidden">
         <div className={`absolute inset-0 z-0 overflow-hidden ${ambientVideoOpacity}`}>
           <video
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+            className={`pointer-events-none absolute inset-0 h-full w-full object-cover saturate-[0.8] contrast-[0.88] brightness-[0.82] transition-all duration-[1800ms] ease-out ${ambientVideoScale} ${ambientVideoAnimation}`}
             src={AMBIENT_VIDEO_SRC}
             autoPlay
             muted
@@ -299,10 +307,10 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
             }}
           />
         </div>
-        <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02),transparent_42%),linear-gradient(180deg,rgba(2,8,20,0.4)_0%,rgba(2,8,20,0.58)_48%,rgba(2,8,20,0.82)_100%)]" />
-        <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.08),transparent_22%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.08),transparent_28%)]" />
-        <div className="absolute inset-0 z-10 bg-[linear-gradient(90deg,rgba(2,8,20,0.14)_0%,transparent_18%,transparent_82%,rgba(2,8,20,0.18)_100%)]" />
-        <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_28%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.14),transparent_34%),linear-gradient(180deg,rgba(4,10,19,0.76)_0%,rgba(8,18,32,0.84)_100%)] animate-meditation-ambient-breathe" />
+        <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02),transparent_42%),linear-gradient(180deg,rgba(2,8,20,0.48)_0%,rgba(2,8,20,0.62)_48%,rgba(2,8,20,0.86)_100%)]" />
+        <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.08),transparent_22%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.1),transparent_28%)]" />
+        <div className="absolute inset-0 z-10 bg-[linear-gradient(90deg,rgba(2,8,20,0.18)_0%,transparent_18%,transparent_82%,rgba(2,8,20,0.2)_100%)]" />
+        <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_28%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.14),transparent_34%),linear-gradient(180deg,rgba(4,10,19,0.7)_0%,rgba(8,18,32,0.82)_100%)] animate-meditation-ambient-breathe" />
         <div className="absolute left-1/2 top-[12%] z-10 h-64 w-64 -translate-x-1/2 rounded-full bg-gold/10 blur-3xl animate-meditation-fog" />
         <div className="absolute bottom-[8%] right-[14%] z-10 h-48 w-48 rounded-full bg-moss/12 blur-3xl animate-meditation-fog" />
         {Array.from({ length: 9 }).map((_, index) => (
@@ -326,7 +334,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
           <div className="min-w-0">
             <p className="text-[11px] uppercase tracking-[0.32em] text-gold/72">{modalCopy.eyebrow}</p>
             <h2 className="mt-3 text-balance font-serif text-2xl leading-tight text-white/92 sm:text-[30px]">{modalCopy.title}</h2>
-            <p className="mt-2 text-[11px] uppercase tracking-[0.24em] text-emerald-100/80">Nature video layer active</p>
+            <p className="mt-3 text-sm leading-7 text-white/60">{modalCopy.natureMicrocopy}</p>
           </div>
 
           <button
