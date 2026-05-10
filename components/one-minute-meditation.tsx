@@ -65,6 +65,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   const [completionIndex, setCompletionIndex] = useState(0);
   const [hasUserGesture, setHasUserGesture] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [ambientVideoFailed, setAmbientVideoFailed] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
   const completionHandledRef = useRef(false);
   const previousPhaseRef = useRef<BreathPhase>("inhale");
@@ -82,6 +83,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
       setHasUserGesture(false);
       completionHandledRef.current = false;
       previousPhaseRef.current = "inhale";
+      setAmbientVideoFailed(false);
       return;
     }
 
@@ -90,6 +92,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
     setCompletionIndex(Math.floor(Math.random() * modalCopy.completionMoments.length));
     completionHandledRef.current = false;
     previousPhaseRef.current = "inhale";
+    setAmbientVideoFailed(false);
   }, [open, modalCopy.completionMoments.length]);
 
   useEffect(() => {
@@ -273,39 +276,31 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   const orbWarmthOpacity = phase === "exhale" ? 0.26 : 0.16;
   const progress = ((TOTAL_SECONDS - secondsLeft) / TOTAL_SECONDS) * 100;
   const orbTransitionDuration = `${getPhaseDuration(phase)}s`;
-  const ambientVideoOpacity = isComplete
-    ? prefersReducedMotion
-      ? "opacity-[0.2]"
-      : "opacity-[0.28]"
-    : prefersReducedMotion
-      ? "opacity-[0.16]"
-      : "opacity-[0.24]";
+  const ambientVideoOpacity = prefersReducedMotion ? "opacity-[0.24]" : "opacity-70";
   const ambientVideoScale = isComplete ? "scale-[1.02]" : phase === "inhale" ? "scale-[1.03]" : "scale-100";
   const ambientVideoAnimation = prefersReducedMotion ? "" : "animate-meditation-video-breathe";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#020814]/92 px-4 py-4 backdrop-blur-xl sm:px-6">
       <div className="absolute inset-0 overflow-hidden">
-        <div className={`absolute inset-0 z-0 overflow-hidden ${ambientVideoOpacity}`}>
-          <video
-            className={`pointer-events-none absolute inset-0 h-full w-full object-cover saturate-[0.8] contrast-[0.88] brightness-[0.82] transition-all duration-[1800ms] ease-out ${ambientVideoScale} ${ambientVideoAnimation}`}
-            src={AMBIENT_VIDEO_SRC}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            aria-hidden="true"
-            onLoadedData={() => {
-              console.info("Ambient meditation video loaded");
-            }}
-            onCanPlay={() => {
-              console.info("Ambient meditation video can play");
-            }}
-            onError={() => {
-              console.warn("Ambient meditation video failed to load");
-            }}
-          />
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          {!ambientVideoFailed ? (
+            <video
+              className={`pointer-events-none absolute inset-0 h-full w-full object-cover saturate-[0.8] contrast-[0.88] brightness-[0.82] transition-all duration-[1800ms] ease-out ${ambientVideoOpacity} ${ambientVideoScale} ${ambientVideoAnimation}`}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-hidden="true"
+              onError={() => {
+                console.warn("Ambient meditation video failed to load");
+                setAmbientVideoFailed(true);
+              }}
+            >
+              <source src={AMBIENT_VIDEO_SRC} type="video/mp4" />
+            </video>
+          ) : null}
         </div>
         <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02),transparent_42%),linear-gradient(180deg,rgba(2,8,20,0.48)_0%,rgba(2,8,20,0.62)_48%,rgba(2,8,20,0.86)_100%)]" />
         <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.08),transparent_22%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.1),transparent_28%)]" />
