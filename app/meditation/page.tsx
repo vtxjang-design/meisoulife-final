@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSiteCopy } from "@/lib/i18n";
+import { handleMeditationComplete as triggerMeditationCompletion, supportsMeditationVibration } from "@/lib/meditation-completion";
 
 const CYCLE_SECONDS = 10;
 const INHALE_SECONDS = 4;
@@ -58,6 +59,18 @@ export default function MeditationPage() {
   const [totalSeconds, setTotalSeconds] = useState(60);
   const [secondsLeft, setSecondsLeft] = useState(60);
   const [meditationType, setMeditationType] = useState<MeditationType>("default");
+  const [soundEnabled, setSoundEnabled] = useState(false);
+  const [vibrationEnabled, setVibrationEnabled] = useState(true);
+  const [vibrationSupported, setVibrationSupported] = useState(false);
+  const [hasUserGesture, setHasUserGesture] = useState(false);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const completionHandledRef = useRef(false);
+  const elapsedTotalSeconds = totalSeconds - secondsLeft;
+  const phase = useMemo(() => getBreathPhase(elapsedTotalSeconds), [elapsedTotalSeconds]);
+  const isComplete = secondsLeft <= 0;
+  const content = copy.variants[meditationType];
+  const circleScaleClass =
+    phase === "inhale" ? "scale-110" : phase === "hold" ? "scale-110" : "scale-90";
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -67,6 +80,20 @@ export default function MeditationPage() {
     setTotalSeconds(nextDuration);
     setSecondsLeft(nextDuration);
     setMeditationType(nextType);
+  }, []);
+
+  useEffect(() => {
+    setVibrationSupported(supportsMeditationVibration());
+
+    const markGesture = () => setHasUserGesture(true);
+
+    window.addEventListener("pointerdown", markGesture, { once: true });
+    window.addEventListener("keydown", markGesture, { once: true });
+
+    return () => {
+      window.removeEventListener("pointerdown", markGesture);
+      window.removeEventListener("keydown", markGesture);
+    };
   }, []);
 
   useEffect(() => {
@@ -83,13 +110,33 @@ export default function MeditationPage() {
     };
   }, [secondsLeft]);
 
-  const elapsedTotalSeconds = totalSeconds - secondsLeft;
-  const phase = useMemo(() => getBreathPhase(elapsedTotalSeconds), [elapsedTotalSeconds]);
-  const isComplete = secondsLeft <= 0;
-  const content = copy.variants[meditationType];
+  useEffect(() => {
+    if (!isComplete || completionHandledRef.current) {
+      return;
+    }
 
-  const circleScaleClass =
-    phase === "inhale" ? "scale-110" : phase === "hold" ? "scale-110" : "scale-90";
+    completionHandledRef.current = true;
+    runMeditationComplete();
+  }, [isComplete, hasUserGesture, soundEnabled, vibrationEnabled]);
+
+  async function runMeditationComplete() {
+    await triggerMeditationCompletion({
+      hasUserGesture,
+      soundEnabled,
+      vibrationEnabled,
+      audioContextRef
+    });
+  }
+
+  function handleSoundToggle() {
+    setHasUserGesture(true);
+    setSoundEnabled((current) => !current);
+  }
+
+  function handleVibrationToggle() {
+    setHasUserGesture(true);
+    setVibrationEnabled((current) => !current);
+  }
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_20%),linear-gradient(180deg,#07111f_0%,#0d1b2d_45%,#10273a_100%)] px-6 py-10 text-white">
@@ -102,6 +149,26 @@ export default function MeditationPage() {
             </div>
 
             <div className="mt-12 flex min-h-[320px] w-full flex-col items-center justify-center">
+              <div className="mb-6 flex items-center gap-2">
+                {vibrationSupported ? (
+                  <button
+                    type="button"
+                    onClick={handleVibrationToggle}
+                    className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
+                    aria-pressed={vibrationEnabled}
+                  >
+                    {vibrationEnabled ? copy.vibrationOn : copy.vibrationOff}
+                  </button>
+                ) : null}
+                <button
+                  type="button"
+                  onClick={handleSoundToggle}
+                  className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
+                  aria-pressed={soundEnabled}
+                >
+                  {soundEnabled ? copy.soundOn : copy.soundOff}
+                </button>
+              </div>
               <p className="text-2xl font-medium text-white/72 transition-all duration-700 ease-in-out sm:text-3xl">
                 {copy.phases[phase]}
               </p>
@@ -127,6 +194,7 @@ export default function MeditationPage() {
         ) : (
           <div className="animate-fade-in space-y-8">
             <h1 className="font-serif text-4xl text-white sm:text-5xl">{content.completionTitle}</h1>
+            <p className="mx-auto max-w-xl whitespace-pre-line text-base leading-8 text-white/72">{copy.completionMessage}</p>
             <p className="mx-auto max-w-2xl text-base leading-8 text-white/68">{copy.completionBody}</p>
             <div className="flex flex-col items-center gap-3">
               <Link

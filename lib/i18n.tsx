@@ -140,6 +140,7 @@ export const siteCopy = {
       title: "今この1分で、呼吸を整えましょう",
       endButton: "1分を終える",
       completeTitle: "今日、あなたは自分に戻りました。",
+      completionMessage: "おつかれさま。\n今の静けさを、\n少しだけ感じてください。",
       completeBody: "この小さな1分が、共に目覚めるリズムの始まりです。",
       completionMoments: [
         "今日も、自分に戻る1分をありがとう。",
@@ -149,6 +150,8 @@ export const siteCopy = {
       tellAi: "AIに今の状態を伝える",
       soundOn: "音を入れる",
       soundOff: "音を消す",
+      vibrationOn: "振動を入れる",
+      vibrationOff: "振動を消す",
       natureLabel: "自然のリズムとともに呼吸する",
       natureMicrocopy: "疲れたら、\nここに戻ってきてください。",
       phaseLabels: {
@@ -718,11 +721,16 @@ export const siteCopy = {
         hold: "止めて… 2秒",
         exhale: "吐いて… 4秒"
       },
+      completionMessage: "おつかれさま。\n今の静けさを、\n少しだけ感じてください。",
       completionBody: "この静かなリズムを、7日間だけ続けてみませんか？",
       completionPrimary: "7日リズムを始める",
       completionSecondary: "今日はここまで",
       coachPrompt: "この静かな状態を、少しだけ続けてみませんか？",
-      coachButton: "AIコーチを開く"
+      coachButton: "AIコーチを開く",
+      soundOn: "音を入れる",
+      soundOff: "音を消す",
+      vibrationOn: "振動を入れる",
+      vibrationOff: "振動を消す"
     },
     premiumPage: {
       successBadge: "決済が完了しました",
@@ -866,6 +874,7 @@ export const siteCopy = {
       title: "지금 이 1분 동안 호흡을 정돈해봅시다",
       endButton: "1분을 마칩니다",
       completeTitle: "오늘, 당신은 자신에게 돌아왔습니다.",
+      completionMessage: "수고했어요.\n지금의 고요함을,\n잠시만 느껴보세요.",
       completeBody: "이 작은 1분이 함께 깨어나는 리듬의 시작입니다.",
       completionMoments: [
         "오늘도 자신에게 돌아오는 1분을 고맙게 받았습니다.",
@@ -875,6 +884,8 @@ export const siteCopy = {
       tellAi: "AI에게 지금 상태 전하기",
       soundOn: "소리 켜기",
       soundOff: "소리 끄기",
+      vibrationOn: "진동 켜기",
+      vibrationOff: "진동 끄기",
       natureLabel: "자연의 리듬과 함께 호흡합니다",
       natureMicrocopy: "지쳤다면,\n여기로 돌아오세요.",
       phaseLabels: {
@@ -1444,11 +1455,16 @@ export const siteCopy = {
         hold: "멈추기… 2초",
         exhale: "내쉬기… 4초"
       },
+      completionMessage: "수고했어요.\n지금의 고요함을,\n잠시만 느껴보세요.",
       completionBody: "이 조용한 리듬을 7일만 더 이어가 보시겠어요?",
       completionPrimary: "7일 리듬 시작하기",
       completionSecondary: "오늘은 여기까지",
       coachPrompt: "이 조용한 상태를 조금만 더 이어가 볼까요?",
-      coachButton: "AI 코치를 열기"
+      coachButton: "AI 코치를 열기",
+      soundOn: "소리 켜기",
+      soundOff: "소리 끄기",
+      vibrationOn: "진동 켜기",
+      vibrationOff: "진동 끄기"
     },
     premiumPage: {
       successBadge: "결제가 완료되었습니다",
@@ -1592,6 +1608,7 @@ export const siteCopy = {
       title: "Use this one minute to settle your breath",
       endButton: "End the minute",
       completeTitle: "Today, you returned to yourself.",
+      completionMessage: "Well done.\nStay with this stillness\nfor just a moment.",
       completeBody: "This one quiet minute is the beginning of a shared awakening rhythm.",
       completionMoments: [
         "Thank you for taking one minute to return to yourself today.",
@@ -1601,6 +1618,8 @@ export const siteCopy = {
       tellAi: "Tell AI how you feel now",
       soundOn: "Sound on",
       soundOff: "Sound off",
+      vibrationOn: "Vibration on",
+      vibrationOff: "Vibration off",
       natureLabel: "Breathe with the rhythm of nature",
       natureMicrocopy: "When you feel tired,\ncome back here.",
       phaseLabels: {
@@ -2170,11 +2189,16 @@ export const siteCopy = {
         hold: "Hold... 2s",
         exhale: "Exhale... 4s"
       },
+      completionMessage: "Well done.\nStay with this stillness\nfor just a moment.",
       completionBody: "Would you like to continue this quiet rhythm for just seven days?",
       completionPrimary: "Start the 7-day rhythm",
       completionSecondary: "That’s enough for today",
       coachPrompt: "Would you like to stay with this quiet state a little longer?",
-      coachButton: "Open the AI coach"
+      coachButton: "Open the AI coach",
+      soundOn: "Sound on",
+      soundOff: "Sound off",
+      vibrationOn: "Vibration on",
+      vibrationOff: "Vibration off"
     },
     premiumPage: {
       successBadge: "Payment completed",

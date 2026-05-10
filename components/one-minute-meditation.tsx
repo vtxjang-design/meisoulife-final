@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { handleMeditationComplete as triggerMeditationCompletion, supportsMeditationVibration } from "@/lib/meditation-completion";
 import { markDailyRhythmCompleted } from "@/lib/return-rhythm";
 import { useSiteCopy } from "@/lib/i18n";
 
@@ -62,6 +63,8 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   const modalCopy = copy.modal;
   const [secondsLeft, setSecondsLeft] = useState(TOTAL_SECONDS);
   const [soundEnabled, setSoundEnabled] = useState(false);
+  const [vibrationEnabled, setVibrationEnabled] = useState(true);
+  const [vibrationSupported, setVibrationSupported] = useState(false);
   const [completionIndex, setCompletionIndex] = useState(0);
   const [hasUserGesture, setHasUserGesture] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
@@ -81,6 +84,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
       setSoundEnabled(false);
       setCompletionIndex(0);
       setHasUserGesture(false);
+      setVibrationEnabled(true);
       completionHandledRef.current = false;
       previousPhaseRef.current = "inhale";
       setAmbientVideoFailed(false);
@@ -89,6 +93,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
 
     setSecondsLeft(TOTAL_SECONDS);
     setHasUserGesture(true);
+    setVibrationEnabled(true);
     setCompletionIndex(Math.floor(Math.random() * modalCopy.completionMoments.length));
     completionHandledRef.current = false;
     previousPhaseRef.current = "inhale";
@@ -107,6 +112,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
 
     syncMotionPreference();
     mediaQuery.addEventListener("change", syncMotionPreference);
+    setVibrationSupported(supportsMeditationVibration());
 
     return () => {
       mediaQuery.removeEventListener("change", syncMotionPreference);
@@ -155,10 +161,8 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
     }
 
     completionHandledRef.current = true;
-    markDailyRhythmCompleted();
-    triggerHaptic([18, 80, 18]);
-    playCompletionCue();
-  }, [isComplete, open, soundEnabled]);
+    runMeditationComplete();
+  }, [isComplete, open, soundEnabled, vibrationEnabled, hasUserGesture]);
 
   useEffect(() => {
     return () => {
@@ -227,12 +231,6 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
     }
   }
 
-  function playCompletionCue() {
-    // TODO: Replace with a very soft bell sample if audio assets are introduced later.
-    playTone(392, 320, 0.018);
-    window.setTimeout(() => playTone(523.25, 460, 0.015), 160);
-  }
-
   function triggerHaptic(pattern: number | number[]) {
     if (!hasUserGesture || typeof navigator === "undefined" || !("vibrate" in navigator)) {
       return;
@@ -264,6 +262,22 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
       }
 
       return next;
+    });
+  }
+
+  function handleVibrationToggle() {
+    setHasUserGesture(true);
+    setVibrationEnabled((current) => !current);
+  }
+
+  async function runMeditationComplete() {
+    markDailyRhythmCompleted();
+
+    await triggerMeditationCompletion({
+      hasUserGesture,
+      soundEnabled,
+      vibrationEnabled,
+      audioContextRef
     });
   }
 
@@ -361,14 +375,26 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
               />
             </div>
 
-            <button
-              type="button"
-              onClick={handleSoundToggle}
-              className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
-              aria-pressed={soundEnabled}
-            >
-              {soundEnabled ? modalCopy.soundOn : modalCopy.soundOff}
-            </button>
+            <div className="flex items-center gap-2">
+              {vibrationSupported ? (
+                <button
+                  type="button"
+                  onClick={handleVibrationToggle}
+                  className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
+                  aria-pressed={vibrationEnabled}
+                >
+                  {vibrationEnabled ? modalCopy.vibrationOn : modalCopy.vibrationOff}
+                </button>
+              ) : null}
+              <button
+                type="button"
+                onClick={handleSoundToggle}
+                className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
+                aria-pressed={soundEnabled}
+              >
+                {soundEnabled ? modalCopy.soundOn : modalCopy.soundOff}
+              </button>
+            </div>
           </div>
 
           {!isComplete ? (
@@ -427,6 +453,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
               </div>
 
               <h3 className="mt-5 text-balance font-serif text-3xl leading-tight text-white/92 sm:text-[34px]">{completionMessage}</h3>
+              <p className="mt-4 max-w-sm whitespace-pre-line text-sm leading-7 text-white/72 sm:text-base">{modalCopy.completionMessage}</p>
               <p className="mt-4 max-w-sm text-sm leading-7 text-white/62 sm:text-base">{modalCopy.completeBody}</p>
 
               <div className="mt-8 flex w-full flex-col gap-3">
