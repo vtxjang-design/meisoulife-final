@@ -303,16 +303,21 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
         ))}
       </div>
 
-      <div className="relative z-20 w-full max-w-md overflow-hidden rounded-[28px] border border-white/8 bg-white/[0.04] p-5 shadow-[0_30px_80px_rgba(0,0,0,0.28)] sm:p-6">
+      <div className="relative z-20 min-h-[480px] w-full max-w-md overflow-hidden rounded-[28px] border border-white/8 bg-white/[0.04] p-5 shadow-[0_30px_80px_rgba(0,0,0,0.28)] sm:p-6">
         {!ambientVideoFailed ? (
           <video
-            className={`pointer-events-none absolute inset-0 z-0 h-full w-full object-cover opacity-80 ${ambientVideoAnimation}`}
+            className={`pointer-events-none absolute inset-0 z-0 h-full w-full object-cover opacity-[0.85] ${ambientVideoAnimation}`}
             autoPlay
             muted
             loop
             playsInline
             preload="auto"
             poster="/images/quiet-meditation.jpg"
+            onLoadedData={() => {
+              if (process.env.NODE_ENV !== "production") {
+                console.log("Meditation video loaded");
+              }
+            }}
             onError={() => {
               console.warn("Ambient meditation video failed to load");
               setAmbientVideoFailed(true);
@@ -323,127 +328,128 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
         ) : (
           <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_28%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.14),transparent_34%),linear-gradient(180deg,rgba(4,10,19,0.76)_0%,rgba(8,18,32,0.88)_100%)]" />
         )}
-        <div className="absolute inset-0 z-10 bg-[linear-gradient(180deg,rgba(2,8,20,0.22)_0%,rgba(2,8,20,0.34)_38%,rgba(2,8,20,0.52)_100%)]" />
-        <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.06),transparent_24%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.08),transparent_28%)]" />
+        <div className="absolute inset-0 z-10 bg-black/30" />
         {ambientVideoFailed ? (
           <div className="absolute left-4 right-4 top-4 z-10 rounded-2xl border border-white/10 bg-[#08121d]/65 px-4 py-3 text-xs leading-6 text-white/60 backdrop-blur">
             Ambient video fallback active. Place the video file at /public/videos/one-minute-nature-loop.mp4.
           </div>
         ) : null}
 
-        <div className="relative z-20 flex items-start justify-between gap-4">
-          <div className="min-w-0">
-            <p className="text-[11px] uppercase tracking-[0.32em] text-gold/72">{modalCopy.eyebrow}</p>
-            <h2 className="mt-3 text-balance font-serif text-2xl leading-tight text-white/92 sm:text-[30px]">{modalCopy.title}</h2>
-            <p className="mt-3 text-sm leading-7 text-white/60">{modalCopy.natureMicrocopy}</p>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleClose}
-            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-lg text-white/70 transition hover:bg-white/[0.08] hover:text-white"
-            aria-label="Close meditation"
-          >
-            ×
-          </button>
-        </div>
-
-        <div className="relative z-20 mt-5 flex items-center justify-between gap-3">
-          <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/8">
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-gold/70 via-white/75 to-moss/70 transition-[width] duration-1000 ease-linear"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-
-          <button
-            type="button"
-            onClick={handleSoundToggle}
-            className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
-            aria-pressed={soundEnabled}
-          >
-            {soundEnabled ? modalCopy.soundOn : modalCopy.soundOff}
-          </button>
-        </div>
-
-        {!isComplete ? (
-          <div className="relative z-20 mt-8 flex flex-col items-center text-center">
-            <div className="min-h-[92px] space-y-3">
-              <p className="text-sm uppercase tracking-[0.28em] text-white/48">{modalCopy.phaseLabels[phase]}</p>
-              <p
-                aria-live="polite"
-                className="text-4xl font-medium tracking-[0.04em] text-white/88 transition-all duration-700 ease-in-out sm:text-5xl"
-              >
-                {formatSeconds(secondsLeft)}
-              </p>
-            </div>
-
-            <div className="relative mt-5 flex h-72 w-72 items-center justify-center sm:h-[320px] sm:w-[320px]">
-              <div
-                className="absolute inset-0 rounded-full bg-gold/18 blur-3xl transition-all ease-in-out"
-                style={{ opacity: orbGlowOpacity, transform: `scale(${orbScale + 0.1})`, transitionDuration: orbTransitionDuration }}
-              />
-              <div
-                className="absolute inset-4 rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.22),transparent_34%),radial-gradient(circle_at_70%_72%,rgba(216,191,131,0.16),transparent_42%),radial-gradient(circle_at_50%_50%,rgba(239,243,244,0.08),rgba(15,31,53,0.02))] blur-2xl transition-all ease-in-out"
-                style={{ transform: `scale(${orbScale + 0.06})`, transitionDuration: orbTransitionDuration }}
-              />
-              <div
-                className={`absolute inset-[18%] rounded-full border border-white/12 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18),rgba(255,255,255,0.03)_42%,rgba(15,31,53,0.18)_100%)] shadow-[0_18px_80px_rgba(216,191,131,0.08)] transition-all ease-in-out ${phase === "hold" ? "animate-meditation-soft-pulse" : ""}`}
-                style={{
-                  transform: `scale(${orbScale})`,
-                  transitionDuration: orbTransitionDuration,
-                  boxShadow: `0 0 90px rgba(216, 191, 131, ${orbGlowOpacity}), inset 0 0 48px rgba(255, 255, 255, ${orbWarmthOpacity})`
-                }}
-              />
-              <div
-                className="absolute inset-[24%] rounded-full border border-white/8 bg-[radial-gradient(circle_at_35%_30%,rgba(255,255,255,0.22),transparent_30%),radial-gradient(circle_at_68%_72%,rgba(216,191,131,0.18),transparent_36%),linear-gradient(180deg,rgba(255,255,255,0.08),rgba(7,17,31,0.2))] transition-all ease-in-out"
-                style={{ transform: `scale(${orbScale - 0.04})`, transitionDuration: orbTransitionDuration }}
-              />
-            </div>
-
-            <div className="mt-5 min-h-[48px] max-w-xs">
-              <p className="mb-2 text-[11px] uppercase tracking-[0.28em] text-white/34">{modalCopy.natureLabel}</p>
-              <p className="text-base leading-7 text-white/58">{modalCopy.breathingGuides[phase === "inhale" ? 0 : phase === "hold" ? 1 : 2]?.text}</p>
+        <div className="relative z-20">
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <p className="text-[11px] uppercase tracking-[0.32em] text-gold/72">{modalCopy.eyebrow}</p>
+              <h2 className="mt-3 text-balance font-serif text-2xl leading-tight text-white/92 sm:text-[30px]">{modalCopy.title}</h2>
+              <p className="mt-3 text-sm leading-7 text-white/60">{modalCopy.natureMicrocopy}</p>
             </div>
 
             <button
               type="button"
               onClick={handleClose}
-              className="mt-6 inline-flex min-h-[52px] w-full items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white/82 transition hover:bg-white/[0.07]"
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-lg text-white/70 transition hover:bg-white/[0.08] hover:text-white"
+              aria-label="Close meditation"
             >
-              {modalCopy.endButton}
+              ×
             </button>
           </div>
-        ) : (
-          <div className="relative z-20 mt-10 flex flex-col items-center text-center animate-meditation-fade-up">
-            <div className="relative flex h-24 w-24 items-center justify-center">
-              <div className="absolute inset-0 rounded-full bg-gold/20 blur-2xl animate-meditation-soft-pulse" />
-              <div className="absolute inset-3 rounded-full border border-gold/30 bg-white/[0.06]" />
+
+          <div className="mt-5 flex items-center justify-between gap-3">
+            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/8">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-gold/70 via-white/75 to-moss/70 transition-[width] duration-1000 ease-linear"
+                style={{ width: `${progress}%` }}
+              />
             </div>
 
-            <h3 className="mt-5 text-balance font-serif text-3xl leading-tight text-white/92 sm:text-[34px]">{completionMessage}</h3>
-            <p className="mt-4 max-w-sm text-sm leading-7 text-white/62 sm:text-base">{modalCopy.completeBody}</p>
+            <button
+              type="button"
+              onClick={handleSoundToggle}
+              className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
+              aria-pressed={soundEnabled}
+            >
+              {soundEnabled ? modalCopy.soundOn : modalCopy.soundOff}
+            </button>
+          </div>
 
-            <div className="mt-8 flex w-full flex-col gap-3">
+          {!isComplete ? (
+            <div className="mt-8 flex flex-col items-center text-center">
+              <div className="min-h-[92px] space-y-3">
+                <p className="text-sm uppercase tracking-[0.28em] text-white/48">{modalCopy.phaseLabels[phase]}</p>
+                <p
+                  aria-live="polite"
+                  className="text-4xl font-medium tracking-[0.04em] text-white/88 transition-all duration-700 ease-in-out sm:text-5xl"
+                >
+                  {formatSeconds(secondsLeft)}
+                </p>
+              </div>
+
+              <div className="relative mt-5 flex h-72 w-72 items-center justify-center sm:h-[320px] sm:w-[320px]">
+                <div
+                  className="absolute inset-0 rounded-full bg-gold/18 blur-3xl transition-all ease-in-out"
+                  style={{ opacity: orbGlowOpacity, transform: `scale(${orbScale + 0.1})`, transitionDuration: orbTransitionDuration }}
+                />
+                <div
+                  className="absolute inset-4 rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.22),transparent_34%),radial-gradient(circle_at_70%_72%,rgba(216,191,131,0.16),transparent_42%),radial-gradient(circle_at_50%_50%,rgba(239,243,244,0.08),rgba(15,31,53,0.02))] blur-2xl transition-all ease-in-out"
+                  style={{ transform: `scale(${orbScale + 0.06})`, transitionDuration: orbTransitionDuration }}
+                />
+                <div
+                  className={`absolute inset-[18%] rounded-full border border-white/12 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18),rgba(255,255,255,0.03)_42%,rgba(15,31,53,0.18)_100%)] shadow-[0_18px_80px_rgba(216,191,131,0.08)] transition-all ease-in-out ${phase === "hold" ? "animate-meditation-soft-pulse" : ""}`}
+                  style={{
+                    transform: `scale(${orbScale})`,
+                    transitionDuration: orbTransitionDuration,
+                    boxShadow: `0 0 90px rgba(216, 191, 131, ${orbGlowOpacity}), inset 0 0 48px rgba(255, 255, 255, ${orbWarmthOpacity})`
+                  }}
+                />
+                <div
+                  className="absolute inset-[24%] rounded-full border border-white/8 bg-[radial-gradient(circle_at_35%_30%,rgba(255,255,255,0.22),transparent_30%),radial-gradient(circle_at_68%_72%,rgba(216,191,131,0.18),transparent_36%),linear-gradient(180deg,rgba(255,255,255,0.08),rgba(7,17,31,0.2))] transition-all ease-in-out"
+                  style={{ transform: `scale(${orbScale - 0.04})`, transitionDuration: orbTransitionDuration }}
+                />
+              </div>
+
+              <div className="mt-5 min-h-[48px] max-w-xs">
+                <p className="mb-2 text-[11px] uppercase tracking-[0.28em] text-white/34">{modalCopy.natureLabel}</p>
+                <p className="text-base leading-7 text-white/58">{modalCopy.breathingGuides[phase === "inhale" ? 0 : phase === "hold" ? 1 : 2]?.text}</p>
+              </div>
+
               <button
                 type="button"
-                onClick={handleRestart}
-                className="inline-flex min-h-[54px] w-full items-center justify-center rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:scale-[1.01] hover:bg-[#e7cd92]"
+                onClick={handleClose}
+                className="mt-6 inline-flex min-h-[52px] w-full items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white/82 transition hover:bg-white/[0.07]"
               >
-                {modalCopy.breatheAgain}
+                {modalCopy.endButton}
               </button>
-
-              <a
-                href={AI_COACH_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-[52px] w-full items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white/84 transition hover:bg-white/[0.07]"
-              >
-                {modalCopy.tellAi}
-              </a>
             </div>
-          </div>
-        )}
+          ) : (
+            <div className="mt-10 flex flex-col items-center text-center animate-meditation-fade-up">
+              <div className="relative flex h-24 w-24 items-center justify-center">
+                <div className="absolute inset-0 rounded-full bg-gold/20 blur-2xl animate-meditation-soft-pulse" />
+                <div className="absolute inset-3 rounded-full border border-gold/30 bg-white/[0.06]" />
+              </div>
+
+              <h3 className="mt-5 text-balance font-serif text-3xl leading-tight text-white/92 sm:text-[34px]">{completionMessage}</h3>
+              <p className="mt-4 max-w-sm text-sm leading-7 text-white/62 sm:text-base">{modalCopy.completeBody}</p>
+
+              <div className="mt-8 flex w-full flex-col gap-3">
+                <button
+                  type="button"
+                  onClick={handleRestart}
+                  className="inline-flex min-h-[54px] w-full items-center justify-center rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:scale-[1.01] hover:bg-[#e7cd92]"
+                >
+                  {modalCopy.breatheAgain}
+                </button>
+
+                <a
+                  href={AI_COACH_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-[52px] w-full items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white/84 transition hover:bg-white/[0.07]"
+                >
+                  {modalCopy.tellAi}
+                </a>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
