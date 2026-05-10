@@ -307,6 +307,23 @@ export const siteCopy = {
           "瞑想lifeは、その考え方を現代の生活リズムに合わせて再構成した場です。1分の静けさから始まり、自己認識、習慣、つながり、成長へと自然に続いていく設計にしています。",
         cta: "今すぐ1分瞑想"
       },
+      whyMeisoulife: {
+        label: "40年以上の実践と研究から生まれた",
+        title: "なぜ瞑想lifeなのか？",
+        description:
+          "瞑想lifeは、\n脳教育（Brain Education）の実践をもとに、\n\n現代人のストレス、\n不安、集中、睡眠、SNS疲れなどの課題に合わせて\n再設計された\n“生活リズムプラットフォーム”です。\n\n私たちは、\n無理なく続く小さな習慣から、\n人が本来の自分へ戻ることを大切にしています。",
+        cards: [
+          "40年以上の研究と実践",
+          "世界100万人以上の実践",
+          "脳教育（Brain Education）",
+          "40冊以上の著書"
+        ],
+        founderMessageTitle: "創始者のメッセージ",
+        founderMessage:
+          "「人間の本来の価値は、\n脳と心の可能性を目覚めさせることにあります。\n\n小さな気づきが、\n人生のリズムを変え、\nやがて社会を変えていく。」",
+        founderSignature: "— 脳教育創始者",
+        button: "脳教育についてもっと知る"
+      },
       platformConcept: {
         eyebrow: "Platform Concept",
         title: "共生リズム・プラットフォームとは",
@@ -746,6 +763,49 @@ export const siteCopy = {
       primary: "料金ページへ進む",
       secondary: "ホームへ戻る"
     },
+    brainEducationPage: {
+      eyebrow: "Brain Education",
+      title: "脳教育について",
+      subtitle: "脳教育は、呼吸・身体感覚・意識を通して、自分の状態に気づき、整え、選び直すための実践的なシステムです。",
+      intro:
+        "瞑想lifeは、この脳教育の考え方を現代の生活リズムに合わせて、より続けやすく、より静かに使える形へ再設計しています。",
+      sections: [
+        {
+          title: "1. What is Brain Education?",
+          body: "Brain Educationは、脳を知識の器ではなく、感覚・感情・意識を調和させる主体としてとらえる実践です。"
+        },
+        {
+          title: "2. 5 Brain Education stages",
+          body: "感覚に気づくことから始まり、感情の調律、意識の選択、行動の一貫性、そして人との共生へと静かに深まっていきます。"
+        },
+        {
+          title: "3. Modern problems & solutions",
+          body: "ストレス、不安、睡眠の乱れ、SNS疲れのような現代的な負荷に対して、まず呼吸と身体感覚から戻る入口をつくります。"
+        },
+        {
+          title: "4. Emotional balance",
+          body: "感情を抑え込むのではなく、感じ、整え、流す力を育てることで、日常の安定感を取り戻していきます。"
+        },
+        {
+          title: "5. Human potential",
+          body: "脳と心の可能性を目覚めさせることは、特別な能力を得ることではなく、本来の自分に戻ることです。"
+        },
+        {
+          title: "6. Coexistence philosophy",
+          body: "脳教育は個人の回復で終わらず、その静けさが関係性や共同体の質を変えていくことを大切にします。"
+        },
+        {
+          title: "7. Founder story",
+          body: "ILCHI LEEは、40年以上にわたり人間の内面の可能性と、日常の中で続く実践の形を探究してきました。"
+        },
+        {
+          title: "8. Global impact",
+          body: "世界各地での実践と教育活動を通して、多くの人が自分に戻る習慣と共生の感覚を育ててきました。"
+        }
+      ],
+      primary: "今日の1分に戻る",
+      secondary: "ホームへ戻る"
+    },
     common: {
       connecting: "接続中...",
       comingSoon: "Checkout is not configured yet."
@@ -968,6 +1028,23 @@ export const siteCopy = {
         philosophyDescription:
           "명상life는 그 접근을 오늘의 생활 리듬에 맞게 다시 구성한 공간입니다. 1분의 고요함에서 시작해 자기인식, 습관, 연결, 성장으로 자연스럽게 이어지도록 설계했습니다.",
         cta: "지금 바로 1분 명상"
+      },
+      whyMeisoulife: {
+        label: "40년이 넘는 실천과 연구에서 태어난",
+        title: "왜 명상life인가요?",
+        description:
+          "명상life는\n뇌교육(Brain Education)의 실천을 바탕으로,\n\n현대인의 스트레스,\n불안, 집중, 수면, SNS 피로 같은 문제에 맞게\n다시 설계된\n“생활 리듬 플랫폼”입니다.\n\n우리는\n무리 없이 이어지는 작은 습관을 통해,\n사람이 본래의 자신에게 돌아가는 일을 소중히 여깁니다.",
+        cards: [
+          "40년이 넘는 연구와 실천",
+          "전 세계 100만 명 이상의 실천",
+          "뇌교육 (Brain Education)",
+          "40권이 넘는 저서"
+        ],
+        founderMessageTitle: "창시자의 메시지",
+        founderMessage:
+          "“인간의 본래 가치는,\n뇌와 마음의 가능성을 깨우는 데 있습니다.\n\n작은 알아차림이,\n삶의 리듬을 바꾸고,\n마침내 사회를 바꾸게 됩니다.”",
+        founderSignature: "— 뇌교육 창시자",
+        button: "뇌교육에 대해 더 알아보기"
       },
       platformConcept: {
         eyebrow: "Platform Concept",
@@ -1408,6 +1485,49 @@ export const siteCopy = {
       primary: "요금 페이지로",
       secondary: "홈으로 돌아가기"
     },
+    brainEducationPage: {
+      eyebrow: "Brain Education",
+      title: "뇌교육에 대하여",
+      subtitle: "뇌교육은 호흡, 신체 감각, 의식을 통해 자신의 상태를 알아차리고 정돈하며 다시 선택할 수 있게 돕는 실천적 시스템입니다.",
+      intro:
+        "명상life는 이 뇌교육의 관점을 오늘의 생활 리듬에 맞게 다시 설계해, 더 조용하고 더 쉽게 이어갈 수 있는 형태로 풀어내고 있습니다.",
+      sections: [
+        {
+          title: "1. What is Brain Education?",
+          body: "뇌교육은 뇌를 단순한 지식 저장소가 아니라, 감각과 감정, 의식을 조율하는 살아 있는 중심으로 보는 실천입니다."
+        },
+        {
+          title: "2. 5 Brain Education stages",
+          body: "감각 알아차림에서 시작해 감정 조율, 의식의 선택, 행동의 일관성, 그리고 타인과의 공생으로 조용히 깊어집니다."
+        },
+        {
+          title: "3. Modern problems & solutions",
+          body: "스트레스, 불안, 수면 문제, SNS 피로 같은 현대적 과제에 대해 먼저 호흡과 몸감각으로 돌아오는 입구를 만듭니다."
+        },
+        {
+          title: "4. Emotional balance",
+          body: "감정을 억누르기보다 느끼고 정돈하며 흘려보내는 힘을 기르면서 일상의 안정감을 회복합니다."
+        },
+        {
+          title: "5. Human potential",
+          body: "뇌와 마음의 가능성을 깨운다는 것은 특별해지는 것이 아니라, 본래의 자신에게 더 가까이 돌아가는 일입니다."
+        },
+        {
+          title: "6. Coexistence philosophy",
+          body: "뇌교육은 개인의 회복에서 멈추지 않고, 그 고요함이 관계와 공동체의 질을 바꾸는 것을 중요하게 봅니다."
+        },
+        {
+          title: "7. Founder story",
+          body: "ILCHI LEE는 40년이 넘는 시간 동안 인간 내면의 가능성과 일상에서 지속되는 실천의 형태를 탐구해 왔습니다."
+        },
+        {
+          title: "8. Global impact",
+          body: "세계 여러 지역의 교육과 실천을 통해 많은 사람들이 자신에게 돌아오는 습관과 공생 감각을 길러왔습니다."
+        }
+      ],
+      primary: "오늘의 1분으로 돌아가기",
+      secondary: "홈으로 돌아가기"
+    },
     common: {
       connecting: "연결 중...",
       comingSoon: "Checkout is not configured yet."
@@ -1630,6 +1750,23 @@ export const siteCopy = {
         philosophyDescription:
           "Meisou Life translates that system into a modern rhythm platform. It begins with one minute of stillness and continues naturally into self-awareness, habit, connection, and growth.",
         cta: "Start 1-Min Meditation Now"
+      },
+      whyMeisoulife: {
+        label: "Born from more than 40 years of practice and research",
+        title: "Why Meisoulife?",
+        description:
+          "Meisoulife is a life rhythm platform redesigned from the practice of Brain Education for modern challenges such as stress, anxiety, focus, sleep, and social media fatigue.\n\nWe believe that small habits people can continue without force help them return to who they really are.",
+        cards: [
+          "40+ years of research and practice",
+          "1M+ people worldwide",
+          "Brain Education",
+          "40+ published books"
+        ],
+        founderMessageTitle: "A message from the founder",
+        founderMessage:
+          "\"The original value of a human being lies in awakening the potential of the brain and the heart.\n\nA small moment of awareness changes the rhythm of life, and in time, changes society.\"",
+        founderSignature: "— Founder of Brain Education",
+        button: "Learn more about Brain Education"
       },
       platformConcept: {
         eyebrow: "Platform Concept",
@@ -2068,6 +2205,49 @@ export const siteCopy = {
       subtitle: "When you are ready to continue with a paid rhythm, you can return here.",
       canceled: "Payment was not completed. You can come back quietly whenever you are ready.",
       primary: "Go to pricing",
+      secondary: "Return home"
+    },
+    brainEducationPage: {
+      eyebrow: "Brain Education",
+      title: "About Brain Education",
+      subtitle: "Brain Education is a practical system that helps people notice, regulate, and consciously redirect their inner state through breath, body awareness, and attention.",
+      intro:
+        "Meisoulife translates this Brain Education perspective into a modern life rhythm platform that feels quieter, gentler, and easier to continue each day.",
+      sections: [
+        {
+          title: "1. What is Brain Education?",
+          body: "Brain Education sees the brain not only as a place for knowledge, but as a living center for sensing, feeling, and choosing."
+        },
+        {
+          title: "2. 5 Brain Education stages",
+          body: "It deepens from sensing the present moment into emotional regulation, conscious choice, consistent action, and finally coexistence with others."
+        },
+        {
+          title: "3. Modern problems & solutions",
+          body: "For stress, anxiety, sleep disruption, and social media fatigue, it creates a simple entry point: return first through breath and body awareness."
+        },
+        {
+          title: "4. Emotional balance",
+          body: "Rather than suppressing emotion, the practice helps people feel, regulate, and move through it with more steadiness."
+        },
+        {
+          title: "5. Human potential",
+          body: "Awakening human potential is not about becoming extraordinary. It is about returning more fully to one’s original self."
+        },
+        {
+          title: "6. Coexistence philosophy",
+          body: "Brain Education does not stop at personal recovery. It values how inner stillness changes the quality of relationships and community."
+        },
+        {
+          title: "7. Founder story",
+          body: "ILCHI LEE has spent more than four decades exploring human potential and the shape of practices that can truly continue in daily life."
+        },
+        {
+          title: "8. Global impact",
+          body: "Through education and practice around the world, many people have cultivated daily return habits and a deeper sense of coexistence."
+        }
+      ],
+      primary: "Return to today’s one minute",
       secondary: "Return home"
     },
     common: {

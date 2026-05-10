@@ -221,6 +221,55 @@ export default function HomePage() {
 
       <AIRhythmCoach copy={landing.coach} coachUrl={AI_COACH_URL} />
 
+      <section className="section-shell mt-24">
+        <div className="rounded-[34px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.14),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-6 py-10 sm:px-10">
+          <div className="max-w-4xl">
+            <p className="text-sm uppercase tracking-[0.28em] text-gold/84">{site.home.whyMeisoulife.label}</p>
+            <h2 className="mt-4 font-serif text-3xl leading-tight text-white sm:text-4xl">{site.home.whyMeisoulife.title}</h2>
+            <p className="mt-6 whitespace-pre-line text-base leading-8 text-white/72 sm:text-lg">
+              {site.home.whyMeisoulife.description}
+            </p>
+          </div>
+
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {site.home.whyMeisoulife.cards.map((item) => (
+              <article key={item} className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
+                <p className="text-sm leading-7 text-white/82">{item}</p>
+              </article>
+            ))}
+          </div>
+
+          <div className="mt-8 grid gap-6 lg:grid-cols-[0.92fr_1.08fr]">
+            <div className="rounded-[28px] border border-gold/16 bg-gold/[0.06] p-6 sm:p-7">
+              <p className="text-xs uppercase tracking-[0.24em] text-gold/82">{site.home.whyMeisoulife.founderMessageTitle}</p>
+              <p className="mt-5 whitespace-pre-line font-serif text-xl leading-9 text-white/90 sm:text-2xl sm:leading-10">
+                {site.home.whyMeisoulife.founderMessage}
+              </p>
+              <p className="mt-5 text-sm uppercase tracking-[0.22em] text-white/54">{site.home.whyMeisoulife.founderSignature}</p>
+            </div>
+
+            <div className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6 sm:p-7">
+              <p className="text-xs uppercase tracking-[0.24em] text-gold/80">{site.home.founder.contributionsTitle}</p>
+              <p className="mt-4 text-lg leading-8 text-white/86">{site.home.founder.founderName}</p>
+              <p className="mt-4 text-sm leading-7 text-white/68">{site.home.founder.founderDescription}</p>
+              <div className="mt-6 space-y-3">
+                {site.home.founder.contributions.map((item) => (
+                  <div key={item} className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4">
+                    <p className="text-sm leading-7 text-white/72">{item}</p>
+                  </div>
+                ))}
+              </div>
+              <Link
+                href="/brain-education"
+                className="mt-6 inline-flex min-h-[54px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
+              >
+                {site.home.whyMeisoulife.button}
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <RhythmGarden
         copy={landing.garden}
         streakCount={Math.max(returnRhythm.streakCount, challengeProgress.completedDays.length, 1)}
@@ -242,37 +291,6 @@ export default function HomePage() {
               <p className="text-sm leading-8 text-white/72">{item}</p>
             </article>
           ))}
-        </div>
-      </section>
-
-      <section className="section-shell mt-24">
-        <SectionHeading eyebrow={landing.mission.eyebrow} title={landing.mission.title} description={landing.mission.mission} />
-        <div className="mt-8 grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-          <div className="rounded-[32px] border border-white/10 bg-white/[0.04] p-6 sm:p-8">
-            <div className="space-y-5">
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-                <p className="text-xs uppercase tracking-[0.24em] text-gold/80">WHY</p>
-                <p className="mt-3 text-lg leading-8 text-white/84">{landing.mission.why}</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-                <p className="text-xs uppercase tracking-[0.24em] text-gold/80">WHY NOW</p>
-                <p className="mt-3 text-lg leading-8 text-white/84">{landing.mission.whyNow}</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-                <p className="text-xs uppercase tracking-[0.24em] text-gold/80">FOUNDER</p>
-                <p className="mt-3 text-lg leading-8 text-white/84">{site.home.founder.founderName}</p>
-                <p className="mt-3 text-sm leading-7 text-white/68">{site.home.founder.contributionsTitle}</p>
-              </div>
-            </div>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {landing.mission.testimonials.map((item) => (
-              <article key={item.name} className="rounded-[28px] border border-white/10 bg-white/[0.04] p-5">
-                <p className="text-lg leading-8 text-white/84">“{item.quote}”</p>
-                <p className="mt-6 text-sm uppercase tracking-[0.24em] text-gold/78">{item.name}</p>
-              </article>
-            ))}
-          </div>
         </div>
       </section>
 
