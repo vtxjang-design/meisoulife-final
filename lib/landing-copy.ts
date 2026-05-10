@@ -10,6 +10,16 @@ export type LandingCopy = {
     secondary: string;
     proof: string[];
   };
+  todaysRhythmCard: {
+    eyebrow: string;
+    title: string;
+    messages: string[];
+    support: string;
+    activeNow: string;
+    actionLabel: string;
+    actions: string[];
+    cta: string;
+  };
   checkIn: {
     eyebrow: string;
     title: string;
@@ -164,6 +174,16 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       primary: "無料で7日間はじめる",
       secondary: "1分瞑想を体験する",
       proof: ["1日1分から", "静かに戻れる", "世界とやわらかくつながる"]
+    },
+    todaysRhythmCard: {
+      eyebrow: "今日の1分リズム",
+      title: "今日の1分リズム",
+      messages: ["考えすぎた日は、\nまず呼吸から戻りましょう。"],
+      support: "今日も、ここから小さく整える。\n一人ではなく、共に。",
+      activeNow: "今日も124人が、それぞれの場所で整っています。",
+      actionLabel: "今日の小さなアクション",
+      actions: ["30秒、笑顔をつくる。"],
+      cta: "今日の1分を始める"
     },
     checkIn: {
       eyebrow: "Today Rhythm Check-in",
@@ -501,6 +521,16 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       secondary: "1분 명상 체험하기",
       proof: ["하루 1분부터", "조용히 돌아오기", "세계와 부드럽게 연결"]
     },
+    todaysRhythmCard: {
+      eyebrow: "오늘의 1분 리듬",
+      title: "오늘의 1분 리듬",
+      messages: ["생각이 많아진 날에는,\n먼저 호흡으로 돌아가요."],
+      support: "오늘도, 여기서부터 작게 정돈합니다.\n혼자가 아니라, 함께.",
+      activeNow: "오늘도 124명이 각자의 자리에서 조용히 정돈하고 있습니다.",
+      actionLabel: "오늘의 작은 액션",
+      actions: ["30초, 미소를 지어봅니다."],
+      cta: "오늘의 1분 시작하기"
+    },
     checkIn: {
       eyebrow: "Today Rhythm Check-in",
       title: "오늘의 상태는 어떤가요?",
@@ -830,6 +860,16 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       primary: "Start free for 7 days",
       secondary: "Try the 1-minute meditation",
       proof: ["From one minute a day", "A quiet place to return", "Softly connected to the world"]
+    },
+    todaysRhythmCard: {
+      eyebrow: "Today’s 1-minute rhythm",
+      title: "Today’s 1-minute rhythm",
+      messages: ["On days when you think too much,\nbegin by returning to breath."],
+      support: "Today too, begin by settling in a small way.\nNot alone, but together.",
+      activeNow: "Today, 124 people are settling in their own quiet places.",
+      actionLabel: "Today’s small action",
+      actions: ["Spend 30 seconds making a soft smile."],
+      cta: "Begin today’s one minute"
     },
     checkIn: {
       eyebrow: "Today Rhythm Check-in",

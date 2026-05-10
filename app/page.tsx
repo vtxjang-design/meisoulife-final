@@ -11,6 +11,7 @@ import { MobileCTA } from "@/components/mobile-cta";
 import { RhythmGarden } from "@/components/rhythm-garden";
 import { SectionHeading } from "@/components/section-heading";
 import { TodayRhythmCheckin } from "@/components/today-rhythm-checkin";
+import { TodaysRhythmCard } from "@/components/todays-rhythm-card";
 import { getChallengeRhythmProgress, type ChallengeRhythmProgress } from "@/lib/challenge-rhythm";
 import { useLanguage, languageButtons, useSiteCopy } from "@/lib/i18n";
 import { landingCopy } from "@/lib/landing-copy";
@@ -215,6 +216,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <TodaysRhythmCard copy={landing.todaysRhythmCard} />
 
       <TodayRhythmCheckin copy={landing.checkIn} />
 
