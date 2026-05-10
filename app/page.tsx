@@ -219,6 +219,8 @@ export default function HomePage() {
 
       <InstantMeditationSection copy={landing.instant} />
 
+      <LiveTogether copy={landing.live} />
+
       <AIRhythmCoach copy={landing.coach} coachUrl={AI_COACH_URL} />
 
       <section className="section-shell mt-24">
@@ -276,8 +278,6 @@ export default function HomePage() {
         completedToday={returnRhythm.isCompletedToday}
         mood={gardenMood}
       />
-
-      <LiveTogether copy={landing.live} />
 
       <section className="section-shell mt-24">
         <SectionHeading
@@ -371,7 +371,7 @@ export default function HomePage() {
         <div className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-6 py-10 text-center sm:px-10">
           <h2 className="font-serif text-3xl text-white sm:text-4xl">{landing.mission.mission}</h2>
           <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-white/68">
-            {landing.live.sharedMinutes}
+            {landing.live.description}
           </p>
           <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
             <Link

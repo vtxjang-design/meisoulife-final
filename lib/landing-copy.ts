@@ -87,10 +87,12 @@ export type LandingCopy = {
     eyebrow: string;
     title: string;
     description: string;
-    sharedMinutes: string;
-    breathingNow: string;
-    countries: string;
-    weekly: string;
+    metrics: Array<{
+      key: string;
+      label: string;
+      value: string;
+      subtext: string;
+    }>;
   };
   mission: {
     eyebrow: string;
@@ -338,13 +340,29 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       steady: "より安定"
     },
     live: {
-      eyebrow: "Live Together",
-      title: "今この瞬間、世界のどこかで誰かが一緒に呼吸しています。",
-      description: "にぎやかなSNSではなく、静かな時間がゆるやかにつながっていく共生フィールドです。",
-      sharedMinutes: "今日、3,842分の静かな時間が共有されています。",
-      breathingNow: "今、一緒に呼吸している人",
-      countries: "今日つながった国",
-      weekly: "今週の共生リズム"
+      eyebrow: "共に整うリズム",
+      title: "今日も、どこかで誰かが呼吸を整えています。",
+      description: "一人でがんばらなくても大丈夫。小さな1分が集まり、共に目覚める毎日をつくっています。",
+      metrics: [
+        {
+          key: "minutes",
+          label: "今日、共に呼吸した時間",
+          value: "3,420分",
+          subtext: "静かな1分が積み重なっています"
+        },
+        {
+          key: "people",
+          label: "今、一緒に整っている人",
+          value: "124人",
+          subtext: "ゆるやかにつながる仲間"
+        },
+        {
+          key: "habit",
+          label: "続いている小さな習慣",
+          value: "7日間チャレンジ",
+          subtext: "無理なく、また戻れるリズム"
+        }
+      ]
     },
     mission: {
       eyebrow: "Why Meisoulife",
@@ -620,13 +638,29 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       steady: "더 안정적"
     },
     live: {
-      eyebrow: "Live Together",
-      title: "지금 이 순간, 세계 어딘가에서 누군가가 함께 호흡하고 있습니다.",
-      description: "시끄러운 소셜 피드가 아니라, 조용한 시간이 느슨하게 연결되는 공생의 장입니다.",
-      sharedMinutes: "오늘 3,842분의 고요한 시간이 함께 쌓였습니다.",
-      breathingNow: "지금 함께 호흡 중인 사람",
-      countries: "오늘 연결된 나라",
-      weekly: "이번 주의 공생 리듬"
+      eyebrow: "함께 정돈되는 리듬",
+      title: "오늘도, 어디선가 누군가가 호흡을 정돈하고 있습니다.",
+      description: "혼자 애쓰지 않아도 괜찮습니다. 작은 1분들이 모여 함께 깨어나는 일상을 만듭니다.",
+      metrics: [
+        {
+          key: "minutes",
+          label: "오늘 함께 호흡한 시간",
+          value: "3,420분",
+          subtext: "조용한 1분이 쌓이고 있습니다"
+        },
+        {
+          key: "people",
+          label: "지금 함께 정돈 중인 사람",
+          value: "124명",
+          subtext: "느슨하게 연결된 동료들"
+        },
+        {
+          key: "habit",
+          label: "이어지고 있는 작은 습관",
+          value: "7일 챌린지",
+          subtext: "무리 없이, 다시 돌아올 수 있는 리듬"
+        }
+      ]
     },
     mission: {
       eyebrow: "Why Meisoulife",
@@ -897,13 +931,29 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       steady: "more steady"
     },
     live: {
-      eyebrow: "Live Together",
-      title: "At this moment, someone somewhere in the world is breathing with you.",
-      description: "Not a noisy social feed, but a coexistence field where quiet time gently gathers.",
-      sharedMinutes: "3,842 quiet minutes have been shared today.",
-      breathingNow: "Breathing together now",
-      countries: "Countries connected today",
-      weekly: "Global rhythm this week"
+      eyebrow: "Rhythm Together",
+      title: "Even today, someone somewhere is settling into breath.",
+      description: "You do not have to push through alone. Small quiet minutes gather into days of awakening together.",
+      metrics: [
+        {
+          key: "minutes",
+          label: "Minutes breathed together today",
+          value: "3,420 min",
+          subtext: "Quiet one-minute returns are accumulating"
+        },
+        {
+          key: "people",
+          label: "People settling together now",
+          value: "124",
+          subtext: "Companions gently connected"
+        },
+        {
+          key: "habit",
+          label: "A small habit continuing",
+          value: "7-day challenge",
+          subtext: "A rhythm you can return to without pressure"
+        }
+      ]
     },
     mission: {
       eyebrow: "Why Meisoulife",

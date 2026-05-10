@@ -147,6 +147,19 @@ img {
   }
 }
 
+@keyframes live-rhythm-pulse {
+  0%,
+  100% {
+    opacity: 0.96;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.015);
+  }
+}
+
 .animate-meditation-ambient-breathe {
   animation: meditation-ambient-breathe 14s ease-in-out infinite;
 }
@@ -169,4 +182,8 @@ img {
 
 .animate-meditation-fade-up {
   animation: meditation-fade-up 800ms ease-out both;
+}
+
+.animate-live-rhythm-pulse {
+  animation: live-rhythm-pulse 10s ease-in-out infinite;
 }
