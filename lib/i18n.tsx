@@ -320,9 +320,9 @@ export const siteCopy = {
         ],
         founderMessageTitle: "創始者のメッセージ",
         founderMessage:
-          "「人間の本来の価値は、\n脳と心の可能性を目覚めさせることにあります。\n\n小さな気づきが、\n人生のリズムを変え、\nやがて社会を変えていく。」",
+          "人は誰もが、\n本来のリズムを持っています。\n\nしかし、速すぎる情報と不安の中で、\n私たちは自分の中心を見失うことがあります。\n\nだからこそ今、\n呼吸を整え、身体を目覚めさせ、\nもう一度自分に戻る時間が必要です。\n\n小さな1分が、\n心の状態を変え、\n人生のリズムを変えていきます。\n\nAI時代だからこそ、\n人間の中心が大切です。\n\n瞑想lifeは、\n毎日戻ってこられる静かな場所として、\n共に目覚める生活文化を育てていきます。",
         founderSignature: "— 脳教育創始者",
-        button: "脳教育についてもっと知る"
+        button: "もっと深く読む"
       },
       platformConcept: {
         eyebrow: "Platform Concept",
@@ -803,6 +803,10 @@ export const siteCopy = {
           body: "世界各地での実践と教育活動を通して、多くの人が自分に戻る習慣と共生の感覚を育ててきました。"
         }
       ],
+      founderMessageTitle: "創始者の深いメッセージ",
+      founderMessageSubtitle: "身体を通して、心と意識を目覚めさせる。",
+      founderMessageBody:
+        "人の中心は、\n遠くにあるものではありません。\n\n呼吸の中にあり、\n身体の感覚の中にあり、\n今この瞬間の選択の中にあります。\n\n情報が増え、AIが進化する時代だからこそ、\n人間には自分の温度を知り、\n自分の状態を整える力が必要です。\n\n考えすぎたときは、\n身体を冷まし、静けさに戻る。\n\n力が足りないときは、\n身体を動かし、生命力を高める。\n\n身体の状態は、\n心の状態につながっています。\n\nだからこそ、\n1時間に1度でも、\n1分でも、2分でも、\n自分の状態を感じ、\n呼吸し、笑い、身体を動かすことが大切です。\n\n笑顔は、\n心を開く最初の筋肉です。\n\n反応する力、\n応援する力、\n愛を表現する力は、\n日々の小さな実践から育ちます。\n\n共生とは、\n特別な理念ではなく、\n生活の中で互いを生かす選択です。\n\n一人が整えば、\n周りの空気が変わります。\n\n一人が目覚めれば、\n共同体のリズムが変わります。\n\nAI時代に必要なのは、\n単なる知識ではなく、\n人を生かす知性です。\n\nそれが、\n共生知能であり、\n弘益の知性です。\n\n瞑想lifeは、\n小さな1分の実践から、\n人が本来の中心に戻り、\n共に目覚める文化を育てていきます。",
       primary: "今日の1分に戻る",
       secondary: "ホームへ戻る"
     },
@@ -1042,9 +1046,9 @@ export const siteCopy = {
         ],
         founderMessageTitle: "창시자의 메시지",
         founderMessage:
-          "“인간의 본래 가치는,\n뇌와 마음의 가능성을 깨우는 데 있습니다.\n\n작은 알아차림이,\n삶의 리듬을 바꾸고,\n마침내 사회를 바꾸게 됩니다.”",
+          "사람은 누구나,\n본래의 리듬을 가지고 있습니다.\n\n하지만 너무 빠른 정보와 불안 속에서,\n우리는 자신의 중심을 놓치곤 합니다.\n\n그래서 지금,\n호흡을 정돈하고 몸을 깨우며,\n다시 자신에게 돌아오는 시간이 필요합니다.\n\n작은 1분이,\n마음의 상태를 바꾸고,\n삶의 리듬을 바꾸기 시작합니다.\n\nAI 시대일수록,\n인간의 중심은 더 중요합니다.\n\n명상life는,\n매일 다시 돌아올 수 있는 조용한 장소로서,\n함께 깨어나는 생활 문화를 길러갑니다.",
         founderSignature: "— 뇌교육 창시자",
-        button: "뇌교육에 대해 더 알아보기"
+        button: "더 깊이 읽기"
       },
       platformConcept: {
         eyebrow: "Platform Concept",
@@ -1525,6 +1529,10 @@ export const siteCopy = {
           body: "세계 여러 지역의 교육과 실천을 통해 많은 사람들이 자신에게 돌아오는 습관과 공생 감각을 길러왔습니다."
         }
       ],
+      founderMessageTitle: "창시자의 깊은 메시지",
+      founderMessageSubtitle: "몸을 통해, 마음과 의식을 깨워갑니다.",
+      founderMessageBody:
+        "사람의 중심은,\n멀리 있는 것이 아닙니다.\n\n호흡 안에 있고,\n몸의 감각 안에 있으며,\n지금 이 순간의 선택 안에 있습니다.\n\n정보가 많아지고 AI가 진화하는 시대일수록,\n인간에게는 자기의 온도를 알고,\n자신의 상태를 정돈하는 힘이 필요합니다.\n\n생각이 많아졌을 때는,\n몸을 식히고 고요함으로 돌아갑니다.\n\n힘이 부족할 때는,\n몸을 움직여 생명력을 높입니다.\n\n몸의 상태는,\n마음의 상태와 이어져 있습니다.\n\n그래서,\n한 시간에 한 번이라도,\n1분이라도, 2분이라도,\n자신의 상태를 느끼고,\n호흡하고, 웃고, 몸을 움직이는 일이 중요합니다.\n\n미소는,\n마음을 여는 첫 번째 근육입니다.\n\n반응하는 힘,\n응원하는 힘,\n사랑을 표현하는 힘은,\n매일의 작은 실천에서 자라납니다.\n\n공생은,\n특별한 이념이 아니라,\n생활 속에서 서로를 살리는 선택입니다.\n\n한 사람이 정돈되면,\n주변의 공기가 달라집니다.\n\n한 사람이 깨어나면,\n공동체의 리듬이 달라집니다.\n\nAI 시대에 필요한 것은,\n단순한 지식이 아니라,\n사람을 살리는 지성입니다.\n\n그것이,\n공생지능이며,\n홍익의 지성입니다.\n\n명상life는,\n작은 1분의 실천에서부터,\n사람이 본래의 중심으로 돌아오고,\n함께 깨어나는 문화를 길러갑니다.",
       primary: "오늘의 1분으로 돌아가기",
       secondary: "홈으로 돌아가기"
     },
@@ -1764,9 +1772,9 @@ export const siteCopy = {
         ],
         founderMessageTitle: "A message from the founder",
         founderMessage:
-          "\"The original value of a human being lies in awakening the potential of the brain and the heart.\n\nA small moment of awareness changes the rhythm of life, and in time, changes society.\"",
+          "Every person carries an original rhythm.\n\nYet in a world of speed, information, and anxiety, we often lose touch with our own center.\n\nThat is why we need time now to settle the breath, awaken the body, and return to ourselves again.\n\nA small one-minute practice can change the state of the mind, and begin to change the rhythm of life.\n\nIn the age of AI, the human center matters even more.\n\nMeisoulife exists as a quiet place people can return to each day, and as a way of growing a culture of awakening together.",
         founderSignature: "— Founder of Brain Education",
-        button: "Learn more about Brain Education"
+        button: "Read more deeply"
       },
       platformConcept: {
         eyebrow: "Platform Concept",
@@ -2247,6 +2255,10 @@ export const siteCopy = {
           body: "Through education and practice around the world, many people have cultivated daily return habits and a deeper sense of coexistence."
         }
       ],
+      founderMessageTitle: "A deeper message from the founder",
+      founderMessageSubtitle: "Awaken mind and awareness through the body.",
+      founderMessageBody:
+        "The human center is not something far away.\n\nIt is in the breath, in the feeling of the body, and in the choices we make in this very moment.\n\nAs information increases and AI grows more powerful, people need the ability to know their own inner temperature and regulate their own state.\n\nWhen you think too much, cool the body and return to stillness.\n\nWhen your energy is low, move the body and raise vitality.\n\nThe condition of the body is deeply connected to the condition of the mind.\n\nThat is why it matters to pause once an hour, or even for one minute or two minutes, to feel your state, breathe, smile, and move the body.\n\nA smile is the first muscle that opens the heart.\n\nThe ability to respond, to encourage, and to express love is cultivated through small daily practice.\n\nCoexistence is not an abstract ideology. It is a choice to let each other live more fully in daily life.\n\nWhen one person settles, the atmosphere around them changes.\n\nWhen one person awakens, the rhythm of the community changes.\n\nWhat the AI age needs is not only knowledge, but intelligence that keeps human beings alive.\n\nThat is coexistence intelligence, and the intelligence of living for the greater good.\n\nFrom a small one-minute practice, Meisoulife seeks to help people return to their true center and cultivate a culture of awakening together.",
       primary: "Return to today’s one minute",
       secondary: "Return home"
     },

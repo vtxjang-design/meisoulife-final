@@ -265,7 +265,7 @@ export default function HomePage() {
                 ))}
               </div>
               <Link
-                href="/brain-education"
+                href="/brain-education#founder-message"
                 className="mt-6 inline-flex min-h-[54px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
               >
                 {site.home.whyMeisoulife.button}
