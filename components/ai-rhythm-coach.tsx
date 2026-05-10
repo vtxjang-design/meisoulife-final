@@ -18,6 +18,10 @@ export function AIRhythmCoach({ copy, coachUrl }: AIRhythmCoachProps) {
     [copy.states, selectedKey]
   );
 
+  if (!current) {
+    return null;
+  }
+
   useEffect(() => {
     if (!copied) {
       return;
@@ -65,6 +69,7 @@ export function AIRhythmCoach({ copy, coachUrl }: AIRhythmCoachProps) {
             <div className="inline-flex w-fit rounded-full border border-gold/20 bg-gold/10 px-3 py-2 text-xs tracking-[0.22em] text-gold/90">
               {copy.eyebrow}
             </div>
+            {/* Future-ready: this static preview/prompt layer can later be replaced with member AI coaching via OpenAI API or Supabase-backed history. */}
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="rounded-2xl border border-emerald-200/12 bg-emerald-200/8 p-5">
                 <p className="text-xs uppercase tracking-[0.24em] text-white/48">{copy.guidanceLabel}</p>
