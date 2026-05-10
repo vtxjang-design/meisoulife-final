@@ -63,6 +63,7 @@ export default function MeditationPage() {
   const [vibrationEnabled, setVibrationEnabled] = useState(true);
   const [vibrationSupported, setVibrationSupported] = useState(false);
   const [hasUserGesture, setHasUserGesture] = useState(false);
+  const [ambientVideoFailed, setAmbientVideoFailed] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
   const completionHandledRef = useRef(false);
   const elapsedTotalSeconds = totalSeconds - secondsLeft;
@@ -80,6 +81,8 @@ export default function MeditationPage() {
     setTotalSeconds(nextDuration);
     setSecondsLeft(nextDuration);
     setMeditationType(nextType);
+    setAmbientVideoFailed(false);
+    completionHandledRef.current = false;
   }, []);
 
   useEffect(() => {
@@ -140,7 +143,27 @@ export default function MeditationPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_20%),linear-gradient(180deg,#07111f_0%,#0d1b2d_45%,#10273a_100%)] px-6 py-10 text-white">
-      <div className="flex w-full max-w-3xl flex-col items-center text-center">
+      <div className="relative flex min-h-[480px] w-full max-w-3xl flex-col items-center overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.04] px-6 py-8 text-center shadow-[0_30px_80px_rgba(0,0,0,0.28)] sm:px-8 sm:py-10">
+        {!ambientVideoFailed ? (
+          <video
+            className="absolute inset-0 z-0 h-full w-full object-cover opacity-85"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster="/images/quiet-meditation.jpg"
+            onLoadedData={() => console.log("Meditation video loaded")}
+            onError={() => setAmbientVideoFailed(true)}
+          >
+            <source src="/videos/one-minute-nature-loop.mp4" type="video/mp4" />
+          </video>
+        ) : (
+          <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_28%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.14),transparent_34%),linear-gradient(180deg,rgba(4,10,19,0.76)_0%,rgba(8,18,32,0.88)_100%)]" />
+        )}
+        <div className="absolute inset-0 z-10 bg-black/25" />
+
+        <div className="relative z-20 flex w-full flex-col items-center text-center">
         {!isComplete ? (
           <>
             <div className="space-y-4">
@@ -225,6 +248,7 @@ export default function MeditationPage() {
             </div>
           </div>
         )}
+        </div>
       </div>
     </main>
   );

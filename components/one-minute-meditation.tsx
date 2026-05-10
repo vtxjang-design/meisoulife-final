@@ -10,10 +10,6 @@ const INHALE_SECONDS = 4;
 const HOLD_SECONDS = 2;
 const EXHALE_SECONDS = 4;
 const BREATH_CYCLE_SECONDS = INHALE_SECONDS + HOLD_SECONDS + EXHALE_SECONDS;
-const AMBIENT_VIDEO_SRC = "/videos/one-minute-nature-loop.mp4";
-// TODO: Add the downloaded 40-second nature video from the provided YouTube Shorts link
-// as /public/videos/one-minute-nature-loop.mp4 so the meditation can use a local looping
-// ambient background without YouTube UI, controls, or branding.
 const AI_COACH_URL =
   process.env.NEXT_PUBLIC_AI_COACH_URL ||
   "https://chatgpt.com/g/g-69f968bc9a408191a3e5f943912666c0-quiet-rhythm-guide";
@@ -67,7 +63,6 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   const [vibrationSupported, setVibrationSupported] = useState(false);
   const [completionIndex, setCompletionIndex] = useState(0);
   const [hasUserGesture, setHasUserGesture] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [ambientVideoFailed, setAmbientVideoFailed] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
   const completionHandledRef = useRef(false);
@@ -105,17 +100,9 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
       return;
     }
 
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const syncMotionPreference = () => {
-      setPrefersReducedMotion(mediaQuery.matches);
-    };
-
-    syncMotionPreference();
-    mediaQuery.addEventListener("change", syncMotionPreference);
     setVibrationSupported(supportsMeditationVibration());
 
     return () => {
-      mediaQuery.removeEventListener("change", syncMotionPreference);
     };
   }, []);
 
@@ -290,8 +277,6 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   const orbWarmthOpacity = phase === "exhale" ? 0.26 : 0.16;
   const progress = ((TOTAL_SECONDS - secondsLeft) / TOTAL_SECONDS) * 100;
   const orbTransitionDuration = `${getPhaseDuration(phase)}s`;
-  const ambientVideoAnimation = prefersReducedMotion ? "" : "animate-meditation-video-breathe";
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#020814]/92 px-4 py-4 backdrop-blur-xl sm:px-6">
       <div className="absolute inset-0 overflow-hidden">
@@ -320,18 +305,14 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
       <div className="relative z-20 min-h-[480px] w-full max-w-md overflow-hidden rounded-[28px] border border-white/8 bg-white/[0.04] p-5 shadow-[0_30px_80px_rgba(0,0,0,0.28)] sm:p-6">
         {!ambientVideoFailed ? (
           <video
-            className={`pointer-events-none absolute inset-0 z-0 h-full w-full object-cover opacity-[0.85] ${ambientVideoAnimation}`}
+            className="absolute inset-0 z-0 h-full w-full object-cover opacity-85"
             autoPlay
             muted
             loop
             playsInline
             preload="auto"
             poster="/images/quiet-meditation.jpg"
-            onLoadedData={() => {
-              if (process.env.NODE_ENV !== "production") {
-                console.log("Meditation video loaded");
-              }
-            }}
+            onLoadedData={() => console.log("Meditation video loaded")}
             onError={() => {
               console.warn("Ambient meditation video failed to load");
               setAmbientVideoFailed(true);
@@ -342,7 +323,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
         ) : (
           <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_28%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.14),transparent_34%),linear-gradient(180deg,rgba(4,10,19,0.76)_0%,rgba(8,18,32,0.88)_100%)]" />
         )}
-        <div className="absolute inset-0 z-10 bg-black/30" />
+        <div className="absolute inset-0 z-10 bg-black/25" />
         {ambientVideoFailed ? (
           <div className="absolute left-4 right-4 top-4 z-10 rounded-2xl border border-white/10 bg-[#08121d]/65 px-4 py-3 text-xs leading-6 text-white/60 backdrop-blur">
             Ambient video fallback active. Place the video file at /public/videos/one-minute-nature-loop.mp4.
