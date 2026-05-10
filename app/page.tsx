@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { AIRhythmCoach } from "@/components/ai-rhythm-coach";
 import { CheckoutButton } from "@/components/checkout-button";
+import { DailyRhythmLayer } from "@/components/daily-rhythm-layer";
 import { InstantMeditationSection } from "@/components/instant-meditation-section";
 import { LiveTogether } from "@/components/live-together";
 import { MobileCTA } from "@/components/mobile-cta";
@@ -220,6 +221,8 @@ export default function HomePage() {
       <InstantMeditationSection copy={landing.instant} />
 
       <LiveTogether copy={landing.live} />
+
+      <DailyRhythmLayer copy={landing.dailyRhythmLayer} />
 
       <AIRhythmCoach copy={landing.coach} coachUrl={AI_COACH_URL} />
 

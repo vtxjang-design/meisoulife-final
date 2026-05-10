@@ -94,6 +94,21 @@ export type LandingCopy = {
       subtext: string;
     }>;
   };
+  dailyRhythmLayer: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    cards: Array<{
+      key: string;
+      emoji: string;
+      title: string;
+      description: string;
+      cta: string;
+      href: string;
+    }>;
+    messageTitle: string;
+    messages: string[];
+  };
   mission: {
     eyebrow: string;
     title: string;
@@ -362,6 +377,43 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
           value: "7日間チャレンジ",
           subtext: "無理なく、また戻れるリズム"
         }
+      ]
+    },
+    dailyRhythmLayer: {
+      eyebrow: "毎日の小さなリズム",
+      title: "今日のあなたに、\nちょうどいい1分を。",
+      description: "忙しくても大丈夫。\n今の状態に合わせて、\n小さく整える時間を。",
+      cards: [
+        {
+          key: "morning",
+          emoji: "☀️",
+          title: "朝のひと呼吸",
+          description: "今日を軽やかに始める1分",
+          cta: "始める",
+          href: "/meditation?duration=60&type=morning"
+        },
+        {
+          key: "afternoon",
+          emoji: "🌿",
+          title: "疲れた時の30秒",
+          description: "SNS疲れや気持ちの乱れに",
+          cta: "整える",
+          href: "/meditation?duration=30&type=day"
+        },
+        {
+          key: "night",
+          emoji: "🌙",
+          title: "おやすみ前の静かな1分",
+          description: "眠る前に心をゆるめる",
+          cta: "眠る準備",
+          href: "/meditation?duration=60&type=night"
+        }
+      ],
+      messageTitle: "今日のあなたへ",
+      messages: [
+        "考えすぎた日は、\nまず呼吸から。",
+        "急がなくて大丈夫。\n小さく整えればいい。",
+        "心が疲れた日は、\n自然に戻ろう。"
       ]
     },
     mission: {
@@ -662,6 +714,43 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
         }
       ]
     },
+    dailyRhythmLayer: {
+      eyebrow: "매일의 작은 리듬",
+      title: "오늘의 당신에게,\n딱 맞는 1분을.",
+      description: "바빠도 괜찮습니다.\n지금 상태에 맞춰,\n작게 정돈하는 시간을.",
+      cards: [
+        {
+          key: "morning",
+          emoji: "☀️",
+          title: "아침의 한 호흡",
+          description: "오늘을 가볍게 시작하는 1분",
+          cta: "시작하기",
+          href: "/meditation?duration=60&type=morning"
+        },
+        {
+          key: "afternoon",
+          emoji: "🌿",
+          title: "지쳤을 때의 30초",
+          description: "SNS 피로와 흐트러진 마음에",
+          cta: "정돈하기",
+          href: "/meditation?duration=30&type=day"
+        },
+        {
+          key: "night",
+          emoji: "🌙",
+          title: "잠들기 전의 조용한 1분",
+          description: "잠들기 전 마음을 부드럽게 풀어줍니다",
+          cta: "잠들 준비",
+          href: "/meditation?duration=60&type=night"
+        }
+      ],
+      messageTitle: "오늘의 당신에게",
+      messages: [
+        "생각이 많아진 날엔,\n먼저 호흡부터.",
+        "서두르지 않아도 괜찮아요.\n작게 정돈하면 됩니다.",
+        "마음이 지친 날엔,\n자연으로 돌아가요."
+      ]
+    },
     mission: {
       eyebrow: "Why Meisoulife",
       title: "고요함을 잃은 시대에, 다시 돌아올 자리를 만든다",
@@ -953,6 +1042,43 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
           value: "7-day challenge",
           subtext: "A rhythm you can return to without pressure"
         }
+      ]
+    },
+    dailyRhythmLayer: {
+      eyebrow: "A small daily rhythm",
+      title: "A minute that fits\nwho you are today.",
+      description: "Even when life is busy,\nyou can still make space\nfor a small return.",
+      cards: [
+        {
+          key: "morning",
+          emoji: "☀️",
+          title: "One breath for the morning",
+          description: "A light one-minute beginning for the day",
+          cta: "Begin",
+          href: "/meditation?duration=60&type=morning"
+        },
+        {
+          key: "afternoon",
+          emoji: "🌿",
+          title: "30 seconds for tired moments",
+          description: "For social fatigue and scattered feelings",
+          cta: "Settle",
+          href: "/meditation?duration=30&type=day"
+        },
+        {
+          key: "night",
+          emoji: "🌙",
+          title: "A quiet minute before sleep",
+          description: "Soften the mind before the day ends",
+          cta: "Prepare for rest",
+          href: "/meditation?duration=60&type=night"
+        }
+      ],
+      messageTitle: "For you today",
+      messages: [
+        "On days when you think too much,\nbegin with breath.",
+        "You do not need to rush.\nSettle one small thing at a time.",
+        "When the heart feels tired,\nreturn to nature."
       ]
     },
     mission: {
