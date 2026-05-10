@@ -40,7 +40,7 @@ export function AIRhythmCoach({ copy, coachUrl }: AIRhythmCoachProps) {
         <div className="rounded-[28px] border border-white/10 bg-white/[0.04] p-6 sm:p-7">
           <div className="flex flex-col gap-5">
             <div className="inline-flex w-fit rounded-full border border-gold/20 bg-gold/10 px-3 py-2 text-xs tracking-[0.22em] text-gold/90">
-              AI RHYTHM GUIDE
+              {copy.eyebrow}
             </div>
             <p className="text-xl leading-9 text-white sm:text-2xl">{current.acknowledgment}</p>
             <div className="grid gap-4 sm:grid-cols-2">
@@ -59,7 +59,7 @@ export function AIRhythmCoach({ copy, coachUrl }: AIRhythmCoachProps) {
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link
-                href="/challenge"
+                href="#one-minute-experience"
                 className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
               >
                 {copy.cta}

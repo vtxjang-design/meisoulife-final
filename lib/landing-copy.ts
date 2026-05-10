@@ -244,25 +244,25 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
     },
     instant: {
       eyebrow: "Instant Calm",
-      title: "5秒で始まる、今日の1分リズム",
+      title: "1分リセット体験",
       description:
-        "読む前に、まず呼吸へ。サインアップなしで、今ここに戻る体験から始められます。",
-      start: "1分を始める",
+        "たった1分。がんばらなくていい呼吸から、今ここへ静かに戻ってみましょう。",
+      start: "1分リセットを始める",
       pause: "一度止める",
       fullscreen: "全画面で開く",
       inhale: "吸って",
       hold: "止めて",
       exhale: "吐いて",
-      sensory: "目を閉じたままでも使えるように、動きと振動でリズムを感じられます。"
+      sensory: "読むより先に、まず呼吸へ。目を閉じたままでも、動きと振動でリズムを感じられます。"
     },
     coach: {
-      eyebrow: "AI Rhythm Coach",
-      title: "今のあなたの状態は？",
-      description: "気分をひとつ選ぶと、AIが今日の戻り方を短く静かに案内します。",
-      cta: "このリズムを続ける",
-      openCoach: "AIコーチを開く",
-      guidanceLabel: "Guidance",
-      rhythmLabel: "Rhythm",
+      eyebrow: "Quiet Companion",
+      title: "今のあなたに必要なリズムは？",
+      description: "今の状態をひとつ選ぶと、やさしく戻るための小さな提案が届きます。",
+      cta: "この状態に合うリズムへ",
+      openCoach: "AIコーチと話す",
+      guidanceLabel: "今日のガイド",
+      rhythmLabel: "おすすめのリズム",
       states: [
         {
           key: "stress",
@@ -340,7 +340,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
     live: {
       eyebrow: "Live Together",
       title: "今この瞬間、世界のどこかで誰かが一緒に呼吸しています。",
-      description: "にぎやかなSNSではなく、静けさが重なっていく共生フィールドです。",
+      description: "にぎやかなSNSではなく、静かな時間がゆるやかにつながっていく共生フィールドです。",
       sharedMinutes: "今日、3,842分の静かな時間が共有されています。",
       breathingNow: "今、一緒に呼吸している人",
       countries: "今日つながった国",
@@ -362,9 +362,9 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
     },
     membership: {
       eyebrow: "Membership",
-      title: "機能ではなく、続けられる自分に入っていく",
+      title: "まずは無料で。\n続けたくなったら、メンバーへ。",
       description:
-        "瞑想lifeのメンバーシップは、瞑想コンテンツを買うことではありません。自分に戻る日常を、AIと仲間と一緒に続けるための参加です。",
+        "瞑想lifeのメンバーシップは、コンテンツを買うことではありません。自分に戻る日常を、やさしく続けるための参加です。",
       freeLabel: "Free",
       freeTitle: "まずは無料で7日間",
       freeFeatures: ["1分瞑想体験", "AIコーチサンプル", "7日リズムトライアル"],
@@ -374,11 +374,11 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
           key: "basic",
           name: "Basic",
           price: "¥1,000 / month",
-          identity: "毎日の戻る力を守る人",
-          description: "daily AI rhythm coach / 1-minute return / quiet continuity",
+          identity: "毎日の戻る力を守る",
+          description: "1分の戻り方を、静かに続けるために",
           lifeChange: "一日が崩れきる前に、自分の中心へ戻れるようになります。",
-          features: ["daily AI rhythm coach", "personal rhythm tracker", "audio guidance", "weekly reflection"],
-          cta: "リズムを続ける",
+          features: ["1分リズム", "AIの静かな伴走", "リズムガーデン", "週ごとのふり返り"],
+          cta: "毎日のリズムを続ける",
           featured: true
         },
         {
@@ -386,25 +386,25 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
           name: "Growth",
           price: "¥3,000 / month",
           identity: "一人では続かない人へ",
-          description: "support / weekly loop / community rhythm",
+          description: "戻れない日があっても、また続けられるように",
           lifeChange: "続かなさを責めずに、戻れる仕組みそのものが生活に根づきます。",
-          features: ["daily AI rhythm coach", "weekly rhythm loop", "focused environment", "community rhythm field"],
-          cta: "リズムを続ける"
+          features: ["毎日のAI伴走", "週ごとのリズム設計", "共生フィールド", "集中できる実践環境"],
+          cta: "深い実践へ進む"
         },
         {
           key: "premium",
           name: "Inner Circle",
           price: "¥10,000 / month",
           identity: "世界10,000人の共生リーダーのための特別な場",
-          description: "leadership / retreat / coexistence culture / global projects",
+          description: "自分を整え、周りにも静けさを広げていくために",
           lifeChange: "自分を整える実践が、周囲と世界に静かに広がる役割へ変わります。",
           features: [
-            "advanced rhythm coaching",
-            "leadership sessions",
-            "retreat priority",
-            "global coexistence projects"
+            "深いリズムコーチング",
+            "リーダーシップセッション",
+            "リトリート優先案内",
+            "共生プロジェクト"
           ],
-          cta: "リズムを続ける"
+          cta: "共生リーダーとして参加する"
         }
       ],
       comparisonTitle: "何が受け取れて、何が変わるのか",
@@ -527,24 +527,24 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
     },
     instant: {
       eyebrow: "Instant Calm",
-      title: "5초 안에 시작되는 오늘의 1분 리듬",
-      description: "읽기 전에 먼저 호흡으로. 회원가입 없이 지금 여기로 돌아오는 체험부터 시작할 수 있습니다.",
-      start: "1분 시작하기",
+      title: "1분 리셋 체험",
+      description: "단 1분. 애쓰지 않는 호흡부터 시작해 지금 여기로 조용히 돌아와 보세요.",
+      start: "1분 리셋 시작하기",
       pause: "잠시 멈추기",
       fullscreen: "전체 화면으로 열기",
       inhale: "들이쉬기",
       hold: "멈추기",
       exhale: "내쉬기",
-      sensory: "눈을 감은 채로도 리듬을 느낄 수 있도록 움직임과 진동으로 설계했습니다."
+      sensory: "읽기보다 먼저 호흡으로. 눈을 감은 채로도 움직임과 진동으로 리듬을 느낄 수 있습니다."
     },
     coach: {
-      eyebrow: "AI Rhythm Coach",
-      title: "지금 당신의 상태는 어떤가요?",
-      description: "기분 하나를 고르면 AI가 오늘 돌아오는 방법을 짧고 조용하게 안내합니다.",
-      cta: "이 리듬을 이어가기",
-      openCoach: "AI 코치 열기",
-      guidanceLabel: "가이드",
-      rhythmLabel: "리듬",
+      eyebrow: "Quiet Companion",
+      title: "지금 당신에게 필요한 리듬은 무엇인가요?",
+      description: "지금의 상태를 하나 고르면, 부드럽게 돌아오기 위한 작은 제안을 건넵니다.",
+      cta: "이 상태에 맞는 리듬으로",
+      openCoach: "AI 코치와 대화하기",
+      guidanceLabel: "오늘의 가이드",
+      rhythmLabel: "추천 리듬",
       states: [
         {
           key: "stress",
@@ -622,7 +622,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
     live: {
       eyebrow: "Live Together",
       title: "지금 이 순간, 세계 어딘가에서 누군가가 함께 호흡하고 있습니다.",
-      description: "시끄러운 소셜 피드가 아니라, 고요함이 겹쳐지는 공생의 장입니다.",
+      description: "시끄러운 소셜 피드가 아니라, 조용한 시간이 느슨하게 연결되는 공생의 장입니다.",
       sharedMinutes: "오늘 3,842분의 고요한 시간이 함께 쌓였습니다.",
       breathingNow: "지금 함께 호흡 중인 사람",
       countries: "오늘 연결된 나라",
@@ -644,9 +644,9 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
     },
     membership: {
       eyebrow: "Membership",
-      title: "기능이 아니라, 계속할 수 있는 나에게 들어가는 것",
+      title: "먼저는 무료로.\n이어가고 싶다면, 멤버십으로.",
       description:
-        "명상life 멤버십은 콘텐츠 구매가 아닙니다. 자신에게 돌아오는 일상을 AI와 사람들과 함께 이어가기 위한 참여입니다.",
+        "명상life 멤버십은 콘텐츠 구매가 아닙니다. 자신에게 돌아오는 일상을 부드럽게 이어가기 위한 참여입니다.",
       freeLabel: "Free",
       freeTitle: "먼저 무료로 7일",
       freeFeatures: ["1분 명상 체험", "AI 코치 샘플", "7일 리듬 체험"],
@@ -656,11 +656,11 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
           key: "basic",
           name: "Basic",
           price: "¥1,000 / month",
-          identity: "매일 돌아오는 힘을 지키는 사람",
-          description: "daily AI rhythm coach / 1-minute return / quiet continuity",
+          identity: "매일 돌아오는 힘을 지키기",
+          description: "1분의 돌아옴을 조용히 이어가기 위해",
           lifeChange: "하루가 완전히 무너지기 전에 자신의 중심으로 돌아올 수 있게 됩니다.",
-          features: ["daily AI rhythm coach", "personal rhythm tracker", "audio guidance", "weekly reflection"],
-          cta: "리듬을 계속하기",
+          features: ["1분 리듬", "AI의 조용한 동행", "리듬 가든", "주간 돌아보기"],
+          cta: "매일의 리듬을 계속하기",
           featured: true
         },
         {
@@ -668,25 +668,20 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
           name: "Growth",
           price: "¥3,000 / month",
           identity: "혼자서는 계속하기 어려운 사람에게",
-          description: "support / weekly loop / community rhythm",
+          description: "돌아오지 못한 날이 있어도 다시 이어가기 위해",
           lifeChange: "계속되지 않는 자신을 탓하지 않고, 돌아올 구조가 생활에 자리잡습니다.",
-          features: ["daily AI rhythm coach", "weekly rhythm loop", "focused environment", "community rhythm field"],
-          cta: "리듬을 계속하기"
+          features: ["매일의 AI 동행", "주간 리듬 설계", "공생 필드", "집중 실천 환경"],
+          cta: "깊은 실천으로 가기"
         },
         {
           key: "premium",
           name: "Inner Circle",
           price: "¥10,000 / month",
           identity: "세계 10,000명의 공생 리더를 위한 특별한 장",
-          description: "leadership / retreat / coexistence culture / global projects",
+          description: "자신을 정돈하고 주변에도 고요함을 넓혀가기 위해",
           lifeChange: "자신을 정돈하는 실천이 주변과 세계를 밝히는 역할로 깊어집니다.",
-          features: [
-            "advanced rhythm coaching",
-            "leadership sessions",
-            "retreat priority",
-            "global coexistence projects"
-          ],
-          cta: "리듬을 계속하기"
+          features: ["깊은 리듬 코칭", "리더십 세션", "리트릿 우선 안내", "공생 프로젝트"],
+          cta: "공생 리더로 참여하기"
         }
       ],
       comparisonTitle: "무엇을 받고, 삶이 어떻게 달라지는가",
@@ -809,24 +804,24 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
     },
     instant: {
       eyebrow: "Instant Calm",
-      title: "Today’s one-minute rhythm begins within five seconds",
-      description: "Before reading, return to breath. No signup is needed to feel the platform first.",
-      start: "Start 1 minute",
+      title: "1-minute reset",
+      description: "Just one minute. Begin with an effortless breath and quietly return to yourself.",
+      start: "Begin the 1-minute reset",
       pause: "Pause",
       fullscreen: "Open full screen",
       inhale: "Inhale",
       hold: "Hold",
       exhale: "Exhale",
-      sensory: "The rhythm is designed to be felt through motion and vibration, even with your eyes closed."
+      sensory: "Before reading, return to breath. The rhythm can be felt through motion and vibration, even with your eyes closed."
     },
     coach: {
-      eyebrow: "AI Rhythm Coach",
-      title: "How are you right now?",
-      description: "Choose one state and the AI offers a quiet way to return today.",
-      cta: "Continue this rhythm",
-      openCoach: "Open AI coach",
+      eyebrow: "Quiet Companion",
+      title: "What rhythm do you need right now?",
+      description: "Choose your current state and receive a small, gentle suggestion for returning.",
+      cta: "Go to the rhythm that fits this moment",
+      openCoach: "Talk with the AI coach",
       guidanceLabel: "Guidance",
-      rhythmLabel: "Rhythm",
+      rhythmLabel: "Recommended rhythm",
       states: [
         {
           key: "stress",
@@ -904,7 +899,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
     live: {
       eyebrow: "Live Together",
       title: "At this moment, someone somewhere in the world is breathing with you.",
-      description: "Not a noisy social feed, but a coexistence field where stillness gathers.",
+      description: "Not a noisy social feed, but a coexistence field where quiet time gently gathers.",
       sharedMinutes: "3,842 quiet minutes have been shared today.",
       breathingNow: "Breathing together now",
       countries: "Countries connected today",
@@ -926,9 +921,9 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
     },
     membership: {
       eyebrow: "Membership",
-      title: "Not just features, but a self you can keep returning with",
+      title: "Start free.\nJoin membership when you want to keep going.",
       description:
-        "Meisoulife membership is not about buying content. It is participation in a daily life of returning, continued with AI and quiet companions.",
+        "Meisoulife membership is not about buying content. It is a way to keep returning to yourself with quiet support.",
       freeLabel: "Free",
       freeTitle: "Start with 7 days free",
       freeFeatures: ["1-minute meditation", "AI coach sample", "7-day rhythm trial"],
@@ -938,11 +933,11 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
           key: "basic",
           name: "Basic",
           price: "¥1,000 / month",
-          identity: "For protecting your daily return",
-          description: "daily AI rhythm coach / 1-minute return / quiet continuity",
+          identity: "Protect your daily return",
+          description: "To quietly continue your daily return",
           lifeChange: "You begin returning to your center before the day fully unravels.",
-          features: ["daily AI rhythm coach", "personal rhythm tracker", "audio guidance", "weekly reflection"],
-          cta: "Continue the rhythm",
+          features: ["1-minute rhythm", "quiet AI support", "Rhythm Garden", "weekly reflection"],
+          cta: "Keep the daily rhythm",
           featured: true
         },
         {
@@ -950,25 +945,20 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
           name: "Growth",
           price: "¥3,000 / month",
           identity: "For people who cannot keep going alone",
-          description: "support / weekly loop / community rhythm",
+          description: "To keep going, even after days when you drift away",
           lifeChange: "Instead of blaming yourself for inconsistency, you gain a structure that helps you return.",
-          features: ["daily AI rhythm coach", "weekly rhythm loop", "focused environment", "community rhythm field"],
-          cta: "Continue the rhythm"
+          features: ["daily AI support", "weekly rhythm loop", "coexistence field", "focused practice space"],
+          cta: "Move into deeper practice"
         },
         {
           key: "premium",
           name: "Inner Circle",
           price: "¥10,000 / month",
           identity: "A special place for 10,000 coexistence leaders",
-          description: "leadership / retreat / coexistence culture / global projects",
+          description: "To deepen your own rhythm and extend calm into the world",
           lifeChange: "Your personal practice grows into a role that quietly illuminates others and the world.",
-          features: [
-            "advanced rhythm coaching",
-            "leadership sessions",
-            "retreat priority",
-            "global coexistence projects"
-          ],
-          cta: "Continue the rhythm"
+          features: ["advanced rhythm coaching", "leadership sessions", "retreat priority", "coexistence projects"],
+          cta: "Join as a coexistence leader"
         }
       ],
       comparisonTitle: "What you receive, and what changes",

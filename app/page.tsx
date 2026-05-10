@@ -35,6 +35,7 @@ function MembershipCard({
         <p className="text-sm uppercase tracking-[0.28em] text-gold">{plan.name}</p>
         <p className="text-3xl font-semibold text-white">{plan.price}</p>
         <p className="text-base text-white/84">{plan.identity}</p>
+        <p className="text-sm uppercase tracking-[0.2em] text-white/42">{plan.description}</p>
         <p className="text-sm leading-7 text-white/68">{plan.lifeChange}</p>
       </div>
       <ul className="mt-6 grid gap-3 text-sm text-white/74">
@@ -138,10 +139,10 @@ export default function HomePage() {
             </div>
 
             <div className="space-y-5">
-              <p className="whitespace-pre-line text-2xl leading-10 text-gold/82 sm:text-[32px] sm:leading-[1.55]">{landing.hero.supporting}</p>
               <h1 className="whitespace-pre-line font-serif text-5xl leading-[1.18] text-white sm:text-6xl sm:leading-[1.2] lg:text-7xl lg:leading-[1.18]">
                 {landing.hero.title}
               </h1>
+              <p className="whitespace-pre-line text-xl leading-9 text-gold/82 sm:text-[30px] sm:leading-[1.55]">{landing.hero.supporting}</p>
               <p className="max-w-3xl text-lg leading-8 text-white/68 sm:text-xl sm:leading-9">{landing.hero.subtitle}</p>
             </div>
 
@@ -176,6 +177,13 @@ export default function HomePage() {
               className="h-[440px] w-full rounded-[28px] object-cover sm:h-[520px]"
             />
             <div className="absolute inset-x-10 bottom-10 rounded-[28px] border border-white/10 bg-[#06111d]/72 p-5 backdrop-blur">
+              <p className="mb-4 text-sm leading-7 text-white/72">
+                {language === "jp"
+                  ? "いつでも戻れる場所があるだけで、今日の呼吸は少しやわらかくなります。"
+                  : language === "kr"
+                    ? "언제든 돌아올 수 있는 자리가 있다는 것만으로도 오늘의 호흡은 조금 부드러워집니다."
+                    : "Just knowing there is a place to return can make today’s breath a little softer."}
+              </p>
               <div className="grid gap-3 sm:grid-cols-3">
                 {liveSummary.map((item, index) => (
                   <div key={index} className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
@@ -343,7 +351,7 @@ export default function HomePage() {
 
       <section className="section-shell mt-24">
         <div className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-6 py-10 text-center sm:px-10">
-          <h2 className="font-serif text-3xl text-white sm:text-4xl">{landing.hero.supporting}</h2>
+          <h2 className="font-serif text-3xl text-white sm:text-4xl">{landing.mission.mission}</h2>
           <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-white/68">
             {landing.live.sharedMinutes}
           </p>

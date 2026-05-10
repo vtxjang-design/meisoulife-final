@@ -91,6 +91,13 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     <section id="one-minute-experience" className="section-shell mt-16">
       <div className="rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-8 shadow-[0_24px_80px_rgba(7,17,31,0.24)] sm:px-8 sm:py-10">
         <SectionHeading eyebrow={copy.eyebrow} title={copy.title} description={copy.description} align="center" />
+        <div className="mt-6 flex flex-wrap justify-center gap-2">
+          {[copy.inhale, copy.hold, copy.exhale].map((item) => (
+            <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-white/58">
+              {item}
+            </span>
+          ))}
+        </div>
         <div className="mt-10 grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div className="order-2 space-y-5 lg:order-1">
             <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
