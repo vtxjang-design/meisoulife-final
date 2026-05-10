@@ -65,16 +65,17 @@ export type LandingCopy = {
     description: string;
     cta: string;
     openCoach: string;
+    note: string;
+    copyPrompt: string;
+    copiedPrompt: string;
+    promptLabel: string;
     guidanceLabel: string;
     rhythmLabel: string;
     states: Array<{
       key: string;
       label: string;
-      acknowledgment: string;
-      guidance: string;
-      rhythm: string;
-      meditation: string;
-      reflection: string;
+      previewMessage: string;
+      prompt: string;
     }>;
   };
   garden: {
@@ -176,10 +177,10 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       proof: ["1日1分から", "静かに戻れる", "世界とやわらかくつながる"]
     },
     todaysRhythmCard: {
-      eyebrow: "今日の1分リズム",
+      eyebrow: "今日の小さなリズム",
       title: "今日の1分リズム",
       messages: ["考えすぎた日は、\nまず呼吸から戻りましょう。"],
-      support: "今日も、ここから小さく整える。\n一人ではなく、共に。",
+      support: "今日もここから、\n小さく整える。",
       activeNow: "今日も124人が、それぞれの場所で整っています。",
       actionLabel: "今日の小さなアクション",
       actions: ["30秒、笑顔をつくる。"],
@@ -293,67 +294,46 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       sensory: "読むより先に、まず呼吸へ。目を閉じたままでも、動きと振動でリズムを感じられます。"
     },
     coach: {
-      eyebrow: "Quiet Companion",
-      title: "今のあなたに必要なリズムは？",
-      description: "今の状態をひとつ選ぶと、やさしく戻るための小さな提案が届きます。",
-      cta: "この状態に合うリズムへ",
-      openCoach: "AIコーチと話す",
-      guidanceLabel: "今日のガイド",
-      rhythmLabel: "おすすめのリズム",
+      eyebrow: "Quiet Rhythm Guide",
+      title: "今のあなたに、\n静かな1分のガイドを。",
+      description:
+        "不安、疲れ、集中できない時に。\nQuiet Rhythm Guide が、\nあなたの今の状態に合わせて\nやさしく言葉を返し、\n1分のリズムへ案内します。",
+      cta: "Quiet Rhythm Guide GPTを開く",
+      openCoach: "Quiet Rhythm Guide GPTを開く",
+      note: "※ ChatGPTにログインすると無料で利用できます。利用回数には制限がある場合があります。",
+      copyPrompt: "プロンプトをコピー",
+      copiedPrompt: "コピーしました",
+      promptLabel: "GPTに伝えるひとこと",
+      guidanceLabel: "小さなプレビュー",
+      rhythmLabel: "1分の入り口",
       states: [
-        {
-          key: "stress",
-          label: "ストレス",
-          acknowledgment: "がんばりすぎた心は、まずほどくことから整います。",
-          guidance: "肩の力を抜いて、呼吸の長さだけを少し広げてみましょう。",
-          rhythm: "4-2-4 呼吸を3分",
-          meditation: "おすすめ: 夜の3分リズム",
-          reflection: "今日は整えるだけで十分です。"
-        },
         {
           key: "anxiety",
           label: "不安",
-          acknowledgment: "不安は、戻る場所が見えないときに大きくなります。",
-          guidance: "足の裏と息の出入りを感じて、今ここに輪郭をつくりましょう。",
-          rhythm: "4-2-4 呼吸を1分",
-          meditation: "おすすめ: 60秒リズム",
-          reflection: "次の一歩だけを見れば大丈夫です。"
+          previewMessage:
+            "大丈夫。\nまずは呼吸を少しだけゆっくりにしましょう。\n今は、答えを急がなくても大丈夫です。",
+          prompt: "今、不安があります。1分で落ち着けるように、やさしくガイドしてください。"
+        },
+        {
+          key: "tired",
+          label: "疲れ",
+          previewMessage:
+            "よくここまで来ました。\n身体が少し休みたがっているかもしれません。\n1分だけ、自分に戻りましょう。",
+          prompt: "少し疲れています。無理なく回復できる1分のリズムを案内してください。"
         },
         {
           key: "focus",
           label: "集中したい",
-          acknowledgment: "集中は、力を入れるより、散ったものを戻すと生まれます。",
-          guidance: "目線を少し落として、息をまっすぐ通す感覚を持ちましょう。",
-          rhythm: "4-2-4 呼吸を1分",
-          meditation: "おすすめ: 昼の1分リズム",
-          reflection: "ひとつに戻るだけで流れは変わります。"
+          previewMessage:
+            "今は、全部をやろうとしなくて大丈夫です。\nまず一つだけ。\n呼吸と視線を整えましょう。",
+          prompt: "集中したいです。今やることを一つに戻す1分ガイドをください。"
         },
         {
           key: "sleep",
-          label: "眠れない",
-          acknowledgment: "眠れない夜は、静けさより先に安心が必要です。",
-          guidance: "吐く息を長めにして、身体にもう大丈夫だと知らせましょう。",
-          rhythm: "4-2-6 呼吸を3分",
-          meditation: "おすすめ: 夜の3分リズム",
-          reflection: "眠ろうとしなくても、緩むだけで十分です。"
-        },
-        {
-          key: "tired",
-          label: "疲れている",
-          acknowledgment: "疲れた日は、前に進むより、少し戻るほうが深く回復します。",
-          guidance: "息を整える前に、身体の重さをそのまま受け止めてみましょう。",
-          rhythm: "自然呼吸を1分",
-          meditation: "おすすめ: 朝の3分リズム",
-          reflection: "今日は休むリズムも大切な実践です。"
-        },
-        {
-          key: "calm",
-          label: "心を落ち着けたい",
-          acknowledgment: "落ち着きたい気持ちそのものが、もう戻る準備になっています。",
-          guidance: "吸う息より、吐く息を丁寧に感じてみてください。",
-          rhythm: "4-2-4 呼吸を3分",
-          meditation: "おすすめ: 朝の3分リズム",
-          reflection: "静けさは、少しずつ広がっていきます。"
+          label: "眠りたい",
+          previewMessage:
+            "今日のことを、少しずつ手放しましょう。\n身体の重さを感じながら、\n静かに眠る準備をします。",
+          prompt: "眠る前に心を静かにしたいです。1分の睡眠前ガイドをお願いします。"
         }
       ]
     },
@@ -522,10 +502,10 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       proof: ["하루 1분부터", "조용히 돌아오기", "세계와 부드럽게 연결"]
     },
     todaysRhythmCard: {
-      eyebrow: "오늘의 1분 리듬",
+      eyebrow: "오늘의 작은 리듬",
       title: "오늘의 1분 리듬",
       messages: ["생각이 많아진 날에는,\n먼저 호흡으로 돌아가요."],
-      support: "오늘도, 여기서부터 작게 정돈합니다.\n혼자가 아니라, 함께.",
+      support: "오늘도 여기서부터,\n작게 정돈합니다.",
       activeNow: "오늘도 124명이 각자의 자리에서 조용히 정돈하고 있습니다.",
       actionLabel: "오늘의 작은 액션",
       actions: ["30초, 미소를 지어봅니다."],
@@ -638,67 +618,46 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       sensory: "읽기보다 먼저 호흡으로. 눈을 감은 채로도 움직임과 진동으로 리듬을 느낄 수 있습니다."
     },
     coach: {
-      eyebrow: "Quiet Companion",
-      title: "지금 당신에게 필요한 리듬은 무엇인가요?",
-      description: "지금의 상태를 하나 고르면, 부드럽게 돌아오기 위한 작은 제안을 건넵니다.",
-      cta: "이 상태에 맞는 리듬으로",
-      openCoach: "AI 코치와 대화하기",
-      guidanceLabel: "오늘의 가이드",
-      rhythmLabel: "추천 리듬",
+      eyebrow: "Quiet Rhythm Guide",
+      title: "지금 당신에게,\n조용한 1분의 가이드를.",
+      description:
+        "불안하거나 지치고, 집중이 흐려질 때.\nQuiet Rhythm Guide가\n지금의 상태에 맞춰\n부드러운 말과 함께\n1분의 리듬으로 안내합니다.",
+      cta: "Quiet Rhythm Guide GPT 열기",
+      openCoach: "Quiet Rhythm Guide GPT 열기",
+      note: "※ ChatGPT에 로그인하면 무료로 이용할 수 있습니다. 사용 횟수에는 제한이 있을 수 있습니다.",
+      copyPrompt: "프롬프트 복사",
+      copiedPrompt: "복사되었습니다",
+      promptLabel: "GPT에 이렇게 전해보세요",
+      guidanceLabel: "작은 프리뷰",
+      rhythmLabel: "1분의 시작",
       states: [
-        {
-          key: "stress",
-          label: "스트레스",
-          acknowledgment: "애써 온 마음은 먼저 풀어줄 때 정돈되기 시작합니다.",
-          guidance: "어깨 힘을 빼고, 호흡의 길이만 조금 넓혀보세요.",
-          rhythm: "4-2-4 호흡 3분",
-          meditation: "추천: 밤의 3분 리듬",
-          reflection: "오늘은 정돈하는 것만으로 충분합니다."
-        },
         {
           key: "anxiety",
           label: "불안",
-          acknowledgment: "불안은 돌아올 자리가 보이지 않을 때 더 커집니다.",
-          guidance: "발바닥과 숨의 드나듦을 느끼며 지금 여기에 윤곽을 만들어보세요.",
-          rhythm: "4-2-4 호흡 1분",
-          meditation: "추천: 60초 리듬",
-          reflection: "다음 한 걸음만 봐도 괜찮습니다."
+          previewMessage:
+            "괜찮습니다.\n먼저 호흡을 조금만 천천히 해봅시다.\n지금은 답을 서두르지 않아도 됩니다.",
+          prompt: "지금 불안이 있습니다. 1분 안에 진정할 수 있도록 부드럽게 안내해 주세요."
+        },
+        {
+          key: "tired",
+          label: "피곤함",
+          previewMessage:
+            "여기까지 온 것만으로도 충분합니다.\n몸이 조금 쉬고 싶어할지도 모릅니다.\n1분만 자신에게 돌아와 봅시다.",
+          prompt: "조금 피곤합니다. 무리 없이 회복할 수 있는 1분 리듬을 안내해 주세요."
         },
         {
           key: "focus",
           label: "집중하고 싶다",
-          acknowledgment: "집중은 힘으로 만드는 것보다 흩어진 것을 돌아오게 할 때 생깁니다.",
-          guidance: "시선을 조금 낮추고, 숨이 곧게 지나가는 감각을 느껴보세요.",
-          rhythm: "4-2-4 호흡 1분",
-          meditation: "추천: 낮의 1분 리듬",
-          reflection: "하나로 돌아오는 것만으로 흐름이 바뀝니다."
+          previewMessage:
+            "지금은 모든 걸 다 하려 하지 않아도 됩니다.\n먼저 하나만.\n호흡과 시선을 정돈해 봅시다.",
+          prompt: "집중하고 싶습니다. 지금 해야 할 한 가지로 돌아가는 1분 가이드를 주세요."
         },
         {
           key: "sleep",
-          label: "잠이 오지 않는다",
-          acknowledgment: "잠들지 못하는 밤에는 고요함보다 먼저 안심이 필요합니다.",
-          guidance: "내쉬는 숨을 조금 길게 해서 몸에 이제 괜찮다고 알려주세요.",
-          rhythm: "4-2-6 호흡 3분",
-          meditation: "추천: 밤의 3분 리듬",
-          reflection: "잠들려 하지 않아도, 풀어지는 것만으로 충분합니다."
-        },
-        {
-          key: "tired",
-          label: "지쳐 있다",
-          acknowledgment: "지친 날에는 앞으로 가는 것보다 조금 돌아오는 것이 더 깊은 회복이 됩니다.",
-          guidance: "호흡을 고치기 전에 몸의 무게를 그대로 받아들여 보세요.",
-          rhythm: "자연 호흡 1분",
-          meditation: "추천: 아침의 3분 리듬",
-          reflection: "오늘은 쉬는 리듬도 중요한 실천입니다."
-        },
-        {
-          key: "calm",
-          label: "마음을 가라앉히고 싶다",
-          acknowledgment: "가라앉고 싶은 마음 자체가 이미 돌아올 준비가 되어 있다는 뜻입니다.",
-          guidance: "들이쉬는 숨보다 내쉬는 숨을 더 또렷하게 느껴보세요.",
-          rhythm: "4-2-4 호흡 3분",
-          meditation: "추천: 아침의 3분 리듬",
-          reflection: "고요함은 조금씩 넓어집니다."
+          label: "잠들고 싶다",
+          previewMessage:
+            "오늘의 일들을 조금씩 내려놓아 봅시다.\n몸의 무게를 느끼면서,\n조용히 잠들 준비를 합니다.",
+          prompt: "잠들기 전에 마음을 조용히 하고 싶습니다. 1분짜리 수면 전 가이드를 부탁합니다."
         }
       ]
     },
@@ -862,10 +821,10 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       proof: ["From one minute a day", "A quiet place to return", "Softly connected to the world"]
     },
     todaysRhythmCard: {
-      eyebrow: "Today’s 1-minute rhythm",
+      eyebrow: "Today’s small rhythm",
       title: "Today’s 1-minute rhythm",
       messages: ["On days when you think too much,\nbegin by returning to breath."],
-      support: "Today too, begin by settling in a small way.\nNot alone, but together.",
+      support: "Begin again here today,\nin one small quiet way.",
       activeNow: "Today, 124 people are settling in their own quiet places.",
       actionLabel: "Today’s small action",
       actions: ["Spend 30 seconds making a soft smile."],
@@ -978,67 +937,46 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       sensory: "Before reading, return to breath. The rhythm can be felt through motion and vibration, even with your eyes closed."
     },
     coach: {
-      eyebrow: "Quiet Companion",
-      title: "What rhythm do you need right now?",
-      description: "Choose your current state and receive a small, gentle suggestion for returning.",
-      cta: "Go to the rhythm that fits this moment",
-      openCoach: "Talk with the AI coach",
-      guidanceLabel: "Guidance",
-      rhythmLabel: "Recommended rhythm",
+      eyebrow: "Quiet Rhythm Guide",
+      title: "A quiet one-minute guide,\nfor how you feel right now.",
+      description:
+        "For anxiety, tiredness, restlessness, or trouble focusing.\nQuiet Rhythm Guide responds gently to your current state\nand leads you into a simple one-minute rhythm.",
+      cta: "Open Quiet Rhythm Guide GPT",
+      openCoach: "Open Quiet Rhythm Guide GPT",
+      note: "ChatGPT login is required to use it for free. Usage limits may apply.",
+      copyPrompt: "Copy prompt",
+      copiedPrompt: "Copied",
+      promptLabel: "A simple prompt to start with",
+      guidanceLabel: "Preview",
+      rhythmLabel: "One-minute entry",
       states: [
-        {
-          key: "stress",
-          label: "Stress",
-          acknowledgment: "An overworked mind settles by softening first.",
-          guidance: "Release your shoulders and widen only the length of your breath.",
-          rhythm: "4-2-4 breathing for 3 minutes",
-          meditation: "Recommended: 3-minute night rhythm",
-          reflection: "Settling is enough for today."
-        },
         {
           key: "anxiety",
           label: "Anxiety",
-          acknowledgment: "Anxiety grows when there is no clear place to return.",
-          guidance: "Feel the soles of your feet and the path of your breath to redraw the present moment.",
-          rhythm: "4-2-4 breathing for 1 minute",
-          meditation: "Recommended: 60-second rhythm",
-          reflection: "Only the next step needs to be clear."
-        },
-        {
-          key: "focus",
-          label: "Need focus",
-          acknowledgment: "Focus arrives when scattered attention is gently brought back.",
-          guidance: "Lower your gaze a little and feel the breath move in one straight line.",
-          rhythm: "4-2-4 breathing for 1 minute",
-          meditation: "Recommended: daytime 1-minute rhythm",
-          reflection: "Returning to one thing shifts the whole flow."
-        },
-        {
-          key: "sleep",
-          label: "Can’t sleep",
-          acknowledgment: "A sleepless night needs reassurance before stillness.",
-          guidance: "Lengthen the exhale so the body can hear that it is safe to rest.",
-          rhythm: "4-2-6 breathing for 3 minutes",
-          meditation: "Recommended: 3-minute night rhythm",
-          reflection: "You do not need to force sleep. Softening is enough."
+          previewMessage:
+            "It's okay.\nLet's slow the breath just a little.\nYou do not have to rush the answer right now.",
+          prompt: "I feel anxious right now. Please guide me gently into a one-minute rhythm that helps me settle."
         },
         {
           key: "tired",
           label: "Tired",
-          acknowledgment: "On tired days, returning is more restorative than pushing forward.",
-          guidance: "Before fixing the breath, allow the weight in the body to be there.",
-          rhythm: "Natural breathing for 1 minute",
-          meditation: "Recommended: 3-minute morning rhythm",
-          reflection: "Rest is also a valid rhythm."
+          previewMessage:
+            "You've already carried a lot.\nYour body may be asking for a little rest.\nLet's return to yourself for one minute.",
+          prompt: "I'm a little tired. Please guide me into a gentle one-minute rhythm for recovery."
         },
         {
-          key: "calm",
-          label: "Need calm",
-          acknowledgment: "The wish to settle is already the beginning of returning.",
-          guidance: "Notice the exhale more clearly than the inhale.",
-          rhythm: "4-2-4 breathing for 3 minutes",
-          meditation: "Recommended: 3-minute morning rhythm",
-          reflection: "Stillness widens little by little."
+          key: "focus",
+          label: "Need focus",
+          previewMessage:
+            "You do not need to do everything at once.\nJust one thing first.\nLet's steady your breath and your gaze.",
+          prompt: "I want to focus. Please give me a one-minute guide that helps me return to one thing."
+        },
+        {
+          key: "sleep",
+          label: "Want to sleep",
+          previewMessage:
+            "Let's release today a little at a time.\nFeel the weight of your body,\nand prepare for sleep quietly.",
+          prompt: "I want to quiet my mind before sleep. Please guide me through a one-minute bedtime rhythm."
         }
       ]
     },
