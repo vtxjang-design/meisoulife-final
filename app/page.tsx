@@ -10,6 +10,7 @@ import { InstantMeditationSection } from "@/components/instant-meditation-sectio
 import { LiveTogether } from "@/components/live-together";
 import { MobileCTA } from "@/components/mobile-cta";
 import { RhythmGarden } from "@/components/rhythm-garden";
+import { RhythmChallenge } from "@/components/rhythm-challenge";
 import { SectionHeading } from "@/components/section-heading";
 import { getChallengeRhythmProgress, type ChallengeRhythmProgress } from "@/lib/challenge-rhythm";
 import { useLanguage, languageButtons, useSiteCopy } from "@/lib/i18n";
@@ -217,6 +218,8 @@ export default function HomePage() {
       </section>
 
       <DailyRhythmCheck copy={landing.dailyRhythmCheck} />
+
+      <RhythmChallenge copy={landing.rhythmChallenge} />
 
       <InstantMeditationSection copy={landing.instant} />
 

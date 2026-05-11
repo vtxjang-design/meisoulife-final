@@ -33,7 +33,7 @@ export function LiveTogether({ copy }: LiveTogetherProps) {
   const metrics = copy.metrics;
 
   return (
-    <section className="section-shell mt-24">
+    <section id="live-together" className="section-shell mt-24">
       <div className="overflow-hidden rounded-[34px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.16),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-6 py-10 shadow-[0_24px_80px_rgba(7,17,31,0.24)] sm:px-10">
         <SectionHeading eyebrow={copy.eyebrow} title={copy.title} description={copy.description} align="center" />
 

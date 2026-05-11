@@ -79,7 +79,7 @@ export function DailyRhythmCheck({ copy }: DailyRhythmCheckProps) {
   }
 
   return (
-    <section className="section-shell mt-10 sm:mt-12">
+    <section id="daily-rhythm-check" className="section-shell mt-10 sm:mt-12">
       <div className="relative overflow-hidden rounded-[30px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(245,241,228,0.12),transparent_20%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.14),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-6 shadow-[0_24px_80px_rgba(7,17,31,0.16)] sm:px-7 sm:py-7">
         <div className="pointer-events-none absolute inset-x-[20%] top-0 h-24 rounded-full bg-gold/10 blur-3xl" />
         <div className="mx-auto max-w-4xl text-center">
