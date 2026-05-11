@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { BreathingCircle } from "@/components/breathing-circle";
 import { SectionHeading } from "@/components/section-heading";
 import type { LandingCopy } from "@/lib/landing-copy";
+import { startAmbientNatureAudio, stopAmbientNatureAudio } from "@/lib/meditation-ambient-audio";
+import { handleMeditationComplete as playMeditationCompletion } from "@/lib/meditation-completion";
 import { markDailyRhythmCompleted } from "@/lib/return-rhythm";
 
 type Phase = "inhale" | "hold" | "exhale";
@@ -35,6 +37,13 @@ function getPhase(elapsedSeconds: number): Phase {
 export function InstantMeditationSection({ copy }: InstantMeditationSectionProps) {
   const [running, setRunning] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(TOTAL_SECONDS);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [audioError, setAudioError] = useState("");
+  const [hasUserGesture, setHasUserGesture] = useState(false);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const completionHandledRef = useRef(false);
 
   useEffect(() => {
     if (!running || secondsLeft <= 0) {
@@ -69,6 +78,24 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     }
   }, [secondsLeft]);
 
+  useEffect(() => {
+    if (secondsLeft !== 0 || completionHandledRef.current) {
+      return;
+    }
+
+    completionHandledRef.current = true;
+    void handleMeditationComplete();
+  }, [secondsLeft]);
+
+  useEffect(() => {
+    return () => {
+      videoRef.current?.pause();
+      stopAmbientNatureAudio(ambientAudioRef);
+      audioContextRef.current?.close().catch(() => undefined);
+      audioContextRef.current = null;
+    };
+  }, []);
+
   const phaseLabel = copy[phase];
   const phaseBottom =
     phase === "inhale"
@@ -77,14 +104,82 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
         ? `${copy.hold} · 2s`
         : `${copy.exhale} · 4s`;
 
-  function handleStartPause() {
+  async function startMeditationExperience() {
+    setHasUserGesture(true);
+    setAudioError("");
+
     if (secondsLeft === 0) {
       setSecondsLeft(TOTAL_SECONDS);
-      setRunning(true);
+      completionHandledRef.current = false;
+    }
+
+    try {
+      await videoRef.current?.play();
+    } catch (error) {
+      console.warn("Meditation video failed to play", error);
+    }
+
+    if (soundEnabled) {
+      const result = await startAmbientNatureAudio(ambientAudioRef, true);
+
+      if (!result.started) {
+        setAudioError(copy.audioError);
+      }
+    }
+
+    setRunning(true);
+  }
+
+  async function handleStartPause() {
+    if (running) {
+      setRunning(false);
+      videoRef.current?.pause();
+      await stopAmbientNatureAudio(ambientAudioRef);
       return;
     }
 
-    setRunning((current) => !current);
+    await startMeditationExperience();
+  }
+
+  async function handleSoundToggle() {
+    const next = !soundEnabled;
+    setSoundEnabled(next);
+    setHasUserGesture(true);
+    setAudioError("");
+
+    if (!next) {
+      await stopAmbientNatureAudio(ambientAudioRef);
+      return;
+    }
+
+    if (running) {
+      const result = await startAmbientNatureAudio(ambientAudioRef, true);
+
+      if (!result.started) {
+        setAudioError(copy.audioError);
+      }
+    }
+  }
+
+  async function handleRetryAudio() {
+    setHasUserGesture(true);
+    setAudioError("");
+    const result = await startAmbientNatureAudio(ambientAudioRef, soundEnabled);
+
+    if (!result.started) {
+      setAudioError(copy.audioError);
+    }
+  }
+
+  async function handleMeditationComplete() {
+    videoRef.current?.pause();
+    await stopAmbientNatureAudio(ambientAudioRef);
+    await playMeditationCompletion({
+      hasUserGesture,
+      soundEnabled,
+      vibrationEnabled: true,
+      audioContextRef
+    });
   }
 
   return (
@@ -103,6 +198,23 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
             <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
               <p className="text-sm leading-7 text-white/68">{copy.sensory}</p>
             </div>
+            {secondsLeft === 0 ? (
+              <div className="rounded-[24px] border border-gold/18 bg-gold/[0.06] p-5">
+                <p className="text-sm leading-7 text-white/82">{copy.completionMessage}</p>
+              </div>
+            ) : null}
+            {audioError ? (
+              <div className="rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-3">
+                <p className="text-sm leading-7 text-white/62">{audioError}</p>
+                <button
+                  type="button"
+                  onClick={handleRetryAudio}
+                  className="mt-3 inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-4 py-2 text-sm font-medium text-white/78 transition hover:bg-white/[0.06] hover:text-white"
+                >
+                  {copy.retryAudio}
+                </button>
+              </div>
+            ) : null}
             <div className="flex flex-col gap-3 sm:flex-row">
               <button
                 type="button"
@@ -110,6 +222,14 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                 className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
               >
                 {running ? copy.pause : copy.start}
+              </button>
+              <button
+                type="button"
+                onClick={handleSoundToggle}
+                className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-4 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
+                aria-pressed={soundEnabled}
+              >
+                {soundEnabled ? copy.soundOn : copy.soundOff}
               </button>
               <Link
                 href="/meditation"
@@ -120,13 +240,29 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
             </div>
           </div>
           <div className="order-1 flex justify-center lg:order-2">
-            <BreathingCircle
-              progress={progress}
-              secondsLeft={secondsLeft}
-              phaseLabel={phaseLabel}
-              bottomLabel={phaseBottom}
-              running={running}
-            />
+            <div className="relative min-h-[480px] w-full overflow-hidden rounded-[32px] border border-white/10 bg-[#08111b]">
+              <video
+                ref={videoRef}
+                className="absolute inset-0 z-0 h-full w-full object-cover opacity-80"
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                poster="/images/quiet-meditation.jpg"
+              >
+                <source src="/videos/one-minute-nature-loop.mp4" type="video/mp4" />
+              </video>
+              <div className="absolute inset-0 z-10 bg-black/25" />
+              <div className="relative z-20 flex min-h-[480px] items-center justify-center px-4 py-8">
+                <BreathingCircle
+                  progress={progress}
+                  secondsLeft={secondsLeft}
+                  phaseLabel={phaseLabel}
+                  bottomLabel={phaseBottom}
+                  running={running}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -2,7 +2,10 @@
 
 import type { MutableRefObject } from "react";
 
-const COMPLETION_CHIME_SRC = "/audio/meditation-complete-chime.mp3";
+const COMPLETION_CHIME_SOURCES = [
+  "/audio/ending-chime.mp3",
+  "/audio/meditation-complete-chime.mp3"
+];
 
 type MeditationCompletionOptions = {
   hasUserGesture: boolean;
@@ -69,17 +72,26 @@ async function playCompletionChime(audioContextRef: MutableRefObject<AudioContex
   }
 
   try {
-    const audio = new Audio(COMPLETION_CHIME_SRC);
-    audio.preload = "auto";
-    audio.volume = 0.35;
+    for (const src of COMPLETION_CHIME_SOURCES) {
+      const audio = new Audio(src);
+      audio.preload = "auto";
+      audio.volume = 0.45;
 
-    await new Promise<void>((resolve, reject) => {
-      audio.oncanplaythrough = () => resolve();
-      audio.onerror = () => reject(new Error("completion chime failed to load"));
-      audio.load();
-    });
+      try {
+        await new Promise<void>((resolve, reject) => {
+          audio.oncanplaythrough = () => resolve();
+          audio.onerror = () => reject(new Error("completion chime failed to load"));
+          audio.load();
+        });
 
-    await audio.play();
+        await audio.play();
+        return;
+      } catch {
+        continue;
+      }
+    }
+
+    playFallbackBell(audioContextRef);
   } catch {
     playFallbackBell(audioContextRef);
   }

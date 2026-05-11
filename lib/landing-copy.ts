@@ -76,6 +76,11 @@ export type LandingCopy = {
     description: string;
     start: string;
     pause: string;
+    soundOn: string;
+    soundOff: string;
+    retryAudio: string;
+    audioError: string;
+    completionMessage: string;
     fullscreen: string;
     inhale: string;
     hold: string;
@@ -368,6 +373,11 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
         "たった1分。がんばらなくていい呼吸から、今ここへ静かに戻ってみましょう。",
       start: "1分リセットを始める",
       pause: "一度止める",
+      soundOn: "音あり",
+      soundOff: "音なし",
+      retryAudio: "自然音を再生",
+      audioError: "音声を再生できませんでした。もう一度タップしてください。",
+      completionMessage: "おつかれさまでした。今の静けさを、少しだけ感じてみましょう。",
       fullscreen: "全画面で開く",
       inhale: "吸って",
       hold: "止めて",
@@ -750,6 +760,11 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       description: "단 1분. 애쓰지 않는 호흡부터 시작해 지금 여기로 조용히 돌아와 보세요.",
       start: "1분 리셋 시작하기",
       pause: "잠시 멈추기",
+      soundOn: "음 있음",
+      soundOff: "음 없음",
+      retryAudio: "자연음 다시 재생",
+      audioError: "오디오를 재생하지 못했습니다. 한 번 더 눌러 주세요.",
+      completionMessage: "수고하셨습니다. 지금의 고요함을 잠시 느껴보세요.",
       fullscreen: "전체 화면으로 열기",
       inhale: "들이쉬기",
       hold: "멈추기",
@@ -1127,6 +1142,11 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       description: "Just one minute. Begin with an effortless breath and quietly return to yourself.",
       start: "Begin the 1-minute reset",
       pause: "Pause",
+      soundOn: "Sound on",
+      soundOff: "Sound off",
+      retryAudio: "Play nature audio",
+      audioError: "Audio could not be played. Please tap again.",
+      completionMessage: "Well done. Stay with this stillness for just a moment.",
       fullscreen: "Open full screen",
       inhale: "Inhale",
       hold: "Hold",
