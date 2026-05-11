@@ -239,31 +239,31 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
     },
     dailyRhythmCheck: {
       eyebrow: "今日の心は？",
-      title: "今日の心は？",
-      description: "今の自分を少し感じてみましょう。",
+      title: "今日、心はどうですか？",
+      description: "今の自分を少し感じてみませんか？",
       cta: "1分呼吸を始める",
-      coexistenceLine: "今日も124人が、それぞれの場所で整っています。",
+      coexistenceLine: "今日も誰かが、自分を静かに整えています。",
       returnMessages: ["また戻ってきましたね", "昨日も来てくれてありがとうございます"],
       options: [
         {
           key: "calm",
-          label: "🙂 穏やか",
-          response: "今日も静かな良い流れですね。1分だけ呼吸して整えてみましょう。"
+          label: "🙂 今日は大丈夫です",
+          response: "その穏やかさを、もう少し深く感じてみましょう。1分だけ呼吸を整えます。"
         },
         {
           key: "tired",
-          label: "😐 少し疲れた",
-          response: "頑張りすぎなくて大丈夫。まず60秒、自分を感じてみましょう。"
+          label: "😐 少し疲れています",
+          response: "頑張りすぎなくて大丈夫です。まず60秒、自分に戻る時間を持ちましょう。"
         },
         {
           key: "heavy",
-          label: "😞 心が重い",
-          response: "無理をしなくて大丈夫です。まず呼吸だけでも十分です。"
+          label: "😞 心が重いです",
+          response: "無理をしなくて大丈夫です。呼吸だけでも、今の自分を支える力になります。"
         },
         {
           key: "focus",
-          label: "🔥 集中したい",
-          response: "今の集中力をさらに整えましょう。1分呼吸から始めます。"
+          label: "🌿 整えたいです",
+          response: "今の心を静かに整えていきましょう。1分の呼吸から始めます。"
         }
       ]
     },
@@ -622,31 +622,31 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
     },
     dailyRhythmCheck: {
       eyebrow: "오늘의 마음은?",
-      title: "오늘의 마음은?",
-      description: "지금의 나를 조금 느껴보세요.",
+      title: "오늘, 마음은 어떠세요?",
+      description: "지금의 나를 잠시 느껴볼까요?",
       cta: "1분 호흡 시작하기",
-      coexistenceLine: "오늘도 124명이 각자의 자리에서 정돈하고 있습니다.",
+      coexistenceLine: "오늘도 누군가가 조용히 자신을 돌보고 있습니다.",
       returnMessages: ["또 돌아오셨네요", "어제도 와주셔서 고마워요"],
       options: [
         {
           key: "calm",
-          label: "🙂 잔잔해요",
-          response: "오늘도 조용히 좋은 흐름이네요. 1분만 호흡하며 정돈해봐요."
+          label: "🙂 오늘은 괜찮아요",
+          response: "그 잔잔함을 조금 더 깊이 느껴보세요. 1분만 호흡을 정돈해봅니다."
         },
         {
           key: "tired",
           label: "😐 조금 지쳤어요",
-          response: "너무 애쓰지 않아도 괜찮아요. 먼저 60초만 나를 느껴봐요."
+          response: "너무 애쓰지 않아도 괜찮습니다. 먼저 60초, 나에게 돌아오는 시간을 가져보세요."
         },
         {
           key: "heavy",
           label: "😞 마음이 무거워요",
-          response: "무리하지 않아도 괜찮아요. 먼저 호흡만 해도 충분합니다."
+          response: "무리하지 않아도 괜찮습니다. 호흡만으로도 지금의 나를 지탱하는 힘이 됩니다."
         },
         {
           key: "focus",
-          label: "🔥 집중하고 싶어요",
-          response: "지금의 집중력을 더 잘 모아볼까요. 1분 호흡부터 시작해요."
+          label: "🌿 정리하고 싶어요",
+          response: "지금의 마음을 조용히 정리해볼까요? 1분 호흡부터 시작합니다."
         }
       ]
     },
@@ -1000,30 +1000,30 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
     dailyRhythmCheck: {
       eyebrow: "Today’s heart",
       title: "How is your heart today?",
-      description: "Take a quiet moment to notice yourself.",
+      description: "Would you like to gently notice how you feel right now?",
       cta: "Start the 1-minute breath",
-      coexistenceLine: "Today, 124 people are settling in their own places.",
+      coexistenceLine: "Someone, somewhere, is also quietly returning to themselves today.",
       returnMessages: ["You found your way back again", "Thank you for coming back yesterday, too"],
       options: [
         {
           key: "calm",
-          label: "🙂 Calm",
-          response: "There is already a gentle flow today. Let’s settle it with one minute of breathing."
+          label: "🙂 I feel okay today",
+          response: "Stay with that steadiness a little longer. Let’s settle into one quiet minute of breathing."
         },
         {
           key: "tired",
           label: "😐 A little tired",
-          response: "You do not have to push so hard. Begin with 60 seconds of simply feeling yourself again."
+          response: "You do not have to push so hard. Take 60 seconds to come back to yourself."
         },
         {
           key: "heavy",
-          label: "😞 Heavy-hearted",
-          response: "You do not have to force anything. For now, just breathing is enough."
+          label: "😞 My heart feels heavy",
+          response: "You do not have to force anything. Even breathing alone can support you right now."
         },
         {
           key: "focus",
-          label: "🔥 Want to focus",
-          response: "Let’s gather your attention gently. Start with one minute of breathing."
+          label: "🌿 I want to settle",
+          response: "Let’s quietly settle the mind you have right now. We can begin with one minute of breathing."
         }
       ]
     },
