@@ -69,6 +69,7 @@ export default function MeditationPage() {
   const [vibrationSupported, setVibrationSupported] = useState(false);
   const [hasUserGesture, setHasUserGesture] = useState(false);
   const [ambientVideoFailed, setAmbientVideoFailed] = useState(false);
+  const [showAmbientRetry, setShowAmbientRetry] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
   const completionHandledRef = useRef(false);
@@ -97,13 +98,22 @@ export default function MeditationPage() {
     setMeditationType(nextType);
     setSoundEnabled(getNatureSoundPreference());
     setAmbientVideoFailed(false);
+    setShowAmbientRetry(false);
     completionHandledRef.current = false;
   }, []);
 
   useEffect(() => {
     setVibrationSupported(supportsMeditationVibration());
 
-    const markGesture = () => setHasUserGesture(true);
+    const markGesture = () => {
+      setHasUserGesture(true);
+
+      if (!isComplete && soundEnabled) {
+        startAmbientNatureAudio(ambientAudioRef, soundEnabled).then((result) => {
+          setShowAmbientRetry(!result.started);
+        });
+      }
+    };
 
     window.addEventListener("pointerdown", markGesture, { once: true });
     window.addEventListener("keydown", markGesture, { once: true });
@@ -113,7 +123,7 @@ export default function MeditationPage() {
       window.removeEventListener("keydown", markGesture);
       stopAmbientNatureAudio(ambientAudioRef);
     };
-  }, []);
+  }, [isComplete, soundEnabled]);
 
   useEffect(() => {
     if (secondsLeft <= 0) {
@@ -135,7 +145,9 @@ export default function MeditationPage() {
       return;
     }
 
-    startAmbientNatureAudio(ambientAudioRef).catch(() => undefined);
+    startAmbientNatureAudio(ambientAudioRef, soundEnabled).then((result) => {
+      setShowAmbientRetry(!result.started);
+    });
 
     return () => {
       if (isComplete) {
@@ -163,23 +175,30 @@ export default function MeditationPage() {
     });
   }
 
-  function handleSoundToggle() {
+  async function handleSoundToggle() {
     setHasUserGesture(true);
-    setSoundEnabled((current) => {
-      const next = !current;
-      setNatureSoundPreference(next);
+    const next = !soundEnabled;
+    setNatureSoundPreference(next);
+    setSoundEnabled(next);
 
-      if (!next) {
-        stopAmbientNatureAudio(ambientAudioRef);
-      }
-
-      return next;
-    });
+    if (next) {
+      const result = await startAmbientNatureAudio(ambientAudioRef, true);
+      setShowAmbientRetry(!result.started);
+    } else {
+      setShowAmbientRetry(false);
+      stopAmbientNatureAudio(ambientAudioRef);
+    }
   }
 
   function handleVibrationToggle() {
     setHasUserGesture(true);
     setVibrationEnabled((current) => !current);
+  }
+
+  async function handleAmbientRetry() {
+    setHasUserGesture(true);
+    const result = await startAmbientNatureAudio(ambientAudioRef, soundEnabled);
+    setShowAmbientRetry(!result.started);
   }
 
   return (
@@ -232,6 +251,15 @@ export default function MeditationPage() {
                 >
                   {soundEnabled ? `🔊 ${copy.soundOn}` : `🔊 ${copy.soundOff}`}
                 </button>
+                {showAmbientRetry && soundEnabled ? (
+                  <button
+                    type="button"
+                    onClick={handleAmbientRetry}
+                    className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
+                  >
+                    自然音を再生
+                  </button>
+                ) : null}
               </div>
               <p className="text-2xl font-medium text-white/72 transition-all duration-700 ease-in-out sm:text-3xl">
                 {copy.phases[phase]}

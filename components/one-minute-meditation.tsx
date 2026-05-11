@@ -69,6 +69,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   const [completionIndex, setCompletionIndex] = useState(0);
   const [hasUserGesture, setHasUserGesture] = useState(false);
   const [ambientVideoFailed, setAmbientVideoFailed] = useState(false);
+  const [showAmbientRetry, setShowAmbientRetry] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
   const completionHandledRef = useRef(false);
@@ -92,6 +93,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
       completionHandledRef.current = false;
       previousPhaseRef.current = "inhale";
       setAmbientVideoFailed(false);
+      setShowAmbientRetry(false);
       stopAmbientNatureAudio(ambientAudioRef);
       return;
     }
@@ -104,6 +106,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
     completionHandledRef.current = false;
     previousPhaseRef.current = "inhale";
     setAmbientVideoFailed(false);
+    setShowAmbientRetry(false);
   }, [completionMoments.length, open]);
 
   useEffect(() => {
@@ -137,7 +140,9 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
       return;
     }
 
-    startAmbientNatureAudio(ambientAudioRef).catch(() => undefined);
+    startAmbientNatureAudio(ambientAudioRef, soundEnabled).then((result) => {
+      setShowAmbientRetry(!result.started);
+    });
 
     return () => {
       if (!open || isComplete) {
@@ -258,33 +263,44 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
     onClose();
   }
 
-  function handleRestart() {
+  async function handleRestart() {
+    setHasUserGesture(true);
     setSecondsLeft(TOTAL_SECONDS);
     setCompletionIndex(Math.floor(Math.random() * completionMoments.length));
     completionHandledRef.current = false;
     previousPhaseRef.current = "inhale";
     triggerHaptic([10]);
+    if (soundEnabled) {
+      const result = await startAmbientNatureAudio(ambientAudioRef, soundEnabled);
+      setShowAmbientRetry(!result.started);
+    }
   }
 
-  function handleSoundToggle() {
+  async function handleSoundToggle() {
     setHasUserGesture(true);
-    setSoundEnabled((current) => {
-      const next = !current;
-      setNatureSoundPreference(next);
+    const next = !soundEnabled;
+    setNatureSoundPreference(next);
+    setSoundEnabled(next);
 
-      if (next) {
-        playTone(329.63, 180, 0.012);
-      } else {
-        stopAmbientNatureAudio(ambientAudioRef);
-      }
-
-      return next;
-    });
+    if (next) {
+      playTone(329.63, 180, 0.012);
+      const result = await startAmbientNatureAudio(ambientAudioRef, true);
+      setShowAmbientRetry(!result.started);
+    } else {
+      setShowAmbientRetry(false);
+      stopAmbientNatureAudio(ambientAudioRef);
+    }
   }
 
   function handleVibrationToggle() {
     setHasUserGesture(true);
     setVibrationEnabled((current) => !current);
+  }
+
+  async function handleAmbientRetry() {
+    setHasUserGesture(true);
+    const result = await startAmbientNatureAudio(ambientAudioRef, soundEnabled);
+    setShowAmbientRetry(!result.started);
   }
 
   async function runMeditationComplete() {
@@ -309,7 +325,18 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   const progress = ((TOTAL_SECONDS - secondsLeft) / TOTAL_SECONDS) * 100;
   const orbTransitionDuration = `${getPhaseDuration(phase)}s`;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#020814]/92 px-4 py-4 backdrop-blur-xl sm:px-6">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#020814]/92 px-4 py-4 backdrop-blur-xl sm:px-6"
+      onPointerDownCapture={() => {
+        if (!showAmbientRetry || !soundEnabled || isComplete) {
+          return;
+        }
+
+        startAmbientNatureAudio(ambientAudioRef, soundEnabled).then((result) => {
+          setShowAmbientRetry(!result.started);
+        });
+      }}
+    >
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02),transparent_42%),linear-gradient(180deg,rgba(2,8,20,0.48)_0%,rgba(2,8,20,0.62)_48%,rgba(2,8,20,0.86)_100%)]" />
         <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.08),transparent_22%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.1),transparent_28%)]" />
@@ -406,6 +433,15 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
               >
                 {soundEnabled ? `🔊 ${modalCopy.soundOn}` : `🔊 ${modalCopy.soundOff}`}
               </button>
+              {showAmbientRetry && soundEnabled ? (
+                <button
+                  type="button"
+                  onClick={handleAmbientRetry}
+                  className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
+                >
+                  自然音を再生
+                </button>
+              ) : null}
             </div>
           </div>
 

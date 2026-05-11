@@ -4,7 +4,7 @@ import type { MutableRefObject } from "react";
 
 const AMBIENT_AUDIO_SRC = "/audio/birds-nature-ambience.mp3";
 const SOUND_PREFERENCE_KEY = "meisoulife_nature_sound_enabled";
-const TARGET_VOLUME = 0.28;
+const TARGET_VOLUME = 0.32;
 const FADE_DURATION_MS = 2000;
 
 type AmbientAudioResult = {
@@ -60,9 +60,10 @@ export function setNatureSoundPreference(enabled: boolean) {
 }
 
 export async function startAmbientNatureAudio(
-  audioRef: MutableRefObject<HTMLAudioElement | null>
+  audioRef: MutableRefObject<HTMLAudioElement | null>,
+  enabled = true
 ): Promise<AmbientAudioResult> {
-  if (typeof window === "undefined" || typeof Audio === "undefined") {
+  if (!enabled || typeof window === "undefined" || typeof Audio === "undefined") {
     return { started: false };
   }
 
@@ -72,18 +73,21 @@ export async function startAmbientNatureAudio(
     const audio = new Audio(AMBIENT_AUDIO_SRC);
     audio.loop = true;
     audio.preload = "auto";
-    audio.volume = 0;
+    audio.volume = TARGET_VOLUME;
     audioRef.current = audio;
   }
 
   const audio = audioRef.current;
 
   try {
+    console.log("Starting ambience audio");
+    audio.volume = TARGET_VOLUME;
     await audio.play();
-    await fadeVolume(audio, audio.volume, TARGET_VOLUME, FADE_DURATION_MS);
+    console.log("Ambience audio playing");
+    await fadeVolume(audio, 0, TARGET_VOLUME, FADE_DURATION_MS);
     return { started: true };
-  } catch {
-    console.warn("Ambient nature audio failed to start");
+  } catch (error) {
+    console.warn("Ambience audio failed", error);
     return { started: false };
   }
 }
