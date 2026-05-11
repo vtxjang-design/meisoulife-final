@@ -67,6 +67,12 @@ export function RhythmChallenge({ copy }: RhythmChallengeProps) {
     }
 
     setSelectedDay(day);
+
+    const selectedStep = copy.steps.find((step) => step.day === day);
+
+    if (day === 1 && selectedStep?.href?.startsWith("#")) {
+      scrollToTarget(selectedStep.href);
+    }
   }
 
   function handleCompleteAndContinue() {
@@ -91,11 +97,12 @@ export function RhythmChallenge({ copy }: RhythmChallengeProps) {
           <p className="mt-4 text-center text-sm leading-7 text-white/52">{copy.returning}</p>
         ) : null}
 
-        <div className="mt-8 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-7 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           {copy.steps.map((step) => {
             const completed = progress.completedDays.includes(step.day);
             const locked = step.day > progress.currentDay;
             const active = selectedDay === step.day;
+            const subdued = step.day >= 4;
 
             return (
               <RhythmDayCard
@@ -104,21 +111,25 @@ export function RhythmChallenge({ copy }: RhythmChallengeProps) {
                 title={step.title}
                 description={step.description}
                 status={getStatus(step.day)}
+                cta={step.day === 1 ? step.cardCta : undefined}
                 active={active}
                 locked={locked}
                 completed={completed}
+                subdued={subdued}
                 onClick={() => handleCardSelect(step.day)}
               />
             );
           })}
         </div>
 
-        <div id="rhythm-challenge-detail" className="mt-6 rounded-[28px] border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+        <p className="mt-4 text-center text-sm leading-7 text-white/50">{copy.gentleLine}</p>
+
+        <div id="rhythm-challenge-detail" className="mt-5 rounded-[28px] border border-white/10 bg-white/[0.03] p-5 sm:p-6">
           <p className="text-xs uppercase tracking-[0.24em] text-gold/80">{copy.actionLabel}</p>
           <h3 className="mt-3 font-serif text-2xl leading-tight text-white sm:text-3xl">{currentStep.title}</h3>
           <p className="mt-3 text-base leading-8 text-white/80">{currentStep.description}</p>
           <p className="mt-4 text-sm leading-7 text-white/62">{currentStep.note}</p>
-          <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="mt-4 flex flex-col gap-2.5 sm:flex-row sm:items-center">
             <button
               type="button"
               onClick={handleCompleteAndContinue}
