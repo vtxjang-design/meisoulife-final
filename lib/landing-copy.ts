@@ -43,6 +43,34 @@ export type LandingCopy = {
       response: string;
     }>;
   };
+  rhythmChallenge: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    returning: string;
+    enoughMessage: string;
+    todayLabel: string;
+    completedLabel: string;
+    lockedLabel: string;
+    actionLabel: string;
+    completeLabel: string;
+    steps: Array<{
+      day: number;
+      title: string;
+      description: string;
+      cta: string;
+      note: string;
+      href?: string;
+    }>;
+    invite: {
+      title: string;
+      description: string;
+      planName: string;
+      price: string;
+      benefits: string[];
+      cta: string;
+    };
+  };
   checkIn: {
     eyebrow: string;
     title: string;
@@ -271,6 +299,82 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
           response: "今の心を静かに整えていきましょう。1分の呼吸から始めます。"
         }
       ]
+    },
+    rhythmChallenge: {
+      eyebrow: "7日間リズム体験",
+      title: "7日間リズム体験",
+      subtitle: "無理なく、自分に戻る小さな習慣。",
+      returning: "また戻ってきましたね。",
+      enoughMessage: "今日はここまででも十分です。",
+      todayLabel: "○ Today",
+      completedLabel: "✓ Completed",
+      lockedLabel: "🔒 Coming tomorrow",
+      actionLabel: "今日の小さな実践",
+      completeLabel: "今日の実践を受け取る",
+      steps: [
+        {
+          day: 1,
+          title: "呼吸",
+          description: "今日は1分だけ、呼吸を感じてみます。",
+          cta: "1分呼吸を始める",
+          note: "今の呼吸を変えようとしなくて大丈夫です。ただ1分、やさしく戻ります。",
+          href: "#one-minute-experience"
+        },
+        {
+          day: 2,
+          title: "心を見る",
+          description: "今の気持ちを少し感じてみましょう。",
+          cta: "今の気持ちを感じる",
+          note: "良い悪いを決めなくても大丈夫です。今の心に、少しだけ気づきを向けます。",
+          href: "#daily-rhythm-check"
+        },
+        {
+          day: 3,
+          title: "身体を感じる",
+          description: "体に力が入っている場所はありますか？",
+          cta: "身体を感じてみる",
+          note: "肩、あご、お腹のどこかに、少し力が残っていないか静かに感じてみましょう。"
+        },
+        {
+          day: 4,
+          title: "思考を休める",
+          description: "頭の中を少し休ませてみましょう。",
+          cta: "30秒リセットを始める",
+          note: "考えを止めなくても大丈夫です。30秒だけ、呼吸に戻る場所をつくります。",
+          href: "/meditation?duration=30&type=day"
+        },
+        {
+          day: 5,
+          title: "感謝",
+          description: "今日、少しでもありがたかった瞬間は？",
+          cta: "小さな感謝を受け取る",
+          note: "とても小さなことで大丈夫です。ひとつのありがたさを、胸の中に置いてみましょう。"
+        },
+        {
+          day: 6,
+          title: "つながり",
+          description: "一人ではないことを感じてみましょう。",
+          cta: "つながりを感じる",
+          note: "同じように、自分を整えようとしている誰かが今日もいます。その感覚だけで十分です。",
+          href: "#live-together"
+        },
+        {
+          day: 7,
+          title: "自分との約束",
+          description: "明日の自分のために、1分だけ。",
+          cta: "静かな1分を始める",
+          note: "今日の静けさを、明日の自分にそっと手渡すような気持ちで呼吸してみましょう。",
+          href: "#one-minute-experience"
+        }
+      ],
+      invite: {
+        title: "一人ではなく、共に続けてみませんか？",
+        description: "7日間の小さなリズムを、これからの日常にもやさしく続けていくための場です。",
+        planName: "Rhythm Membership",
+        price: "¥1,000 / month",
+        benefits: ["毎日の静かなリズム", "AI心サポート", "音声ガイド", "共に続ける場"],
+        cta: "静かな習慣を始める"
+      }
     },
     checkIn: {
       eyebrow: "Today Rhythm Check-in",
@@ -660,6 +764,82 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
         }
       ]
     },
+    rhythmChallenge: {
+      eyebrow: "7일 리듬 체험",
+      title: "7일 리듬 체험",
+      subtitle: "무리하지 않고, 나에게 돌아오는 작은 습관",
+      returning: "다시 와주셨네요.",
+      enoughMessage: "오늘은 여기까지여도 충분합니다.",
+      todayLabel: "○ Today",
+      completedLabel: "✓ Completed",
+      lockedLabel: "🔒 Coming tomorrow",
+      actionLabel: "오늘의 작은 실천",
+      completeLabel: "오늘의 실천 받기",
+      steps: [
+        {
+          day: 1,
+          title: "호흡",
+          description: "오늘은 1분만 호흡을 느껴봅니다。",
+          cta: "1분 호흡 시작하기",
+          note: "호흡을 바꾸려고 하지 않아도 괜찮아요. 1분만, 부드럽게 돌아옵니다.",
+          href: "#one-minute-experience"
+        },
+        {
+          day: 2,
+          title: "마음 보기",
+          description: "지금의 마음을 잠시 느껴봅니다。",
+          cta: "지금의 마음을 느끼기",
+          note: "좋고 나쁨을 정하지 않아도 괜찮아요. 지금의 마음을 잠시 알아차려 봅니다.",
+          href: "#daily-rhythm-check"
+        },
+        {
+          day: 3,
+          title: "몸 느끼기",
+          description: "몸에 힘이 들어간 곳이 있나요?",
+          cta: "몸을 느껴보기",
+          note: "어깨, 턱, 배에 힘이 남아 있지 않은지 조용히 느껴보세요."
+        },
+        {
+          day: 4,
+          title: "생각 쉬기",
+          description: "머릿속을 잠시 쉬게 해봅니다。",
+          cta: "30초 리셋 시작하기",
+          note: "생각을 멈추지 않아도 괜찮아요. 30초만, 호흡으로 돌아올 자리를 만듭니다.",
+          href: "/meditation?duration=30&type=day"
+        },
+        {
+          day: 5,
+          title: "감사",
+          description: "오늘 감사했던 순간 하나는 무엇인가요?",
+          cta: "작은 감사를 떠올리기",
+          note: "아주 작은 것으로도 충분해요. 한 가지 감사함을 가슴 안에 두어봅니다."
+        },
+        {
+          day: 6,
+          title: "연결감",
+          description: "혼자가 아니라는 것을 잠시 느껴봅니다。",
+          cta: "연결감을 느껴보기",
+          note: "오늘도 어딘가에서 자신을 돌보려는 누군가가 있습니다. 그 감각만으로도 충분합니다.",
+          href: "#live-together"
+        },
+        {
+          day: 7,
+          title: "나와의 약속",
+          description: "내일의 나를 위해, 1분만。",
+          cta: "조용한 1분 시작하기",
+          note: "오늘의 고요함을 내일의 나에게 건네는 마음으로 호흡해보세요.",
+          href: "#one-minute-experience"
+        }
+      ],
+      invite: {
+        title: "혼자가 아니라, 함께 이어가볼까요?",
+        description: "7일 동안 만든 작은 리듬을 앞으로의 일상에도 부드럽게 이어가기 위한 자리입니다.",
+        planName: "Rhythm Membership",
+        price: "¥1,000 / month",
+        benefits: ["매일의 조용한 리듬", "AI 마음 동행", "음성 가이드", "함께 이어가는 공간"],
+        cta: "조용한 습관 시작하기"
+      }
+    },
     checkIn: {
       eyebrow: "Today Rhythm Check-in",
       title: "오늘의 상태는 어떤가요?",
@@ -1041,6 +1221,82 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
           response: "Let’s quietly settle the mind you have right now. We can begin with one minute of breathing."
         }
       ]
+    },
+    rhythmChallenge: {
+      eyebrow: "7-day rhythm experience",
+      title: "7-day rhythm experience",
+      subtitle: "A small habit of returning to yourself, without pressure.",
+      returning: "You found your way back again.",
+      enoughMessage: "This is enough for today.",
+      todayLabel: "○ Today",
+      completedLabel: "✓ Completed",
+      lockedLabel: "🔒 Coming tomorrow",
+      actionLabel: "Today’s small practice",
+      completeLabel: "Receive today’s practice",
+      steps: [
+        {
+          day: 1,
+          title: "Breath",
+          description: "Today, just notice your breath for one minute.",
+          cta: "Start the 1-minute breath",
+          note: "You do not have to change anything. Just return gently for one quiet minute.",
+          href: "#one-minute-experience"
+        },
+        {
+          day: 2,
+          title: "Notice the heart",
+          description: "Take a moment to feel how your heart is right now.",
+          cta: "Notice how you feel",
+          note: "There is no need to judge it. Simply allow yourself to notice what is here.",
+          href: "#daily-rhythm-check"
+        },
+        {
+          day: 3,
+          title: "Feel the body",
+          description: "Is there a place in the body still holding tension?",
+          cta: "Feel the body",
+          note: "Quietly notice the shoulders, jaw, or belly and see if they are still holding a little effort."
+        },
+        {
+          day: 4,
+          title: "Rest the mind",
+          description: "Let the mind rest for just a little while.",
+          cta: "Start a 30-second reset",
+          note: "You do not have to stop thinking. Just make a small place to return to breath.",
+          href: "/meditation?duration=30&type=day"
+        },
+        {
+          day: 5,
+          title: "Gratitude",
+          description: "What was one small thing you felt grateful for today?",
+          cta: "Receive a small gratitude",
+          note: "It can be very small. Let one gratitude rest quietly in your chest for a moment."
+        },
+        {
+          day: 6,
+          title: "Connection",
+          description: "Take a moment to feel that you are not alone.",
+          cta: "Feel the connection",
+          note: "Somewhere today, someone else is also trying to return to themselves. That feeling is enough.",
+          href: "#live-together"
+        },
+        {
+          day: 7,
+          title: "A promise to yourself",
+          description: "Just one minute for tomorrow’s you.",
+          cta: "Begin a quiet minute",
+          note: "Breathe as if you are gently passing today’s stillness on to the self who will wake up tomorrow.",
+          href: "#one-minute-experience"
+        }
+      ],
+      invite: {
+        title: "Would you like to continue, not alone but together?",
+        description: "A gentle place to keep carrying this seven-day rhythm into everyday life.",
+        planName: "Rhythm Membership",
+        price: "¥1,000 / month",
+        benefits: ["A quiet daily rhythm", "AI emotional support", "Audio guidance", "A place to continue together"],
+        cta: "Begin a quiet habit"
+      }
     },
     checkIn: {
       eyebrow: "Today Rhythm Check-in",
