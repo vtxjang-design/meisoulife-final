@@ -55,6 +55,10 @@ function formatSeconds(seconds: number) {
   return `${minutes}:${String(remainder).padStart(2, "0")}`;
 }
 
+function getDurationVariant(totalSeconds: number) {
+  return totalSeconds >= 180 ? "threeMinutes" : "sixty";
+}
+
 export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditationProps) {
   const copy = useSiteCopy();
   const modalCopy = copy.modal;
@@ -73,7 +77,10 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   const elapsedSeconds = TOTAL_SECONDS - secondsLeft;
   const phase = useMemo(() => getPhase(elapsedSeconds), [elapsedSeconds]);
   const isComplete = secondsLeft <= 0;
-  const completionMessage = modalCopy.completionMoments[completionIndex] || modalCopy.completeBody;
+  const durationVariant = getDurationVariant(TOTAL_SECONDS);
+  const durationTextSet = modalCopy.durationTexts?.[durationVariant];
+  const completionMoments = durationTextSet?.completionMoments || modalCopy.completionMoments;
+  const completionMessage = completionMoments[completionIndex] || durationTextSet?.completionBody || modalCopy.completeBody;
 
   useEffect(() => {
     if (!open) {
@@ -93,11 +100,11 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
     setHasUserGesture(true);
     setSoundEnabled(getNatureSoundPreference());
     setVibrationEnabled(true);
-    setCompletionIndex(Math.floor(Math.random() * modalCopy.completionMoments.length));
+    setCompletionIndex(Math.floor(Math.random() * completionMoments.length));
     completionHandledRef.current = false;
     previousPhaseRef.current = "inhale";
     setAmbientVideoFailed(false);
-  }, [open, modalCopy.completionMoments.length]);
+  }, [completionMoments.length, open]);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -253,7 +260,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
 
   function handleRestart() {
     setSecondsLeft(TOTAL_SECONDS);
-    setCompletionIndex(Math.floor(Math.random() * modalCopy.completionMoments.length));
+    setCompletionIndex(Math.floor(Math.random() * completionMoments.length));
     completionHandledRef.current = false;
     previousPhaseRef.current = "inhale";
     triggerHaptic([10]);
@@ -358,7 +365,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
               <p className="text-[11px] uppercase tracking-[0.32em] text-gold/72">{modalCopy.eyebrow}</p>
-              <h2 className="mt-3 text-balance font-serif text-2xl leading-tight text-white/92 sm:text-[30px]">{modalCopy.title}</h2>
+              <h2 className="mt-3 text-balance font-serif text-2xl leading-tight text-white/92 sm:text-[30px]">{durationTextSet?.title || modalCopy.title}</h2>
               <p className="mt-3 text-sm leading-7 text-white/60">{modalCopy.natureMicrocopy}</p>
             </div>
 
@@ -460,7 +467,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
               <h3 className="mt-5 text-balance font-serif text-3xl leading-tight text-white/92 sm:text-[34px]">{completionMessage}</h3>
               <p className="mt-4 max-w-sm whitespace-pre-line text-sm leading-7 text-white/72 sm:text-base">{modalCopy.completionMessage}</p>
               <p className="mt-3 text-sm leading-7 text-white/54">{modalCopy.completionReturnText}</p>
-              <p className="mt-4 max-w-sm text-sm leading-7 text-white/62 sm:text-base">{modalCopy.completeBody}</p>
+              <p className="mt-4 max-w-sm text-sm leading-7 text-white/62 sm:text-base">{durationTextSet?.completionBody || modalCopy.completeBody}</p>
 
               <div className="mt-8 flex w-full flex-col gap-3">
                 <button

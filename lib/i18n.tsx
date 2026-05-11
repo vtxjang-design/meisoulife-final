@@ -137,14 +137,32 @@ export const siteCopy = {
     },
     modal: {
       eyebrow: "1分瞑想",
-      title: "今この1分で、呼吸を整えましょう",
+      title: "今ここで、呼吸に戻りましょう",
       endButton: "1分を終える",
       completeTitle: "今日、あなたは自分に戻りました。",
       completionMessage: "おつかれさま。\n今の静けさを、\n少しだけ感じてください。",
       completionReturnText: "また戻ってきてください。",
-      completeBody: "この小さな1分が、共に目覚めるリズムの始まりです。",
+      completeBody: "この小さな呼吸が、共に目覚めるリズムの始まりです。",
+      durationTexts: {
+        sixty: {
+          title: "今ここで、60秒だけ呼吸に戻りましょう",
+          completionBody: "この小さな60秒が、共に目覚めるリズムの始まりです。",
+          completionMoments: [
+            "今日も、自分に戻る60秒をありがとう。",
+            "静けさは、いつもあなたの中にあります。"
+          ]
+        },
+        threeMinutes: {
+          title: "今ここで、3分間、ゆっくり呼吸のリズムに戻りましょう",
+          completionBody: "この静かな3分が、共に目覚めるリズムの始まりです。",
+          completionMoments: [
+            "今日も、自分に戻る3分をありがとう。",
+            "静けさは、いつもあなたの中にあります。"
+          ]
+        }
+      },
       completionMoments: [
-        "今日も、自分に戻る1分をありがとう。",
+        "今日も、自分に戻る60秒をありがとう。",
         "静けさは、いつもあなたの中にあります。"
       ],
       breatheAgain: "もう一度呼吸する",
@@ -690,6 +708,16 @@ export const siteCopy = {
       error: "ログインに失敗しました。メールとパスワードを確認してください。"
     },
     meditationPage: {
+      durationTexts: {
+        sixty: {
+          topText: "今ここで、60秒だけ呼吸に戻りましょう",
+          completionTitle: "60秒、今ここに戻りました。"
+        },
+        threeMinutes: {
+          topText: "今ここで、3分間、ゆっくり呼吸のリズムに戻りましょう",
+          completionTitle: "3分間、呼吸のリズムに戻りました。"
+        }
+      },
       variants: {
         default: {
           topText: "今ここで、60秒だけ呼吸に戻りましょう",
@@ -873,14 +901,32 @@ export const siteCopy = {
     },
     modal: {
       eyebrow: "1분 명상",
-      title: "지금 이 1분 동안 호흡을 정돈해봅시다",
+      title: "지금 여기서, 호흡으로 돌아와 봅시다",
       endButton: "1분을 마칩니다",
       completeTitle: "오늘, 당신은 자신에게 돌아왔습니다.",
       completionMessage: "수고했어요.\n지금의 고요함을,\n잠시만 느껴보세요.",
       completionReturnText: "또 돌아와 주세요.",
-      completeBody: "이 작은 1분이 함께 깨어나는 리듬의 시작입니다.",
+      completeBody: "이 작은 호흡이 함께 깨어나는 리듬의 시작입니다.",
+      durationTexts: {
+        sixty: {
+          title: "지금 여기서, 60초만 호흡으로 돌아와 봅시다",
+          completionBody: "이 작은 60초가 함께 깨어나는 리듬의 시작입니다.",
+          completionMoments: [
+            "오늘도 자신에게 돌아오는 60초를 고맙게 받았습니다.",
+            "고요함은 언제나 당신 안에 있습니다."
+          ]
+        },
+        threeMinutes: {
+          title: "지금 여기서, 3분간 천천히 호흡을 따라가 봅시다",
+          completionBody: "이 조용한 3분이 함께 깨어나는 리듬의 시작입니다.",
+          completionMoments: [
+            "오늘도 자신에게 돌아오는 3분을 고맙게 받았습니다.",
+            "고요함은 언제나 당신 안에 있습니다."
+          ]
+        }
+      },
       completionMoments: [
-        "오늘도 자신에게 돌아오는 1분을 고맙게 받았습니다.",
+        "오늘도 자신에게 돌아오는 60초를 고맙게 받았습니다.",
         "고요함은 언제나 당신 안에 있습니다."
       ],
       breatheAgain: "한 번 더 호흡하기",
@@ -1426,6 +1472,16 @@ export const siteCopy = {
       error: "로그인에 실패했습니다. 이메일과 비밀번호를 확인해 주세요."
     },
     meditationPage: {
+      durationTexts: {
+        sixty: {
+          topText: "지금 여기서, 60초만 호흡으로 돌아와 봅시다",
+          completionTitle: "60초 동안, 지금 여기로 돌아왔습니다."
+        },
+        threeMinutes: {
+          topText: "지금 여기서, 3분간 천천히 호흡을 따라가 봅시다",
+          completionTitle: "3분 동안, 호흡의 리듬으로 돌아왔습니다."
+        }
+      },
       variants: {
         default: {
           topText: "지금 여기서, 60초만 호흡으로 돌아와 봅시다",
@@ -1609,14 +1665,32 @@ export const siteCopy = {
     },
     modal: {
       eyebrow: "1-Minute Meditation",
-      title: "Use this one minute to settle your breath",
+      title: "Gently return to your breath",
       endButton: "End the minute",
       completeTitle: "Today, you returned to yourself.",
       completionMessage: "Well done.\nStay with this stillness\nfor just a moment.",
       completionReturnText: "Please come back again.",
-      completeBody: "This one quiet minute is the beginning of a shared awakening rhythm.",
+      completeBody: "This small breath is the beginning of a shared awakening rhythm.",
+      durationTexts: {
+        sixty: {
+          title: "For the next 60 seconds, gently return to your breath.",
+          completionBody: "These quiet 60 seconds are the beginning of a shared awakening rhythm.",
+          completionMoments: [
+            "Thank you for giving yourself these 60 seconds.",
+            "Stillness has always been within you."
+          ]
+        },
+        threeMinutes: {
+          title: "For the next 3 minutes, gently follow the rhythm of your breath.",
+          completionBody: "These quiet 3 minutes are the beginning of a shared awakening rhythm.",
+          completionMoments: [
+            "Thank you for giving yourself these 3 minutes.",
+            "Stillness has always been within you."
+          ]
+        }
+      },
       completionMoments: [
-        "Thank you for taking one minute to return to yourself today.",
+        "Thank you for giving yourself these 60 seconds.",
         "Stillness has always been within you."
       ],
       breatheAgain: "Breathe once more",
@@ -2162,6 +2236,16 @@ export const siteCopy = {
       error: "Login failed. Please check your email and password."
     },
     meditationPage: {
+      durationTexts: {
+        sixty: {
+          topText: "For the next 60 seconds, gently return to your breath.",
+          completionTitle: "For 60 seconds, you returned to the present."
+        },
+        threeMinutes: {
+          topText: "For the next 3 minutes, gently follow the rhythm of your breath.",
+          completionTitle: "For 3 minutes, you returned to the rhythm of your breath."
+        }
+      },
       variants: {
         default: {
           topText: "Return to your breath for just 60 seconds",

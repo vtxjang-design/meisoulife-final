@@ -55,6 +55,10 @@ function getBreathPhase(elapsedSeconds: number): BreathPhase {
   return "exhale";
 }
 
+function getDurationVariant(totalSeconds: number) {
+  return totalSeconds >= 180 ? "threeMinutes" : "sixty";
+}
+
 export default function MeditationPage() {
   const copy = useSiteCopy().meditationPage;
   const [totalSeconds, setTotalSeconds] = useState(60);
@@ -72,6 +76,14 @@ export default function MeditationPage() {
   const phase = useMemo(() => getBreathPhase(elapsedTotalSeconds), [elapsedTotalSeconds]);
   const isComplete = secondsLeft <= 0;
   const content = copy.variants[meditationType];
+  const durationVariant = getDurationVariant(totalSeconds);
+  const durationTextSet = copy.durationTexts?.[durationVariant];
+  const topText =
+    meditationType === "morning" || meditationType === "night" ? content.topText : durationTextSet?.topText || content.topText;
+  const completionTitle =
+    meditationType === "morning" || meditationType === "night"
+      ? content.completionTitle
+      : durationTextSet?.completionTitle || content.completionTitle;
   const circleScaleClass =
     phase === "inhale" ? "scale-110" : phase === "hold" ? "scale-110" : "scale-90";
 
@@ -196,7 +208,7 @@ export default function MeditationPage() {
         {!isComplete ? (
           <>
             <div className="space-y-4">
-              <p className="text-sm uppercase tracking-[0.32em] text-gold/80">{content.topText}</p>
+              <p className="text-sm uppercase tracking-[0.32em] text-gold/80">{topText}</p>
               <p className="mx-auto max-w-2xl text-sm leading-7 text-white/60 sm:text-base">{content.intro}</p>
             </div>
 
@@ -245,7 +257,7 @@ export default function MeditationPage() {
           </>
         ) : (
           <div className="animate-fade-in space-y-8">
-            <h1 className="font-serif text-4xl text-white sm:text-5xl">{content.completionTitle}</h1>
+            <h1 className="font-serif text-4xl text-white sm:text-5xl">{completionTitle}</h1>
             <p className="mx-auto max-w-xl whitespace-pre-line text-base leading-8 text-white/72">{copy.completionMessage}</p>
             <p className="text-sm leading-7 text-white/54">{copy.completionReturnText}</p>
             <p className="mx-auto max-w-2xl text-base leading-8 text-white/68">{copy.completionBody}</p>
