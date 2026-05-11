@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { getNatureSoundPreference, setNatureSoundPreference, startAmbientNatureAudio, stopAmbientNatureAudio } from "@/lib/meditation-ambient-audio";
 import { handleMeditationComplete as triggerMeditationCompletion, supportsMeditationVibration } from "@/lib/meditation-completion";
 import { markDailyRhythmCompleted } from "@/lib/return-rhythm";
 import { useSiteCopy } from "@/lib/i18n";
@@ -65,6 +66,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   const [hasUserGesture, setHasUserGesture] = useState(false);
   const [ambientVideoFailed, setAmbientVideoFailed] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
+  const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
   const completionHandledRef = useRef(false);
   const previousPhaseRef = useRef<BreathPhase>("inhale");
 
@@ -76,18 +78,20 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   useEffect(() => {
     if (!open) {
       setSecondsLeft(TOTAL_SECONDS);
-      setSoundEnabled(false);
+      setSoundEnabled(getNatureSoundPreference());
       setCompletionIndex(0);
       setHasUserGesture(false);
       setVibrationEnabled(true);
       completionHandledRef.current = false;
       previousPhaseRef.current = "inhale";
       setAmbientVideoFailed(false);
+      stopAmbientNatureAudio(ambientAudioRef);
       return;
     }
 
     setSecondsLeft(TOTAL_SECONDS);
     setHasUserGesture(true);
+    setSoundEnabled(getNatureSoundPreference());
     setVibrationEnabled(true);
     setCompletionIndex(Math.floor(Math.random() * modalCopy.completionMoments.length));
     completionHandledRef.current = false;
@@ -119,6 +123,21 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
       window.clearTimeout(timer);
     };
   }, [isComplete, open, secondsLeft]);
+
+  useEffect(() => {
+    if (!open || isComplete || !soundEnabled || !hasUserGesture) {
+      stopAmbientNatureAudio(ambientAudioRef);
+      return;
+    }
+
+    startAmbientNatureAudio(ambientAudioRef).catch(() => undefined);
+
+    return () => {
+      if (!open || isComplete) {
+        stopAmbientNatureAudio(ambientAudioRef);
+      }
+    };
+  }, [hasUserGesture, isComplete, open, soundEnabled]);
 
   useEffect(() => {
     if (!open) {
@@ -153,6 +172,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
 
   useEffect(() => {
     return () => {
+      stopAmbientNatureAudio(ambientAudioRef);
       audioContextRef.current?.close().catch(() => undefined);
       audioContextRef.current = null;
     };
@@ -227,7 +247,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   }
 
   function handleClose() {
-    setSoundEnabled(false);
+    stopAmbientNatureAudio(ambientAudioRef);
     onClose();
   }
 
@@ -243,9 +263,12 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
     setHasUserGesture(true);
     setSoundEnabled((current) => {
       const next = !current;
+      setNatureSoundPreference(next);
 
       if (next) {
         playTone(329.63, 180, 0.012);
+      } else {
+        stopAmbientNatureAudio(ambientAudioRef);
       }
 
       return next;
@@ -259,6 +282,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
 
   async function runMeditationComplete() {
     markDailyRhythmCompleted();
+    stopAmbientNatureAudio(ambientAudioRef);
 
     await triggerMeditationCompletion({
       hasUserGesture,
@@ -373,7 +397,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
                 className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
                 aria-pressed={soundEnabled}
               >
-                {soundEnabled ? modalCopy.soundOn : modalCopy.soundOff}
+                {soundEnabled ? `🔊 ${modalCopy.soundOn}` : `🔊 ${modalCopy.soundOff}`}
               </button>
             </div>
           </div>

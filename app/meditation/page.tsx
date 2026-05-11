@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSiteCopy } from "@/lib/i18n";
+import { getNatureSoundPreference, setNatureSoundPreference, startAmbientNatureAudio, stopAmbientNatureAudio } from "@/lib/meditation-ambient-audio";
 import { handleMeditationComplete as triggerMeditationCompletion, supportsMeditationVibration } from "@/lib/meditation-completion";
 
 const CYCLE_SECONDS = 10;
@@ -65,6 +66,7 @@ export default function MeditationPage() {
   const [hasUserGesture, setHasUserGesture] = useState(false);
   const [ambientVideoFailed, setAmbientVideoFailed] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
+  const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
   const completionHandledRef = useRef(false);
   const elapsedTotalSeconds = totalSeconds - secondsLeft;
   const phase = useMemo(() => getBreathPhase(elapsedTotalSeconds), [elapsedTotalSeconds]);
@@ -81,6 +83,7 @@ export default function MeditationPage() {
     setTotalSeconds(nextDuration);
     setSecondsLeft(nextDuration);
     setMeditationType(nextType);
+    setSoundEnabled(getNatureSoundPreference());
     setAmbientVideoFailed(false);
     completionHandledRef.current = false;
   }, []);
@@ -96,6 +99,7 @@ export default function MeditationPage() {
     return () => {
       window.removeEventListener("pointerdown", markGesture);
       window.removeEventListener("keydown", markGesture);
+      stopAmbientNatureAudio(ambientAudioRef);
     };
   }, []);
 
@@ -114,6 +118,21 @@ export default function MeditationPage() {
   }, [secondsLeft]);
 
   useEffect(() => {
+    if (isComplete || !soundEnabled || !hasUserGesture) {
+      stopAmbientNatureAudio(ambientAudioRef);
+      return;
+    }
+
+    startAmbientNatureAudio(ambientAudioRef).catch(() => undefined);
+
+    return () => {
+      if (isComplete) {
+        stopAmbientNatureAudio(ambientAudioRef);
+      }
+    };
+  }, [hasUserGesture, isComplete, soundEnabled]);
+
+  useEffect(() => {
     if (!isComplete || completionHandledRef.current) {
       return;
     }
@@ -123,6 +142,7 @@ export default function MeditationPage() {
   }, [isComplete, hasUserGesture, soundEnabled, vibrationEnabled]);
 
   async function runMeditationComplete() {
+    stopAmbientNatureAudio(ambientAudioRef);
     await triggerMeditationCompletion({
       hasUserGesture,
       soundEnabled,
@@ -133,7 +153,16 @@ export default function MeditationPage() {
 
   function handleSoundToggle() {
     setHasUserGesture(true);
-    setSoundEnabled((current) => !current);
+    setSoundEnabled((current) => {
+      const next = !current;
+      setNatureSoundPreference(next);
+
+      if (!next) {
+        stopAmbientNatureAudio(ambientAudioRef);
+      }
+
+      return next;
+    });
   }
 
   function handleVibrationToggle() {
@@ -189,7 +218,7 @@ export default function MeditationPage() {
                   className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
                   aria-pressed={soundEnabled}
                 >
-                  {soundEnabled ? copy.soundOn : copy.soundOff}
+                  {soundEnabled ? `🔊 ${copy.soundOn}` : `🔊 ${copy.soundOff}`}
                 </button>
               </div>
               <p className="text-2xl font-medium text-white/72 transition-all duration-700 ease-in-out sm:text-3xl">
