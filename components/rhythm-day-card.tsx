@@ -10,6 +10,7 @@ type RhythmDayCardProps = {
   locked: boolean;
   completed: boolean;
   subdued?: boolean;
+  emphasized?: boolean;
   onClick: () => void;
 };
 
@@ -23,6 +24,7 @@ export function RhythmDayCard({
   locked,
   completed,
   subdued = false,
+  emphasized = false,
   onClick
 }: RhythmDayCardProps) {
   return (
@@ -30,13 +32,15 @@ export function RhythmDayCard({
       type="button"
       onClick={onClick}
       disabled={locked}
-      className={`text-left rounded-2xl border px-4 py-3.5 transition duration-300 ${
+      className={`group text-left rounded-2xl border px-4 py-3.5 transition duration-300 ${
         active
           ? "border-gold/35 bg-gold/10 shadow-[0_18px_50px_rgba(216,191,131,0.08)]"
           : completed
             ? "border-emerald-200/18 bg-emerald-200/[0.06]"
-            : "border-white/10 bg-white/[0.03] hover:bg-white/[0.05]"
-      } ${locked ? "cursor-not-allowed opacity-65" : ""} ${subdued && !active && !completed ? "opacity-72" : ""}`}
+            : emphasized
+              ? "border-white/12 bg-white/[0.045] hover:bg-white/[0.06]"
+              : "border-white/10 bg-white/[0.03] hover:bg-white/[0.05]"
+      } ${locked ? "cursor-not-allowed" : ""} ${subdued && !active && !completed ? "opacity-[0.78]" : ""}`}
     >
       <div className="flex items-start justify-between gap-3">
         <div>
@@ -46,7 +50,11 @@ export function RhythmDayCard({
         <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[11px] text-white/58">{status}</span>
       </div>
       <p className="mt-2.5 text-sm leading-6 text-white/68">{description}</p>
-      {cta ? <p className="mt-3 text-sm font-medium text-gold/86">{cta}</p> : null}
+      {cta ? (
+        <div className="mt-3 flex justify-end">
+          <span className="text-sm font-medium text-gold/78 transition duration-300 group-hover:text-gold/90">{cta}</span>
+        </div>
+      ) : null}
     </button>
   );
 }

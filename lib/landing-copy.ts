@@ -305,7 +305,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
     rhythmChallenge: {
       eyebrow: "7日間リズム体験",
       title: "7日間リズム体験",
-      subtitle: "無理なく、自分に戻る小さな習慣。",
+      subtitle: "無理しなくても大丈夫です\n自分に戻る、小さなリズム",
       returning: "また戻ってきましたね。",
       enoughMessage: "今日はここまででも十分です。",
       gentleLine: "少しずつ続ければ十分です。",
@@ -771,7 +771,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
     rhythmChallenge: {
       eyebrow: "7일 리듬 체험",
       title: "7일 리듬 체험",
-      subtitle: "무리하지 않고, 나에게 돌아오는 작은 습관",
+      subtitle: "무리하지 않아도 괜찮아요\n나에게 돌아오는 작은 리듬",
       returning: "다시 와주셨네요.",
       enoughMessage: "오늘은 여기까지여도 충분합니다.",
       gentleLine: "조금씩 이어가면 충분합니다.",

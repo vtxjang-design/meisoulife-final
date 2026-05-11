@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { CheckoutButton } from "@/components/checkout-button";
 import { RhythmDayCard } from "@/components/rhythm-day-card";
-import { SectionHeading } from "@/components/section-heading";
 import type { LandingCopy } from "@/lib/landing-copy";
 import {
   completeRhythmChallengeDay,
@@ -92,7 +91,11 @@ export function RhythmChallenge({ copy }: RhythmChallengeProps) {
   return (
     <section id="rhythm-challenge" className="section-shell mt-14 sm:mt-16">
       <div className="overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.14),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-7 shadow-[0_24px_80px_rgba(7,17,31,0.22)] sm:px-8 sm:py-9">
-        <SectionHeading eyebrow={copy.eyebrow} title={copy.title} description={copy.subtitle} align="center" />
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="text-sm uppercase tracking-[0.3em] text-gold/90">{copy.eyebrow}</p>
+          <h2 className="mt-4 font-serif text-3xl leading-tight text-white sm:text-4xl">{copy.title}</h2>
+          <p className="mt-4 whitespace-pre-line text-sm leading-8 text-white/68 sm:text-base">{copy.subtitle}</p>
+        </div>
         {progress.completedDays.length > 0 ? (
           <p className="mt-4 text-center text-sm leading-7 text-white/52">{copy.returning}</p>
         ) : null}
@@ -116,6 +119,7 @@ export function RhythmChallenge({ copy }: RhythmChallengeProps) {
                 locked={locked}
                 completed={completed}
                 subdued={subdued}
+                emphasized={step.day <= 3}
                 onClick={() => handleCardSelect(step.day)}
               />
             );
