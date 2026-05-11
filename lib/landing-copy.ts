@@ -49,19 +49,21 @@ export type LandingCopy = {
     subtitle: string;
     returning: string;
     enoughMessage: string;
+    gentleLine: string;
     todayLabel: string;
     completedLabel: string;
     lockedLabel: string;
     actionLabel: string;
     completeLabel: string;
-    steps: Array<{
-      day: number;
-      title: string;
-      description: string;
-      cta: string;
-      note: string;
-      href?: string;
-    }>;
+      steps: Array<{
+        day: number;
+        title: string;
+        description: string;
+        cta: string;
+        cardCta?: string;
+        note: string;
+        href?: string;
+      }>;
     invite: {
       title: string;
       description: string;
@@ -306,9 +308,10 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       subtitle: "無理なく、自分に戻る小さな習慣。",
       returning: "また戻ってきましたね。",
       enoughMessage: "今日はここまででも十分です。",
+      gentleLine: "少しずつ続ければ十分です。",
       todayLabel: "○ Today",
       completedLabel: "✓ Completed",
-      lockedLabel: "🔒 Coming tomorrow",
+      lockedLabel: "明日、また整えましょう",
       actionLabel: "今日の小さな実践",
       completeLabel: "今日の実践を受け取る",
       steps: [
@@ -317,6 +320,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
           title: "呼吸",
           description: "今日は1分だけ、呼吸を感じてみます。",
           cta: "1分呼吸を始める",
+          cardCta: "1分はじめる →",
           note: "今の呼吸を変えようとしなくて大丈夫です。ただ1分、やさしく戻ります。",
           href: "#one-minute-experience"
         },
@@ -770,24 +774,26 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       subtitle: "무리하지 않고, 나에게 돌아오는 작은 습관",
       returning: "다시 와주셨네요.",
       enoughMessage: "오늘은 여기까지여도 충분합니다.",
+      gentleLine: "조금씩 이어가면 충분합니다.",
       todayLabel: "○ Today",
       completedLabel: "✓ Completed",
-      lockedLabel: "🔒 Coming tomorrow",
+      lockedLabel: "내일 함께 이어가요",
       actionLabel: "오늘의 작은 실천",
       completeLabel: "오늘의 실천 받기",
       steps: [
         {
           day: 1,
           title: "호흡",
-          description: "오늘은 1분만 호흡을 느껴봅니다。",
+          description: "오늘은 1분만 호흡을 느껴봅니다.",
           cta: "1분 호흡 시작하기",
+          cardCta: "1분 시작하기 →",
           note: "호흡을 바꾸려고 하지 않아도 괜찮아요. 1분만, 부드럽게 돌아옵니다.",
           href: "#one-minute-experience"
         },
         {
           day: 2,
           title: "마음 보기",
-          description: "지금의 마음을 잠시 느껴봅니다。",
+          description: "지금의 마음을 잠시 느껴봅니다.",
           cta: "지금의 마음을 느끼기",
           note: "좋고 나쁨을 정하지 않아도 괜찮아요. 지금의 마음을 잠시 알아차려 봅니다.",
           href: "#daily-rhythm-check"
@@ -802,7 +808,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
         {
           day: 4,
           title: "생각 쉬기",
-          description: "머릿속을 잠시 쉬게 해봅니다。",
+          description: "머릿속을 잠시 쉬게 해봅니다.",
           cta: "30초 리셋 시작하기",
           note: "생각을 멈추지 않아도 괜찮아요. 30초만, 호흡으로 돌아올 자리를 만듭니다.",
           href: "/meditation?duration=30&type=day"
@@ -817,7 +823,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
         {
           day: 6,
           title: "연결감",
-          description: "혼자가 아니라는 것을 잠시 느껴봅니다。",
+          description: "혼자가 아니라는 것을 잠시 느껴봅니다.",
           cta: "연결감을 느껴보기",
           note: "오늘도 어딘가에서 자신을 돌보려는 누군가가 있습니다. 그 감각만으로도 충분합니다.",
           href: "#live-together"
@@ -825,7 +831,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
         {
           day: 7,
           title: "나와의 약속",
-          description: "내일의 나를 위해, 1분만。",
+          description: "내일의 나를 위해, 1분만.",
           cta: "조용한 1분 시작하기",
           note: "오늘의 고요함을 내일의 나에게 건네는 마음으로 호흡해보세요.",
           href: "#one-minute-experience"
@@ -1228,9 +1234,10 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       subtitle: "A small habit of returning to yourself, without pressure.",
       returning: "You found your way back again.",
       enoughMessage: "This is enough for today.",
+      gentleLine: "A little at a time is enough.",
       todayLabel: "○ Today",
       completedLabel: "✓ Completed",
-      lockedLabel: "🔒 Coming tomorrow",
+      lockedLabel: "We can continue tomorrow",
       actionLabel: "Today’s small practice",
       completeLabel: "Receive today’s practice",
       steps: [
@@ -1239,6 +1246,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
           title: "Breath",
           description: "Today, just notice your breath for one minute.",
           cta: "Start the 1-minute breath",
+          cardCta: "Start 1 minute →",
           note: "You do not have to change anything. Just return gently for one quiet minute.",
           href: "#one-minute-experience"
         },
