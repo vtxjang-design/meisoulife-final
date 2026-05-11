@@ -282,7 +282,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
 
   async function runMeditationComplete() {
     markDailyRhythmCompleted();
-    stopAmbientNatureAudio(ambientAudioRef);
+    await stopAmbientNatureAudio(ambientAudioRef);
 
     await triggerMeditationCompletion({
       hasUserGesture,
@@ -459,6 +459,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
 
               <h3 className="mt-5 text-balance font-serif text-3xl leading-tight text-white/92 sm:text-[34px]">{completionMessage}</h3>
               <p className="mt-4 max-w-sm whitespace-pre-line text-sm leading-7 text-white/72 sm:text-base">{modalCopy.completionMessage}</p>
+              <p className="mt-3 text-sm leading-7 text-white/54">{modalCopy.completionReturnText}</p>
               <p className="mt-4 max-w-sm text-sm leading-7 text-white/62 sm:text-base">{modalCopy.completeBody}</p>
 
               <div className="mt-8 flex w-full flex-col gap-3">

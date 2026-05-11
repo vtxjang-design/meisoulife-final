@@ -71,7 +71,7 @@ async function playCompletionChime(audioContextRef: MutableRefObject<AudioContex
   try {
     const audio = new Audio(COMPLETION_CHIME_SRC);
     audio.preload = "auto";
-    audio.volume = 0.42;
+    audio.volume = 0.35;
 
     await new Promise<void>((resolve, reject) => {
       audio.oncanplaythrough = () => resolve();

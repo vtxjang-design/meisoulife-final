@@ -15,25 +15,26 @@ function fadeVolume(
   audio: HTMLAudioElement,
   from: number,
   to: number,
-  durationMs: number,
-  onComplete?: () => void
+  durationMs: number
 ) {
-  const steps = 20;
-  const stepDuration = durationMs / steps;
-  let currentStep = 0;
+  return new Promise<void>((resolve) => {
+    const steps = 20;
+    const stepDuration = durationMs / steps;
+    let currentStep = 0;
 
-  audio.volume = from;
+    audio.volume = from;
 
-  const interval = window.setInterval(() => {
-    currentStep += 1;
-    const progress = Math.min(currentStep / steps, 1);
-    audio.volume = from + (to - from) * progress;
+    const interval = window.setInterval(() => {
+      currentStep += 1;
+      const progress = Math.min(currentStep / steps, 1);
+      audio.volume = from + (to - from) * progress;
 
-    if (progress >= 1) {
-      window.clearInterval(interval);
-      onComplete?.();
-    }
-  }, stepDuration);
+      if (progress >= 1) {
+        window.clearInterval(interval);
+        resolve();
+      }
+    }, stepDuration);
+  });
 }
 
 export function getNatureSoundPreference() {
@@ -77,22 +78,21 @@ export async function startAmbientNatureAudio(
 
   try {
     await audio.play();
-    fadeVolume(audio, audio.volume, TARGET_VOLUME, FADE_DURATION_MS);
+    await fadeVolume(audio, audio.volume, TARGET_VOLUME, FADE_DURATION_MS);
     return { started: true };
   } catch {
     return { started: false };
   }
 }
 
-export function stopAmbientNatureAudio(audioRef: MutableRefObject<HTMLAudioElement | null>) {
+export async function stopAmbientNatureAudio(audioRef: MutableRefObject<HTMLAudioElement | null>) {
   const audio = audioRef.current;
 
   if (!audio) {
     return;
   }
 
-  fadeVolume(audio, audio.volume, 0, FADE_DURATION_MS, () => {
-    audio.pause();
-    audio.currentTime = 0;
-  });
+  await fadeVolume(audio, audio.volume, 0, FADE_DURATION_MS);
+  audio.pause();
+  audio.currentTime = 0;
 }

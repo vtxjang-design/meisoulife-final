@@ -142,7 +142,7 @@ export default function MeditationPage() {
   }, [isComplete, hasUserGesture, soundEnabled, vibrationEnabled]);
 
   async function runMeditationComplete() {
-    stopAmbientNatureAudio(ambientAudioRef);
+    await stopAmbientNatureAudio(ambientAudioRef);
     await triggerMeditationCompletion({
       hasUserGesture,
       soundEnabled,
@@ -247,6 +247,7 @@ export default function MeditationPage() {
           <div className="animate-fade-in space-y-8">
             <h1 className="font-serif text-4xl text-white sm:text-5xl">{content.completionTitle}</h1>
             <p className="mx-auto max-w-xl whitespace-pre-line text-base leading-8 text-white/72">{copy.completionMessage}</p>
+            <p className="text-sm leading-7 text-white/54">{copy.completionReturnText}</p>
             <p className="mx-auto max-w-2xl text-base leading-8 text-white/68">{copy.completionBody}</p>
             <div className="flex flex-col items-center gap-3">
               <Link

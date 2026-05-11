@@ -141,6 +141,7 @@ export const siteCopy = {
       endButton: "1分を終える",
       completeTitle: "今日、あなたは自分に戻りました。",
       completionMessage: "おつかれさま。\n今の静けさを、\n少しだけ感じてください。",
+      completionReturnText: "また戻ってきてください。",
       completeBody: "この小さな1分が、共に目覚めるリズムの始まりです。",
       completionMoments: [
         "今日も、自分に戻る1分をありがとう。",
@@ -722,6 +723,7 @@ export const siteCopy = {
         exhale: "吐いて… 4秒"
       },
       completionMessage: "おつかれさま。\n今の静けさを、\n少しだけ感じてください。",
+      completionReturnText: "また戻ってきてください。",
       completionBody: "この静かなリズムを、7日間だけ続けてみませんか？",
       completionPrimary: "7日リズムを始める",
       completionSecondary: "今日はここまで",
@@ -875,6 +877,7 @@ export const siteCopy = {
       endButton: "1분을 마칩니다",
       completeTitle: "오늘, 당신은 자신에게 돌아왔습니다.",
       completionMessage: "수고했어요.\n지금의 고요함을,\n잠시만 느껴보세요.",
+      completionReturnText: "또 돌아와 주세요.",
       completeBody: "이 작은 1분이 함께 깨어나는 리듬의 시작입니다.",
       completionMoments: [
         "오늘도 자신에게 돌아오는 1분을 고맙게 받았습니다.",
@@ -1456,6 +1459,7 @@ export const siteCopy = {
         exhale: "내쉬기… 4초"
       },
       completionMessage: "수고했어요.\n지금의 고요함을,\n잠시만 느껴보세요.",
+      completionReturnText: "또 돌아와 주세요.",
       completionBody: "이 조용한 리듬을 7일만 더 이어가 보시겠어요?",
       completionPrimary: "7일 리듬 시작하기",
       completionSecondary: "오늘은 여기까지",
@@ -1609,6 +1613,7 @@ export const siteCopy = {
       endButton: "End the minute",
       completeTitle: "Today, you returned to yourself.",
       completionMessage: "Well done.\nStay with this stillness\nfor just a moment.",
+      completionReturnText: "Please come back again.",
       completeBody: "This one quiet minute is the beginning of a shared awakening rhythm.",
       completionMoments: [
         "Thank you for taking one minute to return to yourself today.",
@@ -2190,6 +2195,7 @@ export const siteCopy = {
         exhale: "Exhale... 4s"
       },
       completionMessage: "Well done.\nStay with this stillness\nfor just a moment.",
+      completionReturnText: "Please come back again.",
       completionBody: "Would you like to continue this quiet rhythm for just seven days?",
       completionPrimary: "Start the 7-day rhythm",
       completionSecondary: "That’s enough for today",
