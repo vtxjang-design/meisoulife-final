@@ -2,9 +2,9 @@
 
 import type { MutableRefObject } from "react";
 
-const AMBIENT_AUDIO_SRC = "/audio/quiet-nature-ambience.mp3";
+const AMBIENT_AUDIO_SRC = "/audio/birds-nature-ambience.mp3";
 const SOUND_PREFERENCE_KEY = "meisoulife_nature_sound_enabled";
-const TARGET_VOLUME = 0.22;
+const TARGET_VOLUME = 0.28;
 const FADE_DURATION_MS = 2000;
 
 type AmbientAudioResult = {
@@ -67,6 +67,8 @@ export async function startAmbientNatureAudio(
   }
 
   if (!audioRef.current) {
+    // TODO: If member-specific ambience is added later, select the source here
+    // from Supabase/member preferences instead of a single shared file.
     const audio = new Audio(AMBIENT_AUDIO_SRC);
     audio.loop = true;
     audio.preload = "auto";
@@ -81,6 +83,7 @@ export async function startAmbientNatureAudio(
     await fadeVolume(audio, audio.volume, TARGET_VOLUME, FADE_DURATION_MS);
     return { started: true };
   } catch {
+    console.warn("Ambient nature audio failed to start");
     return { started: false };
   }
 }
