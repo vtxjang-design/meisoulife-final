@@ -4,14 +4,13 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { AIRhythmCoach } from "@/components/ai-rhythm-coach";
 import { CheckoutButton } from "@/components/checkout-button";
+import { DailyRhythmCheck } from "@/components/daily-rhythm-check";
 import { DailyRhythmLayer } from "@/components/daily-rhythm-layer";
 import { InstantMeditationSection } from "@/components/instant-meditation-section";
 import { LiveTogether } from "@/components/live-together";
 import { MobileCTA } from "@/components/mobile-cta";
-import { QuietCompanionMode } from "@/components/quiet-companion-mode";
 import { RhythmGarden } from "@/components/rhythm-garden";
 import { SectionHeading } from "@/components/section-heading";
-import { TodaysRhythmCard } from "@/components/todays-rhythm-card";
 import { getChallengeRhythmProgress, type ChallengeRhythmProgress } from "@/lib/challenge-rhythm";
 import { useLanguage, languageButtons, useSiteCopy } from "@/lib/i18n";
 import { landingCopy } from "@/lib/landing-copy";
@@ -217,9 +216,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <TodaysRhythmCard copy={landing.todaysRhythmCard} />
-
-      <QuietCompanionMode copy={landing.quietCompanion} />
+      <DailyRhythmCheck copy={landing.dailyRhythmCheck} />
 
       <InstantMeditationSection copy={landing.instant} />
 
