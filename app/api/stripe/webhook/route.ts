@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import { sendPaymentConfirmationEmail } from "@/lib/resend";
 import { getStripeClient } from "@/lib/stripe";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 
@@ -46,6 +47,57 @@ async function upsertMembership(record: MembershipUpsert) {
   });
 }
 
+async function hasProcessedWebhookEvent(eventId: string) {
+  const supabase = getSupabaseAdminClient();
+
+  if (!supabase) {
+    await logWithoutDatabase("webhook idempotency lookup skipped", {
+      reason: "missing_supabase_admin",
+      eventId
+    });
+    return false;
+  }
+
+  const { data, error } = await supabase
+    .from("stripe_webhook_events")
+    .select("event_id")
+    .eq("event_id", eventId)
+    .maybeSingle();
+
+  if (error) {
+    console.warn("[stripe-webhook] idempotency lookup failed", {
+      eventId,
+      message: error.message
+    });
+    return false;
+  }
+
+  return Boolean(data?.event_id);
+}
+
+async function markWebhookEventProcessed(eventId: string) {
+  const supabase = getSupabaseAdminClient();
+
+  if (!supabase) {
+    await logWithoutDatabase("webhook processed event persistence skipped", {
+      reason: "missing_supabase_admin",
+      eventId
+    });
+    return;
+  }
+
+  const { error } = await supabase.from("stripe_webhook_events").insert({
+    event_id: eventId
+  });
+
+  if (error) {
+    console.warn("[stripe-webhook] failed to persist processed event", {
+      eventId,
+      message: error.message
+    });
+  }
+}
+
 async function getSubscription(
   stripe: Stripe,
   subscription: string | Stripe.Subscription | null | undefined
@@ -65,16 +117,38 @@ async function handleCheckoutCompleted(stripe: Stripe, session: Stripe.Checkout.
   const subscription = await getSubscription(stripe, session.subscription);
   const stripeCustomerId = typeof session.customer === "string" ? session.customer : session.customer?.id || null;
   const stripeSubscriptionId = typeof session.subscription === "string" ? session.subscription : session.subscription?.id || null;
+  const language = session.metadata?.language || null;
+  const plan = session.metadata?.plan || subscription?.metadata?.plan || null;
+  const userId = session.metadata?.user_id || session.metadata?.userId || null;
 
   await upsertMembership({
-    user_id: session.metadata?.user_id || null,
+    user_id: userId,
     email: session.customer_details?.email || session.customer_email || null,
     stripe_customer_id: stripeCustomerId,
     stripe_subscription_id: stripeSubscriptionId,
-    plan: session.metadata?.plan || subscription?.metadata?.plan || null,
+    plan,
     status: "active",
     current_period_end: toIsoDate(getCurrentPeriodEnd(subscription)),
     updated_at: new Date().toISOString()
+  });
+
+  const customerEmail = session.customer_details?.email || session.customer_email || null;
+
+  if (!customerEmail) {
+    console.warn("[stripe-webhook] checkout completed without customer email", {
+      sessionId: session.id,
+      plan
+    });
+    return;
+  }
+
+  await sendPaymentConfirmationEmail({
+    email: customerEmail,
+    name: session.customer_details?.name || null,
+    language,
+    plan,
+    amountTotal: session.amount_total ?? null,
+    currency: session.currency ?? null
   });
 }
 
@@ -160,6 +234,13 @@ export async function POST(request: Request) {
     const event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
     console.log("[stripe-webhook] received", { type: event.type, id: event.id });
 
+    const alreadyProcessed = await hasProcessedWebhookEvent(event.id);
+
+    if (alreadyProcessed) {
+      console.log("[stripe-webhook] duplicate event ignored", { id: event.id, type: event.type });
+      return NextResponse.json({ received: true, duplicate: true });
+    }
+
     switch (event.type) {
       case "checkout.session.completed":
         await handleCheckoutCompleted(stripe, event.data.object as Stripe.Checkout.Session);
@@ -185,15 +266,21 @@ export async function POST(request: Request) {
         break;
     }
 
+    await markWebhookEventProcessed(event.id);
+
     return NextResponse.json({ received: true });
   } catch (error) {
     console.error("[stripe-webhook] failed", error);
+    const isSignatureError =
+      error instanceof Stripe.errors.StripeSignatureVerificationError ||
+      (error instanceof Error && error.message.toLowerCase().includes("signature"));
+
     return NextResponse.json(
       {
         error: error instanceof Error ? error.message : "Webhook failed"
       },
       {
-        status: 400
+        status: isSignatureError ? 400 : 500
       }
     );
   }

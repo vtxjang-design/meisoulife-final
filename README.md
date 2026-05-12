@@ -59,6 +59,8 @@ npm run build
 OPENAI_API_KEY
 STRIPE_SECRET_KEY
 STRIPE_WEBHOOK_SECRET
+RESEND_API_KEY
+RESEND_FROM_EMAIL
 NEXT_PUBLIC_SITE_URL
 NEXT_PUBLIC_SUPABASE_URL
 NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -177,6 +179,43 @@ invoice.payment_succeeded
 customer.subscription.updated
 customer.subscription.deleted
 invoice.payment_failed
+```
+
+결제 완료 확인 메일:
+
+```text
+- checkout.session.completed 수신 시 자동 발송
+- 기본 언어는 일본어
+- Stripe metadata.language 가 ko 이면 한국어 발송
+- 발신자 기본값: Meisoulife <hello@meisoulife.com>
+```
+
+Resend 설정 메모:
+
+```text
+RESEND_API_KEY
+RESEND_FROM_EMAIL
+```
+
+`hello@meisoulife.com` 발신 도메인이 아직 Resend에서 검증되지 않았다면, 먼저 Resend onboarding sender 또는 검증된 발신자로 테스트하세요.
+
+Webhook 중복 처리:
+
+```text
+Supabase table: public.stripe_webhook_events
+primary key: event_id
+```
+
+로컬 테스트:
+
+```bash
+stripe listen --forward-to localhost:3000/api/stripe/webhook
+```
+
+Stripe CLI가 출력하는 signing secret 값을 아래 환경변수에 넣어야 합니다:
+
+```text
+STRIPE_WEBHOOK_SECRET
 ```
 
 Checkout success / cancel URL:

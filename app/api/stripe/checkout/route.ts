@@ -8,6 +8,11 @@ const checkoutSchema = z.object({
   plan: z.enum(["basic", "leader", "premium", "growth", "inner_circle"])
 });
 
+function resolveCheckoutLanguage(request: Request) {
+  const acceptLanguage = request.headers.get("accept-language")?.toLowerCase() || "";
+  return acceptLanguage.startsWith("ko") ? "ko" : "ja";
+}
+
 export async function POST(request: Request) {
   try {
     const stripe = getStripeClient();
@@ -77,10 +82,13 @@ export async function POST(request: Request) {
 
     const siteUrl = getSiteUrl();
     const membershipPlan = mapMembershipPlan(checkoutPlan);
+    const language = resolveCheckoutLanguage(request);
     const metadata = {
       user_id: user.id,
+      userId: user.id,
       plan: membershipPlan,
       tier: membershipPlan,
+      language,
       source: "meisoulife",
       flow: "membership"
     };

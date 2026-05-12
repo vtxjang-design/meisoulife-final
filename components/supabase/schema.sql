@@ -41,6 +41,11 @@ create table if not exists public.memberships (
   updated_at timestamptz default now()
 );
 
+create table if not exists public.stripe_webhook_events (
+  event_id text primary key,
+  created_at timestamptz default now()
+);
+
 create table if not exists public.challenge_progress (
   id uuid primary key default gen_random_uuid(),
   email text not null,
