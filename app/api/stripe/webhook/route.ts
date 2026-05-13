@@ -15,6 +15,8 @@ type MembershipUpsert = {
   updated_at: string;
 };
 
+const processedWebhookEventsFallback = new Set<string>();
+
 async function logWithoutDatabase(message: string, payload: Record<string, unknown>) {
   console.warn(`[stripe-webhook] ${message}`, payload);
 }
@@ -51,11 +53,13 @@ async function hasProcessedWebhookEvent(eventId: string) {
   const supabase = getSupabaseAdminClient();
 
   if (!supabase) {
-    await logWithoutDatabase("webhook idempotency lookup skipped", {
+    const processed = processedWebhookEventsFallback.has(eventId);
+    await logWithoutDatabase("webhook idempotency using in-memory fallback", {
       reason: "missing_supabase_admin",
-      eventId
+      eventId,
+      processed
     });
-    return false;
+    return processed;
   }
 
   const { data, error } = await supabase
@@ -79,7 +83,8 @@ async function markWebhookEventProcessed(eventId: string) {
   const supabase = getSupabaseAdminClient();
 
   if (!supabase) {
-    await logWithoutDatabase("webhook processed event persistence skipped", {
+    processedWebhookEventsFallback.add(eventId);
+    await logWithoutDatabase("webhook processed event stored in-memory fallback", {
       reason: "missing_supabase_admin",
       eventId
     });
@@ -114,6 +119,11 @@ async function getSubscription(
 }
 
 async function handleCheckoutCompleted(stripe: Stripe, session: Stripe.Checkout.Session) {
+  console.log("[stripe-webhook] checkout.session.completed received", {
+    sessionId: session.id,
+    customerId: typeof session.customer === "string" ? session.customer : session.customer?.id || null
+  });
+
   const subscription = await getSubscription(stripe, session.subscription);
   const stripeCustomerId = typeof session.customer === "string" ? session.customer : session.customer?.id || null;
   const stripeSubscriptionId = typeof session.subscription === "string" ? session.subscription : session.subscription?.id || null;
@@ -135,21 +145,34 @@ async function handleCheckoutCompleted(stripe: Stripe, session: Stripe.Checkout.
   const customerEmail = session.customer_details?.email || session.customer_email || null;
 
   if (!customerEmail) {
-    console.warn("[stripe-webhook] checkout completed without customer email", {
+    console.warn("[stripe-webhook] customer email missing", {
       sessionId: session.id,
       plan
     });
     return;
   }
 
-  await sendPaymentConfirmationEmail({
-    email: customerEmail,
-    name: session.customer_details?.name || null,
-    language,
-    plan,
-    amountTotal: session.amount_total ?? null,
-    currency: session.currency ?? null
+  console.log("[stripe-webhook] customer email found", {
+    sessionId: session.id,
+    email: customerEmail
   });
+
+  try {
+    await sendPaymentConfirmationEmail({
+      email: customerEmail,
+      name: session.customer_details?.name || null,
+      language,
+      plan,
+      amountTotal: session.amount_total ?? null,
+      currency: session.currency ?? null
+    });
+  } catch (error) {
+    console.error("[stripe-webhook] resend email failed with error", {
+      sessionId: session.id,
+      email: customerEmail,
+      error: error instanceof Error ? error.message : error
+    });
+  }
 }
 
 async function handleInvoicePaid(stripe: Stripe, invoice: Stripe.Invoice) {
@@ -226,13 +249,19 @@ export async function POST(request: Request) {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
   if (!stripe || !signature || !webhookSecret) {
+    console.error("[stripe-webhook] missing required configuration", {
+      hasStripeClient: Boolean(stripe),
+      hasSignature: Boolean(signature),
+      hasWebhookSecret: Boolean(webhookSecret)
+    });
     return NextResponse.json({ received: false }, { status: 400 });
   }
 
   try {
     const body = await request.text();
+    console.log("[stripe-webhook] Stripe webhook received");
     const event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
-    console.log("[stripe-webhook] received", { type: event.type, id: event.id });
+    console.log("[stripe-webhook] event type received", { type: event.type, id: event.id });
 
     const alreadyProcessed = await hasProcessedWebhookEvent(event.id);
 

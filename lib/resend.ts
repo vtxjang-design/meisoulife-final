@@ -130,7 +130,14 @@ export async function sendPaymentConfirmationEmail(input: PaymentConfirmationEma
   }
 
   const language = normalizeLanguage(input.language);
-  const from = process.env.RESEND_FROM_EMAIL || "Meisoulife <hello@meisoulife.com>";
+  const from = process.env.RESEND_FROM_EMAIL || "Meisoulife <onboarding@resend.dev>";
+
+  console.log("[resend] payment confirmation email sending started", {
+    email: input.email,
+    language,
+    from,
+    plan: input.plan ?? null
+  });
 
   // If hello@meisoulife.com is not verified in Resend yet, use a verified onboarding/testing sender here.
   const response = await fetch(RESEND_API_URL, {
@@ -150,11 +157,16 @@ export async function sendPaymentConfirmationEmail(input: PaymentConfirmationEma
 
   if (!response.ok) {
     const errorText = await response.text();
+    console.error("[resend] payment confirmation email failed", {
+      email: input.email,
+      status: response.status,
+      errorText
+    });
     throw new Error(`Resend API failed: ${response.status} ${errorText}`);
   }
 
   const data = await response.json();
-  console.log("[resend] payment confirmation email sent", {
+  console.log("[resend] payment confirmation email sent successfully", {
     email: input.email,
     id: data?.id ?? null,
     plan: input.plan ?? null,
