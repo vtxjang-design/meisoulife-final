@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { languageButtons, useLanguage, useSiteCopy } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -10,7 +11,68 @@ export function SiteHeader() {
   const pathname = usePathname();
   const { language, setLanguage } = useLanguage();
   const copy = useSiteCopy();
+  const dashboardLabel = language === "jp" ? "ダッシュボード" : language === "kr" ? "대시보드" : "Dashboard";
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [memberState, setMemberState] = useState<"guest" | "free" | "paid">("guest");
+  const [paidLabel, setPaidLabel] = useState("");
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadMemberState() {
+      const supabase = getSupabaseBrowserClient();
+
+      if (!supabase) {
+        return;
+      }
+
+      const {
+        data: { session }
+      } = await supabase.auth.getSession();
+
+      if (!active) {
+        return;
+      }
+
+      if (!session?.user) {
+        setMemberState("guest");
+        setPaidLabel("");
+        return;
+      }
+
+      const { data: membership } = await supabase
+        .from("memberships")
+        .select("plan, status")
+        .eq("user_id", session.user.id)
+        .in("status", ["active", "trialing"])
+        .order("updated_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (!active) {
+        return;
+      }
+
+      if (membership) {
+        setMemberState("paid");
+        if (membership.plan === "inner_circle") {
+          setPaidLabel(language === "jp" ? "Brain Owner" : language === "kr" ? "브레인 오너" : "Brain Owner");
+        } else {
+          setPaidLabel(language === "jp" ? "Premium Member" : language === "kr" ? "프리미엄 멤버" : "Premium Member");
+        }
+        return;
+      }
+
+      setMemberState("free");
+      setPaidLabel(language === "jp" ? "Upgrade" : language === "kr" ? "업그레이드" : "Upgrade");
+    }
+
+    loadMemberState();
+
+    return () => {
+      active = false;
+    };
+  }, [language, pathname]);
 
   useEffect(() => {
     setMobileOpen(false);
@@ -73,18 +135,34 @@ export function SiteHeader() {
               </button>
             ))}
           </div>
-          <Link
-            href="/login"
-            className="hidden rounded-md border border-white/15 px-4 py-2 text-sm text-white/90 transition hover:border-gold/60 hover:text-white sm:inline-flex"
-          >
-            {copy.header.login}
-          </Link>
-          <Link
-            href="/welcome-member"
-            className="hidden rounded-md bg-gold px-4 py-2 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] sm:inline-flex"
-          >
-            {copy.header.freeJoin}
-          </Link>
+          {memberState !== "guest" ? (
+            <>
+              <span className="hidden rounded-full border border-gold/20 bg-gold/[0.08] px-4 py-2 text-xs font-semibold tracking-[0.16em] text-gold sm:inline-flex">
+                {paidLabel}
+              </span>
+              <Link
+                href="/dashboard"
+                className="hidden rounded-md border border-white/15 px-4 py-2 text-sm text-white/90 transition hover:border-gold/60 hover:text-white sm:inline-flex"
+              >
+                {dashboardLabel}
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="hidden rounded-md border border-white/15 px-4 py-2 text-sm text-white/90 transition hover:border-gold/60 hover:text-white sm:inline-flex"
+              >
+                {copy.header.login}
+              </Link>
+              <Link
+                href="/welcome-member"
+                className="hidden rounded-md bg-gold px-4 py-2 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] sm:inline-flex"
+              >
+                {copy.header.freeJoin}
+              </Link>
+            </>
+          )}
         </div>
       </div>
 
@@ -149,20 +227,37 @@ export function SiteHeader() {
             </div>
 
             <div className="flex items-center gap-2">
-              <Link
-                href="/login"
-                onClick={() => setMobileOpen(false)}
-                className="inline-flex min-h-[44px] items-center rounded-full border border-white/10 px-4 py-2 text-sm text-white/84 transition hover:bg-white/[0.06]"
-              >
-                {copy.header.login}
-              </Link>
-              <Link
-                href="/challenge"
-                onClick={() => setMobileOpen(false)}
-                className="inline-flex min-h-[44px] items-center rounded-full bg-gold px-4 py-2 text-sm font-semibold text-ink transition hover:bg-[#e7cd92]"
-              >
-                {copy.header.freeJoin}
-              </Link>
+              {memberState !== "guest" ? (
+                <>
+                  <span className="inline-flex min-h-[44px] items-center rounded-full border border-gold/20 bg-gold/[0.08] px-4 py-2 text-sm font-semibold text-gold">
+                    {paidLabel}
+                  </span>
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setMobileOpen(false)}
+                    className="inline-flex min-h-[44px] items-center rounded-full border border-white/10 px-4 py-2 text-sm text-white/84 transition hover:bg-white/[0.06]"
+                  >
+                    {dashboardLabel}
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    onClick={() => setMobileOpen(false)}
+                    className="inline-flex min-h-[44px] items-center rounded-full border border-white/10 px-4 py-2 text-sm text-white/84 transition hover:bg-white/[0.06]"
+                  >
+                    {copy.header.login}
+                  </Link>
+                  <Link
+                    href="/challenge"
+                    onClick={() => setMobileOpen(false)}
+                    className="inline-flex min-h-[44px] items-center rounded-full bg-gold px-4 py-2 text-sm font-semibold text-ink transition hover:bg-[#e7cd92]"
+                  >
+                    {copy.header.freeJoin}
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

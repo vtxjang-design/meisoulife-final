@@ -26,6 +26,23 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     } = await supabase.auth.getUser();
 
     if (user) {
+      const { data: membership } = await supabase
+        .from("memberships")
+        .select("plan, status")
+        .eq("user_id", user.id)
+        .in("status", ["active", "trialing"])
+        .order("updated_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (membership?.plan === "basic") {
+        plan = "Basic";
+      } else if (membership?.plan === "growth") {
+        plan = "Growth";
+      } else if (membership?.plan === "inner_circle") {
+        plan = "Inner Circle";
+      }
+
       const { data: profile } = await supabase
         .from("users")
         .select("current_plan, candidate_leader, paid_days, check_in_count, helpful_comments, challenge_day")

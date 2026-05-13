@@ -56,7 +56,7 @@ export function AuthCard({ mode }: AuthCardProps) {
           throw error;
         }
 
-        router.push("/program/basic");
+        router.push("/dashboard");
       }
     } catch (_error) {
       setMessage(

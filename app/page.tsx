@@ -3,15 +3,19 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { AIRhythmCoach } from "@/components/ai-rhythm-coach";
+import { BrainOwnershipJourney } from "@/components/brain-ownership-journey";
 import { CheckoutButton } from "@/components/checkout-button";
 import { DailyRhythmCheck } from "@/components/daily-rhythm-check";
 import { DailyRhythmLayer } from "@/components/daily-rhythm-layer";
+import { FounderVisionSection } from "@/components/founder-vision-section";
 import { InstantMeditationSection } from "@/components/instant-meditation-section";
 import { LiveTogether } from "@/components/live-together";
 import { MobileCTA } from "@/components/mobile-cta";
 import { RhythmGarden } from "@/components/rhythm-garden";
 import { RhythmChallenge } from "@/components/rhythm-challenge";
 import { SectionHeading } from "@/components/section-heading";
+import { TogetherAwakeSection } from "@/components/together-awake-section";
+import { ZeroExperienceModal } from "@/components/zero-experience-modal";
 import { getChallengeRhythmProgress, type ChallengeRhythmProgress } from "@/lib/challenge-rhythm";
 import { useLanguage, languageButtons, useSiteCopy } from "@/lib/i18n";
 import { landingCopy } from "@/lib/landing-copy";
@@ -23,6 +27,48 @@ const AI_COACH_URL =
   process.env.NEXT_PUBLIC_AI_COACH_URL ||
   "https://chatgpt.com/g/g-69f968bc9a408191a3e5f943912666c0-quiet-rhythm-guide";
 const LINE_URL = process.env.NEXT_PUBLIC_LINE_URL || process.env.NEXT_PUBLIC_LINE_FREE_URL || "https://lin.ee/z8Lzvvs";
+
+const heroCopy = {
+  jp: {
+    eyebrow: "Digital Zero Park",
+    title: "1日1分、自分に戻る。",
+    supporting: "AI時代、脳の主人として生きる。",
+    subtitle: "瞑想を入口に、人間の本来価値を取り戻す Human Evolution OS。",
+    primary: "1分ZERO体験",
+    secondary: "無料で始める",
+    tertiary: "メンバーになる",
+    proof: ["Deep Forest Green", "Breath-led Return", "Together Awakening"],
+    visualCopy: "情報の波から少し離れ、\nZeroに戻る入口をひとつ。",
+    visualLabel: "Human Evolution OS",
+    visualAlt: "Forest light and stillness"
+  },
+  kr: {
+    eyebrow: "Digital Zero Park",
+    title: "하루 1분, 다시 나에게 돌아오기。",
+    supporting: "AI 시대, 뇌의 주인으로 살아가기。",
+    subtitle: "명상을 입구로 인간의 본래 가치를 회복하는 Human Evolution OS。",
+    primary: "1분 ZERO 체험",
+    secondary: "무료로 시작하기",
+    tertiary: "멤버 되기",
+    proof: ["Deep Forest Green", "Breath-led Return", "Together Awakening"],
+    visualCopy: "정보의 파도에서 잠시 벗어나,\nZero로 돌아오는 입구를 하나 둡니다.",
+    visualLabel: "Human Evolution OS",
+    visualAlt: "Forest light and stillness"
+  },
+  en: {
+    eyebrow: "Digital Zero Park",
+    title: "One minute a day, return to yourself.",
+    supporting: "Live as the owner of your brain in the AI era.",
+    subtitle: "A Human Evolution OS powered by meditation.",
+    primary: "1-Minute ZERO",
+    secondary: "Start Free",
+    tertiary: "Become a Member",
+    proof: ["Deep Forest Green", "Breath-led Return", "Together Awakening"],
+    visualCopy: "Step out of the information stream\nand return to Zero.",
+    visualLabel: "Human Evolution OS",
+    visualAlt: "Forest light and stillness"
+  }
+} as const;
 
 function MembershipCard({
   plan,
@@ -86,7 +132,9 @@ export default function HomePage() {
   const { language, setLanguage } = useLanguage();
   const site = useSiteCopy();
   const landing = landingCopy[language];
+  const hero = heroCopy[language];
   const membershipPlans = useLandingMembership();
+  const [zeroOpen, setZeroOpen] = useState(false);
   const [challengeProgress, setChallengeProgress] = useState<ChallengeRhythmProgress>({
     currentDay: 1,
     completedDays: []
@@ -123,7 +171,7 @@ export default function HomePage() {
         <div className="grid gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
           <div className="space-y-8">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm uppercase tracking-[0.34em] text-gold/85">{landing.hero.eyebrow}</p>
+              <p className="text-sm uppercase tracking-[0.34em] text-gold/85">{hero.eyebrow}</p>
               <div className="inline-flex w-fit rounded-full border border-white/10 bg-white/[0.03] p-1">
                 {languageButtons.map((button) => (
                   <button
@@ -142,29 +190,36 @@ export default function HomePage() {
 
             <div className="space-y-5">
               <h1 className="whitespace-pre-line font-serif text-5xl leading-[1.18] text-white sm:text-6xl sm:leading-[1.2] lg:text-7xl lg:leading-[1.18]">
-                {landing.hero.title}
+                {hero.title}
               </h1>
-              <p className="whitespace-pre-line text-xl leading-9 text-gold/82 sm:text-[30px] sm:leading-[1.55]">{landing.hero.supporting}</p>
-              <p className="max-w-3xl text-lg leading-8 text-white/68 sm:text-xl sm:leading-9">{landing.hero.subtitle}</p>
+              <p className="whitespace-pre-line text-xl leading-9 text-gold/82 sm:text-[30px] sm:leading-[1.55]">{hero.supporting}</p>
+              <p className="max-w-3xl text-lg leading-8 text-white/68 sm:text-xl sm:leading-9">{hero.subtitle}</p>
             </div>
 
-            <div className="flex flex-col gap-3 pt-1 sm:flex-row">
-              <Link
-                href="/challenge"
+            <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:flex-wrap">
+              <button
+                type="button"
+                onClick={() => setZeroOpen(true)}
                 className="inline-flex min-h-[58px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink shadow-[0_18px_36px_rgba(212,186,117,0.22)] transition duration-300 hover:scale-[1.01] hover:bg-[#e7cd92]"
               >
-                {landing.hero.primary}
-              </Link>
+                {hero.primary}
+              </button>
               <Link
-                href="#one-minute-experience"
+                href="/challenge"
                 className="inline-flex min-h-[58px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-4 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
               >
-                {landing.hero.secondary}
+                {hero.secondary}
+              </Link>
+              <Link
+                href="/pricing"
+                className="inline-flex min-h-[58px] items-center justify-center rounded-full border border-gold/20 bg-gold/[0.08] px-6 py-4 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12]"
+              >
+                {hero.tertiary}
               </Link>
             </div>
 
             <div className="flex flex-wrap gap-2 pt-1">
-              {landing.hero.proof.map((item) => (
+              {hero.proof.map((item) => (
                 <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-white/58">
                   {item}
                 </span>
@@ -175,18 +230,25 @@ export default function HomePage() {
           <div className="relative overflow-hidden rounded-[36px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.18),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] p-5 sm:p-6">
             <img
               src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1400&q=80"
-              alt="Quiet meditation"
+              alt={hero.visualAlt}
               className="h-[440px] w-full rounded-[28px] object-cover sm:h-[520px]"
             />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,18,24,0.12),rgba(5,18,24,0.64))]" />
+            <div className="absolute inset-0 flex items-center justify-center px-8">
+              <button
+                type="button"
+                onClick={() => setZeroOpen(true)}
+                className="flex h-56 w-56 items-center justify-center rounded-full border border-gold/28 bg-[radial-gradient(circle,rgba(212,186,117,0.24),rgba(212,186,117,0.08)_55%,rgba(6,17,29,0.15)_72%)] shadow-[0_0_120px_rgba(212,186,117,0.16)] transition duration-300 hover:scale-[1.01]"
+              >
+                <div className="text-center">
+                  <p className="text-xs uppercase tracking-[0.28em] text-gold/84">{hero.visualLabel}</p>
+                  <p className="mt-4 font-serif text-6xl text-white sm:text-7xl">ZERO</p>
+                </div>
+              </button>
+            </div>
             <div className="absolute inset-x-10 bottom-10 rounded-[28px] border border-white/10 bg-[#06111d]/72 p-5 backdrop-blur">
-              <p className="mb-4 text-sm leading-7 text-white/72">
-                {language === "jp"
-                  ? "いつでも戻れる場所があるだけで、今日の呼吸は少しやわらかくなります。"
-                  : language === "kr"
-                    ? "언제든 돌아올 수 있는 자리가 있다는 것만으로도 오늘의 호흡은 조금 부드러워집니다."
-                    : "Just knowing there is a place to return can make today’s breath a little softer."}
-              </p>
-              <div className="grid gap-3 sm:grid-cols-3">
+              <p className="whitespace-pre-line text-sm leading-7 text-white/72">{hero.visualCopy}</p>
+              <div className="mt-4 grid gap-3 sm:grid-cols-3">
                 {liveSummary.map((item, index) => (
                   <div key={index} className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
                     <p className="text-xs uppercase tracking-[0.22em] text-white/42">
@@ -198,15 +260,15 @@ export default function HomePage() {
                             : "time anchor"
                         : index === 1
                           ? language === "jp"
-                            ? "7 day trial"
+                            ? "7 day flow"
                             : language === "kr"
                               ? "7일 리듬"
-                              : "7 day trial"
+                              : "7 day flow"
                           : language === "jp"
-                            ? "streak"
+                            ? "return"
                             : language === "kr"
-                              ? "streak"
-                              : "streak"}
+                              ? "return"
+                              : "return"}
                     </p>
                     <p className="mt-3 text-lg text-white/84">{item}</p>
                   </div>
@@ -225,58 +287,15 @@ export default function HomePage() {
 
       <LiveTogether copy={landing.live} />
 
+      <BrainOwnershipJourney />
+
       <DailyRhythmLayer copy={landing.dailyRhythmLayer} />
 
       <AIRhythmCoach copy={landing.coach} coachUrl={AI_COACH_URL} />
 
-      <section className="section-shell mt-24">
-        <div className="rounded-[34px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.14),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-6 py-10 sm:px-10">
-          <div className="max-w-4xl">
-            <p className="text-sm uppercase tracking-[0.28em] text-gold/84">{site.home.whyMeisoulife.label}</p>
-            <h2 className="mt-4 font-serif text-3xl leading-tight text-white sm:text-4xl">{site.home.whyMeisoulife.title}</h2>
-            <p className="mt-6 whitespace-pre-line text-base leading-8 text-white/72 sm:text-lg">
-              {site.home.whyMeisoulife.description}
-            </p>
-          </div>
+      <TogetherAwakeSection />
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {site.home.whyMeisoulife.cards.map((item) => (
-              <article key={item} className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
-                <p className="text-sm leading-7 text-white/82">{item}</p>
-              </article>
-            ))}
-          </div>
-
-          <div className="mt-8 grid gap-6 lg:grid-cols-[0.92fr_1.08fr]">
-            <div className="rounded-[28px] border border-gold/16 bg-gold/[0.06] p-6 sm:p-7">
-              <p className="text-xs uppercase tracking-[0.24em] text-gold/82">{site.home.whyMeisoulife.founderMessageTitle}</p>
-              <p className="mt-5 whitespace-pre-line font-serif text-xl leading-9 text-white/90 sm:text-2xl sm:leading-10">
-                {site.home.whyMeisoulife.founderMessage}
-              </p>
-              <p className="mt-5 text-sm uppercase tracking-[0.22em] text-white/54">{site.home.whyMeisoulife.founderSignature}</p>
-            </div>
-
-            <div className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6 sm:p-7">
-              <p className="text-xs uppercase tracking-[0.24em] text-gold/80">{site.home.founder.contributionsTitle}</p>
-              <p className="mt-4 text-lg leading-8 text-white/86">{site.home.founder.founderName}</p>
-              <p className="mt-4 text-sm leading-7 text-white/68">{site.home.founder.founderDescription}</p>
-              <div className="mt-6 space-y-3">
-                {site.home.founder.contributions.map((item) => (
-                  <div key={item} className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4">
-                    <p className="text-sm leading-7 text-white/72">{item}</p>
-                  </div>
-                ))}
-              </div>
-              <Link
-                href="/brain-education#founder-message"
-                className="mt-6 inline-flex min-h-[54px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
-              >
-                {site.home.whyMeisoulife.button}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <FounderVisionSection />
 
       <RhythmGarden
         copy={landing.garden}
@@ -284,21 +303,6 @@ export default function HomePage() {
         completedToday={returnRhythm.isCompletedToday}
         mood={gardenMood}
       />
-
-      <section className="section-shell mt-24">
-        <SectionHeading
-          eyebrow={site.home.platformConcept.eyebrow}
-          title={site.home.platformConcept.title}
-          description={site.home.platformConcept.description}
-        />
-        <div className="mt-8 grid gap-4 lg:grid-cols-4">
-          {site.home.platformConcept.items.map((item) => (
-            <article key={item} className="rounded-[28px] border border-white/10 bg-white/[0.04] p-6">
-              <p className="text-sm leading-8 text-white/72">{item}</p>
-            </article>
-          ))}
-        </div>
-      </section>
 
       <section id="membership" className="section-shell mt-24">
         <SectionHeading
@@ -399,6 +403,7 @@ export default function HomePage() {
       </section>
 
       <MobileCTA copy={landing.mobile} />
+      <ZeroExperienceModal open={zeroOpen} onClose={() => setZeroOpen(false)} />
     </div>
   );
 }

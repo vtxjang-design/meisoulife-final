@@ -86,6 +86,7 @@ export async function POST(request: Request) {
     const metadata = {
       user_id: user.id,
       userId: user.id,
+      email: user.email || "",
       plan: membershipPlan,
       tier: membershipPlan,
       language,
@@ -103,7 +104,7 @@ export async function POST(request: Request) {
           quantity: 1
         }
       ],
-      success_url: `${siteUrl}/membership/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${siteUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/#membership`,
       metadata,
       subscription_data: {

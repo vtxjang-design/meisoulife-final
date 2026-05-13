@@ -49,6 +49,38 @@ async function upsertMembership(record: MembershipUpsert) {
   });
 }
 
+async function syncUserPlan(record: {
+  userId?: string | null;
+  email?: string | null;
+  plan?: string | null;
+  status?: string | null;
+}) {
+  const supabase = getSupabaseAdminClient();
+
+  if (!supabase || !record.email) {
+    return;
+  }
+
+  const currentPlan = record.status === "active" || record.status === "trialing" ? record.plan || "free" : "free";
+  const { error } = await supabase.from("users").upsert(
+    {
+      auth_user_id: record.userId || null,
+      email: record.email,
+      current_plan: currentPlan
+    },
+    {
+      onConflict: "email"
+    }
+  );
+
+  if (error) {
+    console.warn("[stripe-webhook] user plan sync failed", {
+      email: record.email,
+      message: error.message
+    });
+  }
+}
+
 async function hasProcessedWebhookEvent(eventId: string) {
   const supabase = getSupabaseAdminClient();
 
@@ -141,6 +173,12 @@ async function handleCheckoutCompleted(stripe: Stripe, session: Stripe.Checkout.
     current_period_end: toIsoDate(getCurrentPeriodEnd(subscription)),
     updated_at: new Date().toISOString()
   });
+  await syncUserPlan({
+    userId,
+    email: session.customer_details?.email || session.customer_email || null,
+    plan,
+    status: "active"
+  });
 
   const customerEmail = session.customer_details?.email || session.customer_email || null;
 
@@ -192,6 +230,11 @@ async function handleInvoicePaid(stripe: Stripe, invoice: Stripe.Invoice) {
     current_period_end: toIsoDate(getCurrentPeriodEnd(subscription)),
     updated_at: new Date().toISOString()
   });
+  await syncUserPlan({
+    email: invoice.customer_email || null,
+    plan: subscription?.metadata?.plan || null,
+    status: "active"
+  });
 }
 
 async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
@@ -209,6 +252,12 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
     current_period_end: toIsoDate(getCurrentPeriodEnd(subscription)),
     updated_at: new Date().toISOString()
   });
+  await syncUserPlan({
+    userId: subscription.metadata?.user_id || null,
+    email: subscription.metadata?.email || null,
+    plan: subscription.metadata?.plan || null,
+    status: subscription.status
+  });
 }
 
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
@@ -221,6 +270,12 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     status: "canceled",
     current_period_end: toIsoDate(getCurrentPeriodEnd(subscription)),
     updated_at: new Date().toISOString()
+  });
+  await syncUserPlan({
+    userId: subscription.metadata?.user_id || null,
+    email: subscription.metadata?.email || null,
+    plan: subscription.metadata?.plan || null,
+    status: "canceled"
   });
 }
 
@@ -240,6 +295,11 @@ async function handleInvoiceFailed(stripe: Stripe, invoice: Stripe.Invoice) {
     status: "past_due",
     current_period_end: toIsoDate(getCurrentPeriodEnd(subscription)),
     updated_at: new Date().toISOString()
+  });
+  await syncUserPlan({
+    email: invoice.customer_email || null,
+    plan: subscription?.metadata?.plan || null,
+    status: "past_due"
   });
 }
 
