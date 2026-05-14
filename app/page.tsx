@@ -104,7 +104,7 @@ function MembershipCard({
         ) : null}
         {plan.key === "leader" ? (
           <CheckoutButton
-            plan="leader"
+            plan="growth"
             label={plan.cta}
             className="inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-white text-ink px-5 py-3 text-sm font-semibold transition duration-300 hover:bg-white/90"
             messageClassName="mt-2 text-sm text-white/52"
@@ -112,7 +112,7 @@ function MembershipCard({
         ) : null}
         {plan.key === "premium" ? (
           <CheckoutButton
-            plan="premium"
+            plan="inner-circle"
             label={plan.cta}
             className="inline-flex min-h-[52px] w-full items-center justify-center rounded-full border border-gold/35 bg-gold/10 px-5 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/15"
             messageClassName="mt-2 text-sm text-white/52"

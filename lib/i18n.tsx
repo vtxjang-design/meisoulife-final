@@ -782,6 +782,7 @@ export const siteCopy = {
       title: "お支払いが完了しました。",
       subtitle: "あなたの瞑想lifeメンバーシップが有効になりました。",
       body: "自分に戻るリズムが、今日からあなたの日常に始まります。",
+      emailSentNote: "確認メールをお送りしました。メールをご確認ください。",
       activeTierLabel: "Activated membership",
       planLabels: {
         basic: "Basic",
@@ -792,7 +793,8 @@ export const siteCopy = {
       lineButton: "LINEコミュニティへ",
       coachButton: "AIコーチを開く",
       rhythmButton: "今日のリズムへ戻る",
-      programButton: "メンバープログラムを開く"
+      programButton: "メンバープログラムを開く",
+      dashboardButton: "ダッシュボードへ"
     },
     membershipPage: {
       title: "メンバーシップのご案内",
@@ -1546,6 +1548,7 @@ export const siteCopy = {
       title: "결제가 완료되었습니다.",
       subtitle: "당신의 명상life 멤버십이 활성화되었습니다.",
       body: "자신에게 돌아오는 리듬이 오늘부터 당신의 일상 안에서 시작됩니다.",
+      emailSentNote: "확인 메일을 보내드렸습니다. 메일함을 확인해 주세요.",
       activeTierLabel: "Activated membership",
       planLabels: {
         basic: "Basic",
@@ -1556,7 +1559,8 @@ export const siteCopy = {
       lineButton: "LINE 커뮤니티로",
       coachButton: "AI 코치 열기",
       rhythmButton: "오늘의 리듬으로 돌아가기",
-      programButton: "멤버 프로그램 열기"
+      programButton: "멤버 프로그램 열기",
+      dashboardButton: "대시보드로"
     },
     membershipPage: {
       title: "멤버십 안내",
@@ -2310,6 +2314,7 @@ export const siteCopy = {
       title: "Your payment is complete.",
       subtitle: "Your Meisoulife membership is now active.",
       body: "A rhythm of returning to yourself begins in your daily life from today.",
+      emailSentNote: "A confirmation email has been sent to you.",
       activeTierLabel: "Activated membership",
       planLabels: {
         basic: "Basic",
@@ -2320,7 +2325,8 @@ export const siteCopy = {
       lineButton: "Go to the LINE community",
       coachButton: "Open the AI coach",
       rhythmButton: "Return to today’s rhythm",
-      programButton: "Open the member program"
+      programButton: "Open the member program",
+      dashboardButton: "Go to dashboard"
     },
     membershipPage: {
       title: "Membership",

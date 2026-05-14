@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import { sendPaymentConfirmationEmail } from "@/lib/resend";
+import { sendAdminPaymentNotification, sendPaymentConfirmationEmail } from "@/lib/resend";
 import { getStripeClient } from "@/lib/stripe";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 
@@ -46,6 +46,12 @@ async function upsertMembership(record: MembershipUpsert) {
 
   await supabase.from("memberships").upsert(record, {
     onConflict: "stripe_subscription_id"
+  });
+  console.log("[stripe-webhook] Membership updated", {
+    email: record.email || null,
+    plan: record.plan || null,
+    status: record.status || null,
+    subscriptionId: record.stripe_subscription_id || null
   });
 }
 
@@ -210,6 +216,24 @@ async function handleCheckoutCompleted(stripe: Stripe, session: Stripe.Checkout.
       email: customerEmail,
       error: error instanceof Error ? error.message : error
     });
+  }
+
+  if (process.env.ADMIN_EMAIL) {
+    try {
+      await sendAdminPaymentNotification({
+        customerEmail,
+        customerName: session.customer_details?.name || null,
+        plan,
+        amountTotal: session.amount_total ?? null,
+        currency: session.currency ?? null
+      });
+    } catch (error) {
+      console.error("[stripe-webhook] admin email failed with error", {
+        sessionId: session.id,
+        email: customerEmail,
+        error: error instanceof Error ? error.message : error
+      });
+    }
   }
 }
 

@@ -1,28 +1,79 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSiteCopy } from "@/lib/i18n";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 type CheckoutButtonProps = {
-  plan: "basic" | "leader" | "premium";
+  plan: "basic" | "growth" | "inner-circle";
   label: string;
   className?: string;
   messageClassName?: string;
 };
 
+const FRIENDLY_CHECKOUT_ERROR = "決済設定を確認中です。しばらくして再度お試しください。";
+const PLAN_UNAVAILABLE_MESSAGE = "このプランは現在準備中です";
+
 export function CheckoutButton({ plan, label, className, messageClassName }: CheckoutButtonProps) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [available, setAvailable] = useState(true);
+  const [checkedAvailability, setCheckedAvailability] = useState(false);
   const router = useRouter();
   const copy = useSiteCopy();
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadAvailability() {
+      try {
+        const response = await fetch("/api/stripe/checkout", {
+          method: "GET",
+          cache: "no-store"
+        });
+
+        if (!response.ok) {
+          return;
+        }
+
+        const data = (await response.json()) as {
+          stripeConfigured?: boolean;
+          plans?: Partial<Record<"basic" | "growth" | "inner-circle", boolean>>;
+        };
+
+        if (!active) {
+          return;
+        }
+
+        const isAvailable = Boolean(data.stripeConfigured && data.plans?.[plan]);
+        setAvailable(isAvailable);
+        setCheckedAvailability(true);
+        if (!isAvailable) {
+          setMessage(PLAN_UNAVAILABLE_MESSAGE);
+        }
+      } catch (error) {
+        console.error("[checkout-button] failed to load checkout availability", error);
+      }
+    }
+
+    loadAvailability();
+
+    return () => {
+      active = false;
+    };
+  }, [plan]);
 
   async function handleCheckout() {
     setLoading(true);
     setMessage("");
 
     try {
+      if (checkedAvailability && !available) {
+        setMessage(PLAN_UNAVAILABLE_MESSAGE);
+        return;
+      }
+
       const supabase = getSupabaseBrowserClient();
 
       if (!supabase) {
@@ -49,7 +100,7 @@ export function CheckoutButton({ plan, label, className, messageClassName }: Che
       });
 
       const data = (await response.json()) as {
-        url?: string;
+        checkoutUrl?: string;
         error?: string;
         message?: string;
       };
@@ -63,20 +114,20 @@ export function CheckoutButton({ plan, label, className, messageClassName }: Che
         return;
       }
 
-      if (!response.ok || !data.url) {
+      if (!response.ok || !data.checkoutUrl) {
         console.error("[checkout-button] checkout session creation failed", {
           plan,
           responseStatus: response.status,
           data
         });
-        setMessage(data.error || data.message || copy.common.comingSoon);
+        setMessage(data.error || data.message || FRIENDLY_CHECKOUT_ERROR);
         return;
       }
 
-      window.location.href = data.url;
+      window.location.href = data.checkoutUrl;
     } catch (error) {
       console.error("[checkout-button] unexpected checkout error", error);
-      setMessage(copy.common.comingSoon);
+      setMessage(FRIENDLY_CHECKOUT_ERROR);
     } finally {
       setLoading(false);
     }
@@ -87,7 +138,7 @@ export function CheckoutButton({ plan, label, className, messageClassName }: Che
       <button
         type="button"
         onClick={handleCheckout}
-        disabled={loading}
+        disabled={loading || (checkedAvailability && !available)}
         className={
           className ||
           "rounded-md bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"

@@ -118,26 +118,20 @@ function buildHtmlBody(input: PaymentConfirmationEmailInput) {
   `;
 }
 
-export async function sendPaymentConfirmationEmail(input: PaymentConfirmationEmailInput) {
+async function sendEmail(params: {
+  to: string[];
+  subject: string;
+  text: string;
+  html: string;
+}) {
   const apiKey = process.env.RESEND_API_KEY;
 
   if (!apiKey) {
-    console.warn("[resend] skipped payment confirmation email", {
-      reason: "missing_api_key",
-      email: input.email
-    });
+    console.warn("[resend] skipped email", { reason: "missing_api_key", to: params.to });
     return { sent: false as const, skipped: true as const };
   }
 
-  const language = normalizeLanguage(input.language);
   const from = process.env.RESEND_FROM_EMAIL || "Meisoulife <onboarding@resend.dev>";
-
-  console.log("[resend] payment confirmation email sending started", {
-    email: input.email,
-    language,
-    from,
-    plan: input.plan ?? null
-  });
 
   // If hello@meisoulife.com is not verified in Resend yet, use a verified onboarding/testing sender here.
   const response = await fetch(RESEND_API_URL, {
@@ -148,31 +142,124 @@ export async function sendPaymentConfirmationEmail(input: PaymentConfirmationEma
     },
     body: JSON.stringify({
       from,
-      to: [input.email],
-      subject: buildSubject(language),
-      text: buildTextBody(input),
-      html: buildHtmlBody(input)
+      to: params.to,
+      subject: params.subject,
+      text: params.text,
+      html: params.html
     })
   });
 
   if (!response.ok) {
     const errorText = await response.text();
-    console.error("[resend] payment confirmation email failed", {
-      email: input.email,
-      status: response.status,
-      errorText
-    });
     throw new Error(`Resend API failed: ${response.status} ${errorText}`);
   }
 
   const data = await response.json();
-  console.log("[resend] payment confirmation email sent successfully", {
+  return { sent: true as const, id: data?.id ?? null };
+}
+
+export async function sendPaymentConfirmationEmail(input: PaymentConfirmationEmailInput) {
+  const language = normalizeLanguage(input.language);
+
+  console.log("[resend] payment confirmation email sending started", {
     email: input.email,
-    id: data?.id ?? null,
-    plan: input.plan ?? null,
-    amountTotal: input.amountTotal ?? null,
-    currency: input.currency ?? null
+    language,
+    plan: input.plan ?? null
   });
 
-  return { sent: true as const, id: data?.id ?? null };
+  try {
+    const result = await sendEmail({
+      to: [input.email],
+      subject: buildSubject(language),
+      text: buildTextBody(input),
+      html: buildHtmlBody(input)
+    });
+
+    if (!result.sent) {
+      return result;
+    }
+
+    console.log("[resend] payment confirmation email sent successfully", {
+      email: input.email,
+      id: result.id ?? null,
+      plan: input.plan ?? null,
+      amountTotal: input.amountTotal ?? null,
+      currency: input.currency ?? null
+    });
+
+    return result;
+  } catch (error) {
+    console.error("[resend] payment confirmation email failed", {
+      email: input.email,
+      error: error instanceof Error ? error.message : error
+    });
+    throw error;
+  }
+}
+
+export async function sendAdminPaymentNotification(input: {
+  customerEmail: string;
+  customerName?: string | null;
+  plan?: string | null;
+  amountTotal?: number | null;
+  currency?: string | null;
+}) {
+  const adminEmail = process.env.ADMIN_EMAIL;
+
+  if (!adminEmail) {
+    return { sent: false as const, skipped: true as const };
+  }
+
+  const subject = "New Meisoulife payment received";
+  const amount =
+    typeof input.amountTotal === "number"
+      ? `${(input.amountTotal / 100).toLocaleString("ja-JP")} ${String(input.currency || "JPY").toUpperCase()}`
+      : "Unknown amount";
+  const text = `A new Meisoulife payment was completed.
+
+Customer: ${input.customerName || "Unknown"}
+Email: ${input.customerEmail}
+Plan: ${input.plan || "Unknown"}
+Amount: ${amount}`;
+  const html = `
+    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:24px;background:#0b0f0d;color:#f4efe5;">
+      <div style="max-width:560px;margin:0 auto;border-radius:20px;padding:24px;background:#101816;border:1px solid rgba(244,239,229,0.08);">
+        <h1 style="margin:0 0 16px;font-size:20px;">New Meisoulife payment received</h1>
+        <p style="margin:0 0 10px;">Customer: ${escapeHtml(input.customerName || "Unknown")}</p>
+        <p style="margin:0 0 10px;">Email: ${escapeHtml(input.customerEmail)}</p>
+        <p style="margin:0 0 10px;">Plan: ${escapeHtml(input.plan || "Unknown")}</p>
+        <p style="margin:0;">Amount: ${escapeHtml(amount)}</p>
+      </div>
+    </div>
+  `;
+
+  console.log("[resend] admin payment notification sending started", {
+    adminEmail,
+    customerEmail: input.customerEmail
+  });
+
+  try {
+    const result = await sendEmail({
+      to: [adminEmail],
+      subject,
+      text,
+      html
+    });
+
+    if (result.sent) {
+      console.log("[resend] admin payment notification sent successfully", {
+        adminEmail,
+        customerEmail: input.customerEmail
+      });
+    }
+
+    return result;
+  } catch (error) {
+    console.error("[resend] admin payment notification failed", {
+      adminEmail,
+      customerEmail: input.customerEmail,
+      error: error instanceof Error ? error.message : error
+    });
+    throw error;
+  }
 }

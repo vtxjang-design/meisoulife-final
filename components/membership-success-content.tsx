@@ -42,6 +42,9 @@ export function MembershipSuccessContent({ sessionId, tier, lineUrl, coachUrl }:
             <h1 className="font-serif text-4xl leading-tight text-white sm:text-5xl">{copy.title}</h1>
             <p className="mt-4 max-w-3xl text-base leading-8 text-white/74 sm:text-lg">{copy.subtitle}</p>
             <p className="mt-4 max-w-3xl text-base leading-8 text-white/64">{copy.body}</p>
+            <p className="mt-3 max-w-3xl text-sm leading-7 text-gold/82">
+              {copy.emailSentNote || "確認メールをお送りしました。メールをご確認ください。"}
+            </p>
           </div>
 
           <div className="mt-8 rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
@@ -86,6 +89,12 @@ export function MembershipSuccessContent({ sessionId, tier, lineUrl, coachUrl }:
               className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
             >
               {copy.programButton}
+            </Link>
+            <Link
+              href="/dashboard"
+              className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
+            >
+              {copy.dashboardButton || "ダッシュボードへ"}
             </Link>
           </div>
         </div>

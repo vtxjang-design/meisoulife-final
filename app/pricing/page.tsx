@@ -58,8 +58,8 @@ export default function PricingPage() {
 
             <div className="mt-6">
               {plan.key === "basic" ? <CheckoutButton plan="basic" label={plan.cta} /> : null}
-              {plan.key === "leader" ? <CheckoutButton plan="leader" label={plan.cta} /> : null}
-              {plan.key === "premium" ? <CheckoutButton plan="premium" label={plan.cta} /> : null}
+              {plan.key === "leader" ? <CheckoutButton plan="growth" label={plan.cta} /> : null}
+              {plan.key === "premium" ? <CheckoutButton plan="inner-circle" label={plan.cta} /> : null}
             </div>
           </article>
         ))}

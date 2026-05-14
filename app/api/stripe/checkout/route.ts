@@ -1,16 +1,22 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSiteUrl } from "@/lib/env";
-import { getPlanPriceId, getStripeClient, mapMembershipPlan, membershipPlans, normalizeCheckoutPlan } from "@/lib/stripe";
+import { getPlanConfig, getPlanPriceId, getStripeCheckoutAvailability, getStripeClient, normalizeCheckoutPlan } from "@/lib/stripe";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 const checkoutSchema = z.object({
-  plan: z.enum(["basic", "leader", "premium", "growth", "inner_circle"])
+  plan: z.enum(["basic", "leader", "premium", "growth", "inner_circle", "inner-circle"])
 });
+
+const FRIENDLY_CHECKOUT_ERROR = "決済設定を確認中です。しばらくして再度お試しください。";
 
 function resolveCheckoutLanguage(request: Request) {
   const acceptLanguage = request.headers.get("accept-language")?.toLowerCase() || "";
   return acceptLanguage.startsWith("ko") ? "ko" : "ja";
+}
+
+export async function GET() {
+  return NextResponse.json(getStripeCheckoutAvailability());
 }
 
 export async function POST(request: Request) {
@@ -18,13 +24,14 @@ export async function POST(request: Request) {
     const stripe = getStripeClient();
     const payload = checkoutSchema.parse(await request.json());
     const checkoutPlan = normalizeCheckoutPlan(payload.plan);
-    const config = membershipPlans[checkoutPlan];
+    const config = getPlanConfig(checkoutPlan);
     const supabase = await getSupabaseServerClient();
 
     if (!stripe) {
+      console.error("[stripe-checkout] missing STRIPE_SECRET_KEY or invalid Stripe secret format");
       return NextResponse.json(
         {
-          error: "Stripe checkout is not configured yet."
+          error: FRIENDLY_CHECKOUT_ERROR
         },
         {
           status: 503
@@ -37,10 +44,10 @@ export async function POST(request: Request) {
     if (!priceConfig) {
       return NextResponse.json(
         {
-          error: `Missing Stripe price ID for ${config.name}.`
+          error: "このプランは現在準備中です"
         },
         {
-          status: 400
+          status: 503
         }
       );
     }
@@ -81,7 +88,7 @@ export async function POST(request: Request) {
     });
 
     const siteUrl = getSiteUrl();
-    const membershipPlan = mapMembershipPlan(checkoutPlan);
+    const membershipPlan = config.membershipPlan;
     const language = resolveCheckoutLanguage(request);
     const metadata = {
       user_id: user.id,
@@ -98,6 +105,7 @@ export async function POST(request: Request) {
       mode: "subscription",
       payment_method_types: ["card"],
       customer_email: user.email,
+      customer_creation: "always",
       line_items: [
         {
           price: priceConfig.priceId,
@@ -108,11 +116,16 @@ export async function POST(request: Request) {
       cancel_url: `${siteUrl}/#membership`,
       metadata,
       subscription_data: {
-        metadata
+        metadata: {
+          user_id: user.id,
+          email: user.email || "",
+          plan: membershipPlan,
+          tier: membershipPlan
+        }
       }
     });
 
-    console.log("[stripe-checkout] session created", {
+    console.log("[stripe-checkout] Stripe checkout session created", {
       userId: user.id,
       metadata,
       sessionId: session.id,
@@ -133,13 +146,13 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       ok: true,
-      url: session.url
+      checkoutUrl: session.url
     });
   } catch (error) {
     console.error("[stripe-checkout] failed", error);
     return NextResponse.json(
       {
-        error: error instanceof Error ? error.message : "Checkout failed"
+        error: FRIENDLY_CHECKOUT_ERROR
       },
       {
         status: 400
