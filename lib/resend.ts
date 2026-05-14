@@ -131,7 +131,7 @@ async function sendEmail(params: {
     return { sent: false as const, skipped: true as const };
   }
 
-  const from = process.env.RESEND_FROM_EMAIL || "Meisoulife <onboarding@resend.dev>";
+  const from = process.env.RESEND_FROM_EMAIL || process.env.FROM_EMAIL || "Meisoulife <onboarding@resend.dev>";
 
   // If hello@meisoulife.com is not verified in Resend yet, use a verified onboarding/testing sender here.
   const response = await fetch(RESEND_API_URL, {

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSiteUrl } from "@/lib/env";
-import { getPlanConfig, getPlanPriceId, getStripeCheckoutAvailability, getStripeClient, normalizeCheckoutPlan } from "@/lib/stripe";
+import { getPlanConfig, getPlanPriceId, getStripeClient, normalizeCheckoutPlan } from "@/lib/stripe";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 const checkoutSchema = z.object({
@@ -13,10 +13,6 @@ const FRIENDLY_CHECKOUT_ERROR = "決済設定を確認中です。しばらく�
 function resolveCheckoutLanguage(request: Request) {
   const acceptLanguage = request.headers.get("accept-language")?.toLowerCase() || "";
   return acceptLanguage.startsWith("ko") ? "ko" : "ja";
-}
-
-export async function GET() {
-  return NextResponse.json(getStripeCheckoutAvailability());
 }
 
 export async function POST(request: Request) {
@@ -52,38 +48,27 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!supabase) {
-      return NextResponse.json(
-        {
-          error: "Supabase auth is not configured yet."
-        },
-        {
-          status: 503
-        }
-      );
-    }
+    let userId = "";
+    let userEmail = "";
 
-    const {
-      data: { user }
-    } = await supabase.auth.getUser();
+    if (supabase) {
+      try {
+        const {
+          data: { user }
+        } = await supabase.auth.getUser();
 
-    if (!user) {
-      console.error("[stripe-checkout] missing authenticated user", {
-        plan: payload.plan
-      });
-      return NextResponse.json(
-        {
-          error: "Authentication required. Please log in again before continuing checkout."
-        },
-        {
-          status: 401
+        if (user) {
+          userId = user.id;
+          userEmail = user.email || "";
         }
-      );
+      } catch (error) {
+        console.warn("[stripe-checkout] unable to load Supabase session", error);
+      }
     }
 
     console.log("[stripe-checkout] authenticated user", {
-      userId: user.id,
-      email: user.email,
+      userId: userId || null,
+      email: userEmail || null,
       plan: checkoutPlan
     });
 
@@ -91,9 +76,9 @@ export async function POST(request: Request) {
     const membershipPlan = config.membershipPlan;
     const language = resolveCheckoutLanguage(request);
     const metadata = {
-      user_id: user.id,
-      userId: user.id,
-      email: user.email || "",
+      user_id: userId,
+      userId: userId,
+      email: userEmail,
       plan: membershipPlan,
       tier: membershipPlan,
       language,
@@ -104,21 +89,20 @@ export async function POST(request: Request) {
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       payment_method_types: ["card"],
-      customer_email: user.email,
-      customer_creation: "always",
+      customer_email: userEmail || undefined,
       line_items: [
         {
           price: priceConfig.priceId,
           quantity: 1
         }
       ],
-      success_url: `${siteUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${siteUrl}/#membership`,
+      success_url: `${siteUrl}/success`,
+      cancel_url: `${siteUrl}/pricing`,
       metadata,
       subscription_data: {
         metadata: {
-          user_id: user.id,
-          email: user.email || "",
+          user_id: userId,
+          email: userEmail,
           plan: membershipPlan,
           tier: membershipPlan
         }
@@ -126,7 +110,7 @@ export async function POST(request: Request) {
     });
 
     console.log("[stripe-checkout] Stripe checkout session created", {
-      userId: user.id,
+      userId: userId || null,
       metadata,
       sessionId: session.id,
       priceEnvKey: priceConfig.envKey,
