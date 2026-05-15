@@ -16,6 +16,7 @@ export function CheckoutButton({ plan, label, className, messageClassName }: Che
   const [message, setMessage] = useState("");
 
   async function handleCheckout() {
+    console.log("checkout clicked", plan);
     setLoading(true);
     setMessage("");
 
@@ -30,12 +31,14 @@ export function CheckoutButton({ plan, label, className, messageClassName }: Che
       });
 
       const data = (await response.json()) as {
+        url?: string;
         checkoutUrl?: string;
         error?: string;
         message?: string;
       };
+      const checkoutUrl = data.url || data.checkoutUrl;
 
-      if (!response.ok || !data.checkoutUrl) {
+      if (!response.ok || !checkoutUrl) {
         console.error("[checkout-button] checkout session creation failed", {
           plan,
           responseStatus: response.status,
@@ -45,7 +48,7 @@ export function CheckoutButton({ plan, label, className, messageClassName }: Che
         return;
       }
 
-      window.location.href = data.checkoutUrl;
+      window.location.href = checkoutUrl;
     } catch (error) {
       console.error("[checkout-button] unexpected checkout error", error);
       setMessage(FRIENDLY_CHECKOUT_ERROR);
@@ -55,14 +58,14 @@ export function CheckoutButton({ plan, label, className, messageClassName }: Che
   }
 
   return (
-    <div className="relative z-20 space-y-2">
+    <div className="relative z-30 space-y-2">
       <button
         type="button"
         onClick={handleCheckout}
         disabled={loading}
         className={
           className ||
-          "rounded-md bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
+          "relative z-30 cursor-pointer rounded-md bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
         }
       >
         {loading ? "決済ページへ移動中..." : label}

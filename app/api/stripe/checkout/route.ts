@@ -38,6 +38,7 @@ export async function POST(request: Request) {
     const priceConfig = getPlanPriceId(checkoutPlan);
 
     if (!priceConfig) {
+      console.error("[stripe-checkout] missing price id", { plan: checkoutPlan });
       return NextResponse.json(
         {
           error: "このプランは現在準備中です"
@@ -130,6 +131,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       ok: true,
+      url: session.url,
       checkoutUrl: session.url
     });
   } catch (error) {

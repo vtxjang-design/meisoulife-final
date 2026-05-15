@@ -56,7 +56,7 @@ export default function PricingPage() {
               ))}
             </ul>
 
-            <div className="mt-6">
+            <div className="relative z-30 mt-6">
               {plan.key === "basic" ? <CheckoutButton plan="basic" label={plan.cta} /> : null}
               {plan.key === "leader" ? <CheckoutButton plan="growth" label={plan.cta} /> : null}
               {plan.key === "premium" ? <CheckoutButton plan="inner-circle" label={plan.cta} /> : null}
