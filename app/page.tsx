@@ -378,6 +378,45 @@ export default function HomePage() {
       </section>
 
       <section className="section-shell mt-24">
+        <div className="relative overflow-hidden rounded-[36px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_24%),linear-gradient(180deg,#0a1716_0%,#0d1824_54%,#08131d_100%)] px-6 py-12 sm:px-10 sm:py-16">
+          <div className="pointer-events-none absolute inset-0">
+            <div className="absolute inset-x-[12%] top-8 h-32 rounded-full bg-gold/10 blur-3xl animate-meditation-fog" />
+            <div className="absolute -left-8 top-16 h-40 w-40 rounded-full bg-emerald-200/8 blur-3xl animate-meditation-ambient-breathe" />
+            <div className="absolute bottom-0 right-0 h-48 w-48 rounded-full bg-sky-200/8 blur-3xl animate-meditation-fog" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,12,16,0.12),rgba(4,12,16,0.34))]" />
+          </div>
+
+          <div className="relative z-10 mx-auto max-w-4xl text-center animate-meditation-fade-up">
+            <p className="text-sm uppercase tracking-[0.32em] text-gold/82">静かな場所 | Quiet Sanctuary</p>
+            <h2 className="mt-6 whitespace-pre-line font-serif text-3xl leading-[1.4] text-white sm:text-4xl sm:leading-[1.45] lg:text-5xl">
+              {"혼자 버티는 삶에서,\n함께 깨어나는 삶으로。"}
+            </h2>
+            <p className="mt-6 whitespace-pre-line text-base leading-8 text-white/72 sm:text-lg sm:leading-9">
+              {"자신을 내려놓을 때,\n우리는 비로소 연결되고 자유로워진다。"}
+            </p>
+
+            <div className="mx-auto mt-8 max-w-2xl rounded-[28px] border border-white/10 bg-white/[0.03] px-5 py-5 backdrop-blur">
+              <p className="text-sm leading-7 text-white/56 sm:text-base">
+                「허공을 아는 순간 생사가 하나가 된다。」
+              </p>
+              <p className="mt-2 text-sm leading-7 text-white/56 sm:text-base">
+                「虚空を知る瞬間、生死は一つになる。」
+              </p>
+            </div>
+
+            <div className="mt-8">
+              <Link
+                href="#one-minute-experience"
+                className="inline-flex min-h-[54px] items-center justify-center rounded-full border border-gold/20 bg-gold/[0.08] px-6 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12] hover:text-[#f1dfaf]"
+              >
+                静かに感じてみる
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-shell mt-24">
         <div className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-6 py-10 text-center sm:px-10">
           <h2 className="font-serif text-3xl text-white sm:text-4xl">{landing.mission.mission}</h2>
           <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-white/68">
