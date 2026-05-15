@@ -208,7 +208,8 @@ async function handleCheckoutCompleted(stripe: Stripe, session: Stripe.Checkout.
       language,
       plan,
       amountTotal: session.amount_total ?? null,
-      currency: session.currency ?? null
+      currency: session.currency ?? null,
+      subscriptionId: stripeSubscriptionId
     });
   } catch (error) {
     console.error("[stripe-webhook] resend email failed with error", {
