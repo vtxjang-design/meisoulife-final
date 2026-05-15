@@ -20,7 +20,7 @@ export function CheckoutButton({ plan, label, className, messageClassName }: Che
     setMessage("");
 
     try {
-      const response = await fetch("/api/create-checkout-session", {
+      const response = await fetch("/api/stripe/checkout", {
         method: "POST",
         credentials: "include",
         headers: {
