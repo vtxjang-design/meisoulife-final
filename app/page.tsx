@@ -196,7 +196,7 @@ export default function HomePage() {
               <p className="max-w-3xl text-lg leading-8 text-white/68 sm:text-xl sm:leading-9">{hero.subtitle}</p>
             </div>
 
-            <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:flex-wrap">
+            <div className="relative z-20 flex flex-col gap-3 pt-1 sm:flex-row sm:flex-wrap">
               <button
                 type="button"
                 onClick={() => setZeroOpen(true)}
@@ -231,14 +231,14 @@ export default function HomePage() {
             <img
               src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1400&q=80"
               alt={hero.visualAlt}
-              className="h-[440px] w-full rounded-[28px] object-cover sm:h-[520px]"
+              className="relative z-0 h-[440px] w-full rounded-[28px] object-cover sm:h-[520px]"
             />
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,18,24,0.12),rgba(5,18,24,0.64))]" />
-            <div className="absolute inset-0 flex items-center justify-center px-8">
+            <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(5,18,24,0.12),rgba(5,18,24,0.64))]" />
+            <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-8">
               <button
                 type="button"
                 onClick={() => setZeroOpen(true)}
-                className="flex h-56 w-56 items-center justify-center rounded-full border border-gold/28 bg-[radial-gradient(circle,rgba(212,186,117,0.24),rgba(212,186,117,0.08)_55%,rgba(6,17,29,0.15)_72%)] shadow-[0_0_120px_rgba(212,186,117,0.16)] transition duration-300 hover:scale-[1.01]"
+                className="pointer-events-auto flex h-56 w-56 items-center justify-center rounded-full border border-gold/28 bg-[radial-gradient(circle,rgba(212,186,117,0.24),rgba(212,186,117,0.08)_55%,rgba(6,17,29,0.15)_72%)] shadow-[0_0_120px_rgba(212,186,117,0.16)] transition duration-300 hover:scale-[1.01]"
               >
                 <div className="text-center">
                   <p className="text-xs uppercase tracking-[0.28em] text-gold/84">{hero.visualLabel}</p>
@@ -246,7 +246,7 @@ export default function HomePage() {
                 </div>
               </button>
             </div>
-            <div className="absolute inset-x-10 bottom-10 rounded-[28px] border border-white/10 bg-[#06111d]/72 p-5 backdrop-blur">
+            <div className="pointer-events-none absolute inset-x-10 bottom-10 z-10 rounded-[28px] border border-white/10 bg-[#06111d]/72 p-5 backdrop-blur">
               <p className="whitespace-pre-line text-sm leading-7 text-white/72">{hero.visualCopy}</p>
               <div className="mt-4 grid gap-3 sm:grid-cols-3">
                 {liveSummary.map((item, index) => (
@@ -321,12 +321,14 @@ export default function HomePage() {
                 </li>
               ))}
             </ul>
-            <Link
-              href="/challenge"
-              className="mt-6 inline-flex min-h-[54px] w-full items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
-            >
-              {landing.membership.freeCta}
-            </Link>
+            <div className="relative z-20 mt-6">
+              <Link
+                href="/challenge"
+                className="inline-flex min-h-[54px] w-full items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
+              >
+                {landing.membership.freeCta}
+              </Link>
+            </div>
           </article>
 
           <div className="grid gap-5 lg:grid-cols-3">
@@ -386,7 +388,7 @@ export default function HomePage() {
             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,12,16,0.12),rgba(4,12,16,0.34))]" />
           </div>
 
-          <div className="relative z-10 mx-auto max-w-4xl text-center animate-meditation-fade-up">
+          <div className="relative z-20 mx-auto max-w-4xl text-center animate-meditation-fade-up">
             <p className="text-sm uppercase tracking-[0.32em] text-gold/82">静かな場所 | Quiet Sanctuary</p>
             <h2 className="mt-6 whitespace-pre-line font-serif text-3xl leading-[1.4] text-white sm:text-4xl sm:leading-[1.45] lg:text-5xl">
               {"혼자 버티는 삶에서,\n함께 깨어나는 삶으로。"}
@@ -404,7 +406,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="mt-8">
+            <div className="relative z-20 mt-8">
               <Link
                 href="#one-minute-experience"
                 className="inline-flex min-h-[54px] items-center justify-center rounded-full border border-gold/20 bg-gold/[0.08] px-6 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12] hover:text-[#f1dfaf]"
@@ -422,7 +424,7 @@ export default function HomePage() {
           <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-white/68">
             {landing.live.description}
           </p>
-          <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+          <div className="relative z-20 mt-6 flex flex-col justify-center gap-3 sm:flex-row">
             <Link
               href="/challenge"
               className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"

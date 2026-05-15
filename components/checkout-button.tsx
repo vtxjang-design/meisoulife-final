@@ -55,7 +55,7 @@ export function CheckoutButton({ plan, label, className, messageClassName }: Che
   }
 
   return (
-    <div className="space-y-2">
+    <div className="relative z-20 space-y-2">
       <button
         type="button"
         onClick={handleCheckout}
