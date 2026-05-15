@@ -1856,29 +1856,13 @@ function renderStripeChecklist() {
 }
 
 async function loadStripeConfigStatus() {
-  if (window.location.protocol === "file:") {
-    renderStripeChecklist();
-    return;
-  }
-
-  try {
-    const response = await fetch("/api/stripe-config-status");
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || "Stripe config status unavailable");
-    }
-
-    stripeConfigStatus = data;
-  } catch (error) {
-    stripeConfigStatus = {
-      secretKey: false,
-      basic: false,
-      care: false,
-      master: false,
-      publicSiteUrl: false
-    };
-  }
+  stripeConfigStatus = {
+    secretKey: false,
+    basic: false,
+    care: false,
+    master: false,
+    publicSiteUrl: false
+  };
 
   renderStripeChecklist();
 }
@@ -1956,7 +1940,7 @@ async function startStripeCheckout(plan) {
   }
 
   try {
-    const response = await fetch("/api/create-checkout-session", {
+    const response = await fetch("/api/stripe/checkout", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
