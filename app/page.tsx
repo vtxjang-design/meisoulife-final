@@ -98,7 +98,7 @@ function MembershipCard({
           <CheckoutButton
             plan="basic"
             label={plan.cta}
-            className="inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
+            className="relative z-50 inline-flex min-h-[52px] w-full cursor-pointer items-center justify-center rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
             messageClassName="mt-2 text-sm text-white/52"
           />
         ) : null}
@@ -106,7 +106,7 @@ function MembershipCard({
           <CheckoutButton
             plan="growth"
             label={plan.cta}
-            className="inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-white text-ink px-5 py-3 text-sm font-semibold transition duration-300 hover:bg-white/90"
+            className="relative z-50 inline-flex min-h-[52px] w-full cursor-pointer items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-ink transition duration-300 hover:bg-white/90"
             messageClassName="mt-2 text-sm text-white/52"
           />
         ) : null}
@@ -114,7 +114,7 @@ function MembershipCard({
           <CheckoutButton
             plan="inner-circle"
             label={plan.cta}
-            className="inline-flex min-h-[52px] w-full items-center justify-center rounded-full border border-gold/35 bg-gold/10 px-5 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/15"
+            className="relative z-50 inline-flex min-h-[52px] w-full cursor-pointer items-center justify-center rounded-full border border-gold/35 bg-gold/10 px-5 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/15"
             messageClassName="mt-2 text-sm text-white/52"
           />
         ) : null}

@@ -56,10 +56,28 @@ export default function PricingPage() {
               ))}
             </ul>
 
-            <div className="relative z-30 mt-6">
-              {plan.key === "basic" ? <CheckoutButton plan="basic" label={plan.cta} /> : null}
-              {plan.key === "leader" ? <CheckoutButton plan="growth" label={plan.cta} /> : null}
-              {plan.key === "premium" ? <CheckoutButton plan="inner-circle" label={plan.cta} /> : null}
+            <div className="relative z-50 mt-6">
+              {plan.key === "basic" ? (
+                <CheckoutButton
+                  plan="basic"
+                  label={plan.cta}
+                  className="relative z-50 min-h-[52px] w-full cursor-pointer rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
+                />
+              ) : null}
+              {plan.key === "leader" ? (
+                <CheckoutButton
+                  plan="growth"
+                  label={plan.cta}
+                  className="relative z-50 min-h-[52px] w-full cursor-pointer rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
+                />
+              ) : null}
+              {plan.key === "premium" ? (
+                <CheckoutButton
+                  plan="inner-circle"
+                  label={plan.cta}
+                  className="relative z-50 min-h-[52px] w-full cursor-pointer rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
+                />
+              ) : null}
             </div>
           </article>
         ))}
