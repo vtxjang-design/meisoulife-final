@@ -60,23 +60,26 @@ export default function PricingPage() {
               {plan.key === "basic" ? (
                 <CheckoutButton
                   plan="basic"
-                  label={plan.cta}
                   className="relative z-50 min-h-[52px] w-full cursor-pointer rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
-                />
+                >
+                  月1,000円で続ける
+                </CheckoutButton>
               ) : null}
               {plan.key === "leader" ? (
                 <CheckoutButton
                   plan="growth"
-                  label={plan.cta}
                   className="relative z-50 min-h-[52px] w-full cursor-pointer rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
-                />
+                >
+                  月3,000円で深める
+                </CheckoutButton>
               ) : null}
               {plan.key === "premium" ? (
                 <CheckoutButton
                   plan="inner-circle"
-                  label={plan.cta}
                   className="relative z-50 min-h-[52px] w-full cursor-pointer rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
-                />
+                >
+                  月10,000円で支える
+                </CheckoutButton>
               ) : null}
             </div>
           </article>
