@@ -10,8 +10,8 @@ type MemberState = "guest" | "free" | "paid";
 
 const journeyCopy = {
   jp: {
-    eyebrow: "Brain Ownership Journey",
-    title: "脳の主人に戻る、5つの静かなステップ",
+    eyebrow: "Brain Education Journey",
+    title: "Brain Education Journey",
     description:
       "瞑想lifeは、ただ落ち着くための場所ではなく、自分の脳感覚を目覚めさせ、柔軟にし、浄化し、統合し、最後には脳の主人として生きるための Human Evolution OS です。",
     badge: {
@@ -31,15 +31,15 @@ const journeyCopy = {
         description: "呼吸と身体感覚を通して、情報より先に自分の感覚へ戻ります。"
       },
       {
-        title: "脳を柔軟にする",
+        title: "脳柔軟化",
         description: "固まった反応をゆるめ、今この瞬間を選び直す余白を育てます。"
       },
       {
-        title: "脳を浄化する",
+        title: "脳浄化",
         description: "疲れた思考を静かに手放し、心と身体の流れを整えていきます。"
       },
       {
-        title: "脳を統合する",
+        title: "脳統合",
         description: "感情、思考、身体の感覚を分けずにひとつのリズムとして結びます。"
       },
       {
@@ -49,8 +49,8 @@ const journeyCopy = {
     ]
   },
   kr: {
-    eyebrow: "Brain Ownership Journey",
-    title: "뇌의 주인으로 돌아가는, 다섯 가지 조용한 단계",
+    eyebrow: "Brain Education Journey",
+    title: "Brain Education Journey",
     description:
       "瞑想life는 단지 마음을 가라앉히는 곳이 아니라, 자신의 뇌감각을 깨우고, 유연하게 하고, 정화하고, 통합하고, 결국 뇌의 주인으로 살아가기 위한 Human Evolution OS입니다.",
     badge: {
@@ -88,8 +88,8 @@ const journeyCopy = {
     ]
   },
   en: {
-    eyebrow: "Brain Ownership Journey",
-    title: "Five quiet steps back to being the owner of your brain",
+    eyebrow: "Brain Education Journey",
+    title: "Brain Education Journey",
     description:
       "Meisoulife is more than a meditation site. It is a Human Evolution OS that helps you awaken brain sense, grow flexibility, purify, integrate, and live as the owner of your brain in the AI era.",
     badge: {

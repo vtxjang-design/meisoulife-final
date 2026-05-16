@@ -30,40 +30,40 @@ const LINE_URL = process.env.NEXT_PUBLIC_LINE_URL || process.env.NEXT_PUBLIC_LIN
 
 const heroCopy = {
   jp: {
-    eyebrow: "Digital Zero Park",
+    eyebrow: "Daily Rhythm Platform",
     title: "1日1分、自分に戻る。",
-    supporting: "AI時代、脳の主人として生きる。",
-    subtitle: "瞑想を入口に、人間の本来価値を取り戻す Human Evolution OS。",
-    primary: "1分ZERO体験",
-    secondary: "無料で始める",
+    supporting: "AI時代、情報に流されず、\n静けさの中で本来の自分へ。",
+    subtitle: "まずは軽く、やさしく。深さは、続ける中で自然に見つかっていきます。",
+    primary: "今日の1分を始める",
+    secondary: "無料・60秒・登録不要",
     tertiary: "メンバーになる",
-    proof: ["Deep Forest Green", "Breath-led Return", "Together Awakening"],
+    proof: ["calm", "easy", "emotionally safe"],
     visualCopy: "情報の波から少し離れ、\nZeroに戻る入口をひとつ。",
     visualLabel: "Human Evolution OS",
     visualAlt: "Forest light and stillness"
   },
   kr: {
-    eyebrow: "Digital Zero Park",
+    eyebrow: "Daily Rhythm Platform",
     title: "하루 1분, 다시 나에게 돌아오기。",
-    supporting: "AI 시대, 뇌의 주인으로 살아가기。",
-    subtitle: "명상을 입구로 인간의 본래 가치를 회복하는 Human Evolution OS。",
-    primary: "1분 ZERO 체험",
-    secondary: "무료로 시작하기",
+    supporting: "AI 시대, 정보에 휩쓸리지 않고,\n고요함 속에서 본래의 나에게.",
+    subtitle: "처음은 가볍게. 깊이는, 계속하는 흐름 속에서 자연스럽게 발견됩니다.",
+    primary: "오늘의 1분 시작하기",
+    secondary: "무료 · 60초 · 가입 불필요",
     tertiary: "멤버 되기",
-    proof: ["Deep Forest Green", "Breath-led Return", "Together Awakening"],
+    proof: ["calm", "easy", "emotionally safe"],
     visualCopy: "정보의 파도에서 잠시 벗어나,\nZero로 돌아오는 입구를 하나 둡니다.",
     visualLabel: "Human Evolution OS",
     visualAlt: "Forest light and stillness"
   },
   en: {
-    eyebrow: "Digital Zero Park",
+    eyebrow: "Daily Rhythm Platform",
     title: "One minute a day, return to yourself.",
-    supporting: "Live as the owner of your brain in the AI era.",
-    subtitle: "A Human Evolution OS powered by meditation.",
-    primary: "1-Minute ZERO",
-    secondary: "Start Free",
+    supporting: "In the AI era, do not be carried away by information.\nReturn to yourself in stillness.",
+    subtitle: "The entry stays light. The depth reveals itself naturally as you continue.",
+    primary: "Start today's minute",
+    secondary: "Free · 60 seconds · No signup",
     tertiary: "Become a Member",
-    proof: ["Deep Forest Green", "Breath-led Return", "Together Awakening"],
+    proof: ["calm", "easy", "emotionally safe"],
     visualCopy: "Step out of the information stream\nand return to Zero.",
     visualLabel: "Human Evolution OS",
     visualAlt: "Forest light and stillness"
@@ -165,6 +165,17 @@ export default function HomePage() {
     [challengeProgress.completedDays.length, returnRhythm.streakCount, returnRhythm.timeAnchor, site.home.rhythmSignals.anchors]
   );
 
+  function scrollToOneMinute() {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    document.querySelector("#one-minute-experience")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
   return (
     <div className="pb-28">
       <section className="section-shell pt-14 sm:pt-20">
@@ -199,17 +210,14 @@ export default function HomePage() {
             <div className="relative z-20 flex flex-col gap-3 pt-1 sm:flex-row sm:flex-wrap">
               <button
                 type="button"
-                onClick={() => setZeroOpen(true)}
+                onClick={scrollToOneMinute}
                 className="inline-flex min-h-[58px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink shadow-[0_18px_36px_rgba(212,186,117,0.22)] transition duration-300 hover:scale-[1.01] hover:bg-[#e7cd92]"
               >
                 {hero.primary}
               </button>
-              <Link
-                href="/challenge"
-                className="inline-flex min-h-[58px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-4 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
-              >
+              <span className="inline-flex min-h-[58px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-4 text-sm font-semibold text-white/76">
                 {hero.secondary}
-              </Link>
+              </span>
               <Link
                 href="/pricing"
                 className="inline-flex min-h-[58px] items-center justify-center rounded-full border border-gold/20 bg-gold/[0.08] px-6 py-4 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12]"

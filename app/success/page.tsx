@@ -83,16 +83,19 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
 
       <div className="mx-auto max-w-5xl">
         <div className="overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.14),transparent_24%),linear-gradient(180deg,#0a1716_0%,#0d1824_54%,#08131d_100%)] px-6 py-10 shadow-[0_28px_90px_rgba(7,17,31,0.28)] sm:px-10 sm:py-14">
-          <div className="mx-auto max-w-3xl text-center">
+          <div className="mx-auto max-w-3xl text-center animate-meditation-fade-up">
             <div className="inline-flex rounded-full border border-gold/20 bg-gold/[0.08] px-4 py-2 text-sm font-medium text-gold">
               🌿 Welcome
             </div>
-            <h1 className="mt-6 font-serif text-4xl leading-tight text-white sm:text-5xl">🌿 瞑想lifeへようこそ</h1>
+            <h1 className="mt-6 font-serif text-4xl leading-tight text-white sm:text-5xl">
+              ようこそ。<br className="hidden sm:block" />
+              あなたの新しいリズムが始まりました。
+            </h1>
             <p className="mt-5 whitespace-pre-line text-base leading-8 text-white/76 sm:text-lg sm:leading-9">
               {"これはコンテンツ購入ではなく、\n「自分に戻る静かなリズム」を育てる参加です。"}
             </p>
             <p className="mt-5 whitespace-pre-line font-serif text-2xl leading-[1.6] text-gold/90 sm:text-3xl">
-              {"ひとりで耐える人生から、\n共に目覚める人生へ。"}
+              {"一人で頑張る毎日から、\n共に目覚める日常へ。"}
             </p>
             <p className="mt-4 text-sm leading-7 text-white/58">
               確認メールをお送りしました。まずは今日の小さな一歩から始めましょう。
@@ -106,21 +109,27 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
             </div>
           ) : null}
 
+          <div className="mx-auto mt-8 max-w-3xl rounded-[24px] border border-white/10 bg-white/[0.03] p-5 text-center">
+            <p className="whitespace-pre-line text-sm leading-8 text-white/78">
+              {"ようこそ、瞑想lifeへ🌿\n\n今日から一緒に、\n1日1分。\n\n自分に戻る静かな習慣を\n始めましょう。"}
+            </p>
+          </div>
+
           <div className="mx-auto mt-8 grid max-w-4xl gap-3 sm:grid-cols-3">
-            <Link
-              href="/#one-minute-experience"
-              className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-gold px-5 py-4 text-center text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
-            >
-              今日の1分瞑想を始める
-            </Link>
             <a
               href={LINE_URL}
               target="_blank"
               rel="noopener noreferrer"
+              className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-gold px-5 py-4 text-center text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
+            >
+              LINEコミュニティへ
+            </a>
+            <Link
+              href="/#one-minute-meditation"
               className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-4 text-center text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
             >
-              LINEコミュニティに参加する
-            </a>
+              今日の1分を始める
+            </Link>
             <Link
               href="/member"
               className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-gold/20 bg-gold/[0.08] px-5 py-4 text-center text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12]"

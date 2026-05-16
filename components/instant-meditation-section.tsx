@@ -19,6 +19,7 @@ const TOTAL_SECONDS = 60;
 const INHALE_SECONDS = 4;
 const HOLD_SECONDS = 2;
 const EXHALE_SECONDS = 4;
+const MEDITATION_MOOD_STORAGE_KEY = "meisoulife_instant_meditation_mood";
 
 function getPhase(elapsedSeconds: number): Phase {
   const cycle = elapsedSeconds % (INHALE_SECONDS + HOLD_SECONDS + EXHALE_SECONDS);
@@ -40,6 +41,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [audioError, setAudioError] = useState("");
   const [hasUserGesture, setHasUserGesture] = useState(false);
+  const [selectedMood, setSelectedMood] = useState("");
   const audioContextRef = useRef<AudioContext | null>(null);
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -182,13 +184,37 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     });
   }
 
+  function handleMoodSelect(moodKey: string) {
+    setSelectedMood(moodKey);
+
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    window.localStorage.setItem(
+      MEDITATION_MOOD_STORAGE_KEY,
+      JSON.stringify({
+        moodKey,
+        recordedAt: new Date().toISOString()
+      })
+    );
+  }
+
   return (
     <section id="one-minute-experience" className="section-shell mt-16">
+      <div id="one-minute-meditation" />
       <div className="rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-8 shadow-[0_24px_80px_rgba(7,17,31,0.24)] sm:px-8 sm:py-10">
         <SectionHeading eyebrow={copy.eyebrow} title={copy.title} description={copy.description} align="center" />
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           {[copy.inhale, copy.hold, copy.exhale].map((item) => (
             <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-white/58">
+              {item}
+            </span>
+          ))}
+        </div>
+        <div className="mt-4 flex flex-wrap justify-center gap-2">
+          {copy.stages.map((item) => (
+            <span key={item} className="rounded-full border border-white/10 bg-white/[0.02] px-3 py-1.5 text-xs tracking-[0.08em] text-white/46">
               {item}
             </span>
           ))}
@@ -201,6 +227,30 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
             {secondsLeft === 0 ? (
               <div className="rounded-[24px] border border-gold/18 bg-gold/[0.06] p-5">
                 <p className="text-sm leading-7 text-white/82">{copy.completionMessage}</p>
+                <div className="mt-5">
+                  <p className="text-sm font-medium text-white/78">{copy.moodQuestion}</p>
+                  <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                    {copy.moods.map((mood) => {
+                      const selected = selectedMood === mood.key;
+
+                      return (
+                        <button
+                          key={mood.key}
+                          type="button"
+                          onClick={() => handleMoodSelect(mood.key)}
+                          className={`min-h-[48px] rounded-2xl border px-4 py-3 text-sm transition duration-300 ${
+                            selected
+                              ? "border-gold/35 bg-gold/12 text-white"
+                              : "border-white/10 bg-white/[0.03] text-white/72 hover:bg-white/[0.05] hover:text-white"
+                          }`}
+                        >
+                          {mood.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {selectedMood ? <p className="mt-3 text-sm leading-7 text-white/56">{copy.moodSaved}</p> : null}
+                </div>
               </div>
             ) : null}
             {audioError ? (

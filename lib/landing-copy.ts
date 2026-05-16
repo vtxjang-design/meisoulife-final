@@ -116,6 +116,13 @@ export type LandingCopy = {
     hold: string;
     exhale: string;
     sensory: string;
+    stages: string[];
+    moodQuestion: string;
+    moodSaved: string;
+    moods: Array<{
+      key: string;
+      label: string;
+    }>;
   };
   coach: {
     eyebrow: string;
@@ -490,7 +497,16 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       inhale: "吸って",
       hold: "止めて",
       exhale: "吐いて",
-      sensory: "読むより先に、まず呼吸へ。目を閉じたままでも、動きと振動でリズムを感じられます。"
+      sensory: "読むより先に、まず呼吸へ。目を閉じたままでも、動きと振動でリズムを感じられます。",
+      stages: ["10 sec breathing", "20 sec body awareness", "20 sec emotional calming", "10 sec gratitude"],
+      moodQuestion: "今の気分は？",
+      moodSaved: "小さな変化を受け取りました。",
+      moods: [
+        { key: "lighter", label: "🙂 少し楽になった" },
+        { key: "calm", label: "😌 落ち着いた" },
+        { key: "hard", label: "😢 まだ苦しい" },
+        { key: "again", label: "🔥 また始めたい" }
+      ]
     },
     coach: {
       eyebrow: "Quiet Rhythm Guide",
@@ -955,7 +971,16 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       inhale: "들이쉬기",
       hold: "멈추기",
       exhale: "내쉬기",
-      sensory: "읽기보다 먼저 호흡으로. 눈을 감은 채로도 움직임과 진동으로 리듬을 느낄 수 있습니다."
+      sensory: "읽기보다 먼저 호흡으로. 눈을 감은 채로도 움직임과 진동으로 리듬을 느낄 수 있습니다.",
+      stages: ["10초 호흡", "20초 몸 감각", "20초 감정 진정", "10초 감사"],
+      moodQuestion: "지금 기분은 어떤가요?",
+      moodSaved: "작은 변화를 잘 받아두었습니다.",
+      moods: [
+        { key: "lighter", label: "🙂 조금 가벼워졌어요" },
+        { key: "calm", label: "😌 차분해졌어요" },
+        { key: "hard", label: "😢 아직 힘들어요" },
+        { key: "again", label: "🔥 한 번 더 하고 싶어요" }
+      ]
     },
     coach: {
       eyebrow: "Quiet Rhythm Guide",
@@ -1415,7 +1440,16 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       inhale: "Inhale",
       hold: "Hold",
       exhale: "Exhale",
-      sensory: "Before reading, return to breath. The rhythm can be felt through motion and vibration, even with your eyes closed."
+      sensory: "Before reading, return to breath. The rhythm can be felt through motion and vibration, even with your eyes closed.",
+      stages: ["10 sec breathing", "20 sec body awareness", "20 sec emotional calming", "10 sec gratitude"],
+      moodQuestion: "How do you feel now?",
+      moodSaved: "Your small shift has been saved.",
+      moods: [
+        { key: "lighter", label: "🙂 A little lighter" },
+        { key: "calm", label: "😌 More settled" },
+        { key: "hard", label: "😢 Still struggling" },
+        { key: "again", label: "🔥 Want to begin again" }
+      ]
     },
     coach: {
       eyebrow: "Quiet Rhythm Guide",
