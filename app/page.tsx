@@ -137,6 +137,57 @@ const reassuranceCopy = {
   }
 } as const;
 
+const sanctuaryCopy = {
+  jp: {
+    eyebrow: "静かな場所 | Quiet Sanctuary",
+    title: "ひとりで耐える人生から、\n共に目覚める人生へ。",
+    description: "自分を少し手放すとき、\n私たちはつながり、\n自由になっていく。",
+    deep: "深く静けさに入るとき、\n生と死さえ、\nひとつの流れであることに気づく。",
+    cta: "静かに感じてみる"
+  },
+  kr: {
+    eyebrow: "고요한 장소 | Quiet Sanctuary",
+    title: "혼자 버티는 삶에서,\n함께 깨어나는 삶으로.",
+    description: "자신을 조금 내려놓을 때,\n우리는 연결되고,\n조금 더 자유로워집니다.",
+    deep: "깊은 고요함에 들어갈 때,\n삶과 죽음마저\n하나의 흐름임을 느끼게 됩니다.",
+    cta: "조용히 느껴보기"
+  },
+  en: {
+    eyebrow: "Quiet Sanctuary",
+    title: "From enduring alone,\ninto awakening together.",
+    description: "When we loosen our grip on the self,\nwe begin to connect,\nand become a little more free.",
+    deep: "When we enter deeper stillness,\neven life and death\ncan be felt as one flow.",
+    cta: "Feel it quietly"
+  }
+} as const;
+
+const aiAgeCopy = {
+  jp: {
+    eyebrow: "Human OS Upgrade",
+    title: "AI時代だからこそ、\n人間らしさを。",
+    description: "注意、感情、関係性、そして気づき。\nこれから大切になるものを、1分のリズムから育てていきます。",
+    memberButton: "瞑想lifeメンバーになる",
+    labels: ["現在の時間帯", "7日リズム", "戻る力"],
+    tableShift: "変化"
+  },
+  kr: {
+    eyebrow: "Human OS Upgrade",
+    title: "AI 시대일수록,\n인간다움이 더 중요합니다.",
+    description: "주의, 감정, 관계, 그리고 알아차림.\n앞으로 더 중요해질 것을 1분의 리듬에서부터 길러갑니다.",
+    memberButton: "명상life 멤버 되기",
+    labels: ["지금의 시간대", "7일 리듬", "돌아오는 힘"],
+    tableShift: "변화"
+  },
+  en: {
+    eyebrow: "Human OS Upgrade",
+    title: "In the AI age,\nhumanity matters more.",
+    description: "Attention, emotion, relationships, and awareness.\nGrow what matters most through a gentle one-minute rhythm.",
+    memberButton: "Become a Meisoulife member",
+    labels: ["time anchor", "7-day rhythm", "return"],
+    tableShift: "Shift"
+  }
+} as const;
+
 function MembershipCard({
   plan,
   className
@@ -203,6 +254,8 @@ export default function HomePage() {
   const healing = healingCopy[language];
   const testimonials = testimonialCopy[language];
   const reassurance = reassuranceCopy[language];
+  const sanctuary = sanctuaryCopy[language];
+  const aiAge = aiAgeCopy[language];
   const membershipPlans = useLandingMembership();
   const [zeroOpen, setZeroOpen] = useState(false);
   const [challengeProgress, setChallengeProgress] = useState<ChallengeRhythmProgress>({
@@ -341,23 +394,7 @@ export default function HomePage() {
                 {liveSummary.map((item, index) => (
                   <div key={index} className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
                     <p className="text-xs uppercase tracking-[0.22em] text-white/42">
-                      {index === 0
-                        ? language === "jp"
-                          ? "time anchor"
-                          : language === "kr"
-                            ? "현재 시간대"
-                            : "time anchor"
-                        : index === 1
-                          ? language === "jp"
-                            ? "7 day flow"
-                            : language === "kr"
-                              ? "7일 리듬"
-                              : "7 day flow"
-                          : language === "jp"
-                            ? "return"
-                            : language === "kr"
-                              ? "return"
-                              : "return"}
+                      {aiAge.labels[index]}
                     </p>
                     <p className="mt-3 text-lg text-white/84">{item}</p>
                   </div>
@@ -486,7 +523,7 @@ export default function HomePage() {
               <thead className="bg-white/[0.02] text-xs uppercase tracking-[0.22em] text-white/46">
                 <tr>
                   <th className="px-6 py-4">
-                    {language === "jp" ? "Shift" : language === "kr" ? "변화" : "Shift"}
+                    {aiAge.tableShift}
                   </th>
                   <th className="px-6 py-4">{landing.membership.freeLabel}</th>
                   <th className="px-6 py-4">{membershipPlans[1].name}</th>
@@ -534,17 +571,17 @@ export default function HomePage() {
           </div>
 
           <div className="relative z-20 mx-auto max-w-4xl text-center animate-meditation-fade-up">
-            <p className="text-sm uppercase tracking-[0.32em] text-gold/82">静かな場所 | Quiet Sanctuary</p>
+            <p className="text-sm uppercase tracking-[0.32em] text-gold/82">{sanctuary.eyebrow}</p>
             <h2 className="mt-6 whitespace-pre-line font-serif text-3xl leading-[1.4] text-white sm:text-4xl sm:leading-[1.45] lg:text-5xl">
-              {"혼자 버티는 삶에서,\n함께 깨어나는 삶으로。"}
+              {sanctuary.title}
             </h2>
             <p className="mt-6 whitespace-pre-line text-base leading-8 text-white/72 sm:text-lg sm:leading-9">
-              {"自分を少し手放すとき、\n私たちはつながり、\n自由になっていく。"}
+              {sanctuary.description}
             </p>
 
             <div className="mx-auto mt-8 max-w-2xl rounded-[28px] border border-white/10 bg-white/[0.03] px-5 py-5 backdrop-blur">
               <p className="whitespace-pre-line text-sm leading-8 text-white/56 sm:text-base">
-                {"深く静けさに入るとき、\n生と死さえ、\nひとつの流れであることに気づく。"}
+                {sanctuary.deep}
               </p>
             </div>
 
@@ -553,7 +590,7 @@ export default function HomePage() {
                 href="#one-minute-experience"
                 className="inline-flex min-h-[54px] items-center justify-center rounded-full border border-gold/20 bg-gold/[0.08] px-6 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12] hover:text-[#f1dfaf]"
               >
-                静かに感じてみる
+                {sanctuary.cta}
               </Link>
             </div>
           </div>
@@ -566,25 +603,17 @@ export default function HomePage() {
             {language === "jp" ? "Human OS Upgrade" : language === "kr" ? "Human OS Upgrade" : "Human OS Upgrade"}
           </p>
           <h2 className="mt-4 whitespace-pre-line font-serif text-3xl text-white sm:text-4xl">
-            {language === "jp"
-              ? "AI時代だからこそ、\n人間らしさを。"
-              : language === "kr"
-                ? "AI 시대일수록,\n인간다움이 더 중요합니다."
-                : "In the AI age,\nhumanity matters more."}
+            {aiAge.title}
           </h2>
           <p className="mx-auto mt-4 max-w-2xl whitespace-pre-line text-base leading-8 text-white/68">
-            {language === "jp"
-              ? "注意、感情、関係性、そして気づき。\nこれから大切になるものを、1分のリズムから育てていきます。"
-              : language === "kr"
-                ? "주의, 감정, 관계, 그리고 알아차림.\n앞으로 더 중요해질 것을 1분의 리듬에서부터 길러갑니다."
-                : "Attention, emotion, relationships, and awareness.\nGrow what matters most through a gentle one-minute rhythm."}
+            {aiAge.description}
           </p>
           <div className="relative z-20 mt-6 flex flex-col justify-center gap-3 sm:flex-row">
             <Link
               href="/pricing"
               className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
             >
-              {language === "jp" ? "瞑想lifeメンバーになる" : language === "kr" ? "명상life 멤버 되기" : "Become a Meisoulife member"}
+              {aiAge.memberButton}
             </Link>
             <a
               href={LINE_URL}

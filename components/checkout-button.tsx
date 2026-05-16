@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useState } from "react";
+import { useLanguage } from "@/lib/i18n";
 
 type CheckoutButtonProps = {
   plan: "basic" | "growth" | "inner-circle";
@@ -11,11 +12,20 @@ type CheckoutButtonProps = {
   messageClassName?: string;
 };
 
-const FRIENDLY_CHECKOUT_ERROR = "決済設定を確認中です。しばらくして再度お試しください。";
-
 export function CheckoutButton({ plan, label, children, className, messageClassName }: CheckoutButtonProps) {
+  const { language } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+
+  const friendlyCheckoutError =
+    language === "kr"
+      ? "결제 설정을 확인하고 있습니다. 잠시 후 다시 시도해주세요."
+      : language === "en"
+        ? "We are checking the checkout settings. Please try again in a moment."
+        : "決済設定を確認中です。しばらくして再度お試しください。";
+
+  const loadingLabel =
+    language === "kr" ? "결제 페이지로 이동 중..." : language === "en" ? "Redirecting to checkout..." : "決済ページへ移動中...";
 
   async function handleCheckout() {
     console.log("checkout clicked", plan);
@@ -47,14 +57,14 @@ export function CheckoutButton({ plan, label, children, className, messageClassN
           responseStatus: response.status,
           data
         });
-        setMessage(data.error || data.message || FRIENDLY_CHECKOUT_ERROR);
+        setMessage(data.error || data.message || friendlyCheckoutError);
         return;
       }
 
       window.location.href = checkoutUrl;
     } catch (error) {
       console.error("[checkout-button] unexpected checkout error", error);
-      setMessage(FRIENDLY_CHECKOUT_ERROR);
+      setMessage(friendlyCheckoutError);
     } finally {
       setLoading(false);
     }
@@ -71,7 +81,7 @@ export function CheckoutButton({ plan, label, children, className, messageClassN
           "relative z-50 cursor-pointer rounded-md bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
         }
       >
-        {loading ? "決済ページへ移動中..." : children || label}
+        {loading ? loadingLabel : children || label}
       </button>
       <p className={messageClassName || "text-sm text-zinc-500"}>
         {message || ""}

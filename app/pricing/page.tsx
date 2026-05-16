@@ -4,9 +4,10 @@ import Link from "next/link";
 import { CheckoutButton } from "@/components/checkout-button";
 import { LineRhythmInvite } from "@/components/line-rhythm-invite";
 import { SectionHeading } from "@/components/section-heading";
-import { useSiteCopy } from "@/lib/i18n";
+import { useLanguage, useSiteCopy } from "@/lib/i18n";
 
 export default function PricingPage() {
+  const { language } = useLanguage();
   const copy = useSiteCopy();
   const pricing = copy.pricingPage;
 
@@ -38,7 +39,9 @@ export default function PricingPage() {
               <div className="space-y-2">
                 <div className="flex items-end gap-2">
                   <p className="text-4xl font-semibold tracking-tight text-zinc-900 sm:text-5xl">{plan.price}</p>
-                  <span className="pb-1 text-sm text-zinc-500">/ month</span>
+                  <span className="pb-1 text-sm text-zinc-500">
+                    {language === "jp" ? "/ 月" : language === "kr" ? "/ 월" : "/ month"}
+                  </span>
                 </div>
                 <p className="text-sm font-medium text-emerald-700">{plan.dailyCost}</p>
               </div>
@@ -62,7 +65,7 @@ export default function PricingPage() {
                   plan="basic"
                   className="relative z-50 min-h-[52px] w-full cursor-pointer rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  月1,000円で続ける
+                  {plan.cta}
                 </CheckoutButton>
               ) : null}
               {plan.key === "leader" ? (
@@ -70,7 +73,7 @@ export default function PricingPage() {
                   plan="growth"
                   className="relative z-50 min-h-[52px] w-full cursor-pointer rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  月3,000円で深める
+                  {plan.cta}
                 </CheckoutButton>
               ) : null}
               {plan.key === "premium" ? (
@@ -78,7 +81,7 @@ export default function PricingPage() {
                   plan="inner-circle"
                   className="relative z-50 min-h-[52px] w-full cursor-pointer rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  月10,000円で支える
+                  {plan.cta}
                 </CheckoutButton>
               ) : null}
             </div>
