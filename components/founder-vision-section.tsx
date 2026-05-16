@@ -9,7 +9,7 @@ const founderCopy = {
     eyebrow: "ILCHI Philosophy",
     title: "人間の価値は、\n内なる意識を目覚めさせることにある。",
     description:
-      "瞑想lifeは、Brain Education創始者 ILCHI LEE（イ・スンホン）先生の哲学を土台に、人が本来持つ可能性、脳の主として生きる力、そして共生の価値を育てます。",
+      "瞑想lifeは、Brain Education創始者 ILCHI LEE（イ・スンホン）先生の哲学を土台に、人が本来持つ可能性、脳の主人として生きる力、そして共生の価値を育てます。",
     quote:
       "一人ひとりの意識の変化が、\n世界を変える。",
     chips: ["Brain Ownership", "Hongik Spirit", "Coexistence", "Earth Citizen Consciousness"],
@@ -22,7 +22,7 @@ const founderCopy = {
     eyebrow: "ILCHI Philosophy",
     title: "인간의 가치는,\n내면의 의식을 깨우는 데 있습니다.",
     description:
-      "瞑想life는 Brain Education 창시자 ILCHI LEE(이승헌) 선생의 철학을 바탕으로, 사람이 본래 지닌 가능성, 뇌의 주로 살아가는 힘, 그리고 공생의 가치를 길러갑니다.",
+      "瞑想life는 Brain Education 창시자 ILCHI LEE(이승헌) 선생의 철학을 바탕으로, 사람이 본래 지닌 가능성, 뇌의 주인으로 살아가는 힘, 그리고 공생의 가치를 길러갑니다.",
     quote:
       "한 사람 한 사람의 의식 변화가,\n세상을 바꿉니다.",
     chips: ["Brain Ownership", "Hongik Spirit", "Coexistence", "Earth Citizen Consciousness"],
@@ -35,7 +35,7 @@ const founderCopy = {
     eyebrow: "ILCHI Philosophy",
     title: "Human value begins\nwhen inner awareness awakens.",
     description:
-      "Meisoulife is grounded in the philosophy of ILCHI LEE, founder of Brain Education. It helps people grow their original potential, live as the owner of the brain, and deepen the value of coexistence.",
+      "Meisoulife is grounded in the philosophy of ILCHI LEE, founder of Brain Education. It helps people grow their original potential, the power to live as the owner of one’s brain, and the value of coexistence.",
     quote:
       "A change in each person’s consciousness\ncan change the world.",
     chips: ["Brain Ownership", "Hongik Spirit", "Coexistence", "Earth Citizen Consciousness"],
