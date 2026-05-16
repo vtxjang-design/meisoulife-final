@@ -10,10 +10,10 @@ type MemberState = "guest" | "free" | "paid";
 
 const journeyCopy = {
   jp: {
-    eyebrow: "Brain Education Journey",
-    title: "Brain Education Journey",
+    eyebrow: "脳を整える旅",
+    title: "脳を整える旅",
     description:
-      "瞑想lifeは、ただ落ち着くための場所ではなく、自分の脳感覚を目覚めさせ、柔軟にし、浄化し、統合し、最後には脳の主人として生きるための Human Evolution OS です。",
+      "脳教育（Brain Education）の哲学をもとに、自分自身の感覚と意識をゆっくり育てていきます。",
     badge: {
       guest: "Guest",
       free: "Free Member",
@@ -49,10 +49,10 @@ const journeyCopy = {
     ]
   },
   kr: {
-    eyebrow: "Brain Education Journey",
-    title: "Brain Education Journey",
+    eyebrow: "뇌를 정돈하는 여정",
+    title: "뇌를 정돈하는 여정",
     description:
-      "瞑想life는 단지 마음을 가라앉히는 곳이 아니라, 자신의 뇌감각을 깨우고, 유연하게 하고, 정화하고, 통합하고, 결국 뇌의 주인으로 살아가기 위한 Human Evolution OS입니다.",
+      "뇌교육(Brain Education)의 철학을 바탕으로, 자신의 감각과 의식을 천천히 길러갑니다.",
     badge: {
       guest: "Guest",
       free: "Free Member",
@@ -89,9 +89,9 @@ const journeyCopy = {
   },
   en: {
     eyebrow: "Brain Education Journey",
-    title: "Brain Education Journey",
+    title: "A Journey to Settle the Brain",
     description:
-      "Meisoulife is more than a meditation site. It is a Human Evolution OS that helps you awaken brain sense, grow flexibility, purify, integrate, and live as the owner of your brain in the AI era.",
+      "Grounded in the philosophy of Brain Education, this journey helps you gently grow your own sensing, awareness, and inner balance.",
     badge: {
       guest: "Guest",
       free: "Free Member",

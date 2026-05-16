@@ -6,34 +6,43 @@ import { useLanguage } from "@/lib/i18n";
 
 const founderCopy = {
   jp: {
-    eyebrow: "Founder / Vision",
-    title: "創設者メッセージ",
+    eyebrow: "ILCHI Philosophy",
+    title: "人間の価値は、\n内なる意識を目覚めさせることにある。",
     description:
-      "瞑想lifeは、イルチ・イ スンホン創設者が長年伝えてきた脳教育、弘益精神、地球市民意識を、AI時代の生活の中で実践できる形にした新しい学びと実践の場です。\n\n私たちは、瞑想を目的ではなく、人間の本来価値を回復する入口と考えます。一人ひとりが脳の主人となり、ゼロ意識から人・自然・地球と調和して生きる時、新しい共生文化が始まります。",
+      "瞑想lifeは、Brain Education創始者 ILCHI LEE（イ・スンホン）先生の哲学を土台に、人が本来持つ可能性、脳の主として生きる力、そして共生の価値を育てます。",
     quote:
-      "瞑想lifeは、1分で戻れるやさしい入口から始まり、やがて人間の本来価値と共生文化へつながっていく Human Evolution OS です。",
-    chips: ["Brain Education", "Hongik Spirit", "Earth Citizenship", "Coexistence Culture"],
-    button: "脳教育と創設者ビジョンを見る"
+      "一人ひとりの意識の変化が、\n世界を変える。",
+    chips: ["Brain Ownership", "Hongik Spirit", "Coexistence", "Earth Citizen Consciousness"],
+    profileLabel: "Brain Education Founder",
+    profileName: "ILCHI LEE",
+    profileSub: "イ・スンホン",
+    button: "哲学を静かに知る"
   },
   kr: {
-    eyebrow: "Founder / Vision",
-    title: "창립자 메시지",
+    eyebrow: "ILCHI Philosophy",
+    title: "인간의 가치는,\n내면의 의식을 깨우는 데 있습니다.",
     description:
-      "瞑想life는 일지 이승헌 창립자가 오랫동안 전해온 뇌교육, 홍익정신, 지구시민 의식을 AI 시대의 생활 속에서 실천할 수 있도록 만든 새로운 배움과 실천의 장입니다.\n\n우리는 명상을 목적이 아니라 인간의 본래 가치를 회복하는 입구로 봅니다. 한 사람 한 사람이 뇌의 주인이 되어 제로의식에서 사람·자연·지구와 조화롭게 살아갈 때, 새로운 공생 문화가 시작됩니다.",
+      "瞑想life는 Brain Education 창시자 ILCHI LEE(이승헌) 선생의 철학을 바탕으로, 사람이 본래 지닌 가능성, 뇌의 주로 살아가는 힘, 그리고 공생의 가치를 길러갑니다.",
     quote:
-      "瞑想life는 1분 만에 돌아올 수 있는 부드러운 입구에서 시작해, 결국 인간의 본래 가치와 공생 문화를 향해 이어지는 Human Evolution OS입니다.",
-    chips: ["Brain Education", "Hongik Spirit", "Earth Citizenship", "Coexistence Culture"],
-    button: "뇌교육과 창립자 비전 보기"
+      "한 사람 한 사람의 의식 변화가,\n세상을 바꿉니다.",
+    chips: ["Brain Ownership", "Hongik Spirit", "Coexistence", "Earth Citizen Consciousness"],
+    profileLabel: "Brain Education Founder",
+    profileName: "ILCHI LEE",
+    profileSub: "이승헌",
+    button: "철학을 조용히 알아보기"
   },
   en: {
-    eyebrow: "Founder / Vision",
-    title: "Founder’s Message",
+    eyebrow: "ILCHI Philosophy",
+    title: "Human value begins\nwhen inner awareness awakens.",
     description:
-      "Meditation Life is a living platform inspired by the vision of Ilchi Lee: Brain Education, Hongik spirit, Earth Citizenship, and a culture of coexistence.\n\nWe do not see meditation as the final goal. We see it as an entrance to recover our original human value. When each person becomes the owner of their brain and lives from Zero Consciousness in harmony with people, nature, and the Earth, a new culture of coexistence begins.",
+      "Meisoulife is grounded in the philosophy of ILCHI LEE, founder of Brain Education. It helps people grow their original potential, live as the owner of the brain, and deepen the value of coexistence.",
     quote:
-      "Meisoulife begins as a gentle one-minute return and gradually opens into a Human Evolution OS for original human value and coexistence culture.",
-    chips: ["Brain Education", "Hongik Spirit", "Earth Citizenship", "Coexistence Culture"],
-    button: "Explore Brain Education and the founder vision"
+      "A change in each person’s consciousness\ncan change the world.",
+    chips: ["Brain Ownership", "Hongik Spirit", "Coexistence", "Earth Citizen Consciousness"],
+    profileLabel: "Brain Education Founder",
+    profileName: "ILCHI LEE",
+    profileSub: "Lee Seung Heun",
+    button: "Discover the philosophy quietly"
   }
 } as const;
 
@@ -43,7 +52,12 @@ export function FounderVisionSection() {
 
   return (
     <section className="section-shell mt-24">
-      <div className="rounded-[34px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.14),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-6 py-10 sm:px-10">
+      <div className="relative overflow-hidden rounded-[34px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.16),transparent_24%),linear-gradient(180deg,#091717_0%,#0b1621_58%,#09111a_100%)] px-6 py-10 sm:px-10">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute left-[10%] top-10 h-32 w-32 rounded-full bg-emerald-200/8 blur-3xl animate-meditation-ambient-breathe" />
+          <div className="absolute right-[12%] top-16 h-36 w-36 rounded-full bg-gold/10 blur-3xl animate-meditation-fog" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,12,16,0.04),rgba(4,12,16,0.18))]" />
+        </div>
         <SectionHeading eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
 
         <div className="mt-8 grid gap-6 lg:grid-cols-[0.96fr_1.04fr]">
@@ -52,6 +66,11 @@ export function FounderVisionSection() {
           </div>
 
           <div className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6 sm:p-7">
+            <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
+              <p className="text-xs uppercase tracking-[0.24em] text-gold/84">{copy.profileLabel}</p>
+              <p className="mt-3 text-2xl font-semibold text-white">{copy.profileName}</p>
+              <p className="mt-1 text-sm text-white/58">{copy.profileSub}</p>
+            </div>
             <div className="flex flex-wrap gap-3">
               {copy.chips.map((chip) => (
                 <span key={chip} className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-xs uppercase tracking-[0.2em] text-white/58">

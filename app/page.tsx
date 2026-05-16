@@ -539,15 +539,12 @@ export default function HomePage() {
               {"혼자 버티는 삶에서,\n함께 깨어나는 삶으로。"}
             </h2>
             <p className="mt-6 whitespace-pre-line text-base leading-8 text-white/72 sm:text-lg sm:leading-9">
-              {"자신을 내려놓을 때,\n우리는 비로소 연결되고 자유로워진다。"}
+              {"自分を少し手放すとき、\n私たちはつながり、\n自由になっていく。"}
             </p>
 
             <div className="mx-auto mt-8 max-w-2xl rounded-[28px] border border-white/10 bg-white/[0.03] px-5 py-5 backdrop-blur">
-              <p className="text-sm leading-7 text-white/56 sm:text-base">
-                「허공을 아는 순간 생사가 하나가 된다。」
-              </p>
-              <p className="mt-2 text-sm leading-7 text-white/56 sm:text-base">
-                「虚空を知る瞬間、生死は一つになる。」
+              <p className="whitespace-pre-line text-sm leading-8 text-white/56 sm:text-base">
+                {"深く静けさに入るとき、\n生と死さえ、\nひとつの流れであることに気づく。"}
               </p>
             </div>
 
@@ -565,8 +562,23 @@ export default function HomePage() {
 
       <section className="section-shell mt-24">
         <div className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-6 py-10 text-center sm:px-10">
-          <h2 className="font-serif text-3xl text-white sm:text-4xl">{landing.mission.mission}</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-white/68">{landing.live.description}</p>
+          <p className="text-sm uppercase tracking-[0.3em] text-gold/84">
+            {language === "jp" ? "Human OS Upgrade" : language === "kr" ? "Human OS Upgrade" : "Human OS Upgrade"}
+          </p>
+          <h2 className="mt-4 whitespace-pre-line font-serif text-3xl text-white sm:text-4xl">
+            {language === "jp"
+              ? "AI時代だからこそ、\n人間らしさを。"
+              : language === "kr"
+                ? "AI 시대일수록,\n인간다움이 더 중요합니다."
+                : "In the AI age,\nhumanity matters more."}
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl whitespace-pre-line text-base leading-8 text-white/68">
+            {language === "jp"
+              ? "注意、感情、関係性、そして気づき。\nこれから大切になるものを、1分のリズムから育てていきます。"
+              : language === "kr"
+                ? "주의, 감정, 관계, 그리고 알아차림.\n앞으로 더 중요해질 것을 1분의 리듬에서부터 길러갑니다."
+                : "Attention, emotion, relationships, and awareness.\nGrow what matters most through a gentle one-minute rhythm."}
+          </p>
           <div className="relative z-20 mt-6 flex flex-col justify-center gap-3 sm:flex-row">
             <Link
               href="/pricing"
