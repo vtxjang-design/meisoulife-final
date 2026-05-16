@@ -14,13 +14,48 @@ type SuccessPageProps = {
 type SuccessTier = "basic" | "growth" | "inner_circle" | null;
 
 const FIRST_SEVEN_DAYS = [
-  "1分、静かに呼吸する",
-  "今日の感情をひとつ書く",
-  "情報を少し手放す",
-  "身体をゆっくり動かす",
-  "誰かに優しい一言を送る",
-  "自然を1分感じる",
-  "自分の変化を振り返る"
+  {
+    day: "DAY 1",
+    theme: "立ち止まる",
+    practice: "1分だけ静かに呼吸する",
+    reflection: "今日は、少し立ち止まれましたか？"
+  },
+  {
+    day: "DAY 2",
+    theme: "呼吸",
+    practice: "呼吸を感じる",
+    reflection: "今の呼吸は\n急いでいませんか？"
+  },
+  {
+    day: "DAY 3",
+    theme: "身体感覚",
+    practice: "身体をゆっくり感じる",
+    reflection: "身体は、\n今のあなたに何を伝えていますか？"
+  },
+  {
+    day: "DAY 4",
+    theme: "感情",
+    practice: "感情を否定せず見る",
+    reflection: "今日の感情に、\n名前をつけるなら？"
+  },
+  {
+    day: "DAY 5",
+    theme: "思考整理",
+    practice: "頭の情報を少し手放す",
+    reflection: "本当に必要な情報だけを\n残せるとしたら？"
+  },
+  {
+    day: "DAY 6",
+    theme: "感謝",
+    practice: "感謝を1つ見つける",
+    reflection: "今日、\n感謝できることは？"
+  },
+  {
+    day: "DAY 7",
+    theme: "本来の自分",
+    practice: "静かに戻る",
+    reflection: "少しだけ、\n自分に戻れましたか？"
+  }
 ];
 
 function normalizeTier(value?: string | null): SuccessTier {
@@ -97,9 +132,12 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
             <p className="mt-5 whitespace-pre-line font-serif text-2xl leading-[1.6] text-gold/90 sm:text-3xl">
               {"一人で頑張る毎日から、\n共に目覚める日常へ。"}
             </p>
-            <p className="mt-4 text-sm leading-7 text-white/58">
-              確認メールをお送りしました。まずは今日の小さな一歩から始めましょう。
-            </p>
+            <div className="mt-6 rounded-[24px] border border-white/10 bg-white/[0.04] px-5 py-5">
+              <p className="whitespace-pre-line text-sm leading-8 text-white/78 sm:text-base">
+                {"ここからは、\n一人で続けなくて大丈夫です。\n\n小さくても、\n一緒に続けていきましょう。"}
+              </p>
+            </div>
+            <p className="mt-4 text-sm leading-7 text-white/58">確認メールをお送りしました。まずは今日の小さな一歩から始めましょう。</p>
           </div>
 
           {activePlanLabel ? (
@@ -116,41 +154,67 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
           </div>
 
           <div className="mx-auto mt-8 grid max-w-4xl gap-3 sm:grid-cols-3">
+            <Link
+              href="/#one-minute-meditation"
+              className="inline-flex min-h-[64px] flex-col items-center justify-center rounded-[24px] bg-gold px-5 py-4 text-center text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
+            >
+              今日の1分を始める
+            </Link>
             <a
               href={LINE_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-gold px-5 py-4 text-center text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
+              className="inline-flex min-h-[64px] flex-col items-center justify-center rounded-[24px] border border-white/12 bg-white/[0.04] px-5 py-4 text-center text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
             >
-              LINEコミュニティへ
+              <span>LINEコミュニティへ</span>
+              <span className="mt-1 text-xs font-medium text-white/56">一緒に続ける仲間がいます</span>
             </a>
             <Link
-              href="/#one-minute-meditation"
-              className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-4 text-center text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
+              href="#first-seven-days"
+              className="inline-flex min-h-[64px] flex-col items-center justify-center rounded-[24px] border border-gold/20 bg-gold/[0.08] px-5 py-4 text-center text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12]"
             >
-              今日の1分を始める
-            </Link>
-            <Link
-              href="/member"
-              className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-gold/20 bg-gold/[0.08] px-5 py-4 text-center text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12]"
-            >
-              メンバーページへ進む
+              <span>7日リズムを見る</span>
+              <span className="mt-1 text-xs font-medium text-gold/72">無理なく続ける小さな習慣</span>
             </Link>
           </div>
 
-          <div className="mx-auto mt-10 max-w-4xl rounded-[28px] border border-white/10 bg-white/[0.03] p-6 sm:p-8">
+          <div id="first-seven-days" className="mx-auto mt-10 max-w-4xl rounded-[28px] border border-white/10 bg-white/[0.03] p-6 sm:p-8">
             <div className="text-center">
               <p className="text-sm uppercase tracking-[0.28em] text-gold/82">First 7 Days Rhythm</p>
-              <h2 className="mt-3 font-serif text-3xl text-white sm:text-4xl">最初の7日間は、やさしく。</h2>
+              <h2 className="mt-3 font-serif text-3xl text-white sm:text-4xl">最初の7日間</h2>
+              <p className="mt-4 whitespace-pre-line text-sm leading-8 text-white/70 sm:text-base">
+                {"変わろうとしなくて大丈夫。\nただ、少しずつ戻っていきましょう。"}
+              </p>
             </div>
 
-            <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {FIRST_SEVEN_DAYS.map((item, index) => (
-                <div key={item} className="rounded-[24px] border border-white/10 bg-white/[0.04] p-5">
-                  <p className="text-xs uppercase tracking-[0.22em] text-white/42">Day {index + 1}</p>
-                  <p className="mt-3 text-sm leading-7 text-white/84">{item}</p>
+            <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              {FIRST_SEVEN_DAYS.map((item) => (
+                <div key={item.day} className="rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.025))] p-5">
+                  <p className="text-xs uppercase tracking-[0.22em] text-gold/78">{item.day}</p>
+                  <h3 className="mt-3 text-xl font-semibold text-white">{item.theme}</h3>
+                  <p className="mt-3 text-sm leading-7 text-white/84">{item.practice}</p>
+                  <div className="mt-4 rounded-2xl border border-white/8 bg-black/10 px-4 py-3">
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">AI Check-in</p>
+                    <p className="mt-2 whitespace-pre-line text-sm leading-7 text-white/68">{item.reflection}</p>
+                  </div>
                 </div>
               ))}
+            </div>
+
+            <div className="mt-8 rounded-[24px] border border-gold/16 bg-gold/[0.05] px-5 py-6 text-center">
+              <p className="whitespace-pre-line font-serif text-2xl leading-[1.7] text-white sm:text-3xl">
+                {"毎日1分で大丈夫。\n\n大切なのは、\n完璧ではなく、\n続けることです。"}
+              </p>
+              <p className="mt-5 text-sm leading-7 text-gold/82">私たちは、共に目覚める旅の仲間です。</p>
+            </div>
+
+            <div className="mt-5 flex justify-center">
+              <Link
+                href="/member"
+                className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-6 py-4 text-center text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
+              >
+                メンバーページへ進む
+              </Link>
             </div>
           </div>
         </div>
