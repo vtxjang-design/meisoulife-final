@@ -21,8 +21,6 @@ import { useLanguage, languageButtons, useSiteCopy } from "@/lib/i18n";
 import { landingCopy } from "@/lib/landing-copy";
 import { getReturnRhythmSnapshot, updateReturnRhythmVisit, type ReturnRhythmSnapshot } from "@/lib/return-rhythm";
 
-type MembershipPlanKey = "basic" | "leader" | "premium";
-
 const AI_COACH_URL =
   process.env.NEXT_PUBLIC_AI_COACH_URL ||
   "https://chatgpt.com/g/g-69f968bc9a408191a3e5f943912666c0-quiet-rhythm-guide";
@@ -31,42 +29,111 @@ const LINE_URL = process.env.NEXT_PUBLIC_LINE_URL || process.env.NEXT_PUBLIC_LIN
 const heroCopy = {
   jp: {
     eyebrow: "Daily Rhythm Platform",
-    title: "1日1分、自分に戻る。",
-    supporting: "AI時代、情報に流されず、\n静けさの中で本来の自分へ。",
-    subtitle: "まずは軽く、やさしく。深さは、続ける中で自然に見つかっていきます。",
+    title: "1日1分から。\n脳を休ませる静かな習慣。",
+    supporting: "自然とつながり、\n心を整え、\nまた本来の自分に戻る。",
+    subtitle: "仕事の疲れ・SNS疲れ・心の疲れに。",
     primary: "今日の1分を始める",
-    secondary: "無料・60秒・登録不要",
-    tertiary: "メンバーになる",
-    proof: ["calm", "easy", "emotionally safe"],
-    visualCopy: "情報の波から少し離れ、\nZeroに戻る入口をひとつ。",
+    secondary: "7日リズムを体験する",
+    trust: "無料・60秒・登録不要",
+    proof: ["brain reset", "nature rhythm", "human connection"],
+    visualCopy: "森の静けさに少し触れて、\n情報の流れから呼吸へ戻る。",
     visualLabel: "Human Evolution OS",
     visualAlt: "Forest light and stillness"
   },
   kr: {
     eyebrow: "Daily Rhythm Platform",
-    title: "하루 1분, 다시 나에게 돌아오기。",
-    supporting: "AI 시대, 정보에 휩쓸리지 않고,\n고요함 속에서 본래의 나에게.",
-    subtitle: "처음은 가볍게. 깊이는, 계속하는 흐름 속에서 자연스럽게 발견됩니다.",
+    title: "하루 1분부터.\n뇌를 쉬게 하는 조용한 습관.",
+    supporting: "자연과 연결되고,\n마음을 정돈하며,\n다시 본래의 나에게 돌아옵니다.",
+    subtitle: "일의 피로·SNS 피로·마음의 피로에.",
     primary: "오늘의 1분 시작하기",
-    secondary: "무료 · 60초 · 가입 불필요",
-    tertiary: "멤버 되기",
-    proof: ["calm", "easy", "emotionally safe"],
-    visualCopy: "정보의 파도에서 잠시 벗어나,\nZero로 돌아오는 입구를 하나 둡니다.",
+    secondary: "7일 리듬 체험하기",
+    trust: "무료 · 60초 · 가입 불필요",
+    proof: ["brain reset", "nature rhythm", "human connection"],
+    visualCopy: "숲의 고요함을 잠시 빌려,\n정보의 흐름에서 호흡으로 돌아옵니다.",
     visualLabel: "Human Evolution OS",
     visualAlt: "Forest light and stillness"
   },
   en: {
     eyebrow: "Daily Rhythm Platform",
-    title: "One minute a day, return to yourself.",
-    supporting: "In the AI era, do not be carried away by information.\nReturn to yourself in stillness.",
-    subtitle: "The entry stays light. The depth reveals itself naturally as you continue.",
+    title: "Start with one minute a day.\nA quiet habit that lets the brain rest.",
+    supporting: "Reconnect with nature,\nsettle your mind,\nand return to who you are.",
+    subtitle: "For work fatigue, social fatigue, and emotional exhaustion.",
     primary: "Start today's minute",
-    secondary: "Free · 60 seconds · No signup",
-    tertiary: "Become a Member",
-    proof: ["calm", "easy", "emotionally safe"],
-    visualCopy: "Step out of the information stream\nand return to Zero.",
+    secondary: "Try the 7-day rhythm",
+    trust: "Free · 60 seconds · No signup",
+    proof: ["brain reset", "nature rhythm", "human connection"],
+    visualCopy: "Borrow a little stillness from the forest,\nand return from information to breath.",
     visualLabel: "Human Evolution OS",
     visualAlt: "Forest light and stillness"
+  }
+} as const;
+
+const healingCopy = {
+  jp: {
+    eyebrow: "Nature Reset",
+    title: "森の近くで深呼吸するように。",
+    description: "鳥の声、静かな光、少しひんやりした空気。瞑想lifeは、忙しい頭を自然のリズムへ戻す小さな休息の場です。",
+    points: ["森の静けさ", "やわらかな呼吸", "情報から少し離れる"]
+  },
+  kr: {
+    eyebrow: "Nature Reset",
+    title: "숲 가까이에서 숨을 고르듯이.",
+    description: "새소리, 잔잔한 빛, 조금 서늘한 공기. 명상life는 바쁜 머리를 자연의 리듬으로 되돌리는 작은 쉼의 자리입니다.",
+    points: ["숲의 고요함", "부드러운 호흡", "정보에서 잠시 멀어지기"]
+  },
+  en: {
+    eyebrow: "Nature Reset",
+    title: "Like taking a deep breath near the forest.",
+    description: "Birdsong, quiet light, and cool air. Meisoulife is a small resting place that returns a busy mind to the rhythm of nature.",
+    points: ["Forest stillness", "Gentle breath", "A small step away from information"]
+  }
+} as const;
+
+const testimonialCopy = {
+  jp: {
+    eyebrow: "Small Relief",
+    title: "小さな変化は、静かに残ります。",
+    items: [
+      "1分だけでも、頭のざわつきが少し静かになりました。",
+      "SNSを見続けたあとに戻る場所ができました。",
+      "頑張れない日でも、ここなら続けられそうです。"
+    ]
+  },
+  kr: {
+    eyebrow: "Small Relief",
+    title: "작은 변화는 조용히 남습니다.",
+    items: [
+      "1분만으로도 머리의 소음이 조금 잦아들었어요.",
+      "SNS를 오래 본 뒤에 돌아올 곳이 생겼습니다.",
+      "애쓰기 어려운 날에도 여기라면 이어갈 수 있을 것 같아요."
+    ]
+  },
+  en: {
+    eyebrow: "Small Relief",
+    title: "Small changes stay quietly with you.",
+    items: [
+      "Even one minute softened the noise in my head.",
+      "I found a place to return after too much social media.",
+      "Even on hard days, this feels possible to continue."
+    ]
+  }
+} as const;
+
+const reassuranceCopy = {
+  jp: {
+    eyebrow: "安心して続ける",
+    title: "無理なく、静かに続けられます。",
+    items: ["いつでもやめられる", "無理なく続けられる", "ひとりじゃない"]
+  },
+  kr: {
+    eyebrow: "안심하고 이어가기",
+    title: "무리 없이, 조용히 이어갈 수 있습니다.",
+    items: ["언제든 멈출 수 있어요", "무리 없이 이어갈 수 있어요", "혼자가 아니에요"]
+  },
+  en: {
+    eyebrow: "A Safe Rhythm",
+    title: "You can continue gently, without pressure.",
+    items: ["You can stop anytime", "You can continue without force", "You are not alone"]
   }
 } as const;
 
@@ -133,6 +200,9 @@ export default function HomePage() {
   const site = useSiteCopy();
   const landing = landingCopy[language];
   const hero = heroCopy[language];
+  const healing = healingCopy[language];
+  const testimonials = testimonialCopy[language];
+  const reassurance = reassuranceCopy[language];
   const membershipPlans = useLandingMembership();
   const [zeroOpen, setZeroOpen] = useState(false);
   const [challengeProgress, setChallengeProgress] = useState<ChallengeRhythmProgress>({
@@ -176,6 +246,17 @@ export default function HomePage() {
     });
   }
 
+  function scrollToRhythmChallenge() {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    document.querySelector("#rhythm-challenge")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
   return (
     <div className="pb-28">
       <section className="section-shell pt-14 sm:pt-20">
@@ -211,20 +292,20 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={scrollToOneMinute}
-                className="inline-flex min-h-[58px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink shadow-[0_18px_36px_rgba(212,186,117,0.22)] transition duration-300 hover:scale-[1.01] hover:bg-[#e7cd92]"
+                className="inline-flex min-h-[58px] items-center justify-center rounded-full bg-gold px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_36px_rgba(212,186,117,0.22)] transition duration-300 hover:scale-[1.01] hover:bg-[#e7cd92]"
               >
                 {hero.primary}
               </button>
-              <span className="inline-flex min-h-[58px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-4 text-sm font-semibold text-white/76">
-                {hero.secondary}
-              </span>
-              <Link
-                href="/pricing"
-                className="inline-flex min-h-[58px] items-center justify-center rounded-full border border-gold/20 bg-gold/[0.08] px-6 py-4 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12]"
+              <button
+                type="button"
+                onClick={scrollToRhythmChallenge}
+                className="inline-flex min-h-[58px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-4 text-base font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
               >
-                {hero.tertiary}
-              </Link>
+                {hero.secondary}
+              </button>
             </div>
+
+            <p className="text-sm leading-7 text-white/56">{hero.trust}</p>
 
             <div className="flex flex-wrap gap-2 pt-1">
               {hero.proof.map((item) => (
@@ -289,9 +370,49 @@ export default function HomePage() {
 
       <DailyRhythmCheck copy={landing.dailyRhythmCheck} />
 
+      <InstantMeditationSection copy={landing.instant} />
+
+      <section className="section-shell mt-16 sm:mt-20">
+        <div className="overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.10),transparent_24%),linear-gradient(180deg,#0a1716_0%,#0d1824_54%,#08131d_100%)] p-5 shadow-[0_24px_80px_rgba(7,17,31,0.22)] sm:p-7">
+          <div className="grid gap-6 lg:grid-cols-[1.02fr_0.98fr] lg:items-center">
+            <div className="space-y-4">
+              <p className="text-sm uppercase tracking-[0.3em] text-gold/84">{healing.eyebrow}</p>
+              <h2 className="font-serif text-3xl leading-tight text-white sm:text-4xl">{healing.title}</h2>
+              <p className="text-base leading-8 text-white/68 sm:text-lg">{healing.description}</p>
+              <div className="flex flex-wrap gap-2 pt-1">
+                {healing.points.map((point) => (
+                  <span key={point} className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-white/62">
+                    {point}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="relative overflow-hidden rounded-[28px] border border-white/10">
+              <img
+                src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80"
+                alt={healing.title}
+                className="h-[260px] w-full object-cover sm:h-[320px]"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(4,12,16,0.06),rgba(4,12,16,0.44))]" />
+            </div>
+          </div>
+        </div>
+      </section>
+
       <RhythmChallenge copy={landing.rhythmChallenge} />
 
-      <InstantMeditationSection copy={landing.instant} />
+      <section className="section-shell mt-16 sm:mt-20">
+        <div className="overflow-hidden rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-7 shadow-[0_24px_80px_rgba(7,17,31,0.18)] sm:px-7 sm:py-9">
+          <SectionHeading eyebrow={testimonials.eyebrow} title={testimonials.title} align="center" />
+          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            {testimonials.items.map((item) => (
+              <article key={item} className="rounded-[24px] border border-white/10 bg-white/[0.04] p-5">
+                <p className="text-sm leading-8 text-white/76">{item}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <LiveTogether copy={landing.live} />
 
@@ -388,6 +509,22 @@ export default function HomePage() {
       </section>
 
       <section className="section-shell mt-24">
+        <div className="rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-6 py-8 sm:px-10">
+          <div className="mx-auto max-w-4xl text-center">
+            <p className="text-sm uppercase tracking-[0.3em] text-gold/84">{reassurance.eyebrow}</p>
+            <h2 className="mt-4 font-serif text-3xl leading-tight text-white sm:text-4xl">{reassurance.title}</h2>
+            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+              {reassurance.items.map((item) => (
+                <div key={item} className="rounded-[22px] border border-white/10 bg-white/[0.04] px-4 py-4 text-sm font-medium text-white/78">
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-shell mt-24">
         <div className="relative overflow-hidden rounded-[36px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_24%),linear-gradient(180deg,#0a1716_0%,#0d1824_54%,#08131d_100%)] px-6 py-12 sm:px-10 sm:py-16">
           <div className="pointer-events-none absolute inset-0">
             <div className="absolute inset-x-[12%] top-8 h-32 rounded-full bg-gold/10 blur-3xl animate-meditation-fog" />
@@ -429,15 +566,13 @@ export default function HomePage() {
       <section className="section-shell mt-24">
         <div className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-6 py-10 text-center sm:px-10">
           <h2 className="font-serif text-3xl text-white sm:text-4xl">{landing.mission.mission}</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-white/68">
-            {landing.live.description}
-          </p>
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-white/68">{landing.live.description}</p>
           <div className="relative z-20 mt-6 flex flex-col justify-center gap-3 sm:flex-row">
             <Link
-              href="/challenge"
+              href="/pricing"
               className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
             >
-              {landing.hero.primary}
+              {language === "jp" ? "瞑想lifeメンバーになる" : language === "kr" ? "명상life 멤버 되기" : "Become a Meisoulife member"}
             </Link>
             <a
               href={LINE_URL}
