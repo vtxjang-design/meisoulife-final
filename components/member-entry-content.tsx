@@ -12,6 +12,8 @@ import {
 type MemberEntryContentProps = {
   lineUrl: string;
   debug?: boolean;
+  supabaseUrl?: string;
+  supabaseAnonKey?: string;
 };
 
 type AuthState = "idle" | "sending" | "sent" | "error" | "unavailable";
@@ -56,6 +58,7 @@ const memberEntryCopy = {
       title: "接続確認",
       supabaseUrl: "Supabase URL",
       anonKey: "Anon key",
+      browserClient: "Browser client",
       origin: "Current origin",
       lastError: "Last error",
       yes: "yes",
@@ -102,6 +105,7 @@ const memberEntryCopy = {
       title: "연결 확인",
       supabaseUrl: "Supabase URL",
       anonKey: "Anon key",
+      browserClient: "Browser client",
       origin: "Current origin",
       lastError: "Last error",
       yes: "yes",
@@ -148,6 +152,7 @@ const memberEntryCopy = {
       title: "Connection check",
       supabaseUrl: "Supabase URL",
       anonKey: "Anon key",
+      browserClient: "Browser client",
       origin: "Current origin",
       lastError: "Last error",
       yes: "yes",
@@ -157,7 +162,12 @@ const memberEntryCopy = {
   }
 } as const;
 
-export function MemberEntryContent({ lineUrl, debug = false }: MemberEntryContentProps) {
+export function MemberEntryContent({
+  lineUrl,
+  debug = false,
+  supabaseUrl = "",
+  supabaseAnonKey = ""
+}: MemberEntryContentProps) {
   const { language } = useLanguage();
   const copy = memberEntryCopy[language];
   const [authState, setAuthState] = useState<AuthState>("idle");
@@ -167,6 +177,7 @@ export function MemberEntryContent({ lineUrl, debug = false }: MemberEntryConten
   const [lastError, setLastError] = useState("");
   const [hasSupabaseUrl, setHasSupabaseUrl] = useState(false);
   const [hasAnonKey, setHasAnonKey] = useState(false);
+  const [hasBrowserClient, setHasBrowserClient] = useState(false);
   const [currentOrigin, setCurrentOrigin] = useState("");
   const debugEnabled = process.env.NODE_ENV !== "production" || debug;
 
@@ -174,11 +185,16 @@ export function MemberEntryContent({ lineUrl, debug = false }: MemberEntryConten
     let active = true;
 
     async function loadSession() {
-      setHasSupabaseUrl(Boolean(SUPABASE_BROWSER_URL));
-      setHasAnonKey(Boolean(SUPABASE_BROWSER_ANON_KEY));
+      setHasSupabaseUrl(Boolean(supabaseUrl || SUPABASE_BROWSER_URL));
+      setHasAnonKey(Boolean(supabaseAnonKey || SUPABASE_BROWSER_ANON_KEY));
       setCurrentOrigin(window.location.origin);
 
-      const supabase = getSupabaseBrowserClient();
+      const supabase = getSupabaseBrowserClient({
+        url: supabaseUrl || undefined,
+        anonKey: supabaseAnonKey || undefined
+      });
+
+      setHasBrowserClient(Boolean(supabase));
 
       if (!supabase) {
         if (active) {
@@ -203,7 +219,7 @@ export function MemberEntryContent({ lineUrl, debug = false }: MemberEntryConten
     return () => {
       active = false;
     };
-  }, []);
+  }, [supabaseAnonKey, supabaseUrl]);
 
   const statusMessage = useMemo(() => {
     if (isLoggedIn) {
@@ -236,7 +252,10 @@ export function MemberEntryContent({ lineUrl, debug = false }: MemberEntryConten
       return;
     }
 
-    const supabase = getSupabaseBrowserClient();
+    const supabase = getSupabaseBrowserClient({
+      url: supabaseUrl || undefined,
+      anonKey: supabaseAnonKey || undefined
+    });
 
     if (!supabase) {
       setLastError("Supabase browser client unavailable");
@@ -401,6 +420,10 @@ export function MemberEntryContent({ lineUrl, debug = false }: MemberEntryConten
                   <div className="flex items-center justify-between gap-3">
                     <dt>{copy.debug.anonKey}</dt>
                     <dd>{hasAnonKey ? copy.debug.yes : copy.debug.no}</dd>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <dt>{copy.debug.browserClient}</dt>
+                    <dd>{hasBrowserClient ? copy.debug.yes : copy.debug.no}</dd>
                   </div>
                   <div className="flex items-center justify-between gap-3">
                     <dt>{copy.debug.origin}</dt>

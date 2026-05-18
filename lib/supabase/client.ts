@@ -1,13 +1,20 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 let browserClient: SupabaseClient | null = null;
+let browserClientKey = "";
 
 export const SUPABASE_BROWSER_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 export const SUPABASE_BROWSER_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
 
-export function getSupabaseClient() {
-  const url = SUPABASE_BROWSER_URL;
-  const anonKey = SUPABASE_BROWSER_ANON_KEY;
+type SupabaseBrowserConfig = {
+  url?: string;
+  anonKey?: string;
+};
+
+export function getSupabaseClient(config?: SupabaseBrowserConfig) {
+  const url = config?.url ?? SUPABASE_BROWSER_URL;
+  const anonKey = config?.anonKey ?? SUPABASE_BROWSER_ANON_KEY;
+  const nextClientKey = `${url}::${anonKey}`;
 
   if (process.env.NODE_ENV !== "production") {
     console.log("[supabase-client] browser env", {
@@ -20,7 +27,7 @@ export function getSupabaseClient() {
     return null;
   }
 
-  if (!browserClient) {
+  if (!browserClient || browserClientKey !== nextClientKey) {
     browserClient = createClient(url, anonKey, {
       auth: {
         persistSession: true,
@@ -28,6 +35,7 @@ export function getSupabaseClient() {
         detectSessionInUrl: true
       }
     });
+    browserClientKey = nextClientKey;
   }
 
   return browserClient;
