@@ -492,20 +492,20 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       soundOff: "音なし",
       retryAudio: "自然音を再生",
       audioError: "音声を再生できませんでした。もう一度タップしてください。",
-      completionMessage: "おつかれさまでした。今の静けさを、少しだけ感じてみましょう。",
+      completionMessage: "今日の1分、お疲れさまでした。",
       fullscreen: "全画面で開く",
       inhale: "吸って",
       hold: "止めて",
       exhale: "吐いて",
       sensory: "読むより先に、まず呼吸へ。目を閉じたままでも、動きと振動でリズムを感じられます。",
       stages: ["10 sec breathing", "20 sec body awareness", "20 sec emotional calming", "10 sec gratitude"],
-      moodQuestion: "今の気分は？",
+      moodQuestion: "少し軽くなりましたか？",
       moodSaved: "小さな変化を受け取りました。",
       moods: [
         { key: "lighter", label: "🙂 少し楽になった" },
         { key: "calm", label: "😌 落ち着いた" },
         { key: "hard", label: "😢 まだ苦しい" },
-        { key: "again", label: "🔥 また始めたい" }
+        { key: "again", label: "🔥 明日も続けたい" }
       ]
     },
     coach: {
@@ -966,20 +966,20 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       soundOff: "음 없음",
       retryAudio: "자연음 다시 재생",
       audioError: "오디오를 재생하지 못했습니다. 한 번 더 눌러 주세요.",
-      completionMessage: "수고하셨습니다. 지금의 고요함을 잠시 느껴보세요.",
+      completionMessage: "오늘의 1분, 수고하셨습니다.",
       fullscreen: "전체 화면으로 열기",
       inhale: "들이쉬기",
       hold: "멈추기",
       exhale: "내쉬기",
       sensory: "읽기보다 먼저 호흡으로. 눈을 감은 채로도 움직임과 진동으로 리듬을 느낄 수 있습니다.",
       stages: ["10초 호흡", "20초 몸 감각", "20초 감정 진정", "10초 감사"],
-      moodQuestion: "지금 기분은 어떤가요?",
+      moodQuestion: "조금 가벼워졌나요?",
       moodSaved: "작은 변화를 잘 받아두었습니다.",
       moods: [
         { key: "lighter", label: "🙂 조금 가벼워졌어요" },
         { key: "calm", label: "😌 차분해졌어요" },
         { key: "hard", label: "😢 아직 힘들어요" },
-        { key: "again", label: "🔥 한 번 더 하고 싶어요" }
+        { key: "again", label: "🔥 내일도 이어가고 싶어요" }
       ]
     },
     coach: {
@@ -1435,20 +1435,20 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       soundOff: "Sound off",
       retryAudio: "Play nature audio",
       audioError: "Audio could not be played. Please tap again.",
-      completionMessage: "Well done. Stay with this stillness for just a moment.",
+      completionMessage: "Well done. Thank you for today’s minute.",
       fullscreen: "Open full screen",
       inhale: "Inhale",
       hold: "Hold",
       exhale: "Exhale",
       sensory: "Before reading, return to breath. The rhythm can be felt through motion and vibration, even with your eyes closed.",
       stages: ["10 sec breathing", "20 sec body awareness", "20 sec emotional calming", "10 sec gratitude"],
-      moodQuestion: "How do you feel now?",
+      moodQuestion: "Do you feel a little lighter?",
       moodSaved: "Your small shift has been saved.",
       moods: [
         { key: "lighter", label: "🙂 A little lighter" },
         { key: "calm", label: "😌 More settled" },
         { key: "hard", label: "😢 Still struggling" },
-        { key: "again", label: "🔥 Want to begin again" }
+        { key: "again", label: "🔥 Want to continue tomorrow" }
       ]
     },
     coach: {

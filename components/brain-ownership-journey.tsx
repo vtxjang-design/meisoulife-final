@@ -15,9 +15,9 @@ const journeyCopy = {
     description:
       "脳教育（Brain Education）の哲学をもとに、自分自身の感覚と意識をゆっくり育てていきます。",
     badge: {
-      guest: "Guest",
-      free: "Free Member",
-      paid: "Brain Owner"
+      guest: "ゲスト",
+      free: "無料メンバー",
+      paid: "脳の主人"
     },
     freeNote: "無料会員は最初の入口を体験できます。すべてのステップは有料メンバー向けに開かれます。",
     cta: {
@@ -54,9 +54,9 @@ const journeyCopy = {
     description:
       "뇌교육(Brain Education)의 철학을 바탕으로, 자신의 감각과 의식을 천천히 길러갑니다.",
     badge: {
-      guest: "Guest",
-      free: "Free Member",
-      paid: "Brain Owner"
+      guest: "게스트",
+      free: "무료 멤버",
+      paid: "뇌의 주인"
     },
     freeNote: "무료 회원은 첫 입구를 체험할 수 있습니다. 모든 단계는 유료 멤버에게 열립니다.",
     cta: {
@@ -204,7 +204,7 @@ export function BrainOwnershipJourney() {
               <div className="flex items-center justify-between gap-3">
                 <p className="text-xs uppercase tracking-[0.24em] text-gold/80">0{index + 1}</p>
                 <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-white/54">
-                  {unlocked ? "Open" : copy.badge.free}
+                  {unlocked ? copy.cta.open : copy.badge.free}
                 </span>
               </div>
               <h3 className="mt-4 text-xl font-semibold text-white">{step.title}</h3>

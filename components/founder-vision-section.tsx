@@ -13,7 +13,7 @@ const founderCopy = {
     quote:
       "一人ひとりの意識の変化が、\n世界を変える。",
     chips: ["Brain Ownership", "Hongik Spirit", "Coexistence", "Earth Citizen Consciousness"],
-    profileLabel: "Brain Education Founder",
+    profileLabel: "Brain Education創始者",
     profileName: "ILCHI LEE",
     profileSub: "イ・スンホン",
     button: "哲学を静かに知る"
@@ -26,7 +26,7 @@ const founderCopy = {
     quote:
       "한 사람 한 사람의 의식 변화가,\n세상을 바꿉니다.",
     chips: ["Brain Ownership", "Hongik Spirit", "Coexistence", "Earth Citizen Consciousness"],
-    profileLabel: "Brain Education Founder",
+    profileLabel: "Brain Education 창시자",
     profileName: "ILCHI LEE",
     profileSub: "이승헌",
     button: "철학을 조용히 알아보기"

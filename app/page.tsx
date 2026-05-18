@@ -28,55 +28,55 @@ const LINE_URL = process.env.NEXT_PUBLIC_LINE_URL || process.env.NEXT_PUBLIC_LIN
 
 const heroCopy = {
   jp: {
-    eyebrow: "Daily Rhythm Platform",
-    title: "1日1分から。\n脳を休ませる静かな習慣。",
+    eyebrow: "毎日のリズム",
+    title: "疲れた脳を、\n1分だけ休ませませんか？",
     supporting: "自然とつながり、\n心を整え、\nまた本来の自分に戻る。",
     subtitle: "仕事の疲れ・SNS疲れ・心の疲れに。",
     primary: "今日の1分を始める",
-    secondary: "7日リズムを体験する",
+    secondary: "7日リズムを見る",
     trust: "無料・60秒・登録不要",
-    proof: ["brain reset", "nature rhythm", "human connection"],
+    proof: ["脳を休ませる", "自然のリズム", "ひとりじゃない"],
     visualCopy: "森の静けさに少し触れて、\n情報の流れから呼吸へ戻る。",
-    visualLabel: "Human Evolution OS",
+    visualLabel: "静かな入口",
     visualAlt: "Forest light and stillness"
   },
   kr: {
-    eyebrow: "Daily Rhythm Platform",
-    title: "하루 1분부터.\n뇌를 쉬게 하는 조용한 습관.",
+    eyebrow: "매일의 리듬",
+    title: "지친 뇌를,\n1분만 쉬게 해보세요.",
     supporting: "자연과 연결되고,\n마음을 정돈하며,\n다시 본래의 나에게 돌아옵니다.",
     subtitle: "일의 피로·SNS 피로·마음의 피로에.",
     primary: "오늘의 1분 시작하기",
-    secondary: "7일 리듬 체험하기",
+    secondary: "7일 리듬 보기",
     trust: "무료 · 60초 · 가입 불필요",
-    proof: ["brain reset", "nature rhythm", "human connection"],
+    proof: ["뇌를 쉬게 하기", "자연의 리듬", "혼자가 아님"],
     visualCopy: "숲의 고요함을 잠시 빌려,\n정보의 흐름에서 호흡으로 돌아옵니다.",
-    visualLabel: "Human Evolution OS",
+    visualLabel: "조용한 입구",
     visualAlt: "Forest light and stillness"
   },
   en: {
-    eyebrow: "Daily Rhythm Platform",
-    title: "Start with one minute a day.\nA quiet habit that lets the brain rest.",
+    eyebrow: "Daily Rhythm",
+    title: "Would you let your tired brain\nrest for one minute?",
     supporting: "Reconnect with nature,\nsettle your mind,\nand return to who you are.",
     subtitle: "For work fatigue, social fatigue, and emotional exhaustion.",
     primary: "Start today's minute",
-    secondary: "Try the 7-day rhythm",
+    secondary: "See the 7-day rhythm",
     trust: "Free · 60 seconds · No signup",
     proof: ["brain reset", "nature rhythm", "human connection"],
     visualCopy: "Borrow a little stillness from the forest,\nand return from information to breath.",
-    visualLabel: "Human Evolution OS",
+    visualLabel: "Quiet entry",
     visualAlt: "Forest light and stillness"
   }
 } as const;
 
 const healingCopy = {
   jp: {
-    eyebrow: "Nature Reset",
+    eyebrow: "自然の休息",
     title: "森の近くで深呼吸するように。",
     description: "鳥の声、静かな光、少しひんやりした空気。瞑想lifeは、忙しい頭を自然のリズムへ戻す小さな休息の場です。",
     points: ["森の静けさ", "やわらかな呼吸", "情報から少し離れる"]
   },
   kr: {
-    eyebrow: "Nature Reset",
+    eyebrow: "자연의 휴식",
     title: "숲 가까이에서 숨을 고르듯이.",
     description: "새소리, 잔잔한 빛, 조금 서늘한 공기. 명상life는 바쁜 머리를 자연의 리듬으로 되돌리는 작은 쉼의 자리입니다.",
     points: ["숲의 고요함", "부드러운 호흡", "정보에서 잠시 멀어지기"]
@@ -91,7 +91,7 @@ const healingCopy = {
 
 const testimonialCopy = {
   jp: {
-    eyebrow: "Small Relief",
+    eyebrow: "小さな回復",
     title: "小さな変化は、静かに残ります。",
     items: [
       "1分だけでも、頭のざわつきが少し静かになりました。",
@@ -100,7 +100,7 @@ const testimonialCopy = {
     ]
   },
   kr: {
-    eyebrow: "Small Relief",
+    eyebrow: "작은 회복",
     title: "작은 변화는 조용히 남습니다.",
     items: [
       "1분만으로도 머리의 소음이 조금 잦아들었어요.",
@@ -139,14 +139,14 @@ const reassuranceCopy = {
 
 const sanctuaryCopy = {
   jp: {
-    eyebrow: "静かな場所 | Quiet Sanctuary",
+    eyebrow: "静かな場所",
     title: "ひとりで耐える人生から、\n共に目覚める人生へ。",
     description: "自分を少し手放すとき、\n私たちはつながり、\n自由になっていく。",
     deep: "深く静けさに入るとき、\n生と死さえ、\nひとつの流れであることに気づく。",
     cta: "静かに感じてみる"
   },
   kr: {
-    eyebrow: "고요한 장소 | Quiet Sanctuary",
+    eyebrow: "고요한 장소",
     title: "혼자 버티는 삶에서,\n함께 깨어나는 삶으로.",
     description: "자신을 조금 내려놓을 때,\n우리는 연결되고,\n조금 더 자유로워집니다.",
     deep: "깊은 고요함에 들어갈 때,\n삶과 죽음마저\n하나의 흐름임을 느끼게 됩니다.",
@@ -163,7 +163,7 @@ const sanctuaryCopy = {
 
 const aiAgeCopy = {
   jp: {
-    eyebrow: "Human OS Upgrade",
+    eyebrow: "人間らしさを育てる",
     title: "AI時代だからこそ、\n人間らしさを。",
     description: "注意、感情、関係性、そして気づき。\nこれから大切になるものを、1分のリズムから育てていきます。",
     memberButton: "瞑想lifeメンバーになる",
@@ -171,7 +171,7 @@ const aiAgeCopy = {
     tableShift: "変化"
   },
   kr: {
-    eyebrow: "Human OS Upgrade",
+    eyebrow: "인간다움을 기르는 리듬",
     title: "AI 시대일수록,\n인간다움이 더 중요합니다.",
     description: "주의, 감정, 관계, 그리고 알아차림.\n앞으로 더 중요해질 것을 1분의 리듬에서부터 길러갑니다.",
     memberButton: "명상life 멤버 되기",
@@ -185,6 +185,33 @@ const aiAgeCopy = {
     memberButton: "Become a Meisoulife member",
     labels: ["time anchor", "7-day rhythm", "return"],
     tableShift: "Shift"
+  }
+} as const;
+
+const giftCopy = {
+  jp: {
+    banner: "あなたに、1分の休息が届きました。",
+    eyebrow: "Share a Quiet Minute",
+    title: "大切な人に、1分の休息を贈る。",
+    description: "言葉で励ますのが難しい日も、\n静かな1分なら届けられます。",
+    button: "1分の休息を贈る",
+    copied: "リンクをコピーしました。大切な人に届けてください。"
+  },
+  kr: {
+    banner: "당신에게 1분의 휴식이 도착했습니다.",
+    eyebrow: "조용한 1분 나누기",
+    title: "소중한 사람에게, 1분의 휴식을 건네보세요.",
+    description: "말로 위로하기 어려운 날에도,\n조용한 1분은 전할 수 있습니다.",
+    button: "1분의 휴식 선물하기",
+    copied: "링크를 복사했습니다. 소중한 사람에게 전해주세요."
+  },
+  en: {
+    banner: "A one-minute rest has been sent to you.",
+    eyebrow: "Share a Quiet Minute",
+    title: "Offer a minute of rest to someone you care about.",
+    description: "Even on days when words feel hard,\na quiet minute can still be shared.",
+    button: "Share a one-minute rest",
+    copied: "Link copied. Send it to someone you care about."
   }
 } as const;
 
@@ -256,6 +283,7 @@ export default function HomePage() {
   const reassurance = reassuranceCopy[language];
   const sanctuary = sanctuaryCopy[language];
   const aiAge = aiAgeCopy[language];
+  const gift = giftCopy[language];
   const membershipPlans = useLandingMembership();
   const [zeroOpen, setZeroOpen] = useState(false);
   const [challengeProgress, setChallengeProgress] = useState<ChallengeRhythmProgress>({
@@ -272,11 +300,31 @@ export default function HomePage() {
     inactiveDays: 0,
     timeAnchor: "daytime"
   });
+  const [giftDelivered, setGiftDelivered] = useState(false);
+  const [giftToast, setGiftToast] = useState("");
 
   useEffect(() => {
     setChallengeProgress(getChallengeRhythmProgress());
     setReturnRhythm(updateReturnRhythmVisit());
   }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const url = new URL(window.location.href);
+    setGiftDelivered(url.searchParams.get("gift") === "1min");
+  }, []);
+
+  useEffect(() => {
+    if (!giftToast) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => setGiftToast(""), 2400);
+    return () => window.clearTimeout(timer);
+  }, [giftToast]);
 
   const gardenMood = returnRhythm.isCompletedToday ? "🙂" : returnRhythm.inactiveDays >= 2 ? "😔" : "😀";
   const liveSummary = useMemo(
@@ -310,8 +358,31 @@ export default function HomePage() {
     });
   }
 
+  async function handleGiftShare() {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const message = `最近少し疲れていませんか？\nこの1分、よかったら一緒にやってみませんか。\nhttps://www.meisoulife.com/?gift=1min`;
+
+    try {
+      await navigator.clipboard.writeText(message);
+      setGiftToast(gift.copied);
+    } catch (error) {
+      console.error("[gift-share] failed to copy invite", error);
+    }
+  }
+
   return (
     <div className="pb-28">
+      {giftDelivered ? (
+        <section className="section-shell pt-6">
+          <div className="rounded-[24px] border border-gold/20 bg-gold/[0.08] px-5 py-4 text-center text-sm font-medium text-gold">
+            {gift.banner}
+          </div>
+        </section>
+      ) : null}
+
       <section className="section-shell pt-14 sm:pt-20">
         <div className="grid gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
           <div className="space-y-8">
@@ -447,6 +518,24 @@ export default function HomePage() {
                 <p className="text-sm leading-8 text-white/76">{item}</p>
               </article>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section-shell mt-16 sm:mt-20">
+        <div className="rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-7 shadow-[0_24px_80px_rgba(7,17,31,0.18)] sm:px-7 sm:py-9">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-sm uppercase tracking-[0.3em] text-gold/84">{gift.eyebrow}</p>
+            <h2 className="mt-4 font-serif text-3xl leading-tight text-white sm:text-4xl">{gift.title}</h2>
+            <p className="mt-4 whitespace-pre-line text-base leading-8 text-white/68 sm:text-lg">{gift.description}</p>
+            <button
+              type="button"
+              onClick={handleGiftShare}
+              className="mt-6 inline-flex min-h-[56px] items-center justify-center rounded-full border border-gold/20 bg-gold/[0.08] px-6 py-4 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12]"
+            >
+              {gift.button}
+            </button>
+            {giftToast ? <p className="mt-3 text-sm leading-7 text-white/58">{giftToast}</p> : null}
           </div>
         </div>
       </section>

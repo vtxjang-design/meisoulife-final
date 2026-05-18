@@ -12,14 +12,14 @@ type PostPaymentSuccessContentProps = {
 
 const successCopy = {
   jp: {
-    badge: "🌿 Welcome",
+    badge: "🌿 ようこそ",
     title: "ようこそ。\nあなたの新しいリズムが始まりました。",
     subtitle: "これはコンテンツ購入ではなく、\n「自分に戻る静かなリズム」を育てる参加です。",
     quote: "一人で頑張る毎日から、\n共に目覚める日常へ。",
     support: "ここからは、\n一人で続けなくて大丈夫です。\n\n小さくても、\n一緒に続けていきましょう。",
     emailNote: "確認メールをお送りしました。まずは今日の小さな一歩から始めましょう。",
     welcome: "ようこそ、瞑想lifeへ🌿\n\n今日から一緒に、\n1日1分。\n\n自分に戻る静かな習慣を\n始めましょう。",
-    activeMembership: "Active Membership",
+    activeMembership: "有効なメンバーシップ",
     planLabels: {
       basic: "Basic member",
       growth: "Growth member",
@@ -30,10 +30,10 @@ const successCopy = {
     lineSub: "一緒に続ける仲間がいます",
     rhythmButton: "7日リズムを見る",
     rhythmSub: "無理なく続ける小さな習慣",
-    firstSevenEyebrow: "First 7 Days Rhythm",
+    firstSevenEyebrow: "最初の7日間リズム",
     firstSevenTitle: "最初の7日間",
     firstSevenDescription: "変わろうとしなくて大丈夫。\nただ、少しずつ戻っていきましょう。",
-    aiCheckIn: "AI Check-in",
+    aiCheckIn: "AIチェックイン",
     closing: "毎日1分で大丈夫。\n\n大切なのは、\n完璧ではなく、\n続けることです。",
     closingSub: "私たちは、共に目覚める旅の仲間です。",
     memberButton: "メンバーページへ進む",
@@ -48,7 +48,7 @@ const successCopy = {
     ]
   },
   kr: {
-    badge: "🌿 Welcome",
+    badge: "🌿 환영합니다",
     title: "어서 오세요.\n새로운 리듬이 시작되었습니다.",
     subtitle: "이것은 단순한 구매가 아니라,\n나에게 돌아오는 조용한 리듬에 참여하는 시작입니다.",
     quote: "혼자 버티는 일상에서,\n함께 깨어나는 삶으로.",
@@ -66,10 +66,10 @@ const successCopy = {
     lineSub: "함께 이어가는 동료가 있습니다",
     rhythmButton: "7일 리듬 보기",
     rhythmSub: "무리 없이 이어가는 작은 습관",
-    firstSevenEyebrow: "First 7 Days Rhythm",
+    firstSevenEyebrow: "처음 7일의 리듬",
     firstSevenTitle: "처음 7일",
     firstSevenDescription: "달라지려 애쓰지 않아도 괜찮습니다.\n조금씩 다시 돌아오면 됩니다.",
-    aiCheckIn: "AI Check-in",
+    aiCheckIn: "AI 체크인",
     closing: "매일 1분이면 충분합니다.\n\n중요한 것은,\n완벽함이 아니라,\n계속하는 것입니다.",
     closingSub: "우리는 함께 깨어나는 여정의 동료입니다.",
     memberButton: "멤버 페이지로 가기",
