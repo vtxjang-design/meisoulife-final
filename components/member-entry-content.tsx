@@ -14,6 +14,22 @@ type MemberEntryContentProps = {
 
 type AuthState = "idle" | "sending" | "sent" | "error" | "unavailable";
 
+type MagicLinkApiResult = {
+  success: boolean;
+  message?: string;
+  error?: string;
+  env?: {
+    supabaseUrlExists: boolean;
+    supabaseKeyExists: boolean;
+  };
+};
+
+type AuthDebugResult = {
+  supabaseUrlExists: boolean;
+  supabaseKeyExists: boolean;
+  siteUrl: string;
+};
+
 const memberEntryCopy = {
   jp: {
     badge: "Member Entrance",
@@ -55,6 +71,7 @@ const memberEntryCopy = {
       supabaseUrl: "Supabase URL",
       anonKey: "Anon key",
       serverApi: "Server API result",
+      authDebug: "Auth debug API",
       origin: "Current origin",
       lastError: "Last error",
       yes: "yes",
@@ -102,6 +119,7 @@ const memberEntryCopy = {
       supabaseUrl: "Supabase URL",
       anonKey: "Anon key",
       serverApi: "Server API result",
+      authDebug: "Auth debug API",
       origin: "Current origin",
       lastError: "Last error",
       yes: "yes",
@@ -149,6 +167,7 @@ const memberEntryCopy = {
       supabaseUrl: "Supabase URL",
       anonKey: "Anon key",
       serverApi: "Server API result",
+      authDebug: "Auth debug API",
       origin: "Current origin",
       lastError: "Last error",
       yes: "yes",
@@ -173,12 +192,47 @@ export function MemberEntryContent({
   const [isLoggedIn] = useState(isLoggedInInitially);
   const [lastError, setLastError] = useState("");
   const [lastApiResult, setLastApiResult] = useState("");
+  const [apiResponse, setApiResponse] = useState<MagicLinkApiResult | null>(null);
+  const [authDebugResponse, setAuthDebugResponse] = useState<AuthDebugResult | null>(null);
   const [currentOrigin, setCurrentOrigin] = useState("");
   const debugEnabled = process.env.NODE_ENV !== "production" || debug;
 
   useEffect(() => {
     setCurrentOrigin(window.location.origin);
   }, []);
+
+  useEffect(() => {
+    if (!debugEnabled) {
+      return;
+    }
+
+    let active = true;
+
+    async function loadAuthDebug() {
+      try {
+        const response = await fetch("/api/auth-debug");
+        const data = (await response.json()) as AuthDebugResult;
+
+        if (!active) {
+          return;
+        }
+
+        setAuthDebugResponse(data);
+      } catch (error) {
+        if (!active) {
+          return;
+        }
+
+        setLastError(error instanceof Error ? error.message : "Unknown error");
+      }
+    }
+
+    loadAuthDebug();
+
+    return () => {
+      active = false;
+    };
+  }, [debugEnabled]);
 
   const statusMessage = useMemo(() => {
     if (isLoggedIn) {
@@ -220,6 +274,7 @@ export function MemberEntryContent({
     setAuthState("sending");
     setLastError("");
     setLastApiResult("");
+    setApiResponse(null);
 
     try {
       const response = await fetch("/api/send-magic-link", {
@@ -230,12 +285,10 @@ export function MemberEntryContent({
         body: JSON.stringify({ email: normalizedEmail })
       });
 
-      const data = (await response.json()) as {
-        success?: boolean;
-        error?: string;
-      };
+      const data = (await response.json()) as MagicLinkApiResult;
 
       setLastApiResult(data.success ? "success" : "error");
+      setApiResponse(data);
 
       if (!response.ok || !data.success) {
         setLastError(data.error || "Unknown error");
@@ -391,10 +444,21 @@ export function MemberEntryContent({
                     <dd className="max-w-[60%] truncate text-right">{currentOrigin || copy.debug.none}</dd>
                   </div>
                   <div className="flex items-center justify-between gap-3">
+                    <dt>{copy.debug.authDebug}</dt>
+                    <dd className="max-w-[60%] truncate text-right">
+                      {authDebugResponse ? JSON.stringify(authDebugResponse) : copy.debug.none}
+                    </dd>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
                     <dt>{copy.debug.lastError}</dt>
                     <dd className="max-w-[60%] truncate text-right">{lastError || copy.debug.none}</dd>
                   </div>
                 </dl>
+                {apiResponse ? (
+                  <pre className="mt-4 overflow-x-auto rounded-xl border border-white/10 bg-[#07111a] p-3 text-xs leading-6 text-white/72">
+                    {JSON.stringify(apiResponse, null, 2)}
+                  </pre>
+                ) : null}
               </div>
             ) : null}
           </div>
