@@ -4,6 +4,10 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { useLanguage } from "@/lib/i18n";
+import {
+  SUPABASE_BROWSER_ANON_KEY,
+  SUPABASE_BROWSER_URL
+} from "@/lib/supabase/client";
 
 type MemberEntryContentProps = {
   lineUrl: string;
@@ -170,8 +174,8 @@ export function MemberEntryContent({ lineUrl, debug = false }: MemberEntryConten
     let active = true;
 
     async function loadSession() {
-      setHasSupabaseUrl(Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL));
-      setHasAnonKey(Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY));
+      setHasSupabaseUrl(Boolean(SUPABASE_BROWSER_URL));
+      setHasAnonKey(Boolean(SUPABASE_BROWSER_ANON_KEY));
       setCurrentOrigin(window.location.origin);
 
       const supabase = getSupabaseBrowserClient();
