@@ -44,6 +44,10 @@ const memberEntryCopy = {
     loggedIn: "ログイン済みです。続きから静かに始められます。",
     inboxHelp:
       "メールが届かない場合は、迷惑メールをご確認ください。解決しない場合はLINEでサポートします。",
+    invalidEmail: "有効なメールアドレスを入力してください。",
+    sentBox:
+      "ログインリンクを送信しました。メールをご確認ください。迷惑メールもご確認ください。",
+    loggedInBox: "ログインできました。今日の1分から始めましょう。",
     debug: {
       title: "接続確認",
       supabaseUrl: "Supabase URL",
@@ -85,6 +89,10 @@ const memberEntryCopy = {
     loggedIn: "이미 로그인되어 있습니다. 이어서 조용히 시작하실 수 있습니다.",
     inboxHelp:
       "메일이 보이지 않으면 스팸함을 확인해주세요. 그래도 해결되지 않으면 LINE으로 도와드리겠습니다.",
+    invalidEmail: "올바른 이메일 주소를 입력해주세요.",
+    sentBox:
+      "로그인 링크를 보냈습니다. 이메일을 확인해주세요. 스팸함도 함께 확인해주세요.",
+    loggedInBox: "로그인되었습니다. 오늘의 1분부터 시작해볼까요?",
     debug: {
       title: "연결 확인",
       supabaseUrl: "Supabase URL",
@@ -126,6 +134,10 @@ const memberEntryCopy = {
     loggedIn: "You are already logged in. You can quietly continue from here.",
     inboxHelp:
       "If the email does not arrive, please check your spam folder. If it still does not appear, LINE support can help.",
+    invalidEmail: "Please enter a valid email address.",
+    sentBox:
+      "Login link sent. Please check your email. Please also check your spam folder.",
+    loggedInBox: "You are logged in. Start with today’s one minute.",
     debug: {
       title: "Connection check",
       supabaseUrl: "Supabase URL",
@@ -202,13 +214,15 @@ export function MemberEntryContent({ lineUrl, debug = false }: MemberEntryConten
     }
 
     return copy.fallback;
-  }, [authState, copy, isLoggedIn]);
+  }, [authState, copy, isLoggedIn, lastError]);
 
-  async function handleMagicLinkLogin() {
+  async function handleMagicLinkSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
     const normalizedEmail = email.trim();
 
-    if (!normalizedEmail) {
-      setLastError("Email is required");
+    if (!normalizedEmail || !normalizedEmail.includes("@")) {
+      setLastError(copy.invalidEmail);
       setAuthState("error");
       return;
     }
@@ -232,6 +246,7 @@ export function MemberEntryContent({ lineUrl, debug = false }: MemberEntryConten
     });
 
     if (error) {
+      console.error("Magic link error:", error);
       setLastError(error.message);
       setAuthState("error");
       return;
@@ -317,36 +332,47 @@ export function MemberEntryContent({ lineUrl, debug = false }: MemberEntryConten
           <div className="mx-auto mt-5 max-w-4xl rounded-[24px] border border-white/10 bg-white/[0.04] p-5 sm:p-6">
             <h2 className="text-xl font-semibold text-white">{copy.loginTitle}</h2>
             <p className="mt-3 text-sm leading-7 text-white/68">{copy.loginDescription}</p>
-            <label className="mt-5 block">
-              <span className="text-sm font-medium text-white/78">{copy.emailLabel}</span>
-              <input
-                type="email"
-                inputMode="email"
-                autoComplete="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                placeholder={copy.emailPlaceholder}
-                className="mt-2 min-h-[52px] w-full rounded-2xl border border-white/12 bg-[#09131d] px-4 py-3 text-base text-white outline-none transition duration-300 placeholder:text-white/28 focus:border-gold/40"
-              />
-            </label>
-            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <button
-                type="button"
-                onClick={handleMagicLinkLogin}
-                disabled={authState === "sending"}
-                className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {authState === "sending" ? copy.submitLoading : copy.submit}
-              </button>
-              <a
-                href={lineUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
-              >
-                {copy.supportCta}
-              </a>
-            </div>
+            <form onSubmit={handleMagicLinkSubmit} className="mt-5">
+              <label className="block">
+                <span className="text-sm font-medium text-white/78">{copy.emailLabel}</span>
+                <input
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  placeholder={copy.emailPlaceholder}
+                  className="mt-2 min-h-[52px] w-full rounded-2xl border border-white/12 bg-[#09131d] px-4 py-3 text-base text-white outline-none transition duration-300 placeholder:text-white/28 focus:border-gold/40"
+                />
+              </label>
+              {authState === "sent" ? (
+                <div className="mt-4 rounded-2xl border border-emerald-300/18 bg-emerald-400/[0.08] px-4 py-4 text-sm leading-7 text-emerald-100">
+                  {copy.sentBox}
+                </div>
+              ) : null}
+              {authState === "error" ? (
+                <div className="mt-4 rounded-2xl border border-rose-300/18 bg-rose-400/[0.08] px-4 py-4 text-sm leading-7 text-rose-100">
+                  {lastError || copy.errorMessage}
+                </div>
+              ) : null}
+              <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <button
+                  type="submit"
+                  disabled={authState === "sending"}
+                  className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {authState === "sending" ? copy.submitLoading : copy.submit}
+                </button>
+                <a
+                  href={lineUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
+                >
+                  {copy.supportCta}
+                </a>
+              </div>
+            </form>
             <p className="mt-4 text-sm leading-7 text-white/56">{copy.inboxHelp}</p>
             {debugEnabled ? (
               <div className="mt-5 rounded-2xl border border-white/10 bg-black/15 p-4 text-left text-sm text-white/66">
