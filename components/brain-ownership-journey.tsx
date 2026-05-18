@@ -189,7 +189,7 @@ export function BrainOwnershipJourney() {
       <div className="mt-8 grid gap-4 lg:grid-cols-5">
         {copy.steps.map((step, index) => {
           const unlocked = memberState === "paid" || index < 2;
-          const href = unlocked ? stepRoutes[index] : memberState === "guest" ? "/login" : "/pricing";
+          const href = unlocked ? stepRoutes[index] : memberState === "guest" ? "/member" : "/pricing";
           const buttonLabel = unlocked ? copy.cta.open : memberState === "guest" ? copy.cta.member : copy.cta.upgrade;
 
           return (

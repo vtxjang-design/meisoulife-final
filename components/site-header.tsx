@@ -150,7 +150,7 @@ export function SiteHeader() {
           ) : (
             <>
               <Link
-                href="/login"
+                href="/member"
                 className="hidden rounded-md border border-white/15 px-4 py-2 text-sm text-white/90 transition hover:border-gold/60 hover:text-white sm:inline-flex"
               >
                 {copy.header.login}
@@ -243,7 +243,7 @@ export function SiteHeader() {
               ) : (
                 <>
                   <Link
-                    href="/login"
+                    href="/member"
                     onClick={() => setMobileOpen(false)}
                     className="inline-flex min-h-[44px] items-center rounded-full border border-white/10 px-4 py-2 text-sm text-white/84 transition hover:bg-white/[0.06]"
                   >

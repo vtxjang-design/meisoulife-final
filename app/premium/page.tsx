@@ -21,7 +21,7 @@ export default async function PremiumPage({ searchParams }: PremiumPageProps) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/login");
+    redirect("/member");
   }
 
   const { data: membership } = await supabase

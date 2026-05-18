@@ -34,7 +34,7 @@ export function ProgramAccessGuard({ children }: ProgramAccessGuardProps) {
       }
 
       if (!data.session) {
-        router.replace("/login");
+        router.replace("/member");
         return;
       }
 
