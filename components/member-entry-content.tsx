@@ -2,18 +2,14 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { useLanguage } from "@/lib/i18n";
-import {
-  SUPABASE_BROWSER_ANON_KEY,
-  SUPABASE_BROWSER_URL
-} from "@/lib/supabase/client";
 
 type MemberEntryContentProps = {
   lineUrl: string;
   debug?: boolean;
-  supabaseUrl?: string;
-  supabaseAnonKey?: string;
+  hasSupabaseUrl: boolean;
+  hasSupabaseAnonKey: boolean;
+  isLoggedInInitially: boolean;
 };
 
 type AuthState = "idle" | "sending" | "sent" | "error" | "unavailable";
@@ -58,7 +54,7 @@ const memberEntryCopy = {
       title: "接続確認",
       supabaseUrl: "Supabase URL",
       anonKey: "Anon key",
-      browserClient: "Browser client",
+      serverApi: "Server API result",
       origin: "Current origin",
       lastError: "Last error",
       yes: "yes",
@@ -105,7 +101,7 @@ const memberEntryCopy = {
       title: "연결 확인",
       supabaseUrl: "Supabase URL",
       anonKey: "Anon key",
-      browserClient: "Browser client",
+      serverApi: "Server API result",
       origin: "Current origin",
       lastError: "Last error",
       yes: "yes",
@@ -152,7 +148,7 @@ const memberEntryCopy = {
       title: "Connection check",
       supabaseUrl: "Supabase URL",
       anonKey: "Anon key",
-      browserClient: "Browser client",
+      serverApi: "Server API result",
       origin: "Current origin",
       lastError: "Last error",
       yes: "yes",
@@ -165,61 +161,24 @@ const memberEntryCopy = {
 export function MemberEntryContent({
   lineUrl,
   debug = false,
-  supabaseUrl = "",
-  supabaseAnonKey = ""
+  hasSupabaseUrl,
+  hasSupabaseAnonKey,
+  isLoggedInInitially
 }: MemberEntryContentProps) {
   const { language } = useLanguage();
   const copy = memberEntryCopy[language];
   const [authState, setAuthState] = useState<AuthState>("idle");
   const [email, setEmail] = useState("");
   const [showLogin, setShowLogin] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn] = useState(isLoggedInInitially);
   const [lastError, setLastError] = useState("");
-  const [hasSupabaseUrl, setHasSupabaseUrl] = useState(false);
-  const [hasAnonKey, setHasAnonKey] = useState(false);
-  const [hasBrowserClient, setHasBrowserClient] = useState(false);
+  const [lastApiResult, setLastApiResult] = useState("");
   const [currentOrigin, setCurrentOrigin] = useState("");
   const debugEnabled = process.env.NODE_ENV !== "production" || debug;
 
   useEffect(() => {
-    let active = true;
-
-    async function loadSession() {
-      setHasSupabaseUrl(Boolean(supabaseUrl || SUPABASE_BROWSER_URL));
-      setHasAnonKey(Boolean(supabaseAnonKey || SUPABASE_BROWSER_ANON_KEY));
-      setCurrentOrigin(window.location.origin);
-
-      const supabase = getSupabaseBrowserClient({
-        url: supabaseUrl || undefined,
-        anonKey: supabaseAnonKey || undefined
-      });
-
-      setHasBrowserClient(Boolean(supabase));
-
-      if (!supabase) {
-        if (active) {
-          setAuthState((current) => (current === "sent" ? current : "unavailable"));
-        }
-        return;
-      }
-
-      const {
-        data: { session }
-      } = await supabase.auth.getSession();
-
-      if (!active) {
-        return;
-      }
-
-      setIsLoggedIn(Boolean(session?.user));
-    }
-
-    loadSession();
-
-    return () => {
-      active = false;
-    };
-  }, [supabaseAnonKey, supabaseUrl]);
+    setCurrentOrigin(window.location.origin);
+  }, []);
 
   const statusMessage = useMemo(() => {
     if (isLoggedIn) {
@@ -252,32 +211,34 @@ export function MemberEntryContent({
       return;
     }
 
-    const supabase = getSupabaseBrowserClient({
-      url: supabaseUrl || undefined,
-      anonKey: supabaseAnonKey || undefined
-    });
-
-    if (!supabase) {
-      setLastError("Supabase browser client unavailable");
+    if (!hasSupabaseUrl || !hasSupabaseAnonKey) {
+      setLastError("Supabase server env unavailable");
       setAuthState("unavailable");
       return;
     }
 
     setAuthState("sending");
     setLastError("");
-    console.log("Sending magic link", normalizedEmail);
+    setLastApiResult("");
 
     try {
-      const { error } = await supabase.auth.signInWithOtp({
-        email: normalizedEmail,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback?next=/member`
-        }
+      const response = await fetch("/api/send-magic-link", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email: normalizedEmail })
       });
 
-      if (error) {
-        console.error("Magic link error:", error);
-        setLastError(error.message);
+      const data = (await response.json()) as {
+        success?: boolean;
+        error?: string;
+      };
+
+      setLastApiResult(data.success ? "success" : "error");
+
+      if (!response.ok || !data.success) {
+        setLastError(data.error || "Unknown error");
         setAuthState("error");
         return;
       }
@@ -419,11 +380,11 @@ export function MemberEntryContent({
                   </div>
                   <div className="flex items-center justify-between gap-3">
                     <dt>{copy.debug.anonKey}</dt>
-                    <dd>{hasAnonKey ? copy.debug.yes : copy.debug.no}</dd>
+                    <dd>{hasSupabaseAnonKey ? copy.debug.yes : copy.debug.no}</dd>
                   </div>
                   <div className="flex items-center justify-between gap-3">
-                    <dt>{copy.debug.browserClient}</dt>
-                    <dd>{hasBrowserClient ? copy.debug.yes : copy.debug.no}</dd>
+                    <dt>{copy.debug.serverApi}</dt>
+                    <dd>{lastApiResult || copy.debug.none}</dd>
                   </div>
                   <div className="flex items-center justify-between gap-3">
                     <dt>{copy.debug.origin}</dt>

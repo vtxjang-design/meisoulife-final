@@ -1,4 +1,5 @@
 import { MemberEntryContent } from "@/components/member-entry-content";
+import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 const LINE_URL =
   process.env.NEXT_PUBLIC_LINE_URL ||
@@ -16,13 +17,18 @@ type MemberPageProps = {
 
 export default async function MemberPage({ searchParams }: MemberPageProps) {
   const params = searchParams ? await searchParams : undefined;
+  const supabase = await getSupabaseServerClient();
+  const {
+    data: { user }
+  } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
 
   return (
     <MemberEntryContent
       lineUrl={LINE_URL}
       debug={params?.debug === "1"}
-      supabaseUrl={SUPABASE_URL}
-      supabaseAnonKey={SUPABASE_ANON_KEY}
+      hasSupabaseUrl={Boolean(SUPABASE_URL)}
+      hasSupabaseAnonKey={Boolean(SUPABASE_ANON_KEY)}
+      isLoggedInInitially={Boolean(user)}
     />
   );
 }
