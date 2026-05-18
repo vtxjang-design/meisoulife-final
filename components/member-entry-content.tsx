@@ -422,6 +422,11 @@ export function MemberEntryContent({
                 </a>
               </div>
             </form>
+            {apiResponse ? (
+              <pre className="mt-4 overflow-x-auto rounded-xl border border-white/10 bg-[#07111a] p-3 text-xs leading-6 text-white/72">
+                {JSON.stringify(apiResponse, null, 2)}
+              </pre>
+            ) : null}
             <p className="mt-4 text-sm leading-7 text-white/56">{copy.inboxHelp}</p>
             {debugEnabled ? (
               <div className="mt-5 rounded-2xl border border-white/10 bg-black/15 p-4 text-left text-sm text-white/66">
@@ -454,11 +459,6 @@ export function MemberEntryContent({
                     <dd className="max-w-[60%] truncate text-right">{lastError || copy.debug.none}</dd>
                   </div>
                 </dl>
-                {apiResponse ? (
-                  <pre className="mt-4 overflow-x-auto rounded-xl border border-white/10 bg-[#07111a] p-3 text-xs leading-6 text-white/72">
-                    {JSON.stringify(apiResponse, null, 2)}
-                  </pre>
-                ) : null}
               </div>
             ) : null}
           </div>
