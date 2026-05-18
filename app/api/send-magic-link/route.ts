@@ -1,22 +1,18 @@
+import { SUPABASE_ANON_KEY, SUPABASE_URL, getSupabaseConfigStatus } from "@/lib/supabase-config";
 import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.meisoulife.com";
 
 export async function POST(request: NextRequest) {
-  const env = {
-    supabaseUrlExists: Boolean(supabaseUrl),
-    supabaseKeyExists: Boolean(supabaseAnonKey)
-  };
+  const env = getSupabaseConfigStatus();
 
   try {
     const body = await request.json().catch(() => null);
     const email = typeof body?.email === "string" ? body.email.trim() : "";
 
-    if (!supabaseUrl) {
-      console.error("[send-magic-link] Missing NEXT_PUBLIC_SUPABASE_URL");
+    if (!SUPABASE_URL) {
+      console.error("[send-magic-link] Missing Supabase URL");
       return NextResponse.json(
         {
           success: false,
@@ -28,8 +24,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!supabaseAnonKey) {
-      console.error("[send-magic-link] Missing NEXT_PUBLIC_SUPABASE_ANON_KEY");
+    if (!SUPABASE_ANON_KEY) {
+      console.error("[send-magic-link] Missing Supabase anon key");
       return NextResponse.json(
         {
           success: false,
@@ -54,7 +50,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const { error } = await supabase.auth.signInWithOtp({
       email,

@@ -1,3 +1,4 @@
+import { SUPABASE_ANON_KEY, SUPABASE_URL } from "@/lib/supabase-config";
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -15,17 +16,14 @@ export async function GET(request: NextRequest) {
   const nextParam = requestUrl.searchParams.get("next");
   const next = nextParam?.startsWith("/") ? nextParam : "/member";
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseAnonKey) {
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
     console.error("[auth-callback] Missing Supabase public environment variables");
     return NextResponse.redirect(new URL("/member?debug=1", request.url));
   }
 
   const response = NextResponse.redirect(new URL(next, request.url));
 
-  const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+  const supabase = createServerClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     cookies: {
       getAll() {
         return request.cookies.getAll();
