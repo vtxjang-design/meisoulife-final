@@ -260,6 +260,45 @@ STRIPE_PRICE_LEADER
 STRIPE_PRICE_PREMIUM
 ```
 
+## Supabase Magic Link 로그인 설정
+
+`/member` 의 비밀번호 없는 이메일 로그인은 Supabase Magic Link 를 사용합니다.
+
+필수 환경변수:
+
+```text
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY
+```
+
+Supabase Dashboard 설정:
+
+1. Authentication -> URL Configuration
+2. Site URL:
+
+```text
+https://www.meisoulife.com
+```
+
+3. Redirect URLs 에 아래 항목 추가:
+
+```text
+https://www.meisoulife.com/auth/callback
+https://www.meisoulife.com/member
+http://localhost:3000/auth/callback
+```
+
+동작 흐름:
+
+```text
+/member
+  -> 이메일 입력
+  -> Supabase signInWithOtp()
+  -> /auth/callback?next=/member
+  -> code 교환 후 세션 생성
+  -> /member 복귀
+```
+
 ## 배포
 
 Vercel 배포 순서는 아래 문서를 보면 됩니다.

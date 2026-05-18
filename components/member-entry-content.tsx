@@ -7,6 +7,7 @@ import { useLanguage } from "@/lib/i18n";
 
 type MemberEntryContentProps = {
   lineUrl: string;
+  debug?: boolean;
 };
 
 type AuthState = "idle" | "sending" | "sent" | "error" | "unavailable";
@@ -35,13 +36,23 @@ const memberEntryCopy = {
     emailLabel: "メールアドレス",
     submit: "ログインリンクを送る",
     submitLoading: "送信中...",
-    sentMessage:
-      "ログインリンクを送りました。メールを開いて、このページに戻ってきてください。",
+    sentMessage: "ログインリンクを送信しました。メールをご確認ください。",
     errorMessage:
       "ログインリンクを送れませんでした。しばらくしてからもう一度お試しください。",
     unavailableMessage:
       "今はログインを開けませんが、LINEからサポートを受ければ次の案内につながれます。",
-    loggedIn: "ログイン済みです。続きから静かに始められます。"
+    loggedIn: "ログイン済みです。続きから静かに始められます。",
+    inboxHelp:
+      "メールが届かない場合は、迷惑メールをご確認ください。解決しない場合はLINEでサポートします。",
+    debug: {
+      title: "接続確認",
+      supabaseUrl: "Supabase URL",
+      anonKey: "Anon key",
+      lastError: "Last error",
+      yes: "yes",
+      no: "no",
+      none: "none"
+    }
   },
   kr: {
     badge: "Member Entrance",
@@ -66,13 +77,23 @@ const memberEntryCopy = {
     emailLabel: "이메일 주소",
     submit: "로그인 링크 보내기",
     submitLoading: "보내는 중...",
-    sentMessage:
-      "로그인 링크를 보냈습니다. 메일을 열고 다시 이 페이지로 돌아와 주세요.",
+    sentMessage: "로그인 링크를 보냈습니다. 이메일을 확인해주세요.",
     errorMessage:
       "로그인 링크를 보내지 못했습니다. 잠시 후 다시 시도해 주세요.",
     unavailableMessage:
       "지금은 로그인 연결이 원활하지 않지만, LINE 지원으로 다음 안내를 받으실 수 있습니다.",
-    loggedIn: "이미 로그인되어 있습니다. 이어서 조용히 시작하실 수 있습니다."
+    loggedIn: "이미 로그인되어 있습니다. 이어서 조용히 시작하실 수 있습니다.",
+    inboxHelp:
+      "메일이 보이지 않으면 스팸함을 확인해주세요. 그래도 해결되지 않으면 LINE으로 도와드리겠습니다.",
+    debug: {
+      title: "연결 확인",
+      supabaseUrl: "Supabase URL",
+      anonKey: "Anon key",
+      lastError: "Last error",
+      yes: "yes",
+      no: "no",
+      none: "none"
+    }
   },
   en: {
     badge: "Member Entrance",
@@ -97,28 +118,45 @@ const memberEntryCopy = {
     emailLabel: "Email address",
     submit: "Send login link",
     submitLoading: "Sending...",
-    sentMessage:
-      "We sent your login link. Open the email and come back to this page.",
+    sentMessage: "Login link sent. Please check your email.",
     errorMessage:
       "We could not send the login link. Please try again in a moment.",
     unavailableMessage:
       "Login is not available right now, but LINE support can guide you to your next step.",
-    loggedIn: "You are already logged in. You can quietly continue from here."
+    loggedIn: "You are already logged in. You can quietly continue from here.",
+    inboxHelp:
+      "If the email does not arrive, please check your spam folder. If it still does not appear, LINE support can help.",
+    debug: {
+      title: "Connection check",
+      supabaseUrl: "Supabase URL",
+      anonKey: "Anon key",
+      lastError: "Last error",
+      yes: "yes",
+      no: "no",
+      none: "none"
+    }
   }
 } as const;
 
-export function MemberEntryContent({ lineUrl }: MemberEntryContentProps) {
+export function MemberEntryContent({ lineUrl, debug = false }: MemberEntryContentProps) {
   const { language } = useLanguage();
   const copy = memberEntryCopy[language];
   const [authState, setAuthState] = useState<AuthState>("idle");
   const [email, setEmail] = useState("");
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [lastError, setLastError] = useState("");
+  const [hasSupabaseUrl, setHasSupabaseUrl] = useState(false);
+  const [hasAnonKey, setHasAnonKey] = useState(false);
+  const debugEnabled = process.env.NODE_ENV !== "production" || debug;
 
   useEffect(() => {
     let active = true;
 
     async function loadSession() {
+      setHasSupabaseUrl(Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL));
+      setHasAnonKey(Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY));
+
       const supabase = getSupabaseBrowserClient();
 
       if (!supabase) {
@@ -156,7 +194,7 @@ export function MemberEntryContent({ lineUrl }: MemberEntryContentProps) {
     }
 
     if (authState === "error") {
-      return copy.errorMessage;
+      return lastError ? `${copy.errorMessage} (${lastError})` : copy.errorMessage;
     }
 
     if (authState === "unavailable") {
@@ -170,6 +208,7 @@ export function MemberEntryContent({ lineUrl }: MemberEntryContentProps) {
     const normalizedEmail = email.trim();
 
     if (!normalizedEmail) {
+      setLastError("Email is required");
       setAuthState("error");
       return;
     }
@@ -177,23 +216,23 @@ export function MemberEntryContent({ lineUrl }: MemberEntryContentProps) {
     const supabase = getSupabaseBrowserClient();
 
     if (!supabase) {
+      setLastError("Supabase browser client unavailable");
       setAuthState("unavailable");
       return;
     }
 
     setAuthState("sending");
-
-    const siteUrl =
-      process.env.NEXT_PUBLIC_SITE_URL || (typeof window !== "undefined" ? window.location.origin : "");
+    setLastError("");
 
     const { error } = await supabase.auth.signInWithOtp({
       email: normalizedEmail,
       options: {
-        emailRedirectTo: `${siteUrl}/member`
+        emailRedirectTo: `${window.location.origin}/auth/callback?next=/member`
       }
     });
 
     if (error) {
+      setLastError(error.message);
       setAuthState("error");
       return;
     }
@@ -233,13 +272,22 @@ export function MemberEntryContent({ lineUrl }: MemberEntryContentProps) {
           >
             {copy.actions.line}
           </a>
-          <button
-            type="button"
-            onClick={() => setShowLogin((current) => !current)}
-            className="relative z-20 inline-flex min-h-[60px] cursor-pointer items-center justify-center rounded-[24px] border border-white/12 bg-white/[0.04] px-5 py-4 text-center text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
-          >
-            {copy.actions.login}
-          </button>
+          {isLoggedIn ? (
+            <Link
+              href="/dashboard"
+              className="relative z-20 inline-flex min-h-[60px] items-center justify-center rounded-[24px] border border-white/12 bg-white/[0.04] px-5 py-4 text-center text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
+            >
+              {copy.actions.dashboard}
+            </Link>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setShowLogin((current) => !current)}
+              className="relative z-20 inline-flex min-h-[60px] cursor-pointer items-center justify-center rounded-[24px] border border-white/12 bg-white/[0.04] px-5 py-4 text-center text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
+            >
+              {copy.actions.login}
+            </button>
+          )}
         </div>
 
         <div className="mx-auto mt-4 max-w-4xl rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
@@ -265,7 +313,7 @@ export function MemberEntryContent({ lineUrl }: MemberEntryContentProps) {
           </div>
         </div>
 
-        {showLogin ? (
+        {!isLoggedIn && showLogin ? (
           <div className="mx-auto mt-5 max-w-4xl rounded-[24px] border border-white/10 bg-white/[0.04] p-5 sm:p-6">
             <h2 className="text-xl font-semibold text-white">{copy.loginTitle}</h2>
             <p className="mt-3 text-sm leading-7 text-white/68">{copy.loginDescription}</p>
@@ -299,6 +347,26 @@ export function MemberEntryContent({ lineUrl }: MemberEntryContentProps) {
                 {copy.supportCta}
               </a>
             </div>
+            <p className="mt-4 text-sm leading-7 text-white/56">{copy.inboxHelp}</p>
+            {debugEnabled ? (
+              <div className="mt-5 rounded-2xl border border-white/10 bg-black/15 p-4 text-left text-sm text-white/66">
+                <p className="font-semibold text-white/84">{copy.debug.title}</p>
+                <dl className="mt-3 space-y-2">
+                  <div className="flex items-center justify-between gap-3">
+                    <dt>{copy.debug.supabaseUrl}</dt>
+                    <dd>{hasSupabaseUrl ? copy.debug.yes : copy.debug.no}</dd>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <dt>{copy.debug.anonKey}</dt>
+                    <dd>{hasAnonKey ? copy.debug.yes : copy.debug.no}</dd>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <dt>{copy.debug.lastError}</dt>
+                    <dd className="max-w-[60%] truncate text-right">{lastError || copy.debug.none}</dd>
+                  </div>
+                </dl>
+              </div>
+            ) : null}
           </div>
         ) : null}
       </div>
