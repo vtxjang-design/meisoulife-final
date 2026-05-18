@@ -52,6 +52,7 @@ const memberEntryCopy = {
       title: "接続確認",
       supabaseUrl: "Supabase URL",
       anonKey: "Anon key",
+      origin: "Current origin",
       lastError: "Last error",
       yes: "yes",
       no: "no",
@@ -97,6 +98,7 @@ const memberEntryCopy = {
       title: "연결 확인",
       supabaseUrl: "Supabase URL",
       anonKey: "Anon key",
+      origin: "Current origin",
       lastError: "Last error",
       yes: "yes",
       no: "no",
@@ -142,6 +144,7 @@ const memberEntryCopy = {
       title: "Connection check",
       supabaseUrl: "Supabase URL",
       anonKey: "Anon key",
+      origin: "Current origin",
       lastError: "Last error",
       yes: "yes",
       no: "no",
@@ -160,6 +163,7 @@ export function MemberEntryContent({ lineUrl, debug = false }: MemberEntryConten
   const [lastError, setLastError] = useState("");
   const [hasSupabaseUrl, setHasSupabaseUrl] = useState(false);
   const [hasAnonKey, setHasAnonKey] = useState(false);
+  const [currentOrigin, setCurrentOrigin] = useState("");
   const debugEnabled = process.env.NODE_ENV !== "production" || debug;
 
   useEffect(() => {
@@ -168,6 +172,7 @@ export function MemberEntryContent({ lineUrl, debug = false }: MemberEntryConten
     async function loadSession() {
       setHasSupabaseUrl(Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL));
       setHasAnonKey(Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY));
+      setCurrentOrigin(window.location.origin);
 
       const supabase = getSupabaseBrowserClient();
 
@@ -237,22 +242,29 @@ export function MemberEntryContent({ lineUrl, debug = false }: MemberEntryConten
 
     setAuthState("sending");
     setLastError("");
+    console.log("Sending magic link", normalizedEmail);
 
-    const { error } = await supabase.auth.signInWithOtp({
-      email: normalizedEmail,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback?next=/member`
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email: normalizedEmail,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=/member`
+        }
+      });
+
+      if (error) {
+        console.error("Magic link error:", error);
+        setLastError(error.message);
+        setAuthState("error");
+        return;
       }
-    });
 
-    if (error) {
-      console.error("Magic link error:", error);
-      setLastError(error.message);
+      setAuthState("sent");
+    } catch (error) {
+      console.error("Unexpected magic link error:", error);
+      setLastError(error instanceof Error ? error.message : "Unknown error");
       setAuthState("error");
-      return;
     }
-
-    setAuthState("sent");
   }
 
   return (
@@ -385,6 +397,10 @@ export function MemberEntryContent({ lineUrl, debug = false }: MemberEntryConten
                   <div className="flex items-center justify-between gap-3">
                     <dt>{copy.debug.anonKey}</dt>
                     <dd>{hasAnonKey ? copy.debug.yes : copy.debug.no}</dd>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <dt>{copy.debug.origin}</dt>
+                    <dd className="max-w-[60%] truncate text-right">{currentOrigin || copy.debug.none}</dd>
                   </div>
                   <div className="flex items-center justify-between gap-3">
                     <dt>{copy.debug.lastError}</dt>
