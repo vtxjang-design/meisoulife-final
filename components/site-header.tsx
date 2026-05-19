@@ -2,27 +2,32 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { languageButtons, useLanguage, useSiteCopy } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const router = useRouter();
   const { language, setLanguage } = useLanguage();
   const copy = useSiteCopy();
-  const dashboardLabel = language === "jp" ? "ダッシュボード" : language === "kr" ? "대시보드" : "Dashboard";
+  const memberCenterLabel =
+    language === "jp" ? "メンバーセンター" : language === "kr" ? "멤버센터" : "Member Center";
+  const logoutLabel = language === "jp" ? "ログアウト" : language === "kr" ? "로그아웃" : "Logout";
   const [mobileOpen, setMobileOpen] = useState(false);
   const [memberState, setMemberState] = useState<"guest" | "free" | "paid">("guest");
   const [paidLabel, setPaidLabel] = useState("");
+  const [loggingOut, setLoggingOut] = useState(false);
 
   useEffect(() => {
     let active = true;
+    const supabase = getSupabaseBrowserClient();
 
     async function loadMemberState() {
-      const supabase = getSupabaseBrowserClient();
-
       if (!supabase) {
+        setMemberState("guest");
+        setPaidLabel("");
         return;
       }
 
@@ -69,10 +74,16 @@ export function SiteHeader() {
 
     loadMemberState();
 
+    const subscription = supabase?.auth.onAuthStateChange(() => {
+      void loadMemberState();
+      router.refresh();
+    });
+
     return () => {
       active = false;
+      subscription?.data.subscription.unsubscribe();
     };
-  }, [language, pathname]);
+  }, [language, pathname, router]);
 
   useEffect(() => {
     setMobileOpen(false);
@@ -85,6 +96,27 @@ export function SiteHeader() {
       document.body.style.overflow = "";
     };
   }, [mobileOpen]);
+
+  async function handleLogout() {
+    const supabase = getSupabaseBrowserClient();
+
+    if (!supabase || loggingOut) {
+      return;
+    }
+
+    setLoggingOut(true);
+
+    try {
+      await supabase.auth.signOut();
+      setMemberState("guest");
+      setPaidLabel("");
+      setMobileOpen(false);
+      router.push("/");
+      router.refresh();
+    } finally {
+      setLoggingOut(false);
+    }
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-ink/80 backdrop-blur-xl">
@@ -144,8 +176,16 @@ export function SiteHeader() {
                 href="/dashboard"
                 className="hidden rounded-md border border-white/15 px-4 py-2 text-sm text-white/90 transition hover:border-gold/60 hover:text-white sm:inline-flex"
               >
-                {dashboardLabel}
+                {memberCenterLabel}
               </Link>
+              <button
+                type="button"
+                onClick={handleLogout}
+                disabled={loggingOut}
+                className="hidden rounded-md border border-white/15 px-4 py-2 text-sm text-white/90 transition hover:border-white/40 hover:text-white disabled:cursor-not-allowed disabled:opacity-60 sm:inline-flex"
+              >
+                {loggingOut ? "..." : logoutLabel}
+              </button>
             </>
           ) : (
             <>
@@ -237,8 +277,16 @@ export function SiteHeader() {
                     onClick={() => setMobileOpen(false)}
                     className="inline-flex min-h-[44px] items-center rounded-full border border-white/10 px-4 py-2 text-sm text-white/84 transition hover:bg-white/[0.06]"
                   >
-                    {dashboardLabel}
+                    {memberCenterLabel}
                   </Link>
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    disabled={loggingOut}
+                    className="inline-flex min-h-[44px] items-center rounded-full border border-white/10 px-4 py-2 text-sm text-white/84 transition hover:bg-white/[0.06] disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {loggingOut ? "..." : logoutLabel}
+                  </button>
                 </>
               ) : (
                 <>
