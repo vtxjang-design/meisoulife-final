@@ -4,15 +4,15 @@ import { sendAdminPaymentNotification, sendPaymentConfirmationEmail } from "@/li
 import { getStripeClient } from "@/lib/stripe";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 
-type MembershipUpsert = {
+type MembershipSyncInput = {
   user_id?: string | null;
   email?: string | null;
   stripe_customer_id?: string | null;
   stripe_subscription_id?: string | null;
   plan?: string | null;
   status?: string | null;
+  amount_total?: number | null;
   current_period_end?: string | null;
-  updated_at: string;
 };
 
 const processedWebhookEventsFallback = new Set<string>();
@@ -33,26 +33,154 @@ function getCurrentPeriodEnd(subscription: Stripe.Subscription | null) {
   return subscription?.items.data[0]?.current_period_end ?? null;
 }
 
-async function upsertMembership(record: MembershipUpsert) {
+function normalizeMembershipPlan(input?: string | null) {
+  if (!input) {
+    return null;
+  }
+
+  const normalized = input.toLowerCase().replace(/[-\s]/g, "_");
+
+  if (normalized === "basic") {
+    return "basic";
+  }
+
+  if (normalized === "growth" || normalized === "leader") {
+    return "growth";
+  }
+
+  if (normalized === "inner_circle" || normalized === "premium") {
+    return "inner_circle";
+  }
+
+  return null;
+}
+
+function resolvePlanFromAmount(amountTotal?: number | null) {
+  if (amountTotal === 1000) {
+    return "basic";
+  }
+
+  if (amountTotal === 3000) {
+    return "growth";
+  }
+
+  if (amountTotal === 10000) {
+    return "inner_circle";
+  }
+
+  return null;
+}
+
+function getMembershipPlan(record: MembershipSyncInput) {
+  return normalizeMembershipPlan(record.plan) || resolvePlanFromAmount(record.amount_total) || "basic";
+}
+
+async function resolveMembershipUserId(email?: string | null, explicitUserId?: string | null) {
   const supabase = getSupabaseAdminClient();
 
-  if (!supabase || !record.stripe_subscription_id) {
-    await logWithoutDatabase("memberships upsert skipped", {
-      reason: !supabase ? "missing_supabase_admin" : "missing_subscription_id",
-      subscriptionId: record.stripe_subscription_id
+  if (explicitUserId) {
+    return explicitUserId;
+  }
+
+  if (!supabase || !email) {
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("users")
+    .select("auth_user_id, email")
+    .eq("email", email)
+    .maybeSingle();
+
+  if (error) {
+    console.error("[stripe-webhook] failed to lookup user by email", {
+      email,
+      message: error.message
+    });
+    return null;
+  }
+
+  return data?.auth_user_id || null;
+}
+
+async function upsertMembership(record: MembershipSyncInput) {
+  const supabase = getSupabaseAdminClient();
+
+  if (!supabase) {
+    await logWithoutDatabase("memberships sync skipped", {
+      reason: "missing_supabase_admin"
     });
     return;
   }
 
-  await supabase.from("memberships").upsert(record, {
-    onConflict: "stripe_subscription_id"
-  });
-  console.log("[stripe-webhook] Membership updated", {
-    email: record.email || null,
-    plan: record.plan || null,
-    status: record.status || null,
-    subscriptionId: record.stripe_subscription_id || null
-  });
+  const resolvedUserId = await resolveMembershipUserId(record.email, record.user_id);
+  const resolvedPlan = getMembershipPlan(record);
+  const resolvedStatus = record.status || "active";
+
+  if (!resolvedUserId) {
+    console.warn("[stripe-webhook] membership sync skipped because user_id could not be resolved", {
+      email: record.email || null,
+      subscriptionId: record.stripe_subscription_id || null
+    });
+    return;
+  }
+
+  const { data: existingMembership, error: lookupError } = await supabase
+    .from("memberships")
+    .select("id")
+    .eq("user_id", resolvedUserId)
+    .maybeSingle();
+
+  if (lookupError) {
+    console.error("[stripe-webhook] failed to lookup existing membership", {
+      userId: resolvedUserId,
+      message: lookupError.message
+    });
+    return;
+  }
+
+  if (existingMembership?.id) {
+    const { data, error } = await supabase
+      .from("memberships")
+      .update({
+        plan: resolvedPlan,
+        status: resolvedStatus
+      })
+      .eq("id", existingMembership.id)
+      .select("id, user_id, plan, status")
+      .maybeSingle();
+
+    if (error) {
+      console.error("[stripe-webhook] membership update failed", {
+        userId: resolvedUserId,
+        message: error.message
+      });
+      return;
+    }
+
+    console.log("[stripe-webhook] Membership synced", data);
+    return;
+  }
+
+  const { data, error } = await supabase
+    .from("memberships")
+    .insert({
+      user_id: resolvedUserId,
+      plan: resolvedPlan,
+      status: resolvedStatus
+    })
+    .select("id, user_id, plan, status")
+    .maybeSingle();
+
+  if (error) {
+    console.error("[stripe-webhook] membership insert failed", {
+      userId: resolvedUserId,
+      message: error.message
+    });
+    return;
+  }
+
+  console.log("[stripe-webhook] Membership synced", data);
 }
 
 async function syncUserPlan(record: {
@@ -67,10 +195,14 @@ async function syncUserPlan(record: {
     return;
   }
 
-  const currentPlan = record.status === "active" || record.status === "trialing" ? record.plan || "free" : "free";
+  const resolvedUserId = await resolveMembershipUserId(record.email, record.userId);
+  const currentPlan =
+    record.status === "active" || record.status === "trialing"
+      ? normalizeMembershipPlan(record.plan) || "free"
+      : "free";
   const { error } = await supabase.from("users").upsert(
     {
-      auth_user_id: record.userId || null,
+      auth_user_id: resolvedUserId || null,
       email: record.email,
       current_plan: currentPlan
     },
@@ -166,7 +298,7 @@ async function handleCheckoutCompleted(stripe: Stripe, session: Stripe.Checkout.
   const stripeCustomerId = typeof session.customer === "string" ? session.customer : session.customer?.id || null;
   const stripeSubscriptionId = typeof session.subscription === "string" ? session.subscription : session.subscription?.id || null;
   const language = session.metadata?.language || null;
-  const plan = session.metadata?.plan || subscription?.metadata?.plan || null;
+  const plan = session.metadata?.plan || subscription?.metadata?.plan || resolvePlanFromAmount(session.amount_total) || null;
   const userId = session.metadata?.user_id || session.metadata?.userId || null;
 
   await upsertMembership({
@@ -176,8 +308,8 @@ async function handleCheckoutCompleted(stripe: Stripe, session: Stripe.Checkout.
     stripe_subscription_id: stripeSubscriptionId,
     plan,
     status: "active",
+    amount_total: session.amount_total ?? null,
     current_period_end: toIsoDate(getCurrentPeriodEnd(subscription)),
-    updated_at: new Date().toISOString()
   });
   await syncUserPlan({
     userId,
@@ -246,16 +378,18 @@ async function handleInvoicePaid(stripe: Stripe, invoice: Stripe.Invoice) {
   );
 
   await upsertMembership({
+    user_id: subscription?.metadata?.user_id || null,
     email: invoice.customer_email || null,
     stripe_customer_id: typeof invoice.customer === "string" ? invoice.customer : invoice.customer?.id || null,
     stripe_subscription_id:
       typeof invoiceSubscription === "string" ? invoiceSubscription : invoiceSubscription?.id || null,
-    plan: subscription?.metadata?.plan || null,
+    plan: subscription?.metadata?.plan || resolvePlanFromAmount(invoice.amount_paid || invoice.amount_due || null) || null,
     status: "active",
+    amount_total: invoice.amount_paid || invoice.amount_due || null,
     current_period_end: toIsoDate(getCurrentPeriodEnd(subscription)),
-    updated_at: new Date().toISOString()
   });
   await syncUserPlan({
+    userId: subscription?.metadata?.user_id || null,
     email: invoice.customer_email || null,
     plan: subscription?.metadata?.plan || null,
     status: "active"
@@ -274,8 +408,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
     stripe_subscription_id: subscription.id,
     plan: subscription.metadata?.plan || null,
     status: subscription.status,
-    current_period_end: toIsoDate(getCurrentPeriodEnd(subscription)),
-    updated_at: new Date().toISOString()
+    current_period_end: toIsoDate(getCurrentPeriodEnd(subscription))
   });
   await syncUserPlan({
     userId: subscription.metadata?.user_id || null,
@@ -293,8 +426,7 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     stripe_subscription_id: subscription.id,
     plan: subscription.metadata?.plan || null,
     status: "canceled",
-    current_period_end: toIsoDate(getCurrentPeriodEnd(subscription)),
-    updated_at: new Date().toISOString()
+    current_period_end: toIsoDate(getCurrentPeriodEnd(subscription))
   });
   await syncUserPlan({
     userId: subscription.metadata?.user_id || null,
@@ -312,16 +444,18 @@ async function handleInvoiceFailed(stripe: Stripe, invoice: Stripe.Invoice) {
   );
 
   await upsertMembership({
+    user_id: subscription?.metadata?.user_id || null,
     email: invoice.customer_email || null,
     stripe_customer_id: typeof invoice.customer === "string" ? invoice.customer : invoice.customer?.id || null,
     stripe_subscription_id:
       typeof invoiceSubscription === "string" ? invoiceSubscription : invoiceSubscription?.id || null,
-    plan: subscription?.metadata?.plan || null,
+    plan: subscription?.metadata?.plan || resolvePlanFromAmount(invoice.amount_due || null) || null,
     status: "past_due",
-    current_period_end: toIsoDate(getCurrentPeriodEnd(subscription)),
-    updated_at: new Date().toISOString()
+    amount_total: invoice.amount_due || null,
+    current_period_end: toIsoDate(getCurrentPeriodEnd(subscription))
   });
   await syncUserPlan({
+    userId: subscription?.metadata?.user_id || null,
     email: invoice.customer_email || null,
     plan: subscription?.metadata?.plan || null,
     status: "past_due"
