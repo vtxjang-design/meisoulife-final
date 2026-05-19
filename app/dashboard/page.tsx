@@ -1,6 +1,5 @@
 import { MemberDashboard } from "@/components/member-dashboard";
 import { isLeaderCandidate } from "@/lib/leader";
-import { SectionHeading } from "@/components/section-heading";
 import { getMockDashboard } from "@/lib/mock-data";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -15,32 +14,30 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   const params = await searchParams;
   const supabase = await getSupabaseServerClient();
   const mock = getMockDashboard();
-  let plan = mock.plan;
+  let planKey: "free" | "basic" | "growth" | "inner_circle" = "free";
   let candidateLeader = false;
   let streakCount = mock.streakCount;
   let challengeDay = mock.challengeDay;
 
   if (supabase) {
     const {
-      data: { user }
-    } = await supabase.auth.getUser();
+      data: { session }
+    } = await supabase.auth.getSession();
+    const user = session?.user ?? null;
 
     if (user) {
-      const { data: membership } = await supabase
+      const { data: membership, error: membershipError } = await supabase
         .from("memberships")
-        .select("plan, status")
+        .select("plan")
         .eq("user_id", user.id)
-        .in("status", ["active", "trialing"])
-        .order("updated_at", { ascending: false })
+        .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle();
 
-      if (membership?.plan === "basic") {
-        plan = "Basic";
-      } else if (membership?.plan === "growth") {
-        plan = "Growth";
-      } else if (membership?.plan === "inner_circle") {
-        plan = "Inner Circle";
+      if (membershipError) {
+        console.error("Failed to fetch membership", membershipError);
+      } else if (membership?.plan === "basic" || membership?.plan === "growth" || membership?.plan === "inner_circle") {
+        planKey = membership.plan;
       }
 
       const { data: profile } = await supabase
@@ -49,8 +46,10 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         .eq("auth_user_id", user.id)
         .maybeSingle();
 
-      if (profile?.current_plan) {
-        plan = profile.current_plan;
+      if (planKey === "free") {
+        if (profile?.current_plan === "basic" || profile?.current_plan === "growth" || profile?.current_plan === "inner_circle") {
+          planKey = profile.current_plan;
+        }
       }
 
       if (typeof profile?.challenge_day === "number" && profile.challenge_day > 0) {
@@ -72,23 +71,16 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
   return (
     <div className="section-shell py-16 sm:py-24">
-      <SectionHeading
-        eyebrow="Dashboard"
-        title={params.challenge ? "チャレンジを開始しました" : "会員ダッシュボード"}
-        description="現在のプラン、チャレンジ進行、ストリーク、AIコーチ利用状況、イベント、コミュニティ導線をひとつにまとめています。"
+      <MemberDashboard
+        planKey={planKey}
+        challengeDay={challengeDay}
+        streakCount={streakCount}
+        aiUsage={mock.aiUsage}
+        candidateLeader={candidateLeader}
+        communityUrl={planKey === "free" ? mock.communityLinks.free : mock.communityLinks.paid}
+        challengeStarted={Boolean(params.challenge)}
+        registeredEmail={params.email}
       />
-      <div className="mt-10">
-        <MemberDashboard
-          plan={plan}
-          challengeDay={challengeDay}
-          streakCount={streakCount}
-          aiUsage={mock.aiUsage}
-          upcomingEvents={mock.upcomingEvents}
-          candidateLeader={candidateLeader}
-          communityUrl={plan === "Free" ? mock.communityLinks.free : mock.communityLinks.paid}
-        />
-      </div>
-      {params.email ? <p className="mt-6 text-sm text-white/50">登録メール: {params.email}</p> : null}
     </div>
   );
 }
