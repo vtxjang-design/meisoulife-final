@@ -19,42 +19,28 @@ export function SiteHeader() {
   const [memberState, setMemberState] = useState<"guest" | "free" | "paid">("guest");
   const [paidLabel, setPaidLabel] = useState("");
   const [loggingOut, setLoggingOut] = useState(false);
+  const [authResolved, setAuthResolved] = useState(false);
 
   useEffect(() => {
     let active = true;
     const supabase = getSupabaseBrowserClient();
 
-    async function loadMemberState() {
-      if (!supabase) {
-        setMemberState("guest");
-        setPaidLabel("");
-        return;
-      }
-
-      const {
-        data: { session }
-      } = await supabase.auth.getSession();
-
-      if (!active) {
-        return;
-      }
-
-      if (!session?.user) {
-        setMemberState("guest");
-        setPaidLabel("");
-        return;
-      }
-
-      const { data: membership } = await supabase
+    async function loadPaidMembership(userId: string) {
+      const { data: membership, error } = await supabase!
         .from("memberships")
         .select("plan, status")
-        .eq("user_id", session.user.id)
+        .eq("user_id", userId)
         .in("status", ["active", "trialing"])
-        .order("updated_at", { ascending: false })
-        .limit(1)
         .maybeSingle();
 
       if (!active) {
+        return;
+      }
+
+      if (error) {
+        console.error("[site-header] failed to load membership state", error);
+        setMemberState("free");
+        setPaidLabel(language === "jp" ? "Member" : language === "kr" ? "멤버" : "Member");
         return;
       }
 
@@ -69,13 +55,51 @@ export function SiteHeader() {
       }
 
       setMemberState("free");
-      setPaidLabel(language === "jp" ? "Upgrade" : language === "kr" ? "업그레이드" : "Upgrade");
+      setPaidLabel(language === "jp" ? "Member" : language === "kr" ? "멤버" : "Member");
     }
 
-    loadMemberState();
+    async function loadAuthState() {
+      if (!supabase) {
+        setMemberState("guest");
+        setPaidLabel("");
+        setAuthResolved(true);
+        return;
+      }
 
-    const subscription = supabase?.auth.onAuthStateChange(() => {
-      void loadMemberState();
+      const {
+        data: { session }
+      } = await supabase.auth.getSession();
+
+      if (!active) {
+        return;
+      }
+
+      if (!session?.user) {
+        setMemberState("guest");
+        setPaidLabel("");
+        setAuthResolved(true);
+        return;
+      }
+
+      setMemberState("free");
+      setPaidLabel(language === "jp" ? "Member" : language === "kr" ? "멤버" : "Member");
+      setAuthResolved(true);
+      await loadPaidMembership(session.user.id);
+    }
+
+    void loadAuthState();
+
+    const subscription = supabase?.auth.onAuthStateChange((_event, session) => {
+      if (!session?.user) {
+        setMemberState("guest");
+        setPaidLabel("");
+        setAuthResolved(true);
+      } else {
+        setMemberState("free");
+        setPaidLabel(language === "jp" ? "Member" : language === "kr" ? "멤버" : "Member");
+        setAuthResolved(true);
+        void loadPaidMembership(session.user.id);
+      }
       router.refresh();
     });
 
@@ -167,13 +191,13 @@ export function SiteHeader() {
               </button>
             ))}
           </div>
-          {memberState !== "guest" ? (
+          {authResolved && memberState !== "guest" ? (
             <>
               <span className="hidden rounded-full border border-gold/20 bg-gold/[0.08] px-4 py-2 text-xs font-semibold tracking-[0.16em] text-gold sm:inline-flex">
                 {paidLabel}
               </span>
               <Link
-                href="/dashboard"
+                href="/member"
                 className="hidden rounded-md border border-white/15 px-4 py-2 text-sm text-white/90 transition hover:border-gold/60 hover:text-white sm:inline-flex"
               >
                 {memberCenterLabel}
@@ -187,7 +211,7 @@ export function SiteHeader() {
                 {loggingOut ? "..." : logoutLabel}
               </button>
             </>
-          ) : (
+          ) : authResolved ? (
             <>
               <Link
                 href="/member"
@@ -202,6 +226,8 @@ export function SiteHeader() {
                 {copy.header.freeJoin}
               </Link>
             </>
+          ) : (
+            <div className="hidden h-10 w-[220px] sm:block" />
           )}
         </div>
       </div>
@@ -267,13 +293,13 @@ export function SiteHeader() {
             </div>
 
             <div className="flex items-center gap-2">
-              {memberState !== "guest" ? (
+              {authResolved && memberState !== "guest" ? (
                 <>
                   <span className="inline-flex min-h-[44px] items-center rounded-full border border-gold/20 bg-gold/[0.08] px-4 py-2 text-sm font-semibold text-gold">
                     {paidLabel}
                   </span>
                   <Link
-                    href="/dashboard"
+                    href="/member"
                     onClick={() => setMobileOpen(false)}
                     className="inline-flex min-h-[44px] items-center rounded-full border border-white/10 px-4 py-2 text-sm text-white/84 transition hover:bg-white/[0.06]"
                   >
@@ -288,7 +314,7 @@ export function SiteHeader() {
                     {loggingOut ? "..." : logoutLabel}
                   </button>
                 </>
-              ) : (
+              ) : authResolved ? (
                 <>
                   <Link
                     href="/member"
@@ -305,7 +331,7 @@ export function SiteHeader() {
                     {copy.header.freeJoin}
                   </Link>
                 </>
-              )}
+              ) : null}
             </div>
           </div>
         </div>
