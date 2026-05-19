@@ -1,5 +1,6 @@
 import { MemberDashboard } from "@/components/member-dashboard";
 import { isLeaderCandidate } from "@/lib/leader";
+import { fetchLatestMembershipPlan } from "@/lib/membership";
 import { getMockDashboard } from "@/lib/mock-data";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -15,6 +16,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   const supabase = await getSupabaseServerClient();
   const mock = getMockDashboard();
   let planKey: "free" | "basic" | "growth" | "inner_circle" = "free";
+  let membershipResolved = false;
   let candidateLeader = false;
   let streakCount = mock.streakCount;
   let challengeDay = mock.challengeDay;
@@ -26,19 +28,9 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     const user = session?.user ?? null;
 
     if (user) {
-      const { data: membership, error: membershipError } = await supabase
-        .from("memberships")
-        .select("plan")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      if (membershipError) {
-        console.error("Failed to fetch membership", membershipError);
-      } else if (membership?.plan === "basic" || membership?.plan === "growth" || membership?.plan === "inner_circle") {
-        planKey = membership.plan;
-      }
+      const membershipState = await fetchLatestMembershipPlan(supabase, user.id, "[dashboard]");
+      membershipResolved = membershipState.resolved;
+      planKey = membershipState.plan;
 
       const { data: profile } = await supabase
         .from("users")
@@ -49,6 +41,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       if (planKey === "free") {
         if (profile?.current_plan === "basic" || profile?.current_plan === "growth" || profile?.current_plan === "inner_circle") {
           planKey = profile.current_plan;
+          membershipResolved = true;
         }
       }
 
@@ -73,6 +66,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     <div className="section-shell py-16 sm:py-24">
       <MemberDashboard
         planKey={planKey}
+        membershipResolved={membershipResolved}
         challengeDay={challengeDay}
         streakCount={streakCount}
         aiUsage={mock.aiUsage}

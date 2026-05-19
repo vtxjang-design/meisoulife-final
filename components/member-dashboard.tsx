@@ -7,6 +7,7 @@ type PlanKey = "free" | "basic" | "growth" | "inner_circle";
 
 type MemberDashboardProps = {
   planKey: PlanKey;
+  membershipResolved?: boolean;
   challengeDay?: number;
   streakCount: number;
   aiUsage: {
@@ -31,6 +32,7 @@ const dashboardCopy = {
     leaderBody:
       "継続実践、チェックイン、コミュニティ貢献が一定基準を超えました。次のステップへ進めます。",
     currentPlan: "現在のプラン",
+    checkingMembership: "会員状態を確認しています...",
     challengeProgress: "チャレンジ進行",
     streakCount: "継続日数",
     aiUsage: "AIコーチ利用",
@@ -73,6 +75,7 @@ const dashboardCopy = {
     leaderTitle: "리더 프로그램에 초대되었습니다",
     leaderBody: "지속 실천, 체크인, 커뮤니티 기여가 기준을 넘어 다음 단계로 나아갈 수 있습니다.",
     currentPlan: "현재 플랜",
+    checkingMembership: "멤버십 상태를 확인하고 있습니다...",
     challengeProgress: "챌린지 진행",
     streakCount: "연속 실천",
     aiUsage: "AI 코치 이용",
@@ -108,6 +111,7 @@ const dashboardCopy = {
     leaderBody:
       "Your steady practice, check-ins, and community contribution have reached the next threshold.",
     currentPlan: "Current plan",
+    checkingMembership: "Checking membership...",
     challengeProgress: "Challenge progress",
     streakCount: "Streak count",
     aiUsage: "AI coach usage",
@@ -137,6 +141,7 @@ const dashboardCopy = {
 
 export function MemberDashboard({
   planKey,
+  membershipResolved = true,
   challengeDay = 1,
   streakCount,
   aiUsage,
@@ -148,6 +153,7 @@ export function MemberDashboard({
   const { language } = useLanguage();
   const copy = dashboardCopy[language];
   const safeChallengeDay = Math.min(Math.max(challengeDay, 1), 7);
+  const planLabel = membershipResolved ? copy.plans[planKey] : copy.checkingMembership;
 
   return (
     <div className="grid gap-6">
@@ -170,7 +176,7 @@ export function MemberDashboard({
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <div className="premium-card rounded-lg p-5">
           <p className="text-sm text-white/60">{copy.currentPlan}</p>
-          <p className="mt-2 text-2xl font-semibold text-white">{copy.plans[planKey]}</p>
+          <p className="mt-2 text-2xl font-semibold text-white">{planLabel}</p>
         </div>
         <div className="premium-card rounded-lg p-5">
           <p className="text-sm text-white/60">{copy.challengeProgress}</p>

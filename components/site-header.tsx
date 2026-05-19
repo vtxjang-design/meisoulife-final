@@ -12,16 +12,20 @@ export function SiteHeader() {
   const pathname = usePathname();
   const router = useRouter();
   const { language, setLanguage } = useLanguage();
-  const { isLoggedIn, authResolved, plan, userEmail } = useAuthState();
+  const { isLoggedIn, authResolved, planResolved, plan, userEmail } = useAuthState();
   const copy = useSiteCopy();
   const memberCenterLabel =
-    language === "jp" ? "メンバーセンター" : language === "kr" ? "멤버센터" : "Member Center";
+    language === "jp" ? "マイページ" : language === "kr" ? "마이페이지" : "My Page";
   const logoutLabel = language === "jp" ? "ログアウト" : language === "kr" ? "로그아웃" : "Logout";
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const memberBadgeLabel = useMemo(() => {
     if (!isLoggedIn) {
       return "";
+    }
+
+    if (!planResolved) {
+      return "...";
     }
 
     if (plan === "inner_circle") {
@@ -37,7 +41,7 @@ export function SiteHeader() {
     }
 
     return "Free";
-  }, [isLoggedIn, plan]);
+  }, [isLoggedIn, planResolved, plan]);
 
   useEffect(() => {
     setMobileOpen(false);
