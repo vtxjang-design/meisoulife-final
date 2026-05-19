@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSiteCopy } from "@/lib/i18n";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -19,6 +19,13 @@ export function AuthCard({ mode }: AuthCardProps) {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [nextPath, setNextPath] = useState<string | null>(null);
+  const redirectTarget = nextPath && nextPath.startsWith("/") ? nextPath : "/dashboard";
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setNextPath(params.get("next"));
+  }, []);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -31,7 +38,7 @@ export function AuthCard({ mode }: AuthCardProps) {
       }
 
       if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -45,6 +52,29 @@ export function AuthCard({ mode }: AuthCardProps) {
           throw error;
         }
 
+        if (data.session?.user) {
+          try {
+            const { error: profileError } = await supabase.from("profiles").upsert(
+              {
+                id: data.session.user.id,
+                email,
+                full_name: name || null
+              },
+              { onConflict: "id" }
+            );
+
+            if (profileError) {
+              console.warn("[auth-card] profiles upsert skipped", profileError.message);
+            }
+          } catch (profileError) {
+            console.warn("[auth-card] profiles table unavailable", profileError);
+          }
+
+          router.push(redirectTarget);
+          router.refresh();
+          return;
+        }
+
         setMessage(copy.loginPage.signupSuccess);
       } else {
         const { error } = await supabase.auth.signInWithPassword({
@@ -56,13 +86,16 @@ export function AuthCard({ mode }: AuthCardProps) {
           throw error;
         }
 
-        router.push("/dashboard");
+        router.push(redirectTarget);
+        router.refresh();
       }
-    } catch (_error) {
+    } catch (error) {
       setMessage(
-        mode === "signup"
-          ? copy.loginPage.signupError
-          : copy.loginPage.error
+        error instanceof Error && error.message
+          ? `${mode === "signup" ? copy.loginPage.signupError : copy.loginPage.error} (${error.message})`
+          : mode === "signup"
+            ? copy.loginPage.signupError
+            : copy.loginPage.error
       );
     } finally {
       setLoading(false);

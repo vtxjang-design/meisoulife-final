@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useAuthState } from "@/components/auth-provider";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { languageButtons, useLanguage, useSiteCopy } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -11,109 +12,32 @@ export function SiteHeader() {
   const pathname = usePathname();
   const router = useRouter();
   const { language, setLanguage } = useLanguage();
+  const { isLoggedIn, authResolved, plan, userEmail } = useAuthState();
   const copy = useSiteCopy();
   const memberCenterLabel =
     language === "jp" ? "メンバーセンター" : language === "kr" ? "멤버센터" : "Member Center";
   const logoutLabel = language === "jp" ? "ログアウト" : language === "kr" ? "로그아웃" : "Logout";
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [memberState, setMemberState] = useState<"guest" | "free" | "paid">("guest");
-  const [paidLabel, setPaidLabel] = useState("");
   const [loggingOut, setLoggingOut] = useState(false);
-  const [authResolved, setAuthResolved] = useState(false);
-
-  useEffect(() => {
-    let active = true;
-    const supabase = getSupabaseBrowserClient();
-
-    async function loadPaidMembership(userId: string) {
-      const { data: membership, error } = await supabase!
-        .from("memberships")
-        .select("plan, status")
-        .eq("user_id", userId)
-        .in("status", ["active", "trialing"])
-        .maybeSingle();
-
-      if (!active) {
-        return;
-      }
-
-      if (error) {
-        console.error("[site-header] failed to load membership state", error);
-        setMemberState("free");
-        setPaidLabel(language === "jp" ? "Member" : language === "kr" ? "멤버" : "Member");
-        return;
-      }
-
-      if (membership) {
-        setMemberState("paid");
-        if (membership.plan === "inner_circle") {
-          setPaidLabel(language === "jp" ? "Brain Owner" : language === "kr" ? "브레인 오너" : "Brain Owner");
-        } else {
-          setPaidLabel(language === "jp" ? "Premium Member" : language === "kr" ? "프리미엄 멤버" : "Premium Member");
-        }
-        return;
-      }
-
-      setMemberState("free");
-      setPaidLabel(language === "jp" ? "Member" : language === "kr" ? "멤버" : "Member");
+  const memberBadgeLabel = useMemo(() => {
+    if (!isLoggedIn) {
+      return "";
     }
 
-    async function loadAuthState() {
-      if (!supabase) {
-        setIsLoggedIn(false);
-        setMemberState("guest");
-        setPaidLabel("");
-        setAuthResolved(true);
-        return;
-      }
-
-      const {
-        data: { session }
-      } = await supabase.auth.getSession();
-
-      if (!active) {
-        return;
-      }
-
-      if (!session?.user) {
-        setIsLoggedIn(false);
-        setMemberState("guest");
-        setPaidLabel("");
-        setAuthResolved(true);
-        return;
-      }
-
-      setIsLoggedIn(true);
-      setMemberState("free");
-      setPaidLabel(language === "jp" ? "Member" : language === "kr" ? "멤버" : "Member");
-      setAuthResolved(true);
-      await loadPaidMembership(session.user.id);
+    if (plan === "inner_circle") {
+      return "Inner Circle";
     }
 
-    void loadAuthState();
+    if (plan === "growth") {
+      return "Growth";
+    }
 
-    const subscription = supabase?.auth.onAuthStateChange((_event, session) => {
-      if (!session?.user) {
-        setIsLoggedIn(false);
-        setMemberState("guest");
-        setPaidLabel("");
-        setAuthResolved(true);
-      } else {
-        setIsLoggedIn(true);
-        setMemberState("free");
-        setPaidLabel(language === "jp" ? "Member" : language === "kr" ? "멤버" : "Member");
-        setAuthResolved(true);
-        void loadPaidMembership(session.user.id);
-      }
-      router.refresh();
-    });
+    if (plan === "basic") {
+      return "Basic";
+    }
 
-    return () => {
-      active = false;
-      subscription?.data.subscription.unsubscribe();
-    };
-  }, [language, pathname, router]);
+    return "Free";
+  }, [isLoggedIn, plan]);
 
   useEffect(() => {
     setMobileOpen(false);
@@ -138,9 +62,6 @@ export function SiteHeader() {
 
     try {
       await supabase.auth.signOut();
-      setIsLoggedIn(false);
-      setMemberState("guest");
-      setPaidLabel("");
       setMobileOpen(false);
       router.push("/");
       router.refresh();
@@ -201,11 +122,12 @@ export function SiteHeader() {
           {authResolved && isLoggedIn ? (
             <>
               <span className="hidden rounded-full border border-gold/20 bg-gold/[0.08] px-4 py-2 text-xs font-semibold tracking-[0.16em] text-gold sm:inline-flex">
-                {paidLabel}
+                {memberBadgeLabel}
               </span>
               <Link
                 href="/member"
                 className="hidden rounded-md border border-white/15 px-4 py-2 text-sm text-white/90 transition hover:border-gold/60 hover:text-white sm:inline-flex"
+                title={userEmail || memberCenterLabel}
               >
                 {memberCenterLabel}
               </Link>
@@ -303,7 +225,7 @@ export function SiteHeader() {
               {authResolved && isLoggedIn ? (
                 <>
                   <span className="inline-flex min-h-[44px] items-center rounded-full border border-gold/20 bg-gold/[0.08] px-4 py-2 text-sm font-semibold text-gold">
-                    {paidLabel}
+                    {memberBadgeLabel}
                   </span>
                   <Link
                     href="/member"

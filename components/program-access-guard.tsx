@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuthState } from "@/components/auth-provider";
 import { useSiteCopy } from "@/lib/i18n";
 import { getSupabaseClient } from "@/lib/supabase/client";
 
@@ -11,42 +12,36 @@ type ProgramAccessGuardProps = {
 
 export function ProgramAccessGuard({ children }: ProgramAccessGuardProps) {
   const router = useRouter();
+  const pathname = usePathname();
+  const { authResolved, isLoggedIn, memberState } = useAuthState();
   const copy = useSiteCopy();
   const [status, setStatus] = useState<"checking" | "ready" | "unavailable">("checking");
 
   useEffect(() => {
-    let isMounted = true;
-
-    async function checkSession() {
-      const supabase = getSupabaseClient();
-
-      if (!supabase) {
-        if (isMounted) {
-          setStatus("unavailable");
-        }
-        return;
-      }
-
-      const { data } = await supabase.auth.getSession();
-
-      if (!isMounted) {
-        return;
-      }
-
-      if (!data.session) {
-        router.replace("/member");
-        return;
-      }
-
-      setStatus("ready");
+    if (!authResolved) {
+      setStatus("checking");
+      return;
     }
 
-    checkSession();
+    const supabase = getSupabaseClient();
 
-    return () => {
-      isMounted = false;
-    };
-  }, [router]);
+    if (!supabase) {
+      setStatus("unavailable");
+      return;
+    }
+
+    if (!isLoggedIn) {
+      router.replace(`/login?next=${encodeURIComponent(pathname)}`);
+      return;
+    }
+
+    if (memberState !== "paid") {
+      router.replace("/pricing");
+      return;
+    }
+
+    setStatus("ready");
+  }, [authResolved, isLoggedIn, memberState, pathname, router]);
 
   async function handleLogout() {
     const supabase = getSupabaseClient();
@@ -58,6 +53,7 @@ export function ProgramAccessGuard({ children }: ProgramAccessGuardProps) {
 
     await supabase.auth.signOut();
     router.push("/");
+    router.refresh();
   }
 
   if (status === "checking") {

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { absoluteUrl } from "@/lib/site";
 import { LanguageProvider } from "@/lib/i18n";
+import { AuthProvider } from "@/components/auth-provider";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import "@/app/globals.css";
@@ -41,11 +42,13 @@ export default function RootLayout({
     <html lang="ja">
       <body className="bg-ink font-sans text-white antialiased">
         <LanguageProvider>
-          <div className="relative min-h-screen overflow-hidden">
-            <SiteHeader />
-            <main>{children}</main>
-            <SiteFooter />
-          </div>
+          <AuthProvider>
+            <div className="relative min-h-screen overflow-hidden">
+              <SiteHeader />
+              <main>{children}</main>
+              <SiteFooter />
+            </div>
+          </AuthProvider>
         </LanguageProvider>
       </body>
     </html>
