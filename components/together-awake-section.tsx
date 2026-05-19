@@ -88,9 +88,10 @@ export function TogetherAwakeSection() {
 
       const { data: membership } = await supabase
         .from("memberships")
-        .select("status")
+        .select("subscription_status")
         .eq("user_id", session.user.id)
-        .in("status", ["active", "trialing"])
+        .in("subscription_status", ["active", "trialing"])
+        .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle();
 

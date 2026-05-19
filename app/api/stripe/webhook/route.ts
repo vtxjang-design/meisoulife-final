@@ -7,12 +7,9 @@ import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 type MembershipSyncInput = {
   user_id?: string | null;
   email?: string | null;
-  stripe_customer_id?: string | null;
-  stripe_subscription_id?: string | null;
   plan?: string | null;
-  status?: string | null;
+  subscription_status?: string | null;
   amount_total?: number | null;
-  current_period_end?: string | null;
 };
 
 const processedWebhookEventsFallback = new Set<string>();
@@ -86,21 +83,29 @@ async function resolveMembershipUserId(email?: string | null, explicitUserId?: s
     return null;
   }
 
-  const { data, error } = await supabase
-    .from("users")
-    .select("auth_user_id, email")
-    .eq("email", email)
-    .maybeSingle();
+  console.log("[stripe-webhook] Stripe email", { email });
+
+  const { data, error } = await supabase.auth.admin.listUsers({
+    page: 1,
+    perPage: 1000
+  });
 
   if (error) {
-    console.error("[stripe-webhook] failed to lookup user by email", {
+    console.error("[stripe-webhook] failed to lookup auth user by email", {
       email,
       message: error.message
     });
     return null;
   }
 
-  return data?.auth_user_id || null;
+  const matchedUser = data.users.find((user) => user.email?.toLowerCase() === email.toLowerCase());
+
+  console.log("[stripe-webhook] matched user id", {
+    email,
+    userId: matchedUser?.id || null
+  });
+
+  return matchedUser?.id || null;
 }
 
 async function upsertMembership(record: MembershipSyncInput) {
@@ -115,68 +120,76 @@ async function upsertMembership(record: MembershipSyncInput) {
 
   const resolvedUserId = await resolveMembershipUserId(record.email, record.user_id);
   const resolvedPlan = getMembershipPlan(record);
-  const resolvedStatus = record.status || "active";
+  const resolvedStatus = record.subscription_status || "active";
 
   if (!resolvedUserId) {
     console.warn("[stripe-webhook] membership sync skipped because user_id could not be resolved", {
       email: record.email || null,
-      subscriptionId: record.stripe_subscription_id || null
+      plan: resolvedPlan
     });
-    return;
-  }
-
-  const { data: existingMembership, error: lookupError } = await supabase
-    .from("memberships")
-    .select("id")
-    .eq("user_id", resolvedUserId)
-    .maybeSingle();
-
-  if (lookupError) {
-    console.error("[stripe-webhook] failed to lookup existing membership", {
-      userId: resolvedUserId,
-      message: lookupError.message
-    });
-    return;
-  }
-
-  if (existingMembership?.id) {
-    const { data, error } = await supabase
-      .from("memberships")
-      .update({
-        plan: resolvedPlan,
-        status: resolvedStatus
-      })
-      .eq("id", existingMembership.id)
-      .select("id, user_id, plan, status")
-      .maybeSingle();
-
-    if (error) {
-      console.error("[stripe-webhook] membership update failed", {
-        userId: resolvedUserId,
-        message: error.message
-      });
-      return;
-    }
-
-    console.log("[stripe-webhook] Membership synced", data);
     return;
   }
 
   const { data, error } = await supabase
     .from("memberships")
-    .insert({
-      user_id: resolvedUserId,
-      plan: resolvedPlan,
-      status: resolvedStatus
-    })
-    .select("id, user_id, plan, status")
+    .upsert(
+      {
+        user_id: resolvedUserId,
+        plan: resolvedPlan,
+        subscription_status: resolvedStatus
+      },
+      {
+        onConflict: "user_id"
+      }
+    )
+    .select("user_id, plan, subscription_status")
     .maybeSingle();
 
   if (error) {
-    console.error("[stripe-webhook] membership insert failed", {
+    console.error("[stripe-webhook] membership upsert failed", {
       userId: resolvedUserId,
       message: error.message
     });
+
+    const { data: existingMembership, error: lookupError } = await supabase
+      .from("memberships")
+      .select("id")
+      .eq("user_id", resolvedUserId)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (lookupError) {
+      console.error("[stripe-webhook] failed to lookup existing membership", {
+        userId: resolvedUserId,
+        message: lookupError.message
+      });
+      return;
+    }
+
+    if (!existingMembership?.id) {
+      return;
+    }
+
+    const { data: fallbackData, error: fallbackError } = await supabase
+      .from("memberships")
+      .update({
+        plan: resolvedPlan,
+        subscription_status: resolvedStatus
+      })
+      .eq("id", existingMembership.id)
+      .select("user_id, plan, subscription_status")
+      .maybeSingle();
+
+    if (fallbackError) {
+      console.error("[stripe-webhook] membership fallback update failed", {
+        userId: resolvedUserId,
+        message: fallbackError.message
+      });
+      return;
+    }
+
+    console.log("[stripe-webhook] Membership synced", fallbackData);
     return;
   }
 
@@ -187,7 +200,7 @@ async function syncUserPlan(record: {
   userId?: string | null;
   email?: string | null;
   plan?: string | null;
-  status?: string | null;
+  subscription_status?: string | null;
 }) {
   const supabase = getSupabaseAdminClient();
 
@@ -197,7 +210,7 @@ async function syncUserPlan(record: {
 
   const resolvedUserId = await resolveMembershipUserId(record.email, record.userId);
   const currentPlan =
-    record.status === "active" || record.status === "trialing"
+    record.subscription_status === "active" || record.subscription_status === "trialing"
       ? normalizeMembershipPlan(record.plan) || "free"
       : "free";
   const { error } = await supabase.from("users").upsert(
@@ -304,18 +317,15 @@ async function handleCheckoutCompleted(stripe: Stripe, session: Stripe.Checkout.
   await upsertMembership({
     user_id: userId,
     email: session.customer_details?.email || session.customer_email || null,
-    stripe_customer_id: stripeCustomerId,
-    stripe_subscription_id: stripeSubscriptionId,
     plan,
-    status: "active",
+    subscription_status: "active",
     amount_total: session.amount_total ?? null,
-    current_period_end: toIsoDate(getCurrentPeriodEnd(subscription)),
   });
   await syncUserPlan({
     userId,
     email: session.customer_details?.email || session.customer_email || null,
     plan,
-    status: "active"
+    subscription_status: "active"
   });
 
   const customerEmail = session.customer_details?.email || session.customer_email || null;
@@ -380,19 +390,15 @@ async function handleInvoicePaid(stripe: Stripe, invoice: Stripe.Invoice) {
   await upsertMembership({
     user_id: subscription?.metadata?.user_id || null,
     email: invoice.customer_email || null,
-    stripe_customer_id: typeof invoice.customer === "string" ? invoice.customer : invoice.customer?.id || null,
-    stripe_subscription_id:
-      typeof invoiceSubscription === "string" ? invoiceSubscription : invoiceSubscription?.id || null,
     plan: subscription?.metadata?.plan || resolvePlanFromAmount(invoice.amount_paid || invoice.amount_due || null) || null,
-    status: "active",
+    subscription_status: "active",
     amount_total: invoice.amount_paid || invoice.amount_due || null,
-    current_period_end: toIsoDate(getCurrentPeriodEnd(subscription)),
   });
   await syncUserPlan({
     userId: subscription?.metadata?.user_id || null,
     email: invoice.customer_email || null,
     plan: subscription?.metadata?.plan || null,
-    status: "active"
+    subscription_status: "active"
   });
 }
 
@@ -403,36 +409,30 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   await upsertMembership({
     user_id: subscription.metadata?.user_id || null,
-    stripe_customer_id:
-      typeof subscription.customer === "string" ? subscription.customer : subscription.customer?.id || null,
-    stripe_subscription_id: subscription.id,
+    email: subscription.metadata?.email || null,
     plan: subscription.metadata?.plan || null,
-    status: subscription.status,
-    current_period_end: toIsoDate(getCurrentPeriodEnd(subscription))
+    subscription_status: subscription.status
   });
   await syncUserPlan({
     userId: subscription.metadata?.user_id || null,
     email: subscription.metadata?.email || null,
     plan: subscription.metadata?.plan || null,
-    status: subscription.status
+    subscription_status: subscription.status
   });
 }
 
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   await upsertMembership({
     user_id: subscription.metadata?.user_id || null,
-    stripe_customer_id:
-      typeof subscription.customer === "string" ? subscription.customer : subscription.customer?.id || null,
-    stripe_subscription_id: subscription.id,
+    email: subscription.metadata?.email || null,
     plan: subscription.metadata?.plan || null,
-    status: "canceled",
-    current_period_end: toIsoDate(getCurrentPeriodEnd(subscription))
+    subscription_status: "canceled"
   });
   await syncUserPlan({
     userId: subscription.metadata?.user_id || null,
     email: subscription.metadata?.email || null,
     plan: subscription.metadata?.plan || null,
-    status: "canceled"
+    subscription_status: "canceled"
   });
 }
 
@@ -446,19 +446,15 @@ async function handleInvoiceFailed(stripe: Stripe, invoice: Stripe.Invoice) {
   await upsertMembership({
     user_id: subscription?.metadata?.user_id || null,
     email: invoice.customer_email || null,
-    stripe_customer_id: typeof invoice.customer === "string" ? invoice.customer : invoice.customer?.id || null,
-    stripe_subscription_id:
-      typeof invoiceSubscription === "string" ? invoiceSubscription : invoiceSubscription?.id || null,
     plan: subscription?.metadata?.plan || resolvePlanFromAmount(invoice.amount_due || null) || null,
-    status: "past_due",
+    subscription_status: "past_due",
     amount_total: invoice.amount_due || null,
-    current_period_end: toIsoDate(getCurrentPeriodEnd(subscription))
   });
   await syncUserPlan({
     userId: subscription?.metadata?.user_id || null,
     email: invoice.customer_email || null,
     plan: subscription?.metadata?.plan || null,
-    status: "past_due"
+    subscription_status: "past_due"
   });
 }
 

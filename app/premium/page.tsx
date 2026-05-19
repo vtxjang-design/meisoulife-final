@@ -26,10 +26,10 @@ export default async function PremiumPage({ searchParams }: PremiumPageProps) {
 
   const { data: membership } = await supabase
     .from("memberships")
-    .select("plan, status")
+    .select("plan, subscription_status")
     .eq("user_id", user.id)
-    .in("status", ["active", "trialing"])
-    .order("updated_at", { ascending: false })
+    .in("subscription_status", ["active", "trialing"])
+    .order("created_at", { ascending: false })
     .limit(1)
     .maybeSingle();
 
