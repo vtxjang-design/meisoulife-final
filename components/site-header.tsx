@@ -16,6 +16,7 @@ export function SiteHeader() {
     language === "jp" ? "メンバーセンター" : language === "kr" ? "멤버센터" : "Member Center";
   const logoutLabel = language === "jp" ? "ログアウト" : language === "kr" ? "로그아웃" : "Logout";
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [memberState, setMemberState] = useState<"guest" | "free" | "paid">("guest");
   const [paidLabel, setPaidLabel] = useState("");
   const [loggingOut, setLoggingOut] = useState(false);
@@ -60,6 +61,7 @@ export function SiteHeader() {
 
     async function loadAuthState() {
       if (!supabase) {
+        setIsLoggedIn(false);
         setMemberState("guest");
         setPaidLabel("");
         setAuthResolved(true);
@@ -75,12 +77,14 @@ export function SiteHeader() {
       }
 
       if (!session?.user) {
+        setIsLoggedIn(false);
         setMemberState("guest");
         setPaidLabel("");
         setAuthResolved(true);
         return;
       }
 
+      setIsLoggedIn(true);
       setMemberState("free");
       setPaidLabel(language === "jp" ? "Member" : language === "kr" ? "멤버" : "Member");
       setAuthResolved(true);
@@ -91,10 +95,12 @@ export function SiteHeader() {
 
     const subscription = supabase?.auth.onAuthStateChange((_event, session) => {
       if (!session?.user) {
+        setIsLoggedIn(false);
         setMemberState("guest");
         setPaidLabel("");
         setAuthResolved(true);
       } else {
+        setIsLoggedIn(true);
         setMemberState("free");
         setPaidLabel(language === "jp" ? "Member" : language === "kr" ? "멤버" : "Member");
         setAuthResolved(true);
@@ -132,6 +138,7 @@ export function SiteHeader() {
 
     try {
       await supabase.auth.signOut();
+      setIsLoggedIn(false);
       setMemberState("guest");
       setPaidLabel("");
       setMobileOpen(false);
@@ -191,7 +198,7 @@ export function SiteHeader() {
               </button>
             ))}
           </div>
-          {authResolved && memberState !== "guest" ? (
+          {authResolved && isLoggedIn ? (
             <>
               <span className="hidden rounded-full border border-gold/20 bg-gold/[0.08] px-4 py-2 text-xs font-semibold tracking-[0.16em] text-gold sm:inline-flex">
                 {paidLabel}
@@ -293,7 +300,7 @@ export function SiteHeader() {
             </div>
 
             <div className="flex items-center gap-2">
-              {authResolved && memberState !== "guest" ? (
+              {authResolved && isLoggedIn ? (
                 <>
                   <span className="inline-flex min-h-[44px] items-center rounded-full border border-gold/20 bg-gold/[0.08] px-4 py-2 text-sm font-semibold text-gold">
                     {paidLabel}
