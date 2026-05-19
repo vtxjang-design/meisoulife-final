@@ -54,6 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       setSession(nextSession);
+      console.log("[auth-provider] current session user id", nextSession?.user?.id ?? null);
 
       if (!nextSession?.user) {
         setPlan("free");
@@ -62,7 +63,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      setAuthResolved(false);
+      setAuthResolved(true);
+      setPlanResolved(false);
       const membershipState = await resolvePlanForUser(nextSession.user.id);
 
       if (!active) {
@@ -93,6 +95,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     void initialize();
 
     const subscription = supabase?.auth.onAuthStateChange((_event, nextSession) => {
+      console.log("[auth-provider] auth state changed", {
+        event: _event,
+        userId: nextSession?.user?.id ?? null
+      });
       void syncAuthState(nextSession);
     });
 

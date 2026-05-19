@@ -55,6 +55,16 @@ export function SiteHeader() {
     };
   }, [mobileOpen]);
 
+  useEffect(() => {
+    console.log("[site-header] header auth state", {
+      isLoggedIn,
+      authResolved,
+      planResolved,
+      plan,
+      userEmail
+    });
+  }, [authResolved, isLoggedIn, plan, planResolved, userEmail]);
+
   async function handleLogout() {
     const supabase = getSupabaseBrowserClient();
 
@@ -66,9 +76,12 @@ export function SiteHeader() {
 
     try {
       await supabase.auth.signOut();
+      console.log("[site-header] logout success");
       setMobileOpen(false);
       router.push("/");
       router.refresh();
+    } catch (error) {
+      console.error("[site-header] logout failed", error);
     } finally {
       setLoggingOut(false);
     }
@@ -147,7 +160,7 @@ export function SiteHeader() {
           ) : authResolved ? (
             <>
               <Link
-                href="/member"
+                href="/login"
                 className="hidden rounded-md border border-white/15 px-4 py-2 text-sm text-white/90 transition hover:border-gold/60 hover:text-white sm:inline-flex"
               >
                 {copy.header.login}
@@ -232,7 +245,7 @@ export function SiteHeader() {
                     {memberBadgeLabel}
                   </span>
                   <Link
-                    href="/member"
+                    href="/login"
                     onClick={() => setMobileOpen(false)}
                     className="inline-flex min-h-[44px] items-center rounded-full border border-white/10 px-4 py-2 text-sm text-white/84 transition hover:bg-white/[0.06]"
                   >
