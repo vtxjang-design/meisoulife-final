@@ -145,6 +145,28 @@ export const siteCopy = {
         { href: "/challenge", label: "無料で始める" }
       ]
     },
+    community: {
+      eyebrow: "COMMUNITY",
+      headline: "ここは、がんばる場所ではありません。毎日、共に目覚め直す場所です。",
+      subcopy:
+        "1分の静けさを一人で終わらせず、7日チャレンジとコミュニティのリズムで自然につなげます。",
+      lineCommunityTitle: "7日間、共に始める入口",
+      lineCommunityDescription:
+        "朝のリマインド、夜の声かけ、7日チャレンジ案内が届く無料コミュニティです。",
+      lineCommunityCTA: "コミュニティに参加する",
+      rhythmTitle: "無料参加から会員リズムへ",
+      rhythmDescription:
+        "ひとりの回復を習慣に変え、共に生きるリズムへ育てる基本会員の入口です。",
+      rhythmCTA: "Basic会員へ進む",
+      supportTitle: "共生人材への入口",
+      supportDescription:
+        "共に目覚めるリズムを支える人へ。リーダー成長の入口につながる案内です。",
+      supportCTA: "リーダーフォームを見る",
+      memberCommunityTitle: "共に続けるコミュニティの流れ",
+      memberCommunityDescription:
+        "毎日のチェックイン、今日の小さな前進、質問、イベント、リーダー成長まで、自然に続く導線を整えています。",
+      channels: ["Daily Check-in", "Wins Today", "Questions", "Events", "Leaders"]
+    },
     footer: {
       brand: "瞑想life",
       line1: "回復から共生へ。共生から地球経営へ。",
@@ -943,6 +965,28 @@ export const siteCopy = {
         { href: "/challenge", label: "무료로 시작하기" }
       ]
     },
+    community: {
+      eyebrow: "COMMUNITY",
+      headline: "여기는 버티는 곳이 아닙니다. 매일 함께 깨어나는 곳입니다.",
+      subcopy:
+        "1분의 고요를 혼자 끝내지 않고, 7일 챌린지와 커뮤니티 리듬을 통해 함께 이어갑니다.",
+      lineCommunityTitle: "7일, 함께 시작하는 입구",
+      lineCommunityDescription:
+        "아침 리마인드, 밤의 돌아보기, 7일 챌린지 안내가 이어지는 무료 커뮤니티입니다.",
+      lineCommunityCTA: "커뮤니티 참여하기",
+      rhythmTitle: "무료 참여에서 멤버 리듬으로",
+      rhythmDescription:
+        "혼자의 회복을 습관으로 바꾸고, 함께 살아가는 리듬으로 이어가는 기본 멤버 입구입니다.",
+      rhythmCTA: "Basic 멤버로 이동",
+      supportTitle: "공생 리더로 이어지는 입구",
+      supportDescription:
+        "함께 깨어나는 리듬을 지지하는 사람으로 나아가는 리더 성장 안내입니다.",
+      supportCTA: "리더 폼 보기",
+      memberCommunityTitle: "함께 이어가는 커뮤니티 흐름",
+      memberCommunityDescription:
+        "매일의 체크인, 오늘의 작은 전진, 질문, 이벤트, 리더 성장까지 자연스럽게 이어지도록 구성했습니다.",
+      channels: ["Daily Check-in", "Wins Today", "Questions", "Events", "Leaders"]
+    },
     footer: {
       brand: "명상life",
       line1: "회복에서 공생으로. 공생에서 지구경영으로.",
@@ -1740,6 +1784,28 @@ export const siteCopy = {
         { href: "/community", label: "Community" },
         { href: "/challenge", label: "Start Free" }
       ]
+    },
+    community: {
+      eyebrow: "COMMUNITY",
+      headline: "This is not a place to push harder. It is a place to wake up together, every day.",
+      subcopy:
+        "Don’t let one minute of stillness end alone. Continue through the 7-day challenge and a shared community rhythm.",
+      lineCommunityTitle: "A 7-day entrance to begin together",
+      lineCommunityDescription:
+        "A free community with morning reminders, evening reflection, and 7-day challenge guidance.",
+      lineCommunityCTA: "Join the Community",
+      rhythmTitle: "From free entry into a member rhythm",
+      rhythmDescription:
+        "A gentle entry into Basic membership, where personal recovery becomes a daily rhythm you can continue with others.",
+      rhythmCTA: "Continue with Basic",
+      supportTitle: "A path into shared leadership",
+      supportDescription:
+        "A calm path for people who want to support the rhythm of awakening together and grow into leadership.",
+      supportCTA: "View the leader form",
+      memberCommunityTitle: "A community flow that helps you continue",
+      memberCommunityDescription:
+        "Daily check-ins, small wins, questions, events, and leadership growth are connected in one steady community rhythm.",
+      channels: ["Daily Check-in", "Wins Today", "Questions", "Events", "Leaders"]
     },
     footer: {
       brand: "Meisou Life",
