@@ -69,6 +69,24 @@ export function SiteHeader() {
   }, [mobileOpen]);
 
   useEffect(() => {
+    if (!mobileOpen) {
+      return;
+    }
+
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setMobileOpen(false);
+      }
+    }
+
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [mobileOpen]);
+
+  useEffect(() => {
     console.log("[site-header] header auth state", {
       isLoggedIn,
       authResolved,
@@ -225,151 +243,159 @@ export function SiteHeader() {
 
       <div
         className={cn(
-          "pointer-events-none fixed inset-0 z-[60] bg-[#020814]/0 opacity-0 transition duration-300 lg:hidden",
-          mobileOpen && "pointer-events-auto bg-[#020814]/84 opacity-100 backdrop-blur-xl"
+          "pointer-events-none fixed inset-0 z-[9999] opacity-0 transition duration-300 lg:hidden",
+          mobileOpen && "pointer-events-auto opacity-100"
         )}
+        onClick={(event) => {
+          if (event.target === event.currentTarget) {
+            setMobileOpen(false);
+          }
+        }}
       >
+        <div className="absolute inset-0 bg-[#020814]/88 backdrop-blur-xl" />
         <div
           className={cn(
-            "absolute inset-x-4 top-4 rounded-[28px] border border-white/10 bg-[#07111f]/94 p-5 shadow-[0_28px_80px_rgba(0,0,0,0.34)] transition duration-300",
-            mobileOpen ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0"
+            "relative flex h-full w-full flex-col overflow-y-auto px-5 pb-6 pt-5 transition duration-300",
+            mobileOpen ? "translate-y-0" : "-translate-y-3"
           )}
         >
-          <div className="flex items-center justify-between gap-4">
-            <Link
-              href="/"
-              onClick={() => setMobileOpen(false)}
-              className="text-base font-semibold tracking-[0.18em] text-white"
-            >
-              {copy.header.brand}
-            </Link>
-            <button
-              type="button"
-              onClick={() => setMobileOpen(false)}
-              className="inline-flex h-11 min-w-[44px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 text-sm font-medium text-white/82 transition hover:bg-white/[0.08]"
-              aria-label={copy.header.close}
-            >
-              {copy.header.close}
-            </button>
-          </div>
-
-          <nav className="mt-5 grid gap-2">
-            {mobileMenuLinks.map((item) => (
+          <div className="mx-auto flex w-full max-w-md flex-1 flex-col">
+            <div className="flex items-center justify-between gap-4">
               <Link
-                key={`${item.href}-${item.label}`}
-                href={item.href}
+                href="/"
                 onClick={() => setMobileOpen(false)}
-                className="inline-flex min-h-[54px] items-center rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
+                className="text-base font-semibold tracking-[0.16em] text-white"
               >
-                {item.label}
+                {copy.header.brand}
               </Link>
-            ))}
-          </nav>
+              <button
+                type="button"
+                onClick={() => setMobileOpen(false)}
+                className="inline-flex h-11 min-w-[44px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 text-sm font-medium text-white/82 transition hover:bg-white/[0.08]"
+                aria-label={copy.header.close}
+              >
+                {copy.header.close}
+              </button>
+            </div>
 
-          <div className="mt-5 grid gap-4">
-            {!authResolved ? (
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                <p className="text-sm text-white/62">{copy.common.connecting}</p>
-              </div>
-            ) : null}
-
-            {authResolved && isLoggedIn ? (
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-white">{userEmail || memberCenterLabel}</p>
-                    <p className="mt-1 text-xs text-white/56">{copy.header.billingMembership}</p>
-                  </div>
-                  <span className="inline-flex min-h-[36px] items-center rounded-full border border-gold/20 bg-gold/[0.08] px-3 py-1.5 text-xs font-semibold tracking-[0.14em] text-gold">
-                    {memberBadgeLabel}
-                  </span>
+            <div className="mt-6 grid gap-4">
+              {!authResolved ? (
+                <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                  <p className="text-sm text-white/62">{copy.common.connecting}</p>
                 </div>
-              </div>
-            ) : null}
-
-            <div className="grid gap-2">
-              {authResolved && isLoggedIn ? (
-                <>
-                  <Link
-                    href="/member"
-                    onClick={() => setMobileOpen(false)}
-                    className="inline-flex min-h-[52px] items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
-                  >
-                    {copy.header.myPage}
-                  </Link>
-                  <Link
-                    href={programHref}
-                    onClick={() => setMobileOpen(false)}
-                    className="inline-flex min-h-[52px] items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
-                  >
-                    {copy.header.myProgram}
-                  </Link>
-                  <Link
-                    href="/pricing"
-                    onClick={() => setMobileOpen(false)}
-                    className="inline-flex min-h-[52px] items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
-                  >
-                    {copy.header.billingMembership}
-                  </Link>
-                </>
+              ) : isLoggedIn ? (
+                <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium text-white">{userEmail || memberCenterLabel}</p>
+                      <p className="mt-1 text-xs text-white/56">{copy.header.billingMembership}</p>
+                    </div>
+                    <span className="inline-flex min-h-[36px] items-center rounded-full border border-gold/20 bg-gold/[0.08] px-3 py-1.5 text-xs font-semibold tracking-[0.14em] text-gold">
+                      {memberBadgeLabel}
+                    </span>
+                  </div>
+                </div>
               ) : (
-                <>
+                <div className="grid gap-2">
                   <Link
                     href="/login"
                     onClick={() => setMobileOpen(false)}
-                    className="inline-flex min-h-[52px] items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
+                    className="inline-flex min-h-[52px] w-full items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
                   >
                     {copy.header.login}
                   </Link>
                   <Link
                     href="/welcome-member"
                     onClick={() => setMobileOpen(false)}
-                    className="inline-flex min-h-[52px] items-center rounded-2xl bg-gold px-4 py-3 text-base font-semibold text-ink transition hover:bg-[#e7cd92]"
+                    className="inline-flex min-h-[52px] w-full items-center rounded-2xl bg-gold px-4 py-3 text-base font-semibold text-ink transition hover:bg-[#e7cd92]"
                   >
                     {copy.header.freeJoin}
                   </Link>
-                </>
+                </div>
               )}
-              <Link
-                href="/community"
-                onClick={() => setMobileOpen(false)}
-                className="inline-flex min-h-[52px] items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
-              >
-                {copy.header.customerSupport}
-              </Link>
+
+              {authResolved && isLoggedIn ? (
+                <div className="grid gap-2">
+                  <Link
+                    href="/member"
+                    onClick={() => setMobileOpen(false)}
+                    className="inline-flex min-h-[52px] w-full items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
+                  >
+                    {copy.header.myPage}
+                  </Link>
+                  <Link
+                    href={programHref}
+                    onClick={() => setMobileOpen(false)}
+                    className="inline-flex min-h-[52px] w-full items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
+                  >
+                    {copy.header.myProgram}
+                  </Link>
+                  <Link
+                    href="/pricing"
+                    onClick={() => setMobileOpen(false)}
+                    className="inline-flex min-h-[52px] w-full items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
+                  >
+                    {copy.header.billingMembership}
+                  </Link>
+                </div>
+              ) : null}
+
+              <nav className="grid gap-2 rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+                {copy.header.mobileGuestMenu.map((item) => (
+                  <Link
+                    key={`${item.href}-${item.label}`}
+                    href={item.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="inline-flex min-h-[52px] w-full items-center rounded-2xl border border-white/8 px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </nav>
             </div>
 
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
-              <p className="px-1 text-xs font-semibold uppercase tracking-[0.24em] text-white/42">
-                {copy.header.languageSettings}
-              </p>
-              <div className="mt-3 inline-flex rounded-full border border-white/10 bg-white/[0.03] p-1">
-                {languageButtons.map((button) => (
+            <div className="mt-auto pt-6">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+                <p className="px-1 text-xs font-semibold uppercase tracking-[0.24em] text-white/42">
+                  {copy.header.languageSettings}
+                </p>
+                <div className="mt-3 inline-flex rounded-full border border-white/10 bg-white/[0.03] p-1">
+                  {languageButtons.map((button) => (
+                    <button
+                      key={button.key}
+                      type="button"
+                      onClick={() => setLanguage(button.key)}
+                      className={cn(
+                        "rounded-full px-3 py-1.5 text-xs font-semibold tracking-[0.2em] transition duration-300",
+                        language === button.key ? "bg-white text-ink" : "text-white/68 hover:text-white"
+                      )}
+                    >
+                      {button.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-3 grid gap-2">
+                <Link
+                  href="/community"
+                  onClick={() => setMobileOpen(false)}
+                  className="inline-flex min-h-[52px] w-full items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
+                >
+                  {copy.header.customerSupport}
+                </Link>
+                {authResolved && isLoggedIn ? (
                   <button
-                    key={button.key}
                     type="button"
-                    onClick={() => setLanguage(button.key)}
-                    className={cn(
-                      "rounded-full px-3 py-1.5 text-xs font-semibold tracking-[0.2em] transition duration-300",
-                      language === button.key ? "bg-white text-ink" : "text-white/68 hover:text-white"
-                    )}
+                    onClick={handleLogout}
+                    disabled={loggingOut}
+                    className="inline-flex min-h-[52px] w-full items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    {button.label}
+                    {loggingOut ? "..." : logoutLabel}
                   </button>
-                ))}
+                ) : null}
               </div>
             </div>
-
-            {authResolved && isLoggedIn ? (
-              <button
-                type="button"
-                onClick={handleLogout}
-                disabled={loggingOut}
-                className="inline-flex min-h-[52px] items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {loggingOut ? "..." : logoutLabel}
-              </button>
-            ) : null}
           </div>
         </div>
       </div>
