@@ -167,6 +167,49 @@ export const siteCopy = {
         "毎日のチェックイン、今日の小さな前進、質問、イベント、リーダー成長まで、自然に続く導線を整えています。",
       channels: ["Daily Check-in", "Wins Today", "Questions", "Events", "Leaders"]
     },
+    leaders: {
+      eyebrow: "LEADER GROWTH",
+      headline: "実践からリーダー成長へ",
+      subcopy:
+        "瞑想lifeのリーダー成長は、参加で終わらず、継続、貢献、信頼を通して共に目覚めるリズムを支える人を育てる構造です。",
+      stage1Label: "STAGE 1",
+      stage1Title: "一般会員",
+      stage1Description: "まずは自分の心を整え、毎日の実践を安定させる段階です。",
+      stage2Label: "STAGE 2",
+      stage2Title: "実践会員",
+      stage2Description: "自分のリズムを保ちながら、小さな実践を周りと分かち合い始める段階です。",
+      stage3Label: "STAGE 3",
+      stage3Title: "共生リーダー",
+      stage3Description: "共に目覚める場をつくり、人々の実践と成長を支えるリーダー段階です。",
+      ctaTitle: "共に成長するリーダーへ",
+      ctaDescription:
+        "瞑想lifeは一人で成長する道ではなく、共に目覚める文化をつくる旅です。",
+      ctaButton: "リーダー成長を始める",
+      promotionRule: "Promotion Rule",
+      promotionTitle: "リーダー候補になる条件",
+      paidDaysLabel: "有料会員",
+      checkInCountLabel: "チェックイン",
+      helpfulCommentsLabel: "助け合いコメント",
+      currentLabel: "現在",
+      daysTargetSuffix: "日以上",
+      daysValueSuffix: "日",
+      countTargetSuffix: "回以上",
+      countValueSuffix: "回",
+      invitationLabel: "Invitation",
+      invitationReadyTitle: "リーダープログラムに招待されました",
+      invitationProgressTitle: "リーダー候補までの進み具合",
+      invitationReadyDescription:
+        "Supabaseの実データをもとに判定し、条件を満たした状態ではダッシュボードにも自動表示されます。",
+      invitationProgressDescription:
+        "Supabaseの実データをもとに、あとどこを積み上げればよいかが見えるようにしています。",
+      dashboardButton: "ダッシュボードで確認",
+      communityButton: "コミュニティ導線を見る",
+      leaderFormButton: "リーダーフォームへ",
+      visionEyebrow: "2030 Vision",
+      visionTitle: "2030年、10万人の共生人材へ",
+      visionDescription:
+        "瞑想lifeのリーダーとは、人を集める人ではありません。毎日、自分に戻り、周りを明るくし、共に目覚めるリズムを支える人です。一人の実践が、家庭を変え、職場を変え、地域を変え、地球を変える。その静かな流れを、2030年までに10万人へ広げていきます。"
+    },
     footer: {
       brand: "瞑想life",
       line1: "回復から共生へ。共生から地球経営へ。",
@@ -987,6 +1030,49 @@ export const siteCopy = {
         "매일의 체크인, 오늘의 작은 전진, 질문, 이벤트, 리더 성장까지 자연스럽게 이어지도록 구성했습니다.",
       channels: ["Daily Check-in", "Wins Today", "Questions", "Events", "Leaders"]
     },
+    leaders: {
+      eyebrow: "LEADER GROWTH",
+      headline: "실천에서 리더 성장으로",
+      subcopy:
+        "명상life의 리더 성장은 참여에서 끝나지 않고, 꾸준한 실천과 신뢰, 공헌을 통해 함께 깨어나는 리듬을 돕는 사람을 키우는 구조입니다.",
+      stage1Label: "STAGE 1",
+      stage1Title: "일반회원",
+      stage1Description: "먼저 자신의 마음을 정리하고, 매일의 실천을 안정시키는 단계입니다.",
+      stage2Label: "STAGE 2",
+      stage2Title: "실천회원",
+      stage2Description: "자신의 리듬을 유지하며, 작은 실천을 주변과 나누기 시작하는 단계입니다.",
+      stage3Label: "STAGE 3",
+      stage3Title: "공생 리더",
+      stage3Description: "함께 깨어나는 장을 만들고, 사람들의 실천과 성장을 돕는 리더 단계입니다.",
+      ctaTitle: "함께 성장하는 리더가 되어보세요",
+      ctaDescription:
+        "명상life는 혼자 성장하는 길이 아니라, 함께 깨어나는 문화를 만드는 여정입니다.",
+      ctaButton: "리더 성장 시작하기",
+      promotionRule: "Promotion Rule",
+      promotionTitle: "리더 후보가 되는 조건",
+      paidDaysLabel: "유료 회원",
+      checkInCountLabel: "체크인",
+      helpfulCommentsLabel: "도움 댓글",
+      currentLabel: "현재",
+      daysTargetSuffix: "일 이상",
+      daysValueSuffix: "일",
+      countTargetSuffix: "회 이상",
+      countValueSuffix: "회",
+      invitationLabel: "Invitation",
+      invitationReadyTitle: "리더 프로그램에 초대되었습니다",
+      invitationProgressTitle: "리더 후보까지의 진행 상황",
+      invitationReadyDescription:
+        "Supabase의 실제 데이터를 기준으로 판정하며, 조건을 만족하면 대시보드에도 자동으로 표시됩니다.",
+      invitationProgressDescription:
+        "Supabase의 실제 데이터를 바탕으로, 앞으로 무엇을 더 쌓아가면 되는지 보이도록 했습니다.",
+      dashboardButton: "대시보드에서 확인",
+      communityButton: "커뮤니티 흐름 보기",
+      leaderFormButton: "리더 폼으로 가기",
+      visionEyebrow: "2030 Vision",
+      visionTitle: "2030년, 10만 명의 공생 인재로",
+      visionDescription:
+        "명상life의 리더는 사람을 모으는 사람이 아닙니다. 매일 자신에게 돌아오고, 주변을 밝히며, 함께 깨어나는 리듬을 지키는 사람입니다. 한 사람의 실천이 가정을 바꾸고, 일터를 바꾸고, 지역을 바꾸고, 지구를 바꿉니다. 그 조용한 흐름을 2030년까지 10만 명으로 넓혀갑니다."
+    },
     footer: {
       brand: "명상life",
       line1: "회복에서 공생으로. 공생에서 지구경영으로.",
@@ -1806,6 +1892,49 @@ export const siteCopy = {
       memberCommunityDescription:
         "Daily check-ins, small wins, questions, events, and leadership growth are connected in one steady community rhythm.",
       channels: ["Daily Check-in", "Wins Today", "Questions", "Events", "Leaders"]
+    },
+    leaders: {
+      eyebrow: "LEADER GROWTH",
+      headline: "From daily practice to conscious leadership",
+      subcopy:
+        "Leader Growth in Meditation Life is not just about joining. It is a path of consistency, trust, contribution, and supporting others in a shared rhythm of awakening.",
+      stage1Label: "STAGE 1",
+      stage1Title: "Member",
+      stage1Description: "Begin by calming your own mind and stabilizing your daily practice.",
+      stage2Label: "STAGE 2",
+      stage2Title: "Practice Member",
+      stage2Description: "Keep your own rhythm and begin sharing small practices with people around you.",
+      stage3Label: "STAGE 3",
+      stage3Title: "Coexistence Leader",
+      stage3Description: "Create spaces of shared awakening and support the practice and growth of others.",
+      ctaTitle: "Grow as a leader together",
+      ctaDescription:
+        "Meditation Life is not a path of growing alone. It is a journey of creating a culture of awakening together.",
+      ctaButton: "Start Leader Growth",
+      promotionRule: "Promotion Rule",
+      promotionTitle: "Requirements to become a leader candidate",
+      paidDaysLabel: "Paid membership",
+      checkInCountLabel: "Check-ins",
+      helpfulCommentsLabel: "Helpful comments",
+      currentLabel: "Current",
+      daysTargetSuffix: " days",
+      daysValueSuffix: " days",
+      countTargetSuffix: "+",
+      countValueSuffix: "",
+      invitationLabel: "Invitation",
+      invitationReadyTitle: "You have been invited to the leader program",
+      invitationProgressTitle: "Your progress toward leader candidacy",
+      invitationReadyDescription:
+        "This is judged from real Supabase data, and once the conditions are met it is shown automatically on the dashboard as well.",
+      invitationProgressDescription:
+        "Based on real Supabase data, this shows what still needs to be built up next.",
+      dashboardButton: "Check in dashboard",
+      communityButton: "See the community flow",
+      leaderFormButton: "Go to leader form",
+      visionEyebrow: "2030 Vision",
+      visionTitle: "Toward 100,000 coexistence leaders by 2030",
+      visionDescription:
+        "A leader in Meditation Life is not someone who gathers people. It is someone who returns to themselves each day, brightens those around them, and supports a rhythm of awakening together. One person’s practice can change a family, a workplace, a community, and the Earth. We will expand that quiet current to 100,000 people by 2030."
     },
     footer: {
       brand: "Meisou Life",
