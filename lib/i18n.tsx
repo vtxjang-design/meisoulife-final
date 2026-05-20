@@ -102,6 +102,20 @@ export const siteCopy = {
       billingMembership: "決済とメンバーシップ",
       menu: "メニュー",
       close: "閉じる",
+      mobileGuestTabs: [
+        { href: "/", label: "ホーム" },
+        { href: "/challenge", label: "7日チャレンジ" },
+        { href: "/pricing", label: "料金" },
+        { href: "/community", label: "コミュニティ" },
+        { href: "/leaders", label: "リーダー成長" }
+      ],
+      mobileMemberTabs: [
+        { href: "/", label: "ホーム" },
+        { href: "/program/basic", label: "マイプログラム" },
+        { href: "/pricing", label: "料金" },
+        { href: "/community", label: "コミュニティ" },
+        { href: "/member", label: "マイページ" }
+      ],
       nav: [
         { href: "/", label: "ホーム" },
         { href: "/challenge", label: "7日チャレンジ" },
@@ -874,6 +888,20 @@ export const siteCopy = {
       billingMembership: "결제 및 멤버십",
       menu: "메뉴",
       close: "닫기",
+      mobileGuestTabs: [
+        { href: "/", label: "홈" },
+        { href: "/challenge", label: "7일 챌린지" },
+        { href: "/pricing", label: "요금" },
+        { href: "/community", label: "커뮤니티" },
+        { href: "/leaders", label: "리더 성장" }
+      ],
+      mobileMemberTabs: [
+        { href: "/", label: "홈" },
+        { href: "/program/basic", label: "나의 프로그램" },
+        { href: "/pricing", label: "요금" },
+        { href: "/community", label: "커뮤니티" },
+        { href: "/member", label: "마이페이지" }
+      ],
       nav: [
         { href: "/", label: "홈" },
         { href: "/challenge", label: "7일 챌린지" },
@@ -1646,6 +1674,20 @@ export const siteCopy = {
       billingMembership: "Billing & Membership",
       menu: "Menu",
       close: "Close",
+      mobileGuestTabs: [
+        { href: "/", label: "Home" },
+        { href: "/challenge", label: "Challenge" },
+        { href: "/pricing", label: "Pricing" },
+        { href: "/community", label: "Community" },
+        { href: "/leaders", label: "Leader Growth" }
+      ],
+      mobileMemberTabs: [
+        { href: "/", label: "Home" },
+        { href: "/program/basic", label: "My Program" },
+        { href: "/pricing", label: "Pricing" },
+        { href: "/community", label: "Community" },
+        { href: "/member", label: "My Page" }
+      ],
       nav: [
         { href: "/", label: "Home" },
         { href: "/challenge", label: "7-Day Challenge" },

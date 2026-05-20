@@ -19,21 +19,16 @@ export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const programHref = plan === "inner_circle" ? "/program/inner" : plan === "growth" ? "/program/growth" : "/program/basic";
-  const mobileTabs = isLoggedIn
-    ? [
-        { href: "/", label: copy.header.nav[0]?.label || "Home" },
-        { href: programHref, label: copy.header.myProgram },
-        { href: "/pricing", label: copy.header.nav[2]?.label || "Pricing" },
-        { href: "/community", label: copy.header.nav[3]?.label || "Community" },
-        { href: "/member", label: copy.header.myPage }
-      ]
-    : [
-        { href: "/", label: copy.header.nav[0]?.label || "Home" },
-        { href: "/challenge", label: copy.header.nav[1]?.label || "Challenge" },
-        { href: "/pricing", label: copy.header.nav[2]?.label || "Pricing" },
-        { href: "/community", label: copy.header.nav[3]?.label || "Community" },
-        { href: "/leaders", label: copy.header.nav[4]?.label || "Leaders" }
-      ];
+  const mobileTabs = useMemo(() => {
+    if (isLoggedIn) {
+      return copy.header.mobileMemberTabs.map((tab) => ({
+        ...tab,
+        href: tab.href === "/program/basic" ? programHref : tab.href
+      }));
+    }
+
+    return copy.header.mobileGuestTabs;
+  }, [copy.header.mobileGuestTabs, copy.header.mobileMemberTabs, isLoggedIn, programHref]);
   const memberBadgeLabel = useMemo(() => {
     if (!isLoggedIn) {
       return "";
