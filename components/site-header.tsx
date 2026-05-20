@@ -14,11 +14,26 @@ export function SiteHeader() {
   const { language, setLanguage } = useLanguage();
   const { isLoggedIn, authResolved, planResolved, plan, userEmail } = useAuthState();
   const copy = useSiteCopy();
-  const memberCenterLabel =
-    language === "jp" ? "マイページ" : language === "kr" ? "마이페이지" : "My Page";
-  const logoutLabel = language === "jp" ? "ログアウト" : language === "kr" ? "로그아웃" : "Logout";
+  const memberCenterLabel = copy.header.myPage;
+  const logoutLabel = copy.header.logout;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const programHref = plan === "inner_circle" ? "/program/inner" : plan === "growth" ? "/program/growth" : "/program/basic";
+  const mobileTabs = isLoggedIn
+    ? [
+        { href: "/", label: copy.header.nav[0]?.label || "Home" },
+        { href: programHref, label: copy.header.myProgram },
+        { href: "/pricing", label: copy.header.nav[2]?.label || "Pricing" },
+        { href: "/community", label: copy.header.nav[3]?.label || "Community" },
+        { href: "/member", label: copy.header.myPage }
+      ]
+    : [
+        { href: "/", label: copy.header.nav[0]?.label || "Home" },
+        { href: "/challenge", label: copy.header.nav[1]?.label || "Challenge" },
+        { href: "/pricing", label: copy.header.nav[2]?.label || "Pricing" },
+        { href: "/community", label: copy.header.nav[3]?.label || "Community" },
+        { href: "/leaders", label: copy.header.nav[4]?.label || "Leaders" }
+      ];
   const memberBadgeLabel = useMemo(() => {
     if (!isLoggedIn) {
       return "";
@@ -85,6 +100,14 @@ export function SiteHeader() {
     } finally {
       setLoggingOut(false);
     }
+  }
+
+  function isActivePath(href: string) {
+    if (href === "/") {
+      return pathname === "/";
+    }
+
+    return pathname === href || pathname.startsWith(`${href}/`);
   }
 
   return (
@@ -177,6 +200,30 @@ export function SiteHeader() {
           )}
         </div>
       </div>
+      <div className="border-t border-white/6 lg:hidden">
+        <div className="section-shell overflow-x-auto py-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <nav className="flex min-w-max items-center gap-2">
+            {mobileTabs.map((tab) => {
+              const active = isActivePath(tab.href);
+
+              return (
+                <Link
+                  key={`${tab.href}-${tab.label}`}
+                  href={tab.href}
+                  className={cn(
+                    "inline-flex min-h-[40px] items-center whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium transition",
+                    active
+                      ? "border-gold/40 bg-gold/[0.08] text-gold"
+                      : "border-white/10 bg-white/[0.03] text-white/72 hover:bg-white/[0.06] hover:text-white"
+                  )}
+                >
+                  {tab.label}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+      </div>
 
       <div
         className={cn(
@@ -221,64 +268,104 @@ export function SiteHeader() {
             ))}
           </nav>
 
-          <div className="mt-5 flex items-center justify-between gap-3">
-            <div className="inline-flex rounded-full border border-white/10 bg-white/[0.03] p-1">
-              {languageButtons.map((button) => (
-                <button
-                  key={button.key}
-                  type="button"
-                  onClick={() => setLanguage(button.key)}
-                  className={cn(
-                    "rounded-full px-3 py-1.5 text-xs font-semibold tracking-[0.2em] transition duration-300",
-                    language === button.key ? "bg-white text-ink" : "text-white/68 hover:text-white"
-                  )}
-                >
-                  {button.label}
-                </button>
-              ))}
-            </div>
-
-            <div className="flex items-center gap-2">
-              {authResolved && isLoggedIn ? (
-                <>
-                  <span className="inline-flex min-h-[44px] items-center rounded-full border border-gold/20 bg-gold/[0.08] px-4 py-2 text-sm font-semibold text-gold">
+          <div className="mt-5 grid gap-4">
+            {authResolved && isLoggedIn ? (
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium text-white">{userEmail || memberCenterLabel}</p>
+                    <p className="mt-1 text-xs text-white/56">{copy.header.billingMembership}</p>
+                  </div>
+                  <span className="inline-flex min-h-[36px] items-center rounded-full border border-gold/20 bg-gold/[0.08] px-3 py-1.5 text-xs font-semibold tracking-[0.14em] text-gold">
                     {memberBadgeLabel}
                   </span>
-                  <Link
-                    href="/login"
-                    onClick={() => setMobileOpen(false)}
-                    className="inline-flex min-h-[44px] items-center rounded-full border border-white/10 px-4 py-2 text-sm text-white/84 transition hover:bg-white/[0.06]"
-                  >
-                    {memberCenterLabel}
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={handleLogout}
-                    disabled={loggingOut}
-                    className="inline-flex min-h-[44px] items-center rounded-full border border-white/10 px-4 py-2 text-sm text-white/84 transition hover:bg-white/[0.06] disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    {loggingOut ? "..." : logoutLabel}
-                  </button>
-                </>
-              ) : authResolved ? (
+                </div>
+              </div>
+            ) : null}
+
+            <div className="grid gap-2">
+              {authResolved && isLoggedIn ? (
                 <>
                   <Link
                     href="/member"
                     onClick={() => setMobileOpen(false)}
-                    className="inline-flex min-h-[44px] items-center rounded-full border border-white/10 px-4 py-2 text-sm text-white/84 transition hover:bg-white/[0.06]"
+                    className="inline-flex min-h-[52px] items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
+                  >
+                    {copy.header.myPage}
+                  </Link>
+                  <Link
+                    href={programHref}
+                    onClick={() => setMobileOpen(false)}
+                    className="inline-flex min-h-[52px] items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
+                  >
+                    {copy.header.myProgram}
+                  </Link>
+                  <Link
+                    href="/pricing"
+                    onClick={() => setMobileOpen(false)}
+                    className="inline-flex min-h-[52px] items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
+                  >
+                    {copy.header.billingMembership}
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    onClick={() => setMobileOpen(false)}
+                    className="inline-flex min-h-[52px] items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
                   >
                     {copy.header.login}
                   </Link>
                   <Link
-                    href="/challenge"
+                    href="/welcome-member"
                     onClick={() => setMobileOpen(false)}
-                    className="inline-flex min-h-[44px] items-center rounded-full bg-gold px-4 py-2 text-sm font-semibold text-ink transition hover:bg-[#e7cd92]"
+                    className="inline-flex min-h-[52px] items-center rounded-2xl bg-gold px-4 py-3 text-base font-semibold text-ink transition hover:bg-[#e7cd92]"
                   >
                     {copy.header.freeJoin}
                   </Link>
                 </>
-              ) : null}
+              )}
+              <Link
+                href="/community"
+                onClick={() => setMobileOpen(false)}
+                className="inline-flex min-h-[52px] items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
+              >
+                {copy.header.customerSupport}
+              </Link>
             </div>
+
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+              <p className="px-1 text-xs font-semibold uppercase tracking-[0.24em] text-white/42">
+                {copy.header.languageSettings}
+              </p>
+              <div className="mt-3 inline-flex rounded-full border border-white/10 bg-white/[0.03] p-1">
+                {languageButtons.map((button) => (
+                  <button
+                    key={button.key}
+                    type="button"
+                    onClick={() => setLanguage(button.key)}
+                    className={cn(
+                      "rounded-full px-3 py-1.5 text-xs font-semibold tracking-[0.2em] transition duration-300",
+                      language === button.key ? "bg-white text-ink" : "text-white/68 hover:text-white"
+                    )}
+                  >
+                    {button.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {authResolved && isLoggedIn ? (
+              <button
+                type="button"
+                onClick={handleLogout}
+                disabled={loggingOut}
+                className="inline-flex min-h-[52px] items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {loggingOut ? "..." : logoutLabel}
+              </button>
+            ) : null}
           </div>
         </div>
       </div>
