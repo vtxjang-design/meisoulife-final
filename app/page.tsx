@@ -29,39 +29,39 @@ const LINE_URL = process.env.NEXT_PUBLIC_LINE_URL || process.env.NEXT_PUBLIC_LIN
 const heroCopy = {
   jp: {
     eyebrow: "毎日のリズム",
-    title: "疲れた脳を、\n1分だけ休ませませんか？",
-    supporting: "自然とつながり、\n心を整え、\nまた本来の自分に戻る。",
-    subtitle: "仕事の疲れ・SNS疲れ・心の疲れに。",
+    title: "1分、\nまた自分に戻る時間",
+    supporting: "忙しい一日の中で、\n心を少し休ませる静かなリズム",
+    subtitle: "仕事の疲れ、SNSの疲れ、心のざわつきに。",
     primary: "今日の1分を始める",
-    secondary: "7日リズムを見る",
+    secondary: "7日無料体験",
     trust: "無料・60秒・登録不要",
-    proof: ["脳を休ませる", "自然のリズム", "ひとりじゃない"],
+    proof: ["1分から始める", "ひとりじゃない", "AIリズムコーチ"],
     visualCopy: "森の静けさに少し触れて、\n情報の流れから呼吸へ戻る。",
     visualLabel: "静かな入口",
     visualAlt: "Forest light and stillness"
   },
   kr: {
     eyebrow: "매일의 리듬",
-    title: "지친 뇌를,\n1분만 쉬게 해보세요.",
-    supporting: "자연과 연결되고,\n마음을 정돈하며,\n다시 본래의 나에게 돌아옵니다.",
-    subtitle: "일의 피로·SNS 피로·마음의 피로에.",
-    primary: "오늘의 1분 시작하기",
-    secondary: "7일 리듬 보기",
+    title: "1분,\n다시 나에게 돌아오는 시간",
+    supporting: "바쁜 하루 속,\n잠시 마음을 쉬게 하는 조용한 리듬",
+    subtitle: "일의 피로, SNS 피로, 마음의 피로에.",
+    primary: "오늘의 1분 시작",
+    secondary: "7일 무료 체험",
     trust: "무료 · 60초 · 가입 불필요",
-    proof: ["뇌를 쉬게 하기", "자연의 리듬", "혼자가 아님"],
+    proof: ["1분부터 시작", "혼자가 아닌 함께", "AI 리듬 코치"],
     visualCopy: "숲의 고요함을 잠시 빌려,\n정보의 흐름에서 호흡으로 돌아옵니다.",
     visualLabel: "조용한 입구",
     visualAlt: "Forest light and stillness"
   },
   en: {
     eyebrow: "Daily Rhythm",
-    title: "Would you let your tired brain\nrest for one minute?",
-    supporting: "Reconnect with nature,\nsettle your mind,\nand return to who you are.",
+    title: "One minute\nto return to yourself",
+    supporting: "A quiet rhythm that lets your mind\nrest for a moment in a busy day",
     subtitle: "For work fatigue, social fatigue, and emotional exhaustion.",
     primary: "Start today's minute",
-    secondary: "See the 7-day rhythm",
+    secondary: "Try 7 days free",
     trust: "Free · 60 seconds · No signup",
-    proof: ["brain reset", "nature rhythm", "human connection"],
+    proof: ["start with one minute", "not alone", "AI rhythm coach"],
     visualCopy: "Borrow a little stillness from the forest,\nand return from information to breath.",
     visualLabel: "Quiet entry",
     visualAlt: "Forest light and stillness"
@@ -383,9 +383,9 @@ export default function HomePage() {
         </section>
       ) : null}
 
-      <section className="section-shell pt-14 sm:pt-20">
+      <section className="section-shell pt-10 sm:pt-20">
         <div className="grid gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm uppercase tracking-[0.34em] text-gold/85">{hero.eyebrow}</p>
               <div className="inline-flex w-fit rounded-full border border-white/10 bg-white/[0.03] p-1">
@@ -404,36 +404,36 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="space-y-5">
-              <h1 className="whitespace-pre-line font-serif text-5xl leading-[1.18] text-white sm:text-6xl sm:leading-[1.2] lg:text-7xl lg:leading-[1.18]">
+            <div className="space-y-4">
+              <h1 className="whitespace-pre-line font-serif text-[30px] leading-[1.12] text-white sm:text-6xl sm:leading-[1.2] lg:text-7xl lg:leading-[1.18]">
                 {hero.title}
               </h1>
-              <p className="whitespace-pre-line text-xl leading-9 text-gold/82 sm:text-[30px] sm:leading-[1.55]">{hero.supporting}</p>
-              <p className="max-w-3xl text-lg leading-8 text-white/68 sm:text-xl sm:leading-9">{hero.subtitle}</p>
+              <p className="whitespace-pre-line text-[17px] leading-7 text-gold/82 sm:text-[30px] sm:leading-[1.55]">{hero.supporting}</p>
+              <p className="max-w-3xl text-[15px] leading-7 text-white/68 sm:text-xl sm:leading-9">{hero.subtitle}</p>
             </div>
 
-            <div className="relative z-20 flex flex-col gap-3 pt-1 sm:flex-row sm:flex-wrap">
+            <div className="relative z-20 flex flex-col gap-2.5 pt-0.5 sm:flex-row sm:flex-wrap">
               <button
                 type="button"
                 onClick={scrollToOneMinute}
-                className="inline-flex min-h-[58px] items-center justify-center rounded-full bg-gold px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_36px_rgba(212,186,117,0.22)] transition duration-300 hover:scale-[1.01] hover:bg-[#e7cd92]"
+                className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold px-5 py-3 text-[15px] font-semibold text-ink shadow-[0_18px_36px_rgba(212,186,117,0.22)] transition duration-300 hover:scale-[1.01] hover:bg-[#e7cd92]"
               >
                 {hero.primary}
               </button>
               <button
                 type="button"
                 onClick={scrollToRhythmChallenge}
-                className="inline-flex min-h-[58px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-4 text-base font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
+                className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-[15px] font-medium text-white/82 transition duration-300 hover:bg-white/[0.06]"
               >
                 {hero.secondary}
               </button>
             </div>
 
-            <p className="text-sm leading-7 text-white/56">{hero.trust}</p>
+            <p className="text-[13px] leading-6 text-white/56">{hero.trust}</p>
 
-            <div className="flex flex-wrap gap-2 pt-1">
+            <div className="flex flex-wrap gap-2 pt-0.5">
               {hero.proof.map((item) => (
-                <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-white/58">
+                <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-1.5 text-[13px] text-white/58">
                   {item}
                 </span>
               ))}

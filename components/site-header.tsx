@@ -110,8 +110,8 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-ink/80 backdrop-blur-xl">
-      <div className="section-shell flex items-center justify-between gap-4 py-4">
-        <Link href="/" className="text-lg font-semibold tracking-[0.18em] text-white">
+      <div className="section-shell flex items-center justify-between gap-4 py-3.5 sm:py-4">
+        <Link href="/" className="text-base font-semibold tracking-[0.16em] text-white sm:text-lg sm:tracking-[0.18em]">
           {copy.header.brand}
         </Link>
         <nav className="hidden items-center gap-2 lg:flex">
@@ -132,7 +132,7 @@ export function SiteHeader() {
           <button
             type="button"
             onClick={() => setMobileOpen(true)}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-white transition hover:bg-white/[0.08] lg:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-white transition hover:bg-white/[0.08] lg:hidden"
             aria-label={copy.header.menu}
             aria-expanded={mobileOpen}
           >
@@ -199,8 +199,8 @@ export function SiteHeader() {
         </div>
       </div>
       <div className="border-t border-white/6 lg:hidden">
-        <div className="section-shell overflow-x-auto py-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <nav className="flex min-w-max items-center gap-2">
+        <div className="section-shell overflow-x-auto py-2.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <nav className="flex min-w-max items-center gap-1.5">
             {mobileTabs.map((tab) => {
               const active = isActivePath(tab.href);
 
@@ -209,7 +209,7 @@ export function SiteHeader() {
                   key={`${tab.href}-${tab.label}`}
                   href={tab.href}
                   className={cn(
-                    "inline-flex min-h-[40px] items-center whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium transition",
+                    "inline-flex min-h-[34px] items-center whitespace-nowrap rounded-full border px-3.5 py-1.5 text-[13px] font-normal transition",
                     active
                       ? "border-gold/40 bg-gold/[0.08] text-gold"
                       : "border-white/10 bg-white/[0.03] text-white/72 hover:bg-white/[0.06] hover:text-white"
