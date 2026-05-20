@@ -29,6 +29,9 @@ export function SiteHeader() {
 
     return copy.header.mobileGuestTabs;
   }, [copy.header.mobileGuestTabs, copy.header.mobileMemberTabs, isLoggedIn, programHref]);
+  const mobileMenuLinks = useMemo(() => {
+    return isLoggedIn ? copy.header.mobileMemberMenu : copy.header.mobileGuestMenu;
+  }, [copy.header.mobileGuestMenu, copy.header.mobileMemberMenu, isLoggedIn]);
   const memberBadgeLabel = useMemo(() => {
     if (!isLoggedIn) {
       return "";
@@ -251,7 +254,7 @@ export function SiteHeader() {
           </div>
 
           <nav className="mt-5 grid gap-2">
-            {copy.header.mobileMenu.map((item) => (
+            {mobileMenuLinks.map((item) => (
               <Link
                 key={`${item.href}-${item.label}`}
                 href={item.href}
@@ -264,6 +267,12 @@ export function SiteHeader() {
           </nav>
 
           <div className="mt-5 grid gap-4">
+            {!authResolved ? (
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                <p className="text-sm text-white/62">{copy.common.connecting}</p>
+              </div>
+            ) : null}
+
             {authResolved && isLoggedIn ? (
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
                 <div className="flex items-center justify-between gap-3">

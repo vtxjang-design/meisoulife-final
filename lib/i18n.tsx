@@ -116,6 +116,18 @@ export const siteCopy = {
         { href: "/community", label: "コミュニティ" },
         { href: "/member", label: "マイページ" }
       ],
+      mobileGuestMenu: [
+        { href: "/", label: "ホーム" },
+        { href: "/challenge", label: "7日チャレンジ" },
+        { href: "/pricing", label: "料金" },
+        { href: "/community", label: "コミュニティ" },
+        { href: "/leaders", label: "リーダー成長" }
+      ],
+      mobileMemberMenu: [
+        { href: "/", label: "ホーム" },
+        { href: "/pricing", label: "料金" },
+        { href: "/community", label: "コミュニティ" }
+      ],
       nav: [
         { href: "/", label: "ホーム" },
         { href: "/challenge", label: "7日チャレンジ" },
@@ -902,6 +914,18 @@ export const siteCopy = {
         { href: "/community", label: "커뮤니티" },
         { href: "/member", label: "마이페이지" }
       ],
+      mobileGuestMenu: [
+        { href: "/", label: "홈" },
+        { href: "/challenge", label: "7일 챌린지" },
+        { href: "/pricing", label: "요금" },
+        { href: "/community", label: "커뮤니티" },
+        { href: "/leaders", label: "리더 성장" }
+      ],
+      mobileMemberMenu: [
+        { href: "/", label: "홈" },
+        { href: "/pricing", label: "요금" },
+        { href: "/community", label: "커뮤니티" }
+      ],
       nav: [
         { href: "/", label: "홈" },
         { href: "/challenge", label: "7일 챌린지" },
@@ -1687,6 +1711,18 @@ export const siteCopy = {
         { href: "/pricing", label: "Pricing" },
         { href: "/community", label: "Community" },
         { href: "/member", label: "My Page" }
+      ],
+      mobileGuestMenu: [
+        { href: "/", label: "Home" },
+        { href: "/challenge", label: "Challenge" },
+        { href: "/pricing", label: "Pricing" },
+        { href: "/community", label: "Community" },
+        { href: "/leaders", label: "Leader Growth" }
+      ],
+      mobileMemberMenu: [
+        { href: "/", label: "Home" },
+        { href: "/pricing", label: "Pricing" },
+        { href: "/community", label: "Community" }
       ],
       nav: [
         { href: "/", label: "Home" },
