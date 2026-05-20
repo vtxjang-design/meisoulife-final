@@ -284,17 +284,51 @@ export function SiteHeader() {
                   <p className="text-sm text-white/62">{copy.common.connecting}</p>
                 </div>
               ) : isLoggedIn ? (
-                <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-medium text-white">{userEmail || memberCenterLabel}</p>
-                      <p className="mt-1 text-xs text-white/56">{copy.header.billingMembership}</p>
+                <>
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-medium text-white">{userEmail || memberCenterLabel}</p>
+                        <p className="mt-1 text-xs text-white/56">{copy.header.billingMembership}</p>
+                      </div>
+                      <span className="inline-flex min-h-[36px] items-center rounded-full border border-gold/20 bg-gold/[0.08] px-3 py-1.5 text-xs font-semibold tracking-[0.14em] text-gold">
+                        {memberBadgeLabel}
+                      </span>
                     </div>
-                    <span className="inline-flex min-h-[36px] items-center rounded-full border border-gold/20 bg-gold/[0.08] px-3 py-1.5 text-xs font-semibold tracking-[0.14em] text-gold">
-                      {memberBadgeLabel}
-                    </span>
                   </div>
-                </div>
+
+                  <div className="grid gap-2">
+                    <Link
+                      href="/member"
+                      onClick={() => setMobileOpen(false)}
+                      className="inline-flex min-h-[52px] w-full items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
+                    >
+                      {copy.header.myPage}
+                    </Link>
+                    <Link
+                      href={programHref}
+                      onClick={() => setMobileOpen(false)}
+                      className="inline-flex min-h-[52px] w-full items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
+                    >
+                      {copy.header.myProgram}
+                    </Link>
+                    <Link
+                      href="/pricing"
+                      onClick={() => setMobileOpen(false)}
+                      className="inline-flex min-h-[52px] w-full items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
+                    >
+                      {copy.header.billingMembership}
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      disabled={loggingOut}
+                      className="inline-flex min-h-[52px] w-full items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {loggingOut ? "..." : logoutLabel}
+                    </button>
+                  </div>
+                </>
               ) : (
                 <div className="grid gap-2">
                   <Link
@@ -314,34 +348,8 @@ export function SiteHeader() {
                 </div>
               )}
 
-              {authResolved && isLoggedIn ? (
-                <div className="grid gap-2">
-                  <Link
-                    href="/member"
-                    onClick={() => setMobileOpen(false)}
-                    className="inline-flex min-h-[52px] w-full items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
-                  >
-                    {copy.header.myPage}
-                  </Link>
-                  <Link
-                    href={programHref}
-                    onClick={() => setMobileOpen(false)}
-                    className="inline-flex min-h-[52px] w-full items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
-                  >
-                    {copy.header.myProgram}
-                  </Link>
-                  <Link
-                    href="/pricing"
-                    onClick={() => setMobileOpen(false)}
-                    className="inline-flex min-h-[52px] w-full items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
-                  >
-                    {copy.header.billingMembership}
-                  </Link>
-                </div>
-              ) : null}
-
               <nav className="grid gap-2 rounded-2xl border border-white/10 bg-white/[0.03] p-3">
-                {copy.header.mobileGuestMenu.map((item) => (
+                {mobileMenuLinks.map((item) => (
                   <Link
                     key={`${item.href}-${item.label}`}
                     href={item.href}
@@ -384,16 +392,6 @@ export function SiteHeader() {
                 >
                   {copy.header.customerSupport}
                 </Link>
-                {authResolved && isLoggedIn ? (
-                  <button
-                    type="button"
-                    onClick={handleLogout}
-                    disabled={loggingOut}
-                    className="inline-flex min-h-[52px] w-full items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    {loggingOut ? "..." : logoutLabel}
-                  </button>
-                ) : null}
               </div>
             </div>
           </div>
