@@ -13,7 +13,7 @@ type ProgramAccessGuardProps = {
 export function ProgramAccessGuard({ children }: ProgramAccessGuardProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { authResolved, isLoggedIn, memberState } = useAuthState();
+  const { authResolved, isLoggedIn, planResolved, memberState } = useAuthState();
   const copy = useSiteCopy();
   const [status, setStatus] = useState<"checking" | "ready" | "unavailable">("checking");
 
@@ -35,13 +35,18 @@ export function ProgramAccessGuard({ children }: ProgramAccessGuardProps) {
       return;
     }
 
+    if (!planResolved) {
+      setStatus("checking");
+      return;
+    }
+
     if (memberState !== "paid") {
       router.replace("/pricing");
       return;
     }
 
     setStatus("ready");
-  }, [authResolved, isLoggedIn, memberState, pathname, router]);
+  }, [authResolved, isLoggedIn, planResolved, memberState, pathname, router]);
 
   async function handleLogout() {
     const supabase = getSupabaseClient();
