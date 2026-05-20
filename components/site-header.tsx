@@ -96,6 +96,19 @@ export function SiteHeader() {
     });
   }, [authResolved, isLoggedIn, plan, planResolved, userEmail]);
 
+  useEffect(() => {
+    if (!mobileOpen) {
+      return;
+    }
+
+    console.log("[site-header] mobile drawer isLoggedIn", isLoggedIn);
+    console.log("[site-header] mobile drawer userEmail", userEmail || null);
+
+    if (authResolved && isLoggedIn) {
+      console.log("[site-header] rendering logged-in menu");
+    }
+  }, [authResolved, isLoggedIn, mobileOpen, userEmail]);
+
   async function handleLogout() {
     const supabase = getSupabaseBrowserClient();
 
@@ -106,6 +119,7 @@ export function SiteHeader() {
     setLoggingOut(true);
 
     try {
+      console.log("[site-header] logout clicked");
       await supabase.auth.signOut();
       console.log("[site-header] logout success");
       setMobileOpen(false);
@@ -281,7 +295,7 @@ export function SiteHeader() {
             <div className="mt-6 grid gap-4">
               {!authResolved ? (
                 <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                  <p className="text-sm text-white/62">{copy.common.connecting}</p>
+                  <p className="text-sm text-white/62">Loading account...</p>
                 </div>
               ) : isLoggedIn ? (
                 <>
@@ -297,7 +311,7 @@ export function SiteHeader() {
                     </div>
                   </div>
 
-                  <div className="grid gap-2">
+                  <div className="flex flex-col gap-3">
                     <Link
                       href="/member"
                       onClick={() => setMobileOpen(false)}
@@ -323,7 +337,7 @@ export function SiteHeader() {
                       type="button"
                       onClick={handleLogout}
                       disabled={loggingOut}
-                      className="inline-flex min-h-[52px] w-full items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+                      className="inline-flex min-h-[52px] w-full items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base font-medium text-white/84 transition hover:bg-white/[0.07] hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       {loggingOut ? "..." : logoutLabel}
                     </button>
