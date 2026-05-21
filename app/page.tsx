@@ -28,43 +28,178 @@ const LINE_URL = process.env.NEXT_PUBLIC_LINE_URL || process.env.NEXT_PUBLIC_LIN
 
 const heroCopy = {
   jp: {
-    eyebrow: "毎日のリズム",
-    title: "1分、\nまた自分に戻る時間",
-    supporting: "ひとりではなく、\n共に心を休ませる静かなリズム",
+    eyebrow: "心と生活のリカバリー",
+    title: "1分で、\n心の過負荷をリセット。",
+    supporting: "不安、疲れ、孤独、考えすぎから\nやさしく戻る時間",
     subtitle: "無料・60秒・登録不要",
-    primary: "今日の1分を始める",
-    secondary: "7日無料体験",
+    primary: "1分リカバリーを始める",
+    secondary: "今の状態を選ぶ",
+    tertiary: "無料で始める",
     trust: "無料・60秒・登録不要",
-    proof: ["1分から始める", "ひとりじゃない", "AIリズムコーチ"],
+    proof: ["不安に", "疲れに", "考えすぎに"],
     visualCopy: "森の静けさに少し触れて、\n情報の流れから呼吸へ戻る。",
     visualLabel: "静かな入口",
     visualAlt: "Forest light and stillness"
   },
   kr: {
-    eyebrow: "매일의 리듬",
-    title: "1분,\n다시 나에게 돌아오는 시간",
-    supporting: "혼자가 아닌,\n함께 마음을 쉬게 하는 조용한 리듬",
+    eyebrow: "마음과 생활의 리커버리",
+    title: "하루 1분,\n마음의 과부하를 멈추세요.",
+    supporting: "불안, 피로, 외로움,\n생각 과잉에서 부드럽게 돌아오는 시간",
     subtitle: "무료 · 60초 · 가입 불필요",
-    primary: "오늘의 1분 시작",
-    secondary: "7일 무료 체험",
+    primary: "1분 리커버리 시작",
+    secondary: "지금 상태 선택하기",
+    tertiary: "무료로 시작하기",
     trust: "무료 · 60초 · 가입 불필요",
-    proof: ["1분부터 시작", "혼자가 아닌 함께", "AI 리듬 코치"],
+    proof: ["불안할 때", "지칠 때", "생각이 많을 때"],
     visualCopy: "숲의 고요함을 잠시 빌려,\n정보의 흐름에서 호흡으로 돌아옵니다.",
     visualLabel: "조용한 입구",
     visualAlt: "Forest light and stillness"
   },
   en: {
-    eyebrow: "Daily Rhythm",
-    title: "One minute\nto return to yourself",
-    supporting: "A quiet rhythm to rest your mind,\ntogether and without pressure",
+    eyebrow: "Mind & Life Recovery",
+    title: "Reset your overloaded mind\nin 1 minute.",
+    supporting: "A gentle way back from anxiety,\nfatigue, loneliness, and overthinking",
     subtitle: "Free · 60 seconds · No signup",
-    primary: "Start today's minute",
-    secondary: "Try 7 days free",
+    primary: "Start 1-Minute Recovery",
+    secondary: "Choose My Current State",
+    tertiary: "Start Free",
     trust: "Free · 60 seconds · No signup",
-    proof: ["start with one minute", "not alone", "AI rhythm coach"],
+    proof: ["for anxiety", "for fatigue", "for overthinking"],
     visualCopy: "Borrow a little stillness from the forest,\nand return from information to breath.",
     visualLabel: "Quiet entry",
     visualAlt: "Forest light and stillness"
+  }
+} as const;
+
+const founderHopeCopy = {
+  jp: {
+    eyebrow: "45 Years of Human Possibility",
+    title: "回復は、\nいつからでも始められます。",
+    description:
+      "45年にわたるBrain Educationの歩みは、特別な人のためではなく、疲れた人がもう一度自分を立て直せると信じる実践の積み重ねでした。",
+    points: [
+      "人は、少しずつ回復できます。",
+      "身体から心を支えることができます。",
+      "小さな習慣が人生の流れを変えます。",
+      "AI時代だからこそ、人のぬくもりが大切です."
+    ],
+    founderLabel: "創設者からの希望",
+    founderMessage:
+      "どんなに疲れていても、人の中にはまた明るくなれる力があります。瞑想lifeは、その力を毎日の生活の中で少しずつ取り戻していくための場です。",
+    deeperLabel: "より深い背景",
+    deeperMessage:
+      "その土台には、弘益の精神、Cheonbugyeongの視点、共生文明、そして地球経営のビジョンがあります。けれど最初は、ただ呼吸と身体を整えるところからで十分です。"
+  },
+  kr: {
+    eyebrow: "45 Years of Human Possibility",
+    title: "회복은,\n언제든 다시 시작할 수 있습니다.",
+    description:
+      "45년의 Brain Education 여정은 특별한 사람만을 위한 것이 아니라, 지친 사람이 다시 자신을 세울 수 있다는 믿음을 실천으로 쌓아온 시간입니다.",
+    points: [
+      "사람은 조금씩 회복할 수 있습니다.",
+      "몸을 통해 마음을 다시 세울 수 있습니다.",
+      "작은 습관이 삶의 흐름을 바꿉니다.",
+      "AI 시대일수록 사람의 온기가 더 중요합니다."
+    ],
+    founderLabel: "창립자가 전하는 희망",
+    founderMessage:
+      "아무리 지쳐 있어도 사람 안에는 다시 밝아질 수 있는 힘이 있습니다. 명상life는 그 힘을 일상 속에서 조금씩 되찾도록 돕는 자리입니다.",
+    deeperLabel: "더 깊은 뿌리",
+    deeperMessage:
+      "그 바탕에는 홍익 정신, 천부경의 시선, 공생 문명, 그리고 지구경영의 비전이 있습니다. 하지만 처음에는 그저 호흡과 몸을 정돈하는 것만으로도 충분합니다."
+  },
+  en: {
+    eyebrow: "45 Years of Human Possibility",
+    title: "Recovery can begin again,\nfrom right here.",
+    description:
+      "The 45-year path of Brain Education was not built for special people. It grew from the belief that tired people can rebuild themselves, little by little, through practice.",
+    points: [
+      "People can recover, step by step.",
+      "The body can help the mind reset.",
+      "Small daily actions change the direction of life.",
+      "In the AI era, human warmth matters even more."
+    ],
+    founderLabel: "A message of hope from the founder",
+    founderMessage:
+      "No matter how tired you feel, there is still a power in you that can brighten again. Meisoulife is a place to recover that power gently within everyday life.",
+    deeperLabel: "Deeper roots",
+    deeperMessage:
+      "Behind this path are Hongik philosophy, the perspective of Cheonbugyeong, a vision of coexistence, and stewardship of the Earth. But at the beginning, it is enough simply to breathe and settle your body."
+  }
+} as const;
+
+const laughResetCopy = {
+  jp: {
+    eyebrow: "1-Minute Laugh Reset",
+    title: "顔と身体から、\n気分を少し持ち上げる。",
+    description:
+      "表情筋や小さな動きは、気分の切り替えを助けることがあります。がんばる前に、まず身体から少し明るさをつくってみましょう。",
+    steps: [
+      "「笑っちゃおう」と声に出す",
+      "口角と頬をゆっくり動かす",
+      "肩と胸を軽く開く",
+      "今日の小さな意図をひとつ決める"
+    ],
+    note: "多くの人が、身体を先に動かすことで気分が少し軽くなると感じます。"
+  },
+  kr: {
+    eyebrow: "1-Minute Laugh Reset",
+    title: "얼굴과 몸에서,\n기분을 조금 끌어올리기.",
+    description:
+      "표정 근육과 작은 움직임은 기분 전환을 도울 수 있습니다. 애쓰기 전에, 먼저 몸으로 작은 밝음을 만들어 보세요.",
+    steps: [
+      "“웃쟈! 웃쟈! 웃쟈!” 하고 외치기",
+      "입꼬리와 볼 근육을 천천히 움직이기",
+      "어깨와 가슴을 가볍게 펴기",
+      "오늘의 작은 의도를 하나 정하기"
+    ],
+    note: "많은 사람들이 몸을 먼저 움직일 때 마음이 조금 가벼워진다고 느낍니다."
+  },
+  en: {
+    eyebrow: "1-Minute Laugh Reset",
+    title: "Lift your state\na little through the body.",
+    description:
+      "Facial muscles and small movements may help shift emotional state. Before pushing harder, create a little brightness through the body first.",
+    steps: [
+      "Say it out loud: “Let’s smile.”",
+      "Move the cheeks and mouth gently",
+      "Open the shoulders and chest a little",
+      "Set one tiny intention for today"
+    ],
+    note: "Many people feel lighter when they begin with the body before trying to think their way out."
+  }
+} as const;
+
+const stateResetCopy = {
+  jp: {
+    eyebrow: "Check your state. Change your state.",
+    title: "心が乱れるときは、\nまず身体の状態を見る。",
+    description:
+      "感情が重いとき、考えだけで解決しようとしなくて大丈夫です。温度、呼吸、姿勢、光、動きが、心の明るさを支えることがあります。",
+    overload: ["冷たい水で顔を洗う", "1分だけ歩く", "肩を回す", "呼吸をゆっくり吐く"],
+    lowEnergy: ["日光を浴びる", "背伸びする", "その場で小さく動く", "一口の水を飲む"],
+    overloadLabel: "When overwhelmed",
+    lowEnergyLabel: "When low-energy"
+  },
+  kr: {
+    eyebrow: "Check your state. Change your state.",
+    title: "마음이 흐려질 때는,\n먼저 몸의 상태를 살펴보세요.",
+    description:
+      "감정이 무거울 때, 생각만으로 해결하려 하지 않아도 됩니다. 온도, 호흡, 자세, 빛, 움직임이 마음의 선명함을 도와줄 수 있습니다.",
+    overload: ["찬물로 얼굴 씻기", "1분만 걷기", "어깨 돌리기", "숨을 천천히 내쉬기"],
+    lowEnergy: ["햇빛 받기", "기지개 켜기", "제자리에서 작게 움직이기", "물 한 모금 마시기"],
+    overloadLabel: "When overwhelmed",
+    lowEnergyLabel: "When low-energy"
+  },
+  en: {
+    eyebrow: "Check your state. Change your state.",
+    title: "When the mind feels stuck,\ncheck the body first.",
+    description:
+      "When you feel overwhelmed, you do not have to solve everything through thought. Temperature, breath, posture, light, and movement can support emotional clarity.",
+    overload: ["Splash cool water on your face", "Take a 1-minute walk", "Roll your shoulders", "Slowly lengthen your exhale"],
+    lowEnergy: ["Get a little sunlight", "Stretch upward", "Move lightly in place", "Drink a sip of water"],
+    overloadLabel: "When overwhelmed",
+    lowEnergyLabel: "When low-energy"
   }
 } as const;
 
@@ -284,6 +419,9 @@ export default function HomePage() {
   const sanctuary = sanctuaryCopy[language];
   const aiAge = aiAgeCopy[language];
   const gift = giftCopy[language];
+  const founderHope = founderHopeCopy[language];
+  const laughReset = laughResetCopy[language];
+  const stateReset = stateResetCopy[language];
   const membershipPlans = useLandingMembership();
   const [zeroOpen, setZeroOpen] = useState(false);
   const [challengeProgress, setChallengeProgress] = useState<ChallengeRhythmProgress>({
@@ -358,6 +496,17 @@ export default function HomePage() {
     });
   }
 
+  function scrollToStateCheck() {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    document.querySelector("#daily-rhythm-check")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
   async function handleGiftShare() {
     if (typeof window === "undefined") {
       return;
@@ -424,10 +573,17 @@ export default function HomePage() {
               </button>
               <button
                 type="button"
-                onClick={scrollToRhythmChallenge}
+                onClick={scrollToStateCheck}
                 className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-4.5 py-3 text-[14px] font-medium text-white/78 transition duration-300 hover:-translate-y-0.5 hover:bg-white/[0.06]"
               >
                 {hero.secondary}
+              </button>
+              <button
+                type="button"
+                onClick={scrollToRhythmChallenge}
+                className="inline-flex min-h-[48px] items-center justify-center rounded-full px-3 py-2 text-[13px] font-medium text-gold/86 transition duration-300 hover:text-[#f1dfaf]"
+              >
+                {hero.tertiary}
               </button>
             </div>
 
@@ -478,9 +634,84 @@ export default function HomePage() {
         </div>
       </section>
 
+      <InstantMeditationSection copy={landing.instant} />
+
       <DailyRhythmCheck copy={landing.dailyRhythmCheck} />
 
-      <InstantMeditationSection copy={landing.instant} />
+      <RhythmChallenge copy={landing.rhythmChallenge} />
+
+      <section className="section-shell mt-16 sm:mt-20">
+        <div className="overflow-hidden rounded-[34px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.14),transparent_22%),linear-gradient(180deg,#0b1520_0%,#0d1824_52%,#09111a_100%)] px-5 py-7 shadow-[0_24px_80px_rgba(7,17,31,0.2)] sm:px-8 sm:py-9">
+          <SectionHeading eyebrow={founderHope.eyebrow} title={founderHope.title} description={founderHope.description} />
+          <div className="mt-7 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="grid gap-3">
+              {founderHope.points.map((point) => (
+                <div key={point} className="rounded-[24px] border border-white/10 bg-white/[0.04] px-4 py-4 text-sm leading-7 text-white/76">
+                  {point}
+                </div>
+              ))}
+            </div>
+            <div className="grid gap-4">
+              <article className="rounded-[28px] border border-gold/20 bg-gold/[0.08] p-6">
+                <p className="text-xs uppercase tracking-[0.24em] text-gold/84">{founderHope.founderLabel}</p>
+                <p className="mt-4 text-sm leading-8 text-white/82">{founderHope.founderMessage}</p>
+              </article>
+              <article className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6">
+                <p className="text-xs uppercase tracking-[0.24em] text-white/46">{founderHope.deeperLabel}</p>
+                <p className="mt-4 text-sm leading-8 text-white/66">{founderHope.deeperMessage}</p>
+              </article>
+            </div>
+          </div>
+
+          <div className="mt-8 grid gap-4 lg:grid-cols-2">
+            <article className="rounded-[28px] border border-white/10 bg-white/[0.04] p-6">
+              <p className="text-sm uppercase tracking-[0.28em] text-gold/82">{laughReset.eyebrow}</p>
+              <h3 className="mt-4 font-serif text-2xl leading-tight text-white">{laughReset.title}</h3>
+              <p className="mt-4 text-sm leading-8 text-white/68">{laughReset.description}</p>
+              <ul className="mt-5 grid gap-3 text-sm text-white/74">
+                {laughReset.steps.map((step) => (
+                  <li key={step} className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3">
+                    {step}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-4 text-sm leading-7 text-white/54">{laughReset.note}</p>
+            </article>
+
+            <article className="rounded-[28px] border border-white/10 bg-white/[0.04] p-6">
+              <p className="text-sm uppercase tracking-[0.28em] text-gold/82">{stateReset.eyebrow}</p>
+              <h3 className="mt-4 font-serif text-2xl leading-tight text-white">{stateReset.title}</h3>
+              <p className="mt-4 text-sm leading-8 text-white/68">{stateReset.description}</p>
+              <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                  <p className="text-xs uppercase tracking-[0.24em] text-white/46">{stateReset.overloadLabel}</p>
+                  <ul className="mt-3 grid gap-2 text-sm text-white/74">
+                    {stateReset.overload.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                  <p className="text-xs uppercase tracking-[0.24em] text-white/46">{stateReset.lowEnergyLabel}</p>
+                  <ul className="mt-3 grid gap-2 text-sm text-white/74">
+                    {stateReset.lowEnergy.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <BrainOwnershipJourney />
+
+      <TogetherAwakeSection />
+
+      <FounderVisionSection />
+
+      <AIRhythmCoach copy={landing.coach} coachUrl={AI_COACH_URL} />
 
       <section className="section-shell mt-16 sm:mt-20">
         <div className="overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.10),transparent_24%),linear-gradient(180deg,#0a1716_0%,#0d1824_54%,#08131d_100%)] p-5 shadow-[0_24px_80px_rgba(7,17,31,0.22)] sm:p-7">
@@ -509,7 +740,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      <RhythmChallenge copy={landing.rhythmChallenge} />
+      <LiveTogether copy={landing.live} />
+
+      <DailyRhythmLayer copy={landing.dailyRhythmLayer} />
 
       <section className="section-shell mt-16 sm:mt-20">
         <div className="overflow-hidden rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-7 shadow-[0_24px_80px_rgba(7,17,31,0.18)] sm:px-7 sm:py-9">
@@ -541,18 +774,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      <LiveTogether copy={landing.live} />
-
-      <BrainOwnershipJourney />
-
-      <DailyRhythmLayer copy={landing.dailyRhythmLayer} />
-
-      <AIRhythmCoach copy={landing.coach} coachUrl={AI_COACH_URL} />
-
-      <TogetherAwakeSection />
-
-      <FounderVisionSection />
 
       <RhythmGarden
         copy={landing.garden}
