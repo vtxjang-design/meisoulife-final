@@ -205,31 +205,31 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
       <div id="one-minute-meditation" />
       <div className="rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-8 shadow-[0_24px_80px_rgba(7,17,31,0.24)] sm:px-8 sm:py-10">
         <SectionHeading eyebrow={copy.eyebrow} title={copy.title} description={copy.description} align="center" />
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
+        <div className="mt-5 flex flex-wrap justify-center gap-2">
           {[copy.inhale, copy.hold, copy.exhale].map((item) => (
-            <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-white/58">
+            <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-1.5 text-[13px] text-white/56">
               {item}
             </span>
           ))}
         </div>
-        <div className="mt-4 flex flex-wrap justify-center gap-2">
+        <div className="mt-3 flex flex-wrap justify-center gap-2">
           {copy.stages.map((item) => (
             <span key={item} className="rounded-full border border-white/10 bg-white/[0.02] px-3 py-1.5 text-xs tracking-[0.08em] text-white/46">
               {item}
             </span>
           ))}
         </div>
-        <div className="mt-10 grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-          <div className="order-2 space-y-5 lg:order-1">
+        <div className="mt-8 grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+          <div className="order-2 space-y-4.5 lg:order-1">
             <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
-              <p className="text-sm leading-7 text-white/68">{copy.sensory}</p>
+              <p className="text-sm leading-[1.8] text-white/66">{copy.sensory}</p>
             </div>
             {secondsLeft === 0 ? (
               <div className="rounded-[24px] border border-gold/18 bg-gold/[0.06] p-5">
-                <p className="text-sm leading-7 text-white/82">{copy.completionMessage}</p>
+                <p className="text-sm leading-[1.8] text-white/82">{copy.completionMessage}</p>
                 <div className="mt-5">
                   <p className="text-sm font-medium text-white/78">{copy.moodQuestion}</p>
-                  <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                  <div className="mt-3 grid grid-cols-2 gap-2">
                     {copy.moods.map((mood) => {
                       const selected = selectedMood === mood.key;
 
@@ -238,10 +238,10 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                           key={mood.key}
                           type="button"
                           onClick={() => handleMoodSelect(mood.key)}
-                          className={`min-h-[48px] rounded-2xl border px-4 py-3 text-sm transition duration-300 ${
+                          className={`min-h-[52px] rounded-[20px] border px-4 py-3 text-sm font-medium transition duration-300 ${
                             selected
-                              ? "border-gold/35 bg-gold/12 text-white"
-                              : "border-white/10 bg-white/[0.03] text-white/72 hover:bg-white/[0.05] hover:text-white"
+                              ? "border-gold/35 bg-gold/[0.16] text-white shadow-[0_12px_28px_rgba(212,186,117,0.12)]"
+                              : "border-white/10 bg-white/[0.05] text-white/72 hover:border-white/14 hover:bg-white/[0.07] hover:text-white"
                           }`}
                         >
                           {mood.label}
@@ -265,7 +265,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                 </button>
               </div>
             ) : null}
-            <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="flex flex-col gap-3">
               <button
                 type="button"
                 onClick={handleStartPause}
@@ -273,20 +273,22 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
               >
                 {running ? copy.pause : copy.start}
               </button>
-              <button
-                type="button"
-                onClick={handleSoundToggle}
-                className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-4 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
-                aria-pressed={soundEnabled}
-              >
-                {soundEnabled ? copy.soundOn : copy.soundOff}
-              </button>
-              <Link
-                href="/meditation"
-                className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-4 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
-              >
-                {copy.fullscreen}
-              </Link>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={handleSoundToggle}
+                  className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-4 py-3 text-sm font-medium text-white/82 transition duration-300 hover:bg-white/[0.06]"
+                  aria-pressed={soundEnabled}
+                >
+                  {soundEnabled ? copy.soundOn : copy.soundOff}
+                </button>
+                <Link
+                  href="/meditation"
+                  className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-4 py-3 text-sm font-medium text-white/82 transition duration-300 hover:bg-white/[0.06]"
+                >
+                  {copy.fullscreen}
+                </Link>
+              </div>
             </div>
           </div>
           <div className="order-1 flex justify-center lg:order-2">

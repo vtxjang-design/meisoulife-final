@@ -385,7 +385,7 @@ export default function HomePage() {
 
       <section className="section-shell pt-8 sm:pt-20">
         <div className="grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
-          <div className="space-y-7 sm:space-y-8">
+          <div className="space-y-8 sm:space-y-8">
             <div className="flex flex-col gap-3.5 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm uppercase tracking-[0.34em] text-gold/85">{hero.eyebrow}</p>
               <div className="inline-flex w-fit rounded-full border border-white/10 bg-white/[0.03] p-1">
@@ -404,15 +404,17 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="space-y-5">
-              <h1 className="whitespace-pre-line font-serif text-[29px] leading-[1.08] text-white sm:text-6xl sm:leading-[1.2] lg:text-7xl lg:leading-[1.18]">
+            <div className="space-y-4.5">
+              <h1 className="max-w-[11ch] whitespace-pre-line font-serif text-[29px] leading-[1.12] text-white sm:max-w-none sm:text-6xl sm:leading-[1.2] lg:text-7xl lg:leading-[1.18]">
                 {hero.title}
               </h1>
-              <p className="whitespace-pre-line text-[16px] leading-[1.7] text-gold/80 sm:text-[30px] sm:leading-[1.55]">{hero.supporting}</p>
-              <p className="max-w-3xl text-[14px] leading-[1.75] text-white/62 sm:text-xl sm:leading-9">{hero.subtitle}</p>
+              <p className="max-w-[18ch] whitespace-pre-line text-[15px] leading-[1.72] text-gold/80 sm:max-w-none sm:text-[30px] sm:leading-[1.55]">
+                {hero.supporting}
+              </p>
+              <p className="max-w-3xl text-[13px] leading-[1.8] text-white/58 sm:text-xl sm:leading-9">{hero.subtitle}</p>
             </div>
 
-            <div className="relative z-20 flex flex-col gap-2.5 pt-2 sm:flex-row sm:flex-wrap">
+            <div className="relative z-20 flex flex-col gap-2.5 pt-3 sm:flex-row sm:flex-wrap">
               <button
                 type="button"
                 onClick={scrollToOneMinute}
@@ -429,9 +431,9 @@ export default function HomePage() {
               </button>
             </div>
 
-            <p className="text-[12px] leading-6 text-white/54">{hero.trust}</p>
+            <p className="text-[12px] leading-6 text-white/50">{hero.trust}</p>
 
-            <div className="flex flex-wrap gap-2 pt-1">
+            <div className="flex flex-wrap gap-2 pt-0.5">
               {hero.proof.map((item) => (
                 <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[12px] text-white/56">
                   {item}
@@ -483,10 +485,10 @@ export default function HomePage() {
       <section className="section-shell mt-16 sm:mt-20">
         <div className="overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.10),transparent_24%),linear-gradient(180deg,#0a1716_0%,#0d1824_54%,#08131d_100%)] p-5 shadow-[0_24px_80px_rgba(7,17,31,0.22)] sm:p-7">
           <div className="grid gap-6 lg:grid-cols-[1.02fr_0.98fr] lg:items-center">
-            <div className="space-y-4">
+            <div className="space-y-3.5">
               <p className="text-sm uppercase tracking-[0.3em] text-gold/84">{healing.eyebrow}</p>
               <h2 className="font-serif text-3xl leading-tight text-white sm:text-4xl">{healing.title}</h2>
-              <p className="text-base leading-8 text-white/68 sm:text-lg">{healing.description}</p>
+              <p className="text-[15px] leading-7 text-white/66 sm:text-lg">{healing.description}</p>
               <div className="flex flex-wrap gap-2 pt-1">
                 {healing.points.map((point) => (
                   <span key={point} className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-white/62">
@@ -515,7 +517,7 @@ export default function HomePage() {
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
             {testimonials.items.map((item) => (
               <article key={item} className="rounded-[24px] border border-white/10 bg-white/[0.04] p-5">
-                <p className="text-sm leading-8 text-white/76">{item}</p>
+                <p className="text-sm leading-7 text-white/74">{item}</p>
               </article>
             ))}
           </div>
@@ -527,7 +529,7 @@ export default function HomePage() {
           <div className="mx-auto max-w-3xl text-center">
             <p className="text-sm uppercase tracking-[0.3em] text-gold/84">{gift.eyebrow}</p>
             <h2 className="mt-4 font-serif text-3xl leading-tight text-white sm:text-4xl">{gift.title}</h2>
-            <p className="mt-4 whitespace-pre-line text-base leading-8 text-white/68 sm:text-lg">{gift.description}</p>
+            <p className="mt-4 whitespace-pre-line text-[15px] leading-7 text-white/66 sm:text-lg">{gift.description}</p>
             <button
               type="button"
               onClick={handleGiftShare}
