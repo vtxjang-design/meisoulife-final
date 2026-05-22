@@ -102,7 +102,8 @@ const memberEntryCopy = {
       journeyTitle: "今日の小さな道のり",
       journeySteps: ["1分の回復", "毎日のリズム", "脳の主人", "共生", "文明"],
       stateTitle: "Welcome Space",
-      stateDescription: "今いちばん近い感覚をひとつ選ぶだけで大丈夫です。",
+      stateDescription: "今いちばん近い感覚をひとつ選ぶだけで大丈夫です。ひとつタップすれば、そのまま1分の回復へ入れます。",
+      stateTapHint: "ひとつタップして、すぐ始める",
       states: [
         {
           key: "overwhelmed",
@@ -193,16 +194,22 @@ const memberEntryCopy = {
       completionBody: "1分でも、あなたが戻ってきたことには意味があります。",
       completionQuestion: "今、どんな感じですか？",
       done: "完了",
+      seeTomorrow: "また明日、戻ってきてください。",
+      completionMessages: [
+        "1分は、小さくても確かな回復です。",
+        "あなたは今、自分の場所に戻ってきました。",
+        "急がなくても、この1分はちゃんと残ります。"
+      ],
       cards: [
-        { key: "meditation", emoji: "🌿", title: "1分瞑想", description: "呼吸と静けさにやさしく戻る" },
-        { key: "breathing", emoji: "💨", title: "1分呼吸", description: "長く吐いて神経を整える" },
-        { key: "brainWave", emoji: "🧠", title: "1分 脳波振動", description: "内側のリズムを細かくゆらす" },
-        { key: "strength", emoji: "💪", title: "1分 体力活性", description: "身体を軽く起こして戻る" },
-        { key: "pause", emoji: "🛑", title: "1分 停止", description: "何もしない勇気を持つ" },
-        { key: "belly", emoji: "☀️", title: "1分 腸ヒーリング", description: "お腹をゆるめて安心感を戻す" },
-        { key: "sleep", emoji: "🌙", title: "1分 睡眠準備", description: "眠る前の緊張をほどく" },
-        { key: "smile", emoji: "🙂", title: "Smile Activation", description: "表情筋から気分を整える" },
-        { key: "temperature", emoji: "💧", title: "Temperature Reset", description: "温度感覚で状態を切り替える" }
+        { key: "meditation", emoji: "🌿", title: "1分瞑想", description: "呼吸と静けさにやさしく戻る", instruction: "背中をゆるめて、息が出ていく感じをただ見守りましょう。" },
+        { key: "breathing", emoji: "💨", title: "1分呼吸", description: "長く吐いて神経を整える", instruction: "吸うよりも、吐く息を少しだけ長くしてみてください。" },
+        { key: "brainWave", emoji: "🧠", title: "1分 脳波振動", description: "内側のリズムを細かくゆらす", instruction: "眉間と頭の奥がやわらぐイメージで、小さくリズムを感じます。" },
+        { key: "strength", emoji: "💪", title: "1分 体力活性", description: "身体を軽く起こして戻る", instruction: "肩と胸を少し開いて、身体が起きてくる感覚を待ちましょう。" },
+        { key: "pause", emoji: "🛑", title: "1分 停止", description: "何もしない勇気を持つ", instruction: "今は変えようとせず、そのままの自分をひと呼吸だけ許してみます。" },
+        { key: "belly", emoji: "☀️", title: "1分 腸ヒーリング", description: "お腹をゆるめて安心感を戻す", instruction: "お腹に手を当てて、ぬくもりが広がる感じを味わってみてください。" },
+        { key: "sleep", emoji: "🌙", title: "1分 睡眠準備", description: "眠る前の緊張をほどく", instruction: "顎と肩の力を抜いて、今日はもう休んでいいと身体に伝えます。" },
+        { key: "smile", emoji: "🙂", title: "Smile Activation", description: "表情筋から気分を整える", instruction: "口角をほんの少し上げて、表情から気分を迎えにいきましょう。" },
+        { key: "temperature", emoji: "💧", title: "Temperature Reset", description: "温度感覚で状態を切り替える", instruction: "水や空気の感覚を思い出しながら、身体の状態が変わる余地をつくります。" }
       ]
     },
     debug: {
@@ -276,7 +283,8 @@ const memberEntryCopy = {
       journeyTitle: "오늘의 작은 여정",
       journeySteps: ["1분 회복", "일상 리듬", "뇌의 주인", "공생", "문명"],
       stateTitle: "Welcome Space",
-      stateDescription: "지금 가장 가까운 감각 하나만 골라도 충분합니다.",
+      stateDescription: "지금 가장 가까운 감각 하나만 골라도 충분합니다. 한 번 탭하면 바로 1분 회복으로 들어갑니다.",
+      stateTapHint: "한 번 탭하고 바로 시작하기",
       states: [
         {
           key: "overwhelmed",
@@ -367,16 +375,22 @@ const memberEntryCopy = {
       completionBody: "1분이라도, 다시 돌아온 것에는 분명한 의미가 있습니다.",
       completionQuestion: "지금은 어떤가요?",
       done: "완료",
+      seeTomorrow: "내일도 다시 돌아오세요.",
+      completionMessages: [
+        "1분은 작아 보여도 분명한 회복입니다.",
+        "지금 당신은 다시 자신의 자리로 돌아왔습니다.",
+        "서두르지 않아도, 이 1분은 몸에 남습니다."
+      ],
       cards: [
-        { key: "meditation", emoji: "🌿", title: "1분 명상", description: "호흡과 고요로 부드럽게 돌아오기" },
-        { key: "breathing", emoji: "💨", title: "1분 호흡", description: "길게 내쉬며 신경을 정돈하기" },
-        { key: "brainWave", emoji: "🧠", title: "1분 뇌파 진동", description: "안쪽 리듬을 가볍게 흔들기" },
-        { key: "strength", emoji: "💪", title: "1분 체력 깨우기", description: "몸을 살짝 깨워 다시 서기" },
-        { key: "pause", emoji: "🛑", title: "1분 멈춤", description: "아무것도 하지 않는 힘 가지기" },
-        { key: "belly", emoji: "☀️", title: "1분 배 힐링", description: "배를 풀어 안정을 되찾기" },
-        { key: "sleep", emoji: "🌙", title: "1분 수면 준비", description: "잠들기 전 긴장을 풀기" },
-        { key: "smile", emoji: "🙂", title: "Smile Activation", description: "표정 근육으로 기분을 회복하기" },
-        { key: "temperature", emoji: "💧", title: "Temperature Reset", description: "온도 감각으로 상태 전환하기" }
+        { key: "meditation", emoji: "🌿", title: "1분 명상", description: "호흡과 고요로 부드럽게 돌아오기", instruction: "등을 편안히 두고, 숨이 나가는 느낌만 조용히 따라가 보세요." },
+        { key: "breathing", emoji: "💨", title: "1분 호흡", description: "길게 내쉬며 신경을 정돈하기", instruction: "들이쉬는 것보다 내쉬는 숨을 조금 더 길게 해보세요." },
+        { key: "brainWave", emoji: "🧠", title: "1분 뇌파 진동", description: "안쪽 리듬을 가볍게 흔들기", instruction: "이마와 머리 안쪽이 부드럽게 풀리는 이미지를 그려보세요." },
+        { key: "strength", emoji: "💪", title: "1분 체력 깨우기", description: "몸을 살짝 깨워 다시 서기", instruction: "가슴과 어깨를 가볍게 열며 몸이 깨어나는 감각을 느껴보세요." },
+        { key: "pause", emoji: "🛑", title: "1분 멈춤", description: "아무것도 하지 않는 힘 가지기", instruction: "지금은 바꾸려 하지 않고, 이 상태 그대로를 한 호흡만 허용해봅니다." },
+        { key: "belly", emoji: "☀️", title: "1분 배 힐링", description: "배를 풀어 안정을 되찾기", instruction: "배 위에 손을 올리고, 따뜻함이 천천히 퍼지는 느낌을 상상해보세요." },
+        { key: "sleep", emoji: "🌙", title: "1분 수면 준비", description: "잠들기 전 긴장을 풀기", instruction: "턱과 어깨 힘을 풀고, 이제 쉬어도 된다고 몸에 말해보세요." },
+        { key: "smile", emoji: "🙂", title: "Smile Activation", description: "표정 근육으로 기분을 회복하기", instruction: "입꼬리를 아주 조금 올리며 표정으로부터 마음을 맞이해봅니다." },
+        { key: "temperature", emoji: "💧", title: "Temperature Reset", description: "온도 감각으로 상태 전환하기", instruction: "물이나 공기의 감각을 떠올리며 몸이 바뀔 여지를 만들어보세요." }
       ]
     },
     debug: {
@@ -450,7 +464,8 @@ const memberEntryCopy = {
       journeyTitle: "Today’s small path",
       journeySteps: ["1-minute recovery", "daily rhythm", "brain ownership", "coexistence", "civilization"],
       stateTitle: "Welcome Space",
-      stateDescription: "Choose the state that feels closest right now.",
+      stateDescription: "Choose the state that feels closest right now. One tap can take you straight into a one-minute ritual.",
+      stateTapHint: "Tap once and begin",
       states: [
         {
           key: "overwhelmed",
@@ -543,16 +558,22 @@ const memberEntryCopy = {
       completionBody: "Even one minute matters. Coming back matters.",
       completionQuestion: "How do you feel now?",
       done: "Done",
+      seeTomorrow: "See you tomorrow.",
+      completionMessages: [
+        "One minute can still be real recovery.",
+        "You came back to yourself just now.",
+        "This minute stays with you, even if the day is still unfinished."
+      ],
       cards: [
-        { key: "meditation", emoji: "🌿", title: "1-Minute Meditation", description: "Return gently to breath and stillness" },
-        { key: "breathing", emoji: "💨", title: "1-Minute Breathing", description: "Long exhales to settle the system" },
-        { key: "brainWave", emoji: "🧠", title: "1-Minute Brain Wave Vibration", description: "Lightly awaken the inner rhythm" },
-        { key: "strength", emoji: "💪", title: "1-Minute Strength Activation", description: "Wake the body and stand up again" },
-        { key: "pause", emoji: "🛑", title: "1-Minute Pause", description: "Practice the courage to stop" },
-        { key: "belly", emoji: "☀️", title: "1-Minute Belly Healing", description: "Soften the belly and restore ease" },
-        { key: "sleep", emoji: "🌙", title: "1-Minute Sleep Preparation", description: "Release tension before rest" },
-        { key: "smile", emoji: "🙂", title: "Smile Activation", description: "Use facial warmth to shift the mood" },
-        { key: "temperature", emoji: "💧", title: "Temperature Reset", description: "Change your state through sensation" }
+        { key: "meditation", emoji: "🌿", title: "1-Minute Meditation", description: "Return gently to breath and stillness", instruction: "Let your shoulders soften and simply notice the breath leaving your body." },
+        { key: "breathing", emoji: "💨", title: "1-Minute Breathing", description: "Long exhales to settle the system", instruction: "Let the exhale be just a little longer than the inhale." },
+        { key: "brainWave", emoji: "🧠", title: "1-Minute Brain Wave Vibration", description: "Lightly awaken the inner rhythm", instruction: "Imagine a subtle vibration of clarity spreading behind the forehead." },
+        { key: "strength", emoji: "💪", title: "1-Minute Strength Activation", description: "Wake the body and stand up again", instruction: "Open the chest slightly and feel the body waking up from the inside." },
+        { key: "pause", emoji: "🛑", title: "1-Minute Pause", description: "Practice the courage to stop", instruction: "For this minute, allow yourself not to fix anything." },
+        { key: "belly", emoji: "☀️", title: "1-Minute Belly Healing", description: "Soften the belly and restore ease", instruction: "Rest a hand on the belly and imagine warmth gathering there." },
+        { key: "sleep", emoji: "🌙", title: "1-Minute Sleep Preparation", description: "Release tension before rest", instruction: "Relax the jaw and shoulders and let the body know it can rest." },
+        { key: "smile", emoji: "🙂", title: "Smile Activation", description: "Use facial warmth to shift the mood", instruction: "Lift the corners of the mouth slightly and let the face lead the feeling." },
+        { key: "temperature", emoji: "💧", title: "Temperature Reset", description: "Change your state through sensation", instruction: "Remember the feel of cool water or fresh air and let the body respond." }
       ]
     },
     debug: {
@@ -606,12 +627,25 @@ export function MemberEntryContent({
       : initialPlan === "inner_circle"
         ? "/program/inner"
         : "/program/basic";
+  const stateForestMap: Record<string, RecoveryForestKey> = {
+    overwhelmed: "breathing",
+    exhausted: "strength",
+    unstable: "meditation",
+    stressed: "temperature",
+    okay: "meditation",
+    energized: "smile"
+  };
   const founderWisdom = copy.dashboard.founderWisdoms[new Date().getDay() % copy.dashboard.founderWisdoms.length];
   const selectedState =
     copy.dashboard.states.find((state) => state.key === selectedStateKey) ?? copy.dashboard.states[0];
   const rhythmScore = Math.round((completedRhythmItems.length / copy.dashboard.rhythmItems.length) * 100);
   const recommendedRecovery = copy.dashboard.recoveryOptions[selectedState.key as keyof typeof copy.dashboard.recoveryOptions];
   const todaysPlanFocus = copy.dashboard.planFocus[initialPlan];
+  const activeForestCard = activeForestKey
+    ? copy.forest.cards.find((card) => card.key === activeForestKey) ?? null
+    : null;
+  const completionMessage =
+    copy.forest.completionMessages[new Date().getDay() % copy.forest.completionMessages.length];
 
   function toggleRhythmItem(index: number) {
     setCompletedRhythmItems((current) =>
@@ -865,7 +899,10 @@ export function MemberEntryContent({
                       <button
                         key={state.key}
                         type="button"
-                        onClick={() => setSelectedStateKey(state.key)}
+                        onClick={() => {
+                          setSelectedStateKey(state.key);
+                          openForestExperience(stateForestMap[state.key]);
+                        }}
                         className={`rounded-[22px] border px-4 py-4 text-left text-sm transition duration-300 ${
                           active
                             ? "border-gold/40 bg-gold/[0.10] text-white shadow-[0_14px_30px_rgba(212,186,117,0.08)]"
@@ -874,6 +911,9 @@ export function MemberEntryContent({
                       >
                         <p className="font-medium">{state.label}</p>
                         <p className="mt-2 leading-6 text-white/58">{state.support}</p>
+                        <p className="mt-3 text-xs uppercase tracking-[0.18em] text-gold/80">
+                          {copy.dashboard.stateTapHint}
+                        </p>
                       </button>
                     );
                   })}
@@ -1167,14 +1207,17 @@ export function MemberEntryContent({
               </button>
             </div>
 
-            <div className="mt-6 rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(140,180,150,0.16),rgba(8,17,26,0.18))] px-5 py-8 text-center">
-              <div className="mx-auto flex h-28 w-28 items-center justify-center rounded-full border border-gold/20 bg-black/15 text-4xl font-semibold text-white">
-                {forestSecondsLeft}
+              <div className="mt-6 rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(140,180,150,0.16),rgba(8,17,26,0.18))] px-5 py-8 text-center">
+                <div className="mx-auto flex h-28 w-28 items-center justify-center rounded-full border border-gold/20 bg-black/15 text-4xl font-semibold text-white">
+                  {forestSecondsLeft}
+                </div>
+                <p className="mt-5 text-sm leading-7 text-white/72">
+                  {activeForestCard?.description}
+                </p>
+                <p className="mt-3 rounded-[20px] border border-white/10 bg-black/10 px-4 py-4 text-sm leading-7 text-white/78">
+                  {activeForestCard?.instruction}
+                </p>
               </div>
-              <p className="mt-5 text-sm leading-7 text-white/72">
-                {copy.forest.cards.find((card) => card.key === activeForestKey)?.description}
-              </p>
-            </div>
 
             <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
               <button
@@ -1203,7 +1246,9 @@ export function MemberEntryContent({
               <div className="mt-5 rounded-[24px] border border-gold/20 bg-gold/[0.08] px-5 py-5">
                 <p className="text-lg font-semibold text-white">{copy.forest.completionTitle}</p>
                 <p className="mt-3 text-sm leading-7 text-white/74">{copy.forest.completionBody}</p>
+                <p className="mt-3 text-sm leading-7 text-white/70">{completionMessage}</p>
                 <p className="mt-3 text-sm text-gold/90">{copy.forest.completionQuestion}</p>
+                <p className="mt-2 text-sm text-white/56">{copy.forest.seeTomorrow}</p>
               </div>
             ) : null}
           </div>
