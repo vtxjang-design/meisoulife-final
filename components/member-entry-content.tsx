@@ -79,66 +79,95 @@ const memberEntryCopy = {
     },
     dashboard: {
       eyebrow: "Daily Life OS",
-      title: "今日の回復から、共に目覚める流れへ",
+      title: "おかえりなさい。今日も、ここで少し呼吸できます。",
       description:
-        "1分の回復、毎日のリズム、脳の主人として生きる感覚、共生の実践、そして大きなビジョンまでを、今日の一歩としてまとめています。",
-      journeyTitle: "今日のプラットフォーム・ジャーニー",
+        "もし今日が少し重くても、1分で十分です。ここは、回復から毎日のリズム、脳の主人として生きる感覚、共生の実践へ静かにつながる場所です。",
+      planFocus: {
+        free: "今日の回復プラクティス",
+        basic: "今日の Life Rhythm プラクティス",
+        growth: "今日の Brain Owner プラクティス",
+        inner_circle: "今日の Coexistence Circle プラクティス"
+      },
+      journeyTitle: "今日の小さな道のり",
       journeySteps: ["1分の回復", "毎日のリズム", "脳の主人", "共生", "文明"],
-      stateTitle: "今日の心の状態",
+      stateTitle: "Welcome Space",
       stateDescription: "今いちばん近い感覚をひとつ選ぶだけで大丈夫です。",
       states: [
         {
-          key: "anxiety",
-          label: "不安がある",
-          support: "まずは長く吐く呼吸で、心のスピードを少しゆるめましょう。"
+          key: "overwhelmed",
+          label: "😰 いっぱいいっぱい",
+          support: "まずは1分の呼吸リセットで、内側の速度を少し落としてみましょう。"
         },
         {
-          key: "overload",
-          label: "頭がいっぱい",
-          support: "考えを減らすより、身体感覚に戻る1分が役立つかもしれません。"
+          key: "exhausted",
+          label: "😴 かなり疲れている",
+          support: "身体をゆるく起こす Body Activation から入る方が、今はやさしいかもしれません。"
         },
         {
-          key: "tired",
-          label: "疲れている",
-          support: "がんばるより、今は静かに力を戻す選択が大切です。"
+          key: "unstable",
+          label: "🌊 感情が揺れている",
+          support: "感情を抑えるより、短いリフレクションで今の波を見つめるのがおすすめです。"
         },
         {
-          key: "lonely",
-          label: "少し孤独",
-          support: "ひとりで耐えなくて大丈夫です。つながる入口を開いておきましょう。"
+          key: "stressed",
+          label: "🔥 ストレスが強い",
+          support: "温度リセットや短い動きで、身体から状態を切り替えてみましょう。"
+        },
+        {
+          key: "okay",
+          label: "🙂 まずまず大丈夫",
+          support: "静かな1分と小さな感謝で、今日のリズムをやさしく整えていきましょう。"
+        },
+        {
+          key: "energized",
+          label: "✨ いい流れがある",
+          support: "この良い流れを、自分だけで終わらせず周りへ広げる日にしてみましょう。"
         }
       ],
-      recoveryTitle: "おすすめの1分リカバリー",
+      recoveryTitle: "今日の1分リカバリー",
       recoveryDescription: "今日の状態に合わせて、最もやさしい入口から始めます。",
       recoveryCta: "1分リカバリーを始める",
-      rhythmTitle: "Daily Rhythm Score",
+      recoveryOptions: {
+        overwhelmed: "1分呼吸リセット",
+        exhausted: "Body Activation",
+        unstable: "短い感情リフレクション",
+        stressed: "Temperature Reset",
+        okay: "1分の感謝リズム",
+        energized: "Smile Muscle Activation"
+      },
+      rhythmTitle: "Rhythm Garden",
       rhythmDescription: "完璧さではなく、今日どれだけ自分に戻れたかを静かに見る指標です。",
       rhythmScoreLabel: "今日のスコア",
       rhythmItems: [
         "☀ 身体を軽く起こす",
-        "🧠 集中をリセットする",
+        "🙂 Smile Muscle",
+        "🧠 Mind Ownership",
         "❤️ 感謝をひとつ見つける",
         "🌿 自然を1分感じる"
       ],
-      bosTitle: "BOS Reflection",
+      bosTitle: "Reflection Bench",
       bosDescription: "Brain Operating System の問いで、今日は何が自分を動かしたかを見つめます。",
       bosQuestions: [
         "今日、私の脳を動かしていたのは何でしたか？",
         "私は何を選び直せますか？",
         "今、自分の主人として戻れているでしょうか？"
       ],
-      coexistenceTitle: "今日の共生アクション",
+      bosPlaceholder: "今日の気づきを一言だけでも残してみましょう。",
+      coexistenceTitle: "Human Connection",
       coexistenceDescription:
         "回復は一人で終わりません。小さな優しさやつながりが、共生文化の始まりになります。",
       coexistenceAction: "誰かに、短くても温かい一言を送る",
-      founderTitle: "今日の創始者の言葉",
+      coexistenceDone: "今日の小さな共生アクションを心に留めました。",
+      communityPulse: "今日も、12人がここで静かに呼吸しました。",
+      founderTitle: "Wisdom Tree",
       founderDescription:
         "45年の実践が伝えてきたのは、人はいつでも再び回復し、目覚め直せるという希望です。",
       founderWisdoms: [
         "小さな実践は、人生のリズムを変える力になります。",
         "AI時代だからこそ、人間の温かさが未来を決めます。",
         "共に目覚める文化は、一人の静かな実践から始まります。"
-      ]
+      ],
+      readDeeper: "Deep Forest をひらく"
     },
     debug: {
       title: "接続確認",
@@ -199,66 +228,95 @@ const memberEntryCopy = {
     },
     dashboard: {
       eyebrow: "Daily Life OS",
-      title: "오늘의 회복에서 함께 깨어나는 흐름으로",
+      title: "다시 오셨어요. 오늘도 여기서 조금 숨을 돌릴 수 있습니다.",
       description:
-        "1분 회복, 일상의 리듬, 뇌의 주인으로 살아가는 감각, 공생의 실천, 그리고 더 큰 비전까지 오늘의 한 걸음으로 이어줍니다.",
-      journeyTitle: "오늘의 플랫폼 여정",
+        "오늘이 조금 무거워도 괜찮습니다. 1분이면 충분합니다. 이곳은 회복에서 일상의 리듬, 뇌의 주인으로 살아가는 감각, 공생의 실천까지 조용히 이어지는 자리입니다.",
+      planFocus: {
+        free: "오늘의 회복 실천",
+        basic: "오늘의 Life Rhythm 실천",
+        growth: "오늘의 Brain Owner 실천",
+        inner_circle: "오늘의 Coexistence Circle 실천"
+      },
+      journeyTitle: "오늘의 작은 여정",
       journeySteps: ["1분 회복", "일상 리듬", "뇌의 주인", "공생", "문명"],
-      stateTitle: "오늘의 마음 상태",
+      stateTitle: "Welcome Space",
       stateDescription: "지금 가장 가까운 감각 하나만 골라도 충분합니다.",
       states: [
         {
-          key: "anxiety",
-          label: "불안해요",
-          support: "먼저 길게 내쉬는 호흡으로 마음의 속도를 조금 늦춰보세요."
+          key: "overwhelmed",
+          label: "😰 벅차요",
+          support: "먼저 1분 호흡 리셋으로 마음의 속도를 조금 낮춰보세요."
         },
         {
-          key: "overload",
-          label: "머리가 복잡해요",
-          support: "생각을 줄이기보다 몸의 감각으로 돌아오는 1분이 도움이 될 수 있습니다."
+          key: "exhausted",
+          label: "😴 너무 지쳐요",
+          support: "지금은 Body Activation처럼 몸을 가볍게 깨우는 쪽이 더 부드러운 시작일 수 있습니다."
         },
         {
-          key: "tired",
-          label: "지쳐 있어요",
-          support: "지금은 더 애쓰기보다 조용히 힘을 회복하는 선택이 중요합니다."
+          key: "unstable",
+          label: "🌊 감정이 흔들려요",
+          support: "감정을 누르기보다 짧은 리플렉션으로 지금의 상태를 바라보는 것이 좋습니다."
         },
         {
-          key: "lonely",
-          label: "조금 외로워요",
-          support: "혼자 버티지 않아도 됩니다. 연결의 입구를 열어둘게요."
+          key: "stressed",
+          label: "🔥 스트레스가 커요",
+          support: "온도 리셋이나 짧은 움직임으로 몸에서부터 상태를 바꿔보세요."
+        },
+        {
+          key: "okay",
+          label: "🙂 괜찮은 편이에요",
+          support: "조용한 1분과 작은 감사 하나로 오늘의 리듬을 안정시켜보세요."
+        },
+        {
+          key: "energized",
+          label: "✨ 흐름이 좋아요",
+          support: "좋은 흐름을 나만의 것이 아니라 주변으로 넓히는 하루로 만들어보세요."
         }
       ],
-      recoveryTitle: "추천 1분 리커버리",
+      recoveryTitle: "오늘의 1분 리커버리",
       recoveryDescription: "지금 상태에 맞는 가장 부드러운 시작점부터 안내합니다.",
       recoveryCta: "1분 리커버리 시작",
-      rhythmTitle: "Daily Rhythm Score",
+      recoveryOptions: {
+        overwhelmed: "1분 호흡 리셋",
+        exhausted: "Body Activation",
+        unstable: "짧은 감정 리플렉션",
+        stressed: "Temperature Reset",
+        okay: "1분 감사 리듬",
+        energized: "Smile Muscle Activation"
+      },
+      rhythmTitle: "Rhythm Garden",
       rhythmDescription: "완벽함보다 오늘 얼마나 나에게 다시 돌아왔는지를 조용히 보는 지표입니다.",
       rhythmScoreLabel: "오늘의 점수",
       rhythmItems: [
         "☀ 몸을 가볍게 깨우기",
-        "🧠 집중 리셋하기",
+        "🙂 Smile Muscle",
+        "🧠 Mind Ownership",
         "❤️ 감사 한 가지 찾기",
         "🌿 자연을 1분 느끼기"
       ],
-      bosTitle: "BOS Reflection",
+      bosTitle: "Reflection Bench",
       bosDescription: "Brain Operating System 질문으로 오늘 무엇이 나를 움직였는지 돌아봅니다.",
       bosQuestions: [
         "오늘 내 뇌를 움직이고 있던 것은 무엇이었나요?",
         "나는 무엇을 다시 선택할 수 있나요?",
         "지금 나는 나의 주인으로 돌아와 있나요?"
       ],
-      coexistenceTitle: "오늘의 공생 액션",
+      bosPlaceholder: "한 문장만 적어도 충분합니다.",
+      coexistenceTitle: "Human Connection",
       coexistenceDescription:
         "회복은 혼자 끝나지 않습니다. 작은 친절과 연결이 공생 문화의 시작이 됩니다.",
       coexistenceAction: "누군가에게 짧아도 따뜻한 한마디를 전하기",
-      founderTitle: "오늘의 창립자 메시지",
+      coexistenceDone: "오늘의 작은 공생 액션을 기억해두었습니다.",
+      communityPulse: "오늘도, 12명이 여기서 함께 숨을 돌렸습니다.",
+      founderTitle: "Wisdom Tree",
       founderDescription:
         "45년의 실천이 전하는 핵심은, 사람은 언제든 다시 회복하고 깨어날 수 있다는 희망입니다.",
       founderWisdoms: [
         "작은 실천이 삶의 리듬을 바꾸는 힘이 됩니다.",
         "AI 시대일수록 인간의 따뜻함이 미래를 결정합니다.",
         "함께 깨어나는 문화는 한 사람의 조용한 실천에서 시작됩니다."
-      ]
+      ],
+      readDeeper: "Deep Forest 열기"
     },
     debug: {
       title: "연결 확인",
@@ -319,49 +377,74 @@ const memberEntryCopy = {
     },
     dashboard: {
       eyebrow: "Daily Life OS",
-      title: "From today’s recovery to a shared rhythm of awakening",
+      title: "Welcome back. You can breathe here again today.",
       description:
-        "This dashboard gathers one-minute recovery, daily rhythm, brain ownership, coexistence practice, and the deeper vision into one calm next step.",
-      journeyTitle: "Today’s platform journey",
+        "Even if today feels heavy, one minute is enough. This is a quiet place where recovery can become daily rhythm, brain ownership, and gentle coexistence.",
+      planFocus: {
+        free: "Today’s recovery practice",
+        basic: "Today’s Life Rhythm practice",
+        growth: "Today’s Brain Owner practice",
+        inner_circle: "Today’s Coexistence Circle practice"
+      },
+      journeyTitle: "Today’s small path",
       journeySteps: ["1-minute recovery", "daily rhythm", "brain ownership", "coexistence", "civilization"],
-      stateTitle: "How are you feeling today?",
+      stateTitle: "Welcome Space",
       stateDescription: "Choose the state that feels closest right now.",
       states: [
         {
-          key: "anxiety",
-          label: "Anxious",
-          support: "Begin with a longer exhale and let the pace inside you soften a little."
+          key: "overwhelmed",
+          label: "😰 Overwhelmed",
+          support: "Start with a one-minute breathing reset and let the inner speed slow down a little."
         },
         {
-          key: "overload",
-          label: "Overloaded",
-          support: "Instead of forcing clarity, one minute in the body may help you return."
+          key: "exhausted",
+          label: "😴 Exhausted",
+          support: "A light body activation may be a kinder starting point than trying harder right now."
         },
         {
-          key: "tired",
-          label: "Exhausted",
-          support: "Today may be less about pushing and more about quietly restoring strength."
+          key: "unstable",
+          label: "🌊 Emotionally unstable",
+          support: "Instead of suppressing the wave, try a short reflection and let the feeling be seen."
         },
         {
-          key: "lonely",
-          label: "Lonely",
-          support: "You do not have to hold everything alone. Let connection stay open."
+          key: "stressed",
+          label: "🔥 Stressed",
+          support: "A temperature reset or a brief movement break may help shift your state from the body outward."
+        },
+        {
+          key: "okay",
+          label: "🙂 Okay",
+          support: "A quiet minute and one gratitude can help steady today’s rhythm."
+        },
+        {
+          key: "energized",
+          label: "✨ Energized",
+          support: "Let this good energy spread beyond you through a small act of warmth."
         }
       ],
-      recoveryTitle: "Recommended 1-minute recovery",
+      recoveryTitle: "Today’s 1-minute recovery",
       recoveryDescription: "Start with the gentlest recovery point for your current state.",
       recoveryCta: "Start 1-minute recovery",
-      rhythmTitle: "Daily Rhythm Score",
+      recoveryOptions: {
+        overwhelmed: "1-minute breathing reset",
+        exhausted: "Body activation",
+        unstable: "Short emotional reflection",
+        stressed: "Temperature reset",
+        okay: "1-minute gratitude rhythm",
+        energized: "Smile Muscle Activation"
+      },
+      rhythmTitle: "Rhythm Garden",
       rhythmDescription:
         "Not a measure of perfection, but a quiet way to see how often you returned to yourself today.",
       rhythmScoreLabel: "Today’s score",
       rhythmItems: [
         "☀ Wake up the body",
-        "🧠 Reset focus",
+        "🙂 Smile Muscle",
+        "🧠 Mind Ownership",
         "❤️ Find one gratitude",
         "🌿 Feel nature for one minute"
       ],
-      bosTitle: "BOS Reflection",
+      bosTitle: "Reflection Bench",
       bosDescription:
         "Use the Brain Operating System questions to notice what guided your mind today.",
       bosQuestions: [
@@ -369,18 +452,22 @@ const memberEntryCopy = {
         "What can I choose again now?",
         "Am I returning as the owner of my mind?"
       ],
-      coexistenceTitle: "Today’s coexistence action",
+      bosPlaceholder: "Even one short sentence is enough.",
+      coexistenceTitle: "Human Connection",
       coexistenceDescription:
         "Recovery does not end with the self. A small act of warmth can begin coexistence.",
       coexistenceAction: "Send one short but warm message to someone today",
-      founderTitle: "Founder wisdom of the day",
+      coexistenceDone: "Today’s small coexistence action is now in motion.",
+      communityPulse: "Today, 12 people breathed here too.",
+      founderTitle: "Wisdom Tree",
       founderDescription:
         "Forty-five years of practice point to one hopeful truth: people can recover, awaken, and begin again.",
       founderWisdoms: [
         "Small daily actions can change the rhythm of a life.",
         "In the AI era, human warmth will matter even more.",
         "A culture of awakening together begins with one quiet practice."
-      ]
+      ],
+      readDeeper: "Open Deep Forest"
     },
     debug: {
       title: "Connection check",
@@ -412,7 +499,10 @@ export function MemberEntryContent({
   const [email, setEmail] = useState("");
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn] = useState(isLoggedInInitially);
-  const [selectedStateKey, setSelectedStateKey] = useState("anxiety");
+  const [selectedStateKey, setSelectedStateKey] = useState("overwhelmed");
+  const [reflectionText, setReflectionText] = useState("");
+  const [coexistenceChecked, setCoexistenceChecked] = useState(false);
+  const [completedRhythmItems, setCompletedRhythmItems] = useState<number[]>([0, 2]);
   const [lastError, setLastError] = useState("");
   const [lastApiResult, setLastApiResult] = useState("");
   const [apiResponse, setApiResponse] = useState<MagicLinkApiResult | null>(null);
@@ -428,7 +518,15 @@ export function MemberEntryContent({
   const founderWisdom = copy.dashboard.founderWisdoms[new Date().getDay() % copy.dashboard.founderWisdoms.length];
   const selectedState =
     copy.dashboard.states.find((state) => state.key === selectedStateKey) ?? copy.dashboard.states[0];
-  const rhythmScore = initialPlan === "inner_circle" ? 88 : initialPlan === "growth" ? 74 : initialPlan === "basic" ? 62 : 40;
+  const rhythmScore = Math.round((completedRhythmItems.length / copy.dashboard.rhythmItems.length) * 100);
+  const recommendedRecovery = copy.dashboard.recoveryOptions[selectedState.key as keyof typeof copy.dashboard.recoveryOptions];
+  const todaysPlanFocus = copy.dashboard.planFocus[initialPlan];
+
+  function toggleRhythmItem(index: number) {
+    setCompletedRhythmItems((current) =>
+      current.includes(index) ? current.filter((item) => item !== index) : [...current, index]
+    );
+  }
 
   useEffect(() => {
     setCurrentOrigin(window.location.origin);
@@ -556,6 +654,7 @@ export function MemberEntryContent({
                   <p className="text-xs uppercase tracking-[0.28em] text-gold/80">{copy.dashboard.eyebrow}</p>
                   <h2 className="mt-3 text-2xl font-semibold text-white sm:text-3xl">{copy.dashboard.title}</h2>
                   <p className="mt-3 max-w-3xl text-sm leading-7 text-white/70">{copy.dashboard.description}</p>
+                  <p className="mt-4 text-sm font-medium text-gold/90">{todaysPlanFocus}</p>
                 </div>
                 <div className="rounded-[24px] border border-gold/20 bg-gold/[0.08] px-4 py-4 text-left">
                   <p className="text-xs uppercase tracking-[0.24em] text-gold/80">{copy.planLabel}</p>
@@ -563,6 +662,7 @@ export function MemberEntryContent({
                   <p className="mt-2 text-sm text-white/62">{initialEmail || copy.loggedInBox}</p>
                 </div>
               </div>
+              <p className="mt-4 text-sm text-white/52">{copy.dashboard.communityPulse}</p>
             </div>
 
             <div className="rounded-[28px] border border-white/10 bg-white/[0.03] p-5 sm:p-6">
@@ -614,7 +714,7 @@ export function MemberEntryContent({
 
               <section className="rounded-[28px] border border-gold/20 bg-[linear-gradient(180deg,rgba(212,186,117,0.12),rgba(255,255,255,0.02))] p-5 sm:p-6">
                 <p className="text-xs uppercase tracking-[0.24em] text-gold/80">{copy.dashboard.recoveryTitle}</p>
-                <h3 className="mt-3 text-xl font-semibold text-white">{selectedState.label}</h3>
+                <h3 className="mt-3 text-xl font-semibold text-white">{recommendedRecovery}</h3>
                 <p className="mt-3 text-sm leading-7 text-white/70">{copy.dashboard.recoveryDescription}</p>
                 <p className="mt-4 rounded-[22px] border border-white/10 bg-black/20 px-4 py-4 text-sm leading-7 text-white/78">
                   {selectedState.support}
@@ -649,10 +749,19 @@ export function MemberEntryContent({
                   </div>
                 </div>
                 <div className="mt-5 grid gap-3">
-                  {copy.dashboard.rhythmItems.map((item) => (
-                    <div key={item} className="rounded-[18px] border border-white/10 bg-[#0a141d] px-4 py-3 text-sm text-white/74">
+                  {copy.dashboard.rhythmItems.map((item, index) => (
+                    <button
+                      key={item}
+                      type="button"
+                      onClick={() => toggleRhythmItem(index)}
+                      className={`rounded-[18px] border px-4 py-3 text-left text-sm transition duration-300 ${
+                        completedRhythmItems.includes(index)
+                          ? "border-gold/30 bg-gold/[0.10] text-white"
+                          : "border-white/10 bg-[#0a141d] text-white/74 hover:bg-white/[0.05]"
+                      }`}
+                    >
                       {item}
-                    </div>
+                    </button>
                   ))}
                 </div>
               </section>
@@ -667,6 +776,12 @@ export function MemberEntryContent({
                     </div>
                   ))}
                 </div>
+                <textarea
+                  value={reflectionText}
+                  onChange={(event) => setReflectionText(event.target.value)}
+                  placeholder={copy.dashboard.bosPlaceholder}
+                  className="mt-4 min-h-[116px] w-full rounded-[22px] border border-white/10 bg-[#09131d] px-4 py-4 text-sm leading-7 text-white outline-none transition duration-300 placeholder:text-white/28 focus:border-gold/40"
+                />
               </section>
             </div>
 
@@ -677,21 +792,23 @@ export function MemberEntryContent({
                 <div className="mt-5 rounded-[22px] border border-gold/20 bg-gold/[0.08] px-4 py-4 text-sm leading-7 text-white/86">
                   {copy.dashboard.coexistenceAction}
                 </div>
+                {coexistenceChecked ? (
+                  <p className="mt-3 text-sm text-gold/90">{copy.dashboard.coexistenceDone}</p>
+                ) : null}
                 <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+                  <button
+                    type="button"
+                    onClick={() => setCoexistenceChecked(true)}
+                    className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-gold/20 bg-gold/[0.08] px-5 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12]"
+                  >
+                    {copy.dashboard.coexistenceAction}
+                  </button>
                   <Link
                     href="/community"
                     className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
                   >
                     {copy.actions.community}
                   </Link>
-                  <a
-                    href={lineUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-gold/20 bg-gold/[0.08] px-5 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12]"
-                  >
-                    {copy.actions.line}
-                  </a>
                 </div>
               </section>
 
@@ -701,6 +818,12 @@ export function MemberEntryContent({
                 <blockquote className="mt-5 rounded-[22px] border border-white/10 bg-black/15 px-4 py-4 text-base leading-8 text-white/86">
                   {founderWisdom}
                 </blockquote>
+                <Link
+                  href="/brain-education"
+                  className="mt-5 inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
+                >
+                  {copy.dashboard.readDeeper}
+                </Link>
               </section>
             </div>
           </div>
