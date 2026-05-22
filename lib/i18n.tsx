@@ -91,7 +91,7 @@ export function useLanguage() {
 export const siteCopy = {
   jp: {
     header: {
-      brand: "Meisou Life",
+      brand: "瞑想life",
       login: "ログイン",
       freeJoin: "無料参加",
       myPage: "マイページ",
@@ -1821,7 +1821,7 @@ export const siteCopy = {
   },
   en: {
     header: {
-      brand: "Meditation Life",
+      brand: "Meisou Life",
       login: "Log In",
       freeJoin: "Free Join",
       myPage: "My Page",
