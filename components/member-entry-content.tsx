@@ -32,6 +32,17 @@ type AuthDebugResult = {
   siteUrl: string;
 };
 
+type RecoveryForestKey =
+  | "meditation"
+  | "breathing"
+  | "brainWave"
+  | "strength"
+  | "pause"
+  | "belly"
+  | "sleep"
+  | "smile"
+  | "temperature";
+
 const memberEntryCopy = {
   jp: {
     badge: "Member Entrance",
@@ -168,6 +179,31 @@ const memberEntryCopy = {
         "共に目覚める文化は、一人の静かな実践から始まります。"
       ],
       readDeeper: "Deep Forest をひらく"
+    },
+    forest: {
+      eyebrow: "1-Minute Recovery Forest",
+      title: "もし今日が重ければ、1分で十分です。",
+      description:
+        "ここは、ひとつずつ静かに試せる小さな回復の道です。コンテンツではなく、今日の自分に戻るための小さな儀式として使ってください。",
+      startLabel: "はじめる",
+      soundOn: "自然音 ON",
+      soundOff: "自然音 OFF",
+      openDeepForest: "静かな深みへ",
+      completionTitle: "戻ってきてくれて、ありがとうございます。",
+      completionBody: "1分でも、あなたが戻ってきたことには意味があります。",
+      completionQuestion: "今、どんな感じですか？",
+      done: "完了",
+      cards: [
+        { key: "meditation", emoji: "🌿", title: "1分瞑想", description: "呼吸と静けさにやさしく戻る" },
+        { key: "breathing", emoji: "💨", title: "1分呼吸", description: "長く吐いて神経を整える" },
+        { key: "brainWave", emoji: "🧠", title: "1分 脳波振動", description: "内側のリズムを細かくゆらす" },
+        { key: "strength", emoji: "💪", title: "1分 体力活性", description: "身体を軽く起こして戻る" },
+        { key: "pause", emoji: "🛑", title: "1分 停止", description: "何もしない勇気を持つ" },
+        { key: "belly", emoji: "☀️", title: "1分 腸ヒーリング", description: "お腹をゆるめて安心感を戻す" },
+        { key: "sleep", emoji: "🌙", title: "1分 睡眠準備", description: "眠る前の緊張をほどく" },
+        { key: "smile", emoji: "🙂", title: "Smile Activation", description: "表情筋から気分を整える" },
+        { key: "temperature", emoji: "💧", title: "Temperature Reset", description: "温度感覚で状態を切り替える" }
+      ]
     },
     debug: {
       title: "接続確認",
@@ -317,6 +353,31 @@ const memberEntryCopy = {
         "함께 깨어나는 문화는 한 사람의 조용한 실천에서 시작됩니다."
       ],
       readDeeper: "Deep Forest 열기"
+    },
+    forest: {
+      eyebrow: "1-Minute Recovery Forest",
+      title: "오늘이 무겁다면, 1분이면 충분합니다.",
+      description:
+        "이곳은 하나씩 조용히 시도할 수 있는 작은 회복의 길입니다. 콘텐츠가 아니라 오늘의 나에게 돌아오기 위한 짧은 의식처럼 사용해보세요.",
+      startLabel: "시작하기",
+      soundOn: "자연음 ON",
+      soundOff: "자연음 OFF",
+      openDeepForest: "조용한 깊이로",
+      completionTitle: "다시 돌아와줘서 고맙습니다.",
+      completionBody: "1분이라도, 다시 돌아온 것에는 분명한 의미가 있습니다.",
+      completionQuestion: "지금은 어떤가요?",
+      done: "완료",
+      cards: [
+        { key: "meditation", emoji: "🌿", title: "1분 명상", description: "호흡과 고요로 부드럽게 돌아오기" },
+        { key: "breathing", emoji: "💨", title: "1분 호흡", description: "길게 내쉬며 신경을 정돈하기" },
+        { key: "brainWave", emoji: "🧠", title: "1분 뇌파 진동", description: "안쪽 리듬을 가볍게 흔들기" },
+        { key: "strength", emoji: "💪", title: "1분 체력 깨우기", description: "몸을 살짝 깨워 다시 서기" },
+        { key: "pause", emoji: "🛑", title: "1분 멈춤", description: "아무것도 하지 않는 힘 가지기" },
+        { key: "belly", emoji: "☀️", title: "1분 배 힐링", description: "배를 풀어 안정을 되찾기" },
+        { key: "sleep", emoji: "🌙", title: "1분 수면 준비", description: "잠들기 전 긴장을 풀기" },
+        { key: "smile", emoji: "🙂", title: "Smile Activation", description: "표정 근육으로 기분을 회복하기" },
+        { key: "temperature", emoji: "💧", title: "Temperature Reset", description: "온도 감각으로 상태 전환하기" }
+      ]
     },
     debug: {
       title: "연결 확인",
@@ -469,6 +530,31 @@ const memberEntryCopy = {
       ],
       readDeeper: "Open Deep Forest"
     },
+    forest: {
+      eyebrow: "1-Minute Recovery Forest",
+      title: "If today feels heavy, one minute is enough.",
+      description:
+        "These are small recovery paths you can enter quietly. Treat them not as content, but as tiny rituals for coming back to yourself today.",
+      startLabel: "Start",
+      soundOn: "Nature sound ON",
+      soundOff: "Nature sound OFF",
+      openDeepForest: "Toward deeper quiet",
+      completionTitle: "Thank you for coming back.",
+      completionBody: "Even one minute matters. Coming back matters.",
+      completionQuestion: "How do you feel now?",
+      done: "Done",
+      cards: [
+        { key: "meditation", emoji: "🌿", title: "1-Minute Meditation", description: "Return gently to breath and stillness" },
+        { key: "breathing", emoji: "💨", title: "1-Minute Breathing", description: "Long exhales to settle the system" },
+        { key: "brainWave", emoji: "🧠", title: "1-Minute Brain Wave Vibration", description: "Lightly awaken the inner rhythm" },
+        { key: "strength", emoji: "💪", title: "1-Minute Strength Activation", description: "Wake the body and stand up again" },
+        { key: "pause", emoji: "🛑", title: "1-Minute Pause", description: "Practice the courage to stop" },
+        { key: "belly", emoji: "☀️", title: "1-Minute Belly Healing", description: "Soften the belly and restore ease" },
+        { key: "sleep", emoji: "🌙", title: "1-Minute Sleep Preparation", description: "Release tension before rest" },
+        { key: "smile", emoji: "🙂", title: "Smile Activation", description: "Use facial warmth to shift the mood" },
+        { key: "temperature", emoji: "💧", title: "Temperature Reset", description: "Change your state through sensation" }
+      ]
+    },
     debug: {
       title: "Connection check",
       supabaseUrl: "Supabase URL",
@@ -503,6 +589,11 @@ export function MemberEntryContent({
   const [reflectionText, setReflectionText] = useState("");
   const [coexistenceChecked, setCoexistenceChecked] = useState(false);
   const [completedRhythmItems, setCompletedRhythmItems] = useState<number[]>([0, 2]);
+  const [activeForestKey, setActiveForestKey] = useState<RecoveryForestKey | null>(null);
+  const [forestSecondsLeft, setForestSecondsLeft] = useState(60);
+  const [forestRunning, setForestRunning] = useState(false);
+  const [forestFinished, setForestFinished] = useState(false);
+  const [forestSoundEnabled, setForestSoundEnabled] = useState(false);
   const [lastError, setLastError] = useState("");
   const [lastApiResult, setLastApiResult] = useState("");
   const [apiResponse, setApiResponse] = useState<MagicLinkApiResult | null>(null);
@@ -527,6 +618,63 @@ export function MemberEntryContent({
       current.includes(index) ? current.filter((item) => item !== index) : [...current, index]
     );
   }
+
+  function openForestExperience(key: RecoveryForestKey) {
+    setActiveForestKey(key);
+    setForestSecondsLeft(60);
+    setForestRunning(false);
+    setForestFinished(false);
+  }
+
+  function closeForestExperience() {
+    setActiveForestKey(null);
+    setForestRunning(false);
+    setForestFinished(false);
+    setForestSecondsLeft(60);
+  }
+
+  useEffect(() => {
+    if (!activeForestKey || !forestRunning || forestFinished) {
+      return;
+    }
+
+    const timer = window.setInterval(() => {
+      setForestSecondsLeft((current) => {
+        if (current <= 1) {
+          window.clearInterval(timer);
+          setForestRunning(false);
+          setForestFinished(true);
+
+          if (forestSoundEnabled && typeof window !== "undefined") {
+            const AudioContextClass = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+
+            if (AudioContextClass) {
+              const context = new AudioContextClass();
+              const oscillator = context.createOscillator();
+              const gain = context.createGain();
+
+              oscillator.type = "sine";
+              oscillator.frequency.value = 528;
+              gain.gain.value = 0.03;
+
+              oscillator.connect(gain);
+              gain.connect(context.destination);
+              oscillator.start();
+              oscillator.stop(context.currentTime + 0.5);
+            }
+          }
+
+          return 0;
+        }
+
+        return current - 1;
+      });
+    }, 1000);
+
+    return () => {
+      window.clearInterval(timer);
+    };
+  }, [activeForestKey, forestFinished, forestRunning, forestSoundEnabled]);
 
   useEffect(() => {
     setCurrentOrigin(window.location.origin);
@@ -684,6 +832,26 @@ export function MemberEntryContent({
                 ))}
               </div>
             </div>
+
+            <section className="rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(110,168,120,0.16),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] p-5 sm:p-6">
+              <p className="text-xs uppercase tracking-[0.24em] text-gold/80">{copy.forest.eyebrow}</p>
+              <h3 className="mt-3 text-2xl font-semibold text-white">{copy.forest.title}</h3>
+              <p className="mt-3 max-w-3xl text-sm leading-7 text-white/68">{copy.forest.description}</p>
+              <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                {copy.forest.cards.map((card) => (
+                  <button
+                    key={card.key}
+                    type="button"
+                    onClick={() => openForestExperience(card.key as RecoveryForestKey)}
+                    className="rounded-[24px] border border-white/10 bg-[#0c1720] px-4 py-4 text-left transition duration-300 hover:border-gold/25 hover:bg-white/[0.05]"
+                  >
+                    <p className="text-lg text-white">{card.emoji}</p>
+                    <p className="mt-3 text-base font-semibold text-white">{card.title}</p>
+                    <p className="mt-2 text-sm leading-6 text-white/60">{card.description}</p>
+                  </button>
+                ))}
+              </div>
+            </section>
 
             <div className="grid gap-5 lg:grid-cols-[1.2fr_0.8fr]">
               <section className="rounded-[28px] border border-white/10 bg-white/[0.03] p-5 sm:p-6">
@@ -978,6 +1146,69 @@ export function MemberEntryContent({
           </div>
         ) : null}
       </div>
+
+      {activeForestKey ? (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#071018]/80 px-4 backdrop-blur-md">
+          <div className="w-full max-w-xl rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(120,168,134,0.18),transparent_26%),linear-gradient(180deg,#0a1716_0%,#0d1824_58%,#09131d_100%)] p-6 shadow-[0_28px_90px_rgba(7,17,31,0.4)] sm:p-8">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.24em] text-gold/80">{copy.forest.eyebrow}</p>
+                <h3 className="mt-2 text-2xl font-semibold text-white">
+                  {copy.forest.cards.find((card) => card.key === activeForestKey)?.title}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={closeForestExperience}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-white/70 transition hover:bg-white/[0.08]"
+                aria-label={copy.forest.done}
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="mt-6 rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(140,180,150,0.16),rgba(8,17,26,0.18))] px-5 py-8 text-center">
+              <div className="mx-auto flex h-28 w-28 items-center justify-center rounded-full border border-gold/20 bg-black/15 text-4xl font-semibold text-white">
+                {forestSecondsLeft}
+              </div>
+              <p className="mt-5 text-sm leading-7 text-white/72">
+                {copy.forest.cards.find((card) => card.key === activeForestKey)?.description}
+              </p>
+            </div>
+
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <button
+                type="button"
+                onClick={() => {
+                  if (forestFinished) {
+                    setForestFinished(false);
+                    setForestSecondsLeft(60);
+                  }
+                  setForestRunning((current) => !current);
+                }}
+                className="inline-flex min-h-[52px] flex-1 items-center justify-center rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
+              >
+                {forestFinished ? copy.forest.startLabel : forestRunning ? copy.forest.done : copy.forest.startLabel}
+              </button>
+              <button
+                type="button"
+                onClick={() => setForestSoundEnabled((current) => !current)}
+                className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
+              >
+                {forestSoundEnabled ? copy.forest.soundOn : copy.forest.soundOff}
+              </button>
+            </div>
+
+            {forestFinished ? (
+              <div className="mt-5 rounded-[24px] border border-gold/20 bg-gold/[0.08] px-5 py-5">
+                <p className="text-lg font-semibold text-white">{copy.forest.completionTitle}</p>
+                <p className="mt-3 text-sm leading-7 text-white/74">{copy.forest.completionBody}</p>
+                <p className="mt-3 text-sm text-gold/90">{copy.forest.completionQuestion}</p>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
