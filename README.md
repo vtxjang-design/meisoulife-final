@@ -40,7 +40,7 @@ npm run dev
 브라우저:
 
 ```text
-http://localhost:3000
+http://YOUR_LOCAL_DEV_URL:3000
 ```
 
 ## 빌드 확인
@@ -209,7 +209,7 @@ primary key: event_id
 로컬 테스트:
 
 ```bash
-stripe listen --forward-to localhost:3000/api/stripe/webhook
+stripe listen --forward-to YOUR_LOCAL_DEV_URL:3000/api/stripe/webhook
 ```
 
 Stripe CLI가 출력하는 signing secret 값을 아래 환경변수에 넣어야 합니다:
@@ -285,7 +285,7 @@ https://www.meisoulife.com
 ```text
 https://www.meisoulife.com/auth/callback
 https://www.meisoulife.com/member
-http://localhost:3000/auth/callback
+http://YOUR_LOCAL_DEV_URL:3000/auth/callback
 ```
 
 동작 흐름:

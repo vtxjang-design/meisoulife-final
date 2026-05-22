@@ -35,7 +35,7 @@ export default function PricingPage() {
           >
             <div className="space-y-4">
               <p className="text-sm font-medium tracking-[0.28em] text-emerald-700">{plan.name}</p>
-              <p className="text-sm leading-7 text-zinc-600">{plan.emotionalCopy}</p>
+              <p className="text-base font-semibold leading-7 text-zinc-900">{plan.emotionalCopy}</p>
               <div className="space-y-2">
                 <div className="flex items-end gap-2">
                   <p className="text-4xl font-semibold tracking-tight text-zinc-900 sm:text-5xl">{plan.price}</p>

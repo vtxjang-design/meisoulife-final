@@ -10,10 +10,10 @@ npm install
 npm run dev
 ```
 
-개발 주소:
+개발 주소 예시:
 
 ```text
-http://localhost:3000
+http://YOUR_LOCAL_DEV_URL:3000
 ```
 
 ## 2. 빌드 확인
