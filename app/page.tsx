@@ -977,7 +977,7 @@ export default function HomePage() {
           <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.08),transparent_34%),linear-gradient(180deg,rgba(7,16,28,0.10),rgba(7,16,28,0))]" />
           <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_76%_14%,rgba(255,246,214,0.055),transparent_18%),linear-gradient(180deg,rgba(5,18,24,0.04),rgba(5,18,24,0.18)_52%,rgba(5,18,24,0))]" />
         </div>
-        <div className="grid gap-8 lg:grid-cols-[1fr_0.94fr] lg:items-center lg:gap-14 xl:gap-20">
+        <div className="grid gap-8 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:gap-12 xl:gap-16">
           <div className="space-y-5 sm:space-y-8 lg:space-y-9">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm uppercase tracking-[0.34em] text-gold/85">{hero.eyebrow}</p>
@@ -1061,39 +1061,34 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="relative hidden overflow-hidden rounded-[36px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-5 lg:block lg:rounded-[40px] lg:p-8 xl:p-9">
+          <div className="relative hidden overflow-hidden rounded-[36px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.16),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6 lg:block lg:rounded-[38px] lg:p-7 xl:p-8">
             <img
-              src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1400&q=80"
+              src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1400&q=80"
               alt={hero.visualAlt}
-              className="relative z-0 h-[620px] w-full rounded-[30px] object-cover object-center opacity-[0.88]"
+              className="relative z-0 h-[440px] w-full rounded-[28px] object-cover sm:h-[520px] lg:h-[560px]"
             />
-            <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(3,10,18,0.24),rgba(3,10,18,0.72))]" />
-            <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_78%_18%,rgba(255,241,205,0.14),transparent_18%),radial-gradient(circle_at_82%_28%,rgba(155,190,164,0.10),transparent_24%),linear-gradient(90deg,rgba(4,11,18,0.92)_0%,rgba(4,11,18,0.76)_26%,rgba(4,11,18,0.24)_56%,rgba(4,11,18,0.02)_100%)]" />
-            <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(4,11,18,0.08),rgba(4,11,18,0.18)_30%,rgba(4,11,18,0.62)_78%,rgba(4,11,18,0.82)_100%)]" />
-            <div className="pointer-events-none absolute right-10 top-10 z-10 max-w-[260px] rounded-[24px] border border-white/8 bg-[#07111a]/34 px-5 py-4 backdrop-blur-xl">
-              <p className="text-[11px] uppercase tracking-[0.26em] text-gold/82">{hero.visualLabel}</p>
-              <p className="mt-3 text-sm leading-7 text-white/68">{hero.visualCopy.replace("\n", " ")}</p>
+            <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(5,18,24,0.12),rgba(5,18,24,0.64))]" />
+            <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-8">
               <button
                 type="button"
                 onClick={() => setZeroOpen(true)}
-                className="pointer-events-auto mt-4 inline-flex min-h-[44px] items-center justify-center rounded-full bg-white/[0.05] px-4 py-2 text-sm font-medium text-white/82 transition duration-300 hover:bg-white/[0.08] hover:text-white"
+                className="pointer-events-auto flex h-56 w-56 items-center justify-center rounded-full border border-gold/24 bg-[radial-gradient(circle,rgba(212,186,117,0.22),rgba(212,186,117,0.08)_55%,rgba(6,17,29,0.14)_74%)] shadow-[0_0_100px_rgba(212,186,117,0.12)] transition duration-300 hover:scale-[1.01] lg:h-58 lg:w-58"
               >
-                ZERO Experience
+                <div className="text-center">
+                  <p className="text-xs uppercase tracking-[0.28em] text-gold/84">{hero.visualLabel}</p>
+                  <p className="mt-4 font-serif text-6xl text-white sm:text-7xl">ZERO</p>
+                </div>
               </button>
             </div>
-            <div className="pointer-events-none absolute inset-x-8 bottom-8 z-10 rounded-[30px] border border-white/10 bg-[#06111d]/74 p-8 shadow-[0_24px_64px_rgba(0,0,0,0.24)] backdrop-blur-xl">
-              <p className="text-[11px] uppercase tracking-[0.26em] text-white/42">{aiAge.eyebrow}</p>
-              <h2 className="mt-3 max-w-[22ch] font-serif text-[26px] leading-[1.28] text-white/92">
-                {aiAge.title.replace("\n", " ")}
-              </h2>
-              <p className="mt-4 max-w-[34ch] whitespace-pre-line text-[14px] leading-7 text-white/66">
-                {aiAge.description}
+            <div className="pointer-events-none absolute inset-x-8 bottom-8 z-10 rounded-[28px] border border-white/10 bg-[#06111d]/70 p-6 shadow-[0_20px_56px_rgba(0,0,0,0.22)] backdrop-blur-xl lg:rounded-[30px] lg:p-7">
+              <p className="max-w-[32ch] whitespace-pre-line text-sm leading-7 text-white/72 lg:text-[15px] lg:leading-8 lg:text-white/76">
+                {hero.visualCopy}
               </p>
-              <div className="mt-5 grid gap-4 sm:grid-cols-3 lg:gap-5">
+              <div className="mt-5 grid gap-4 sm:grid-cols-3 lg:gap-4">
                 {heroPanelCards.map((card, index) => (
                   <div
                     key={index}
-                    className="rounded-[24px] border border-white/8 bg-white/[0.035] px-5 py-5 lg:min-h-[176px]"
+                    className="rounded-[22px] border border-white/8 bg-white/[0.035] px-5 py-5 lg:min-h-[164px]"
                   >
                     <div className="flex items-center justify-between gap-3">
                       <p className="text-[11px] uppercase tracking-[0.22em] text-white/42 lg:text-[12px]">
@@ -1101,10 +1096,10 @@ export default function HomePage() {
                       </p>
                       <span className="text-sm text-gold/78 lg:text-base">{card.accent}</span>
                     </div>
-                    <p className="mt-4 text-lg leading-tight text-white/90 lg:text-[30px] lg:leading-[1.1]">
+                    <p className="mt-4 text-lg leading-tight text-white/90 lg:text-[28px] lg:leading-[1.12]">
                       {card.main}
                     </p>
-                    <p className="mt-3 text-[13px] leading-6 text-white/66 lg:text-[13px] lg:leading-6 lg:text-white/72">
+                    <p className="mt-3 text-[13px] leading-6 text-white/66 lg:text-[13px] lg:leading-6 lg:text-white/70">
                       {card.note}
                     </p>
                   </div>
