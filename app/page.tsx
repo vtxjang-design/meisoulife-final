@@ -127,6 +127,69 @@ const nationalParkCopy = {
   }
 } as const;
 
+const heroPanelCopy = {
+  jp: {
+    accents: ["☀", "◌", "↺"],
+    cards: [
+      {
+        mainPrefix: "今は",
+        mainSuffix: "のリズム",
+        note: "エネルギーを整え、静かに集中しやすい時間です。"
+      },
+      {
+        mainPrefix: "",
+        mainSuffix: "",
+        note: "小さなリズムが、少しずつ続いています。"
+      },
+      {
+        mainPrefix: "",
+        mainSuffix: "",
+        note: "静かな1分が、未来の自分を整えていきます。"
+      }
+    ]
+  },
+  kr: {
+    accents: ["☀", "◌", "↺"],
+    cards: [
+      {
+        mainPrefix: "지금은 ",
+        mainSuffix: " 리듬",
+        note: "에너지를 고르고, 조용히 집중을 회복하기 좋은 시간입니다."
+      },
+      {
+        mainPrefix: "",
+        mainSuffix: "",
+        note: "작은 리듬이 하루의 결을 조금씩 이어가고 있습니다."
+      },
+      {
+        mainPrefix: "",
+        mainSuffix: "",
+        note: "조용한 1분이 미래의 나를 천천히 만들어갑니다."
+      }
+    ]
+  },
+  en: {
+    accents: ["☀", "◌", "↺"],
+    cards: [
+      {
+        mainPrefix: "It is ",
+        mainSuffix: " rhythm now",
+        note: "A good moment to settle your energy and return to clear focus."
+      },
+      {
+        mainPrefix: "",
+        mainSuffix: "",
+        note: "A small rhythm is quietly continuing."
+      },
+      {
+        mainPrefix: "",
+        mainSuffix: "",
+        note: "One quiet minute shapes the self you return to tomorrow."
+      }
+    ]
+  }
+} as const;
+
 const whyReturnCopy = {
   jp: {
     eyebrow: "WHY PEOPLE RETURN",
@@ -717,6 +780,7 @@ export default function HomePage() {
   const quietGarden = quietGardenCopy[language];
   const whyReturn = whyReturnCopy[language];
   const finalCta = finalCtaCopy[language];
+  const heroPanel = heroPanelCopy[language];
   const healing = healingCopy[language];
   const testimonials = testimonialCopy[language];
   const reassurance = reassuranceCopy[language];
@@ -820,6 +884,15 @@ export default function HomePage() {
   const heroTitleLines = hero.title.split("\n");
   const heroAccentLine = language === "jp" ? heroTitleLines[0] : null;
   const heroMainLines = language === "jp" ? heroTitleLines.slice(1) : heroTitleLines;
+  const heroPanelCards = liveSummary.map((item, index) => ({
+    label: aiAge.labels[index],
+    accent: heroPanel.accents[index],
+    main:
+      index === 0
+        ? `${heroPanel.cards[index].mainPrefix}${item}${heroPanel.cards[index].mainSuffix}`
+        : item,
+    note: heroPanel.cards[index].note
+  }));
 
   function scrollToOneMinute() {
     if (typeof window === "undefined") {
@@ -904,8 +977,8 @@ export default function HomePage() {
           <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.08),transparent_34%),linear-gradient(180deg,rgba(7,16,28,0.10),rgba(7,16,28,0))]" />
           <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_72%_16%,rgba(255,246,214,0.08),transparent_20%),linear-gradient(180deg,rgba(5,18,24,0.04),rgba(5,18,24,0.18)_52%,rgba(5,18,24,0))]" />
         </div>
-        <div className="grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
-          <div className="space-y-5 sm:space-y-8">
+        <div className="grid gap-8 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:gap-12 xl:gap-16">
+          <div className="space-y-5 sm:space-y-8 lg:space-y-9">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm uppercase tracking-[0.34em] text-gold/85">{hero.eyebrow}</p>
               <div className="hidden w-fit rounded-full border border-white/10 bg-white/[0.03] p-1 md:inline-flex lg:hidden">
@@ -924,39 +997,41 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="space-y-3.5 sm:space-y-6 lg:space-y-7">
+            <div className="space-y-3.5 sm:space-y-6 lg:space-y-6">
               {heroAccentLine ? (
-                <p className="max-w-[12ch] font-serif text-[20px] leading-[1.3] text-gold/84 sm:max-w-none sm:text-[28px] sm:leading-[1.45]">
+                <p className="max-w-[12ch] font-serif text-[20px] leading-[1.3] text-gold/84 sm:max-w-none sm:text-[28px] sm:leading-[1.45] lg:text-[30px]">
                   {heroAccentLine}
                 </p>
               ) : null}
-              <h1 className="max-w-[10ch] whitespace-pre-line font-serif text-[29px] leading-[1.24] text-white sm:max-w-[11ch] sm:text-[56px] sm:leading-[1.24] lg:text-[66px] lg:leading-[1.22]">
+              <h1 className="max-w-[10ch] whitespace-pre-line font-serif text-[29px] leading-[1.24] text-white sm:max-w-[11ch] sm:text-[56px] sm:leading-[1.24] lg:max-w-[620px] lg:text-[64px] lg:leading-[1.14] xl:text-[68px]">
                 {heroMainLines.join("\n")}
               </h1>
-              <p className="max-w-[16ch] whitespace-pre-line text-[13px] leading-[1.9] text-white/60 sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.95]">
+              <p className="max-w-[16ch] whitespace-pre-line text-[13px] leading-[1.9] text-white/60 sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.95] lg:max-w-[420px] lg:text-[17px] lg:leading-[1.92] lg:text-white/82">
                 {hero.supporting}
               </p>
-              <p className="hidden max-w-3xl text-[12px] leading-[1.7] text-white/52 sm:block sm:text-xl sm:leading-9">{hero.subtitle}</p>
+              <p className="hidden max-w-3xl text-[12px] leading-[1.7] text-white/52 sm:block sm:text-xl sm:leading-9 lg:text-[13px] lg:leading-7 lg:text-white/56">
+                {hero.subtitle}
+              </p>
             </div>
 
-            <div className="relative z-20 flex flex-col gap-2 pt-1 sm:flex-row sm:flex-wrap">
+            <div className="relative z-20 flex flex-col gap-2 pt-1 sm:flex-row sm:flex-wrap lg:gap-5 lg:pt-2">
               <button
                 type="button"
                 onClick={scrollToOneMinute}
-                className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold/90 px-4.5 py-3 text-[14px] font-semibold text-ink shadow-[0_14px_30px_rgba(212,186,117,0.16)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#e7cd92]"
+                className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold/90 px-4.5 py-3 text-[14px] font-semibold leading-none text-ink shadow-[0_14px_30px_rgba(212,186,117,0.16)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#e7cd92] lg:min-h-[60px] lg:px-9 lg:text-[17px] lg:shadow-[0_18px_36px_rgba(212,186,117,0.18)]"
               >
                 {hero.primary}
               </button>
               <button
                 type="button"
                 onClick={scrollToStateCheck}
-                className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-white/[0.04] px-3.5 py-2 text-[13px] font-medium text-white/68 transition duration-300 hover:bg-white/[0.08] hover:text-white"
+                className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-2 text-[13px] font-medium leading-none text-white/68 transition duration-300 hover:bg-white/[0.07] hover:text-white lg:min-h-[60px] lg:px-10 lg:text-[16px] lg:text-white/78"
               >
                 {hero.secondary}
               </button>
             </div>
 
-            <p className="hidden text-[12px] leading-6 text-white/50 sm:block">{hero.trust}</p>
+            <p className="hidden text-[12px] leading-6 text-white/50 sm:block lg:text-[13px] lg:leading-7 lg:text-white/54">{hero.trust}</p>
 
             <p className="max-w-[20ch] text-[12px] leading-6 text-white/50 sm:max-w-none">
               {language === "jp"
@@ -988,18 +1063,18 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="relative hidden overflow-hidden rounded-[36px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.18),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] p-5 sm:block sm:p-6">
+          <div className="relative hidden overflow-hidden rounded-[36px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.18),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] p-5 sm:block sm:p-6 lg:rounded-[40px] lg:p-8 xl:p-9">
             <img
               src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1400&q=80"
               alt={hero.visualAlt}
-              className="relative z-0 h-[440px] w-full rounded-[28px] object-cover sm:h-[520px]"
+              className="relative z-0 h-[440px] w-full rounded-[28px] object-cover sm:h-[520px] lg:h-[620px]"
             />
             <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(5,18,24,0.12),rgba(5,18,24,0.64))]" />
             <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-8">
               <button
                 type="button"
                 onClick={() => setZeroOpen(true)}
-                className="pointer-events-auto flex h-56 w-56 items-center justify-center rounded-full border border-gold/28 bg-[radial-gradient(circle,rgba(212,186,117,0.24),rgba(212,186,117,0.08)_55%,rgba(6,17,29,0.15)_72%)] shadow-[0_0_120px_rgba(212,186,117,0.16)] transition duration-300 hover:scale-[1.01]"
+                className="pointer-events-auto flex h-56 w-56 items-center justify-center rounded-full border border-gold/28 bg-[radial-gradient(circle,rgba(212,186,117,0.24),rgba(212,186,117,0.08)_55%,rgba(6,17,29,0.15)_72%)] shadow-[0_0_120px_rgba(212,186,117,0.16)] transition duration-300 hover:scale-[1.01] lg:h-60 lg:w-60"
               >
                 <div className="text-center">
                   <p className="text-xs uppercase tracking-[0.28em] text-gold/84">{hero.visualLabel}</p>
@@ -1007,15 +1082,28 @@ export default function HomePage() {
                 </div>
               </button>
             </div>
-            <div className="pointer-events-none absolute inset-x-10 bottom-10 z-10 rounded-[28px] border border-white/10 bg-[#06111d]/72 p-5 backdrop-blur">
-              <p className="whitespace-pre-line text-sm leading-7 text-white/72">{hero.visualCopy}</p>
-              <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                {liveSummary.map((item, index) => (
-                  <div key={index} className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-                    <p className="text-xs uppercase tracking-[0.22em] text-white/42">
-                      {aiAge.labels[index]}
+            <div className="pointer-events-none absolute inset-x-10 bottom-10 z-10 rounded-[28px] border border-white/10 bg-[#06111d]/72 p-5 backdrop-blur lg:inset-x-8 lg:bottom-8 lg:rounded-[30px] lg:p-8">
+              <p className="max-w-[32ch] whitespace-pre-line text-sm leading-7 text-white/72 lg:text-[15px] lg:leading-8 lg:text-white/76">
+                {hero.visualCopy}
+              </p>
+              <div className="mt-5 grid gap-4 sm:grid-cols-3 lg:gap-5">
+                {heroPanelCards.map((card, index) => (
+                  <div
+                    key={index}
+                    className="rounded-[24px] border border-white/8 bg-white/[0.035] p-4 lg:min-h-[168px] lg:px-5 lg:py-5"
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="text-[11px] uppercase tracking-[0.22em] text-white/42 lg:text-[12px]">
+                        {card.label}
+                      </p>
+                      <span className="text-sm text-gold/78 lg:text-base">{card.accent}</span>
+                    </div>
+                    <p className="mt-4 text-lg leading-tight text-white/90 lg:text-[30px] lg:leading-[1.1]">
+                      {card.main}
                     </p>
-                    <p className="mt-3 text-lg text-white/84">{item}</p>
+                    <p className="mt-3 text-[13px] leading-6 text-white/66 lg:text-[13px] lg:leading-6 lg:text-white/72">
+                      {card.note}
+                    </p>
                   </div>
                 ))}
               </div>
