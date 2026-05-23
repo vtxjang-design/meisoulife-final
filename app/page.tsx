@@ -295,6 +295,78 @@ const returnEntryCopy = {
   }
 } as const;
 
+const quietMinuteCopy = {
+  jp: {
+    eyebrow: "TODAY'S QUIET MINUTE",
+    title: "今日のあなたは、どんな状態ですか？",
+    options: [
+      { key: "tired", emoji: "😮‍💨", label: "少し疲れた", note: "休める1分から始めましょう。" },
+      { key: "overthinking", emoji: "🧠", label: "考えすぎている", note: "まずは呼吸で戻りましょう。" },
+      { key: "rest", emoji: "😴", label: "休みたい", note: "身体をゆるめる1分へ。" },
+      { key: "quiet", emoji: "🌿", label: "ただ静かにいたい", note: "何もしない1分でも大丈夫です。" }
+    ],
+    cta: "1分リカバリーを始める"
+  },
+  kr: {
+    eyebrow: "TODAY'S QUIET MINUTE",
+    title: "오늘 당신은 어떤 상태인가요?",
+    options: [
+      { key: "tired", emoji: "😮‍💨", label: "지쳤어요", note: "쉬어가는 1분부터 시작해요." },
+      { key: "overthinking", emoji: "🧠", label: "생각이 너무 많아요", note: "먼저 호흡으로 돌아가 봅시다." },
+      { key: "rest", emoji: "😴", label: "쉬고 싶어요", note: "몸을 풀어주는 1분으로 가볼게요." },
+      { key: "quiet", emoji: "🌿", label: "그냥 조용히 있고 싶어요", note: "아무것도 하지 않는 1분도 괜찮아요." }
+    ],
+    cta: "1분 리커버리 시작"
+  },
+  en: {
+    eyebrow: "TODAY'S QUIET MINUTE",
+    title: "How are you today?",
+    options: [
+      { key: "tired", emoji: "😮‍💨", label: "I feel tired", note: "Begin with one minute of rest." },
+      { key: "overthinking", emoji: "🧠", label: "I’m overthinking", note: "Return to breath first." },
+      { key: "rest", emoji: "😴", label: "I want to rest", note: "A softer minute is enough." },
+      { key: "quiet", emoji: "🌿", label: "I just want quiet", note: "A silent minute still counts." }
+    ],
+    cta: "Start 1-Minute Recovery"
+  }
+} as const;
+
+const quietGardenCopy = {
+  jp: {
+    eyebrow: "QUIET RETURN GARDEN",
+    title: "今日も誰かが、\n静かに戻っています。",
+    description: "ここは競争の場ではなく、静かな回復が集まる場所です。",
+    cities: [
+      { city: "Tokyo", count: "128" },
+      { city: "Seoul", count: "93" },
+      { city: "New York", count: "42" }
+    ],
+    note: "あなたは一人ではありません。"
+  },
+  kr: {
+    eyebrow: "QUIET RETURN GARDEN",
+    title: "오늘도 누군가는,\n조용히 돌아오고 있습니다.",
+    description: "여기는 경쟁하는 공간이 아니라, 조용한 회복이 모이는 장소입니다.",
+    cities: [
+      { city: "Tokyo", count: "128" },
+      { city: "Seoul", count: "93" },
+      { city: "New York", count: "42" }
+    ],
+    note: "당신 혼자가 아닙니다."
+  },
+  en: {
+    eyebrow: "QUIET RETURN GARDEN",
+    title: "Even today,\nsomeone is quietly returning.",
+    description: "This is not a competitive space. It is a place where quiet recovery gathers.",
+    cities: [
+      { city: "Tokyo", count: "128" },
+      { city: "Seoul", count: "93" },
+      { city: "New York", count: "42" }
+    ],
+    note: "You are not alone."
+  }
+} as const;
+
 const founderHopeCopy = {
   jp: {
     eyebrow: "45 Years of Human Possibility",
@@ -641,6 +713,8 @@ export default function HomePage() {
   const hero = heroCopy[language];
   const nationalPark = nationalParkCopy[language];
   const returnEntry = returnEntryCopy[language];
+  const quietMinute = quietMinuteCopy[language];
+  const quietGarden = quietGardenCopy[language];
   const whyReturn = whyReturnCopy[language];
   const finalCta = finalCtaCopy[language];
   const healing = healingCopy[language];
@@ -882,7 +956,7 @@ export default function HomePage() {
               </button>
             </div>
 
-            <p className="text-[12px] leading-6 text-white/50">{hero.trust}</p>
+            <p className="hidden text-[12px] leading-6 text-white/50 sm:block">{hero.trust}</p>
 
             <p className="max-w-[24ch] text-[13px] leading-7 text-white/52 sm:max-w-none">
               {language === "jp"
@@ -892,7 +966,7 @@ export default function HomePage() {
                   : "You do not need to fix your life today. Just take one quiet minute."}
             </p>
 
-            <div className="flex flex-wrap gap-2 pt-0.5">
+            <div className="hidden flex-wrap gap-2 pt-0.5 sm:flex">
               {hero.proof.map((item) => (
                 <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[12px] text-white/56">
                   {item}
@@ -933,6 +1007,38 @@ export default function HomePage() {
                 ))}
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-shell mt-10 sm:mt-14">
+        <div className="rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-6 shadow-[0_20px_72px_rgba(7,17,31,0.18)] sm:px-7 sm:py-8">
+          <p className="text-xs uppercase tracking-[0.28em] text-gold/82">{quietMinute.eyebrow}</p>
+          <h2 className="mt-4 font-serif text-2xl leading-tight text-white sm:text-3xl">{quietMinute.title}</h2>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {quietMinute.options.map((option) => (
+              <button
+                key={option.key}
+                type="button"
+                onClick={scrollToOneMinute}
+                className="flex min-h-[108px] flex-col items-start justify-between rounded-[24px] border border-white/10 bg-white/[0.04] px-4 py-4 text-left transition duration-300 hover:bg-white/[0.06]"
+              >
+                <span className="text-2xl">{option.emoji}</span>
+                <div>
+                  <p className="text-sm font-medium text-white">{option.label}</p>
+                  <p className="mt-2 text-sm leading-6 text-white/60">{option.note}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+          <div className="mt-5">
+            <button
+              type="button"
+              onClick={scrollToOneMinute}
+              className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-gold/18 bg-gold/[0.08] px-5 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12]"
+            >
+              {quietMinute.cta}
+            </button>
           </div>
         </div>
       </section>
@@ -990,6 +1096,23 @@ export default function HomePage() {
               </article>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="section-shell mt-10 sm:mt-14">
+        <div className="rounded-[30px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.08),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] px-5 py-6 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-7 sm:py-8">
+          <p className="text-xs uppercase tracking-[0.28em] text-gold/82">{quietGarden.eyebrow}</p>
+          <h2 className="mt-4 whitespace-pre-line font-serif text-2xl leading-tight text-white sm:text-3xl">{quietGarden.title}</h2>
+          <p className="mt-4 text-sm leading-7 text-white/64">{quietGarden.description}</p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-3">
+            {quietGarden.cities.map((item) => (
+              <article key={item.city} className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4">
+                <p className="text-xs uppercase tracking-[0.22em] text-white/42">{item.city}</p>
+                <p className="mt-2 font-serif text-2xl text-white">{item.count}</p>
+              </article>
+            ))}
+          </div>
+          <p className="mt-5 text-sm leading-7 text-gold/84">{quietGarden.note}</p>
         </div>
       </section>
 
