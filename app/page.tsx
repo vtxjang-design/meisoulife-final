@@ -17,7 +17,6 @@ import { RhythmGarden } from "@/components/rhythm-garden";
 import { RhythmChallenge } from "@/components/rhythm-challenge";
 import { SectionHeading } from "@/components/section-heading";
 import { TogetherAwakeSection } from "@/components/together-awake-section";
-import { ZeroExperienceModal } from "@/components/zero-experience-modal";
 import { getChallengeRhythmProgress, type ChallengeRhythmProgress } from "@/lib/challenge-rhythm";
 import { useLanguage, languageButtons, useSiteCopy } from "@/lib/i18n";
 import { landingCopy } from "@/lib/landing-copy";
@@ -31,7 +30,7 @@ const AI_COACH_URL =
 const heroCopy = {
   jp: {
     eyebrow: "AI時代の人間回復",
-    title: "AIと情報に疲れた、\n心と脳が静かに戻る場所。",
+    title: "AIと情報に疲れた、\n心と脳が静かに\n戻る場所。",
     supporting:
       "少し立ち止まり、\n自分のリズムへ戻る。\n\n急がなくても大丈夫です。",
     subtitle: "無料・60秒・登録不要",
@@ -129,61 +128,76 @@ const nationalParkCopy = {
 
 const heroPanelCopy = {
   jp: {
-    accents: ["☀", "◌", "↺"],
+    intro: "情報に引かれるのではなく、\n自分へ戻るための静かな入口。",
+    pace: "今日も、あなたのペースで。",
+    footer: "AIと共に生きる時代、心の回復力は、新しい力になる。",
     cards: [
       {
-        mainPrefix: "今は",
-        mainSuffix: "のリズム",
+        label: "現在の時間帯",
+        accent: "☾",
+        prefix: "今は",
+        suffix: "のリズム",
         note: "エネルギーを整え、静かに集中しやすい時間です。"
       },
       {
-        mainPrefix: "",
-        mainSuffix: "",
+        label: "7日リズム",
+        accent: "◌",
         note: "小さなリズムが、少しずつ続いています。"
       },
       {
-        mainPrefix: "",
-        mainSuffix: "",
+        label: "戻る力",
+        accent: "↺",
+        main: "1分",
         note: "静かな1分が、未来の自分を整えていきます。"
       }
     ]
   },
   kr: {
-    accents: ["☀", "◌", "↺"],
+    intro: "정보에 끌려가는 대신,\n나 자신에게 돌아오는 조용한 입구.",
+    pace: "오늘도, 당신의 속도로.",
+    footer: "AI와 함께 살아가는 시대, 마음의 회복력은 새로운 힘이 됩니다.",
     cards: [
       {
-        mainPrefix: "지금은 ",
-        mainSuffix: " 리듬",
+        label: "지금의 시간대",
+        accent: "☾",
+        prefix: "지금은 ",
+        suffix: " 리듬",
         note: "에너지를 고르고, 조용히 집중을 회복하기 좋은 시간입니다."
       },
       {
-        mainPrefix: "",
-        mainSuffix: "",
+        label: "7일 리듬",
+        accent: "◌",
         note: "작은 리듬이 하루의 결을 조금씩 이어가고 있습니다."
       },
       {
-        mainPrefix: "",
-        mainSuffix: "",
+        label: "돌아오는 힘",
+        accent: "↺",
+        main: "1분",
         note: "조용한 1분이 미래의 나를 천천히 만들어갑니다."
       }
     ]
   },
   en: {
-    accents: ["☀", "◌", "↺"],
+    intro: "A quiet entrance for returning\nto yourself instead of being pulled by information.",
+    pace: "Today as well, at your own pace.",
+    footer: "In the age of living with AI, the power to recover your mind becomes a new kind of strength.",
     cards: [
       {
-        mainPrefix: "It is ",
-        mainSuffix: " rhythm now",
+        label: "Current Time",
+        accent: "☾",
+        prefix: "It is ",
+        suffix: " rhythm",
         note: "A good moment to settle your energy and return to clear focus."
       },
       {
-        mainPrefix: "",
-        mainSuffix: "",
+        label: "7-Day Rhythm",
+        accent: "◌",
         note: "A small rhythm is quietly continuing."
       },
       {
-        mainPrefix: "",
-        mainSuffix: "",
+        label: "Return Power",
+        accent: "↺",
+        main: "1 min",
         note: "One quiet minute shapes the self you return to tomorrow."
       }
     ]
@@ -791,7 +805,6 @@ export default function HomePage() {
   const laughReset = laughResetCopy[language];
   const stateReset = stateResetCopy[language];
   const membershipPlans = useLandingMembership();
-  const [zeroOpen, setZeroOpen] = useState(false);
   const [challengeProgress, setChallengeProgress] = useState<ChallengeRhythmProgress>({
     currentDay: 1,
     completedDays: []
@@ -856,14 +869,6 @@ export default function HomePage() {
   }, [giftToast]);
 
   const gardenMood = returnRhythm.isCompletedToday ? "🙂" : returnRhythm.inactiveDays >= 2 ? "😔" : "😀";
-  const liveSummary = useMemo(
-    () => [
-      site.home.rhythmSignals.anchors[returnRhythm.timeAnchor],
-      `${challengeProgress.completedDays.length}/7`,
-      `${Math.max(returnRhythm.streakCount, 1)}`
-    ],
-    [challengeProgress.completedDays.length, returnRhythm.streakCount, returnRhythm.timeAnchor, site.home.rhythmSignals.anchors]
-  );
   const returnActionLabel = authResolved
     ? !isLoggedIn
       ? hero.tertiaryGuest
@@ -884,15 +889,26 @@ export default function HomePage() {
   const heroTitleLines = hero.title.split("\n");
   const heroAccentLine = language === "jp" ? heroTitleLines[0] : null;
   const heroMainLines = language === "jp" ? heroTitleLines.slice(1) : heroTitleLines;
-  const heroPanelCards = liveSummary.map((item, index) => ({
-    label: aiAge.labels[index],
-    accent: heroPanel.accents[index],
-    main:
-      index === 0
-        ? `${heroPanel.cards[index].mainPrefix}${item}${heroPanel.cards[index].mainSuffix}`
-        : item,
-    note: heroPanel.cards[index].note
-  }));
+  const heroPanelCards = [
+    {
+      label: heroPanel.cards[0].label,
+      accent: heroPanel.cards[0].accent,
+      main: `${heroPanel.cards[0].prefix}${site.home.rhythmSignals.anchors[returnRhythm.timeAnchor]}\n${heroPanel.cards[0].suffix}`,
+      note: heroPanel.cards[0].note
+    },
+    {
+      label: heroPanel.cards[1].label,
+      accent: heroPanel.cards[1].accent,
+      main: `${challengeProgress.completedDays.length}/7`,
+      note: heroPanel.cards[1].note
+    },
+    {
+      label: heroPanel.cards[2].label,
+      accent: heroPanel.cards[2].accent,
+      main: heroPanel.cards[2].main,
+      note: heroPanel.cards[2].note
+    }
+  ];
 
   function scrollToOneMinute() {
     if (typeof window === "undefined") {
@@ -1061,50 +1077,43 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="relative hidden overflow-hidden rounded-[36px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.16),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6 lg:block lg:rounded-[38px] lg:p-7 xl:p-8">
+          <div className="relative hidden overflow-hidden rounded-[36px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.018))] p-6 shadow-[0_28px_80px_rgba(3,10,18,0.18)] lg:block lg:rounded-[38px] lg:p-7 xl:p-8">
             <img
-              src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1400&q=80"
+              src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80"
               alt={hero.visualAlt}
-              className="relative z-0 h-[440px] w-full rounded-[28px] object-cover sm:h-[520px] lg:h-[560px]"
+              className="relative z-0 h-[440px] w-full rounded-[28px] object-cover object-center sm:h-[520px] lg:h-[560px]"
             />
-            <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(5,18,24,0.12),rgba(5,18,24,0.64))]" />
-            <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-8">
-              <button
-                type="button"
-                onClick={() => setZeroOpen(true)}
-                className="pointer-events-auto flex h-56 w-56 items-center justify-center rounded-full border border-gold/24 bg-[radial-gradient(circle,rgba(212,186,117,0.22),rgba(212,186,117,0.08)_55%,rgba(6,17,29,0.14)_74%)] shadow-[0_0_100px_rgba(212,186,117,0.12)] transition duration-300 hover:scale-[1.01] lg:h-58 lg:w-58"
-              >
-                <div className="text-center">
-                  <p className="text-xs uppercase tracking-[0.28em] text-gold/84">{hero.visualLabel}</p>
-                  <p className="mt-4 font-serif text-6xl text-white sm:text-7xl">ZERO</p>
-                </div>
-              </button>
-            </div>
-            <div className="pointer-events-none absolute inset-x-8 bottom-8 z-10 rounded-[28px] border border-white/10 bg-[#06111d]/70 p-6 shadow-[0_20px_56px_rgba(0,0,0,0.22)] backdrop-blur-xl lg:rounded-[30px] lg:p-7">
-              <p className="max-w-[32ch] whitespace-pre-line text-sm leading-7 text-white/72 lg:text-[15px] lg:leading-8 lg:text-white/76">
-                {hero.visualCopy}
+            <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(4,12,22,0.16),rgba(4,12,22,0.74))]" />
+            <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_78%_16%,rgba(237,211,143,0.18),transparent_18%),radial-gradient(circle_at_72%_24%,rgba(178,214,190,0.10),transparent_22%),linear-gradient(90deg,rgba(5,11,20,0.88)_0%,rgba(5,11,20,0.54)_36%,rgba(5,11,20,0.18)_72%,rgba(5,11,20,0.02)_100%)]" />
+            <div className="pointer-events-none absolute inset-x-8 top-8 z-10 rounded-[26px] bg-[#07111a]/28 px-6 py-5 backdrop-blur-[18px]">
+              <p className="max-w-[28ch] whitespace-pre-line text-[15px] leading-8 text-white/84">
+                {heroPanel.intro}
               </p>
-              <div className="mt-5 grid gap-4 sm:grid-cols-3 lg:gap-4">
+              <p className="mt-3 text-sm text-gold/78">{heroPanel.pace}</p>
+            </div>
+            <div className="pointer-events-none absolute inset-x-8 bottom-8 z-10 rounded-[28px] bg-[#06111d]/56 p-6 shadow-[0_20px_56px_rgba(0,0,0,0.18)] backdrop-blur-[22px] lg:rounded-[30px] lg:p-7">
+              <div className="grid gap-4 sm:grid-cols-3 lg:gap-4">
                 {heroPanelCards.map((card, index) => (
                   <div
                     key={index}
-                    className="rounded-[22px] border border-white/8 bg-white/[0.035] px-5 py-5 lg:min-h-[164px]"
+                    className="rounded-[22px] bg-white/[0.035] px-5 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] lg:min-h-[176px]"
                   >
                     <div className="flex items-center justify-between gap-3">
-                      <p className="text-[11px] uppercase tracking-[0.22em] text-white/42 lg:text-[12px]">
+                      <p className="text-[11px] uppercase tracking-[0.22em] text-white/46 lg:text-[12px]">
                         {card.label}
                       </p>
                       <span className="text-sm text-gold/78 lg:text-base">{card.accent}</span>
                     </div>
-                    <p className="mt-4 text-lg leading-tight text-white/90 lg:text-[28px] lg:leading-[1.12]">
+                    <p className="mt-4 whitespace-pre-line text-[26px] leading-[1.18] text-white/92">
                       {card.main}
                     </p>
-                    <p className="mt-3 text-[13px] leading-6 text-white/66 lg:text-[13px] lg:leading-6 lg:text-white/70">
+                    <p className="mt-3 whitespace-pre-line text-[13px] leading-6 text-white/66 lg:text-[13px] lg:leading-6 lg:text-white/70">
                       {card.note}
                     </p>
                   </div>
                 ))}
               </div>
+              <p className="mt-5 text-sm leading-7 text-white/60">{heroPanel.footer}</p>
             </div>
           </div>
         </div>
@@ -1550,7 +1559,6 @@ export default function HomePage() {
       </section>
 
       <MobileCTA copy={landing.mobile} />
-      <ZeroExperienceModal open={zeroOpen} onClose={() => setZeroOpen(false)} />
     </div>
   );
 }
