@@ -190,6 +190,108 @@ const finalCtaCopy = {
   }
 } as const;
 
+const returnEntryCopy = {
+  jp: {
+    eyebrow: "WELCOME BACK",
+    title: "今日も少し休みに来ましたか？",
+    guestDescription:
+      "ここは、急がなくていい場所です。人生を変えなくても大丈夫。ただ静かな1分から始められます。",
+    memberDescription:
+      "この場所は、あなたのリズムを覚えています。昨日の続きからでも、今日の気分からでも始められます。",
+    guestPrimary: "1分リカバリーを始める",
+    memberPrimary: "今日の1分を続ける",
+    secondary: "今の状態を選ぶ",
+    cards: {
+      recovery: "今日の1分リカバリー",
+      checkIn: "感情のチェックイン",
+      progress: "静かな進み方",
+      memory: "この場所はあなたのリズムを覚えています"
+    },
+    status: {
+      returning: "また戻ってきてくれて、ありがとうございます。",
+      first: "今日はここから始めましょう。",
+      completed: "昨日の静かな1分が、今日にもつながっています。",
+      waiting: "ここには、あなたの戻る場所があります。"
+    },
+    progress: {
+      streak: "続いている静かな日々",
+      challenge: "7日トレイル",
+      state: "昨日の気配"
+    },
+    memory: {
+      calm: "昨日は少し落ち着きを選びました。",
+      return: "今日はどんな1分が必要ですか？",
+      alone: "どこかで、誰かも静かに戻ろうとしています。"
+    }
+  },
+  kr: {
+    eyebrow: "WELCOME BACK",
+    title: "오늘도 잠시 쉬러 오셨나요?",
+    guestDescription:
+      "여기는 서두르지 않아도 되는 곳입니다. 삶을 바꾸지 않아도 괜찮아요. 그저 조용한 1분부터 시작하면 됩니다.",
+    memberDescription:
+      "이 공간은 당신의 리듬을 기억합니다. 어제의 흐름에서 이어도 좋고, 오늘의 상태에서 다시 시작해도 괜찮습니다.",
+    guestPrimary: "1분 리커버리 시작",
+    memberPrimary: "오늘의 1분 이어가기",
+    secondary: "지금 상태 선택하기",
+    cards: {
+      recovery: "오늘의 1분 리커버리",
+      checkIn: "감정 체크인",
+      progress: "조용한 진행",
+      memory: "이곳은 당신의 리듬을 기억합니다"
+    },
+    status: {
+      returning: "다시 와주셔서 반가워요.",
+      first: "오늘은 여기서부터 시작해봐요.",
+      completed: "어제의 조용한 1분이 오늘까지 이어지고 있어요.",
+      waiting: "여기에는 당신이 돌아올 자리가 있습니다."
+    },
+    progress: {
+      streak: "이어지고 있는 조용한 날들",
+      challenge: "7일 트레일",
+      state: "어제의 기분"
+    },
+    memory: {
+      calm: "어제는 조금 차분함을 선택했어요.",
+      return: "오늘은 어떤 1분이 필요할까요?",
+      alone: "어딘가에서 누군가도 조용히 자신에게 돌아오고 있습니다."
+    }
+  },
+  en: {
+    eyebrow: "WELCOME BACK",
+    title: "Welcome back.",
+    guestDescription:
+      "This is a place where you do not have to hurry. You do not have to fix your life today. Just begin with one quiet minute.",
+    memberDescription:
+      "This space remembers your rhythm. You can continue from yesterday, or simply begin from how you feel today.",
+    guestPrimary: "Start 1-Minute Recovery",
+    memberPrimary: "Continue Today’s Quiet Minute",
+    secondary: "Choose My Current State",
+    cards: {
+      recovery: "Today’s 1-minute recovery",
+      checkIn: "Emotional check-in",
+      progress: "Quiet progress",
+      memory: "This space remembers your rhythm"
+    },
+    status: {
+      returning: "You came back. That matters.",
+      first: "We can begin from here today.",
+      completed: "Yesterday’s quiet minute is still with you today.",
+      waiting: "Your quiet place is here."
+    },
+    progress: {
+      streak: "Quiet days continuing",
+      challenge: "7-day trail",
+      state: "Yesterday’s feeling"
+    },
+    memory: {
+      calm: "Yesterday you chose a little calm.",
+      return: "Ready for another quiet minute?",
+      alone: "Somewhere else, someone is quietly returning too."
+    }
+  }
+} as const;
+
 const founderHopeCopy = {
   jp: {
     eyebrow: "45 Years of Human Possibility",
@@ -535,6 +637,7 @@ export default function HomePage() {
   const landing = landingCopy[language];
   const hero = heroCopy[language];
   const nationalPark = nationalParkCopy[language];
+  const returnEntry = returnEntryCopy[language];
   const whyReturn = whyReturnCopy[language];
   const finalCta = finalCtaCopy[language];
   const healing = healingCopy[language];
@@ -604,6 +707,13 @@ export default function HomePage() {
         ? hero.tertiaryFree
         : hero.tertiaryPaid
     : hero.tertiaryGuest;
+  const returnStatusMessage = !returnRhythm.lastVisitDate
+    ? returnEntry.status.first
+    : returnRhythm.isCompletedToday
+      ? returnEntry.status.completed
+      : returnRhythm.isReturningToday
+        ? returnEntry.status.returning
+        : returnEntry.status.waiting;
 
   function scrollToOneMinute() {
     if (typeof window === "undefined") {
@@ -778,6 +888,64 @@ export default function HomePage() {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-shell mt-10 sm:mt-14">
+        <div className="overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-7 shadow-[0_20px_72px_rgba(7,17,31,0.18)] sm:px-8 sm:py-8">
+          <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+            <div>
+              <p className="text-sm uppercase tracking-[0.3em] text-gold/84">{returnEntry.eyebrow}</p>
+              <h2 className="mt-4 font-serif text-3xl leading-tight text-white sm:text-4xl">{returnEntry.title}</h2>
+              <p className="mt-4 max-w-2xl text-[15px] leading-7 text-white/68">
+                {isLoggedIn ? returnEntry.memberDescription : returnEntry.guestDescription}
+              </p>
+              <p className="mt-4 text-sm leading-7 text-gold/82">{returnStatusMessage}</p>
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                <button
+                  type="button"
+                  onClick={scrollToOneMinute}
+                  className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
+                >
+                  {isLoggedIn ? returnEntry.memberPrimary : returnEntry.guestPrimary}
+                </button>
+                <button
+                  type="button"
+                  onClick={scrollToStateCheck}
+                  className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
+                >
+                  {returnEntry.secondary}
+                </button>
+              </div>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <article className="rounded-[24px] border border-white/10 bg-white/[0.04] p-4">
+                <p className="text-xs uppercase tracking-[0.2em] text-white/46">{returnEntry.cards.recovery}</p>
+                <p className="mt-3 text-sm leading-7 text-white/72">{landing.instant.title}</p>
+              </article>
+              <article className="rounded-[24px] border border-white/10 bg-white/[0.04] p-4">
+                <p className="text-xs uppercase tracking-[0.2em] text-white/46">{returnEntry.cards.checkIn}</p>
+                <p className="mt-3 text-sm leading-7 text-white/72">{landing.dailyRhythmCheck.options[0]?.label}</p>
+              </article>
+              <article className="rounded-[24px] border border-white/10 bg-white/[0.04] p-4">
+                <p className="text-xs uppercase tracking-[0.2em] text-white/46">{returnEntry.progress.streak}</p>
+                <p className="mt-3 text-lg text-white/84">{Math.max(returnRhythm.streakCount, 1)} {landing.garden.dayUnit}</p>
+                <p className="mt-1 text-sm leading-7 text-white/58">
+                  {returnEntry.progress.challenge} · {challengeProgress.completedDays.length}/7
+                </p>
+              </article>
+              <article className="rounded-[24px] border border-gold/18 bg-gold/[0.08] p-4">
+                <p className="text-xs uppercase tracking-[0.2em] text-gold/82">{returnEntry.cards.memory}</p>
+                <p className="mt-3 text-sm leading-7 text-white/82">
+                  {returnEntry.memory.calm}
+                  <br />
+                  {returnEntry.memory.return}
+                </p>
+                <p className="mt-3 text-sm leading-7 text-white/56">{returnEntry.memory.alone}</p>
+              </article>
             </div>
           </div>
         </div>
