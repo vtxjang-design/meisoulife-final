@@ -23,10 +23,10 @@ import { useLanguage, languageButtons, useSiteCopy } from "@/lib/i18n";
 import { landingCopy } from "@/lib/landing-copy";
 import { getReturnRhythmSnapshot, updateReturnRhythmVisit, type ReturnRhythmSnapshot } from "@/lib/return-rhythm";
 
+const MEDITATION_MOOD_STORAGE_KEY = "meisoulife_instant_meditation_mood";
 const AI_COACH_URL =
   process.env.NEXT_PUBLIC_AI_COACH_URL ||
   "https://chatgpt.com/g/g-69f968bc9a408191a3e5f943912666c0-quiet-rhythm-guide";
-const LINE_URL = process.env.NEXT_PUBLIC_LINE_URL || process.env.NEXT_PUBLIC_LINE_FREE_URL || "https://lin.ee/z8Lzvvs";
 
 const heroCopy = {
   jp: {
@@ -667,6 +667,7 @@ export default function HomePage() {
   });
   const [giftDelivered, setGiftDelivered] = useState(false);
   const [giftToast, setGiftToast] = useState("");
+  const [lastMoodLabel, setLastMoodLabel] = useState("");
 
   useEffect(() => {
     setChallengeProgress(getChallengeRhythmProgress());
@@ -681,6 +682,28 @@ export default function HomePage() {
     const url = new URL(window.location.href);
     setGiftDelivered(url.searchParams.get("gift") === "1min");
   }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    try {
+      const stored = window.localStorage.getItem(MEDITATION_MOOD_STORAGE_KEY);
+
+      if (!stored) {
+        setLastMoodLabel("");
+        return;
+      }
+
+      const parsed = JSON.parse(stored) as { moodKey?: string };
+      const moodLabel = landing.instant.moods.find((item) => item.key === parsed.moodKey)?.label ?? "";
+      setLastMoodLabel(moodLabel);
+    } catch (error) {
+      console.error("[home] failed to read last meditation mood", error);
+      setLastMoodLabel("");
+    }
+  }, [landing.instant.moods]);
 
   useEffect(() => {
     if (!giftToast) {
@@ -714,6 +737,9 @@ export default function HomePage() {
       : returnRhythm.isReturningToday
         ? returnEntry.status.returning
         : returnEntry.status.waiting;
+  const returnMemoryLine = lastMoodLabel
+    ? `${returnEntry.memory.calm} ${lastMoodLabel}`
+    : returnEntry.memory.return;
 
   function scrollToOneMinute() {
     if (typeof window === "undefined") {
@@ -823,30 +849,22 @@ export default function HomePage() {
               </button>
               <button
                 type="button"
-                onClick={scrollToRhythmChallenge}
-                className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-4.5 py-3 text-[14px] font-medium text-white/78 transition duration-300 hover:-translate-y-0.5 hover:bg-white/[0.06]"
+                onClick={scrollToStateCheck}
+                className="inline-flex min-h-[44px] items-center justify-center rounded-full px-3 py-2 text-[13px] font-medium text-white/66 transition duration-300 hover:text-white"
               >
-                {hero.secondary}
-              </button>
-              <button
-                type="button"
-                onClick={handleReturnAction}
-                className="inline-flex min-h-[48px] items-center justify-center rounded-full px-3 py-2 text-[13px] font-medium text-gold/86 transition duration-300 hover:text-[#f1dfaf]"
-              >
-                {returnActionLabel}
+                {language === "jp" ? "静かに見てみる" : language === "kr" ? "조용히 둘러보기" : "Explore Quietly"}
               </button>
             </div>
 
             <p className="text-[12px] leading-6 text-white/50">{hero.trust}</p>
 
-            <button
-              type="button"
-              onClick={scrollToStateCheck}
-              className="inline-flex w-fit items-center gap-2 text-[13px] font-medium text-white/60 transition hover:text-white"
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-gold/80" />
-              {landing.dailyRhythmCheck.eyebrow}
-            </button>
+            <p className="text-[13px] leading-7 text-white/54">
+              {language === "jp"
+                ? "人生を今日変えなくても大丈夫です。ただ静かな1分だけ。"
+                : language === "kr"
+                  ? "오늘 삶을 바꾸지 않아도 괜찮아요. 그저 조용한 1분이면 됩니다."
+                  : "You do not need to fix your life today. Just take one quiet minute."}
+            </p>
 
             <div className="flex flex-wrap gap-2 pt-0.5">
               {hero.proof.map((item) => (
@@ -906,10 +924,10 @@ export default function HomePage() {
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                 <button
                   type="button"
-                  onClick={scrollToOneMinute}
+                  onClick={isLoggedIn ? handleReturnAction : scrollToOneMinute}
                   className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
                 >
-                  {isLoggedIn ? returnEntry.memberPrimary : returnEntry.guestPrimary}
+                  {isLoggedIn ? returnActionLabel : returnEntry.guestPrimary}
                 </button>
                 <button
                   type="button"
@@ -940,9 +958,7 @@ export default function HomePage() {
               <article className="rounded-[24px] border border-gold/18 bg-gold/[0.08] p-4">
                 <p className="text-xs uppercase tracking-[0.2em] text-gold/82">{returnEntry.cards.memory}</p>
                 <p className="mt-3 text-sm leading-7 text-white/82">
-                  {returnEntry.memory.calm}
-                  <br />
-                  {returnEntry.memory.return}
+                  {returnMemoryLine}
                 </p>
                 <p className="mt-3 text-sm leading-7 text-white/56">{returnEntry.memory.alone}</p>
               </article>
@@ -969,6 +985,8 @@ export default function HomePage() {
       <DailyRhythmCheck copy={landing.dailyRhythmCheck} />
 
       <InstantMeditationSection copy={landing.instant} />
+
+      <DailyRhythmLayer copy={landing.dailyRhythmLayer} />
 
       <RhythmChallenge copy={landing.rhythmChallenge} />
 
@@ -1039,8 +1057,6 @@ export default function HomePage() {
 
       <BrainOwnershipJourney />
 
-      <TogetherAwakeSection />
-
       <FounderVisionSection />
 
       <AIRhythmCoach copy={landing.coach} coachUrl={AI_COACH_URL} />
@@ -1074,8 +1090,6 @@ export default function HomePage() {
 
       <LiveTogether copy={landing.live} />
 
-      <DailyRhythmLayer copy={landing.dailyRhythmLayer} />
-
       <section className="section-shell mt-16 sm:mt-20">
         <div className="rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-7 shadow-[0_24px_80px_rgba(7,17,31,0.18)] sm:px-7 sm:py-9">
           <SectionHeading eyebrow={whyReturn.eyebrow} title={whyReturn.title} align="center" />
@@ -1089,6 +1103,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <TogetherAwakeSection />
 
       <section className="section-shell mt-16 sm:mt-20">
         <div className="overflow-hidden rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-7 shadow-[0_24px_80px_rgba(7,17,31,0.18)] sm:px-7 sm:py-9">
