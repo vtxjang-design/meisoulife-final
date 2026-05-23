@@ -128,77 +128,77 @@ const nationalParkCopy = {
 
 const heroPanelCopy = {
   jp: {
-    intro: "情報に引かれるのではなく、\n自分へ戻るための静かな入口。",
+    intro: "自分へ戻る、\n静かな入口。",
     pace: "今日も、あなたのペースで。",
     footer: "AIと共に生きる時代、心の回復力は、新しい力になる。",
     cards: [
       {
-        label: "現在の時間帯",
+        label: "◐",
         accent: "☾",
         prefix: "今は",
         suffix: "のリズム",
-        note: "エネルギーを整え、静かに集中しやすい時間です。"
+        note: ""
       },
       {
-        label: "7日リズム",
+        label: "◐",
         accent: "◌",
-        note: "小さなリズムが、少しずつ続いています。"
+        note: ""
       },
       {
-        label: "戻る力",
+        label: "◐",
         accent: "↺",
         main: "1分",
-        note: "静かな1分が、未来の自分を整えていきます。"
+        note: ""
       }
     ]
   },
   kr: {
-    intro: "정보에 끌려가는 대신,\n나 자신에게 돌아오는 조용한 입구.",
+    intro: "나 자신에게 돌아오는,\n조용한 입구.",
     pace: "오늘도, 당신의 속도로.",
     footer: "AI와 함께 살아가는 시대, 마음의 회복력은 새로운 힘이 됩니다.",
     cards: [
       {
-        label: "지금의 시간대",
+        label: "◐",
         accent: "☾",
         prefix: "지금은 ",
         suffix: " 리듬",
-        note: "에너지를 고르고, 조용히 집중을 회복하기 좋은 시간입니다."
+        note: ""
       },
       {
-        label: "7일 리듬",
+        label: "◐",
         accent: "◌",
-        note: "작은 리듬이 하루의 결을 조금씩 이어가고 있습니다."
+        note: ""
       },
       {
-        label: "돌아오는 힘",
+        label: "◐",
         accent: "↺",
         main: "1분",
-        note: "조용한 1분이 미래의 나를 천천히 만들어갑니다."
+        note: ""
       }
     ]
   },
   en: {
-    intro: "A quiet entrance for returning\nto yourself instead of being pulled by information.",
+    intro: "A quiet entrance,\nback to yourself.",
     pace: "Today as well, at your own pace.",
     footer: "In the age of living with AI, the power to recover your mind becomes a new kind of strength.",
     cards: [
       {
-        label: "Current Time",
+        label: "◐",
         accent: "☾",
         prefix: "It is ",
         suffix: " rhythm",
-        note: "A good moment to settle your energy and return to clear focus."
+        note: ""
       },
       {
-        label: "7-Day Rhythm",
+        label: "◐",
         accent: "◌",
-        note: "A small rhythm is quietly continuing."
+        note: ""
       },
       {
-        label: "Return Power",
+        label: "◐",
         accent: "↺",
         main: "1 min",
-        note: "One quiet minute shapes the self you return to tomorrow."
+        note: ""
       }
     ]
   }
@@ -993,7 +993,7 @@ export default function HomePage() {
           <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.08),transparent_34%),linear-gradient(180deg,rgba(7,16,28,0.10),rgba(7,16,28,0))]" />
           <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_76%_14%,rgba(255,246,214,0.055),transparent_18%),linear-gradient(180deg,rgba(5,18,24,0.04),rgba(5,18,24,0.18)_52%,rgba(5,18,24,0))]" />
         </div>
-        <div className="grid gap-8 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:gap-12 xl:gap-16">
+        <div className="grid gap-8 lg:grid-cols-[1.24fr_0.76fr] lg:items-center lg:gap-16 xl:gap-20">
           <div className="space-y-5 sm:space-y-8 lg:space-y-9">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm uppercase tracking-[0.34em] text-gold/85">{hero.eyebrow}</p>
@@ -1077,43 +1077,35 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="relative hidden overflow-hidden rounded-[36px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.018))] p-6 shadow-[0_28px_80px_rgba(3,10,18,0.18)] lg:block lg:rounded-[38px] lg:p-7 xl:p-8">
+          <div className="relative hidden overflow-hidden rounded-[34px] bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.012))] p-5 shadow-[0_22px_72px_rgba(3,10,18,0.14)] lg:block lg:rounded-[36px] lg:p-6 xl:p-7">
             <img
-              src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80"
+              src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1400&q=80"
               alt={hero.visualAlt}
-              className="relative z-0 h-[440px] w-full rounded-[28px] object-cover object-center sm:h-[520px] lg:h-[560px]"
+              className="relative z-0 h-[420px] w-full rounded-[26px] object-cover object-center opacity-[0.9] lg:h-[500px]"
             />
-            <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(4,12,22,0.16),rgba(4,12,22,0.74))]" />
-            <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_78%_16%,rgba(237,211,143,0.18),transparent_18%),radial-gradient(circle_at_72%_24%,rgba(178,214,190,0.10),transparent_22%),linear-gradient(90deg,rgba(5,11,20,0.88)_0%,rgba(5,11,20,0.54)_36%,rgba(5,11,20,0.18)_72%,rgba(5,11,20,0.02)_100%)]" />
-            <div className="pointer-events-none absolute inset-x-8 top-8 z-10 rounded-[26px] bg-[#07111a]/28 px-6 py-5 backdrop-blur-[18px]">
-              <p className="max-w-[28ch] whitespace-pre-line text-[15px] leading-8 text-white/84">
+            <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(4,12,22,0.24),rgba(4,12,22,0.78))]" />
+            <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_78%_14%,rgba(236,206,132,0.16),transparent_17%),radial-gradient(circle_at_70%_24%,rgba(176,203,184,0.08),transparent_22%),linear-gradient(90deg,rgba(5,11,20,0.92)_0%,rgba(5,11,20,0.58)_34%,rgba(5,11,20,0.18)_68%,rgba(5,11,20,0.02)_100%)]" />
+            <div className="pointer-events-none absolute inset-x-8 top-8 z-10 rounded-[24px] bg-[#07111a]/22 px-6 py-5 backdrop-blur-[16px]">
+              <p className="max-w-[22ch] whitespace-pre-line text-[15px] leading-8 text-white/86">
                 {heroPanel.intro}
               </p>
-              <p className="mt-3 text-sm text-gold/78">{heroPanel.pace}</p>
+              <p className="mt-3 text-sm text-gold/74">{heroPanel.pace}</p>
             </div>
-            <div className="pointer-events-none absolute inset-x-8 bottom-8 z-10 rounded-[28px] bg-[#06111d]/56 p-6 shadow-[0_20px_56px_rgba(0,0,0,0.18)] backdrop-blur-[22px] lg:rounded-[30px] lg:p-7">
-              <div className="grid gap-4 sm:grid-cols-3 lg:gap-4">
+            <div className="pointer-events-none absolute inset-x-8 bottom-8 z-10 rounded-[26px] bg-[#06111d]/42 px-5 py-5 shadow-[0_18px_48px_rgba(0,0,0,0.14)] backdrop-blur-[18px]">
+              <div className="flex flex-wrap gap-3">
                 {heroPanelCards.map((card, index) => (
                   <div
                     key={index}
-                    className="rounded-[22px] bg-white/[0.035] px-5 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] lg:min-h-[176px]"
+                    className="rounded-full bg-white/[0.045] px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
                   >
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="text-[11px] uppercase tracking-[0.22em] text-white/46 lg:text-[12px]">
-                        {card.label}
-                      </p>
-                      <span className="text-sm text-gold/78 lg:text-base">{card.accent}</span>
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-[12px] text-gold/76">{card.label}</span>
+                      <span className="text-[12px] text-white/90 whitespace-pre-line">{card.main}</span>
                     </div>
-                    <p className="mt-4 whitespace-pre-line text-[26px] leading-[1.18] text-white/92">
-                      {card.main}
-                    </p>
-                    <p className="mt-3 whitespace-pre-line text-[13px] leading-6 text-white/66 lg:text-[13px] lg:leading-6 lg:text-white/70">
-                      {card.note}
-                    </p>
                   </div>
                 ))}
               </div>
-              <p className="mt-5 text-sm leading-7 text-white/60">{heroPanel.footer}</p>
+              <p className="mt-4 max-w-[30ch] text-sm leading-7 text-white/58">{heroPanel.footer}</p>
             </div>
           </div>
         </div>
