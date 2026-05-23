@@ -888,7 +888,12 @@ export default function HomePage() {
         </section>
       ) : null}
 
-      <section className="section-shell pt-4 sm:pt-20">
+      <section className="section-shell relative overflow-hidden pt-3 sm:pt-20">
+        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[420px] sm:hidden">
+          <div className="absolute left-[8%] top-10 h-28 w-28 rounded-full bg-gold/[0.08] blur-3xl" />
+          <div className="absolute right-[10%] top-24 h-36 w-36 rounded-full bg-emerald-200/[0.06] blur-3xl" />
+          <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.08),transparent_34%),linear-gradient(180deg,rgba(7,16,28,0.10),rgba(7,16,28,0))]" />
+        </div>
         <div className="grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
           <div className="space-y-5 sm:space-y-8">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -915,27 +920,27 @@ export default function HomePage() {
                   {heroAccentLine}
                 </p>
               ) : null}
-              <h1 className="max-w-[10ch] whitespace-pre-line font-serif text-[29px] leading-[1.2] text-white sm:max-w-[11ch] sm:text-[56px] sm:leading-[1.24] lg:text-[66px] lg:leading-[1.22]">
+              <h1 className="max-w-[10ch] whitespace-pre-line font-serif text-[29px] leading-[1.24] text-white sm:max-w-[11ch] sm:text-[56px] sm:leading-[1.24] lg:text-[66px] lg:leading-[1.22]">
                 {heroMainLines.join("\n")}
               </h1>
-              <p className="max-w-[16ch] whitespace-pre-line text-[13px] leading-[1.82] text-white/62 sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.95]">
+              <p className="max-w-[16ch] whitespace-pre-line text-[13px] leading-[1.9] text-white/60 sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.95]">
                 {hero.supporting}
               </p>
               <p className="hidden max-w-3xl text-[12px] leading-[1.7] text-white/52 sm:block sm:text-xl sm:leading-9">{hero.subtitle}</p>
             </div>
 
-            <div className="relative z-20 flex flex-col gap-2 pt-1.5 sm:flex-row sm:flex-wrap">
+            <div className="relative z-20 flex flex-col gap-2 pt-1 sm:flex-row sm:flex-wrap">
               <button
                 type="button"
                 onClick={scrollToOneMinute}
-                className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold/90 px-4.5 py-3 text-[14px] font-semibold text-ink shadow-[0_14px_28px_rgba(212,186,117,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#e7cd92]"
+                className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold/90 px-4.5 py-3 text-[14px] font-semibold text-ink shadow-[0_14px_30px_rgba(212,186,117,0.16)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#e7cd92]"
               >
                 {hero.primary}
               </button>
               <button
                 type="button"
                 onClick={scrollToStateCheck}
-                className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-white/[0.04] px-3.5 py-2 text-[13px] font-medium text-white/72 transition duration-300 hover:bg-white/[0.08] hover:text-white"
+                className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-white/[0.04] px-3.5 py-2 text-[13px] font-medium text-white/68 transition duration-300 hover:bg-white/[0.08] hover:text-white"
               >
                 {hero.secondary}
               </button>
@@ -943,13 +948,26 @@ export default function HomePage() {
 
             <p className="hidden text-[12px] leading-6 text-white/50 sm:block">{hero.trust}</p>
 
-            <p className="max-w-[20ch] text-[12px] leading-6 text-white/52 sm:max-w-none">
+            <p className="max-w-[20ch] text-[12px] leading-6 text-white/50 sm:max-w-none">
               {language === "jp"
                 ? "人生を今日変えなくても大丈夫です。ただ静かな1分だけ。"
                 : language === "kr"
                   ? "오늘 삶을 바꾸지 않아도 괜찮아요. 그저 조용한 1분이면 됩니다."
                   : "You do not need to fix your life today. Just take one quiet minute."}
             </p>
+
+            <button
+              type="button"
+              onClick={scrollToStateCheck}
+              className="inline-flex w-fit items-center gap-2 text-[12px] font-medium text-white/46 transition hover:text-white/72"
+            >
+              <span className="h-1 w-1 rounded-full bg-gold/72" />
+              {language === "jp"
+                ? "この先に、今日の静かな入口があります"
+                : language === "kr"
+                  ? "이 아래에 오늘의 조용한 입구가 있습니다"
+                  : "A quiet path begins just below"}
+            </button>
 
             <div className="hidden flex-wrap gap-2 pt-0.5 sm:flex">
               {hero.proof.map((item) => (

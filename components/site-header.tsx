@@ -160,9 +160,9 @@ export function SiteHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-ink/80 backdrop-blur-xl">
-      <div className="section-shell flex items-center justify-between gap-4 py-3 sm:py-4">
-        <Link href="/" className="text-base font-semibold tracking-[0.16em] text-white sm:text-lg sm:tracking-[0.18em]">
+    <header className="sticky top-0 z-50 bg-[linear-gradient(180deg,rgba(4,11,19,0.88),rgba(4,11,19,0.68))] backdrop-blur-2xl">
+      <div className="section-shell flex items-center justify-between gap-3 py-2.5 sm:py-4">
+        <Link href="/" className="text-[15px] font-semibold tracking-[0.14em] text-white sm:text-lg sm:tracking-[0.18em]">
           {copy.header.brand}
         </Link>
         <nav className="hidden items-center gap-2 lg:flex">
@@ -179,18 +179,18 @@ export function SiteHeader() {
             </Link>
           ))}
         </nav>
-        <div className="flex items-center gap-2">
-          <div className="inline-flex rounded-full bg-white/[0.02] p-0.5 backdrop-blur md:hidden">
+        <div className="flex items-center gap-1.5">
+          <div className="inline-flex rounded-full bg-white/[0.03] p-0.5 backdrop-blur-md md:hidden">
             {languageButtons.map((button) => (
               <button
                 key={button.key}
                 type="button"
                 onClick={() => setLanguage(button.key)}
                 className={cn(
-                  "rounded-full px-2 py-1 text-[10px] font-semibold tracking-[0.16em] transition duration-300",
+                  "rounded-full px-2 py-1 text-[10px] font-semibold tracking-[0.14em] transition duration-300",
                   language === button.key
-                    ? "bg-white/[0.14] text-white shadow-[0_0_20px_rgba(255,255,255,0.06)]"
-                    : "text-white/65 hover:text-white"
+                    ? "bg-white/[0.12] text-white shadow-[0_0_16px_rgba(255,255,255,0.05)]"
+                    : "text-white/60 hover:text-white"
                 )}
               >
                 {button.label}
@@ -200,7 +200,7 @@ export function SiteHeader() {
           <button
             type="button"
             onClick={() => setMobileOpen(true)}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.02] text-white/82 transition hover:bg-white/[0.05] hover:text-white lg:hidden"
+            className="inline-flex h-8.5 w-8.5 items-center justify-center rounded-full bg-white/[0.03] text-white/80 backdrop-blur-md transition hover:bg-white/[0.06] hover:text-white lg:hidden"
             aria-label={copy.header.menu}
             aria-expanded={mobileOpen}
           >
@@ -266,8 +266,8 @@ export function SiteHeader() {
           )}
         </div>
       </div>
-      <div className="border-t border-white/6 lg:hidden">
-        <div className="section-shell overflow-x-auto py-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="lg:hidden">
+        <div className="section-shell overflow-x-auto py-1.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <nav className="flex min-w-max items-center gap-2">
             {mobileTabs.map((tab) => {
               const active = isActivePath(tab.href);
@@ -277,10 +277,10 @@ export function SiteHeader() {
                   key={`${tab.href}-${tab.label}`}
                   href={tab.href}
                   className={cn(
-                    "inline-flex min-h-[36px] items-center whitespace-nowrap rounded-full px-3.5 py-1.5 text-[12px] font-medium transition backdrop-blur",
+                    "inline-flex min-h-[34px] items-center whitespace-nowrap rounded-full px-3.5 py-1.5 text-[12px] font-medium transition backdrop-blur-md",
                     active
-                      ? "bg-white/[0.06] text-white"
-                      : "bg-white/[0.035] text-white/72 hover:bg-white/[0.08] hover:text-white"
+                      ? "bg-white/[0.08] text-white shadow-[0_8px_24px_rgba(255,255,255,0.03)]"
+                      : "bg-white/[0.04] text-white/72 hover:bg-white/[0.08] hover:text-white"
                   )}
                 >
                   {tab.label}
