@@ -31,9 +31,9 @@ const AI_COACH_URL =
 const heroCopy = {
   jp: {
     eyebrow: "AI時代の人間回復",
-    title: "AIと情報に疲れた、\n心と脳が戻る場所。",
+    title: "AIと情報に疲れた、\n心と脳が静かに戻る場所。",
     supporting:
-      "少し立ち止まり、\n自分のリズムへ戻る\n静かな場所。\n\n急がなくても大丈夫です。",
+      "少し立ち止まり、\n自分のリズムへ戻る。\n\n急がなくても大丈夫です。",
     subtitle: "無料・60秒・登録不要",
     primary: "1分リカバリーを始める",
     secondary: "静かに見てみる",
@@ -65,7 +65,7 @@ const heroCopy = {
   },
   en: {
     eyebrow: "Human Recovery in the AI Age",
-    title: "A place where\nyour mind and brain\nreturn.",
+    title: "A quiet place\nwhere your mind and brain\ncan return.",
     supporting:
       "Pause.\nBreathe.\nReturn to your rhythm.\n\nThere is no need to rush.",
     subtitle: "Free · 60 seconds · No signup",
@@ -977,7 +977,7 @@ export default function HomePage() {
           <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.08),transparent_34%),linear-gradient(180deg,rgba(7,16,28,0.10),rgba(7,16,28,0))]" />
           <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_76%_14%,rgba(255,246,214,0.055),transparent_18%),linear-gradient(180deg,rgba(5,18,24,0.04),rgba(5,18,24,0.18)_52%,rgba(5,18,24,0))]" />
         </div>
-        <div className="grid gap-8 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:gap-12 xl:gap-16">
+        <div className="grid gap-8 lg:grid-cols-[1fr_0.94fr] lg:items-center lg:gap-14 xl:gap-20">
           <div className="space-y-5 sm:space-y-8 lg:space-y-9">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm uppercase tracking-[0.34em] text-gold/85">{hero.eyebrow}</p>
@@ -997,19 +997,19 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="space-y-3.5 sm:space-y-6 lg:space-y-6">
+            <div className="space-y-3.5 sm:space-y-6 lg:space-y-5">
               {heroAccentLine ? (
                 <p className="max-w-[12ch] font-serif text-[20px] leading-[1.3] text-gold/84 sm:max-w-none sm:text-[28px] sm:leading-[1.45] lg:text-[30px]">
                   {heroAccentLine}
                 </p>
               ) : null}
-              <h1 className="max-w-[10ch] whitespace-pre-line font-serif text-[29px] leading-[1.24] text-white sm:max-w-[11ch] sm:text-[56px] sm:leading-[1.24] lg:max-w-[620px] lg:text-[64px] lg:leading-[1.14] xl:text-[68px]">
+              <h1 className="max-w-[11ch] whitespace-pre-line font-serif text-[29px] leading-[1.22] text-white sm:max-w-[11ch] sm:text-[56px] sm:leading-[1.2] lg:max-w-[620px] lg:text-[64px] lg:leading-[1.12] lg:tracking-[-0.015em] xl:text-[68px]">
                 {heroMainLines.join("\n")}
               </h1>
-              <p className="max-w-[16ch] whitespace-pre-line text-[13px] leading-[1.9] text-white/60 sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.95] lg:max-w-[420px] lg:text-[17px] lg:leading-[1.92] lg:text-white/82">
+              <p className="max-w-[18ch] whitespace-pre-line text-[13px] leading-[1.8] text-white/66 sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.9] lg:max-w-[420px] lg:text-[17px] lg:leading-[1.86] lg:text-white/82">
                 {hero.supporting}
               </p>
-              <p className="hidden max-w-3xl text-[12px] leading-[1.7] text-white/52 sm:block sm:text-xl sm:leading-9 lg:text-[13px] lg:leading-7 lg:text-white/56">
+              <p className="max-w-[22ch] text-[11px] leading-5 text-white/48 sm:max-w-none sm:text-xl sm:leading-9 lg:text-[13px] lg:leading-7 lg:text-white/56">
                 {hero.subtitle}
               </p>
             </div>
@@ -1031,9 +1031,7 @@ export default function HomePage() {
               </button>
             </div>
 
-            <p className="hidden text-[12px] leading-6 text-white/50 sm:block lg:text-[13px] lg:leading-7 lg:text-white/54">{hero.trust}</p>
-
-            <p className="max-w-[20ch] text-[12px] leading-6 text-white/50 sm:max-w-none">
+            <p className="hidden max-w-[28ch] text-[12px] leading-6 text-white/50 sm:max-w-none lg:block lg:text-[13px] lg:leading-7 lg:text-white/54">
               {language === "jp"
                 ? "人生を今日変えなくても大丈夫です。ただ静かな1分だけ。"
                 : language === "kr"
@@ -1063,34 +1061,39 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="relative hidden overflow-hidden rounded-[36px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.18),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] p-5 sm:block sm:p-6 lg:rounded-[40px] lg:p-8 xl:p-9">
+          <div className="relative hidden overflow-hidden rounded-[36px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-5 lg:block lg:rounded-[40px] lg:p-8 xl:p-9">
             <img
-              src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1400&q=80"
+              src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1400&q=80"
               alt={hero.visualAlt}
-              className="relative z-0 h-[440px] w-full rounded-[28px] object-cover sm:h-[520px] lg:h-[620px]"
+              className="relative z-0 h-[620px] w-full rounded-[30px] object-cover object-center opacity-[0.88]"
             />
-            <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(5,18,24,0.12),rgba(5,18,24,0.64))]" />
-            <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-8">
+            <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(3,10,18,0.24),rgba(3,10,18,0.72))]" />
+            <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_78%_18%,rgba(255,241,205,0.14),transparent_18%),radial-gradient(circle_at_82%_28%,rgba(155,190,164,0.10),transparent_24%),linear-gradient(90deg,rgba(4,11,18,0.92)_0%,rgba(4,11,18,0.76)_26%,rgba(4,11,18,0.24)_56%,rgba(4,11,18,0.02)_100%)]" />
+            <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(4,11,18,0.08),rgba(4,11,18,0.18)_30%,rgba(4,11,18,0.62)_78%,rgba(4,11,18,0.82)_100%)]" />
+            <div className="pointer-events-none absolute right-10 top-10 z-10 max-w-[260px] rounded-[24px] border border-white/8 bg-[#07111a]/34 px-5 py-4 backdrop-blur-xl">
+              <p className="text-[11px] uppercase tracking-[0.26em] text-gold/82">{hero.visualLabel}</p>
+              <p className="mt-3 text-sm leading-7 text-white/68">{hero.visualCopy.replace("\n", " ")}</p>
               <button
                 type="button"
                 onClick={() => setZeroOpen(true)}
-                className="pointer-events-auto flex h-56 w-56 items-center justify-center rounded-full border border-gold/28 bg-[radial-gradient(circle,rgba(212,186,117,0.24),rgba(212,186,117,0.08)_55%,rgba(6,17,29,0.15)_72%)] shadow-[0_0_120px_rgba(212,186,117,0.16)] transition duration-300 hover:scale-[1.01] lg:h-60 lg:w-60"
+                className="pointer-events-auto mt-4 inline-flex min-h-[44px] items-center justify-center rounded-full bg-white/[0.05] px-4 py-2 text-sm font-medium text-white/82 transition duration-300 hover:bg-white/[0.08] hover:text-white"
               >
-                <div className="text-center">
-                  <p className="text-xs uppercase tracking-[0.28em] text-gold/84">{hero.visualLabel}</p>
-                  <p className="mt-4 font-serif text-6xl text-white sm:text-7xl">ZERO</p>
-                </div>
+                ZERO Experience
               </button>
             </div>
-            <div className="pointer-events-none absolute inset-x-10 bottom-10 z-10 rounded-[28px] border border-white/10 bg-[#06111d]/72 p-5 backdrop-blur lg:inset-x-8 lg:bottom-8 lg:rounded-[30px] lg:p-8">
-              <p className="max-w-[32ch] whitespace-pre-line text-sm leading-7 text-white/72 lg:text-[15px] lg:leading-8 lg:text-white/76">
-                {hero.visualCopy}
+            <div className="pointer-events-none absolute inset-x-8 bottom-8 z-10 rounded-[30px] border border-white/10 bg-[#06111d]/74 p-8 shadow-[0_24px_64px_rgba(0,0,0,0.24)] backdrop-blur-xl">
+              <p className="text-[11px] uppercase tracking-[0.26em] text-white/42">{aiAge.eyebrow}</p>
+              <h2 className="mt-3 max-w-[22ch] font-serif text-[26px] leading-[1.28] text-white/92">
+                {aiAge.title.replace("\n", " ")}
+              </h2>
+              <p className="mt-4 max-w-[34ch] whitespace-pre-line text-[14px] leading-7 text-white/66">
+                {aiAge.description}
               </p>
               <div className="mt-5 grid gap-4 sm:grid-cols-3 lg:gap-5">
                 {heroPanelCards.map((card, index) => (
                   <div
                     key={index}
-                    className="rounded-[24px] border border-white/8 bg-white/[0.035] p-4 lg:min-h-[168px] lg:px-5 lg:py-5"
+                    className="rounded-[24px] border border-white/8 bg-white/[0.035] px-5 py-5 lg:min-h-[176px]"
                   >
                     <div className="flex items-center justify-between gap-3">
                       <p className="text-[11px] uppercase tracking-[0.22em] text-white/42 lg:text-[12px]">
