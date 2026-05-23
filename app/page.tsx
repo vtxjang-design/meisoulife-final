@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { AIRhythmCoach } from "@/components/ai-rhythm-coach";
+import { useAuthState } from "@/components/auth-provider";
 import { BrainOwnershipJourney } from "@/components/brain-ownership-journey";
 import { CheckoutButton } from "@/components/checkout-button";
 import { DailyRhythmCheck } from "@/components/daily-rhythm-check";
@@ -28,46 +30,163 @@ const LINE_URL = process.env.NEXT_PUBLIC_LINE_URL || process.env.NEXT_PUBLIC_LIN
 
 const heroCopy = {
   jp: {
-    eyebrow: "心と生活のリカバリー",
-    title: "1分で、\n心の過負荷をリセット。",
-    supporting: "不安、疲れ、孤独、考えすぎから\nやさしく戻る時間",
+    eyebrow: "AI時代の人間回復",
+    title: "AI時代に、\n心へ戻る場所を。",
+    supporting: "MeisoLifeは、自然な知性を取り戻し、\n自分の心と脳の主人として生きるための\n静かなデジタル・ナショナルパークです。",
     subtitle: "無料・60秒・登録不要",
     primary: "1分リカバリーを始める",
-    secondary: "今の状態を選ぶ",
-    tertiary: "無料で始める",
+    secondary: "7日リズムを試す",
+    tertiaryGuest: "無料で始める",
+    tertiaryFree: "今日のチェックイン",
+    tertiaryPaid: "自分のリズムへ戻る",
     trust: "無料・60秒・登録不要",
-    proof: ["不安に", "疲れに", "考えすぎに"],
-    visualCopy: "森の静けさに少し触れて、\n情報の流れから呼吸へ戻る。",
-    visualLabel: "静かな入口",
+    proof: ["情報過多に", "疲れた心に", "考えすぎに"],
+    visualCopy: "情報に引かれるのではなく、\n自分へ戻るための静かな入口。",
+    visualLabel: "Quiet Forest Entry",
     visualAlt: "Forest light and stillness"
   },
   kr: {
-    eyebrow: "마음과 생활의 리커버리",
-    title: "하루 1분,\n마음의 과부하를 멈추세요.",
-    supporting: "불안, 피로, 외로움,\n생각 과잉에서 부드럽게 돌아오는 시간",
+    eyebrow: "AI 시대의 인간 회복",
+    title: "AI 시대에,\n다시 내 마음으로 돌아오는 곳.",
+    supporting: "MeisoLife는 자연지능을 회복하고,\n내 마음과 뇌의 주인으로 살아가기 위한\n조용한 디지털 내셔널 파크입니다.",
     subtitle: "무료 · 60초 · 가입 불필요",
     primary: "1분 리커버리 시작",
-    secondary: "지금 상태 선택하기",
-    tertiary: "무료로 시작하기",
+    secondary: "7일 리듬 체험",
+    tertiaryGuest: "무료로 시작하기",
+    tertiaryFree: "오늘의 체크인",
+    tertiaryPaid: "나의 리듬으로 돌아가기",
     trust: "무료 · 60초 · 가입 불필요",
-    proof: ["불안할 때", "지칠 때", "생각이 많을 때"],
-    visualCopy: "숲의 고요함을 잠시 빌려,\n정보의 흐름에서 호흡으로 돌아옵니다.",
-    visualLabel: "조용한 입구",
+    proof: ["과부하일 때", "지쳤을 때", "생각이 많을 때"],
+    visualCopy: "정보의 흐름보다,\n나 자신에게 돌아오는 숨의 입구.",
+    visualLabel: "Quiet Forest Entry",
     visualAlt: "Forest light and stillness"
   },
   en: {
-    eyebrow: "Mind & Life Recovery",
-    title: "Reset your overloaded mind\nin 1 minute.",
-    supporting: "A gentle way back from anxiety,\nfatigue, loneliness, and overthinking",
+    eyebrow: "Human Recovery in the AI Age",
+    title: "Return to your mind\nin the age of AI.",
+    supporting: "MeisoLife helps people recover their natural intelligence,\nreclaim ownership of their mind,\nand build a calmer rhythm of life in a world of endless information.",
     subtitle: "Free · 60 seconds · No signup",
     primary: "Start 1-Minute Recovery",
-    secondary: "Choose My Current State",
-    tertiary: "Start Free",
+    secondary: "Try 7-Day Rhythm",
+    tertiaryGuest: "Start Free",
+    tertiaryFree: "Today's Check-In",
+    tertiaryPaid: "Return to My Rhythm",
     trust: "Free · 60 seconds · No signup",
-    proof: ["for anxiety", "for fatigue", "for overthinking"],
-    visualCopy: "Borrow a little stillness from the forest,\nand return from information to breath.",
-    visualLabel: "Quiet entry",
+    proof: ["for stress", "for overload", "for overthinking"],
+    visualCopy: "A quiet forest entrance for returning\nto breath instead of noise.",
+    visualLabel: "Quiet Forest Entry",
     visualAlt: "Forest light and stillness"
+  }
+} as const;
+
+const nationalParkCopy = {
+  jp: {
+    eyebrow: "DIGITAL NATIONAL PARK",
+    title: "毎日戻りたくなる、\n静かな場所。",
+    description:
+      "瞑想lifeは、情報過多から少し離れ、感情のバランスを整え、人とのつながりを思い出すためのデジタル・ナショナルパークです。",
+    spaces: [
+      { key: "visitor", title: "Visitor Center", description: "1分リカバリーから始める入口" },
+      { key: "trail", title: "Healing Trails", description: "7日リズムで少しずつ戻る道" },
+      { key: "deck", title: "Observation Deck", description: "脳の主人として自分を見る視点" },
+      { key: "campfire", title: "Quiet Campfire", description: "静かに共に整う場" },
+      { key: "ranger", title: "AI Ranger", description: "自分に戻るためのやさしい案内役" }
+    ],
+    note: "依存ではなく、回復のために戻ってくる場所です。"
+  },
+  kr: {
+    eyebrow: "DIGITAL NATIONAL PARK",
+    title: "매일 다시 오고 싶은,\n조용한 장소.",
+    description:
+      "명상life는 정보 과부하에서 잠시 벗어나고, 감정의 균형을 회복하고, 자신과 사람들을 다시 느끼기 위한 디지털 내셔널 파크입니다.",
+    spaces: [
+      { key: "visitor", title: "Visitor Center", description: "1분 리커버리로 시작하는 입구" },
+      { key: "trail", title: "Healing Trails", description: "7일 리듬으로 조금씩 돌아오는 길" },
+      { key: "deck", title: "Observation Deck", description: "뇌의 주인으로 자신을 바라보는 자리" },
+      { key: "campfire", title: "Quiet Campfire", description: "조용히 함께 정돈되는 공간" },
+      { key: "ranger", title: "AI Ranger", description: "자신에게 돌아오게 돕는 부드러운 안내자" }
+    ],
+    note: "중독을 만드는 곳이 아니라, 회복을 위해 들르는 장소입니다."
+  },
+  en: {
+    eyebrow: "DIGITAL NATIONAL PARK",
+    title: "A place to return to,\nevery day.",
+    description:
+      "MeisoLife is a digital national park where people step away from information overload, restore emotional balance, and reconnect with themselves and others.",
+    spaces: [
+      { key: "visitor", title: "Visitor Center", description: "An easy entrance through 1-minute recovery" },
+      { key: "trail", title: "Healing Trails", description: "A 7-day path back into a calmer rhythm" },
+      { key: "deck", title: "Observation Deck", description: "A clearer view of the mind you are learning to own" },
+      { key: "campfire", title: "Quiet Campfire", description: "A soft place for shared recovery" },
+      { key: "ranger", title: "AI Ranger", description: "A gentle guide that helps you return to yourself" }
+    ],
+    note: "A place to recover, not another place to get hooked."
+  }
+} as const;
+
+const whyReturnCopy = {
+  jp: {
+    eyebrow: "WHY PEOPLE RETURN",
+    title: "また戻ってきたくなる理由",
+    cards: [
+      { title: "誰かが待っている", description: "同じように整えようとしている誰かの気配があります。" },
+      { title: "今日のチェックイン", description: "今の状態をひとつ選ぶだけで、始められます。" },
+      { title: "小さな達成感", description: "1分でも十分。小さな回復が残ります。" },
+      { title: "静かな励まし", description: "無理しなくていいという空気がここにあります。" },
+      { title: "意味のあるつながり", description: "競争ではなく、静かな共生の感覚があります。" },
+      { title: "生活の変化", description: "少しずつ、現実の一日が整っていきます。" }
+    ]
+  },
+  kr: {
+    eyebrow: "WHY PEOPLE RETURN",
+    title: "사람들이 다시 돌아오는 이유",
+    cards: [
+      { title: "누군가 함께하고 있다", description: "어딘가에서 같은 마음으로 자신을 돌보는 사람이 있습니다." },
+      { title: "오늘의 체크인", description: "지금 상태를 하나 고르는 것만으로 시작할 수 있습니다." },
+      { title: "작은 성취감", description: "1분이면 충분해요. 작은 회복이 남습니다." },
+      { title: "조용한 격려", description: "무리하지 않아도 된다는 분위기가 여기에 있습니다." },
+      { title: "의미 있는 연결", description: "경쟁이 아니라, 공생의 따뜻한 감각이 있습니다." },
+      { title: "생활의 변화", description: "조금씩, 실제 하루가 달라지기 시작합니다." }
+    ]
+  },
+  en: {
+    eyebrow: "WHY PEOPLE RETURN",
+    title: "Why people keep coming back",
+    cards: [
+      { title: "Someone is here too", description: "You can feel the presence of others quietly returning as well." },
+      { title: "Daily check-in", description: "Choose one state and begin without friction." },
+      { title: "Small achievements", description: "One minute is enough. A small recovery still counts." },
+      { title: "Quiet encouragement", description: "The atmosphere says you do not have to force anything." },
+      { title: "Meaningful connection", description: "It feels less like social media and more like shared recovery." },
+      { title: "Real life change", description: "Little by little, everyday life begins to feel different." }
+    ]
+  }
+} as const;
+
+const finalCtaCopy = {
+  jp: {
+    eyebrow: "COME BACK TOMORROW",
+    title: "また、静かな1分のために。",
+    description: "日常が騒がしいほど、戻れる場所は大切になります。",
+    primary: "1分リカバリーを始める",
+    secondary: "7日リズムを試す",
+    tertiary: "メンバーシップを見る"
+  },
+  kr: {
+    eyebrow: "COME BACK TOMORROW",
+    title: "다시,\n조용한 1분을 위해.",
+    description: "일상이 시끄러울수록, 돌아올 수 있는 장소가 더 중요해집니다.",
+    primary: "1분 리커버리 시작",
+    secondary: "7일 리듬 체험",
+    tertiary: "멤버십 보기"
+  },
+  en: {
+    eyebrow: "COME BACK TOMORROW",
+    title: "Come back for\none quiet minute.",
+    description: "The louder life gets, the more a return place matters.",
+    primary: "Start 1-Minute Recovery",
+    secondary: "Try 7-Day Rhythm",
+    tertiary: "Explore Membership"
   }
 } as const;
 
@@ -409,10 +528,15 @@ function useLandingMembership() {
 }
 
 export default function HomePage() {
+  const router = useRouter();
   const { language, setLanguage } = useLanguage();
+  const { authResolved, isLoggedIn, memberState } = useAuthState();
   const site = useSiteCopy();
   const landing = landingCopy[language];
   const hero = heroCopy[language];
+  const nationalPark = nationalParkCopy[language];
+  const whyReturn = whyReturnCopy[language];
+  const finalCta = finalCtaCopy[language];
   const healing = healingCopy[language];
   const testimonials = testimonialCopy[language];
   const reassurance = reassuranceCopy[language];
@@ -473,6 +597,13 @@ export default function HomePage() {
     ],
     [challengeProgress.completedDays.length, returnRhythm.streakCount, returnRhythm.timeAnchor, site.home.rhythmSignals.anchors]
   );
+  const returnActionLabel = authResolved
+    ? !isLoggedIn
+      ? hero.tertiaryGuest
+      : memberState === "free"
+        ? hero.tertiaryFree
+        : hero.tertiaryPaid
+    : hero.tertiaryGuest;
 
   function scrollToOneMinute() {
     if (typeof window === "undefined") {
@@ -505,6 +636,15 @@ export default function HomePage() {
       behavior: "smooth",
       block: "start"
     });
+  }
+
+  function handleReturnAction() {
+    if (!authResolved || !isLoggedIn) {
+      router.push("/signup");
+      return;
+    }
+
+    router.push("/member");
   }
 
   async function handleGiftShare() {
@@ -573,21 +713,30 @@ export default function HomePage() {
               </button>
               <button
                 type="button"
-                onClick={scrollToStateCheck}
+                onClick={scrollToRhythmChallenge}
                 className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-4.5 py-3 text-[14px] font-medium text-white/78 transition duration-300 hover:-translate-y-0.5 hover:bg-white/[0.06]"
               >
                 {hero.secondary}
               </button>
               <button
                 type="button"
-                onClick={scrollToRhythmChallenge}
+                onClick={handleReturnAction}
                 className="inline-flex min-h-[48px] items-center justify-center rounded-full px-3 py-2 text-[13px] font-medium text-gold/86 transition duration-300 hover:text-[#f1dfaf]"
               >
-                {hero.tertiary}
+                {returnActionLabel}
               </button>
             </div>
 
             <p className="text-[12px] leading-6 text-white/50">{hero.trust}</p>
+
+            <button
+              type="button"
+              onClick={scrollToStateCheck}
+              className="inline-flex w-fit items-center gap-2 text-[13px] font-medium text-white/60 transition hover:text-white"
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-gold/80" />
+              {landing.dailyRhythmCheck.eyebrow}
+            </button>
 
             <div className="flex flex-wrap gap-2 pt-0.5">
               {hero.proof.map((item) => (
@@ -634,9 +783,24 @@ export default function HomePage() {
         </div>
       </section>
 
-      <InstantMeditationSection copy={landing.instant} />
+      <section className="section-shell mt-16 sm:mt-20">
+        <div className="overflow-hidden rounded-[34px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.14),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-7 shadow-[0_24px_80px_rgba(7,17,31,0.18)] sm:px-8 sm:py-9">
+          <SectionHeading eyebrow={nationalPark.eyebrow} title={nationalPark.title} description={nationalPark.description} />
+          <div className="mt-7 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+            {nationalPark.spaces.map((space) => (
+              <article key={space.key} className="rounded-[24px] border border-white/10 bg-white/[0.04] p-5">
+                <p className="text-xs uppercase tracking-[0.22em] text-gold/82">{space.title}</p>
+                <p className="mt-3 text-sm leading-7 text-white/70">{space.description}</p>
+              </article>
+            ))}
+          </div>
+          <p className="mt-6 text-sm leading-7 text-white/54">{nationalPark.note}</p>
+        </div>
+      </section>
 
       <DailyRhythmCheck copy={landing.dailyRhythmCheck} />
+
+      <InstantMeditationSection copy={landing.instant} />
 
       <RhythmChallenge copy={landing.rhythmChallenge} />
 
@@ -743,6 +907,20 @@ export default function HomePage() {
       <LiveTogether copy={landing.live} />
 
       <DailyRhythmLayer copy={landing.dailyRhythmLayer} />
+
+      <section className="section-shell mt-16 sm:mt-20">
+        <div className="rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-7 shadow-[0_24px_80px_rgba(7,17,31,0.18)] sm:px-7 sm:py-9">
+          <SectionHeading eyebrow={whyReturn.eyebrow} title={whyReturn.title} align="center" />
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            {whyReturn.cards.map((card) => (
+              <article key={card.title} className="rounded-[24px] border border-white/10 bg-white/[0.04] p-5">
+                <h3 className="text-base font-semibold text-white">{card.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-white/68">{card.description}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <section className="section-shell mt-16 sm:mt-20">
         <div className="overflow-hidden rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-7 shadow-[0_24px_80px_rgba(7,17,31,0.18)] sm:px-7 sm:py-9">
@@ -911,30 +1089,30 @@ export default function HomePage() {
 
       <section className="section-shell mt-24">
         <div className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-6 py-10 text-center sm:px-10">
-          <p className="text-sm uppercase tracking-[0.3em] text-gold/84">
-            {language === "jp" ? "Human OS Upgrade" : language === "kr" ? "Human OS Upgrade" : "Human OS Upgrade"}
-          </p>
-          <h2 className="mt-4 whitespace-pre-line font-serif text-3xl text-white sm:text-4xl">
-            {aiAge.title}
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl whitespace-pre-line text-base leading-8 text-white/68">
-            {aiAge.description}
-          </p>
+          <p className="text-sm uppercase tracking-[0.3em] text-gold/84">{finalCta.eyebrow}</p>
+          <h2 className="mt-4 whitespace-pre-line font-serif text-3xl text-white sm:text-4xl">{finalCta.title}</h2>
+          <p className="mx-auto mt-4 max-w-2xl whitespace-pre-line text-base leading-8 text-white/68">{finalCta.description}</p>
           <div className="relative z-20 mt-6 flex flex-col justify-center gap-3 sm:flex-row">
-            <Link
-              href="/pricing"
+            <button
+              type="button"
+              onClick={scrollToOneMinute}
               className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
             >
-              {aiAge.memberButton}
-            </Link>
-            <a
-              href={LINE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+              {finalCta.primary}
+            </button>
+            <button
+              type="button"
+              onClick={scrollToRhythmChallenge}
               className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-4 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
             >
-              LINE
-            </a>
+              {finalCta.secondary}
+            </button>
+            <Link
+              href="/pricing"
+              className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-gold/20 bg-gold/[0.08] px-6 py-4 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12]"
+            >
+              {finalCta.tertiary}
+            </Link>
           </div>
         </div>
       </section>
