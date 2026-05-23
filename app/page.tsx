@@ -31,8 +31,9 @@ const AI_COACH_URL =
 const heroCopy = {
   jp: {
     eyebrow: "AI時代の人間回復",
-    title: "AIと情報に疲れた\n心と脳を、1分で休める場所。",
-    supporting: "MeisoLifeは、自然な知性を取り戻し、\n自分の心と脳の主人として生きるための\n静かなデジタル・ナショナルパークです。",
+    title: "1分で Reset！\nAIと情報に疲れた、\n心と脳が戻る場所。",
+    supporting:
+      "忙しい毎日や情報の波の中で、\n少しだけ立ち止まり、\n自分のリズムへ戻るための\n静かなデジタル・ナショナルパーク。\n\n急がなくても大丈夫です。",
     subtitle: "無料・60秒・登録不要",
     primary: "1分リカバリーを始める",
     secondary: "7日リズムを試す",
@@ -740,6 +741,9 @@ export default function HomePage() {
   const returnMemoryLine = lastMoodLabel
     ? `${returnEntry.memory.calm} ${lastMoodLabel}`
     : returnEntry.memory.return;
+  const heroTitleLines = hero.title.split("\n");
+  const heroAccentLine = language === "jp" ? heroTitleLines[0] : null;
+  const heroMainLines = language === "jp" ? heroTitleLines.slice(1) : heroTitleLines;
 
   function scrollToOneMinute() {
     if (typeof window === "undefined") {
@@ -829,17 +833,22 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="space-y-4.5">
-              <h1 className="max-w-[11ch] whitespace-pre-line font-serif text-[29px] leading-[1.12] text-white sm:max-w-none sm:text-6xl sm:leading-[1.2] lg:text-7xl lg:leading-[1.18]">
-                {hero.title}
+            <div className="space-y-6 sm:space-y-7">
+              {heroAccentLine ? (
+                <p className="max-w-[12ch] font-serif text-[22px] leading-[1.35] text-gold/86 sm:max-w-none sm:text-[28px] sm:leading-[1.45]">
+                  {heroAccentLine}
+                </p>
+              ) : null}
+              <h1 className="max-w-[12ch] whitespace-pre-line font-serif text-[30px] leading-[1.24] text-white sm:max-w-[11ch] sm:text-[56px] sm:leading-[1.24] lg:text-[66px] lg:leading-[1.22]">
+                {heroMainLines.join("\n")}
               </h1>
-              <p className="max-w-[18ch] whitespace-pre-line text-[15px] leading-[1.72] text-gold/80 sm:max-w-none sm:text-[30px] sm:leading-[1.55]">
+              <p className="max-w-[22ch] whitespace-pre-line text-[14px] leading-[1.95] text-white/64 sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.95]">
                 {hero.supporting}
               </p>
               <p className="max-w-3xl text-[13px] leading-[1.8] text-white/58 sm:text-xl sm:leading-9">{hero.subtitle}</p>
             </div>
 
-            <div className="relative z-20 flex flex-col gap-2.5 pt-3 sm:flex-row sm:flex-wrap">
+            <div className="relative z-20 flex flex-col gap-2.5 pt-4 sm:flex-row sm:flex-wrap">
               <button
                 type="button"
                 onClick={scrollToOneMinute}
@@ -850,7 +859,7 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={scrollToStateCheck}
-                className="inline-flex min-h-[44px] items-center justify-center rounded-full px-3 py-2 text-[13px] font-medium text-white/66 transition duration-300 hover:text-white"
+                className="inline-flex min-h-[44px] items-center justify-center rounded-full px-3 py-2 text-[13px] font-medium text-white/60 transition duration-300 hover:text-white"
               >
                 {language === "jp" ? "静かに見てみる" : language === "kr" ? "조용히 둘러보기" : "Explore Quietly"}
               </button>
@@ -858,7 +867,7 @@ export default function HomePage() {
 
             <p className="text-[12px] leading-6 text-white/50">{hero.trust}</p>
 
-            <p className="text-[13px] leading-7 text-white/54">
+            <p className="max-w-[24ch] text-[13px] leading-7 text-white/52 sm:max-w-none">
               {language === "jp"
                 ? "人生を今日変えなくても大丈夫です。ただ静かな1分だけ。"
                 : language === "kr"
