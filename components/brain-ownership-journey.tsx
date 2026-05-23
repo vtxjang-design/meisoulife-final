@@ -10,10 +10,10 @@ type MemberState = "guest" | "free" | "paid";
 
 const journeyCopy = {
   jp: {
-    eyebrow: "脳を整える旅",
-    title: "脳を整える旅",
+    eyebrow: "Observation Deck",
+    title: "脳の主人になる。",
     description:
-      "脳教育（Brain Education）の哲学をもとに、自分自身の感覚と意識をゆっくり育てていきます。",
+      "情報とAIの答えがあふれる時代に、感じること、選ぶこと、集中することを自分に取り戻していく旅です。",
     badge: {
       guest: "ゲスト",
       free: "無料メンバー",
@@ -49,10 +49,10 @@ const journeyCopy = {
     ]
   },
   kr: {
-    eyebrow: "뇌를 정돈하는 여정",
-    title: "뇌를 정돈하는 여정",
+    eyebrow: "Observation Deck",
+    title: "뇌의 주인이 되기.",
     description:
-      "뇌교육(Brain Education)의 철학을 바탕으로, 자신의 감각과 의식을 천천히 길러갑니다.",
+      "정보와 AI의 답이 넘치는 시대에, 느끼고, 선택하고, 집중하는 힘을 다시 자신에게 돌려주는 여정입니다.",
     badge: {
       guest: "게스트",
       free: "무료 멤버",
@@ -88,10 +88,10 @@ const journeyCopy = {
     ]
   },
   en: {
-    eyebrow: "Brain Education Journey",
-    title: "A Journey to Settle the Brain",
+    eyebrow: "Observation Deck",
+    title: "Become the Owner of Your Brain.",
     description:
-      "Grounded in the philosophy of Brain Education, this journey helps you gently grow your own sensing, awareness, and inner balance.",
+      "In an age of endless information and AI-generated answers, human freedom begins when we can feel, choose, focus, and think clearly again.",
     badge: {
       guest: "Guest",
       free: "Free Member",

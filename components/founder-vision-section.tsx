@@ -6,8 +6,8 @@ import { useLanguage } from "@/lib/i18n";
 
 const founderCopy = {
   jp: {
-    eyebrow: "ILCHI Philosophy",
-    title: "人間の価値は、\n内なる意識を目覚めさせることにある。",
+    eyebrow: "Secret Forest",
+    title: "Brain Education創始者からのメッセージ",
     description:
       "瞑想lifeは、Brain Education創始者 ILCHI LEE（イ・スンホン）先生の哲学を土台に、人が本来持つ可能性、脳の主人として生きる力、そして共生の価値を育てます。",
     quote:
@@ -16,11 +16,11 @@ const founderCopy = {
     profileLabel: "Brain Education創始者",
     profileName: "ILCHI LEE",
     profileSub: "イ・スンホン",
-    button: "哲学を静かに知る"
+    button: "哲学を探訪する"
   },
   kr: {
-    eyebrow: "ILCHI Philosophy",
-    title: "인간의 가치는,\n내면의 의식을 깨우는 데 있습니다.",
+    eyebrow: "Secret Forest",
+    title: "Brain Education 창시자의 메시지",
     description:
       "瞑想life는 Brain Education 창시자 ILCHI LEE(이승헌) 선생의 철학을 바탕으로, 사람이 본래 지닌 가능성, 뇌의 주인으로 살아가는 힘, 그리고 공생의 가치를 길러갑니다.",
     quote:
@@ -29,11 +29,11 @@ const founderCopy = {
     profileLabel: "Brain Education 창시자",
     profileName: "ILCHI LEE",
     profileSub: "이승헌",
-    button: "철학을 조용히 알아보기"
+    button: "철학 더 알아보기"
   },
   en: {
-    eyebrow: "ILCHI Philosophy",
-    title: "Human value begins\nwhen inner awareness awakens.",
+    eyebrow: "Secret Forest",
+    title: "A Message from the Founder of Brain Education",
     description:
       "Meisoulife is grounded in the philosophy of ILCHI LEE, founder of Brain Education. It helps people grow their original potential, the power to live as the owner of one’s brain, and the value of coexistence.",
     quote:
@@ -42,7 +42,7 @@ const founderCopy = {
     profileLabel: "Brain Education Founder",
     profileName: "ILCHI LEE",
     profileSub: "Lee Seung Heun",
-    button: "Discover the philosophy quietly"
+    button: "Explore the Philosophy"
   }
 } as const;
 

@@ -31,7 +31,7 @@ const LINE_URL = process.env.NEXT_PUBLIC_LINE_URL || process.env.NEXT_PUBLIC_LIN
 const heroCopy = {
   jp: {
     eyebrow: "AI時代の人間回復",
-    title: "AI時代に、\n心へ戻る場所を。",
+    title: "AIと情報に疲れた\n心と脳を、1分で休める場所。",
     supporting: "MeisoLifeは、自然な知性を取り戻し、\n自分の心と脳の主人として生きるための\n静かなデジタル・ナショナルパークです。",
     subtitle: "無料・60秒・登録不要",
     primary: "1分リカバリーを始める",
@@ -47,7 +47,7 @@ const heroCopy = {
   },
   kr: {
     eyebrow: "AI 시대의 인간 회복",
-    title: "AI 시대에,\n다시 내 마음으로 돌아오는 곳.",
+    title: "AI와 정보에 지친\n마음과 뇌를 쉬게 하는 곳.",
     supporting: "MeisoLife는 자연지능을 회복하고,\n내 마음과 뇌의 주인으로 살아가기 위한\n조용한 디지털 내셔널 파크입니다.",
     subtitle: "무료 · 60초 · 가입 불필요",
     primary: "1분 리커버리 시작",
@@ -63,7 +63,7 @@ const heroCopy = {
   },
   en: {
     eyebrow: "Human Recovery in the AI Age",
-    title: "Return to your mind\nin the age of AI.",
+    title: "A quiet place to rest\nyour mind and brain.",
     supporting: "MeisoLife helps people recover their natural intelligence,\nreclaim ownership of their mind,\nand build a calmer rhythm of life in a world of endless information.",
     subtitle: "Free · 60 seconds · No signup",
     primary: "Start 1-Minute Recovery",

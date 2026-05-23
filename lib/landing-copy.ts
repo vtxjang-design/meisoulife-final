@@ -320,9 +320,9 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       ]
     },
     rhythmChallenge: {
-      eyebrow: "7日間リズム体験",
-      title: "7日間リズム体験",
-      subtitle: "無理しなくても大丈夫です\n自分に戻る、小さなリズム",
+      eyebrow: "Healing Trail",
+      title: "7日間ヒーリングトレイル",
+      subtitle: "朝3分、昼1分、夜3分。\n小さなリズムが脳の自然なバランスを取り戻します。",
       returning: "また戻ってきましたね。",
       enoughMessage: "今日はここまででも十分です。",
       gentleLine: "少しずつ続ければ十分です。",
@@ -334,7 +334,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       steps: [
         {
           day: 1,
-          title: "呼吸",
+          title: "Pause",
           description: "今日は1分だけ、呼吸を感じてみます。",
           cta: "1分呼吸を始める",
           cardCta: "1分はじめる →",
@@ -343,7 +343,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
         },
         {
           day: 2,
-          title: "心を見る",
+          title: "Breathe",
           description: "今の気持ちを少し感じてみましょう。",
           cta: "今の気持ちを感じる",
           note: "良い悪いを決めなくても大丈夫です。今の心に、少しだけ気づきを向けます。",
@@ -351,14 +351,14 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
         },
         {
           day: 3,
-          title: "身体を感じる",
+          title: "Release",
           description: "体に力が入っている場所はありますか？",
           cta: "身体を感じてみる",
           note: "肩、あご、お腹のどこかに、少し力が残っていないか静かに感じてみましょう。"
         },
         {
           day: 4,
-          title: "思考を休める",
+          title: "Focus",
           description: "頭の中を少し休ませてみましょう。",
           cta: "30秒リセットを始める",
           note: "考えを止めなくても大丈夫です。30秒だけ、呼吸に戻る場所をつくります。",
@@ -366,14 +366,14 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
         },
         {
           day: 5,
-          title: "感謝",
+          title: "Sleep",
           description: "今日、少しでもありがたかった瞬間は？",
           cta: "小さな感謝を受け取る",
           note: "とても小さなことで大丈夫です。ひとつのありがたさを、胸の中に置いてみましょう。"
         },
         {
           day: 6,
-          title: "つながり",
+          title: "Connect",
           description: "一人ではないことを感じてみましょう。",
           cta: "つながりを感じる",
           note: "同じように、自分を整えようとしている誰かが今日もいます。その感覚だけで十分です。",
@@ -381,7 +381,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
         },
         {
           day: 7,
-          title: "自分との約束",
+          title: "Return",
           description: "明日の自分のために、1分だけ。",
           cta: "静かな1分を始める",
           note: "今日の静けさを、明日の自分にそっと手渡すような気持ちで呼吸してみましょう。",
@@ -519,13 +519,13 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       ]
     },
     coach: {
-      eyebrow: "Life Rhythm Recovery Companion",
-      title: "今の状態に合わせて、\nやさしく整えるAIガイド。",
+      eyebrow: "AI Ranger",
+      title: "自分に戻るのを助ける\nAIガイド。",
       description:
-        "不安、疲れ、人間関係のしんどさ、考えすぎに。\nAIが短い呼吸、ひとことの振り返り、今日の小さな一歩をやさしく提案します。",
+        "テクノロジーが注意を奪うのではなく、取り戻すために。AI Rangerは、呼吸、短いふり返り、今日の小さな一歩をやさしく案内します。",
       cta: "1分リカバリーへ戻る",
       openCoach: "AIガイドを開く",
-      note: "※ 医療や治療の代わりではありません。日々の気持ちを整えるための静かな伴走として使えます。",
+      note: "※ 医療診断や治療ではありません。毎日の心と注意を整える静かなガイドとして使えます。",
       copyPrompt: "プロンプトをコピー",
       copiedPrompt: "コピーしました",
       promptLabel: "GPTに伝えるひとこと",
@@ -580,8 +580,8 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       steady: "より安定"
     },
     live: {
-      eyebrow: "共に整うリズム",
-      title: "今日も、どこかで誰かが呼吸を整えています。",
+      eyebrow: "Quiet Campfire",
+      title: "静かに待っている誰かがいる場所。",
       description: "一人でがんばらなくても大丈夫。小さな1分が集まり、共に目覚める毎日をつくっています。",
       metrics: [
         {
@@ -669,7 +669,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
           key: "basic",
           name: "Basic",
           price: "¥1,000 / month",
-          identity: "心が過負荷な時の、すばやい感情回復",
+          identity: "Life Rhythm",
           description: "毎日の揺れから静かに戻るために",
           lifeChange: "一日が崩れきる前に、自分の中心へ戻れるようになります。",
           features: ["1分リズム", "AIの静かな伴走", "リズムガーデン", "週ごとのふり返り"],
@@ -680,7 +680,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
           key: "leader",
           name: "Growth",
           price: "¥3,000 / month",
-          identity: "安定した毎日のリズムを育てる",
+          identity: "Brain Owner",
           description: "戻れない日があっても、また続けられるように",
           lifeChange: "続かなさを責めずに、戻れる仕組みそのものが生活に根づきます。",
           features: ["毎日のAI伴走", "週ごとのリズム設計", "共生フィールド", "集中できる実践環境"],
@@ -690,7 +690,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
           key: "premium",
           name: "Inner Circle",
           price: "¥10,000 / month",
-          identity: "感情・身体・関係性のバランスを深く回復する",
+          identity: "Coexistence Circle",
           description: "AIガイドと共に、より深い回復リズムを育てるために",
           lifeChange: "自分を整える実践が、周囲と世界に静かに広がる役割へ変わります。",
           features: [
@@ -805,9 +805,9 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       ]
     },
     rhythmChallenge: {
-      eyebrow: "7일 리듬 체험",
-      title: "7일 리듬 체험",
-      subtitle: "무리하지 않아도 괜찮아요\n나에게 돌아오는 작은 리듬",
+      eyebrow: "Healing Trail",
+      title: "7일 힐링 트레일",
+      subtitle: "아침 3분, 낮 1분, 밤 3분.\n작은 리듬이 뇌의 자연한 균형을 회복합니다.",
       returning: "다시 와주셨네요.",
       enoughMessage: "오늘은 여기까지여도 충분합니다.",
       gentleLine: "조금씩 이어가면 충분합니다.",
@@ -819,7 +819,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       steps: [
         {
           day: 1,
-          title: "호흡",
+          title: "Pause",
           description: "오늘은 1분만 호흡을 느껴봅니다.",
           cta: "1분 호흡 시작하기",
           cardCta: "1분 시작하기 →",
@@ -828,7 +828,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
         },
         {
           day: 2,
-          title: "마음 보기",
+          title: "Breathe",
           description: "지금의 마음을 잠시 느껴봅니다.",
           cta: "지금의 마음을 느끼기",
           note: "좋고 나쁨을 정하지 않아도 괜찮아요. 지금의 마음을 잠시 알아차려 봅니다.",
@@ -836,14 +836,14 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
         },
         {
           day: 3,
-          title: "몸 느끼기",
+          title: "Release",
           description: "몸에 힘이 들어간 곳이 있나요?",
           cta: "몸을 느껴보기",
           note: "어깨, 턱, 배에 힘이 남아 있지 않은지 조용히 느껴보세요."
         },
         {
           day: 4,
-          title: "생각 쉬기",
+          title: "Focus",
           description: "머릿속을 잠시 쉬게 해봅니다.",
           cta: "30초 리셋 시작하기",
           note: "생각을 멈추지 않아도 괜찮아요. 30초만, 호흡으로 돌아올 자리를 만듭니다.",
@@ -851,14 +851,14 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
         },
         {
           day: 5,
-          title: "감사",
+          title: "Sleep",
           description: "오늘 감사했던 순간 하나는 무엇인가요?",
           cta: "작은 감사를 떠올리기",
           note: "아주 작은 것으로도 충분해요. 한 가지 감사함을 가슴 안에 두어봅니다."
         },
         {
           day: 6,
-          title: "연결감",
+          title: "Connect",
           description: "혼자가 아니라는 것을 잠시 느껴봅니다.",
           cta: "연결감을 느껴보기",
           note: "오늘도 어딘가에서 자신을 돌보려는 누군가가 있습니다. 그 감각만으로도 충분합니다.",
@@ -866,7 +866,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
         },
         {
           day: 7,
-          title: "나와의 약속",
+          title: "Return",
           description: "내일의 나를 위해, 1분만.",
           cta: "조용한 1분 시작하기",
           note: "오늘의 고요함을 내일의 나에게 건네는 마음으로 호흡해보세요.",
@@ -1003,13 +1003,13 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       ]
     },
     coach: {
-      eyebrow: "Life Rhythm Recovery Companion",
-      title: "지금 상태에 맞게,\n부드럽게 정돈해주는 AI 가이드.",
+      eyebrow: "AI Ranger",
+      title: "나 자신에게 돌아오도록 돕는\nAI 가이드.",
       description:
-        "불안, 피로, 관계 피로, 생각 과잉이 올 때.\nAI가 짧은 호흡, 한 줄의 돌아보기,\n오늘의 작은 실천을 조용히 제안합니다.",
+        "기술이 주의를 빼앗는 대신, 다시 돌려주어야 합니다. AI Ranger는 호흡, 짧은 돌아보기, 오늘의 작은 실천을 부드럽게 제안합니다.",
       cta: "1분 리커버리로 돌아가기",
       openCoach: "AI 가이드 열기",
-      note: "※ 치료나 진단을 대신하지 않습니다. 일상의 마음을 정돈하는 조용한 동행으로 사용할 수 있습니다.",
+      note: "※ 의료 진단이나 치료가 아닙니다. 일상의 마음과 주의를 정돈하는 조용한 안내로 사용할 수 있습니다.",
       copyPrompt: "프롬프트 복사",
       copiedPrompt: "복사되었습니다",
       promptLabel: "GPT에 이렇게 전해보세요",
@@ -1064,8 +1064,8 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       steady: "더 안정적"
     },
     live: {
-      eyebrow: "함께 정돈되는 리듬",
-      title: "오늘도, 어디선가 누군가가 호흡을 정돈하고 있습니다.",
+      eyebrow: "Quiet Campfire",
+      title: "조용히 기다려주는 누군가가 있는 곳.",
       description: "혼자 애쓰지 않아도 괜찮습니다. 작은 1분들이 모여 함께 깨어나는 일상을 만듭니다.",
       metrics: [
         {
@@ -1153,7 +1153,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
           key: "basic",
           name: "Basic",
           price: "¥1,000 / month",
-          identity: "삶이 벅찰 때 빠르게 감정을 회복하기",
+          identity: "Life Rhythm",
           description: "매일의 흔들림에서 조용히 돌아오기 위해",
           lifeChange: "하루가 완전히 무너지기 전에 자신의 중심으로 돌아올 수 있게 됩니다.",
           features: ["1분 리듬", "AI의 조용한 동행", "리듬 가든", "주간 돌아보기"],
@@ -1164,7 +1164,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
           key: "leader",
           name: "Growth",
           price: "¥3,000 / month",
-          identity: "안정된 매일의 리듬을 만들기",
+          identity: "Brain Owner",
           description: "돌아오지 못한 날이 있어도 다시 이어가기 위해",
           lifeChange: "계속되지 않는 자신을 탓하지 않고, 돌아올 구조가 생활에 자리잡습니다.",
           features: ["매일의 AI 동행", "주간 리듬 설계", "공생 필드", "집중 실천 환경"],
@@ -1174,7 +1174,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
           key: "premium",
           name: "Inner Circle",
           price: "¥10,000 / month",
-          identity: "감정, 몸, 관계의 균형을 더 깊게 회복하기",
+          identity: "Coexistence Circle",
           description: "AI 가이드와 함께 더 깊은 회복 리듬을 만들기 위해",
           lifeChange: "자신을 정돈하는 실천이 주변과 세계를 밝히는 역할로 깊어집니다.",
           features: ["깊은 리듬 코칭", "리더십 세션", "리트릿 우선 안내", "공생 프로젝트"],
@@ -1284,9 +1284,9 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       ]
     },
     rhythmChallenge: {
-      eyebrow: "7-day rhythm experience",
-      title: "7-day rhythm experience",
-      subtitle: "A small habit of returning to yourself, without pressure.",
+      eyebrow: "Healing Trail",
+      title: "Walk the 7-Day Healing Trail",
+      subtitle: "Morning 3 minutes, midday 1 minute, night 3 minutes. Small rhythms help the brain recover its natural balance.",
       returning: "You found your way back again.",
       enoughMessage: "This is enough for today.",
       gentleLine: "A little at a time is enough.",
@@ -1298,7 +1298,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       steps: [
         {
           day: 1,
-          title: "Breath",
+          title: "Pause",
           description: "Today, just notice your breath for one minute.",
           cta: "Start the 1-minute breath",
           cardCta: "Start 1 minute →",
@@ -1307,7 +1307,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
         },
         {
           day: 2,
-          title: "Notice the heart",
+          title: "Breathe",
           description: "Take a moment to feel how your heart is right now.",
           cta: "Notice how you feel",
           note: "There is no need to judge it. Simply allow yourself to notice what is here.",
@@ -1315,14 +1315,14 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
         },
         {
           day: 3,
-          title: "Feel the body",
+          title: "Release",
           description: "Is there a place in the body still holding tension?",
           cta: "Feel the body",
           note: "Quietly notice the shoulders, jaw, or belly and see if they are still holding a little effort."
         },
         {
           day: 4,
-          title: "Rest the mind",
+          title: "Focus",
           description: "Let the mind rest for just a little while.",
           cta: "Start a 30-second reset",
           note: "You do not have to stop thinking. Just make a small place to return to breath.",
@@ -1330,14 +1330,14 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
         },
         {
           day: 5,
-          title: "Gratitude",
+          title: "Sleep",
           description: "What was one small thing you felt grateful for today?",
           cta: "Receive a small gratitude",
           note: "It can be very small. Let one gratitude rest quietly in your chest for a moment."
         },
         {
           day: 6,
-          title: "Connection",
+          title: "Connect",
           description: "Take a moment to feel that you are not alone.",
           cta: "Feel the connection",
           note: "Somewhere today, someone else is also trying to return to themselves. That feeling is enough.",
@@ -1345,7 +1345,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
         },
         {
           day: 7,
-          title: "A promise to yourself",
+          title: "Return",
           description: "Just one minute for tomorrow’s you.",
           cta: "Begin a quiet minute",
           note: "Breathe as if you are gently passing today’s stillness on to the self who will wake up tomorrow.",
@@ -1482,13 +1482,13 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       ]
     },
     coach: {
-      eyebrow: "Life Rhythm Recovery Companion",
-      title: "An AI guide that helps you\nsettle your state gently.",
+      eyebrow: "AI Ranger",
+      title: "AI that helps you\nreturn to yourself.",
       description:
-        "For emotional stress, relationship fatigue, mental overload, or physical tension.\nIt offers a small breath, a brief reflection, and one tiny action for today.",
+        "Technology should not own your attention. It should help you reclaim it. AI Ranger offers a small breath, a brief reflection, and one tiny next step for today.",
       cta: "Return to 1-Minute Recovery",
       openCoach: "Open the AI guide",
-      note: "This is not therapy or medical treatment. It is a quiet companion for everyday emotional recovery.",
+      note: "This is not medical diagnosis or treatment. It is a quiet guide for everyday recovery and attention reset.",
       copyPrompt: "Copy prompt",
       copiedPrompt: "Copied",
       promptLabel: "A simple prompt to start with",
@@ -1543,8 +1543,8 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       steady: "more steady"
     },
     live: {
-      eyebrow: "Rhythm Together",
-      title: "Even today, someone somewhere is settling into breath.",
+      eyebrow: "Quiet Campfire",
+      title: "A quiet place where someone is waiting.",
       description: "You do not have to push through alone. Small quiet minutes gather into days of awakening together.",
       metrics: [
         {
@@ -1632,7 +1632,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
           key: "basic",
           name: "Basic",
           price: "¥1,000 / month",
-          identity: "Quick emotional recovery when life feels overwhelming",
+          identity: "Life Rhythm",
           description: "To return quietly from daily overload",
           lifeChange: "You begin returning to your center before the day fully unravels.",
           features: ["1-minute rhythm", "quiet AI support", "Rhythm Garden", "weekly reflection"],
@@ -1643,7 +1643,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
           key: "leader",
           name: "Growth",
           price: "¥3,000 / month",
-          identity: "Build a stable daily rhythm",
+          identity: "Brain Owner",
           description: "To keep going, even after days when you drift away",
           lifeChange: "Instead of blaming yourself for inconsistency, you gain a structure that helps you return.",
           features: ["daily AI support", "weekly rhythm loop", "coexistence field", "focused practice space"],
@@ -1653,7 +1653,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
           key: "premium",
           name: "Inner Circle",
           price: "¥10,000 / month",
-          identity: "Recover emotional, physical, and relational balance more deeply",
+          identity: "Coexistence Circle",
           description: "To deepen recovery with AI guidance and a steadier rhythm",
           lifeChange: "Your personal practice grows into a role that quietly illuminates others and the world.",
           features: ["advanced rhythm coaching", "leadership sessions", "retreat priority", "coexistence projects"],

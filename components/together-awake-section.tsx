@@ -8,8 +8,8 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 const sectionCopy = {
   jp: {
-    eyebrow: "共に整う仲間",
-    title: "競争ではなく、共に成長する場所。",
+    eyebrow: "Summit",
+    title: "個人の回復が、\n共に目覚める力になる。",
     description:
       "瞑想lifeは、一人で整うだけで終わらないための場です。感謝、共生行動、自然とのつながりを、静かな日常の中で少しずつ育てていきます。",
     prompts: [
@@ -26,8 +26,8 @@ const sectionCopy = {
     secondary: "料金を見る"
   },
   kr: {
-    eyebrow: "함께 정돈하는 동료",
-    title: "경쟁이 아니라, 함께 성장하는 곳.",
+    eyebrow: "Summit",
+    title: "개인의 회복이,\n함께 깨어나는 힘이 됩니다.",
     description:
       "瞑想life는 혼자 정돈하는 데서 끝나지 않도록 돕는 자리입니다. 감사, 공생 행동, 자연과의 연결을 조용한 일상 속에서 조금씩 키워갑니다.",
     prompts: [
@@ -44,8 +44,8 @@ const sectionCopy = {
     secondary: "요금 보기"
   },
   en: {
-    eyebrow: "Together in Rhythm",
-    title: "A place to grow together, not compete.",
+    eyebrow: "Summit",
+    title: "When personal recovery becomes shared awakening.",
     description:
       "Meisoulife is not only about calming yourself alone. It is a place to grow gratitude, coexistence, and connection with nature in the middle of everyday life.",
     prompts: [
