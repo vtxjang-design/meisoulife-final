@@ -892,7 +892,17 @@ export default function HomePage() {
         <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[420px] sm:hidden">
           <div className="absolute left-[8%] top-10 h-28 w-28 rounded-full bg-gold/[0.08] blur-3xl" />
           <div className="absolute right-[10%] top-24 h-36 w-36 rounded-full bg-emerald-200/[0.06] blur-3xl" />
+          <div className="absolute right-[-14%] top-0 h-[280px] w-[72%] overflow-hidden rounded-full opacity-[0.16] mix-blend-screen">
+            <img
+              src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80"
+              alt=""
+              aria-hidden="true"
+              className="h-full w-full scale-110 object-cover blur-[1px] [mask-image:radial-gradient(circle_at_36%_42%,black_0%,rgba(0,0,0,0.76)_36%,transparent_78%)] [-webkit-mask-image:radial-gradient(circle_at_36%_42%,black_0%,rgba(0,0,0,0.76)_36%,transparent_78%)]"
+            />
+          </div>
+          <div className="absolute right-[9%] top-14 h-36 w-24 rounded-full bg-white/[0.03] blur-3xl" />
           <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.08),transparent_34%),linear-gradient(180deg,rgba(7,16,28,0.10),rgba(7,16,28,0))]" />
+          <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_72%_16%,rgba(255,246,214,0.08),transparent_20%),linear-gradient(180deg,rgba(5,18,24,0.04),rgba(5,18,24,0.18)_52%,rgba(5,18,24,0))]" />
         </div>
         <div className="grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
           <div className="space-y-5 sm:space-y-8">
