@@ -48,11 +48,12 @@ const heroCopy = {
   },
   kr: {
     eyebrow: "AI 시대의 인간 회복",
-    title: "AI와 정보에 지친\n마음과 뇌를 쉬게 하는 곳.",
-    supporting: "MeisoLife는 자연지능을 회복하고,\n내 마음과 뇌의 주인으로 살아가기 위한\n조용한 디지털 내셔널 파크입니다.",
+    title: "AI와 정보에 지친,\n마음과 뇌가 돌아오는 곳.",
+    supporting:
+      "바쁜 하루와 정보의 흐름 속에서\n잠시 멈추고,\n내 리듬으로 돌아오는 조용한 공간.\n\n서두르지 않아도 괜찮습니다.",
     subtitle: "무료 · 60초 · 가입 불필요",
     primary: "1분 리커버리 시작",
-    secondary: "7일 리듬 체험",
+    secondary: "조용히 둘러보기",
     tertiaryGuest: "무료로 시작하기",
     tertiaryFree: "오늘의 체크인",
     tertiaryPaid: "나의 리듬으로 돌아가기",
@@ -64,11 +65,12 @@ const heroCopy = {
   },
   en: {
     eyebrow: "Human Recovery in the AI Age",
-    title: "A quiet place to rest\nyour mind and brain.",
-    supporting: "MeisoLife helps people recover their natural intelligence,\nreclaim ownership of their mind,\nand build a calmer rhythm of life in a world of endless information.",
+    title: "1-Minute Reset.\nA place where your mind and brain return.",
+    supporting:
+      "A quiet place to pause,\nbreathe,\nand return to your rhythm\nin a noisy world.\n\nThere is no need to rush.",
     subtitle: "Free · 60 seconds · No signup",
     primary: "Start 1-Minute Recovery",
-    secondary: "Try 7-Day Rhythm",
+    secondary: "Explore Quietly",
     tertiaryGuest: "Start Free",
     tertiaryFree: "Today's Check-In",
     tertiaryPaid: "Return to My Rhythm",
@@ -817,7 +819,7 @@ export default function HomePage() {
           <div className="space-y-8 sm:space-y-8">
             <div className="flex flex-col gap-3.5 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm uppercase tracking-[0.34em] text-gold/85">{hero.eyebrow}</p>
-              <div className="inline-flex w-fit rounded-full border border-white/10 bg-white/[0.03] p-1">
+              <div className="hidden w-fit rounded-full border border-white/10 bg-white/[0.03] p-1 md:inline-flex">
                 {languageButtons.map((button) => (
                   <button
                     key={button.key}
@@ -861,8 +863,23 @@ export default function HomePage() {
                 onClick={scrollToStateCheck}
                 className="inline-flex min-h-[44px] items-center justify-center rounded-full px-3 py-2 text-[13px] font-medium text-white/60 transition duration-300 hover:text-white"
               >
-                {language === "jp" ? "静かに見てみる" : language === "kr" ? "조용히 둘러보기" : "Explore Quietly"}
+                {hero.secondary}
               </button>
+            </div>
+
+            <div className="inline-flex w-fit rounded-full border border-white/10 bg-white/[0.03] p-1 md:hidden">
+              {languageButtons.map((button) => (
+                <button
+                  key={button.key}
+                  type="button"
+                  onClick={() => setLanguage(button.key)}
+                  className={`rounded-full px-3 py-1.5 text-xs font-semibold tracking-[0.2em] transition ${
+                    button.key === language ? "bg-white text-ink" : "text-white/68 hover:text-white"
+                  }`}
+                >
+                  {button.label}
+                </button>
+              ))}
             </div>
 
             <p className="text-[12px] leading-6 text-white/50">{hero.trust}</p>
