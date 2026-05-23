@@ -137,7 +137,7 @@ export const siteCopy = {
       ],
       mobileMenu: [
         { href: "/", label: "ホーム" },
-        { href: "/#one-minute-experience", label: "1分瞑想" },
+        { href: "/#one-minute-experience", label: "1分リカバリー" },
         { href: "/#ai-rhythm-coach", label: "AIコーチ" },
         { href: "/pricing", label: "料金" },
         { href: "/program/basic", label: "プログラム" },
@@ -1002,7 +1002,7 @@ export const siteCopy = {
       ],
       mobileMenu: [
         { href: "/", label: "홈" },
-        { href: "/#one-minute-experience", label: "1분 명상" },
+        { href: "/#one-minute-experience", label: "1분 리커버리" },
         { href: "/#ai-rhythm-coach", label: "AI 코치" },
         { href: "/pricing", label: "요금" },
         { href: "/program/basic", label: "프로그램" },
@@ -1867,7 +1867,7 @@ export const siteCopy = {
       ],
       mobileMenu: [
         { href: "/", label: "Home" },
-        { href: "/#one-minute-experience", label: "1-Minute Meditation" },
+        { href: "/#one-minute-experience", label: "1-Minute Recovery" },
         { href: "/#ai-rhythm-coach", label: "AI Coach" },
         { href: "/pricing", label: "Pricing" },
         { href: "/program/basic", label: "Programs" },

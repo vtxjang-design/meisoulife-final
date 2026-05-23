@@ -36,7 +36,7 @@ const heroCopy = {
       "少し立ち止まり、\n自分のリズムへ戻る\n静かな場所。\n\n急がなくても大丈夫です。",
     subtitle: "無料・60秒・登録不要",
     primary: "1分リカバリーを始める",
-    secondary: "7日リズムを試す",
+    secondary: "静かに見てみる",
     tertiaryGuest: "無料で始める",
     tertiaryFree: "今日のチェックイン",
     tertiaryPaid: "自分のリズムへ戻る",
@@ -48,7 +48,7 @@ const heroCopy = {
   },
   kr: {
     eyebrow: "AI 시대의 인간 회복",
-    title: "AI와 정보에 지친,\n마음과 뇌가 돌아오는 곳.",
+    title: "AI와 정보에 지친,\n마음과 뇌가\n다시 돌아오는 곳.",
     supporting:
       "잠시 멈추고,\n내 리듬으로 돌아오는\n조용한 공간.\n\n서두르지 않아도 괜찮습니다.",
     subtitle: "무료 · 60초 · 가입 불필요",
@@ -65,7 +65,7 @@ const heroCopy = {
   },
   en: {
     eyebrow: "Human Recovery in the AI Age",
-    title: "1-Minute Reset.\nA place where your mind and brain return.",
+    title: "A place where\nyour mind and brain\nreturn.",
     supporting:
       "Pause.\nBreathe.\nReturn to your rhythm.\n\nThere is no need to rush.",
     subtitle: "Free · 60 seconds · No signup",
@@ -888,10 +888,10 @@ export default function HomePage() {
         </section>
       ) : null}
 
-      <section className="section-shell pt-6 sm:pt-20">
+      <section className="section-shell pt-4 sm:pt-20">
         <div className="grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
-          <div className="space-y-6 sm:space-y-8">
-            <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="space-y-5 sm:space-y-8">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm uppercase tracking-[0.34em] text-gold/85">{hero.eyebrow}</p>
               <div className="hidden w-fit rounded-full border border-white/10 bg-white/[0.03] p-1 md:inline-flex">
                 {languageButtons.map((button) => (
@@ -909,37 +909,22 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="inline-flex w-fit rounded-full border border-white/8 bg-white/[0.02] p-0.5 md:hidden">
-              {languageButtons.map((button) => (
-                <button
-                  key={button.key}
-                  type="button"
-                  onClick={() => setLanguage(button.key)}
-                  className={`rounded-full px-2.5 py-1 text-[10px] font-semibold tracking-[0.18em] transition ${
-                    button.key === language ? "bg-white text-ink" : "text-white/62 hover:text-white"
-                  }`}
-                >
-                  {button.label}
-                </button>
-              ))}
-            </div>
-
-            <div className="space-y-4 sm:space-y-7">
+            <div className="space-y-3.5 sm:space-y-7">
               {heroAccentLine ? (
                 <p className="max-w-[12ch] font-serif text-[20px] leading-[1.3] text-gold/84 sm:max-w-none sm:text-[28px] sm:leading-[1.45]">
                   {heroAccentLine}
                 </p>
               ) : null}
-              <h1 className="max-w-[11ch] whitespace-pre-line font-serif text-[28px] leading-[1.22] text-white sm:max-w-[11ch] sm:text-[56px] sm:leading-[1.24] lg:text-[66px] lg:leading-[1.22]">
+              <h1 className="max-w-[10ch] whitespace-pre-line font-serif text-[29px] leading-[1.2] text-white sm:max-w-[11ch] sm:text-[56px] sm:leading-[1.24] lg:text-[66px] lg:leading-[1.22]">
                 {heroMainLines.join("\n")}
               </h1>
-              <p className="max-w-[18ch] whitespace-pre-line text-[13px] leading-[1.9] text-white/62 sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.95]">
+              <p className="max-w-[16ch] whitespace-pre-line text-[13px] leading-[1.82] text-white/62 sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.95]">
                 {hero.supporting}
               </p>
-              <p className="max-w-3xl text-[12px] leading-[1.7] text-white/52 sm:text-xl sm:leading-9">{hero.subtitle}</p>
+              <p className="hidden max-w-3xl text-[12px] leading-[1.7] text-white/52 sm:block sm:text-xl sm:leading-9">{hero.subtitle}</p>
             </div>
 
-            <div className="relative z-20 flex flex-col gap-2 pt-2 sm:flex-row sm:flex-wrap">
+            <div className="relative z-20 flex flex-col gap-2 pt-1.5 sm:flex-row sm:flex-wrap">
               <button
                 type="button"
                 onClick={scrollToOneMinute}
@@ -958,7 +943,7 @@ export default function HomePage() {
 
             <p className="hidden text-[12px] leading-6 text-white/50 sm:block">{hero.trust}</p>
 
-            <p className="max-w-[24ch] text-[13px] leading-7 text-white/52 sm:max-w-none">
+            <p className="max-w-[20ch] text-[12px] leading-6 text-white/52 sm:max-w-none">
               {language === "jp"
                 ? "人生を今日変えなくても大丈夫です。ただ静かな1分だけ。"
                 : language === "kr"
@@ -975,7 +960,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="relative overflow-hidden rounded-[36px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.18),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] p-5 sm:p-6">
+          <div className="relative hidden overflow-hidden rounded-[36px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.18),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] p-5 sm:block sm:p-6">
             <img
               src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1400&q=80"
               alt={hero.visualAlt}

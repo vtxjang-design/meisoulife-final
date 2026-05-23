@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const isHome = pathname === "/";
   const router = useRouter();
   const { language, setLanguage } = useLanguage();
   const { isLoggedIn, authResolved, planResolved, plan, userEmail } = useAuthState();
@@ -22,7 +23,7 @@ export function SiteHeader() {
   const oneMinuteLabel = copy.header.mobileMenu.find((item) => item.href === "/#one-minute-experience")?.label ?? copy.header.nav[0]?.label ?? "1-Minute Recovery";
   const rhythmLabel = copy.header.nav[1]?.label ?? "7-Day Rhythm";
   const mobileTabs = useMemo(() => {
-    if (pathname === "/") {
+    if (isHome) {
       if (isLoggedIn) {
         return [
           { href: "/meditation", label: oneMinuteLabel },
@@ -46,7 +47,7 @@ export function SiteHeader() {
     }
 
     return copy.header.mobileGuestTabs;
-  }, [copy.header.login, copy.header.mobileGuestTabs, copy.header.mobileMemberTabs, copy.header.myPage, isLoggedIn, oneMinuteLabel, pathname, programHref, rhythmLabel]);
+  }, [copy.header.login, copy.header.mobileGuestTabs, copy.header.mobileMemberTabs, copy.header.myPage, isHome, isLoggedIn, oneMinuteLabel, programHref, rhythmLabel]);
   const mobileMenuLinks = useMemo(() => {
     return isLoggedIn ? copy.header.mobileMemberMenu : copy.header.mobileGuestMenu;
   }, [copy.header.mobileGuestMenu, copy.header.mobileMemberMenu, isLoggedIn]);
@@ -160,7 +161,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-ink/80 backdrop-blur-xl">
-      <div className="section-shell flex items-center justify-between gap-4 py-3.5 sm:py-4">
+      <div className="section-shell flex items-center justify-between gap-4 py-3 sm:py-4">
         <Link href="/" className="text-base font-semibold tracking-[0.16em] text-white sm:text-lg sm:tracking-[0.18em]">
           {copy.header.brand}
         </Link>
@@ -179,10 +180,25 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
+          <div className="inline-flex rounded-full border border-white/8 bg-white/[0.02] p-0.5 md:hidden">
+            {languageButtons.map((button) => (
+              <button
+                key={button.key}
+                type="button"
+                onClick={() => setLanguage(button.key)}
+                className={cn(
+                  "rounded-full px-2 py-1 text-[10px] font-semibold tracking-[0.16em] transition duration-300",
+                  language === button.key ? "bg-white text-ink" : "text-white/58 hover:text-white"
+                )}
+              >
+                {button.label}
+              </button>
+            ))}
+          </div>
           <button
             type="button"
             onClick={() => setMobileOpen(true)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-white transition hover:bg-white/[0.08] lg:hidden"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/8 bg-white/[0.02] text-white transition hover:bg-white/[0.06] lg:hidden"
             aria-label={copy.header.menu}
             aria-expanded={mobileOpen}
           >
@@ -249,8 +265,8 @@ export function SiteHeader() {
         </div>
       </div>
       <div className="border-t border-white/6 lg:hidden">
-        <div className="section-shell overflow-x-auto py-2.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <nav className="flex min-w-max items-center gap-1.5">
+        <div className="section-shell overflow-x-auto py-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <nav className="flex min-w-max items-center gap-2">
             {mobileTabs.map((tab) => {
               const active = isActivePath(tab.href);
 
@@ -259,10 +275,10 @@ export function SiteHeader() {
                   key={`${tab.href}-${tab.label}`}
                   href={tab.href}
                   className={cn(
-                    "inline-flex min-h-[34px] items-center whitespace-nowrap rounded-full border px-3.5 py-1.5 text-[13px] font-normal transition",
+                    "inline-flex min-h-[36px] items-center whitespace-nowrap rounded-full border px-3.5 py-1.5 text-[12px] font-medium transition backdrop-blur",
                     active
-                      ? "border-gold/40 bg-gold/[0.08] text-gold"
-                      : "border-white/10 bg-white/[0.03] text-white/72 hover:bg-white/[0.06] hover:text-white"
+                      ? "border-gold/30 bg-gold/[0.08] text-gold"
+                      : "border-white/8 bg-white/[0.025] text-white/70 hover:bg-white/[0.05] hover:text-white"
                   )}
                 >
                   {tab.label}
