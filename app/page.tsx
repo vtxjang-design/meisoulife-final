@@ -896,9 +896,9 @@ export default function HomePage() {
         </div>
         <div className="grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
           <div className="space-y-5 sm:space-y-8">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm uppercase tracking-[0.34em] text-gold/85">{hero.eyebrow}</p>
-              <div className="hidden w-fit rounded-full border border-white/10 bg-white/[0.03] p-1 md:inline-flex">
+              <div className="hidden w-fit rounded-full border border-white/10 bg-white/[0.03] p-1 md:inline-flex lg:hidden">
                 {languageButtons.map((button) => (
                   <button
                     key={button.key}
@@ -914,7 +914,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="space-y-3.5 sm:space-y-7">
+            <div className="space-y-3.5 sm:space-y-6 lg:space-y-7">
               {heroAccentLine ? (
                 <p className="max-w-[12ch] font-serif text-[20px] leading-[1.3] text-gold/84 sm:max-w-none sm:text-[28px] sm:leading-[1.45]">
                   {heroAccentLine}

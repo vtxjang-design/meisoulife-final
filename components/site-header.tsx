@@ -210,7 +210,7 @@ export function SiteHeader() {
               <span className="absolute left-0 top-3 h-[2px] w-5 rounded-full bg-current" />
             </span>
           </button>
-          <div className="hidden rounded-full border border-white/10 bg-white/[0.03] p-1 md:inline-flex">
+          <div className="hidden rounded-full border border-white/10 bg-white/[0.03] p-1 lg:inline-flex">
             {languageButtons.map((button) => (
               <button
                 key={button.key}
