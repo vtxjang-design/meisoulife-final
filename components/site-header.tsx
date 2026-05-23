@@ -180,7 +180,7 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <div className="inline-flex rounded-full border border-white/8 bg-white/[0.02] p-0.5 md:hidden">
+          <div className="inline-flex rounded-full bg-white/[0.02] p-0.5 backdrop-blur md:hidden">
             {languageButtons.map((button) => (
               <button
                 key={button.key}
@@ -188,7 +188,9 @@ export function SiteHeader() {
                 onClick={() => setLanguage(button.key)}
                 className={cn(
                   "rounded-full px-2 py-1 text-[10px] font-semibold tracking-[0.16em] transition duration-300",
-                  language === button.key ? "bg-white text-ink" : "text-white/58 hover:text-white"
+                  language === button.key
+                    ? "bg-white/[0.14] text-white shadow-[0_0_20px_rgba(255,255,255,0.06)]"
+                    : "text-white/65 hover:text-white"
                 )}
               >
                 {button.label}
@@ -198,7 +200,7 @@ export function SiteHeader() {
           <button
             type="button"
             onClick={() => setMobileOpen(true)}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/8 bg-white/[0.02] text-white transition hover:bg-white/[0.06] lg:hidden"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.02] text-white/82 transition hover:bg-white/[0.05] hover:text-white lg:hidden"
             aria-label={copy.header.menu}
             aria-expanded={mobileOpen}
           >
@@ -275,10 +277,10 @@ export function SiteHeader() {
                   key={`${tab.href}-${tab.label}`}
                   href={tab.href}
                   className={cn(
-                    "inline-flex min-h-[36px] items-center whitespace-nowrap rounded-full border px-3.5 py-1.5 text-[12px] font-medium transition backdrop-blur",
+                    "inline-flex min-h-[36px] items-center whitespace-nowrap rounded-full px-3.5 py-1.5 text-[12px] font-medium transition backdrop-blur",
                     active
-                      ? "border-gold/30 bg-gold/[0.08] text-gold"
-                      : "border-white/8 bg-white/[0.025] text-white/70 hover:bg-white/[0.05] hover:text-white"
+                      ? "bg-white/[0.06] text-white"
+                      : "bg-white/[0.035] text-white/72 hover:bg-white/[0.08] hover:text-white"
                   )}
                 >
                   {tab.label}

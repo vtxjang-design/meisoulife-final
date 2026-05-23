@@ -48,7 +48,7 @@ const heroCopy = {
   },
   kr: {
     eyebrow: "AI 시대의 인간 회복",
-    title: "AI와 정보에 지친,\n마음과 뇌가\n다시 돌아오는 곳.",
+    title: "AI와 정보에 지친 하루,\n\n마음과 뇌가\n잠시 쉬어가는 곳.",
     supporting:
       "잠시 멈추고,\n내 리듬으로 돌아오는\n조용한 공간.\n\n서두르지 않아도 괜찮습니다.",
     subtitle: "무료 · 60초 · 가입 불필요",
@@ -928,14 +928,14 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={scrollToOneMinute}
-                className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold px-4.5 py-3 text-[14px] font-semibold text-ink shadow-[0_16px_32px_rgba(212,186,117,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#e7cd92]"
+                className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold/90 px-4.5 py-3 text-[14px] font-semibold text-ink shadow-[0_14px_28px_rgba(212,186,117,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#e7cd92]"
               >
                 {hero.primary}
               </button>
               <button
                 type="button"
                 onClick={scrollToStateCheck}
-                className="inline-flex min-h-[44px] items-center justify-center rounded-full px-3 py-2 text-[13px] font-medium text-white/60 transition duration-300 hover:text-white"
+                className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-white/[0.04] px-3.5 py-2 text-[13px] font-medium text-white/72 transition duration-300 hover:bg-white/[0.08] hover:text-white"
               >
                 {hero.secondary}
               </button>
