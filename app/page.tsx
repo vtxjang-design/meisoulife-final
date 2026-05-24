@@ -12,7 +12,6 @@ import { DailyRhythmLayer } from "@/components/daily-rhythm-layer";
 import { FounderVisionSection } from "@/components/founder-vision-section";
 import { InstantMeditationSection } from "@/components/instant-meditation-section";
 import { LiveTogether } from "@/components/live-together";
-import { MobileCTA } from "@/components/mobile-cta";
 import { RhythmGarden } from "@/components/rhythm-garden";
 import { RhythmChallenge } from "@/components/rhythm-challenge";
 import { SectionHeading } from "@/components/section-heading";
@@ -1578,7 +1577,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <MobileCTA copy={landing.mobile} />
     </div>
   );
 }

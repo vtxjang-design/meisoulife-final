@@ -11,10 +11,9 @@ type ZeroGateSectionProps = {
 const zeroGateCopy = {
   jp: {
     eyebrow: "ZERO GATE — 1分リセット",
-    title: "今、どんな入口が必要ですか？",
+    title: "今のあなたに必要な入口は？",
     description:
       "すぐわかる実用的な入口から始めて、静かな1分の中で自分のリズムへ戻ります。",
-    cta: "この入口から入る",
     gates: [
       { key: "overload", emoji: "🧠⚡", label: "脳過負荷", worldName: "「思考を空ける森」", description: "頭の中が複雑すぎるとき" },
       { key: "anxiety", emoji: "😰", label: "不安", worldName: "「安全の洞窟」", description: "心が不安なとき" },
@@ -29,7 +28,6 @@ const zeroGateCopy = {
     title: "지금 어떤 문이 필요하세요?",
     description:
       "바로 알아볼 수 있는 실용적인 문에서 시작해서, 조용한 1분 안에서 다시 내 리듬으로 돌아갑니다.",
-    cta: "이 문으로 들어가기",
     gates: [
       { key: "overload", emoji: "🧠⚡", label: "뇌과부하", worldName: "「생각 비우는 숲」", description: "머리가 너무 복잡할 때" },
       { key: "anxiety", emoji: "😰", label: "불안", worldName: "「안전의 동굴」", description: "마음이 불안할 때" },
@@ -44,7 +42,6 @@ const zeroGateCopy = {
     title: "What kind of gate do you need right now?",
     description:
       "Begin with a practical entry you can recognize instantly, then return to your rhythm through one quiet minute.",
-    cta: "Enter through this gate",
     gates: [
       { key: "overload", emoji: "🧠⚡", label: "Mental Overload", worldName: '"Forest of Empty Thoughts"', description: "When your mind feels too crowded" },
       { key: "anxiety", emoji: "😰", label: "Anxiety", worldName: '"Cave of Safety"', description: "When your heart feels uneasy" },
@@ -72,7 +69,6 @@ export function ZeroGateSection({ onEnterGate }: ZeroGateSectionProps) {
               label={gate.label}
               worldName={gate.worldName}
               description={gate.description}
-              cta={copy.cta}
               onClick={() => onEnterGate(gate.key)}
             />
           ))}
