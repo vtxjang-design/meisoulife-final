@@ -17,6 +17,7 @@ import { RhythmGarden } from "@/components/rhythm-garden";
 import { RhythmChallenge } from "@/components/rhythm-challenge";
 import { SectionHeading } from "@/components/section-heading";
 import { TogetherAwakeSection } from "@/components/together-awake-section";
+import { ZeroGateSection } from "@/components/zero-gate-section";
 import { getChallengeRhythmProgress, type ChallengeRhythmProgress } from "@/lib/challenge-rhythm";
 import { useLanguage, languageButtons, useSiteCopy } from "@/lib/i18n";
 import { landingCopy } from "@/lib/landing-copy";
@@ -921,6 +922,20 @@ export default function HomePage() {
     });
   }
 
+  function handleZeroGateEnter(gateKey: string) {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(
+        "meisoulife_zero_gate",
+        JSON.stringify({
+          gateKey,
+          enteredAt: new Date().toISOString()
+        })
+      );
+    }
+
+    scrollToOneMinute();
+  }
+
   function scrollToRhythmChallenge() {
     if (typeof window === "undefined") {
       return;
@@ -1110,6 +1125,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <ZeroGateSection onEnterGate={handleZeroGateEnter} />
 
       <section className="section-shell mt-10 sm:mt-14">
         <div className="rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-6 shadow-[0_20px_72px_rgba(7,17,31,0.18)] sm:px-7 sm:py-8">
