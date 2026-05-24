@@ -273,17 +273,17 @@ const finalCtaCopy = {
 const returnEntryCopy = {
   jp: {
     eyebrow: "WELCOME BACK",
-    title: "今日も少し休みに来ましたか？",
+    title: "今日も、少し戻るだけで大丈夫です。",
     guestDescription:
       "ここは、急がなくていい場所です。人生を変えなくても大丈夫。ただ静かな1分から始められます。",
     memberDescription:
-      "この場所は、あなたのリズムを覚えています。昨日の続きからでも、今日の気分からでも始められます。",
+      "ここは、あなたのリズムを続ける場所です。昨日の小さな回復も、今日の静かな1分につながっています。",
     guestPrimary: "1分リカバリーを始める",
     memberPrimary: "今日の1分を続ける",
-    secondary: "今の状態を選ぶ",
+    secondary: "記録を見る",
     cards: {
       recovery: "今日の1分リカバリー",
-      checkIn: "感情のチェックイン",
+      checkIn: "昨日の状態",
       progress: "静かな進み方",
       memory: "この場所はあなたのリズムを覚えています"
     },
@@ -306,17 +306,17 @@ const returnEntryCopy = {
   },
   kr: {
     eyebrow: "WELCOME BACK",
-    title: "오늘도 잠시 쉬러 오셨나요?",
+    title: "오늘도, 조금만 돌아오면 충분합니다.",
     guestDescription:
       "여기는 서두르지 않아도 되는 곳입니다. 삶을 바꾸지 않아도 괜찮아요. 그저 조용한 1분부터 시작하면 됩니다.",
     memberDescription:
-      "이 공간은 당신의 리듬을 기억합니다. 어제의 흐름에서 이어도 좋고, 오늘의 상태에서 다시 시작해도 괜찮습니다.",
+      "이곳은 당신의 리듬을 이어가는 자리입니다. 어제의 작은 회복도 오늘의 조용한 1분으로 이어집니다.",
     guestPrimary: "1분 리커버리 시작",
     memberPrimary: "오늘의 1분 이어가기",
-    secondary: "지금 상태 선택하기",
+    secondary: "기록 보기",
     cards: {
       recovery: "오늘의 1분 리커버리",
-      checkIn: "감정 체크인",
+      checkIn: "어제의 상태",
       progress: "조용한 진행",
       memory: "이곳은 당신의 리듬을 기억합니다"
     },
@@ -339,17 +339,17 @@ const returnEntryCopy = {
   },
   en: {
     eyebrow: "WELCOME BACK",
-    title: "Welcome back.",
+    title: "Today too, a small return is enough.",
     guestDescription:
       "This is a place where you do not have to hurry. You do not have to fix your life today. Just begin with one quiet minute.",
     memberDescription:
-      "This space remembers your rhythm. You can continue from yesterday, or simply begin from how you feel today.",
+      "This is a place to continue your rhythm. Yesterday’s small recovery can carry into today’s quiet minute.",
     guestPrimary: "Start 1-Minute Recovery",
     memberPrimary: "Continue Today’s Quiet Minute",
-    secondary: "Choose My Current State",
+    secondary: "View My Record",
     cards: {
       recovery: "Today’s 1-minute recovery",
-      checkIn: "Emotional check-in",
+      checkIn: "Yesterday’s state",
       progress: "Quiet progress",
       memory: "This space remembers your rhythm"
     },
@@ -369,42 +369,6 @@ const returnEntryCopy = {
       return: "Ready for another quiet minute?",
       alone: "Somewhere else, someone is quietly returning too."
     }
-  }
-} as const;
-
-const quietMinuteCopy = {
-  jp: {
-    eyebrow: "TODAY'S QUIET MINUTE",
-    title: "今日のあなたは、どんな状態ですか？",
-    options: [
-      { key: "tired", emoji: "😮‍💨", label: "少し疲れた", note: "休める1分から始めましょう。" },
-      { key: "overthinking", emoji: "🧠", label: "考えすぎている", note: "まずは呼吸で戻りましょう。" },
-      { key: "rest", emoji: "😴", label: "休みたい", note: "身体をゆるめる1分へ。" },
-      { key: "quiet", emoji: "🌿", label: "ただ静かにいたい", note: "何もしない1分でも大丈夫です。" }
-    ],
-    cta: "1分リカバリーを始める"
-  },
-  kr: {
-    eyebrow: "TODAY'S QUIET MINUTE",
-    title: "오늘 당신은 어떤 상태인가요?",
-    options: [
-      { key: "tired", emoji: "😮‍💨", label: "지쳤어요", note: "쉬어가는 1분부터 시작해요." },
-      { key: "overthinking", emoji: "🧠", label: "생각이 너무 많아요", note: "먼저 호흡으로 돌아가 봅시다." },
-      { key: "rest", emoji: "😴", label: "쉬고 싶어요", note: "몸을 풀어주는 1분으로 가볼게요." },
-      { key: "quiet", emoji: "🌿", label: "그냥 조용히 있고 싶어요", note: "아무것도 하지 않는 1분도 괜찮아요." }
-    ],
-    cta: "1분 리커버리 시작"
-  },
-  en: {
-    eyebrow: "TODAY'S QUIET MINUTE",
-    title: "How are you today?",
-    options: [
-      { key: "tired", emoji: "😮‍💨", label: "I feel tired", note: "Begin with one minute of rest." },
-      { key: "overthinking", emoji: "🧠", label: "I’m overthinking", note: "Return to breath first." },
-      { key: "rest", emoji: "😴", label: "I want to rest", note: "A softer minute is enough." },
-      { key: "quiet", emoji: "🌿", label: "I just want quiet", note: "A silent minute still counts." }
-    ],
-    cta: "Start 1-Minute Recovery"
   }
 } as const;
 
@@ -790,7 +754,6 @@ export default function HomePage() {
   const hero = heroCopy[language];
   const nationalPark = nationalParkCopy[language];
   const returnEntry = returnEntryCopy[language];
-  const quietMinute = quietMinuteCopy[language];
   const quietGarden = quietGardenCopy[language];
   const whyReturn = whyReturnCopy[language];
   const finalCta = finalCtaCopy[language];
@@ -1139,38 +1102,6 @@ export default function HomePage() {
       <ZeroGateSection onEnterGate={handleZeroGateEnter} />
 
       <section className="section-shell mt-10 sm:mt-14">
-        <div className="rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-6 shadow-[0_20px_72px_rgba(7,17,31,0.18)] sm:px-7 sm:py-8">
-          <p className="text-xs uppercase tracking-[0.28em] text-gold/82">{quietMinute.eyebrow}</p>
-          <h2 className="mt-4 font-serif text-2xl leading-tight text-white sm:text-3xl">{quietMinute.title}</h2>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            {quietMinute.options.map((option) => (
-              <button
-                key={option.key}
-                type="button"
-                onClick={scrollToOneMinute}
-                className="flex min-h-[108px] flex-col items-start justify-between rounded-[24px] border border-white/10 bg-white/[0.04] px-4 py-4 text-left transition duration-300 hover:bg-white/[0.06]"
-              >
-                <span className="text-2xl">{option.emoji}</span>
-                <div>
-                  <p className="text-sm font-medium text-white">{option.label}</p>
-                  <p className="mt-2 text-sm leading-6 text-white/60">{option.note}</p>
-                </div>
-              </button>
-            ))}
-          </div>
-          <div className="mt-5">
-            <button
-              type="button"
-              onClick={scrollToOneMinute}
-              className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-gold/18 bg-gold/[0.08] px-5 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12]"
-            >
-              {quietMinute.cta}
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <section className="section-shell mt-10 sm:mt-14">
         <div className="overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-7 shadow-[0_20px_72px_rgba(7,17,31,0.18)] sm:px-8 sm:py-8">
           <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
             <div>
@@ -1190,7 +1121,7 @@ export default function HomePage() {
                 </button>
                 <button
                   type="button"
-                  onClick={scrollToStateCheck}
+                  onClick={isLoggedIn ? handleReturnAction : scrollToRhythmChallenge}
                   className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
                 >
                   {returnEntry.secondary}
@@ -1205,7 +1136,7 @@ export default function HomePage() {
               </article>
               <article className="rounded-[24px] border border-white/10 bg-white/[0.04] p-4">
                 <p className="text-xs uppercase tracking-[0.2em] text-white/46">{returnEntry.cards.checkIn}</p>
-                <p className="mt-3 text-sm leading-7 text-white/72">{landing.dailyRhythmCheck.options[0]?.label}</p>
+                <p className="mt-3 text-sm leading-7 text-white/72">{lastMoodLabel || returnEntry.progress.state}</p>
               </article>
               <article className="rounded-[24px] border border-white/10 bg-white/[0.04] p-4">
                 <p className="text-xs uppercase tracking-[0.2em] text-white/46">{returnEntry.progress.streak}</p>
