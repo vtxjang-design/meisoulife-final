@@ -30,9 +30,9 @@ const AI_COACH_URL =
 const heroCopy = {
   jp: {
     eyebrow: "AI時代の人間回復",
-    title: "AIと情報に疲れた、\n心と脳が静かに\n戻る場所。",
+    title: "AIと情報に疲れた、\n心と脳が静かに戻る場所。",
     supporting:
-      "少し立ち止まり、\n自分のリズムへ戻る。\n\n急がなくても大丈夫です。",
+      "少し立ち止まり、\n自分のリズムへ戻る。\n急がなくても大丈夫です。",
     subtitle: "無料・60秒・登録不要",
     primary: "今の状態を整える",
     secondary: "静かに見てみる",
@@ -1038,16 +1038,16 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="space-y-3.5 sm:space-y-6 lg:space-y-5">
+            <div className="space-y-3.5 sm:space-y-6 lg:space-y-4.5">
               {heroAccentLine ? (
                 <p className="max-w-[12ch] font-serif text-[20px] leading-[1.3] text-gold/84 sm:max-w-none sm:text-[28px] sm:leading-[1.45] lg:text-[30px]">
                   {heroAccentLine}
                 </p>
               ) : null}
-              <h1 className="max-w-[11ch] whitespace-pre-line font-serif text-[29px] leading-[1.22] text-white sm:max-w-[11ch] sm:text-[56px] sm:leading-[1.2] lg:max-w-[620px] lg:text-[64px] lg:leading-[1.12] lg:tracking-[-0.015em] xl:text-[68px]">
+              <h1 className="max-w-[11.5ch] whitespace-pre-line font-serif text-[29px] leading-[1.22] text-white sm:max-w-[11.5ch] sm:text-[56px] sm:leading-[1.18] lg:max-w-[620px] lg:text-[64px] lg:leading-[1.1] lg:tracking-[-0.015em] xl:text-[68px]">
                 {heroMainLines.join("\n")}
               </h1>
-              <p className="max-w-[18ch] whitespace-pre-line text-[13px] leading-[1.8] text-white/66 sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.9] lg:max-w-[420px] lg:text-[17px] lg:leading-[1.86] lg:text-white/82">
+              <p className="max-w-[18ch] whitespace-pre-line text-[13px] leading-[1.72] text-white/66 sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.82] lg:max-w-[420px] lg:text-[17px] lg:leading-[1.78] lg:text-white/82">
                 {hero.supporting}
               </p>
               <p className="max-w-[22ch] text-[11px] leading-5 text-white/48 sm:max-w-none sm:text-xl sm:leading-9 lg:text-[13px] lg:leading-7 lg:text-white/56">
@@ -1055,7 +1055,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="relative z-20 flex flex-col gap-2 pt-1 sm:flex-row sm:flex-wrap lg:gap-5 lg:pt-2">
+            <div className="relative z-20 flex flex-col gap-2 pt-1.5 sm:flex-row sm:flex-wrap lg:gap-5 lg:pt-2.5">
               <button
                 type="button"
                 onClick={scrollToZeroGate}
@@ -1072,7 +1072,7 @@ export default function HomePage() {
               </button>
             </div>
 
-            <p className="hidden max-w-[28ch] text-[12px] leading-6 text-white/50 sm:max-w-none lg:block lg:text-[13px] lg:leading-7 lg:text-white/54">
+            <p className="hidden max-w-[28ch] text-[12px] leading-6 text-white/50 sm:max-w-none lg:block lg:pt-0.5 lg:text-[13px] lg:leading-7 lg:text-white/54">
               {language === "jp"
                 ? "人生を今日変えなくても大丈夫です。ただ静かな1分だけ。"
                 : language === "kr"
