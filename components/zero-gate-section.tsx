@@ -11,7 +11,7 @@ type ZeroGateSectionProps = {
 const zeroGateCopy = {
   jp: {
     eyebrow: "ZERO GATE — 1分リセット",
-    title: "今のあなたに必要な入口は？",
+    title: "今のあなたは、どこから整えますか？",
     description:
       "すぐわかる実用的な入口から始めて、静かな1分の中で自分のリズムへ戻ります。",
     gates: [
