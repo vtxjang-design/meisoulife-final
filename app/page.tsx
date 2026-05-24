@@ -294,9 +294,10 @@ const returnEntryCopy = {
       waiting: "ここには、あなたの戻る場所があります。"
     },
     progress: {
-      streak: "続いている静かな日々",
+      streak: "静かな歩み",
       challenge: "7日トレイル",
-      state: "昨日の気配"
+      state: "昨日の気配",
+      firstDay: "今日で1日目"
     },
     memory: {
       calm: "昨日は少し落ち着きを選びました。",
@@ -327,9 +328,10 @@ const returnEntryCopy = {
       waiting: "여기에는 당신이 돌아올 자리가 있습니다."
     },
     progress: {
-      streak: "이어지고 있는 조용한 날들",
+      streak: "조용한 걸음",
       challenge: "7일 트레일",
-      state: "어제의 기분"
+      state: "어제의 기분",
+      firstDay: "오늘이 첫 걸음"
     },
     memory: {
       calm: "어제는 조금 차분함을 선택했어요.",
@@ -360,9 +362,10 @@ const returnEntryCopy = {
       waiting: "Your quiet place is here."
     },
     progress: {
-      streak: "Quiet days continuing",
+      streak: "Quiet steps",
       challenge: "7-day trail",
-      state: "Yesterday’s feeling"
+      state: "Yesterday’s feeling",
+      firstDay: "Today is day one"
     },
     memory: {
       calm: "Yesterday you chose a little calm.",
@@ -1140,7 +1143,11 @@ export default function HomePage() {
               </article>
               <article className="rounded-[24px] border border-white/10 bg-white/[0.04] p-4">
                 <p className="text-xs uppercase tracking-[0.2em] text-white/46">{returnEntry.progress.streak}</p>
-                <p className="mt-3 text-lg text-white/84">{Math.max(returnRhythm.streakCount, 1)} {landing.garden.dayUnit}</p>
+                <p className="mt-3 text-lg text-white/84">
+                  {Math.max(returnRhythm.streakCount, 1) <= 1
+                    ? returnEntry.progress.firstDay
+                    : `${Math.max(returnRhythm.streakCount, 1)} ${landing.garden.dayUnit}`}
+                </p>
                 <p className="mt-1 text-sm leading-7 text-white/58">
                   {returnEntry.progress.challenge} · {challengeProgress.completedDays.length}/7
                 </p>

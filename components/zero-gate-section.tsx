@@ -11,7 +11,7 @@ type ZeroGateSectionProps = {
 const zeroGateCopy = {
   jp: {
     eyebrow: "ZERO GATE — 1分リセット",
-    title: "今のあなたは、どこから整えますか？",
+    title: "今のあなたは、\nどこから整えますか？",
     description:
       "すぐわかる実用的な入口から始めて、静かな1分の中で自分のリズムへ戻ります。",
     gates: [
@@ -58,12 +58,13 @@ export function ZeroGateSection({ onEnterGate }: ZeroGateSectionProps) {
   const copy = zeroGateCopy[language];
 
   return (
-    <section id="zero-gate" className="section-shell mt-12 scroll-mt-24 sm:mt-15">
-      <div className="rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_26%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-7.5 shadow-[0_24px_80px_rgba(7,17,31,0.22)] sm:px-7 sm:py-8.5 lg:px-8 lg:py-9">
-        <div className="max-w-[24ch] sm:max-w-3xl">
+    <section id="zero-gate" className="section-shell mt-12 scroll-mt-24 sm:mt-14">
+      <div className="rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_26%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-7 shadow-[0_24px_80px_rgba(7,17,31,0.22)] sm:px-7 sm:py-8 lg:px-8 lg:py-8.5">
+        <div className="max-w-[20ch] sm:max-w-3xl">
           <SectionHeading eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
         </div>
-        <div className="mt-6 grid grid-cols-2 gap-3 xl:grid-cols-3 xl:gap-4">
+        <p className="mt-5 text-sm leading-7 text-white/48">少しずつで、大丈夫です。</p>
+        <div className="mt-5 grid grid-cols-2 gap-3 xl:grid-cols-3 xl:gap-4">
           {copy.gates.map((gate) => (
             <GateCard
               key={gate.key}
