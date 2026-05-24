@@ -61,10 +61,10 @@ export function ZeroGateSection({ onEnterGate }: ZeroGateSectionProps) {
   const copy = zeroGateCopy[language];
 
   return (
-    <section className="section-shell mt-10 sm:mt-14">
+    <section id="zero-gate" className="section-shell mt-10 scroll-mt-24 sm:mt-14">
       <div className="rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_26%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-7 shadow-[0_24px_80px_rgba(7,17,31,0.22)] sm:px-7 sm:py-8 lg:px-8 lg:py-9">
         <SectionHeading eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
-        <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3 xl:gap-4">
+        <div className="mt-6 grid grid-cols-2 gap-3 xl:grid-cols-3 xl:gap-4">
           {copy.gates.map((gate) => (
             <GateCard
               key={gate.key}

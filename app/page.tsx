@@ -35,7 +35,7 @@ const heroCopy = {
     supporting:
       "少し立ち止まり、\n自分のリズムへ戻る。\n\n急がなくても大丈夫です。",
     subtitle: "無料・60秒・登録不要",
-    primary: "1分リカバリーを始める",
+    primary: "今の状態を整える",
     secondary: "静かに見てみる",
     tertiaryGuest: "無料で始める",
     tertiaryFree: "今日のチェックイン",
@@ -52,7 +52,7 @@ const heroCopy = {
     supporting:
       "잠시 멈추고,\n내 리듬으로 돌아오는\n조용한 공간.\n\n서두르지 않아도 괜찮습니다.",
     subtitle: "무료 · 60초 · 가입 불필요",
-    primary: "1분 리커버리 시작",
+    primary: "오늘의 입구를 고르기",
     secondary: "조용히 둘러보기",
     tertiaryGuest: "무료로 시작하기",
     tertiaryFree: "오늘의 체크인",
@@ -69,7 +69,7 @@ const heroCopy = {
     supporting:
       "Pause.\nBreathe.\nReturn to your rhythm.\n\nThere is no need to rush.",
     subtitle: "Free · 60 seconds · No signup",
-    primary: "Start 1-Minute Recovery",
+    primary: "Choose Today’s Gate",
     secondary: "Explore Quietly",
     tertiaryGuest: "Start Free",
     tertiaryFree: "Today's Check-In",
@@ -922,6 +922,17 @@ export default function HomePage() {
     });
   }
 
+  function scrollToZeroGate() {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    document.querySelector("#zero-gate")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
   function handleZeroGateEnter(gateKey: string) {
     if (typeof window !== "undefined") {
       window.localStorage.setItem(
@@ -1048,7 +1059,7 @@ export default function HomePage() {
             <div className="relative z-20 flex flex-col gap-2 pt-1 sm:flex-row sm:flex-wrap lg:gap-5 lg:pt-2">
               <button
                 type="button"
-                onClick={scrollToOneMinute}
+                onClick={scrollToZeroGate}
                 className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold/90 px-4.5 py-3 text-[14px] font-semibold leading-none text-ink shadow-[0_14px_30px_rgba(212,186,117,0.16)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#e7cd92] lg:min-h-[60px] lg:px-9 lg:text-[17px] lg:shadow-[0_18px_36px_rgba(212,186,117,0.18)]"
               >
                 {hero.primary}

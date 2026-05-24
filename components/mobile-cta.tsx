@@ -48,7 +48,7 @@ export function MobileCTA({ copy }: MobileCTAProps) {
         {open ? (
           <div className="glass-panel flex w-[168px] flex-col gap-2 rounded-[22px] border border-white/10 px-2 py-2 shadow-[0_20px_50px_rgba(7,17,31,0.32)]">
             <Link
-              href="#one-minute-experience"
+              href="#zero-gate"
               onClick={() => setOpen(false)}
               className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-gold px-4 text-sm font-semibold text-ink"
             >

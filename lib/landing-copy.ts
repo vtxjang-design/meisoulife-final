@@ -711,8 +711,8 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       ]
     },
     mobile: {
-      trigger: "今日の1分",
-      meditate: "1分体験",
+      trigger: "1分入口",
+      meditate: "ZERO開始",
       askAi: "AIに聞く"
     }
   },
@@ -1190,8 +1190,8 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       ]
     },
     mobile: {
-      trigger: "오늘의 1분",
-      meditate: "1분 체험",
+      trigger: "1분 입구",
+      meditate: "ZERO 시작",
       askAi: "AI에게 묻기"
     }
   },
@@ -1669,8 +1669,8 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       ]
     },
     mobile: {
-      trigger: "Today’s Minute",
-      meditate: "1-minute trial",
+      trigger: "Minute Gate",
+      meditate: "Start ZERO",
       askAi: "Ask AI"
     }
   }
