@@ -17,7 +17,7 @@ type LanguageContextValue = {
   setLanguage: (language: Language) => void;
 };
 
-type LocaleRecord<T> = Partial<Record<Language, T>>;
+type LocaleRecord<T = unknown> = Partial<Record<Language, T>>;
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
@@ -55,14 +55,14 @@ function mergeLocaleValue<T>(fallback: T, localized: unknown): T {
   return localized as T;
 }
 
-export function getLocaleCopy<T>(copy: LocaleRecord<T>, language: Language): T {
-  const fallback = copy.en ?? copy.jp ?? copy.kr;
+export function getLocaleCopy<T extends LocaleRecord>(copy: T, language: Language): NonNullable<T["en"] | T["jp"] | T["kr"]> {
+  const fallback = (copy.en ?? copy.jp ?? copy.kr) as NonNullable<T["en"] | T["jp"] | T["kr"]>;
 
   if (!fallback) {
     throw new Error("Locale copy requires at least one language entry.");
   }
 
-  return mergeLocaleValue(fallback, copy[language]);
+  return mergeLocaleValue(fallback, copy[language]) as NonNullable<T["en"] | T["jp"] | T["kr"]>;
 }
 
 function getHtmlLanguage(language: Language) {
@@ -134,7 +134,7 @@ export function useLanguage() {
   return context;
 }
 
-export function useLocaleCopy<T>(copy: LocaleRecord<T>) {
+export function useLocaleCopy<T extends LocaleRecord>(copy: T) {
   const { language } = useLanguage();
 
   return useMemo(() => getLocaleCopy(copy, language), [copy, language]);
@@ -911,7 +911,8 @@ export const siteCopy = {
       soundOn: "自然音 ON",
       soundOff: "自然音 OFF",
       vibrationOn: "振動を入れる",
-      vibrationOff: "振動を消す"
+      vibrationOff: "振動を消す",
+      natureLabel: "自然のリズムとともに呼吸する"
     },
     premiumPage: {
       successBadge: "決済が完了しました",
@@ -1776,7 +1777,8 @@ export const siteCopy = {
       soundOn: "자연음 ON",
       soundOff: "자연음 OFF",
       vibrationOn: "진동 켜기",
-      vibrationOff: "진동 끄기"
+      vibrationOff: "진동 끄기",
+      natureLabel: "자연의 리듬과 함께 호흡하기"
     },
     premiumPage: {
       successBadge: "결제가 완료되었습니다",
@@ -2641,7 +2643,8 @@ export const siteCopy = {
       soundOn: "Nature ON",
       soundOff: "Nature OFF",
       vibrationOn: "Vibration on",
-      vibrationOff: "Vibration off"
+      vibrationOff: "Vibration off",
+      natureLabel: "Breathe with the rhythm of nature"
     },
     premiumPage: {
       successBadge: "Payment completed",
