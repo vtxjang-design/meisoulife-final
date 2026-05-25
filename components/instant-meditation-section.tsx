@@ -5,7 +5,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { BreathingCircle } from "@/components/breathing-circle";
 import { SectionHeading } from "@/components/section-heading";
 import type { LandingCopy } from "@/lib/landing-copy";
-import { startAmbientNatureAudio, stopAmbientNatureAudio } from "@/lib/meditation-ambient-audio";
 import { handleMeditationComplete as playMeditationCompletion } from "@/lib/meditation-completion";
 import { markDailyRhythmCompleted } from "@/lib/return-rhythm";
 
@@ -124,13 +123,11 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const [running, setRunning] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(TOTAL_SECONDS);
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const [audioError, setAudioError] = useState("");
   const [hasUserGesture, setHasUserGesture] = useState(false);
   const [selectedMood, setSelectedMood] = useState("");
   const [selectedGate, setSelectedGate] = useState<SanctuaryGateKey>(DEFAULT_SANCTUARY);
   const [videoSourceIndex, setVideoSourceIndex] = useState(0);
   const audioContextRef = useRef<AudioContext | null>(null);
-  const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const completionHandledRef = useRef(false);
 
@@ -179,7 +176,6 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   useEffect(() => {
     return () => {
       videoRef.current?.pause();
-      stopAmbientNatureAudio(ambientAudioRef);
       audioContextRef.current?.close().catch(() => undefined);
       audioContextRef.current = null;
     };
@@ -218,21 +214,41 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const sanctuaryVisual = sanctuaryVisuals[selectedGate];
   const activeVideoSource = sanctuaryVisual.sources[Math.min(videoSourceIndex, sanctuaryVisual.sources.length - 1)];
 
+  async function syncVideoAudio(nextRunning: boolean, nextSoundEnabled: boolean) {
+    const video = videoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    if (!nextRunning) {
+      video.muted = true;
+      video.volume = 0;
+      return;
+    }
+
+    video.volume = nextSoundEnabled ? 1 : 0;
+    video.muted = !nextSoundEnabled;
+
+    try {
+      await video.play();
+    } catch (error) {
+      console.warn("Sanctuary video playback fell back to muted mode", error);
+      video.muted = true;
+      video.volume = 0;
+    }
+  }
+
+  useEffect(() => {
+    void syncVideoAudio(running, soundEnabled);
+  }, [activeVideoSource, running, soundEnabled]);
+
   async function startMeditationExperience() {
     setHasUserGesture(true);
-    setAudioError("");
 
     if (secondsLeft === 0) {
       setSecondsLeft(TOTAL_SECONDS);
       completionHandledRef.current = false;
-    }
-
-    if (soundEnabled) {
-      const result = await startAmbientNatureAudio(ambientAudioRef, true);
-
-      if (!result.started) {
-        setAudioError(copy.audioError);
-      }
     }
 
     setRunning(true);
@@ -241,7 +257,6 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   async function handleStartPause() {
     if (running) {
       setRunning(false);
-      await stopAmbientNatureAudio(ambientAudioRef);
       return;
     }
 
@@ -252,34 +267,9 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     const next = !soundEnabled;
     setSoundEnabled(next);
     setHasUserGesture(true);
-    setAudioError("");
-
-    if (!next) {
-      await stopAmbientNatureAudio(ambientAudioRef);
-      return;
-    }
-
-    if (running) {
-      const result = await startAmbientNatureAudio(ambientAudioRef, true);
-
-      if (!result.started) {
-        setAudioError(copy.audioError);
-      }
-    }
-  }
-
-  async function handleRetryAudio() {
-    setHasUserGesture(true);
-    setAudioError("");
-    const result = await startAmbientNatureAudio(ambientAudioRef, soundEnabled);
-
-    if (!result.started) {
-      setAudioError(copy.audioError);
-    }
   }
 
   async function handleMeditationComplete() {
-    await stopAmbientNatureAudio(ambientAudioRef);
     await playMeditationCompletion({
       hasUserGesture,
       soundEnabled,
@@ -365,18 +355,6 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                   </div>
                   {selectedMood ? <p className="mt-3 text-sm leading-7 text-white/56">{copy.moodSaved}</p> : null}
                 </div>
-              </div>
-            ) : null}
-            {audioError ? (
-              <div className="rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-3">
-                <p className="text-sm leading-7 text-white/62">{audioError}</p>
-                <button
-                  type="button"
-                  onClick={handleRetryAudio}
-                  className="mt-3 inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-4 py-2 text-sm font-medium text-white/78 transition hover:bg-white/[0.06] hover:text-white"
-                >
-                  {copy.retryAudio}
-                </button>
               </div>
             ) : null}
             <div className="flex flex-col gap-3">
