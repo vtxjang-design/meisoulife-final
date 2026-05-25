@@ -976,21 +976,22 @@ export default function HomePage() {
       ) : null}
 
       <section className="section-shell relative overflow-hidden pt-3 sm:pt-20">
-        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[440px] sm:hidden">
-          <div className="absolute left-[6%] top-8 h-32 w-32 rounded-full bg-gold/[0.1] blur-[72px]" />
-          <div className="absolute right-[6%] top-18 h-44 w-44 rounded-full bg-emerald-200/[0.08] blur-[88px]" />
-          <div className="absolute right-[-18%] top-[-5%] h-[236px] w-[58%] overflow-hidden opacity-[0.16] mix-blend-screen">
+        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[456px] sm:hidden">
+          <div className="absolute left-[4%] top-8 h-32 w-32 rounded-full bg-gold/[0.12] blur-[78px]" />
+          <div className="absolute right-[2%] top-16 h-52 w-52 rounded-full bg-emerald-200/[0.1] blur-[96px]" />
+          <div className="absolute right-[-14%] top-[-4%] h-[252px] w-[64%] overflow-hidden opacity-[0.22] mix-blend-screen">
             <img
               src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80"
               alt=""
               aria-hidden="true"
-              className="h-full w-full scale-[1.12] object-cover blur-[3px] [mask-image:radial-gradient(ellipse_at_30%_42%,rgba(0,0,0,0.94)_0%,rgba(0,0,0,0.76)_28%,rgba(0,0,0,0.38)_54%,transparent_84%)] [-webkit-mask-image:radial-gradient(ellipse_at_30%_42%,rgba(0,0,0,0.94)_0%,rgba(0,0,0,0.76)_28%,rgba(0,0,0,0.38)_54%,transparent_84%)]"
+              className="h-full w-full scale-[1.16] object-cover blur-[3.5px] [mask-image:radial-gradient(ellipse_at_28%_42%,rgba(0,0,0,0.96)_0%,rgba(0,0,0,0.84)_26%,rgba(0,0,0,0.5)_54%,transparent_86%)] [-webkit-mask-image:radial-gradient(ellipse_at_28%_42%,rgba(0,0,0,0.96)_0%,rgba(0,0,0,0.84)_26%,rgba(0,0,0,0.5)_54%,transparent_86%)]"
             />
           </div>
-          <div className="absolute right-[10%] top-10 h-36 w-24 rounded-full bg-white/[0.025] blur-[72px]" />
-          <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.1),transparent_34%),linear-gradient(180deg,rgba(7,16,28,0.06),rgba(7,16,28,0.02)_32%,rgba(7,16,28,0))]" />
-          <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_82%_16%,rgba(126,162,171,0.12),transparent_20%),radial-gradient(circle_at_78%_28%,rgba(255,246,214,0.06),transparent_16%),linear-gradient(90deg,rgba(5,18,24,0.02)_0%,rgba(5,18,24,0.08)_38%,rgba(5,18,24,0.2)_100%)]" />
-          <div className="absolute inset-x-0 top-0 h-full bg-[linear-gradient(90deg,rgba(5,16,24,0)_0%,rgba(5,16,24,0.02)_38%,rgba(5,16,24,0.16)_74%,rgba(5,16,24,0.3)_100%),linear-gradient(180deg,rgba(5,18,24,0.02),rgba(5,18,24,0.16)_48%,rgba(5,18,24,0))]" />
+          <div className="absolute right-[8%] top-8 h-40 w-28 rounded-full bg-white/[0.028] blur-[82px]" />
+          <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_34%),linear-gradient(180deg,rgba(7,16,28,0.04),rgba(7,16,28,0.02)_28%,rgba(7,16,28,0))]" />
+          <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_84%_18%,rgba(126,162,171,0.16),transparent_22%),radial-gradient(circle_at_78%_30%,rgba(255,246,214,0.08),transparent_18%),linear-gradient(90deg,rgba(5,18,24,0.01)_0%,rgba(5,18,24,0.07)_26%,rgba(5,18,24,0.18)_56%,rgba(5,18,24,0.3)_100%)]" />
+          <div className="absolute inset-x-0 top-0 h-full bg-[linear-gradient(90deg,rgba(5,16,24,0)_0%,rgba(5,16,24,0.01)_24%,rgba(5,16,24,0.12)_54%,rgba(5,16,24,0.32)_100%),linear-gradient(180deg,rgba(5,18,24,0.02),rgba(5,18,24,0.12)_42%,rgba(5,18,24,0.28)_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_88%_54%,rgba(8,28,36,0.18),transparent_22%),linear-gradient(180deg,transparent_0%,rgba(3,10,18,0.06)_48%,rgba(3,10,18,0.22)_100%)]" />
         </div>
         <div className="grid gap-8 lg:grid-cols-[1.24fr_0.76fr] lg:items-center lg:gap-16 xl:gap-20">
           <div className="space-y-5 sm:space-y-8 lg:space-y-9">
@@ -1018,10 +1019,10 @@ export default function HomePage() {
                   {heroAccentLine}
                 </p>
               ) : null}
-              <h1 className="max-w-[11.5ch] whitespace-pre-line font-serif text-[29px] leading-[1.22] text-white sm:max-w-[11.5ch] sm:text-[56px] sm:leading-[1.18] lg:max-w-[620px] lg:text-[64px] lg:leading-[1.1] lg:tracking-[-0.015em] xl:text-[68px]">
+              <h1 className="max-w-[10.8ch] whitespace-pre-line text-balance font-serif text-[28px] leading-[1.26] tracking-[-0.01em] text-white sm:max-w-[11.5ch] sm:text-[56px] sm:leading-[1.18] lg:max-w-[620px] lg:text-[64px] lg:leading-[1.1] lg:tracking-[-0.015em] xl:text-[68px]">
                 {heroMainLines.join("\n")}
               </h1>
-              <p className="max-w-[18ch] whitespace-pre-line text-[13px] leading-[1.72] text-white/66 sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.82] lg:max-w-[420px] lg:text-[17px] lg:leading-[1.78] lg:text-white/82">
+              <p className="max-w-[16.5ch] whitespace-pre-line text-[13px] leading-[1.84] text-white/68 sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.82] lg:max-w-[420px] lg:text-[17px] lg:leading-[1.78] lg:text-white/82">
                 {hero.supporting}
               </p>
               <p className="max-w-[22ch] text-[11px] leading-5 text-white/48 sm:max-w-none sm:text-xl sm:leading-9 lg:text-[13px] lg:leading-7 lg:text-white/56">

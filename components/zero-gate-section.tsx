@@ -63,15 +63,16 @@ export function ZeroGateSection({ onEnterGate }: ZeroGateSectionProps) {
     <section id="zero-gate" className="section-shell mt-12 scroll-mt-24 sm:mt-14">
       <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_26%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-7 shadow-[0_24px_80px_rgba(7,17,31,0.22)] sm:px-7 sm:py-8 lg:px-8 lg:py-8.5">
         <div className="pointer-events-none absolute inset-0 sm:hidden">
-          <div className="absolute right-[-10%] top-[10%] h-40 w-40 rounded-full bg-emerald-200/[0.06] blur-[78px]" />
-          <div className="absolute left-[-6%] top-0 h-28 w-28 rounded-full bg-gold/[0.08] blur-[64px]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_86%_22%,rgba(126,162,171,0.09),transparent_18%),radial-gradient(circle_at_18%_0%,rgba(212,186,117,0.08),transparent_24%),linear-gradient(180deg,rgba(7,17,31,0.01),rgba(7,17,31,0.12)_62%,rgba(7,17,31,0.18))]" />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,12,22,0.02),rgba(4,12,22,0.08)_24%,rgba(4,12,22,0.22)_100%)]" />
+          <div className="absolute right-[-6%] top-[8%] h-44 w-44 rounded-full bg-emerald-200/[0.08] blur-[86px]" />
+          <div className="absolute left-[-4%] top-[-2%] h-32 w-32 rounded-full bg-gold/[0.1] blur-[72px]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_86%_20%,rgba(126,162,171,0.13),transparent_19%),radial-gradient(circle_at_18%_0%,rgba(212,186,117,0.09),transparent_24%),linear-gradient(180deg,rgba(7,17,31,0.01),rgba(7,17,31,0.08)_18%,rgba(7,17,31,0.15)_58%,rgba(7,17,31,0.24))]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,12,22,0.01),rgba(4,12,22,0.06)_24%,rgba(4,12,22,0.18)_56%,rgba(4,12,22,0.28)_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_68%,rgba(6,23,31,0.18),transparent_24%)]" />
         </div>
-        <div className="relative max-w-[19ch] sm:max-w-3xl">
+        <div className="relative max-w-[17.5ch] sm:max-w-3xl">
           <SectionHeading eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
         </div>
-        <p className="relative mt-5 text-sm leading-7 text-white/48">{copy.encouragement}</p>
+        <p className="relative mt-5 max-w-[18ch] text-sm leading-7 text-white/48 sm:max-w-none">{copy.encouragement}</p>
         <div className="relative mt-5 grid grid-cols-2 gap-3 xl:grid-cols-3 xl:gap-4">
           {copy.gates.map((gate) => (
             <GateCard
