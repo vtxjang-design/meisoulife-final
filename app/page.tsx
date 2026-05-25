@@ -976,20 +976,21 @@ export default function HomePage() {
       ) : null}
 
       <section className="section-shell relative overflow-hidden pt-3 sm:pt-20">
-        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[420px] sm:hidden">
-          <div className="absolute left-[8%] top-10 h-28 w-28 rounded-full bg-gold/[0.08] blur-3xl" />
-          <div className="absolute right-[10%] top-24 h-36 w-36 rounded-full bg-emerald-200/[0.06] blur-3xl" />
-          <div className="absolute right-[-22%] top-[-4%] h-[204px] w-[50%] overflow-hidden opacity-[0.1] mix-blend-screen">
+        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[440px] sm:hidden">
+          <div className="absolute left-[6%] top-8 h-32 w-32 rounded-full bg-gold/[0.1] blur-[72px]" />
+          <div className="absolute right-[6%] top-18 h-44 w-44 rounded-full bg-emerald-200/[0.08] blur-[88px]" />
+          <div className="absolute right-[-18%] top-[-5%] h-[236px] w-[58%] overflow-hidden opacity-[0.16] mix-blend-screen">
             <img
               src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80"
               alt=""
               aria-hidden="true"
-              className="h-full w-full scale-[1.14] object-cover blur-[2px] [mask-image:radial-gradient(ellipse_at_34%_46%,rgba(0,0,0,0.9)_0%,rgba(0,0,0,0.68)_32%,rgba(0,0,0,0.24)_58%,transparent_84%)] [-webkit-mask-image:radial-gradient(ellipse_at_34%_46%,rgba(0,0,0,0.9)_0%,rgba(0,0,0,0.68)_32%,rgba(0,0,0,0.24)_58%,transparent_84%)]"
+              className="h-full w-full scale-[1.12] object-cover blur-[3px] [mask-image:radial-gradient(ellipse_at_30%_42%,rgba(0,0,0,0.94)_0%,rgba(0,0,0,0.76)_28%,rgba(0,0,0,0.38)_54%,transparent_84%)] [-webkit-mask-image:radial-gradient(ellipse_at_30%_42%,rgba(0,0,0,0.94)_0%,rgba(0,0,0,0.76)_28%,rgba(0,0,0,0.38)_54%,transparent_84%)]"
             />
           </div>
-          <div className="absolute right-[11%] top-12 h-28 w-20 rounded-full bg-white/[0.02] blur-3xl" />
-          <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.08),transparent_34%),linear-gradient(180deg,rgba(7,16,28,0.10),rgba(7,16,28,0))]" />
-          <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_76%_14%,rgba(255,246,214,0.055),transparent_18%),linear-gradient(180deg,rgba(5,18,24,0.04),rgba(5,18,24,0.18)_52%,rgba(5,18,24,0))]" />
+          <div className="absolute right-[10%] top-10 h-36 w-24 rounded-full bg-white/[0.025] blur-[72px]" />
+          <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.1),transparent_34%),linear-gradient(180deg,rgba(7,16,28,0.06),rgba(7,16,28,0.02)_32%,rgba(7,16,28,0))]" />
+          <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_82%_16%,rgba(126,162,171,0.12),transparent_20%),radial-gradient(circle_at_78%_28%,rgba(255,246,214,0.06),transparent_16%),linear-gradient(90deg,rgba(5,18,24,0.02)_0%,rgba(5,18,24,0.08)_38%,rgba(5,18,24,0.2)_100%)]" />
+          <div className="absolute inset-x-0 top-0 h-full bg-[linear-gradient(90deg,rgba(5,16,24,0)_0%,rgba(5,16,24,0.02)_38%,rgba(5,16,24,0.16)_74%,rgba(5,16,24,0.3)_100%),linear-gradient(180deg,rgba(5,18,24,0.02),rgba(5,18,24,0.16)_48%,rgba(5,18,24,0))]" />
         </div>
         <div className="grid gap-8 lg:grid-cols-[1.24fr_0.76fr] lg:items-center lg:gap-16 xl:gap-20">
           <div className="space-y-5 sm:space-y-8 lg:space-y-9">
