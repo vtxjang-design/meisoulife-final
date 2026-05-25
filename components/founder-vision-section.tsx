@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { SectionHeading } from "@/components/section-heading";
-import { useLanguage } from "@/lib/i18n";
+import { useLocaleCopy } from "@/lib/i18n";
 
 const founderCopy = {
   jp: {
@@ -22,7 +22,7 @@ const founderCopy = {
     eyebrow: "Secret Forest",
     title: "Brain Education 창시자의 메시지",
     description:
-      "瞑想life는 Brain Education 창시자 ILCHI LEE(이승헌) 선생의 철학을 바탕으로, 사람이 본래 지닌 가능성, 뇌의 주인으로 살아가는 힘, 그리고 공생의 가치를 길러갑니다.",
+      "명상life는 Brain Education 창시자 ILCHI LEE(이승헌) 선생의 철학을 바탕으로, 사람이 본래 지닌 가능성, 뇌의 주인으로 살아가는 힘, 그리고 공생의 가치를 길러갑니다.",
     quote:
       "한 사람 한 사람의 의식 변화가,\n세상을 바꿉니다.",
     chips: ["Brain Ownership", "Hongik Spirit", "Coexistence", "Earth Citizen Consciousness"],
@@ -47,8 +47,7 @@ const founderCopy = {
 } as const;
 
 export function FounderVisionSection() {
-  const { language } = useLanguage();
-  const copy = founderCopy[language];
+  const copy = useLocaleCopy(founderCopy);
 
   return (
     <section className="section-shell mt-24">

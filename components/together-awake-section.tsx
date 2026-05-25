@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { SectionHeading } from "@/components/section-heading";
-import { useLanguage } from "@/lib/i18n";
+import { useLocaleCopy } from "@/lib/i18n";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 const sectionCopy = {
@@ -29,7 +29,7 @@ const sectionCopy = {
     eyebrow: "Summit",
     title: "개인의 회복이,\n함께 깨어나는 힘이 됩니다.",
     description:
-      "瞑想life는 혼자 정돈하는 데서 끝나지 않도록 돕는 자리입니다. 감사, 공생 행동, 자연과의 연결을 조용한 일상 속에서 조금씩 키워갑니다.",
+      "명상life는 혼자 정돈하는 데서 끝나지 않도록 돕는 자리입니다. 감사, 공생 행동, 자연과의 연결을 조용한 일상 속에서 조금씩 키워갑니다.",
     prompts: [
       "오늘 누군가에게 감사를 전했나요?",
       "오늘 자연을 1분 느껴보았나요?",
@@ -64,8 +64,7 @@ const sectionCopy = {
 } as const;
 
 export function TogetherAwakeSection() {
-  const { language } = useLanguage();
-  const copy = sectionCopy[language];
+  const copy = useLocaleCopy(sectionCopy);
   const [hasPaidMembership, setHasPaidMembership] = useState(false);
 
   useEffect(() => {

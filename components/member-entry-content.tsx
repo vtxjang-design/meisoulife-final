@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { useLanguage } from "@/lib/i18n";
+import { useLocaleCopy } from "@/lib/i18n";
 
 type MemberEntryContentProps = {
   lineUrl: string;
@@ -143,7 +143,7 @@ const memberEntryCopy = {
         overwhelmed: "1分呼吸リセット",
         exhausted: "Body Activation",
         unstable: "短い感情リフレクション",
-        stressed: "Temperature Reset",
+        stressed: "1分 温度リセット",
         okay: "1分の感謝リズム",
         energized: "Smile Muscle Activation"
       },
@@ -208,8 +208,8 @@ const memberEntryCopy = {
         { key: "pause", emoji: "🛑", title: "1分 停止", description: "何もしない勇気を持つ", instruction: "今は変えようとせず、そのままの自分をひと呼吸だけ許してみます。" },
         { key: "belly", emoji: "☀️", title: "1分 腸ヒーリング", description: "お腹をゆるめて安心感を戻す", instruction: "お腹に手を当てて、ぬくもりが広がる感じを味わってみてください。" },
         { key: "sleep", emoji: "🌙", title: "1分 睡眠準備", description: "眠る前の緊張をほどく", instruction: "顎と肩の力を抜いて、今日はもう休んでいいと身体に伝えます。" },
-        { key: "smile", emoji: "🙂", title: "Smile Activation", description: "表情筋から気分を整える", instruction: "口角をほんの少し上げて、表情から気分を迎えにいきましょう。" },
-        { key: "temperature", emoji: "💧", title: "Temperature Reset", description: "温度感覚で状態を切り替える", instruction: "水や空気の感覚を思い出しながら、身体の状態が変わる余地をつくります。" }
+        { key: "smile", emoji: "🙂", title: "1分 スマイル活性", description: "表情筋から気分を整える", instruction: "口角をほんの少し上げて、表情から気分を迎えにいきましょう。" },
+        { key: "temperature", emoji: "💧", title: "1分 温度リセット", description: "温度感覚で状態を切り替える", instruction: "水や空気の感覚を思い出しながら、身体の状態が変わる余地をつくります。" }
       ]
     },
     debug: {
@@ -324,7 +324,7 @@ const memberEntryCopy = {
         overwhelmed: "1분 호흡 리셋",
         exhausted: "Body Activation",
         unstable: "짧은 감정 리플렉션",
-        stressed: "Temperature Reset",
+        stressed: "1분 온도 리셋",
         okay: "1분 감사 리듬",
         energized: "Smile Muscle Activation"
       },
@@ -389,8 +389,8 @@ const memberEntryCopy = {
         { key: "pause", emoji: "🛑", title: "1분 멈춤", description: "아무것도 하지 않는 힘 가지기", instruction: "지금은 바꾸려 하지 않고, 이 상태 그대로를 한 호흡만 허용해봅니다." },
         { key: "belly", emoji: "☀️", title: "1분 배 힐링", description: "배를 풀어 안정을 되찾기", instruction: "배 위에 손을 올리고, 따뜻함이 천천히 퍼지는 느낌을 상상해보세요." },
         { key: "sleep", emoji: "🌙", title: "1분 수면 준비", description: "잠들기 전 긴장을 풀기", instruction: "턱과 어깨 힘을 풀고, 이제 쉬어도 된다고 몸에 말해보세요." },
-        { key: "smile", emoji: "🙂", title: "Smile Activation", description: "표정 근육으로 기분을 회복하기", instruction: "입꼬리를 아주 조금 올리며 표정으로부터 마음을 맞이해봅니다." },
-        { key: "temperature", emoji: "💧", title: "Temperature Reset", description: "온도 감각으로 상태 전환하기", instruction: "물이나 공기의 감각을 떠올리며 몸이 바뀔 여지를 만들어보세요." }
+        { key: "smile", emoji: "🙂", title: "1분 스마일 활성", description: "표정 근육으로 기분을 회복하기", instruction: "입꼬리를 아주 조금 올리며 표정으로부터 마음을 맞이해봅니다." },
+        { key: "temperature", emoji: "💧", title: "1분 온도 리셋", description: "온도 감각으로 상태 전환하기", instruction: "물이나 공기의 감각을 떠올리며 몸이 바뀔 여지를 만들어보세요." }
       ]
     },
     debug: {
@@ -600,8 +600,7 @@ export function MemberEntryContent({
   initialPlan,
   initialEmail
 }: MemberEntryContentProps) {
-  const { language } = useLanguage();
-  const copy = memberEntryCopy[language];
+  const copy = useLocaleCopy(memberEntryCopy);
   const [authState, setAuthState] = useState<AuthState>("idle");
   const [email, setEmail] = useState("");
   const [showLogin, setShowLogin] = useState(false);

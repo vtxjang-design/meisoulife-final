@@ -17,7 +17,53 @@ type LanguageContextValue = {
   setLanguage: (language: Language) => void;
 };
 
+type LocaleRecord<T> = Partial<Record<Language, T>>;
+
 const LanguageContext = createContext<LanguageContextValue | null>(null);
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function mergeLocaleValue<T>(fallback: T, localized: unknown): T {
+  if (localized === undefined) {
+    return fallback;
+  }
+
+  if (Array.isArray(fallback)) {
+    return (Array.isArray(localized) ? localized : fallback) as T;
+  }
+
+  if (isPlainObject(fallback) && isPlainObject(localized)) {
+    const result: Record<string, unknown> = { ...fallback };
+
+    for (const key of Object.keys(localized)) {
+      const localizedValue = localized[key];
+      const fallbackValue = result[key];
+
+      if (fallbackValue === undefined) {
+        result[key] = localizedValue;
+        continue;
+      }
+
+      result[key] = mergeLocaleValue(fallbackValue, localizedValue);
+    }
+
+    return result as T;
+  }
+
+  return localized as T;
+}
+
+export function getLocaleCopy<T>(copy: LocaleRecord<T>, language: Language): T {
+  const fallback = copy.en ?? copy.jp ?? copy.kr;
+
+  if (!fallback) {
+    throw new Error("Locale copy requires at least one language entry.");
+  }
+
+  return mergeLocaleValue(fallback, copy[language]);
+}
 
 function getHtmlLanguage(language: Language) {
   if (language === "kr") {
@@ -86,6 +132,12 @@ export function useLanguage() {
   }
 
   return context;
+}
+
+export function useLocaleCopy<T>(copy: LocaleRecord<T>) {
+  const { language } = useLanguage();
+
+  return useMemo(() => getLocaleCopy(copy, language), [copy, language]);
 }
 
 export const siteCopy = {
@@ -2689,5 +2741,5 @@ export const siteCopy = {
 export function useSiteCopy() {
   const { language } = useLanguage();
 
-  return siteCopy[language];
+  return getLocaleCopy(siteCopy, language);
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useLanguage } from "@/lib/i18n";
+import { useLocaleCopy } from "@/lib/i18n";
 
 type PlanKey = "free" | "basic" | "growth" | "inner_circle";
 
@@ -150,8 +150,7 @@ export function MemberDashboard({
   challengeStarted = false,
   registeredEmail
 }: MemberDashboardProps) {
-  const { language } = useLanguage();
-  const copy = dashboardCopy[language];
+  const copy = useLocaleCopy(dashboardCopy);
   const safeChallengeDay = Math.min(Math.max(challengeDay, 1), 7);
   const planLabel = membershipResolved ? copy.plans[planKey] : copy.checkingMembership;
 
