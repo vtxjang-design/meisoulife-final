@@ -68,7 +68,7 @@ const heroCopy = {
   },
   en: {
     eyebrow: "Human Recovery in the AI Age",
-    title: "A quiet place\nwhere your mind and brain\ncan return.",
+    title: "AI and information overload,\nan exhausting day,\nwhere your mind and brain\ncan briefly rest.",
     supporting:
       "Pause.\nBreathe.\nReturn to your rhythm.\n\nThere is no need to rush.",
     subtitle: "Free · 60 seconds · No signup",
@@ -979,19 +979,19 @@ export default function HomePage() {
         <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[470px] sm:hidden">
           <div className="absolute left-[3%] top-7 h-32 w-32 rounded-full bg-gold/[0.13] blur-[84px] animate-meditation-ambient-breathe motion-reduce:animate-none" />
           <div className="absolute right-[1%] top-14 h-56 w-56 rounded-full bg-emerald-200/[0.11] blur-[102px] animate-meditation-fog motion-reduce:animate-none" />
-          <div className="absolute right-[-12%] top-[-4%] h-[264px] w-[66%] overflow-hidden opacity-[0.26] mix-blend-screen">
+          <div className="absolute right-[-16%] top-[-2%] h-[248px] w-[46%] overflow-hidden opacity-[0.18] mix-blend-screen">
             <img
               src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80"
               alt=""
               aria-hidden="true"
-              className="h-full w-full scale-[1.17] object-cover blur-[3.5px] animate-meditation-video-breathe motion-reduce:animate-none [mask-image:radial-gradient(ellipse_at_28%_42%,rgba(0,0,0,0.97)_0%,rgba(0,0,0,0.86)_24%,rgba(0,0,0,0.52)_54%,transparent_86%)] [-webkit-mask-image:radial-gradient(ellipse_at_28%_42%,rgba(0,0,0,0.97)_0%,rgba(0,0,0,0.86)_24%,rgba(0,0,0,0.52)_54%,transparent_86%)]"
+              className="h-full w-full scale-[1.12] object-cover blur-[4px] animate-meditation-video-breathe motion-reduce:animate-none [mask-image:radial-gradient(ellipse_at_24%_42%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.88)_26%,rgba(0,0,0,0.46)_58%,transparent_86%)] [-webkit-mask-image:radial-gradient(ellipse_at_24%_42%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.88)_26%,rgba(0,0,0,0.46)_58%,transparent_86%)]"
             />
           </div>
-          <div className="absolute right-[7%] top-8 h-40 w-28 rounded-full bg-white/[0.03] blur-[86px] animate-meditation-float motion-reduce:animate-none" />
+          <div className="absolute right-[4%] top-10 h-32 w-24 rounded-full bg-white/[0.025] blur-[72px] animate-meditation-float motion-reduce:animate-none" />
           <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_34%),linear-gradient(180deg,rgba(7,16,28,0.04),rgba(7,16,28,0.02)_28%,rgba(7,16,28,0))]" />
-          <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_84%_18%,rgba(126,162,171,0.18),transparent_22%),radial-gradient(circle_at_78%_30%,rgba(255,246,214,0.08),transparent_18%),linear-gradient(90deg,rgba(5,18,24,0.01)_0%,rgba(5,18,24,0.07)_20%,rgba(5,18,24,0.16)_46%,rgba(5,18,24,0.34)_100%)]" />
-          <div className="absolute inset-x-0 top-0 h-full bg-[linear-gradient(90deg,rgba(5,16,24,0.01)_0%,rgba(5,16,24,0.02)_20%,rgba(5,16,24,0.09)_42%,rgba(5,16,24,0.24)_64%,rgba(5,16,24,0.42)_100%),linear-gradient(180deg,rgba(5,18,24,0.02),rgba(5,18,24,0.1)_38%,rgba(5,18,24,0.34)_100%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_88%_54%,rgba(8,28,36,0.2),transparent_24%),linear-gradient(180deg,transparent_0%,rgba(3,10,18,0.04)_34%,rgba(3,10,18,0.24)_78%,rgba(3,10,18,0.34)_100%)]" />
+          <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_78%_20%,rgba(126,162,171,0.16),transparent_18%),radial-gradient(circle_at_80%_32%,rgba(255,246,214,0.06),transparent_14%),linear-gradient(90deg,rgba(5,18,24,0.03)_0%,rgba(5,18,24,0.04)_32%,rgba(5,18,24,0.08)_52%,rgba(5,18,24,0.18)_70%,rgba(5,18,24,0.34)_100%)]" />
+          <div className="absolute inset-x-0 top-0 h-full bg-[linear-gradient(90deg,rgba(5,16,24,0.02)_0%,rgba(5,16,24,0.03)_28%,rgba(5,16,24,0.06)_48%,rgba(5,16,24,0.14)_64%,rgba(5,16,24,0.34)_100%),linear-gradient(180deg,rgba(5,18,24,0.02),rgba(5,18,24,0.08)_38%,rgba(5,18,24,0.3)_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_56%,rgba(8,28,36,0.16),transparent_22%),linear-gradient(180deg,transparent_0%,rgba(3,10,18,0.04)_34%,rgba(3,10,18,0.2)_78%,rgba(3,10,18,0.34)_100%)]" />
         </div>
         <div className="grid gap-8 lg:grid-cols-[1.24fr_0.76fr] lg:items-center lg:gap-16 xl:gap-20">
           <div className="space-y-5 sm:space-y-8 lg:space-y-9">
@@ -1013,26 +1013,28 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="space-y-4.5 sm:space-y-6 lg:space-y-4.5">
+            <div className="space-y-5 sm:space-y-6 lg:space-y-4.5">
               {heroAccentLine ? (
                 <p className="max-w-[12ch] font-serif text-[20px] leading-[1.3] text-gold/84 sm:max-w-none sm:text-[28px] sm:leading-[1.45] lg:text-[30px]">
                   {heroAccentLine}
                 </p>
               ) : null}
-              <h1 className={`whitespace-pre-line text-balance font-serif text-[28px] leading-[1.28] tracking-[-0.012em] text-white sm:max-w-[11.5ch] sm:text-[56px] sm:leading-[1.18] lg:max-w-[620px] lg:text-[64px] lg:leading-[1.1] lg:tracking-[-0.015em] xl:text-[68px] ${
-                language === "kr" ? "max-w-[10.2ch]" : "max-w-[10.8ch]"
+              <h1 className={`whitespace-pre-line text-balance font-serif text-[40px] leading-[1.2] tracking-[-0.03em] text-white sm:max-w-[11.5ch] sm:text-[56px] sm:leading-[1.18] lg:max-w-[620px] lg:text-[64px] lg:leading-[1.1] lg:tracking-[-0.015em] xl:text-[68px] ${
+                language === "kr" ? "max-w-[12.2ch]" : language === "en" ? "max-w-[13.6ch]" : "max-w-[12.4ch]"
               }`}>
                 {heroMainLines.join("\n")}
               </h1>
-              <p className="max-w-[15.5ch] whitespace-pre-line text-[13px] leading-[1.9] text-white/68 sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.82] lg:max-w-[420px] lg:text-[17px] lg:leading-[1.78] lg:text-white/82">
+              <p className={`whitespace-pre-line text-[14px] leading-[1.82] text-white/68 sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.82] lg:max-w-[420px] lg:text-[17px] lg:leading-[1.78] lg:text-white/82 ${
+                language === "kr" ? "max-w-[16.5ch]" : "max-w-[19ch]"
+              }`}>
                 {hero.supporting}
               </p>
-              <p className="max-w-[22ch] pt-0.5 text-[11px] leading-5 text-white/48 sm:max-w-none sm:text-xl sm:leading-9 lg:text-[13px] lg:leading-7 lg:text-white/56">
+              <p className="max-w-[22ch] pt-1 text-[11px] leading-5 text-white/48 sm:max-w-none sm:text-xl sm:leading-9 lg:text-[13px] lg:leading-7 lg:text-white/56">
                 {hero.subtitle}
               </p>
             </div>
 
-            <div className="relative z-20 flex flex-col gap-2.5 pt-2 sm:flex-row sm:flex-wrap lg:gap-5 lg:pt-2.5">
+            <div className="relative z-20 flex flex-col gap-3 pt-2.5 sm:flex-row sm:flex-wrap lg:gap-5 lg:pt-2.5">
               <button
                 type="button"
                 onClick={scrollToZeroGate}
