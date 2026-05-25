@@ -26,10 +26,10 @@ const zeroGateCopy = {
   },
   kr: {
     eyebrow: "ZERO GATE — 1분 리셋",
-    title: "지금 어떤 문이 필요하세요?",
+    title: "오늘은 어떤 상태를\n먼저 돌보고 싶으세요?",
     description:
-      "바로 알아볼 수 있는 실용적인 문에서 시작해서, 조용한 1분 안에서 다시 내 리듬으로 돌아갑니다.",
-    encouragement: "조금씩이면 충분합니다.",
+      "지금의 상태에 맞는 작은 리셋부터 시작해보세요.\n조용한 1분 안에서 다시 내 리듬을 찾게 됩니다.",
+    encouragement: "천천히여도 충분합니다.",
     gates: [
       { key: "overload", emoji: "🧠⚡", label: "뇌과부하", worldName: "「생각 비우는 숲」", description: "머리가 너무 복잡할 때" },
       { key: "anxiety", emoji: "😰", label: "불안", worldName: "「안전의 동굴」", description: "마음이 불안할 때" },
