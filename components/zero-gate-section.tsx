@@ -28,7 +28,7 @@ const zeroGateCopy = {
     eyebrow: "ZERO GATE — 1분 리셋",
     title: "오늘은 어떤 상태를\n먼저 돌보고 싶으세요?",
     description:
-      "지금의 상태에 맞는 작은 리셋부터 시작해보세요.\n조용한 1분 안에서 다시 내 리듬을 찾게 됩니다.",
+      "지금의 상태에 맞는\n작은 리셋부터 시작해보세요.\n조용한 1분 안에서\n다시 내 리듬을 찾게 됩니다.",
     encouragement: "천천히여도 충분합니다.",
     gates: [
       { key: "overload", emoji: "🧠⚡", label: "뇌과부하", worldName: "「생각 비우는 숲」", description: "머리가 너무 복잡할 때" },
@@ -63,16 +63,17 @@ export function ZeroGateSection({ onEnterGate }: ZeroGateSectionProps) {
     <section id="zero-gate" className="section-shell mt-12 scroll-mt-24 sm:mt-14">
       <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_26%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-7 shadow-[0_24px_80px_rgba(7,17,31,0.22)] sm:px-7 sm:py-8 lg:px-8 lg:py-8.5">
         <div className="pointer-events-none absolute inset-0 sm:hidden">
-          <div className="absolute right-[-6%] top-[8%] h-44 w-44 rounded-full bg-emerald-200/[0.08] blur-[86px]" />
-          <div className="absolute left-[-4%] top-[-2%] h-32 w-32 rounded-full bg-gold/[0.1] blur-[72px]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_86%_20%,rgba(126,162,171,0.13),transparent_19%),radial-gradient(circle_at_18%_0%,rgba(212,186,117,0.09),transparent_24%),linear-gradient(180deg,rgba(7,17,31,0.01),rgba(7,17,31,0.08)_18%,rgba(7,17,31,0.15)_58%,rgba(7,17,31,0.24))]" />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,12,22,0.01),rgba(4,12,22,0.06)_24%,rgba(4,12,22,0.18)_56%,rgba(4,12,22,0.28)_100%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_68%,rgba(6,23,31,0.18),transparent_24%)]" />
+          <div className="absolute right-[-4%] top-[7%] h-48 w-48 rounded-full bg-emerald-200/[0.09] blur-[92px] animate-meditation-ambient-breathe motion-reduce:animate-none" />
+          <div className="absolute left-[-4%] top-[-2%] h-32 w-32 rounded-full bg-gold/[0.11] blur-[76px] animate-meditation-fog motion-reduce:animate-none" />
+          <div className="absolute right-[8%] top-[14%] h-24 w-24 rounded-full bg-white/[0.02] blur-[56px] animate-meditation-float motion-reduce:animate-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_86%_20%,rgba(126,162,171,0.14),transparent_19%),radial-gradient(circle_at_18%_0%,rgba(212,186,117,0.1),transparent_24%),linear-gradient(180deg,rgba(7,17,31,0.01),rgba(7,17,31,0.06)_16%,rgba(7,17,31,0.14)_56%,rgba(7,17,31,0.26))]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,12,22,0.01),rgba(4,12,22,0.05)_24%,rgba(4,12,22,0.16)_52%,rgba(4,12,22,0.3)_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_68%,rgba(6,23,31,0.2),transparent_24%)]" />
         </div>
-        <div className="relative max-w-[17.5ch] sm:max-w-3xl">
+        <div className="relative max-w-[17ch] sm:max-w-3xl">
           <SectionHeading eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
         </div>
-        <p className="relative mt-5 max-w-[18ch] text-sm leading-7 text-white/48 sm:max-w-none">{copy.encouragement}</p>
+        <p className="relative mt-5 max-w-[16ch] text-sm leading-7 text-white/48 sm:max-w-none">{copy.encouragement}</p>
         <div className="relative mt-5 grid grid-cols-2 gap-3 xl:grid-cols-3 xl:gap-4">
           {copy.gates.map((gate) => (
             <GateCard
