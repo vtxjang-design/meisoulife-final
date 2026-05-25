@@ -18,7 +18,7 @@ import { SectionHeading } from "@/components/section-heading";
 import { TogetherAwakeSection } from "@/components/together-awake-section";
 import { ZeroGateSection } from "@/components/zero-gate-section";
 import { getChallengeRhythmProgress, type ChallengeRhythmProgress } from "@/lib/challenge-rhythm";
-import { useLanguage, languageButtons, useSiteCopy } from "@/lib/i18n";
+import { useLanguage, languageButtons, useLocaleCopy, useSiteCopy } from "@/lib/i18n";
 import { landingCopy } from "@/lib/landing-copy";
 import { getReturnRhythmSnapshot, updateReturnRhythmVisit, type ReturnRhythmSnapshot } from "@/lib/return-rhythm";
 
@@ -40,6 +40,8 @@ const heroCopy = {
     tertiaryFree: "今日のチェックイン",
     tertiaryPaid: "自分のリズムへ戻る",
     trust: "無料・60秒・登録不要",
+    note: "人生を今日変えなくても大丈夫です。ただ静かな1分だけ。",
+    scrollHint: "この先に、今日の静かな入口があります",
     proof: ["情報過多に", "疲れた心に", "考えすぎに"],
     visualCopy: "情報に引かれるのではなく、\n自分へ戻るための静かな入口。",
     visualLabel: "Quiet Forest Entry",
@@ -57,6 +59,8 @@ const heroCopy = {
     tertiaryFree: "오늘의 체크인",
     tertiaryPaid: "나의 리듬으로 돌아가기",
     trust: "무료 · 60초 · 가입 불필요",
+    note: "오늘 삶을 바꾸지 않아도 괜찮아요. 그저 조용한 1분이면 됩니다.",
+    scrollHint: "이 아래에 오늘의 조용한 입구가 있습니다",
     proof: ["과부하일 때", "지쳤을 때", "생각이 많을 때"],
     visualCopy: "정보의 흐름보다,\n나 자신에게 돌아오는 숨의 입구.",
     visualLabel: "Quiet Forest Entry",
@@ -74,6 +78,8 @@ const heroCopy = {
     tertiaryFree: "Today's Check-In",
     tertiaryPaid: "Return to My Rhythm",
     trust: "Free · 60 seconds · No signup",
+    note: "You do not need to fix your life today. Just take one quiet minute.",
+    scrollHint: "A quiet path begins just below",
     proof: ["for stress", "for overload", "for overthinking"],
     visualCopy: "A quiet forest entrance for returning\nto breath instead of noise.",
     visualLabel: "Quiet Forest Entry",
@@ -670,6 +676,7 @@ const giftCopy = {
     title: "大切な人に、1分の休息を贈る。",
     description: "言葉で励ますのが難しい日も、\n静かな1分なら届けられます。",
     button: "1分の休息を贈る",
+    shareMessage: "最近少し疲れていませんか？\nこの1分、よかったら一緒にやってみませんか。\nhttps://www.meisoulife.com/?gift=1min",
     copied: "リンクをコピーしました。大切な人に届けてください。"
   },
   kr: {
@@ -678,6 +685,7 @@ const giftCopy = {
     title: "소중한 사람에게, 1분의 휴식을 건네보세요.",
     description: "말로 위로하기 어려운 날에도,\n조용한 1분은 전할 수 있습니다.",
     button: "1분의 휴식 선물하기",
+    shareMessage: "요즘 조금 지치지 않았나요?\n괜찮다면 이 1분을 함께 해보세요.\nhttps://www.meisoulife.com/?gift=1min",
     copied: "링크를 복사했습니다. 소중한 사람에게 전해주세요."
   },
   en: {
@@ -686,6 +694,7 @@ const giftCopy = {
     title: "Offer a minute of rest to someone you care about.",
     description: "Even on days when words feel hard,\na quiet minute can still be shared.",
     button: "Share a one-minute rest",
+    shareMessage: "Have you been feeling a little tired lately?\nIf you'd like, try this quiet minute with me.\nhttps://www.meisoulife.com/?gift=1min",
     copied: "Link copied. Send it to someone you care about."
   }
 } as const;
