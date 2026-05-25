@@ -753,8 +753,8 @@ function MembershipCard({
 }
 
 function useLandingMembership() {
-  const { language } = useLanguage();
-  return landingCopy[language].membership.plans;
+  const landing = useLocaleCopy(landingCopy);
+  return landing.membership.plans;
 }
 
 export default function HomePage() {
@@ -762,23 +762,23 @@ export default function HomePage() {
   const { language, setLanguage } = useLanguage();
   const { authResolved, isLoggedIn, memberState } = useAuthState();
   const site = useSiteCopy();
-  const landing = landingCopy[language];
-  const hero = heroCopy[language];
-  const nationalPark = nationalParkCopy[language];
-  const returnEntry = returnEntryCopy[language];
-  const quietGarden = quietGardenCopy[language];
-  const whyReturn = whyReturnCopy[language];
-  const finalCta = finalCtaCopy[language];
-  const heroPanel = heroPanelCopy[language];
-  const healing = healingCopy[language];
-  const testimonials = testimonialCopy[language];
-  const reassurance = reassuranceCopy[language];
-  const sanctuary = sanctuaryCopy[language];
-  const aiAge = aiAgeCopy[language];
-  const gift = giftCopy[language];
-  const founderHope = founderHopeCopy[language];
-  const laughReset = laughResetCopy[language];
-  const stateReset = stateResetCopy[language];
+  const landing = useLocaleCopy(landingCopy);
+  const hero = useLocaleCopy(heroCopy);
+  const nationalPark = useLocaleCopy(nationalParkCopy);
+  const returnEntry = useLocaleCopy(returnEntryCopy);
+  const quietGarden = useLocaleCopy(quietGardenCopy);
+  const whyReturn = useLocaleCopy(whyReturnCopy);
+  const finalCta = useLocaleCopy(finalCtaCopy);
+  const heroPanel = useLocaleCopy(heroPanelCopy);
+  const healing = useLocaleCopy(healingCopy);
+  const testimonials = useLocaleCopy(testimonialCopy);
+  const reassurance = useLocaleCopy(reassuranceCopy);
+  const sanctuary = useLocaleCopy(sanctuaryCopy);
+  const aiAge = useLocaleCopy(aiAgeCopy);
+  const gift = useLocaleCopy(giftCopy);
+  const founderHope = useLocaleCopy(founderHopeCopy);
+  const laughReset = useLocaleCopy(laughResetCopy);
+  const stateReset = useLocaleCopy(stateResetCopy);
   const membershipPlans = useLandingMembership();
   const [challengeProgress, setChallengeProgress] = useState<ChallengeRhythmProgress>({
     currentDay: 1,
@@ -957,10 +957,8 @@ export default function HomePage() {
       return;
     }
 
-    const message = `最近少し疲れていませんか？\nこの1分、よかったら一緒にやってみませんか。\nhttps://www.meisoulife.com/?gift=1min`;
-
     try {
-      await navigator.clipboard.writeText(message);
+      await navigator.clipboard.writeText(gift.shareMessage);
       setGiftToast(gift.copied);
     } catch (error) {
       console.error("[gift-share] failed to copy invite", error);
@@ -1048,11 +1046,7 @@ export default function HomePage() {
             </div>
 
             <p className="hidden max-w-[28ch] text-[12px] leading-6 text-white/50 sm:max-w-none lg:block lg:pt-0.5 lg:text-[13px] lg:leading-7 lg:text-white/54">
-              {language === "jp"
-                ? "人生を今日変えなくても大丈夫です。ただ静かな1分だけ。"
-                : language === "kr"
-                  ? "오늘 삶을 바꾸지 않아도 괜찮아요. 그저 조용한 1분이면 됩니다."
-                  : "You do not need to fix your life today. Just take one quiet minute."}
+              {hero.note}
             </p>
 
             <button
@@ -1061,11 +1055,7 @@ export default function HomePage() {
               className="inline-flex w-fit items-center gap-2 text-[12px] font-medium text-white/46 transition hover:text-white/72"
             >
               <span className="h-1 w-1 rounded-full bg-gold/72" />
-              {language === "jp"
-                ? "この先に、今日の静かな入口があります"
-                : language === "kr"
-                  ? "이 아래에 오늘의 조용한 입구가 있습니다"
-                  : "A quiet path begins just below"}
+              {hero.scrollHint}
             </button>
 
             <div className="hidden flex-wrap gap-2 pt-0.5 sm:flex">

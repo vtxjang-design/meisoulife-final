@@ -439,7 +439,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
                   onClick={handleAmbientRetry}
                   className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
                 >
-                  自然音を再生
+                  {modalCopy.natureLabel}
                 </button>
               ) : null}
             </div>

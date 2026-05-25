@@ -257,7 +257,7 @@ export default function MeditationPage() {
                     onClick={handleAmbientRetry}
                     className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
                   >
-                    自然音を再生
+                    {copy.natureLabel}
                   </button>
                 ) : null}
               </div>
