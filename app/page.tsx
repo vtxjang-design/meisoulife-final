@@ -900,13 +900,13 @@ export default function HomePage() {
 
   function handleZeroGateEnter(gateKey: string) {
     if (typeof window !== "undefined") {
-      window.localStorage.setItem(
-        "meisoulife_zero_gate",
-        JSON.stringify({
-          gateKey,
-          enteredAt: new Date().toISOString()
-        })
-      );
+      const payload = {
+        gateKey,
+        enteredAt: new Date().toISOString()
+      };
+
+      window.localStorage.setItem("meisoulife_zero_gate", JSON.stringify(payload));
+      window.dispatchEvent(new CustomEvent("meisoulife:zero-gate-change", { detail: payload }));
     }
 
     scrollToOneMinute();

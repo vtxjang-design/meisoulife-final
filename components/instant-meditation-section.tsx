@@ -15,11 +15,96 @@ type InstantMeditationSectionProps = {
   copy: LandingCopy["instant"];
 };
 
+type SanctuaryGateKey = "overload" | "anxiety" | "low-energy" | "distracted" | "reset-mood" | "sleep";
+
 const TOTAL_SECONDS = 60;
 const INHALE_SECONDS = 4;
 const HOLD_SECONDS = 2;
 const EXHALE_SECONDS = 4;
 const MEDITATION_MOOD_STORAGE_KEY = "meisoulife_instant_meditation_mood";
+const ZERO_GATE_STORAGE_KEY = "meisoulife_zero_gate";
+const DEFAULT_SANCTUARY: SanctuaryGateKey = "overload";
+
+const sanctuaryVisuals: Record<
+  SanctuaryGateKey,
+  {
+    sources: string[];
+    poster: string;
+    overlayClassName: string;
+    glowClassName: string;
+  }
+> = {
+  overload: {
+    sources: ["/videos/forest.mp4", "/videos/one-minute-reset-forest.mp4"],
+    poster: "/images/quiet-meditation.jpg",
+    overlayClassName:
+      "bg-[linear-gradient(180deg,rgba(4,10,18,0.18),rgba(4,10,18,0.72)_72%,rgba(4,10,18,0.84))]",
+    glowClassName: "bg-[radial-gradient(circle_at_78%_24%,rgba(125,151,130,0.16),transparent_42%)]"
+  },
+  anxiety: {
+    sources: ["/videos/cave.mp4", "/videos/one-minute-reset-cave.mp4"],
+    poster: "/images/quiet-meditation.jpg",
+    overlayClassName:
+      "bg-[linear-gradient(180deg,rgba(5,10,18,0.22),rgba(5,10,18,0.74)_72%,rgba(5,10,18,0.86))]",
+    glowClassName: "bg-[radial-gradient(circle_at_72%_22%,rgba(120,138,169,0.14),transparent_38%)]"
+  },
+  "low-energy": {
+    sources: ["/videos/seed.mp4", "/videos/one-minute-reset-seed.mp4"],
+    poster: "/images/quiet-meditation.jpg",
+    overlayClassName:
+      "bg-[linear-gradient(180deg,rgba(6,10,16,0.18),rgba(6,10,16,0.68)_70%,rgba(6,10,16,0.82))]",
+    glowClassName: "bg-[radial-gradient(circle_at_74%_26%,rgba(212,186,117,0.14),transparent_40%)]"
+  },
+  distracted: {
+    sources: ["/videos/path.mp4", "/videos/one-minute-reset-path.mp4"],
+    poster: "/images/quiet-meditation.jpg",
+    overlayClassName:
+      "bg-[linear-gradient(180deg,rgba(4,11,19,0.2),rgba(4,11,19,0.72)_70%,rgba(4,11,19,0.84))]",
+    glowClassName: "bg-[radial-gradient(circle_at_80%_22%,rgba(105,145,169,0.14),transparent_42%)]"
+  },
+  "reset-mood": {
+    sources: ["/videos/garden.mp4", "/videos/one-minute-reset-garden.mp4"],
+    poster: "/images/quiet-meditation.jpg",
+    overlayClassName:
+      "bg-[linear-gradient(180deg,rgba(6,11,18,0.16),rgba(6,11,18,0.68)_72%,rgba(6,11,18,0.82))]",
+    glowClassName: "bg-[radial-gradient(circle_at_78%_20%,rgba(157,177,129,0.14),transparent_40%)]"
+  },
+  sleep: {
+    sources: ["/videos/moon.mp4", "/videos/one-minute-reset-moon.mp4"],
+    poster: "/images/quiet-meditation.jpg",
+    overlayClassName:
+      "bg-[linear-gradient(180deg,rgba(4,8,18,0.26),rgba(4,8,18,0.76)_72%,rgba(4,8,18,0.88))]",
+    glowClassName: "bg-[radial-gradient(circle_at_78%_18%,rgba(138,152,196,0.16),transparent_40%)]"
+  }
+};
+
+function isSanctuaryGateKey(value: string): value is SanctuaryGateKey {
+  return value in sanctuaryVisuals;
+}
+
+function readStoredGate(): SanctuaryGateKey {
+  if (typeof window === "undefined") {
+    return DEFAULT_SANCTUARY;
+  }
+
+  try {
+    const rawValue = window.localStorage.getItem(ZERO_GATE_STORAGE_KEY);
+
+    if (!rawValue) {
+      return DEFAULT_SANCTUARY;
+    }
+
+    const parsed = JSON.parse(rawValue) as { gateKey?: string };
+
+    if (parsed.gateKey && isSanctuaryGateKey(parsed.gateKey)) {
+      return parsed.gateKey;
+    }
+  } catch (error) {
+    console.warn("Failed to read ZERO GATE selection", error);
+  }
+
+  return DEFAULT_SANCTUARY;
+}
 
 function getPhase(elapsedSeconds: number): Phase {
   const cycle = elapsedSeconds % (INHALE_SECONDS + HOLD_SECONDS + EXHALE_SECONDS);
@@ -42,6 +127,8 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const [audioError, setAudioError] = useState("");
   const [hasUserGesture, setHasUserGesture] = useState(false);
   const [selectedMood, setSelectedMood] = useState("");
+  const [selectedGate, setSelectedGate] = useState<SanctuaryGateKey>(DEFAULT_SANCTUARY);
+  const [videoSourceIndex, setVideoSourceIndex] = useState(0);
   const audioContextRef = useRef<AudioContext | null>(null);
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -98,6 +185,29 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     };
   }, []);
 
+  useEffect(() => {
+    setSelectedGate(readStoredGate());
+
+    function handleGateChange(event: Event) {
+      const customEvent = event as CustomEvent<{ gateKey?: string }>;
+      const nextGate = customEvent.detail?.gateKey;
+
+      if (nextGate && isSanctuaryGateKey(nextGate)) {
+        setSelectedGate(nextGate);
+      }
+    }
+
+    window.addEventListener("meisoulife:zero-gate-change", handleGateChange as EventListener);
+
+    return () => {
+      window.removeEventListener("meisoulife:zero-gate-change", handleGateChange as EventListener);
+    };
+  }, []);
+
+  useEffect(() => {
+    setVideoSourceIndex(0);
+  }, [selectedGate]);
+
   const phaseLabel = copy[phase];
   const phaseBottom =
     phase === "inhale"
@@ -105,6 +215,8 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
       : phase === "hold"
         ? `${copy.hold} · 2s`
         : `${copy.exhale} · 4s`;
+  const sanctuaryVisual = sanctuaryVisuals[selectedGate];
+  const activeVideoSource = sanctuaryVisual.sources[Math.min(videoSourceIndex, sanctuaryVisual.sources.length - 1)];
 
   async function startMeditationExperience() {
     setHasUserGesture(true);
@@ -113,12 +225,6 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     if (secondsLeft === 0) {
       setSecondsLeft(TOTAL_SECONDS);
       completionHandledRef.current = false;
-    }
-
-    try {
-      await videoRef.current?.play();
-    } catch (error) {
-      console.warn("Meditation video failed to play", error);
     }
 
     if (soundEnabled) {
@@ -135,7 +241,6 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   async function handleStartPause() {
     if (running) {
       setRunning(false);
-      videoRef.current?.pause();
       await stopAmbientNatureAudio(ambientAudioRef);
       return;
     }
@@ -174,7 +279,6 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   }
 
   async function handleMeditationComplete() {
-    videoRef.current?.pause();
     await stopAmbientNatureAudio(ambientAudioRef);
     await playMeditationCompletion({
       hasUserGesture,
@@ -198,6 +302,16 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
         recordedAt: new Date().toISOString()
       })
     );
+  }
+
+  function handleVideoError() {
+    setVideoSourceIndex((current) => {
+      if (current >= sanctuaryVisual.sources.length - 1) {
+        return current;
+      }
+
+      return current + 1;
+    });
   }
 
   return (
@@ -294,17 +408,23 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
           <div className="order-1 flex justify-center lg:order-2">
             <div className="relative min-h-[480px] w-full overflow-hidden rounded-[32px] border border-white/10 bg-[#08111b]">
               <video
+                key={activeVideoSource}
                 ref={videoRef}
-                className="absolute inset-0 z-0 h-full w-full object-cover opacity-80"
+                className="absolute inset-0 z-0 h-full w-full object-cover opacity-[0.6] blur-[1.5px] transition-opacity duration-700"
+                autoPlay
                 muted
                 loop
                 playsInline
                 preload="metadata"
-                poster="/images/quiet-meditation.jpg"
+                poster={sanctuaryVisual.poster}
+                onError={handleVideoError}
               >
-                <source src="/videos/one-minute-nature-loop.mp4" type="video/mp4" />
+                <source src={activeVideoSource} type="video/mp4" />
               </video>
-              <div className="absolute inset-0 z-10 bg-black/25" />
+              <div className={`absolute inset-0 z-10 ${sanctuaryVisual.glowClassName}`} />
+              <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_82%_18%,rgba(255,255,255,0.06),transparent_20%),radial-gradient(circle_at_74%_32%,rgba(212,186,117,0.08),transparent_34%)] opacity-60 blur-2xl" />
+              <div className={`absolute inset-0 z-10 ${sanctuaryVisual.overlayClassName}`} />
+              <div className="absolute inset-0 z-10 bg-[linear-gradient(180deg,rgba(3,9,16,0.08),rgba(3,9,16,0.22)_36%,rgba(3,9,16,0.44)_100%)] backdrop-blur-[1px]" />
               <div className="relative z-20 flex min-h-[480px] items-center justify-center px-4 py-8">
                 <BreathingCircle
                   progress={progress}
