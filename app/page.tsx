@@ -35,13 +35,13 @@ const heroCopy = {
       "少し立ち止まり、\n自分のリズムへ戻る。\n急がなくても大丈夫です。",
     subtitle: "無料・60秒・登録不要",
     primary: "今の状態を整える",
-    secondary: "静かに見てみる",
+    secondary: "7日リズムを見てみる",
     tertiaryGuest: "無料で始める",
     tertiaryFree: "今日のチェックイン",
     tertiaryPaid: "自分のリズムへ戻る",
     trust: "無料・60秒・登録不要",
     note: "人生を今日変えなくても大丈夫です。ただ静かな1分だけ。",
-    scrollHint: "この先に、今日の静かな入口があります",
+    scrollHint: "この先に、7日リズムへ続く静かな道があります",
     proof: ["情報過多に", "疲れた心に", "考えすぎに"],
     visualCopy: "情報に引かれるのではなく、\n自分へ戻るための静かな入口。",
     visualLabel: "Quiet Forest Entry",
@@ -54,13 +54,13 @@ const heroCopy = {
       "잠시 멈추고,\n내 리듬으로 돌아오는\n조용한 1분.",
     subtitle: "무료 · 60초 · 가입 불필요",
     primary: "오늘의 리셋 고르기",
-    secondary: "조용히 둘러보기",
+    secondary: "7일 리듬 보기",
     tertiaryGuest: "무료로 시작하기",
     tertiaryFree: "오늘의 체크인",
     tertiaryPaid: "나의 리듬으로 돌아가기",
     trust: "무료 · 60초 · 가입 불필요",
     note: "서두르지 않아도 괜찮습니다.",
-    scrollHint: "오늘의 조용한 리셋이 아래 준비되어 있습니다",
+    scrollHint: "이 아래에 7일 리듬으로 이어지는 조용한 길이 있습니다",
     proof: ["과부하일 때", "지쳤을 때", "생각이 많을 때"],
     visualCopy: "정보의 흐름보다,\n나 자신에게 돌아오는 숨의 입구.",
     visualLabel: "Quiet Forest Entry",
@@ -73,17 +73,62 @@ const heroCopy = {
       "Pause.\nBreathe.\nReturn to your rhythm.\n\nThere is no need to rush.",
     subtitle: "Free · 60 seconds · No signup",
     primary: "Choose Today’s Gate",
-    secondary: "Explore Quietly",
+    secondary: "See the 7-Day Rhythm",
     tertiaryGuest: "Start Free",
     tertiaryFree: "Today's Check-In",
     tertiaryPaid: "Return to My Rhythm",
     trust: "Free · 60 seconds · No signup",
     note: "You do not need to fix your life today. Just take one quiet minute.",
-    scrollHint: "A quiet path begins just below",
+    scrollHint: "A quiet path into the 7-day rhythm begins just below",
     proof: ["for stress", "for overload", "for overthinking"],
     visualCopy: "A quiet forest entrance for returning\nto breath instead of noise.",
     visualLabel: "Quiet Forest Entry",
     visualAlt: "Forest light and stillness"
+  }
+} as const;
+
+const returnLoopCopy = {
+  jp: {
+    eyebrow: "RETURN LOOP",
+    title: "静かな1分が、\nまた戻ってこられるリズムになる。",
+    description:
+      "瞑想lifeは、一度きりの気分転換ではなく、また明日も戻ってこられる静かな回復の流れを育てます。",
+    steps: [
+      { label: "今日", title: "1分リセット", description: "今の状態に合う入口をひとつ選んで、静かに整えます。" },
+      { label: "7日", title: "リズムをつくる", description: "短くても、毎日の小さな回復が戻る力を育てます。" },
+      { label: "30日", title: "自分の軸が育つ", description: "少しずつ、情報に飲まれにくい自分の感覚が育っていきます。" }
+    ],
+    note: "大切なのは、深く頑張ることではなく、また戻ってくることです。",
+    primary: "7日リズムを始める",
+    secondary: "まず1分から整える"
+  },
+  kr: {
+    eyebrow: "RETURN LOOP",
+    title: "조용한 1분이,\n다시 돌아오게 하는 리듬이 됩니다.",
+    description:
+      "명상life는 한 번의 기분 전환보다, 내일도 다시 돌아올 수 있는 조용한 회복의 흐름을 만드는 데 더 집중합니다.",
+    steps: [
+      { label: "오늘", title: "1분 리셋", description: "지금 상태에 맞는 입구 하나를 고르고, 조용히 몸과 마음을 정돈합니다." },
+      { label: "7일", title: "리듬 만들기", description: "짧아도 괜찮아요. 매일의 작은 회복이 다시 돌아오는 힘이 됩니다." },
+      { label: "30일", title: "내 중심이 자라기", description: "조금씩, 정보에 덜 휩쓸리는 자기 감각과 선택의 힘이 자라납니다." }
+    ],
+    note: "중요한 것은 깊게 애쓰는 것이 아니라, 다시 돌아오는 것입니다.",
+    primary: "7일 리듬 시작하기",
+    secondary: "먼저 1분 리셋하기"
+  },
+  en: {
+    eyebrow: "RETURN LOOP",
+    title: "One quiet minute can become\na rhythm you return to tomorrow.",
+    description:
+      "MeisoLife is not only for one good moment. It is a calm recovery loop you can come back to again tomorrow.",
+    steps: [
+      { label: "Today", title: "1-minute reset", description: "Choose one gate that fits your state and settle quietly." },
+      { label: "7 days", title: "Build a rhythm", description: "Even short daily returns begin to strengthen your inner reset pattern." },
+      { label: "30 days", title: "Grow inner stability", description: "Little by little, your attention becomes less capturable and more your own." }
+    ],
+    note: "The point is not to push harder. It is to come back again.",
+    primary: "Start the 7-Day Rhythm",
+    secondary: "Begin with 1 minute"
   }
 } as const;
 
@@ -766,6 +811,7 @@ export default function HomePage() {
   const hero = useLocaleCopy(heroCopy);
   const nationalPark = useLocaleCopy(nationalParkCopy);
   const returnEntry = useLocaleCopy(returnEntryCopy);
+  const returnLoop = useLocaleCopy(returnLoopCopy);
   const quietGarden = useLocaleCopy(quietGardenCopy);
   const whyReturn = useLocaleCopy(whyReturnCopy);
   const finalCta = useLocaleCopy(finalCtaCopy);
@@ -1044,7 +1090,7 @@ export default function HomePage() {
               </button>
               <button
                 type="button"
-                onClick={scrollToStateCheck}
+                onClick={scrollToRhythmChallenge}
                 className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-2 text-[13px] font-medium leading-none text-white/68 transition duration-300 hover:bg-white/[0.07] hover:text-white lg:min-h-[60px] lg:px-10 lg:text-[16px] lg:text-white/78"
               >
                 {hero.secondary}
@@ -1057,7 +1103,7 @@ export default function HomePage() {
 
             <button
               type="button"
-              onClick={scrollToStateCheck}
+              onClick={scrollToRhythmChallenge}
               className="inline-flex w-fit items-center gap-2 pt-1 text-[12px] font-medium text-white/46 transition hover:text-white/72"
             >
               <span className="h-1 w-1 rounded-full bg-gold/72" />
@@ -1108,6 +1154,38 @@ export default function HomePage() {
       </section>
 
       <ZeroGateSection onEnterGate={handleZeroGateEnter} />
+
+      <section className="section-shell mt-10 sm:mt-14">
+        <div className="overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] px-5 py-7 shadow-[0_20px_72px_rgba(7,17,31,0.18)] sm:px-8 sm:py-8">
+          <SectionHeading eyebrow={returnLoop.eyebrow} title={returnLoop.title} description={returnLoop.description} />
+          <div className="mt-6 grid gap-3 lg:grid-cols-3 lg:gap-4">
+            {returnLoop.steps.map((step) => (
+              <article key={step.label} className="rounded-[24px] border border-white/10 bg-white/[0.04] p-5">
+                <p className="text-xs uppercase tracking-[0.24em] text-gold/80">{step.label}</p>
+                <h3 className="mt-3 text-lg font-semibold text-white">{step.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-white/66">{step.description}</p>
+              </article>
+            ))}
+          </div>
+          <p className="mt-6 text-sm leading-7 text-white/56">{returnLoop.note}</p>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <button
+              type="button"
+              onClick={scrollToRhythmChallenge}
+              className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
+            >
+              {returnLoop.primary}
+            </button>
+            <button
+              type="button"
+              onClick={scrollToOneMinute}
+              className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
+            >
+              {returnLoop.secondary}
+            </button>
+          </div>
+        </div>
+      </section>
 
       <section className="section-shell mt-10 sm:mt-14">
         <div className="overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-7 shadow-[0_20px_72px_rgba(7,17,31,0.18)] sm:px-8 sm:py-8">
