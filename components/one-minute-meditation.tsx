@@ -324,6 +324,11 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   const orbWarmthOpacity = phase === "exhale" ? 0.26 : 0.16;
   const progress = ((TOTAL_SECONDS - secondsLeft) / TOTAL_SECONDS) * 100;
   const orbTransitionDuration = `${getPhaseDuration(phase)}s`;
+  const ringSize = 300;
+  const ringStroke = 10;
+  const ringRadius = (ringSize - ringStroke) / 2;
+  const ringCircumference = 2 * Math.PI * ringRadius;
+  const ringOffset = ringCircumference - (progress / 100) * ringCircumference;
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-[#020814]/92 px-4 py-4 backdrop-blur-xl sm:px-6"
@@ -338,10 +343,10 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
       }}
     >
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02),transparent_42%),linear-gradient(180deg,rgba(2,8,20,0.48)_0%,rgba(2,8,20,0.62)_48%,rgba(2,8,20,0.86)_100%)]" />
-        <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.08),transparent_22%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.1),transparent_28%)]" />
-        <div className="absolute inset-0 z-10 bg-[linear-gradient(90deg,rgba(2,8,20,0.18)_0%,transparent_18%,transparent_82%,rgba(2,8,20,0.2)_100%)]" />
-        <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_28%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.14),transparent_34%),linear-gradient(180deg,rgba(4,10,19,0.7)_0%,rgba(8,18,32,0.82)_100%)] animate-meditation-ambient-breathe" />
+        <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.018),transparent_40%),linear-gradient(180deg,rgba(2,8,20,0.58)_0%,rgba(2,8,20,0.72)_44%,rgba(2,8,20,0.9)_100%)]" />
+        <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.07),transparent_20%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.08),transparent_24%)]" />
+        <div className="absolute inset-0 z-10 bg-[linear-gradient(90deg,rgba(2,8,20,0.26)_0%,transparent_16%,transparent_84%,rgba(2,8,20,0.28)_100%)]" />
+        <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_top,rgba(186,205,255,0.08),transparent_18%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.12),transparent_30%),linear-gradient(180deg,rgba(4,10,19,0.8)_0%,rgba(7,16,29,0.9)_100%)] animate-meditation-ambient-breathe" />
         <div className="absolute left-1/2 top-[12%] z-10 h-64 w-64 -translate-x-1/2 rounded-full bg-gold/10 blur-3xl animate-meditation-fog" />
         <div className="absolute bottom-[8%] right-[14%] z-10 h-48 w-48 rounded-full bg-moss/12 blur-3xl animate-meditation-fog" />
         {Array.from({ length: 9 }).map((_, index) => (
@@ -363,7 +368,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
       <div className="relative z-20 min-h-[480px] w-full max-w-md overflow-hidden rounded-[28px] border border-white/8 bg-white/[0.04] p-5 shadow-[0_30px_80px_rgba(0,0,0,0.28)] sm:p-6">
         {!ambientVideoFailed ? (
           <video
-            className="absolute inset-0 z-0 h-full w-full object-cover opacity-85"
+            className="absolute inset-0 z-0 h-full w-full object-cover opacity-[0.78] brightness-[0.7] contrast-[0.95] saturate-[0.92]"
             autoPlay
             muted
             loop
@@ -381,7 +386,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
         ) : (
           <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_28%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.14),transparent_34%),linear-gradient(180deg,rgba(4,10,19,0.76)_0%,rgba(8,18,32,0.88)_100%)]" />
         )}
-        <div className="absolute inset-0 z-10 bg-black/25" />
+        <div className="absolute inset-0 z-10 bg-black/38" />
         {ambientVideoFailed ? (
           <div className="absolute left-4 right-4 top-4 z-10 rounded-2xl border border-white/10 bg-[#08121d]/65 px-4 py-3 text-xs leading-6 text-white/60 backdrop-blur">
             Ambient video fallback active. Place the video file at /public/videos/one-minute-nature-loop.mp4.
@@ -447,17 +452,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
 
           {!isComplete ? (
             <div className="mt-8 flex flex-col items-center text-center">
-              <div className="min-h-[92px] space-y-3">
-                <p className="text-sm uppercase tracking-[0.28em] text-white/48">{modalCopy.phaseLabels[phase]}</p>
-                <p
-                  aria-live="polite"
-                  className="text-4xl font-medium tracking-[0.04em] text-white/88 transition-all duration-700 ease-in-out sm:text-5xl"
-                >
-                  {formatSeconds(secondsLeft)}
-                </p>
-              </div>
-
-              <div className="relative mt-5 flex h-72 w-72 items-center justify-center sm:h-[320px] sm:w-[320px]">
+              <div className="relative mt-2 flex h-[320px] w-[320px] items-center justify-center sm:h-[360px] sm:w-[360px]">
                 <div
                   className="absolute inset-0 rounded-full bg-gold/18 blur-3xl transition-all ease-in-out"
                   style={{ opacity: orbGlowOpacity, transform: `scale(${orbScale + 0.1})`, transitionDuration: orbTransitionDuration }}
@@ -478,11 +473,41 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
                   className="absolute inset-[24%] rounded-full border border-white/8 bg-[radial-gradient(circle_at_35%_30%,rgba(255,255,255,0.22),transparent_30%),radial-gradient(circle_at_68%_72%,rgba(216,191,131,0.18),transparent_36%),linear-gradient(180deg,rgba(255,255,255,0.08),rgba(7,17,31,0.2))] transition-all ease-in-out"
                   style={{ transform: `scale(${orbScale - 0.04})`, transitionDuration: orbTransitionDuration }}
                 />
-              </div>
-
-              <div className="mt-5 min-h-[48px] max-w-xs">
-                <p className="mb-2 text-[11px] uppercase tracking-[0.28em] text-white/34">{modalCopy.natureLabel}</p>
-                <p className="text-base leading-7 text-white/58">{modalCopy.breathingGuides[phase === "inhale" ? 0 : phase === "hold" ? 1 : 2]?.text}</p>
+                <svg className="absolute inset-0 h-full w-full -rotate-90" viewBox={`0 0 ${ringSize} ${ringSize}`} aria-hidden="true">
+                  <circle
+                    cx={ringSize / 2}
+                    cy={ringSize / 2}
+                    r={ringRadius}
+                    fill="none"
+                    stroke="rgba(255,255,255,0.1)"
+                    strokeWidth={ringStroke}
+                  />
+                  <circle
+                    cx={ringSize / 2}
+                    cy={ringSize / 2}
+                    r={ringRadius}
+                    fill="none"
+                    stroke="rgba(227,206,151,0.94)"
+                    strokeLinecap="round"
+                    strokeWidth={ringStroke}
+                    strokeDasharray={ringCircumference}
+                    strokeDashoffset={ringOffset}
+                    className="transition-[stroke-dashoffset] duration-1000 ease-linear"
+                  />
+                </svg>
+                <div className="absolute left-1/2 top-1/2 flex w-[62%] -translate-x-1/2 -translate-y-1/2 flex-col items-center rounded-[28px] border border-white/10 bg-[#06111b]/48 px-5 py-5 shadow-[0_24px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl">
+                  <p className="text-[11px] uppercase tracking-[0.3em] text-white/90">{modalCopy.eyebrow}</p>
+                  <p
+                    aria-live="polite"
+                    className="mt-3 text-[2.7rem] font-medium tracking-[0.06em] text-white drop-shadow-[0_10px_24px_rgba(0,0,0,0.45)] transition-all duration-700 ease-in-out sm:text-[3.2rem]"
+                  >
+                    {formatSeconds(secondsLeft)}
+                  </p>
+                  <p className="mt-3 text-sm uppercase tracking-[0.26em] text-white/68">{modalCopy.phaseLabels[phase]}</p>
+                  <p className="mt-4 text-sm font-medium leading-6 text-white/92">
+                    {modalCopy.breathingGuides[phase === "inhale" ? 0 : phase === "hold" ? 1 : 2]?.text}
+                  </p>
+                </div>
               </div>
 
               <button
