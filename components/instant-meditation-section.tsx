@@ -133,6 +133,18 @@ function getPhaseSecondsRemaining(elapsedSeconds: number) {
   return cycleLength - cyclePosition;
 }
 
+function getStartSupportText(startLabel: string) {
+  if (/[가-힣]/.test(startLabel)) {
+    return "지금의 리듬을, 조용히 정돈합니다";
+  }
+
+  if (/[ぁ-んァ-ン一-龯]/.test(startLabel)) {
+    return "今のリズムを、静かに整える";
+  }
+
+  return "Settle your rhythm, quietly";
+}
+
 export function InstantMeditationSection({ copy }: InstantMeditationSectionProps) {
   const [running, setRunning] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(TOTAL_SECONDS);
@@ -221,6 +233,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
 
   const phaseLabel = copy[phase];
   const phaseBottom = `${phaseLabel} · ${phaseSecondsLeft}s`;
+  const startSupportText = getStartSupportText(copy.start);
   const sanctuaryVisual = sanctuaryVisuals[selectedGate];
   const activeVideoSource = hasSelectedGate ? sanctuaryVisual.source : null;
 
@@ -470,10 +483,11 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
               </div>
             ) : null}
             <div className="flex flex-col gap-3">
+              <p className="text-center text-sm tracking-[0.02em] text-white/62">{startSupportText}</p>
               <button
                 type="button"
                 onClick={handleStartPause}
-                className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
+                className="inline-flex min-h-[60px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f0ddb0_0%,#dcc086_52%,#caa160_100%)] px-7 py-4 text-sm font-semibold text-[#17202a] shadow-[0_18px_40px_rgba(212,186,117,0.24),inset_0_1px_0_rgba(255,255,255,0.3)] transition duration-300 hover:scale-[1.015] hover:brightness-[1.03] active:scale-[0.985]"
               >
                 {running ? copy.pause : copy.start}
               </button>
@@ -550,7 +564,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
               ) : null}
               <div className="relative z-20 flex min-h-[480px] items-center justify-center px-4 py-8">
                 <div className="relative flex flex-col items-center">
-                  <div className="absolute inset-0 -z-10 rounded-full bg-[radial-gradient(circle,rgba(212,186,117,0.14),transparent_64%)] blur-3xl" />
+                  <div className="absolute inset-0 -z-10 rounded-full bg-[radial-gradient(circle,rgba(212,186,117,0.1),transparent_66%)] blur-3xl" />
                   <div className="relative flex h-[288px] w-[288px] items-center justify-center sm:h-[328px] sm:w-[328px]">
                     <svg viewBox="0 0 240 240" className="absolute inset-0 h-full w-full -rotate-90">
                       <circle cx="120" cy="120" r={ringRadius} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="5" />
@@ -567,15 +581,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                         className="transition-all duration-1000 ease-linear"
                       />
                     </svg>
-                    <div
-                      className={`absolute inset-[22%] rounded-full border border-white/8 bg-[#07111b]/14 shadow-[0_14px_40px_rgba(0,0,0,0.12)] backdrop-blur-md transition-transform duration-[2400ms] ease-in-out ${
-                        phase === "inhale"
-                          ? "scale-[1.01]"
-                          : phase === "hold"
-                            ? "scale-[1.04]"
-                            : "scale-[0.985]"
-                      }`}
-                    />
+                    <div className="absolute inset-[22%] rounded-full border border-white/7 bg-[#07111b]/10 shadow-[0_10px_28px_rgba(0,0,0,0.1)] backdrop-blur-sm" />
                     <div className="relative z-10 flex max-w-[62%] flex-col items-center text-center">
                       <p className="text-[11px] uppercase tracking-[0.3em] text-gold/84">{phaseLabel}</p>
                       <p className="mt-5 font-serif text-[4rem] leading-none text-white drop-shadow-[0_10px_24px_rgba(0,0,0,0.32)] sm:text-[4.7rem]">
