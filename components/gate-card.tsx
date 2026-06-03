@@ -5,10 +5,11 @@ type GateCardProps = {
   label: string;
   worldName: string;
   description: string;
+  ctaLabel?: string;
   onClick: () => void;
 };
 
-export function GateCard({ emoji, label, worldName, description, onClick }: GateCardProps) {
+export function GateCard({ emoji, label, worldName, description, ctaLabel, onClick }: GateCardProps) {
   return (
     <button
       type="button"
@@ -23,6 +24,11 @@ export function GateCard({ emoji, label, worldName, description, onClick }: Gate
           <p className="text-[15px] font-semibold leading-[1.24] text-white sm:text-[15.5px]">{label}</p>
           <p className="font-serif text-[12.5px] leading-[1.42] text-gold/84 sm:text-[13.5px]">{worldName}</p>
           <p className="max-w-[16ch] text-[11.5px] leading-[1.58] text-white/64 sm:max-w-none sm:text-[12px] sm:leading-[1.6]">{description}</p>
+          {ctaLabel ? (
+            <span className="inline-flex rounded-full border border-gold/20 bg-gold/[0.08] px-2.5 py-1 text-[10.5px] font-medium tracking-[0.08em] text-gold/90">
+              {ctaLabel}
+            </span>
+          ) : null}
         </div>
       </div>
     </button>

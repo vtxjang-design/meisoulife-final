@@ -13,7 +13,7 @@ type InstantMeditationSectionProps = {
   copy: LandingCopy["instant"];
 };
 
-type SanctuaryGateKey = "overload" | "anxiety" | "low-energy" | "distracted" | "reset-mood" | "sleep";
+type SanctuaryGateKey = "overload" | "anxiety" | "morning" | "low-energy" | "distracted" | "reset-mood" | "sleep";
 
 const TOTAL_SECONDS = 60;
 const INHALE_SECONDS = 4;
@@ -45,6 +45,13 @@ const sanctuaryVisuals: Record<
     overlayClassName:
       "bg-[linear-gradient(180deg,rgba(5,10,18,0.22),rgba(5,10,18,0.74)_72%,rgba(5,10,18,0.86))]",
     glowClassName: "bg-[radial-gradient(circle_at_72%_22%,rgba(120,138,169,0.14),transparent_38%)]"
+  },
+  morning: {
+    source: "/videos/one-minute-reset-morning.mp4",
+    poster: "/images/quiet-meditation.jpg",
+    overlayClassName:
+      "bg-[linear-gradient(180deg,rgba(11,15,22,0.14),rgba(11,15,22,0.58)_70%,rgba(11,15,22,0.76))]",
+    glowClassName: "bg-[radial-gradient(circle_at_76%_20%,rgba(230,197,120,0.16),transparent_40%)]"
   },
   "low-energy": {
     source: "/videos/one-minute-reset-energy.mp4",
