@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { BreathingCircle } from "@/components/breathing-circle";
 import { SectionHeading } from "@/components/section-heading";
 import type { LandingCopy } from "@/lib/landing-copy";
 import { handleMeditationComplete as playMeditationCompletion } from "@/lib/meditation-completion";
@@ -119,6 +118,21 @@ function getPhase(elapsedSeconds: number): Phase {
   return "exhale";
 }
 
+function getPhaseSecondsRemaining(elapsedSeconds: number) {
+  const cycleLength = INHALE_SECONDS + HOLD_SECONDS + EXHALE_SECONDS;
+  const cyclePosition = elapsedSeconds % cycleLength;
+
+  if (cyclePosition < INHALE_SECONDS) {
+    return INHALE_SECONDS - cyclePosition;
+  }
+
+  if (cyclePosition < INHALE_SECONDS + HOLD_SECONDS) {
+    return INHALE_SECONDS + HOLD_SECONDS - cyclePosition;
+  }
+
+  return cycleLength - cyclePosition;
+}
+
 export function InstantMeditationSection({ copy }: InstantMeditationSectionProps) {
   const [running, setRunning] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(TOTAL_SECONDS);
@@ -129,24 +143,17 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const [hasSelectedGate, setHasSelectedGate] = useState(false);
   const [videoLoading, setVideoLoading] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
+  const [audioBlocked, setAudioBlocked] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const playerRef = useRef<HTMLDivElement | null>(null);
+  const timerRef = useRef<number | null>(null);
   const completionHandledRef = useRef(false);
-
-  useEffect(() => {
-    if (!running || secondsLeft <= 0) {
-      return;
-    }
-
-    const timer = window.setTimeout(() => {
-      setSecondsLeft((current) => Math.max(current - 1, 0));
-    }, 1000);
-
-    return () => window.clearTimeout(timer);
-  }, [running, secondsLeft]);
+  const pendingAutoStartRef = useRef(false);
 
   const elapsedSeconds = TOTAL_SECONDS - secondsLeft;
   const phase = useMemo(() => getPhase(elapsedSeconds), [elapsedSeconds]);
+  const phaseSecondsLeft = useMemo(() => getPhaseSecondsRemaining(elapsedSeconds), [elapsedSeconds]);
   const progress = elapsedSeconds / TOTAL_SECONDS;
 
   useEffect(() => {
@@ -161,7 +168,12 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
 
   useEffect(() => {
     if (secondsLeft === 0) {
+      clearTimer();
       setRunning(false);
+      videoRef.current?.pause();
+      videoRef.current && (videoRef.current.currentTime = Math.min(videoRef.current.currentTime, videoRef.current.duration || videoRef.current.currentTime));
+      videoRef.current && (videoRef.current.muted = true);
+      videoRef.current && (videoRef.current.volume = 0);
       markDailyRhythmCompleted();
     }
   }, [secondsLeft]);
@@ -177,6 +189,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
 
   useEffect(() => {
     return () => {
+      clearTimer();
       videoRef.current?.pause();
       audioContextRef.current?.close().catch(() => undefined);
       audioContextRef.current = null;
@@ -188,16 +201,14 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     setHasSelectedGate(false);
     setVideoLoading(false);
     setVideoFailed(false);
+    setAudioBlocked(false);
 
     function handleGateChange(event: Event) {
       const customEvent = event as CustomEvent<{ gateKey?: string }>;
       const nextGate = customEvent.detail?.gateKey;
 
       if (nextGate && isSanctuaryGateKey(nextGate)) {
-        setSelectedGate(nextGate);
-        setHasSelectedGate(true);
-        setVideoLoading(true);
-        setVideoFailed(false);
+        void enterGate(nextGate);
       }
     }
 
@@ -209,14 +220,32 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   }, []);
 
   const phaseLabel = copy[phase];
-  const phaseBottom =
-    phase === "inhale"
-      ? `${copy.inhale} · 4s`
-      : phase === "hold"
-        ? `${copy.hold} · 2s`
-        : `${copy.exhale} · 4s`;
+  const phaseBottom = `${phaseLabel} · ${phaseSecondsLeft}s`;
   const sanctuaryVisual = sanctuaryVisuals[selectedGate];
   const activeVideoSource = hasSelectedGate ? sanctuaryVisual.source : null;
+
+  function clearTimer() {
+    if (timerRef.current) {
+      window.clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  }
+
+  function startTimer() {
+    clearTimer();
+    completionHandledRef.current = false;
+    setSecondsLeft(TOTAL_SECONDS);
+    timerRef.current = window.setInterval(() => {
+      setSecondsLeft((current) => {
+        if (current <= 1) {
+          clearTimer();
+          return 0;
+        }
+
+        return current - 1;
+      });
+    }, 1000);
+  }
 
   async function syncVideoAudio(nextRunning: boolean, nextSoundEnabled: boolean) {
     const video = videoRef.current;
@@ -230,20 +259,32 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     }
 
     if (!nextRunning) {
+      clearTimer();
+      video.pause();
       video.muted = true;
       video.volume = 0;
       return;
     }
 
-    video.volume = nextSoundEnabled ? 1 : 0;
+    video.volume = nextSoundEnabled ? 0.28 : 0;
     video.muted = !nextSoundEnabled;
 
     try {
+      video.load();
       await video.play();
+      setAudioBlocked(false);
+      startTimer();
     } catch (error) {
-      console.warn("Sanctuary video playback fell back to muted mode", error);
+      console.warn("Sanctuary video playback blocked or fell back", error);
       video.muted = true;
       video.volume = 0;
+      setAudioBlocked(nextSoundEnabled);
+      try {
+        await video.play();
+        startTimer();
+      } catch (fallbackError) {
+        console.warn("Sanctuary muted video playback failed", fallbackError);
+      }
     }
   }
 
@@ -251,18 +292,50 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     void syncVideoAudio(running, soundEnabled);
   }, [activeVideoSource, running, soundEnabled, videoFailed]);
 
+  function scrollPlayerIntoView() {
+    const node = playerRef.current;
+
+    if (!node || typeof window === "undefined") {
+      return;
+    }
+
+    const top = node.getBoundingClientRect().top + window.scrollY - 88;
+    window.scrollTo({ top: Math.max(top, 0), behavior: "smooth" });
+  }
+
   async function startMeditationExperience() {
     setHasUserGesture(true);
     setHasSelectedGate(true);
     setVideoLoading(true);
     setVideoFailed(false);
+    setAudioBlocked(false);
 
-    if (secondsLeft === 0) {
-      setSecondsLeft(TOTAL_SECONDS);
-      completionHandledRef.current = false;
-    }
+    setSecondsLeft(TOTAL_SECONDS);
+    completionHandledRef.current = false;
+    pendingAutoStartRef.current = true;
 
     setRunning(true);
+  }
+
+  async function enterGate(nextGate: SanctuaryGateKey) {
+    clearTimer();
+    setSelectedGate(nextGate);
+    setHasSelectedGate(true);
+    setVideoLoading(true);
+    setVideoFailed(false);
+    setAudioBlocked(false);
+    setSelectedMood("");
+    scrollPlayerIntoView();
+
+    if (typeof window !== "undefined") {
+      window.requestAnimationFrame(() => {
+        window.setTimeout(() => {
+          scrollPlayerIntoView();
+        }, 120);
+      });
+    }
+
+    await startMeditationExperience();
   }
 
   async function handleStartPause() {
@@ -278,6 +351,22 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     const next = !soundEnabled;
     setSoundEnabled(next);
     setHasUserGesture(true);
+
+    if (next && !running) {
+      await startMeditationExperience();
+      return;
+    }
+
+    if (next && running) {
+      await syncVideoAudio(true, true);
+    }
+  }
+
+  async function handleEnableAudio() {
+    setHasUserGesture(true);
+    setSoundEnabled(true);
+    setAudioBlocked(false);
+    await syncVideoAudio(true, true);
   }
 
   async function handleMeditationComplete() {
@@ -308,7 +397,24 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   function handleVideoError() {
     setVideoLoading(false);
     setVideoFailed(true);
+    setRunning(false);
+    clearTimer();
   }
+
+  async function handleVideoCanPlay() {
+    setVideoLoading(false);
+
+    if (!pendingAutoStartRef.current || !running) {
+      return;
+    }
+
+    pendingAutoStartRef.current = false;
+    await syncVideoAudio(true, soundEnabled);
+  }
+
+  const ringRadius = 106;
+  const ringCircumference = 2 * Math.PI * ringRadius;
+  const dashOffset = ringCircumference - progress * ringCircumference;
 
   return (
     <section id="one-minute-experience" className="section-shell mt-16">
@@ -390,7 +496,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
             </div>
           </div>
           <div className="order-1 flex justify-center lg:order-2">
-            <div className="relative min-h-[480px] w-full overflow-hidden rounded-[32px] border border-white/10 bg-[#08111b]">
+            <div ref={playerRef} className="relative min-h-[480px] w-full overflow-hidden rounded-[32px] border border-white/10 bg-[#08111b]">
               {activeVideoSource && !videoFailed ? (
                 <video
                   key={activeVideoSource}
@@ -404,7 +510,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                   poster={sanctuaryVisual.poster}
                   onLoadStart={() => setVideoLoading(true)}
                   onLoadedData={() => setVideoLoading(false)}
-                  onCanPlay={() => setVideoLoading(false)}
+                  onCanPlay={handleVideoCanPlay}
                   onError={handleVideoError}
                 >
                   <source src={activeVideoSource} type="video/mp4" />
@@ -416,9 +522,9 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                 />
               )}
               <div className={`absolute inset-0 z-10 ${sanctuaryVisual.glowClassName}`} />
-              <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_82%_18%,rgba(255,255,255,0.06),transparent_20%),radial-gradient(circle_at_74%_32%,rgba(212,186,117,0.08),transparent_34%)] opacity-60 blur-2xl" />
+              <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_82%_18%,rgba(255,255,255,0.05),transparent_20%),radial-gradient(circle_at_74%_32%,rgba(212,186,117,0.07),transparent_34%)] opacity-50 blur-2xl" />
               <div className={`absolute inset-0 z-10 ${sanctuaryVisual.overlayClassName}`} />
-              <div className="absolute inset-0 z-10 bg-[linear-gradient(180deg,rgba(3,9,16,0.08),rgba(3,9,16,0.22)_36%,rgba(3,9,16,0.44)_100%)] backdrop-blur-[1px]" />
+              <div className="absolute inset-0 z-10 bg-[linear-gradient(180deg,rgba(3,9,16,0.06),rgba(3,9,16,0.18)_36%,rgba(3,9,16,0.34)_100%)] backdrop-blur-[0.5px]" />
               {videoLoading ? (
                 <div className="absolute inset-0 z-20 flex items-center justify-center">
                   <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/12 bg-[#07111b]/62 backdrop-blur-md">
@@ -431,14 +537,54 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                   {copy.audioError}
                 </div>
               ) : null}
+              {audioBlocked ? (
+                <div className="absolute inset-x-5 bottom-5 z-20">
+                  <button
+                    type="button"
+                    onClick={handleEnableAudio}
+                    className="inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-gold/20 bg-gold/[0.16] px-4 py-3 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(0,0,0,0.18)] backdrop-blur-md transition hover:bg-gold/[0.22]"
+                  >
+                    音ありで開始
+                  </button>
+                </div>
+              ) : null}
               <div className="relative z-20 flex min-h-[480px] items-center justify-center px-4 py-8">
-                <BreathingCircle
-                  progress={progress}
-                  secondsLeft={secondsLeft}
-                  phaseLabel={phaseLabel}
-                  bottomLabel={phaseBottom}
-                  running={running}
-                />
+                <div className="relative flex flex-col items-center">
+                  <div className="absolute inset-0 -z-10 rounded-full bg-[radial-gradient(circle,rgba(212,186,117,0.14),transparent_64%)] blur-3xl" />
+                  <div className="relative flex h-[288px] w-[288px] items-center justify-center sm:h-[328px] sm:w-[328px]">
+                    <svg viewBox="0 0 240 240" className="absolute inset-0 h-full w-full -rotate-90">
+                      <circle cx="120" cy="120" r={ringRadius} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="5" />
+                      <circle
+                        cx="120"
+                        cy="120"
+                        r={ringRadius}
+                        fill="none"
+                        stroke="rgba(212,186,117,0.92)"
+                        strokeWidth="5"
+                        strokeLinecap="round"
+                        strokeDasharray={ringCircumference}
+                        strokeDashoffset={dashOffset}
+                        className="transition-all duration-1000 ease-linear"
+                      />
+                    </svg>
+                    <div
+                      className={`absolute inset-[22%] rounded-full border border-white/8 bg-[#07111b]/14 shadow-[0_14px_40px_rgba(0,0,0,0.12)] backdrop-blur-md transition-transform duration-[2400ms] ease-in-out ${
+                        phase === "inhale"
+                          ? "scale-[1.01]"
+                          : phase === "hold"
+                            ? "scale-[1.04]"
+                            : "scale-[0.985]"
+                      }`}
+                    />
+                    <div className="relative z-10 flex max-w-[62%] flex-col items-center text-center">
+                      <p className="text-[11px] uppercase tracking-[0.3em] text-gold/84">{phaseLabel}</p>
+                      <p className="mt-5 font-serif text-[4rem] leading-none text-white drop-shadow-[0_10px_24px_rgba(0,0,0,0.32)] sm:text-[4.7rem]">
+                        {secondsLeft}
+                      </p>
+                    </div>
+                  </div>
+                  <p className="mt-4 text-sm font-medium tracking-[0.02em] text-white/72">{phaseBottom}</p>
+                </div>
               </div>
             </div>
           </div>
