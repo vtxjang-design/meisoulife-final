@@ -47,7 +47,7 @@ const sanctuaryVisuals: Record<
     glowClassName: "bg-[radial-gradient(circle_at_72%_22%,rgba(120,138,169,0.14),transparent_38%)]"
   },
   morning: {
-    source: "/videos/one-minute-reset-morning.mp4",
+    source: "/videos/morning-one-minute-rhythm.mp4",
     poster: "/images/quiet-meditation.jpg",
     overlayClassName:
       "bg-[linear-gradient(180deg,rgba(11,15,22,0.14),rgba(11,15,22,0.58)_70%,rgba(11,15,22,0.76))]",
