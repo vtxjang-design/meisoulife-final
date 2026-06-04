@@ -4,8 +4,18 @@ import { GateCard } from "@/components/gate-card";
 import { SectionHeading } from "@/components/section-heading";
 import { useLocaleCopy } from "@/lib/i18n";
 
+type ZeroGateDestinationKey = "overload" | "anxiety" | "low-energy" | "distracted" | "reset-mood" | "sleep";
+
 type ZeroGateSectionProps = {
-  onEnterGate: (gateKey: string) => void;
+  onEnterGate: (gateKey: ZeroGateDestinationKey) => void;
+};
+
+type ZeroGateCard = {
+  key: ZeroGateDestinationKey;
+  emoji: string;
+  label: string;
+  worldName: string;
+  description: string;
 };
 
 const zeroGateCopy = {
@@ -22,7 +32,7 @@ const zeroGateCopy = {
       { key: "distracted", emoji: "🌀", label: "散漫", worldName: "「集中の道」", description: "集中がほどけるとき" },
       { key: "reset-mood", emoji: "😄", label: "気分転換", worldName: "「気分転換の庭」", description: "空気を変えたいとき" },
       { key: "sleep", emoji: "🌙", label: "睡眠", worldName: "「月明かりの休み場」", description: "眠りに入りにくいとき" }
-    ]
+    ] satisfies ZeroGateCard[]
   },
   kr: {
     eyebrow: "ZERO GATE — 1분 리셋",
@@ -37,7 +47,7 @@ const zeroGateCopy = {
       { key: "distracted", emoji: "🌀", label: "산만", worldName: "「집중의 길」", description: "집중이 흐트러질 때" },
       { key: "reset-mood", emoji: "😄", label: "기분전환", worldName: "「기분 전환의 정원」", description: "분위기를 바꾸고 싶을 때" },
       { key: "sleep", emoji: "🌙", label: "수면", worldName: "「달빛 쉼터」", description: "잠들기 어려울 때" }
-    ]
+    ] satisfies ZeroGateCard[]
   },
   en: {
     eyebrow: "ZERO GATE — 1-Minute Reset",
@@ -52,7 +62,7 @@ const zeroGateCopy = {
       { key: "distracted", emoji: "🌀", label: "Distraction", worldName: '"Path of Focus"', description: "When your attention keeps scattering" },
       { key: "reset-mood", emoji: "😄", label: "Mood Reset", worldName: '"Garden of Renewal"', description: "When you want to change the atmosphere" },
       { key: "sleep", emoji: "🌙", label: "Sleep", worldName: '"Moonlight Rest Stop"', description: "When it is hard to fall asleep" }
-    ]
+    ] satisfies ZeroGateCard[]
   }
 } as const;
 
