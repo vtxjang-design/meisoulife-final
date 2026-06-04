@@ -614,7 +614,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
           emoji: "☀️",
           title: "朝のひと呼吸",
           description: "今日を軽やかに始める1分",
-          cta: "始める",
+          cta: "開始する",
           href: "/meditation?duration=60&type=morning"
         },
         {
@@ -1577,7 +1577,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
           emoji: "☀️",
           title: "One breath for the morning",
           description: "A light one-minute beginning for the day",
-          cta: "Begin",
+          cta: "Start",
           href: "/meditation?duration=60&type=morning"
         },
         {

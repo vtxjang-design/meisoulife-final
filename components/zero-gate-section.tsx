@@ -18,7 +18,6 @@ const zeroGateCopy = {
     gates: [
       { key: "overload", emoji: "🧠⚡", label: "脳過負荷", worldName: "「思考を空ける森」", description: "頭の中が複雑すぎるとき" },
       { key: "anxiety", emoji: "😰", label: "不安", worldName: "「安全の洞窟」", description: "心が不安なとき" },
-      { key: "morning", emoji: "☀️", label: "朝のひと呼吸", worldName: "今日を軽やかに始める1分", description: "朝のリズムをやさしく整えたいとき", ctaLabel: "始める" },
       { key: "low-energy", emoji: "🥱", label: "気力不足", worldName: "「生命の火種」", description: "心と体に力が出ないとき" },
       { key: "distracted", emoji: "🌀", label: "散漫", worldName: "「集中の道」", description: "集中がほどけるとき" },
       { key: "reset-mood", emoji: "😄", label: "気分転換", worldName: "「気分転換の庭」", description: "空気を変えたいとき" },
@@ -34,7 +33,6 @@ const zeroGateCopy = {
     gates: [
       { key: "overload", emoji: "🧠⚡", label: "뇌과부하", worldName: "「생각 비우는 숲」", description: "머리가 너무 복잡할 때" },
       { key: "anxiety", emoji: "😰", label: "불안", worldName: "「안전의 동굴」", description: "마음이 불안할 때" },
-      { key: "morning", emoji: "☀️", label: "아침 한 호흡", worldName: "오늘을 가볍게 여는 1분", description: "아침 리듬을 부드럽게 깨우고 싶을 때", ctaLabel: "시작" },
       { key: "low-energy", emoji: "🥱", label: "기력 없음", worldName: "「생명의 불씨」", description: "몸과 마음에 힘이 없을 때" },
       { key: "distracted", emoji: "🌀", label: "산만", worldName: "「집중의 길」", description: "집중이 흐트러질 때" },
       { key: "reset-mood", emoji: "😄", label: "기분전환", worldName: "「기분 전환의 정원」", description: "분위기를 바꾸고 싶을 때" },
@@ -50,7 +48,6 @@ const zeroGateCopy = {
     gates: [
       { key: "overload", emoji: "🧠⚡", label: "Mental Overload", worldName: '"Forest of Empty Thoughts"', description: "When your mind feels too crowded" },
       { key: "anxiety", emoji: "😰", label: "Anxiety", worldName: '"Cave of Safety"', description: "When your heart feels uneasy" },
-      { key: "morning", emoji: "☀️", label: "Morning Breath", worldName: '"One light minute to begin today"', description: "When you want to begin the day with clarity", ctaLabel: "Begin" },
       { key: "low-energy", emoji: "🥱", label: "Low Energy", worldName: '"Spark of Life"', description: "When body and mind feel drained" },
       { key: "distracted", emoji: "🌀", label: "Distraction", worldName: '"Path of Focus"', description: "When your attention keeps scattering" },
       { key: "reset-mood", emoji: "😄", label: "Mood Reset", worldName: '"Garden of Renewal"', description: "When you want to change the atmosphere" },
@@ -85,7 +82,6 @@ export function ZeroGateSection({ onEnterGate }: ZeroGateSectionProps) {
               label={gate.label}
               worldName={gate.worldName}
               description={gate.description}
-              ctaLabel={"ctaLabel" in gate ? gate.ctaLabel : undefined}
               onClick={() => onEnterGate(gate.key)}
             />
           ))}
