@@ -178,9 +178,11 @@ export type LandingCopy = {
       key: string;
       emoji: string;
       title: string;
+      subtitle: string;
       description: string;
       cta: string;
-      href: string;
+      href?: string;
+      experienceKey?: string;
     }>;
     messageTitle: string;
     messages: string[];
@@ -607,23 +609,34 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
     dailyRhythmLayer: {
       eyebrow: "毎日の小さなリズム",
       title: "今日のあなたに、\nちょうどいい1分を。",
-      description: "忙しくても大丈夫。\n今の状態に合わせて、\n小さく整える時間を。",
+      description: "忙しくても大丈夫。\n朝・昼・夜の流れに合わせて、\n小さく整える時間を。",
       cards: [
         {
-          key: "afternoon",
+          key: "morning",
+          emoji: "☀️",
+          title: "朝のひと呼吸",
+          subtitle: "今日を軽やかに始める1分",
+          description: "朝のリズムをやさしく整えたいとき",
+          cta: "始める",
+          experienceKey: "morning"
+        },
+        {
+          key: "day",
           emoji: "🌿",
-          title: "疲れた時の30秒",
-          description: "SNS疲れや気持ちの乱れに",
+          title: "昼のリズム回復",
+          subtitle: "流れを整える1分",
+          description: "日中に心と体を整えたいとき",
           cta: "整える",
-          href: "/meditation?duration=30&type=day"
+          experienceKey: "day"
         },
         {
           key: "night",
           emoji: "🌙",
-          title: "おやすみ前の静かな1分",
-          description: "眠る前に心をゆるめる",
-          cta: "眠る準備",
-          href: "/meditation?duration=60&type=night"
+          title: "睡眠リセット",
+          subtitle: "深く休む準備の1分",
+          description: "夜の緊張をゆるめたいとき",
+          cta: "休む",
+          experienceKey: "night"
         }
       ],
       messageTitle: "今日のあなたへ",
@@ -1083,23 +1096,34 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
     dailyRhythmLayer: {
       eyebrow: "매일의 작은 리듬",
       title: "오늘의 당신에게,\n딱 맞는 1분을.",
-      description: "바빠도 괜찮습니다.\n지금 상태에 맞춰,\n작게 정돈하는 시간을.",
+      description: "바빠도 괜찮습니다.\n아침 · 낮 · 밤의 흐름에 맞춰,\n작게 정돈하는 시간을.",
       cards: [
         {
-          key: "afternoon",
+          key: "morning",
+          emoji: "☀️",
+          title: "아침의 한 호흡",
+          subtitle: "오늘을 가볍게 시작하는 1분",
+          description: "아침 리듬을 부드럽게 정돈하고 싶을 때",
+          cta: "시작하기",
+          experienceKey: "morning"
+        },
+        {
+          key: "day",
           emoji: "🌿",
-          title: "지쳤을 때의 30초",
-          description: "SNS 피로와 흐트러진 마음에",
+          title: "낮의 리듬 회복",
+          subtitle: "흐름을 정돈하는 1분",
+          description: "낮 동안 마음과 몸을 정돈하고 싶을 때",
           cta: "정돈하기",
-          href: "/meditation?duration=30&type=day"
+          experienceKey: "day"
         },
         {
           key: "night",
           emoji: "🌙",
-          title: "잠들기 전의 조용한 1분",
-          description: "잠들기 전 마음을 부드럽게 풀어줍니다",
-          cta: "잠들 준비",
-          href: "/meditation?duration=60&type=night"
+          title: "수면 리셋",
+          subtitle: "깊게 쉬기 위한 1분",
+          description: "밤의 긴장을 부드럽게 풀고 싶을 때",
+          cta: "쉬기",
+          experienceKey: "night"
         }
       ],
       messageTitle: "오늘의 당신에게",
@@ -1554,23 +1578,34 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
     dailyRhythmLayer: {
       eyebrow: "A small daily rhythm",
       title: "A minute that fits\nwho you are today.",
-      description: "Even when life is busy,\nyou can still make space\nfor a small return.",
+      description: "Even when life is busy,\nyou can still make space\nacross morning, day, and night.",
       cards: [
         {
-          key: "afternoon",
+          key: "morning",
+          emoji: "☀️",
+          title: "Morning Breath",
+          subtitle: "A light one-minute beginning",
+          description: "When you want to ease gently into the day",
+          cta: "Begin",
+          experienceKey: "morning"
+        },
+        {
+          key: "day",
           emoji: "🌿",
-          title: "30 seconds for tired moments",
-          description: "For social fatigue and scattered feelings",
+          title: "Day Rhythm Recovery",
+          subtitle: "One minute to settle the flow",
+          description: "When you want to steady body and mind during the day",
           cta: "Settle",
-          href: "/meditation?duration=30&type=day"
+          experienceKey: "day"
         },
         {
           key: "night",
           emoji: "🌙",
-          title: "A quiet minute before sleep",
-          description: "Soften the mind before the day ends",
-          cta: "Prepare for rest",
-          href: "/meditation?duration=60&type=night"
+          title: "Sleep Reset",
+          subtitle: "One minute to prepare for deep rest",
+          description: "When you want to soften the tension of the night",
+          cta: "Rest",
+          experienceKey: "night"
         }
       ],
       messageTitle: "For you today",

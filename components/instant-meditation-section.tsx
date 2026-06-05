@@ -13,7 +13,9 @@ type InstantMeditationSectionProps = {
   copy: LandingCopy["instant"];
 };
 
-type SanctuaryGateKey = "overload" | "anxiety" | "low-energy" | "distracted" | "reset-mood" | "sleep";
+type ZeroGateKey = "overload" | "anxiety" | "low-energy" | "distracted" | "reset-mood" | "sleep";
+type DailyRhythmKey = "morning" | "day" | "night";
+type MeditationExperienceKey = ZeroGateKey | DailyRhythmKey;
 
 const TOTAL_SECONDS = 60;
 const INHALE_SECONDS = 4;
@@ -21,10 +23,10 @@ const HOLD_SECONDS = 2;
 const EXHALE_SECONDS = 4;
 const MEDITATION_MOOD_STORAGE_KEY = "meisoulife_instant_meditation_mood";
 const ZERO_GATE_STORAGE_KEY = "meisoulife_zero_gate";
-const DEFAULT_SANCTUARY: SanctuaryGateKey = "overload";
+const DEFAULT_SANCTUARY: ZeroGateKey = "overload";
 
 const sanctuaryVisuals: Record<
-  SanctuaryGateKey,
+  MeditationExperienceKey,
   {
     source: string;
     poster: string;
@@ -45,6 +47,27 @@ const sanctuaryVisuals: Record<
     overlayClassName:
       "bg-[linear-gradient(180deg,rgba(5,10,18,0.22),rgba(5,10,18,0.74)_72%,rgba(5,10,18,0.86))]",
     glowClassName: "bg-[radial-gradient(circle_at_72%_22%,rgba(120,138,169,0.14),transparent_38%)]"
+  },
+  morning: {
+    source: "/videos2/morning-one-minute-rhythm.mp4",
+    poster: "/images/quiet-meditation.jpg",
+    overlayClassName:
+      "bg-[linear-gradient(180deg,rgba(11,15,22,0.12),rgba(11,15,22,0.56)_70%,rgba(11,15,22,0.76))]",
+    glowClassName: "bg-[radial-gradient(circle_at_76%_20%,rgba(230,197,120,0.16),transparent_40%)]"
+  },
+  day: {
+    source: "/videos/one-minute-reset-energy.mp4",
+    poster: "/images/quiet-meditation.jpg",
+    overlayClassName:
+      "bg-[linear-gradient(180deg,rgba(6,10,16,0.16),rgba(6,10,16,0.64)_70%,rgba(6,10,16,0.8))]",
+    glowClassName: "bg-[radial-gradient(circle_at_74%_26%,rgba(212,186,117,0.14),transparent_40%)]"
+  },
+  night: {
+    source: "/videos/one-minute-reset-moon.mp4",
+    poster: "/images/quiet-meditation.jpg",
+    overlayClassName:
+      "bg-[linear-gradient(180deg,rgba(4,8,18,0.24),rgba(4,8,18,0.74)_72%,rgba(4,8,18,0.88))]",
+    glowClassName: "bg-[radial-gradient(circle_at_78%_18%,rgba(138,152,196,0.16),transparent_40%)]"
   },
   "low-energy": {
     source: "/videos/one-minute-reset-energy.mp4",
@@ -76,11 +99,15 @@ const sanctuaryVisuals: Record<
   }
 };
 
-function isSanctuaryGateKey(value: string): value is SanctuaryGateKey {
+function isMeditationExperienceKey(value: string): value is MeditationExperienceKey {
   return value in sanctuaryVisuals;
 }
 
-function readStoredGate(): SanctuaryGateKey {
+function isZeroGateKey(value: string): value is ZeroGateKey {
+  return ["overload", "anxiety", "low-energy", "distracted", "reset-mood", "sleep"].includes(value);
+}
+
+function readStoredGate(): ZeroGateKey {
   if (typeof window === "undefined") {
     return DEFAULT_SANCTUARY;
   }
@@ -94,7 +121,7 @@ function readStoredGate(): SanctuaryGateKey {
 
     const parsed = JSON.parse(rawValue) as { gateKey?: string };
 
-    if (parsed.gateKey && isSanctuaryGateKey(parsed.gateKey)) {
+    if (parsed.gateKey && isZeroGateKey(parsed.gateKey)) {
       return parsed.gateKey;
     }
   } catch (error) {
@@ -151,7 +178,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [hasUserGesture, setHasUserGesture] = useState(false);
   const [selectedMood, setSelectedMood] = useState("");
-  const [selectedGate, setSelectedGate] = useState<SanctuaryGateKey>(DEFAULT_SANCTUARY);
+  const [selectedGate, setSelectedGate] = useState<MeditationExperienceKey>(DEFAULT_SANCTUARY);
   const [hasSelectedGate, setHasSelectedGate] = useState(false);
   const [videoLoading, setVideoLoading] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
@@ -219,15 +246,26 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
       const customEvent = event as CustomEvent<{ gateKey?: string }>;
       const nextGate = customEvent.detail?.gateKey;
 
-      if (nextGate && isSanctuaryGateKey(nextGate)) {
+      if (nextGate && isMeditationExperienceKey(nextGate)) {
         void enterGate(nextGate);
       }
     }
 
+    function handleDailyRhythmChange(event: Event) {
+      const customEvent = event as CustomEvent<{ experienceKey?: string }>;
+      const nextExperience = customEvent.detail?.experienceKey;
+
+      if (nextExperience && isMeditationExperienceKey(nextExperience)) {
+        void enterGate(nextExperience);
+      }
+    }
+
     window.addEventListener("meisoulife:zero-gate-change", handleGateChange as EventListener);
+    window.addEventListener("meisoulife:daily-rhythm-change", handleDailyRhythmChange as EventListener);
 
     return () => {
       window.removeEventListener("meisoulife:zero-gate-change", handleGateChange as EventListener);
+      window.removeEventListener("meisoulife:daily-rhythm-change", handleDailyRhythmChange as EventListener);
     };
   }, []);
 
@@ -330,7 +368,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     setRunning(true);
   }
 
-  async function enterGate(nextGate: SanctuaryGateKey) {
+  async function enterGate(nextGate: MeditationExperienceKey) {
     clearTimer();
     setSelectedGate(nextGate);
     setHasSelectedGate(true);
