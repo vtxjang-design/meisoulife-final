@@ -610,14 +610,6 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       description: "忙しくても大丈夫。\n今の状態に合わせて、\n小さく整える時間を。",
       cards: [
         {
-          key: "morning",
-          emoji: "☀️",
-          title: "朝のひと呼吸",
-          description: "今日を軽やかに始める1分",
-          cta: "開始する",
-          href: "/meditation?duration=60&type=morning"
-        },
-        {
           key: "afternoon",
           emoji: "🌿",
           title: "疲れた時の30秒",
@@ -1094,14 +1086,6 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       description: "바빠도 괜찮습니다.\n지금 상태에 맞춰,\n작게 정돈하는 시간을.",
       cards: [
         {
-          key: "morning",
-          emoji: "☀️",
-          title: "아침의 한 호흡",
-          description: "오늘을 가볍게 시작하는 1분",
-          cta: "시작하기",
-          href: "/meditation?duration=60&type=morning"
-        },
-        {
           key: "afternoon",
           emoji: "🌿",
           title: "지쳤을 때의 30초",
@@ -1572,14 +1556,6 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       title: "A minute that fits\nwho you are today.",
       description: "Even when life is busy,\nyou can still make space\nfor a small return.",
       cards: [
-        {
-          key: "morning",
-          emoji: "☀️",
-          title: "One breath for the morning",
-          description: "A light one-minute beginning for the day",
-          cta: "Start",
-          href: "/meditation?duration=60&type=morning"
-        },
         {
           key: "afternoon",
           emoji: "🌿",
