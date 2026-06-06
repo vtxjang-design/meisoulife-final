@@ -35,7 +35,7 @@ const sanctuaryVisuals: Record<
   }
 > = {
   overload: {
-    source: "/videos/one-minute-reset-forest.mp4",
+    source: "/videos/one-minute-reset-forest8.mp4",
     poster: "/images/quiet-meditation.jpg",
     overlayClassName:
       "bg-[linear-gradient(180deg,rgba(4,10,18,0.18),rgba(4,10,18,0.72)_72%,rgba(4,10,18,0.84))]",
@@ -63,7 +63,7 @@ const sanctuaryVisuals: Record<
     glowClassName: "bg-[radial-gradient(circle_at_74%_26%,rgba(212,186,117,0.14),transparent_40%)]"
   },
   night: {
-    source: "/videos/one-minute-reset-moon.mp4",
+    source: "/videos/one-minute-reset-moon8.mp4",
     poster: "/images/quiet-meditation.jpg",
     overlayClassName:
       "bg-[linear-gradient(180deg,rgba(4,8,18,0.24),rgba(4,8,18,0.74)_72%,rgba(4,8,18,0.88))]",
@@ -77,7 +77,7 @@ const sanctuaryVisuals: Record<
     glowClassName: "bg-[radial-gradient(circle_at_74%_26%,rgba(212,186,117,0.14),transparent_40%)]"
   },
   distracted: {
-    source: "/videos/one-minute-reset-path.mp4",
+    source: "/videos/one-minute-reset-path8.mp4",
     poster: "/images/quiet-meditation.jpg",
     overlayClassName:
       "bg-[linear-gradient(180deg,rgba(4,11,19,0.2),rgba(4,11,19,0.72)_70%,rgba(4,11,19,0.84))]",
@@ -91,7 +91,7 @@ const sanctuaryVisuals: Record<
     glowClassName: "bg-[radial-gradient(circle_at_78%_20%,rgba(157,177,129,0.14),transparent_40%)]"
   },
   sleep: {
-    source: "/videos/one-minute-reset-moon.mp4",
+    source: "/videos/one-minute-reset-moon8.mp4",
     poster: "/images/quiet-meditation.jpg",
     overlayClassName:
       "bg-[linear-gradient(180deg,rgba(4,8,18,0.26),rgba(4,8,18,0.76)_72%,rgba(4,8,18,0.88))]",
