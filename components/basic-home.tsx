@@ -15,6 +15,10 @@ type CheckInState = {
 
 const basicHomeCopy = {
   jp: {
+    sanctuaryEyebrow: "MEMBER SANCTUARY",
+    sanctuaryTitle: "静かなリズムの場所へようこそ。",
+    sanctuaryBody:
+      "ここは、\n一日の中で少しだけ自分に戻るための場所です。\n\n今日のあなたに必要なリズムを、\n3分だけ選んでください。",
     hero: {
       morning: {
         emoji: "☀️",
@@ -35,7 +39,7 @@ const basicHomeCopy = {
         button: "夜のリズムを始める"
       }
     },
-    todayMessageTitle: "今日の一文",
+    todayMessageTitle: "今日の道しるべ",
     todayMessages: [
       "急がなくて大丈夫です。\nあなたのリズムは、すでにあなたの中にあります。",
       "今日の目標は、うまくやることではなく、目覚めていることです。",
@@ -56,9 +60,9 @@ const basicHomeCopy = {
     },
     rhythmCardsTitle: "一日のリズム",
     rhythmCards: [
-      { key: "morning", emoji: "☀️", title: "朝", description: "今日を軽やかに始める3分" },
-      { key: "day", emoji: "🌿", title: "昼", description: "呼吸を整える3分" },
-      { key: "night", emoji: "🌙", title: "夜", description: "一日を手放す3分" }
+      { key: "morning", emoji: "☀️", title: "朝の扉", description: "今日を軽やかに始める" },
+      { key: "day", emoji: "🌿", title: "昼の扉", description: "呼吸を整え、流れを戻す" },
+      { key: "night", emoji: "🌙", title: "夜の扉", description: "一日をやさしく手放す" }
     ],
     stateRecoveryTitle: "今の状態から選ぶ",
     stateRecoveryItems: [
@@ -77,6 +81,10 @@ const basicHomeCopy = {
     }
   },
   kr: {
+    sanctuaryEyebrow: "MEMBER SANCTUARY",
+    sanctuaryTitle: "고요한 리듬의 장소에 오신 것을 환영합니다.",
+    sanctuaryBody:
+      "이곳은\n하루 속에서 잠시 자신에게 돌아오는 공간입니다.\n\n오늘 당신에게 필요한 리듬을\n3분만 선택해보세요.",
     hero: {
       morning: {
         emoji: "☀️",
@@ -97,7 +105,7 @@ const basicHomeCopy = {
         button: "밤 리듬 시작"
       }
     },
-    todayMessageTitle: "오늘의 한 문장",
+    todayMessageTitle: "오늘의 표지석",
     todayMessages: [
       "급하게 가지 않아도 됩니다.\n당신의 리듬은 이미 당신 안에 있습니다.",
       "오늘의 목표는 잘하는 것이 아니라 깨어있는 것입니다.",
@@ -118,9 +126,9 @@ const basicHomeCopy = {
     },
     rhythmCardsTitle: "하루의 리듬",
     rhythmCards: [
-      { key: "morning", emoji: "☀️", title: "아침", description: "오늘을 가볍게 시작하는 3분" },
-      { key: "day", emoji: "🌿", title: "낮", description: "호흡을 정리하는 3분" },
-      { key: "night", emoji: "🌙", title: "밤", description: "하루를 내려놓는 3분" }
+      { key: "morning", emoji: "☀️", title: "아침의 문", description: "오늘을 가볍게 시작하기" },
+      { key: "day", emoji: "🌿", title: "낮의 문", description: "호흡을 정리하고 흐름을 되찾기" },
+      { key: "night", emoji: "🌙", title: "밤의 문", description: "하루를 부드럽게 내려놓기" }
     ],
     stateRecoveryTitle: "지금 상태에서 선택하기",
     stateRecoveryItems: [
@@ -139,6 +147,10 @@ const basicHomeCopy = {
     }
   },
   en: {
+    sanctuaryEyebrow: "MEMBER SANCTUARY",
+    sanctuaryTitle: "Welcome to your quiet rhythm space.",
+    sanctuaryBody:
+      "This is a place to return to yourself\nfor a few moments in your day.\n\nChoose the rhythm you need today\nfor just 3 minutes.",
     hero: {
       morning: {
         emoji: "☀️",
@@ -180,9 +192,9 @@ const basicHomeCopy = {
     },
     rhythmCardsTitle: "Rhythm of the Day",
     rhythmCards: [
-      { key: "morning", emoji: "☀️", title: "Morning", description: "3 minutes to begin lightly" },
-      { key: "day", emoji: "🌿", title: "Day", description: "3 minutes to settle your breath" },
-      { key: "night", emoji: "🌙", title: "Night", description: "3 minutes to let the day go" }
+      { key: "morning", emoji: "☀️", title: "Morning Gate", description: "Begin the day lightly" },
+      { key: "day", emoji: "🌿", title: "Day Gate", description: "Settle your breath and return to flow" },
+      { key: "night", emoji: "🌙", title: "Night Gate", description: "Gently let the day go" }
     ],
     stateRecoveryTitle: "Choose From Your Current State",
     stateRecoveryItems: [
@@ -303,20 +315,41 @@ export function BasicHome() {
   return (
     <div className="section-shell py-14 sm:py-20">
       <div className="mx-auto max-w-6xl space-y-10 sm:space-y-12">
-        <section className="overflow-hidden rounded-[34px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(245,241,228,0.12),transparent_20%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.16),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.055),rgba(255,255,255,0.02))] px-6 py-8 shadow-[0_28px_90px_rgba(7,17,31,0.22)] sm:px-8 sm:py-10">
+        <section className="overflow-hidden rounded-[38px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.18),transparent_18%),radial-gradient(circle_at_left,rgba(80,119,103,0.20),transparent_28%),radial-gradient(circle_at_bottom,rgba(18,41,64,0.42),transparent_34%),linear-gradient(180deg,rgba(10,23,38,0.96),rgba(6,18,30,0.92))] px-6 py-8 shadow-[0_32px_110px_rgba(3,10,20,0.34)] sm:px-8 sm:py-10">
           <div className="max-w-3xl">
-            <p className="text-sm uppercase tracking-[0.28em] text-gold/82">{copy.hero[rhythmPhase].emoji} {copy.hero[rhythmPhase].title}</p>
-            <h1 className="mt-5 whitespace-pre-line font-serif text-[34px] leading-[1.34] text-white sm:text-[46px]">
-              {hero.body}
+            <p className="text-sm uppercase tracking-[0.32em] text-gold/82">{copy.sanctuaryEyebrow}</p>
+            <h1 className="mt-5 font-serif text-[36px] leading-[1.24] text-white sm:text-[50px]">
+              {copy.sanctuaryTitle}
             </h1>
-            <div className="mt-7">
+            <p className="mt-6 whitespace-pre-line text-base leading-[2] text-white/76 sm:text-lg sm:leading-[2.05]">
+              {copy.sanctuaryBody}
+            </p>
+          </div>
+
+          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+            {copy.rhythmCards.map((card) => (
               <Link
-                href={buildRhythmMeditationHref(rhythmPhase)}
-                className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.22)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#e7cd92]"
+                key={card.key}
+                href={buildRhythmMeditationHref(card.key as RhythmPhase)}
+                className={`rounded-[28px] border px-5 py-5 transition duration-300 ${
+                  rhythmPhase === card.key
+                    ? "border-gold/30 bg-gold/[0.08] shadow-[0_20px_44px_rgba(212,186,117,0.10)]"
+                    : "border-white/10 bg-white/[0.035] hover:bg-white/[0.06]"
+                }`}
               >
-                {hero.button}
+                <p className="text-sm uppercase tracking-[0.24em] text-gold/82">{card.emoji} {card.title}</p>
+                <p className="mt-3 text-sm leading-7 text-white/72">{card.description}</p>
               </Link>
-            </div>
+            ))}
+          </div>
+
+          <div className="mt-7">
+            <Link
+              href={buildRhythmMeditationHref(rhythmPhase)}
+              className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.22)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#e7cd92]"
+            >
+              {hero.emoji} {hero.button}
+            </Link>
           </div>
         </section>
 
@@ -354,21 +387,15 @@ export function BasicHome() {
 
           <article className="rounded-[30px] border border-white/10 bg-white/[0.035] px-6 py-7 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">
             <p className="text-sm uppercase tracking-[0.28em] text-gold/82">{copy.rhythmCardsTitle}</p>
-            <div className="mt-6 grid gap-3">
-              {copy.rhythmCards.map((card) => (
-                <Link
-                  key={card.key}
-                  href={buildRhythmMeditationHref(card.key as RhythmPhase)}
-                  className={`rounded-[24px] border px-5 py-5 transition duration-300 ${
-                    rhythmPhase === card.key
-                      ? "border-gold/26 bg-gold/[0.08]"
-                      : "border-white/10 bg-white/[0.03] hover:bg-white/[0.05]"
-                  }`}
-                >
-                  <p className="text-sm uppercase tracking-[0.24em] text-gold/80">{card.emoji} {card.title}</p>
-                  <p className="mt-3 text-sm leading-7 text-white/72">{card.description}</p>
-                </Link>
-              ))}
+            <div className="mt-6 rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
+              <p className="text-sm uppercase tracking-[0.24em] text-gold/80">{hero.emoji} {copy.hero[rhythmPhase].title}</p>
+              <p className="mt-3 whitespace-pre-line text-sm leading-7 text-white/72">{hero.body}</p>
+              <Link
+                href={buildRhythmMeditationHref(rhythmPhase)}
+                className="mt-5 inline-flex min-h-[48px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
+              >
+                {hero.button}
+              </Link>
             </div>
           </article>
         </section>
