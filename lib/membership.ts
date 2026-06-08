@@ -14,6 +14,8 @@ export type MembershipFetchResult = {
   plan: MembershipPlanKey;
   resolved: boolean;
   subscriptionStatus: string | null;
+  table: "memberships";
+  errorMessage: string | null;
 };
 
 const ACTIVE_MEMBERSHIP_STATUSES = ["active", "trialing"];
@@ -57,7 +59,9 @@ export async function fetchLatestMembershipPlan(
         return {
           plan: "free",
           resolved: false,
-          subscriptionStatus: null
+          subscriptionStatus: null,
+          table: "memberships",
+          errorMessage: activeError.message ?? "Unknown memberships query error"
         };
       }
 
@@ -72,7 +76,9 @@ export async function fetchLatestMembershipPlan(
       return {
         plan: selectedPlan,
         resolved: true,
-        subscriptionStatus: activeMembership.subscription_status ?? null
+        subscriptionStatus: activeMembership.subscription_status ?? null,
+        table: "memberships",
+        errorMessage: null
       };
     }
 
@@ -85,7 +91,9 @@ export async function fetchLatestMembershipPlan(
         return {
           plan: "free",
           resolved: false,
-          subscriptionStatus: null
+          subscriptionStatus: null,
+          table: "memberships",
+          errorMessage: fallbackError.message ?? "Unknown memberships fallback query error"
         };
       }
 
@@ -99,13 +107,17 @@ export async function fetchLatestMembershipPlan(
     return {
       plan: selectedPlan,
       resolved: true,
-      subscriptionStatus: fallbackMembership?.subscription_status ?? null
+      subscriptionStatus: fallbackMembership?.subscription_status ?? null,
+      table: "memberships",
+      errorMessage: null
     };
   }
 
   return {
     plan: "free",
     resolved: false,
-    subscriptionStatus: null
+    subscriptionStatus: null,
+    table: "memberships",
+    errorMessage: "Membership lookup exhausted without a successful response"
   };
 }
