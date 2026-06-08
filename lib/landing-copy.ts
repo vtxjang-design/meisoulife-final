@@ -323,8 +323,8 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
     },
     rhythmChallenge: {
       eyebrow: "Healing Trail",
-      title: "7日間ヒーリングトレイル",
-      subtitle: "朝3分、昼1分、夜3分。\n小さなリズムが脳の自然なバランスを取り戻します。",
+      title: "7日間の小さな回復",
+      subtitle: "あなたのリズムを取り戻す、小さな7日間。\n朝・昼・夜の流れに合わせて、やさしく整えていきます。",
       returning: "また戻ってきましたね。",
       enoughMessage: "今日はここまででも十分です。",
       gentleLine: "少しずつ続ければ十分です。",
@@ -811,8 +811,8 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
     },
     rhythmChallenge: {
       eyebrow: "Healing Trail",
-      title: "7일 힐링 트레일",
-      subtitle: "아침 3분, 낮 1분, 밤 3분.\n작은 리듬이 뇌의 자연한 균형을 회복합니다.",
+      title: "7일간의 작은 회복",
+      subtitle: "나의 리듬을 되찾는 작은 7일.\n아침과 낮, 밤의 흐름에 맞춰 부드럽게 정돈해 갑니다.",
       returning: "다시 와주셨네요.",
       enoughMessage: "오늘은 여기까지여도 충분합니다.",
       gentleLine: "조금씩 이어가면 충분합니다.",
@@ -1293,8 +1293,8 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
     },
     rhythmChallenge: {
       eyebrow: "Healing Trail",
-      title: "Walk the 7-Day Healing Trail",
-      subtitle: "Morning 3 minutes, midday 1 minute, night 3 minutes. Small rhythms help the brain recover its natural balance.",
+      title: "7 Days of Small Recovery",
+      subtitle: "A small 7-day journey to return to your rhythm.\nGently settle into morning, day, and night at your own pace.",
       returning: "You found your way back again.",
       enoughMessage: "This is enough for today.",
       gentleLine: "A little at a time is enough.",

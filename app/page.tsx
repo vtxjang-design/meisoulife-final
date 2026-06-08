@@ -34,14 +34,15 @@ const heroCopy = {
     supporting:
       "少し立ち止まり、\n自分のリズムへ戻る。\n急がなくても大丈夫です。",
     subtitle: "無料・60秒・登録不要",
-    primary: "今の状態を整える",
-    secondary: "7日リズムを見てみる",
+    primary: "今日のリセットを選ぶ",
+    secondary: "7日間の小さな回復",
+    ctaSupport: "あなたのリズムを取り戻す、小さな7日間。",
     tertiaryGuest: "無料で始める",
     tertiaryFree: "今日のチェックイン",
     tertiaryPaid: "自分のリズムへ戻る",
     trust: "無料・60秒・登録不要",
     note: "人生を今日変えなくても大丈夫です。ただ静かな1分だけ。",
-    scrollHint: "この先に、7日リズムへ続く静かな道があります",
+    scrollHint: "この先に、小さな回復へ続く静かな道があります",
     proof: ["情報過多に", "疲れた心に", "考えすぎに"],
     visualCopy: "情報に引かれるのではなく、\n自分へ戻るための静かな入口。",
     visualLabel: "Quiet Forest Entry",
@@ -54,13 +55,14 @@ const heroCopy = {
       "잠시 멈추고,\n내 리듬으로 돌아오는\n조용한 1분.",
     subtitle: "무료 · 60초 · 가입 불필요",
     primary: "오늘의 리셋 고르기",
-    secondary: "7일 리듬 보기",
+    secondary: "7일간의 작은 회복",
+    ctaSupport: "나의 리듬을 되찾는 작은 7일.",
     tertiaryGuest: "무료로 시작하기",
     tertiaryFree: "오늘의 체크인",
     tertiaryPaid: "나의 리듬으로 돌아가기",
     trust: "무료 · 60초 · 가입 불필요",
     note: "서두르지 않아도 괜찮습니다.",
-    scrollHint: "이 아래에 7일 리듬으로 이어지는 조용한 길이 있습니다",
+    scrollHint: "이 아래에 작은 회복으로 이어지는 조용한 길이 있습니다",
     proof: ["과부하일 때", "지쳤을 때", "생각이 많을 때"],
     visualCopy: "정보의 흐름보다,\n나 자신에게 돌아오는 숨의 입구.",
     visualLabel: "Quiet Forest Entry",
@@ -72,14 +74,15 @@ const heroCopy = {
     supporting:
       "Pause.\nBreathe.\nReturn to your rhythm.\n\nThere is no need to rush.",
     subtitle: "Free · 60 seconds · No signup",
-    primary: "Choose Today’s Gate",
-    secondary: "See the 7-Day Rhythm",
+    primary: "Choose Today’s Reset",
+    secondary: "7 Days of Small Recovery",
+    ctaSupport: "A small 7-day journey to return to your rhythm.",
     tertiaryGuest: "Start Free",
     tertiaryFree: "Today's Check-In",
     tertiaryPaid: "Return to My Rhythm",
     trust: "Free · 60 seconds · No signup",
     note: "You do not need to fix your life today. Just take one quiet minute.",
-    scrollHint: "A quiet path into the 7-day rhythm begins just below",
+    scrollHint: "A quiet path into small recovery begins just below",
     proof: ["for stress", "for overload", "for overthinking"],
     visualCopy: "A quiet forest entrance for returning\nto breath instead of noise.",
     visualLabel: "Quiet Forest Entry",
@@ -99,7 +102,7 @@ const returnLoopCopy = {
       { label: "30日", title: "自分の軸が育つ", description: "少しずつ、情報に飲まれにくい自分の感覚が育っていきます。" }
     ],
     note: "大切なのは、深く頑張ることではなく、また戻ってくることです。",
-    primary: "7日リズムを始める",
+    primary: "7日間の小さな回復",
     secondary: "まず1分から整える"
   },
   kr: {
@@ -113,7 +116,7 @@ const returnLoopCopy = {
       { label: "30일", title: "내 중심이 자라기", description: "조금씩, 정보에 덜 휩쓸리는 자기 감각과 선택의 힘이 자라납니다." }
     ],
     note: "중요한 것은 깊게 애쓰는 것이 아니라, 다시 돌아오는 것입니다.",
-    primary: "7일 리듬 시작하기",
+    primary: "7일간의 작은 회복",
     secondary: "먼저 1분 리셋하기"
   },
   en: {
@@ -127,7 +130,7 @@ const returnLoopCopy = {
       { label: "30 days", title: "Grow inner stability", description: "Little by little, your attention becomes less capturable and more your own." }
     ],
     note: "The point is not to push harder. It is to come back again.",
-    primary: "Start the 7-Day Rhythm",
+    primary: "7 Days of Small Recovery",
     secondary: "Begin with 1 minute"
   }
 } as const;
@@ -300,7 +303,7 @@ const finalCtaCopy = {
     title: "また、静かな1分のために。",
     description: "日常が騒がしいほど、戻れる場所は大切になります。",
     primary: "1分リカバリーを始める",
-    secondary: "7日リズムを試す",
+    secondary: "7日間の小さな回復",
     tertiary: "メンバーシップを見る"
   },
   kr: {
@@ -308,7 +311,7 @@ const finalCtaCopy = {
     title: "다시,\n조용한 1분을 위해.",
     description: "일상이 시끄러울수록, 돌아올 수 있는 장소가 더 중요해집니다.",
     primary: "1분 리커버리 시작",
-    secondary: "7일 리듬 체험",
+    secondary: "7일간의 작은 회복",
     tertiary: "멤버십 보기"
   },
   en: {
@@ -316,7 +319,7 @@ const finalCtaCopy = {
     title: "Come back for\none quiet minute.",
     description: "The louder life gets, the more a return place matters.",
     primary: "Start 1-Minute Recovery",
-    secondary: "Try 7-Day Rhythm",
+    secondary: "7 Days of Small Recovery",
     tertiary: "Explore Membership"
   }
 } as const;
@@ -1096,6 +1099,10 @@ export default function HomePage() {
                 {hero.secondary}
               </button>
             </div>
+
+            <p className="max-w-[26ch] text-[12px] leading-6 text-white/56 sm:max-w-[34ch] sm:text-[14px] sm:leading-7 lg:max-w-[420px] lg:text-[14px] lg:leading-7 lg:text-white/58">
+              {hero.ctaSupport}
+            </p>
 
             <p className="hidden max-w-[28ch] text-[12px] leading-6 text-white/50 sm:max-w-none lg:block lg:pt-0.5 lg:text-[13px] lg:leading-7 lg:text-white/54">
               {hero.note}
