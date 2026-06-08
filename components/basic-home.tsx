@@ -10,9 +10,7 @@ const BASIC_CHECKIN_STORAGE_KEY = "meisoulife_basic_rhythm_check";
 type RhythmPhase = "morning" | "day" | "night";
 
 type CheckInState = {
-  mood: string;
-  sleep: string;
-  stress: string;
+  state: string;
 };
 
 const basicHomeCopy = {
@@ -20,51 +18,43 @@ const basicHomeCopy = {
     hero: {
       morning: {
         emoji: "☀️",
-        title: "朝のリズム",
-        body: "今日を始める前に、\n3分だけ自分とつながりましょう。",
+        title: "今日の朝のリズム",
+        body: "今日を始める前に、\n3分だけ自分に戻ってみましょう。",
         button: "朝のリズムを始める"
       },
       day: {
         emoji: "🌿",
-        title: "昼のリズム",
-        body: "少し立ち止まり、\n呼吸を回復する時間です。",
+        title: "今日の昼のリズム",
+        body: "少し立ち止まり、\n呼吸をもう一度整えてみましょう。",
         button: "昼のリズムを始める"
       },
       night: {
         emoji: "🌙",
-        title: "夜のリズム",
-        body: "今日もお疲れさまでした。\n一日をやさしく手放しましょう。",
+        title: "今日の夜のリズム",
+        body: "今日一日をやさしく手放し、\nゆっくり休んでみましょう。",
         button: "夜のリズムを始める"
       }
     },
-    todayMessageTitle: "Today’s Message",
+    todayMessageTitle: "今日の一文",
     todayMessages: [
-      "急がなくて大丈夫です。\nあなたのリズムは、誰とも比べられません。",
+      "急がなくて大丈夫です。\nあなたのリズムは、すでにあなたの中にあります。",
       "今日の目標は、うまくやることではなく、目覚めていることです。",
       "今の一呼吸が、今日を少し変えてくれます。",
       "自然は急ぎません。\nあなたも、急がなくて大丈夫です。",
-      "静けさは、遠くではなく、今ここにあります。"
+      "静けさは遠くにありません。\n今ここにあります。"
     ],
     checkIn: {
-      title: "今日のリズムチェック",
-      mood: "今日の気分",
-      sleep: "睡眠",
-      stress: "ストレス",
-      moodOptions: ["😀", "🙂", "😐", "😔", "😩"],
-      sleepOptions: [
-        { value: "good", label: "良い" },
-        { value: "normal", label: "普通" },
-        { value: "low", label: "不足" }
+      title: "今の私の状態",
+      stateOptions: [
+        { value: "calm", label: "😀 穏やか" },
+        { value: "tired", label: "😌 少し疲れた" },
+        { value: "sleepy", label: "😴 眠い" },
+        { value: "energy", label: "⚡ エネルギーが必要" },
+        { value: "thoughts", label: "💭 考えが多い" }
       ],
-      stressOptions: [
-        { value: "low", label: "低い" },
-        { value: "normal", label: "普通" },
-        { value: "high", label: "高い" }
-      ],
-      save: "記録する",
-      saved: "今日のリズムを記録しました。"
+      saved: "今日の状態を記録しました。"
     },
-    rhythmCardsTitle: "今日のリズムから始める",
+    rhythmCardsTitle: "一日のリズム",
     rhythmCards: [
       { key: "morning", emoji: "☀️", title: "朝", description: "今日を軽やかに始める3分" },
       { key: "day", emoji: "🌿", title: "昼", description: "呼吸を整える3分" },
@@ -90,51 +80,43 @@ const basicHomeCopy = {
     hero: {
       morning: {
         emoji: "☀️",
-        title: "아침 리듬",
-        body: "오늘을 시작하기 전에\n3분만 자신과 연결해보세요.",
+        title: "오늘의 아침 리듬",
+        body: "오늘을 시작하기 전에\n3분만 자신에게 돌아와 보세요.",
         button: "아침 리듬 시작"
       },
       day: {
         emoji: "🌿",
-        title: "낮 리듬",
-        body: "잠시 멈추고\n호흡을 회복할 시간입니다.",
+        title: "오늘의 낮 리듬",
+        body: "잠시 멈추고\n호흡을 다시 정리해보세요.",
         button: "낮 리듬 시작"
       },
       night: {
         emoji: "🌙",
-        title: "밤 리듬",
-        body: "오늘도 수고하셨습니다.\n하루를 부드럽게 내려놓아 보세요.",
+        title: "오늘의 밤 리듬",
+        body: "오늘 하루를 부드럽게 내려놓고\n편안히 쉬어보세요.",
         button: "밤 리듬 시작"
       }
     },
-    todayMessageTitle: "Today’s Message",
+    todayMessageTitle: "오늘의 한 문장",
     todayMessages: [
-      "서두르지 않아도 괜찮습니다.\n당신의 리듬은 누구와도 비교할 수 없습니다.",
+      "급하게 가지 않아도 됩니다.\n당신의 리듬은 이미 당신 안에 있습니다.",
       "오늘의 목표는 잘하는 것이 아니라 깨어있는 것입니다.",
       "지금 한 번의 숨이 오늘을 조금 바꿀 수 있습니다.",
       "자연은 서두르지 않습니다.\n당신도 서두르지 않아도 괜찮습니다.",
-      "고요함은 멀리 있는 것이 아니라 지금 여기에 있습니다."
+      "고요함은 멀리 있지 않습니다.\n지금 여기에 있습니다."
     ],
     checkIn: {
-      title: "오늘의 리듬 체크",
-      mood: "오늘의 기분",
-      sleep: "수면",
-      stress: "스트레스",
-      moodOptions: ["😀", "🙂", "😐", "😔", "😩"],
-      sleepOptions: [
-        { value: "good", label: "좋음" },
-        { value: "normal", label: "보통" },
-        { value: "low", label: "부족" }
+      title: "지금 내 상태",
+      stateOptions: [
+        { value: "calm", label: "😀 편안함" },
+        { value: "tired", label: "😌 조금 지침" },
+        { value: "sleepy", label: "😴 피곤함" },
+        { value: "energy", label: "⚡ 에너지 필요" },
+        { value: "thoughts", label: "💭 생각이 많음" }
       ],
-      stressOptions: [
-        { value: "low", label: "낮음" },
-        { value: "normal", label: "보통" },
-        { value: "high", label: "높음" }
-      ],
-      save: "기록하기",
-      saved: "오늘의 리듬을 기록했습니다."
+      saved: "오늘의 상태를 기록했습니다."
     },
-    rhythmCardsTitle: "오늘의 리듬으로 시작하기",
+    rhythmCardsTitle: "하루의 리듬",
     rhythmCards: [
       { key: "morning", emoji: "☀️", title: "아침", description: "오늘을 가볍게 시작하는 3분" },
       { key: "day", emoji: "🌿", title: "낮", description: "호흡을 정리하는 3분" },
@@ -160,51 +142,43 @@ const basicHomeCopy = {
     hero: {
       morning: {
         emoji: "☀️",
-        title: "Morning Rhythm",
-        body: "Before you begin your day,\ntake 3 minutes to reconnect with yourself.",
+        title: "Today’s Morning Rhythm",
+        body: "Before you begin your day,\ntake 3 minutes to return to yourself.",
         button: "Start Morning Rhythm"
       },
       day: {
         emoji: "🌿",
-        title: "Day Rhythm",
-        body: "Pause for a moment.\nThis is time to recover your breath.",
+        title: "Today’s Day Rhythm",
+        body: "Pause for a moment\nand gently settle your breath.",
         button: "Start Day Rhythm"
       },
       night: {
         emoji: "🌙",
-        title: "Night Rhythm",
-        body: "You did enough today.\nGently let the day go.",
+        title: "Today’s Night Rhythm",
+        body: "Gently let go of the day\nand rest in your own rhythm.",
         button: "Start Night Rhythm"
       }
     },
     todayMessageTitle: "Today’s Message",
     todayMessages: [
-      "You do not need to rush.\nYour rhythm cannot be compared with anyone else’s.",
+      "You do not need to rush.\nYour rhythm is already within you.",
       "Today’s goal is not to do it perfectly, but to stay awake within yourself.",
       "One breath now can gently change your day.",
       "Nature does not hurry.\nYou do not need to hurry either.",
       "Stillness is not far away. It is here, now."
     ],
     checkIn: {
-      title: "Today’s Rhythm Check",
-      mood: "Mood",
-      sleep: "Sleep",
-      stress: "Stress",
-      moodOptions: ["😀", "🙂", "😐", "😔", "😩"],
-      sleepOptions: [
-        { value: "good", label: "Good" },
-        { value: "normal", label: "Normal" },
-        { value: "low", label: "Low" }
+      title: "My State Now",
+      stateOptions: [
+        { value: "calm", label: "😀 Calm" },
+        { value: "tired", label: "😌 A little tired" },
+        { value: "sleepy", label: "😴 Sleepy" },
+        { value: "energy", label: "⚡ Need energy" },
+        { value: "thoughts", label: "💭 Many thoughts" }
       ],
-      stressOptions: [
-        { value: "low", label: "Low" },
-        { value: "normal", label: "Normal" },
-        { value: "high", label: "High" }
-      ],
-      save: "Save",
-      saved: "Your rhythm has been recorded for today."
+      saved: "Your state has been recorded for today."
     },
-    rhythmCardsTitle: "Begin with the rhythm you need today",
+    rhythmCardsTitle: "Rhythm of the Day",
     rhythmCards: [
       { key: "morning", emoji: "☀️", title: "Morning", description: "3 minutes to begin lightly" },
       { key: "day", emoji: "🌿", title: "Day", description: "3 minutes to settle your breath" },
@@ -277,7 +251,7 @@ function readStoredCheckIn(): { date: string; values: CheckInState } | null {
 }
 
 function buildRhythmMeditationHref(rhythm: RhythmPhase) {
-  // TODO: Replace with dedicated Daily Rhythm routes if morning/day/night get their own stable destinations.
+  // Existing safe Daily Rhythm flow currently enters through meditation.
   return `/meditation?duration=180&type=${rhythm}&returnTo=${encodeURIComponent(`/program/basic?rhythm=${rhythm}`)}`;
 }
 
@@ -303,28 +277,20 @@ export function BasicHome() {
     }
 
     return {
-      mood: copy.checkIn.moodOptions[2] ?? "😐",
-      sleep: "normal",
-      stress: "normal"
+      state: copy.checkIn.stateOptions[0]?.value ?? "calm"
     };
   });
   const [savedMessage, setSavedMessage] = useState("");
 
-  function updateCheckIn<K extends keyof CheckInState>(key: K, value: CheckInState[K]) {
-    setCheckIn((current) => ({
-      ...current,
-      [key]: value
-    }));
-    setSavedMessage("");
-  }
-
-  function saveCheckIn() {
+  function saveCheckIn(state: string) {
+    const nextState = { state };
+    setCheckIn(nextState);
     try {
       window.localStorage.setItem(
         BASIC_CHECKIN_STORAGE_KEY,
         JSON.stringify({
           date: getTodayKey(),
-          values: checkIn
+          values: nextState
         })
       );
     } catch (error) {
@@ -364,87 +330,26 @@ export function BasicHome() {
         <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
           <article className="rounded-[30px] border border-white/10 bg-white/[0.035] px-6 py-7 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">
             <p className="text-sm uppercase tracking-[0.28em] text-gold/82">{copy.checkIn.title}</p>
-            <div className="mt-6 space-y-6">
-              <div>
-                <p className="text-sm text-white/64">{copy.checkIn.mood}</p>
-                <div className="mt-3 flex flex-wrap gap-2.5">
-                  {copy.checkIn.moodOptions.map((option) => {
-                    const selected = checkIn.mood === option;
-                    return (
-                      <button
-                        key={option}
-                        type="button"
-                        onClick={() => updateCheckIn("mood", option)}
-                        className={`inline-flex h-12 min-w-12 items-center justify-center rounded-full px-4 text-xl transition duration-200 ${
-                          selected
-                            ? "border border-gold/30 bg-gold/12 shadow-[0_12px_32px_rgba(212,186,117,0.12)]"
-                            : "border border-white/10 bg-white/[0.03] hover:bg-white/[0.06]"
-                        }`}
-                      >
-                        {option}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div>
-                <p className="text-sm text-white/64">{copy.checkIn.sleep}</p>
-                <div className="mt-3 flex flex-wrap gap-2.5">
-                  {copy.checkIn.sleepOptions.map((option) => {
-                    const selected = checkIn.sleep === option.value;
-                    return (
-                      <button
-                        key={option.value}
-                        type="button"
-                        onClick={() => updateCheckIn("sleep", option.value)}
-                        className={`rounded-full px-4 py-2.5 text-sm transition duration-200 ${
-                          selected
-                            ? "border border-gold/30 bg-gold/12 text-white"
-                            : "border border-white/10 bg-white/[0.03] text-white/72 hover:bg-white/[0.06]"
-                        }`}
-                      >
-                        {option.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div>
-                <p className="text-sm text-white/64">{copy.checkIn.stress}</p>
-                <div className="mt-3 flex flex-wrap gap-2.5">
-                  {copy.checkIn.stressOptions.map((option) => {
-                    const selected = checkIn.stress === option.value;
-                    return (
-                      <button
-                        key={option.value}
-                        type="button"
-                        onClick={() => updateCheckIn("stress", option.value)}
-                        className={`rounded-full px-4 py-2.5 text-sm transition duration-200 ${
-                          selected
-                            ? "border border-gold/30 bg-gold/12 text-white"
-                            : "border border-white/10 bg-white/[0.03] text-white/72 hover:bg-white/[0.06]"
-                        }`}
-                      >
-                        {option.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="flex flex-col items-start gap-3">
-                <button
-                  type="button"
-                  onClick={saveCheckIn}
-                  className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-5 py-3 text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
-                >
-                  {copy.checkIn.save}
-                </button>
-                {savedMessage ? <p className="text-sm text-white/58">{savedMessage}</p> : null}
-              </div>
+            <div className="mt-6 flex flex-wrap gap-2.5">
+              {copy.checkIn.stateOptions.map((option) => {
+                const selected = checkIn.state === option.value;
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => saveCheckIn(option.value)}
+                    className={`inline-flex min-h-[48px] items-center justify-center rounded-full border px-4 py-2.5 text-sm transition duration-200 ${
+                      selected
+                        ? "border-gold/30 bg-gold/12 text-white shadow-[0_12px_32px_rgba(212,186,117,0.12)]"
+                        : "border-white/10 bg-white/[0.03] text-white/72 hover:bg-white/[0.06]"
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                );
+              })}
             </div>
+            {savedMessage ? <p className="mt-5 text-sm text-white/58">{savedMessage}</p> : null}
           </article>
 
           <article className="rounded-[30px] border border-white/10 bg-white/[0.035] px-6 py-7 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">

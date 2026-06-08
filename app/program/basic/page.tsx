@@ -5,6 +5,7 @@ import { useAuthState } from "@/components/auth-provider";
 import { BasicHome } from "@/components/basic-home";
 import { MemberDashboard } from "@/components/member-dashboard";
 import { ProgramAccessGuard } from "@/components/program-access-guard";
+import { getLocaleCopy, useLanguage } from "@/lib/i18n";
 import { isLeaderCandidate } from "@/lib/leader";
 import { getMockDashboard } from "@/lib/mock-data";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -15,8 +16,25 @@ type DashboardState = {
   candidateLeader: boolean;
 };
 
+const basicPageCopy = {
+  jp: {
+    secondaryEyebrow: "Member Space",
+    secondaryBody: "プラン、旅の進み、コミュニティ、ライブ予定は、必要なときにここで静かに確認できます。"
+  },
+  kr: {
+    secondaryEyebrow: "Member Space",
+    secondaryBody: "플랜, 여정의 흐름, 커뮤니티, 라이브 일정은 필요할 때 여기에서 차분히 확인할 수 있습니다."
+  },
+  en: {
+    secondaryEyebrow: "Member Space",
+    secondaryBody: "Plan, journey, community, and upcoming events stay here for you when you need them."
+  }
+} as const;
+
 function BasicProgramContent() {
   const { plan, planResolved, planError, userEmail, session } = useAuthState();
+  const { language } = useLanguage();
+  const copy = getLocaleCopy(basicPageCopy, language);
   const mock = getMockDashboard();
   const [dashboardState, setDashboardState] = useState<DashboardState>({
     challengeDay: mock.challengeDay,
@@ -94,16 +112,15 @@ function BasicProgramContent() {
       <section className="section-shell pt-10 sm:pt-14">
         <div className="mx-auto max-w-6xl">
           <div className="mb-6 max-w-2xl">
-            <p className="text-xs uppercase tracking-[0.28em] text-white/42">Member Space</p>
-            <p className="mt-3 text-sm leading-7 text-white/60">
-              Plan, journey, community, and upcoming events stay here when you need them.
-            </p>
+            <p className="text-xs uppercase tracking-[0.28em] text-white/42">{copy.secondaryEyebrow}</p>
+            <p className="mt-3 text-sm leading-7 text-white/60">{copy.secondaryBody}</p>
             {planError ? <p className="mt-3 text-sm text-white/46">{planError}</p> : null}
           </div>
 
           <MemberDashboard
             planKey={plan}
             membershipResolved={planResolved && !planError}
+            membershipError={Boolean(planError)}
             challengeDay={dashboardState.challengeDay}
             streakCount={dashboardState.streakCount}
             aiUsage={mock.aiUsage}

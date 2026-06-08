@@ -8,6 +8,7 @@ type PlanKey = "free" | "basic" | "growth" | "inner_circle";
 type MemberDashboardProps = {
   planKey: PlanKey;
   membershipResolved?: boolean;
+  membershipError?: boolean;
   challengeDay?: number;
   streakCount: number;
   aiUsage: {
@@ -32,7 +33,7 @@ const dashboardCopy = {
     leaderBody:
       "継続実践、チェックイン、コミュニティ貢献が一定基準を超えました。次のステップへ進めます。",
     currentPlan: "現在のプラン",
-    checkingMembership: "会員状態を確認しています...",
+    checkingMembership: "会員状態を確認できませんでした。少し時間をおいてもう一度お試しください。",
     challengeProgress: "チャレンジ進行",
     streakCount: "継続日数",
     aiUsage: "AIコーチ利用",
@@ -49,10 +50,10 @@ const dashboardCopy = {
     dayLabel: "Day",
     streakUnit: "日",
     plans: {
-      free: "Free",
-      basic: "Basic メンバー",
-      growth: "Growth メンバー",
-      inner_circle: "Inner Circle メンバー"
+      free: "Freeメンバー",
+      basic: "Basicメンバー",
+      growth: "Growthメンバー",
+      inner_circle: "Inner Circleメンバー"
     },
     challengeDays: [
       "立ち止まる",
@@ -75,7 +76,7 @@ const dashboardCopy = {
     leaderTitle: "리더 프로그램에 초대되었습니다",
     leaderBody: "지속 실천, 체크인, 커뮤니티 기여가 기준을 넘어 다음 단계로 나아갈 수 있습니다.",
     currentPlan: "현재 플랜",
-    checkingMembership: "멤버십 상태를 확인하고 있습니다...",
+    checkingMembership: "회원 상태를 확인할 수 없습니다. 잠시 후 다시 시도해주세요.",
     challengeProgress: "챌린지 진행",
     streakCount: "연속 실천",
     aiUsage: "AI 코치 이용",
@@ -92,10 +93,10 @@ const dashboardCopy = {
     dayLabel: "Day",
     streakUnit: "일",
     plans: {
-      free: "Free",
-      basic: "Basic 멤버",
-      growth: "Growth 멤버",
-      inner_circle: "Inner Circle 멤버"
+      free: "Free 회원",
+      basic: "Basic 회원",
+      growth: "Growth 회원",
+      inner_circle: "Inner Circle 회원"
     },
     challengeDays: ["멈추기", "호흡", "몸", "감정", "생각", "감사", "본래의 나"],
     events: ["매주 수요일 06:30 아침 라이브 명상", "토요일 21:00 수면 회복 세션"]
@@ -111,7 +112,7 @@ const dashboardCopy = {
     leaderBody:
       "Your steady practice, check-ins, and community contribution have reached the next threshold.",
     currentPlan: "Current plan",
-    checkingMembership: "Checking membership...",
+    checkingMembership: "We could not confirm your membership status. Please try again shortly.",
     challengeProgress: "Challenge progress",
     streakCount: "Streak count",
     aiUsage: "AI coach usage",
@@ -142,6 +143,7 @@ const dashboardCopy = {
 export function MemberDashboard({
   planKey,
   membershipResolved = true,
+  membershipError = false,
   challengeDay = 1,
   streakCount,
   aiUsage,
@@ -152,7 +154,7 @@ export function MemberDashboard({
 }: MemberDashboardProps) {
   const copy = useLocaleCopy(dashboardCopy);
   const safeChallengeDay = Math.min(Math.max(challengeDay, 1), 7);
-  const planLabel = membershipResolved ? copy.plans[planKey] : copy.checkingMembership;
+  const planLabel = membershipResolved && !membershipError ? copy.plans[planKey] : copy.checkingMembership;
 
   return (
     <div className="grid gap-6">
