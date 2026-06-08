@@ -147,6 +147,11 @@ export function RhythmJourneyPage() {
     updateProgress(next);
   }
 
+  function getDailyRhythmRoute(choice: string) {
+    // TODO: Point these to dedicated morning/day/night destinations if those routes or anchors are added later.
+    return `${DAILY_RHYTHM_ROUTE}?rhythm=${encodeURIComponent(choice)}`;
+  }
+
   if (!hydrated) {
     return (
       <div className="section-shell py-20 sm:py-24">
@@ -312,25 +317,25 @@ export function RhythmJourneyPage() {
                           {journeyCopy.day7Body}
                         </p>
                         <p className="whitespace-pre-line text-base leading-8 text-[#f4ead1]/86">
-                          {journeyCopy.day7Prompt}
+                          {journeyCopy.day7Transition}
                         </p>
-                        <div className="flex flex-wrap justify-center gap-2.5">
+                        <div className="grid gap-3 sm:grid-cols-3">
                           {journeyCopy.rhythmChoices.map((option) => {
                             const selected = day7RhythmSelection === option.value;
 
                             return (
-                              <button
+                              <Link
                                 key={option.value}
-                                type="button"
+                                href={getDailyRhythmRoute(option.value)}
                                 onClick={() => handleDay7RhythmSelect(option.value)}
-                                className={`rounded-full px-4 py-2.5 text-sm transition duration-200 ${
+                                className={`flex min-h-[72px] items-center justify-center rounded-[24px] px-4 py-4 text-center text-sm font-semibold transition duration-200 ${
                                   selected
                                     ? "border border-[#f0d79c]/30 bg-[#f3e0af]/16 text-[#fff8e6]"
                                     : "border border-white/10 bg-white/[0.04] text-white/72 hover:bg-white/[0.07]"
                                 }`}
                               >
                                 {option.label}
-                              </button>
+                              </Link>
                             );
                           })}
                         </div>
@@ -351,14 +356,14 @@ export function RhythmJourneyPage() {
                     </button>
                   ) : (
                     <div className="flex flex-col gap-3">
-                      <button
-                        type="button"
-                        onClick={handleNext}
-                        disabled={!day7RhythmSelection}
-                        className="inline-flex min-h-[54px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-3 text-sm font-semibold text-ink transition duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
-                      >
-                        {rhythmButtonLabel}
-                      </button>
+                      {day7RhythmSelection ? (
+                        <Link
+                          href={getDailyRhythmRoute(day7RhythmSelection)}
+                          className="inline-flex min-h-[54px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-3 text-sm font-semibold text-ink transition duration-300 hover:-translate-y-0.5"
+                        >
+                          {rhythmButtonLabel}
+                        </Link>
+                      ) : null}
                       <Link
                         href="/"
                         className="inline-flex min-h-[54px] w-full items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.07]"

@@ -73,7 +73,7 @@ export type RhythmJourneyLocaleContent = {
   audioOff: string;
   day7Title: string;
   day7Body: string;
-  day7Prompt: string;
+  day7Transition: string;
   dailyRhythmCta: string;
   rhythmChoices: RhythmJourneyChoice[];
   days: RhythmJourneyDay[];
@@ -104,13 +104,14 @@ const rhythmJourneyContent: Record<Language, RhythmJourneyLocaleContent> = {
     audioOn: "自然音 ON",
     audioOff: "自然音 OFF",
     day7Title: "7日間、\nお疲れさまでした。",
-    day7Body: "あなたは変わったのではなく、\n\n本来のリズムを\n思い出し始めました。",
-    day7Prompt: "これから、\nどのリズムを育てたいですか？",
+    day7Body:
+      "あなたは、\n新しい自分になったのではありません。\n\nもともと持っていたリズムを、\n少しずつ思い出し始めたのです。\n\n回復は、\n特別なことではありません。\n\n一日の小さな呼吸から、\nまた始めることができます。",
+    day7Transition: "明日からは、\nあなたの一日のリズムを\n小さく整えていきましょう。",
     dailyRhythmCta: "私のDaily Rhythmへ",
     rhythmChoices: [
-      { value: "morning", label: "☀️ 朝を整えたい", followUp: "朝のリズムを\n育てていきましょう。", cta: "Morning Rhythmへ" },
-      { value: "day", label: "🌿 昼を整えたい", followUp: "昼のリズムを\n育てていきましょう。", cta: "Day Rhythmへ" },
-      { value: "night", label: "🌙 夜を整えたい", followUp: "夜のリズムを\n育てていきましょう。", cta: "Night Rhythmへ" }
+      { value: "morning", label: "☀️ 朝のリズム", followUp: "朝のリズムを\n育てていきましょう。", cta: "Morning Rhythmへ" },
+      { value: "day", label: "🌿 昼のリズム", followUp: "昼のリズムを\n育てていきましょう。", cta: "Day Rhythmへ" },
+      { value: "night", label: "🌙 夜のリズム", followUp: "夜のリズムを\n育てていきましょう。", cta: "Night Rhythmへ" }
     ],
     days: [
       {
@@ -260,13 +261,14 @@ const rhythmJourneyContent: Record<Language, RhythmJourneyLocaleContent> = {
     audioOn: "자연음 ON",
     audioOff: "자연음 OFF",
     day7Title: "7일간,\n수고 많으셨습니다.",
-    day7Body: "무언가 달라진 것이 아니라,\n\n본래의 리듬을\n다시 떠올리기 시작했습니다.",
-    day7Prompt: "이제,\n어떤 리듬을 키워가고 싶나요?",
+    day7Body:
+      "당신은\n새로운 사람이 된 것이 아닙니다.\n\n원래 가지고 있던 리듬을\n조금씩 기억하기 시작한 것입니다.\n\n회복은\n특별한 일이 아닙니다.\n\n하루의 작은 숨에서\n다시 시작할 수 있습니다.",
+    day7Transition: "내일부터는\n당신의 하루 리듬을\n작게 정리해가세요.",
     dailyRhythmCta: "나의 Daily Rhythm으로",
     rhythmChoices: [
-      { value: "morning", label: "☀️ 아침을 정돈하고 싶어요", followUp: "아침의 리듬을\n천천히 키워가 봅시다.", cta: "Morning Rhythm으로" },
-      { value: "day", label: "🌿 낮을 정돈하고 싶어요", followUp: "낮의 리듬을\n천천히 키워가 봅시다.", cta: "Day Rhythm으로" },
-      { value: "night", label: "🌙 밤을 정돈하고 싶어요", followUp: "밤의 리듬을\n천천히 키워가 봅시다.", cta: "Night Rhythm으로" }
+      { value: "morning", label: "☀️ 아침 리듬", followUp: "아침의 리듬을\n천천히 키워가 봅시다.", cta: "Morning Rhythm으로" },
+      { value: "day", label: "🌿 낮 리듬", followUp: "낮의 리듬을\n천천히 키워가 봅시다.", cta: "Day Rhythm으로" },
+      { value: "night", label: "🌙 밤 리듬", followUp: "밤의 리듬을\n천천히 키워가 봅시다.", cta: "Night Rhythm으로" }
     ],
     days: [
       {
@@ -416,13 +418,14 @@ const rhythmJourneyContent: Record<Language, RhythmJourneyLocaleContent> = {
     audioOn: "Nature sound ON",
     audioOff: "Nature sound OFF",
     day7Title: "Thank you\nfor these 7 days.",
-    day7Body: "You did not become someone else.\n\nYou began to remember\nyour own rhythm.",
-    day7Prompt: "From here,\nwhich rhythm would you like to grow?",
+    day7Body:
+      "You have not become someone new.\n\nYou have simply begun to remember\nthe rhythm you already had within you.\n\nRecovery is not something special.\n\nIt can begin again\nwith one small breath in your day.",
+    day7Transition: "From tomorrow,\nbegin gently caring for\nthe rhythm of your day.",
     dailyRhythmCta: "Go to My Daily Rhythm",
     rhythmChoices: [
-      { value: "morning", label: "☀️ I want to steady my morning", followUp: "Let us gently grow\nyour morning rhythm.", cta: "Morning Rhythm" },
-      { value: "day", label: "🌿 I want to steady my daytime", followUp: "Let us gently grow\nyour daytime rhythm.", cta: "Day Rhythm" },
-      { value: "night", label: "🌙 I want to steady my night", followUp: "Let us gently grow\nyour night rhythm.", cta: "Night Rhythm" }
+      { value: "morning", label: "☀️ Morning Rhythm", followUp: "Let us gently grow\nyour morning rhythm.", cta: "Morning Rhythm" },
+      { value: "day", label: "🌿 Day Rhythm", followUp: "Let us gently grow\nyour daytime rhythm.", cta: "Day Rhythm" },
+      { value: "night", label: "🌙 Night Rhythm", followUp: "Let us gently grow\nyour night rhythm.", cta: "Night Rhythm" }
     ],
     days: [
       {
