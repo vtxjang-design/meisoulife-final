@@ -13,6 +13,7 @@ const HOLD_SECONDS = 2;
 const AI_COACH_URL =
   process.env.NEXT_PUBLIC_AI_COACH_URL ||
   "https://chatgpt.com/g/g-69f968bc9a408191a3e5f943912666c0-quiet-rhythm-guide";
+const JOURNEY_AUDIO_PENDING_KEY = "meisoulife_journey_audio_pending";
 
 type BreathPhase = "inhale" | "hold" | "exhale";
 type MeditationType = "default" | "morning" | "day" | "night";
@@ -77,6 +78,7 @@ export default function MeditationPage() {
   const audioContextRef = useRef<AudioContext | null>(null);
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
   const completionHandledRef = useRef(false);
+  const pendingJourneyAudioRef = useRef(false);
   const elapsedTotalSeconds = totalSeconds - secondsLeft;
   const phase = useMemo(() => getBreathPhase(elapsedTotalSeconds), [elapsedTotalSeconds]);
   const isComplete = secondsLeft <= 0;
@@ -85,7 +87,7 @@ export default function MeditationPage() {
   const durationTextSet = copy.durationTexts?.[durationVariant];
   const journeyAudioSource = journeyDay ? journeyAudioMap[journeyDay] : undefined;
   const ambientAudioSource = journeyMode && journeyAudioSource ? journeyAudioSource : undefined;
-  const ambientAudioVolume = journeyMode ? 0.26 : undefined;
+  const ambientAudioVolume = journeyMode ? 0.45 : undefined;
   const topText = journeyMode
     ? "今ここで、\n60秒だけ呼吸に戻りましょう。"
     : meditationType === "morning" || meditationType === "night"
@@ -106,18 +108,60 @@ export default function MeditationPage() {
     const nextJourneyMode = searchParams.get("journey") === "1";
     const nextJourneyDay = Number(searchParams.get("journeyDay"));
     const nextReturnTo = searchParams.get("returnTo");
+    const pendingJourneyAudio =
+      typeof window === "undefined" ? null : window.sessionStorage.getItem(JOURNEY_AUDIO_PENDING_KEY);
 
     setTotalSeconds(nextDuration);
     setSecondsLeft(nextDuration);
     setMeditationType(nextType);
-    setSoundEnabled(getNatureSoundPreference());
+    const nextSoundEnabled = nextJourneyMode && pendingJourneyAudio ? true : getNatureSoundPreference();
+    setSoundEnabled(nextSoundEnabled);
     setJourneyMode(nextJourneyMode);
     setJourneyDay(Number.isInteger(nextJourneyDay) && nextJourneyDay >= 1 && nextJourneyDay <= 7 ? nextJourneyDay : null);
     setReturnToHref(nextReturnTo || "/challenge");
     setAmbientVideoFailed(false);
     setShowAmbientRetry(false);
+    pendingJourneyAudioRef.current = Boolean(nextJourneyMode && pendingJourneyAudio);
+    setHasUserGesture(Boolean(nextJourneyMode && pendingJourneyAudio));
     completionHandledRef.current = false;
   }, []);
+
+  async function handleAmbientStartResult(result: { started: boolean }) {
+    if (journeyMode && journeyDay) {
+      console.log("[Journey Audio] day:", journeyDay);
+      console.log("[Journey Audio] src:", ambientAudioSource);
+    }
+
+    if (result.started) {
+      if (journeyMode) {
+        console.log("[Journey Audio] play started");
+      }
+
+      setShowAmbientRetry(false);
+      setSoundEnabled(true);
+      setNatureSoundPreference(true);
+      pendingJourneyAudioRef.current = false;
+
+      if (typeof window !== "undefined") {
+        window.sessionStorage.removeItem(JOURNEY_AUDIO_PENDING_KEY);
+      }
+
+      return;
+    }
+
+    if (journeyMode) {
+      setSoundEnabled(false);
+      setNatureSoundPreference(false);
+      pendingJourneyAudioRef.current = false;
+      console.warn("[Journey Audio] play failed");
+
+      if (typeof window !== "undefined") {
+        window.sessionStorage.removeItem(JOURNEY_AUDIO_PENDING_KEY);
+      }
+    } else {
+      setShowAmbientRetry(true);
+    }
+  }
 
   useEffect(() => {
     setVibrationSupported(supportsMeditationVibration());
@@ -127,7 +171,7 @@ export default function MeditationPage() {
 
       if (!isComplete && soundEnabled) {
         startAmbientNatureAudio(ambientAudioRef, soundEnabled, ambientAudioSource, ambientAudioVolume).then((result) => {
-          setShowAmbientRetry(!result.started);
+          void handleAmbientStartResult(result);
         });
       }
     };
@@ -163,7 +207,7 @@ export default function MeditationPage() {
     }
 
     startAmbientNatureAudio(ambientAudioRef, soundEnabled, ambientAudioSource, ambientAudioVolume).then((result) => {
-      setShowAmbientRetry(!result.started);
+      void handleAmbientStartResult(result);
     });
 
     return () => {
@@ -195,13 +239,13 @@ export default function MeditationPage() {
   async function handleSoundToggle() {
     setHasUserGesture(true);
     const next = !soundEnabled;
-    setNatureSoundPreference(next);
-    setSoundEnabled(next);
 
     if (next) {
       const result = await startAmbientNatureAudio(ambientAudioRef, true, ambientAudioSource, ambientAudioVolume);
-      setShowAmbientRetry(!result.started);
+      await handleAmbientStartResult(result);
     } else {
+      setSoundEnabled(false);
+      setNatureSoundPreference(false);
       setShowAmbientRetry(false);
       stopAmbientNatureAudio(ambientAudioRef);
     }
@@ -215,7 +259,7 @@ export default function MeditationPage() {
   async function handleAmbientRetry() {
     setHasUserGesture(true);
     const result = await startAmbientNatureAudio(ambientAudioRef, soundEnabled, ambientAudioSource, ambientAudioVolume);
-    setShowAmbientRetry(!result.started);
+    await handleAmbientStartResult(result);
   }
 
   return (
