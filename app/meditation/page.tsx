@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useSiteCopy } from "@/lib/i18n";
 import { getNatureSoundPreference, setNatureSoundPreference, startAmbientNatureAudio, stopAmbientNatureAudio } from "@/lib/meditation-ambient-audio";
 import { handleMeditationComplete as triggerMeditationCompletion, supportsMeditationVibration } from "@/lib/meditation-completion";
-import { journeyAudioMap } from "@/lib/rhythm-journey";
+import { journeyAudioMap, journeyGuidanceMap } from "@/lib/rhythm-journey";
 
 const CYCLE_SECONDS = 10;
 const INHALE_SECONDS = 4;
@@ -62,6 +62,18 @@ function getDurationVariant(totalSeconds: number) {
   return totalSeconds >= 180 ? "threeMinutes" : "sixty";
 }
 
+function getJourneyGuidanceStage(elapsedSeconds: number, totalSeconds: number) {
+  if (elapsedSeconds < 8) {
+    return "opening";
+  }
+
+  if (elapsedSeconds >= Math.max(totalSeconds - 5, 0)) {
+    return "closing";
+  }
+
+  return "breathing";
+}
+
 export default function MeditationPage() {
   const copy = useSiteCopy().meditationPage;
   const [totalSeconds, setTotalSeconds] = useState(60);
@@ -86,8 +98,10 @@ export default function MeditationPage() {
   const durationVariant = getDurationVariant(totalSeconds);
   const durationTextSet = copy.durationTexts?.[durationVariant];
   const journeyAudioSource = journeyDay ? journeyAudioMap[journeyDay] : undefined;
+  const journeyGuidance = journeyDay ? journeyGuidanceMap[journeyDay] : undefined;
   const ambientAudioSource = journeyMode && journeyAudioSource ? journeyAudioSource : undefined;
   const ambientAudioVolume = journeyMode ? 0.65 : undefined;
+  const journeyGuidanceStage = getJourneyGuidanceStage(elapsedTotalSeconds, totalSeconds);
   const topText = journeyMode
     ? "今ここで、\n60秒だけ呼吸に戻りましょう。"
     : meditationType === "morning" || meditationType === "night"
@@ -100,6 +114,14 @@ export default function MeditationPage() {
       : durationTextSet?.completionTitle || content.completionTitle;
   const circleScaleClass =
     phase === "inhale" ? "scale-110" : phase === "hold" ? "scale-110" : "scale-90";
+  const journeyOverlayMessage =
+    journeyMode && journeyGuidance
+      ? journeyGuidanceStage === "opening"
+        ? journeyGuidance.openingMessage
+        : journeyGuidanceStage === "closing"
+          ? journeyGuidance.closingMessage
+          : null
+      : null;
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -359,10 +381,36 @@ export default function MeditationPage() {
         <div className="relative z-20 flex w-full flex-col items-center text-center">
         {!isComplete ? (
           <>
-            <div className="space-y-4">
-              <p className="text-sm uppercase tracking-[0.32em] text-gold/80">{topText}</p>
-              <p className="mx-auto max-w-2xl text-sm leading-7 text-white/60 sm:text-base">{introText}</p>
-            </div>
+            {journeyMode ? (
+              <div className="flex min-h-[112px] w-full items-center justify-center">
+                {journeyOverlayMessage ? (
+                  <div
+                    key={`${journeyDay}-${journeyGuidanceStage}`}
+                    className="animate-fade-in space-y-3 transition-opacity duration-300"
+                  >
+                    <p className="text-xs uppercase tracking-[0.28em] text-gold/72">{topText}</p>
+                    <p className="mx-auto max-w-xl whitespace-pre-line text-center text-xl leading-[1.9] text-white/92 sm:text-2xl">
+                      {journeyOverlayMessage}
+                    </p>
+                  </div>
+                ) : (
+                  <div
+                    key={`${journeyDay}-${journeyGuidanceStage}`}
+                    className="animate-fade-in space-y-3 transition-opacity duration-300"
+                  >
+                    <p className="text-xs uppercase tracking-[0.28em] text-gold/72">{topText}</p>
+                    <p className="mx-auto max-w-xl text-center text-sm leading-7 text-white/62 sm:text-base">
+                      {introText}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <p className="text-sm uppercase tracking-[0.32em] text-gold/80">{topText}</p>
+                <p className="mx-auto max-w-2xl text-sm leading-7 text-white/60 sm:text-base">{introText}</p>
+              </div>
+            )}
 
             <div className="mt-12 flex min-h-[320px] w-full flex-col items-center justify-center">
               <div className="mb-6 flex items-center gap-2">
@@ -403,7 +451,7 @@ export default function MeditationPage() {
                   </button>
                 ) : null}
               </div>
-              <p className="text-2xl font-medium text-white/72 transition-all duration-700 ease-in-out sm:text-3xl">
+              <p className="text-2xl font-medium text-white/72 transition-all duration-300 ease-out sm:text-3xl">
                 {copy.phases[phase]}
               </p>
 
@@ -422,7 +470,9 @@ export default function MeditationPage() {
             </div>
 
             <div className="mt-8">
-              <p className="text-sm font-medium tracking-[0.18em] text-white/68 sm:text-base">{copy.bottomText[phase]}</p>
+              <p className="text-sm font-medium tracking-[0.18em] text-white/68 transition-opacity duration-300 sm:text-base">
+                {copy.bottomText[phase]}
+              </p>
             </div>
           </>
         ) : (

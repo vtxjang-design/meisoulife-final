@@ -9,6 +9,43 @@ export const journeyAudioMap: Record<number, string> = {
   7: "/audio/7day-recovery/day07-my-rhythm.mp3"
 };
 
+export const journeyGuidanceMap: Record<
+  number,
+  {
+    openingMessage: string;
+    closingMessage: string;
+  }
+> = {
+  1: {
+    openingMessage: "何かを変えなくて大丈夫です。\n\n今日は、\n少し止まってみましょう。",
+    closingMessage: "少し止まれました。\n\nそれだけで十分です。"
+  },
+  2: {
+    openingMessage: "呼吸は、\nいつもここにあります。\n\nそのリズムに\n戻ってみましょう。",
+    closingMessage: "呼吸は、\nあなたを支えています。"
+  },
+  3: {
+    openingMessage: "考える前に、\n\n身体の声を\n聞いてみましょう。",
+    closingMessage: "身体は、\n\nいつも答えを\n知っています。"
+  },
+  4: {
+    openingMessage: "自然は急ぎません。\n\nあなたも、\n急がなくて大丈夫です。",
+    closingMessage: "自然とのつながりを\n\n思い出しました。"
+  },
+  5: {
+    openingMessage: "小さなことで\n大丈夫です。\n\n今日の恵みに\n気づいてみましょう。",
+    closingMessage: "感謝は、\n\n心をやさしく\n整えてくれます。"
+  },
+  6: {
+    openingMessage: "静けさは\n\n遠くではなく、\n\nすでにここにあります。",
+    closingMessage: "静かな自分に\n\n少し出会えました。"
+  },
+  7: {
+    openingMessage: "正しいリズムではなく、\n\nあなた自身のリズムを\n\n感じてみましょう。",
+    closingMessage: "あなたのリズムを\n\n大切に育ててください。"
+  }
+};
+
 export type RhythmJourneyProgress = {
   journeyStarted: boolean;
   currentDay: number;
