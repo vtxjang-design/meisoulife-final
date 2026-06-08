@@ -41,11 +41,11 @@ const basicHomeCopy = {
     },
     todayMessageTitle: "今日の道しるべ",
     todayMessages: [
-      "急がなくて大丈夫です。\nあなたのリズムは、すでにあなたの中にあります。",
-      "今日の目標は、うまくやることではなく、目覚めていることです。",
-      "今の一呼吸が、今日を少し変えてくれます。",
       "自然は急ぎません。\nあなたも、急がなくて大丈夫です。",
-      "静けさは遠くにありません。\n今ここにあります。"
+      "今の一呼吸が、今日を少し変えてくれます。",
+      "静けさは遠くにありません。\n今ここにあります。",
+      "今日の目標は、うまくやることではなく、目覚めていることです。",
+      "あなたのリズムは、すでにあなたの中にあります。"
     ],
     checkIn: {
       title: "今の私の状態",
@@ -60,9 +60,30 @@ const basicHomeCopy = {
     },
     rhythmCardsTitle: "一日のリズム",
     rhythmCards: [
-      { key: "morning", emoji: "☀️", title: "朝の扉", description: "今日を軽やかに始める" },
-      { key: "day", emoji: "🌿", title: "昼の扉", description: "呼吸を整え、流れを戻す" },
-      { key: "night", emoji: "🌙", title: "夜の扉", description: "一日をやさしく手放す" }
+      {
+        key: "morning",
+        emoji: "☀️",
+        title: "朝の扉",
+        description: "今日を軽やかに始める",
+        detail: "3分・Morning Gate",
+        button: "朝のリズムを始める →"
+      },
+      {
+        key: "day",
+        emoji: "🌿",
+        title: "昼の扉",
+        description: "呼吸を整え、流れを戻す",
+        detail: "3分・Day Gate",
+        button: "昼のリズムを始める →"
+      },
+      {
+        key: "night",
+        emoji: "🌙",
+        title: "夜の扉",
+        description: "一日をやさしく手放す",
+        detail: "3分・Night Gate",
+        button: "夜のリズムを始める →"
+      }
     ],
     stateRecoveryTitle: "今の状態から選ぶ",
     stateRecoveryItems: [
@@ -107,11 +128,11 @@ const basicHomeCopy = {
     },
     todayMessageTitle: "오늘의 표지석",
     todayMessages: [
-      "급하게 가지 않아도 됩니다.\n당신의 리듬은 이미 당신 안에 있습니다.",
-      "오늘의 목표는 잘하는 것이 아니라 깨어있는 것입니다.",
-      "지금 한 번의 숨이 오늘을 조금 바꿀 수 있습니다.",
       "자연은 서두르지 않습니다.\n당신도 서두르지 않아도 괜찮습니다.",
-      "고요함은 멀리 있지 않습니다.\n지금 여기에 있습니다."
+      "지금 한 번의 숨이 오늘 하루를 조금 바꿀 수 있습니다.",
+      "고요함은 멀리 있지 않습니다.\n지금 여기에 있습니다.",
+      "오늘의 목표는 잘하는 것이 아니라 깨어있는 것입니다.",
+      "당신의 리듬은 이미 당신 안에 있습니다."
     ],
     checkIn: {
       title: "지금 내 상태",
@@ -126,9 +147,30 @@ const basicHomeCopy = {
     },
     rhythmCardsTitle: "하루의 리듬",
     rhythmCards: [
-      { key: "morning", emoji: "☀️", title: "아침의 문", description: "오늘을 가볍게 시작하기" },
-      { key: "day", emoji: "🌿", title: "낮의 문", description: "호흡을 정리하고 흐름을 되찾기" },
-      { key: "night", emoji: "🌙", title: "밤의 문", description: "하루를 부드럽게 내려놓기" }
+      {
+        key: "morning",
+        emoji: "☀️",
+        title: "아침의 문",
+        description: "오늘을 가볍게 시작하기",
+        detail: "3분 · Morning Gate",
+        button: "아침 리듬 시작 →"
+      },
+      {
+        key: "day",
+        emoji: "🌿",
+        title: "낮의 문",
+        description: "호흡을 정리하고 흐름을 되찾기",
+        detail: "3분 · Day Gate",
+        button: "낮 리듬 시작 →"
+      },
+      {
+        key: "night",
+        emoji: "🌙",
+        title: "밤의 문",
+        description: "하루를 부드럽게 내려놓기",
+        detail: "3분 · Night Gate",
+        button: "밤 리듬 시작 →"
+      }
     ],
     stateRecoveryTitle: "지금 상태에서 선택하기",
     stateRecoveryItems: [
@@ -171,13 +213,13 @@ const basicHomeCopy = {
         button: "Start Night Rhythm"
       }
     },
-    todayMessageTitle: "Today’s Message",
+    todayMessageTitle: "Today’s Signpost",
     todayMessages: [
-      "You do not need to rush.\nYour rhythm is already within you.",
-      "Today’s goal is not to do it perfectly, but to stay awake within yourself.",
-      "One breath now can gently change your day.",
       "Nature does not hurry.\nYou do not need to hurry either.",
-      "Stillness is not far away. It is here, now."
+      "One breath now can gently change your day.",
+      "Stillness is not far away. It is here, now.",
+      "Today’s goal is not to do it perfectly, but to stay awake within yourself.",
+      "Your rhythm is already within you."
     ],
     checkIn: {
       title: "My State Now",
@@ -192,9 +234,30 @@ const basicHomeCopy = {
     },
     rhythmCardsTitle: "Rhythm of the Day",
     rhythmCards: [
-      { key: "morning", emoji: "☀️", title: "Morning Gate", description: "Begin the day lightly" },
-      { key: "day", emoji: "🌿", title: "Day Gate", description: "Settle your breath and return to flow" },
-      { key: "night", emoji: "🌙", title: "Night Gate", description: "Gently let the day go" }
+      {
+        key: "morning",
+        emoji: "☀️",
+        title: "Morning Gate",
+        description: "Begin the day lightly",
+        detail: "3 min · Morning Rhythm",
+        button: "Start Morning Rhythm →"
+      },
+      {
+        key: "day",
+        emoji: "🌿",
+        title: "Day Gate",
+        description: "Settle your breath and return to flow",
+        detail: "3 min · Day Rhythm",
+        button: "Start Day Rhythm →"
+      },
+      {
+        key: "night",
+        emoji: "🌙",
+        title: "Night Gate",
+        description: "Gently let the day go",
+        detail: "3 min · Night Rhythm",
+        button: "Start Night Rhythm →"
+      }
     ],
     stateRecoveryTitle: "Choose From Your Current State",
     stateRecoveryItems: [
@@ -272,6 +335,18 @@ function buildStateRecoveryHref(state: string) {
   return `/meditation?duration=60&type=default&state=${encodeURIComponent(state)}&returnTo=${encodeURIComponent("/program/basic#state-recovery")}`;
 }
 
+function getGateSurfaceClasses(rhythm: RhythmPhase) {
+  if (rhythm === "morning") {
+    return "bg-[radial-gradient(circle_at_top,rgba(240,211,138,0.26),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(194,139,72,0.18),transparent_36%),linear-gradient(180deg,rgba(46,56,86,0.88),rgba(20,26,42,0.92))] shadow-[0_22px_60px_rgba(232,190,111,0.14)]";
+  }
+
+  if (rhythm === "day") {
+    return "bg-[radial-gradient(circle_at_top,rgba(120,174,138,0.20),transparent_32%),radial-gradient(circle_at_bottom_left,rgba(53,101,87,0.24),transparent_40%),linear-gradient(180deg,rgba(23,54,58,0.90),rgba(12,26,30,0.94))] shadow-[0_22px_60px_rgba(73,126,103,0.16)]";
+  }
+
+  return "bg-[radial-gradient(circle_at_top,rgba(110,138,208,0.22),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(58,90,148,0.18),transparent_42%),linear-gradient(180deg,rgba(20,35,61,0.92),rgba(9,18,34,0.96))] shadow-[0_22px_60px_rgba(79,111,178,0.16)]";
+}
+
 export function BasicHome() {
   const { language } = useLanguage();
   const copy = useMemo(() => getLocaleCopy(basicHomeCopy, language), [language]);
@@ -280,7 +355,6 @@ export function BasicHome() {
   const rhythmPhase = highlightedRhythm === "morning" || highlightedRhythm === "day" || highlightedRhythm === "night"
     ? highlightedRhythm
     : getLocalRhythmPhase();
-  const hero = copy.hero[rhythmPhase];
   const todayMessage = useMemo(() => getDailyMessage(copy.todayMessages), [copy.todayMessages]);
   const [checkIn, setCheckIn] = useState<CheckInState>(() => {
     const stored = readStoredCheckIn();
@@ -315,8 +389,14 @@ export function BasicHome() {
   return (
     <div className="section-shell py-14 sm:py-20">
       <div className="mx-auto max-w-6xl space-y-10 sm:space-y-12">
-        <section className="overflow-hidden rounded-[38px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.18),transparent_18%),radial-gradient(circle_at_left,rgba(80,119,103,0.20),transparent_28%),radial-gradient(circle_at_bottom,rgba(18,41,64,0.42),transparent_34%),linear-gradient(180deg,rgba(10,23,38,0.96),rgba(6,18,30,0.92))] px-6 py-8 shadow-[0_32px_110px_rgba(3,10,20,0.34)] sm:px-8 sm:py-10">
-          <div className="max-w-3xl">
+        <section className="relative overflow-hidden rounded-[38px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(231,206,140,0.16),transparent_16%),radial-gradient(circle_at_left,rgba(67,104,91,0.22),transparent_24%),radial-gradient(circle_at_bottom_right,rgba(46,86,118,0.24),transparent_28%),linear-gradient(180deg,rgba(8,20,34,0.98),rgba(5,14,24,0.96))] px-6 py-8 shadow-[0_36px_120px_rgba(3,10,20,0.44)] sm:px-8 sm:py-10">
+          <div className="pointer-events-none absolute inset-0">
+            <div className="absolute inset-x-0 top-0 h-48 bg-[radial-gradient(circle_at_top,rgba(241,222,170,0.20),transparent_62%)]" />
+            <div className="absolute -left-10 bottom-0 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(83,120,102,0.20),transparent_68%)] blur-2xl" />
+            <div className="absolute right-0 top-10 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgba(85,110,162,0.18),transparent_70%)] blur-3xl" />
+          </div>
+
+          <div className="relative max-w-3xl">
             <p className="text-sm uppercase tracking-[0.32em] text-gold/82">{copy.sanctuaryEyebrow}</p>
             <h1 className="mt-5 font-serif text-[36px] leading-[1.24] text-white sm:text-[50px]">
               {copy.sanctuaryTitle}
@@ -326,30 +406,30 @@ export function BasicHome() {
             </p>
           </div>
 
-          <div className="mt-8 grid gap-3 sm:grid-cols-3">
-            {copy.rhythmCards.map((card) => (
+          <div className="relative mt-10 grid gap-4 sm:grid-cols-3">
+            {copy.rhythmCards.map((card) => {
+              const rhythm = card.key as RhythmPhase;
+
+              return (
               <Link
                 key={card.key}
-                href={buildRhythmMeditationHref(card.key as RhythmPhase)}
-                className={`rounded-[28px] border px-5 py-5 transition duration-300 ${
-                  rhythmPhase === card.key
-                    ? "border-gold/30 bg-gold/[0.08] shadow-[0_20px_44px_rgba(212,186,117,0.10)]"
-                    : "border-white/10 bg-white/[0.035] hover:bg-white/[0.06]"
-                }`}
+                href={buildRhythmMeditationHref(rhythm)}
+                className={`group relative overflow-hidden rounded-[30px] border px-5 py-5 transition duration-300 hover:-translate-y-1 ${
+                  rhythmPhase === card.key ? "border-gold/28 ring-1 ring-gold/18" : "border-white/10"
+                } ${getGateSurfaceClasses(rhythm)}`}
               >
-                <p className="text-sm uppercase tracking-[0.24em] text-gold/82">{card.emoji} {card.title}</p>
-                <p className="mt-3 text-sm leading-7 text-white/72">{card.description}</p>
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent_26%,rgba(6,10,20,0.24)_100%)] opacity-90" />
+                <div className="relative">
+                  <p className="text-sm uppercase tracking-[0.24em] text-gold/82">{card.emoji} {card.title}</p>
+                  <p className="mt-3 min-h-[56px] text-sm leading-7 text-white/82">{card.description}</p>
+                  <p className="mt-4 text-xs uppercase tracking-[0.24em] text-white/52">{card.detail}</p>
+                  <div className="mt-6 inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/14 bg-white/[0.08] px-4 py-2 text-sm font-semibold text-white transition duration-300 group-hover:bg-white/[0.12]">
+                    {card.button}
+                  </div>
+                </div>
               </Link>
-            ))}
-          </div>
-
-          <div className="mt-7">
-            <Link
-              href={buildRhythmMeditationHref(rhythmPhase)}
-              className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.22)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#e7cd92]"
-            >
-              {hero.emoji} {hero.button}
-            </Link>
+            );
+            })}
           </div>
         </section>
 
@@ -360,7 +440,7 @@ export function BasicHome() {
           </p>
         </section>
 
-        <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+        <section>
           <article className="rounded-[30px] border border-white/10 bg-white/[0.035] px-6 py-7 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">
             <p className="text-sm uppercase tracking-[0.28em] text-gold/82">{copy.checkIn.title}</p>
             <div className="mt-6 flex flex-wrap gap-2.5">
@@ -383,20 +463,6 @@ export function BasicHome() {
               })}
             </div>
             {savedMessage ? <p className="mt-5 text-sm text-white/58">{savedMessage}</p> : null}
-          </article>
-
-          <article className="rounded-[30px] border border-white/10 bg-white/[0.035] px-6 py-7 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">
-            <p className="text-sm uppercase tracking-[0.28em] text-gold/82">{copy.rhythmCardsTitle}</p>
-            <div className="mt-6 rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
-              <p className="text-sm uppercase tracking-[0.24em] text-gold/80">{hero.emoji} {copy.hero[rhythmPhase].title}</p>
-              <p className="mt-3 whitespace-pre-line text-sm leading-7 text-white/72">{hero.body}</p>
-              <Link
-                href={buildRhythmMeditationHref(rhythmPhase)}
-                className="mt-5 inline-flex min-h-[48px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
-              >
-                {hero.button}
-              </Link>
-            </div>
           </article>
         </section>
 

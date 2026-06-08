@@ -23,11 +23,11 @@ type MemberDashboardProps = {
 
 const dashboardCopy = {
   jp: {
-    eyebrow: "Dashboard",
-    title: "会員ダッシュボード",
+    eyebrow: "Member Space",
+    title: "静かな記録とつながり",
     challengeStartedTitle: "チャレンジを開始しました",
     description:
-      "現在のプラン、チャレンジ進行、継続日数、AIコーチ利用状況、コミュニティ導線をひとつにまとめています。",
+      "現在のプラン、旅の進み、継続の流れ、AIコーチ利用状況、コミュニティとのつながりをここで静かに確認できます。",
     leaderEyebrow: "Leader Program",
     leaderTitle: "リーダープログラムに招待されました",
     leaderBody:
@@ -67,11 +67,11 @@ const dashboardCopy = {
     events: ["毎週水曜 06:30 朝ライブ瞑想", "土曜 21:00 睡眠回復セッション"]
   },
   kr: {
-    eyebrow: "Dashboard",
-    title: "회원 대시보드",
+    eyebrow: "Member Space",
+    title: "조용한 기록과 연결",
     challengeStartedTitle: "챌린지를 시작했습니다",
     description:
-      "현재 플랜, 챌린지 진행, 연속 실천, AI 코치 이용 현황, 커뮤니티 동선을 한곳에서 볼 수 있습니다.",
+      "현재 플랜, 여정의 흐름, 이어온 리듬, AI 코치 이용 현황, 커뮤니티 연결을 이곳에서 차분히 확인할 수 있습니다.",
     leaderEyebrow: "Leader Program",
     leaderTitle: "리더 프로그램에 초대되었습니다",
     leaderBody: "지속 실천, 체크인, 커뮤니티 기여가 기준을 넘어 다음 단계로 나아갈 수 있습니다.",
@@ -102,11 +102,11 @@ const dashboardCopy = {
     events: ["매주 수요일 06:30 아침 라이브 명상", "토요일 21:00 수면 회복 세션"]
   },
   en: {
-    eyebrow: "Dashboard",
-    title: "Member Dashboard",
+    eyebrow: "Member Space",
+    title: "A quiet place for rhythm and connection",
     challengeStartedTitle: "Your challenge has started",
     description:
-      "Your current plan, challenge progress, streak count, AI coach usage, and community path are gathered in one place.",
+      "Your plan, journey progress, returning rhythm, AI coach usage, and community path live here quietly when you need them.",
     leaderEyebrow: "Leader Program",
     leaderTitle: "You have been invited to the leader program",
     leaderBody:
