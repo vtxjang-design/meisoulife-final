@@ -83,6 +83,7 @@ export async function startAmbientNatureAudio(
     const audio = new Audio(source);
     audio.loop = true;
     audio.preload = "auto";
+    audio.muted = false;
     audio.volume = targetVolume;
     audio.dataset.meisoSrc = source;
     audioRef.current = audio;
@@ -93,6 +94,8 @@ export async function startAmbientNatureAudio(
   try {
     console.log("Starting ambience audio");
     audio.volume = targetVolume;
+    audio.muted = false;
+    audio.load();
     await audio.play();
     console.log("Ambience audio playing");
     await fadeVolume(audio, 0, targetVolume, FADE_DURATION_MS);

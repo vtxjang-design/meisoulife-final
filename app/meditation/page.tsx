@@ -14,6 +14,7 @@ const AI_COACH_URL =
   process.env.NEXT_PUBLIC_AI_COACH_URL ||
   "https://chatgpt.com/g/g-69f968bc9a408191a3e5f943912666c0-quiet-rhythm-guide";
 const JOURNEY_AUDIO_PENDING_KEY = "meisoulife_journey_audio_pending";
+const JOURNEY_AUDIO_DAY_KEY = "meisoulife_journey_day";
 
 type BreathPhase = "inhale" | "hold" | "exhale";
 type MeditationType = "default" | "morning" | "day" | "night";
@@ -78,7 +79,6 @@ export default function MeditationPage() {
   const audioContextRef = useRef<AudioContext | null>(null);
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
   const completionHandledRef = useRef(false);
-  const pendingJourneyAudioRef = useRef(false);
   const elapsedTotalSeconds = totalSeconds - secondsLeft;
   const phase = useMemo(() => getBreathPhase(elapsedTotalSeconds), [elapsedTotalSeconds]);
   const isComplete = secondsLeft <= 0;
@@ -87,7 +87,7 @@ export default function MeditationPage() {
   const durationTextSet = copy.durationTexts?.[durationVariant];
   const journeyAudioSource = journeyDay ? journeyAudioMap[journeyDay] : undefined;
   const ambientAudioSource = journeyMode && journeyAudioSource ? journeyAudioSource : undefined;
-  const ambientAudioVolume = journeyMode ? 0.45 : undefined;
+  const ambientAudioVolume = journeyMode ? 0.65 : undefined;
   const topText = journeyMode
     ? "今ここで、\n60秒だけ呼吸に戻りましょう。"
     : meditationType === "morning" || meditationType === "night"
@@ -106,10 +106,15 @@ export default function MeditationPage() {
     const nextDuration = normalizeDuration(searchParams.get("duration"));
     const nextType = normalizeMeditationType(searchParams.get("type"));
     const nextJourneyMode = searchParams.get("journey") === "1";
-    const nextJourneyDay = Number(searchParams.get("journeyDay"));
+    const nextJourneyDay = Number(searchParams.get("day"));
     const nextReturnTo = searchParams.get("returnTo");
     const pendingJourneyAudio =
       typeof window === "undefined" ? null : window.sessionStorage.getItem(JOURNEY_AUDIO_PENDING_KEY);
+    const storedJourneyDay =
+      typeof window === "undefined" ? null : window.sessionStorage.getItem(JOURNEY_AUDIO_DAY_KEY);
+    const resolvedJourneyDay = Number.isInteger(nextJourneyDay) && nextJourneyDay >= 1 && nextJourneyDay <= 7
+      ? nextJourneyDay
+      : Number(storedJourneyDay);
 
     setTotalSeconds(nextDuration);
     setSecondsLeft(nextDuration);
@@ -117,19 +122,34 @@ export default function MeditationPage() {
     const nextSoundEnabled = nextJourneyMode && pendingJourneyAudio ? true : getNatureSoundPreference();
     setSoundEnabled(nextSoundEnabled);
     setJourneyMode(nextJourneyMode);
-    setJourneyDay(Number.isInteger(nextJourneyDay) && nextJourneyDay >= 1 && nextJourneyDay <= 7 ? nextJourneyDay : null);
+    setJourneyDay(Number.isInteger(resolvedJourneyDay) && resolvedJourneyDay >= 1 && resolvedJourneyDay <= 7 ? resolvedJourneyDay : null);
     setReturnToHref(nextReturnTo || "/challenge");
     setAmbientVideoFailed(false);
     setShowAmbientRetry(false);
-    pendingJourneyAudioRef.current = Boolean(nextJourneyMode && pendingJourneyAudio);
     setHasUserGesture(Boolean(nextJourneyMode && pendingJourneyAudio));
     completionHandledRef.current = false;
+    console.log("[Journey Audio] journeyMode:", nextJourneyMode);
+    console.log("[Journey Audio] journeyDay:", resolvedJourneyDay);
+    console.log(
+      "[Journey Audio] src:",
+      Number.isInteger(resolvedJourneyDay) && resolvedJourneyDay >= 1 && resolvedJourneyDay <= 7
+        ? journeyAudioMap[resolvedJourneyDay]
+        : undefined
+    );
+    console.log("[Journey Audio] pending:", pendingJourneyAudio);
+    console.log("[Journey Audio] audio element:", ambientAudioRef.current);
   }, []);
 
   async function handleAmbientStartResult(result: { started: boolean }) {
     if (journeyMode && journeyDay) {
-      console.log("[Journey Audio] day:", journeyDay);
+      console.log("[Journey Audio] journeyMode:", journeyMode);
+      console.log("[Journey Audio] journeyDay:", journeyDay);
       console.log("[Journey Audio] src:", ambientAudioSource);
+      console.log(
+        "[Journey Audio] pending:",
+        typeof window === "undefined" ? null : window.sessionStorage.getItem(JOURNEY_AUDIO_PENDING_KEY)
+      );
+      console.log("[Journey Audio] audio element:", ambientAudioRef.current);
     }
 
     if (result.started) {
@@ -140,10 +160,10 @@ export default function MeditationPage() {
       setShowAmbientRetry(false);
       setSoundEnabled(true);
       setNatureSoundPreference(true);
-      pendingJourneyAudioRef.current = false;
 
       if (typeof window !== "undefined") {
         window.sessionStorage.removeItem(JOURNEY_AUDIO_PENDING_KEY);
+        window.sessionStorage.removeItem(JOURNEY_AUDIO_DAY_KEY);
       }
 
       return;
@@ -152,14 +172,66 @@ export default function MeditationPage() {
     if (journeyMode) {
       setSoundEnabled(false);
       setNatureSoundPreference(false);
-      pendingJourneyAudioRef.current = false;
       console.warn("[Journey Audio] play failed");
 
       if (typeof window !== "undefined") {
-        window.sessionStorage.removeItem(JOURNEY_AUDIO_PENDING_KEY);
+        console.warn("[Journey Audio] exact pending state kept for manual retry");
       }
     } else {
       setShowAmbientRetry(true);
+    }
+  }
+
+  async function handleJourneyAudioStart() {
+    if (!journeyMode || !ambientAudioSource) {
+      return;
+    }
+
+    setHasUserGesture(true);
+
+    try {
+      if (!ambientAudioRef.current) {
+        const audio = new Audio(ambientAudioSource);
+        audio.loop = true;
+        audio.preload = "auto";
+        audio.volume = ambientAudioVolume ?? 0.65;
+        audio.muted = false;
+        audio.dataset.meisoSrc = ambientAudioSource;
+        ambientAudioRef.current = audio;
+      } else if (ambientAudioRef.current.dataset.meisoSrc !== ambientAudioSource) {
+        ambientAudioRef.current.pause();
+        ambientAudioRef.current.currentTime = 0;
+        ambientAudioRef.current.src = ambientAudioSource;
+        ambientAudioRef.current.dataset.meisoSrc = ambientAudioSource;
+      }
+
+      const audio = ambientAudioRef.current;
+      audio.volume = ambientAudioVolume ?? 0.65;
+      audio.muted = false;
+      audio.loop = true;
+      audio.load();
+      console.log("[Journey Audio] journeyMode:", journeyMode);
+      console.log("[Journey Audio] journeyDay:", journeyDay);
+      console.log("[Journey Audio] src:", ambientAudioSource);
+      console.log(
+        "[Journey Audio] pending:",
+        typeof window === "undefined" ? null : window.sessionStorage.getItem(JOURNEY_AUDIO_PENDING_KEY)
+      );
+      console.log("[Journey Audio] audio element:", ambientAudioRef.current);
+      await audio.play();
+      console.log("[Journey Audio] play started");
+      setSoundEnabled(true);
+      setNatureSoundPreference(true);
+      setShowAmbientRetry(false);
+      if (typeof window !== "undefined") {
+        window.sessionStorage.removeItem(JOURNEY_AUDIO_PENDING_KEY);
+        window.sessionStorage.removeItem(JOURNEY_AUDIO_DAY_KEY);
+      }
+    } catch (error) {
+      setSoundEnabled(false);
+      setNatureSoundPreference(false);
+      setShowAmbientRetry(true);
+      console.warn("[Journey Audio] manual start failed", error);
     }
   }
 
@@ -312,6 +384,15 @@ export default function MeditationPage() {
                 >
                   {soundEnabled ? `🔊 ${copy.soundOn}` : `🔊 ${copy.soundOff}`}
                 </button>
+                {journeyMode && (!soundEnabled || showAmbientRetry) ? (
+                  <button
+                    type="button"
+                    onClick={handleJourneyAudioStart}
+                    className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-gold/20 bg-gold/10 px-3 py-1.5 text-xs font-medium text-gold transition hover:bg-gold/15 hover:text-[#f5e4b5]"
+                  >
+                    自然音をはじめる
+                  </button>
+                ) : null}
                 {showAmbientRetry && soundEnabled ? (
                   <button
                     type="button"

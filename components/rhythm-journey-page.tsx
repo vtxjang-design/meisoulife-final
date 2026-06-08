@@ -14,6 +14,7 @@ import {
 
 const DAILY_RHYTHM_ROUTE = "/program/basic";
 const JOURNEY_AUDIO_PENDING_KEY = "meisoulife_journey_audio_pending";
+const JOURNEY_AUDIO_DAY_KEY = "meisoulife_journey_day";
 
 const emptyProgress: RhythmJourneyProgress = {
   journeyStarted: false,
@@ -129,19 +130,12 @@ export function RhythmJourneyPage() {
     const meditationType = currentDay.day === 7 ? "morning" : currentDay.day === 6 ? "night" : "default";
 
     if (typeof window !== "undefined") {
-      const src = journeyAudioMap[currentDay.day];
-      window.sessionStorage.setItem(
-        JOURNEY_AUDIO_PENDING_KEY,
-        JSON.stringify({
-          day: currentDay.day,
-          src,
-          requestedAt: Date.now()
-        })
-      );
+      window.sessionStorage.setItem(JOURNEY_AUDIO_PENDING_KEY, "true");
+      window.sessionStorage.setItem(JOURNEY_AUDIO_DAY_KEY, String(currentDay.day));
     }
 
     router.push(
-      `/meditation?duration=60&type=${meditationType}&journey=1&journeyDay=${currentDay.day}&returnTo=${encodeURIComponent(
+      `/meditation?duration=60&type=${meditationType}&journey=1&day=${currentDay.day}&returnTo=${encodeURIComponent(
         `/rhythm-journey?completedDay=${currentDay.day}`
       )}`
     );
