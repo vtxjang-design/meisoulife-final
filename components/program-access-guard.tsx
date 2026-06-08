@@ -30,8 +30,13 @@ export function ProgramAccessGuard({ children }: ProgramAccessGuardProps) {
       return;
     }
 
+    const nextPath =
+      typeof window !== "undefined"
+        ? `${window.location.pathname}${window.location.search}${window.location.hash}`
+        : pathname;
+
     if (!isLoggedIn) {
-      router.replace(`/login?next=${encodeURIComponent(pathname)}`);
+      router.replace(`/login?next=${encodeURIComponent(nextPath)}`);
       return;
     }
 
@@ -41,12 +46,12 @@ export function ProgramAccessGuard({ children }: ProgramAccessGuardProps) {
     }
 
     if (memberState !== "paid") {
-      router.replace("/pricing");
+      router.replace(`/pricing?next=${encodeURIComponent(nextPath)}`);
       return;
     }
 
     setStatus("ready");
-  }, [authResolved, isLoggedIn, planResolved, memberState, pathname, router]);
+  }, [authResolved, isLoggedIn, memberState, pathname, planResolved, router]);
 
   async function handleLogout() {
     const supabase = getSupabaseClient();
