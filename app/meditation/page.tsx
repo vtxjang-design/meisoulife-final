@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useSiteCopy } from "@/lib/i18n";
+import { useLanguage, useSiteCopy } from "@/lib/i18n";
 import { getNatureSoundPreference, setNatureSoundPreference, startAmbientNatureAudio, stopAmbientNatureAudio } from "@/lib/meditation-ambient-audio";
 import { handleMeditationComplete as triggerMeditationCompletion, supportsMeditationVibration } from "@/lib/meditation-completion";
-import { journeyAudioMap, journeyGuidanceMap } from "@/lib/rhythm-journey";
+import { getRhythmJourneyContent, getRhythmJourneyGuidance, journeyAudioMap } from "@/lib/rhythm-journey";
 
 const CYCLE_SECONDS = 10;
 const INHALE_SECONDS = 4;
@@ -75,7 +75,9 @@ function getJourneyGuidanceStage(elapsedSeconds: number, totalSeconds: number) {
 }
 
 export default function MeditationPage() {
+  const { language } = useLanguage();
   const copy = useSiteCopy().meditationPage;
+  const journeyCopy = useMemo(() => getRhythmJourneyContent(language), [language]);
   const [totalSeconds, setTotalSeconds] = useState(60);
   const [secondsLeft, setSecondsLeft] = useState(60);
   const [meditationType, setMeditationType] = useState<MeditationType>("default");
@@ -98,16 +100,16 @@ export default function MeditationPage() {
   const durationVariant = getDurationVariant(totalSeconds);
   const durationTextSet = copy.durationTexts?.[durationVariant];
   const journeyAudioSource = journeyDay ? journeyAudioMap[journeyDay] : undefined;
-  const journeyGuidance = journeyDay ? journeyGuidanceMap[journeyDay] : undefined;
+  const journeyGuidance = journeyDay ? getRhythmJourneyGuidance(language, journeyDay) : undefined;
   const ambientAudioSource = journeyMode && journeyAudioSource ? journeyAudioSource : undefined;
   const ambientAudioVolume = journeyMode ? 0.65 : undefined;
   const journeyGuidanceStage = getJourneyGuidanceStage(elapsedTotalSeconds, totalSeconds);
   const topText = journeyMode
-    ? "今ここで、\n60秒だけ呼吸に戻りましょう。"
+    ? journeyCopy.timerTopText
     : meditationType === "morning" || meditationType === "night"
       ? content.topText
       : durationTextSet?.topText || content.topText;
-  const introText = journeyMode ? "急がなくて大丈夫です。" : content.intro;
+  const introText = journeyMode ? journeyCopy.timerSubText : content.intro;
   const completionTitle =
     meditationType === "morning" || meditationType === "night"
       ? content.completionTitle
@@ -117,9 +119,9 @@ export default function MeditationPage() {
   const journeyOverlayMessage =
     journeyMode && journeyGuidance
       ? journeyGuidanceStage === "opening"
-        ? journeyGuidance.openingMessage
+        ? journeyGuidance.opening
         : journeyGuidanceStage === "closing"
-          ? journeyGuidance.closingMessage
+          ? journeyGuidance.closing
           : null
       : null;
 
@@ -430,7 +432,7 @@ export default function MeditationPage() {
                   className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
                   aria-pressed={soundEnabled}
                 >
-                  {soundEnabled ? `🔊 ${copy.soundOn}` : `🔊 ${copy.soundOff}`}
+                  {soundEnabled ? `🔊 ${journeyMode ? journeyCopy.audioOn : copy.soundOn}` : `🔊 ${journeyMode ? journeyCopy.audioOff : copy.soundOff}`}
                 </button>
                 {journeyMode && (!soundEnabled || showAmbientRetry) ? (
                   <button
@@ -438,7 +440,7 @@ export default function MeditationPage() {
                     onClick={handleJourneyAudioStart}
                     className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-gold/20 bg-gold/10 px-3 py-1.5 text-xs font-medium text-gold transition hover:bg-gold/15 hover:text-[#f5e4b5]"
                   >
-                    自然音をはじめる
+                    {journeyCopy.audioStart}
                   </button>
                 ) : null}
                 {showAmbientRetry && soundEnabled ? (
@@ -486,7 +488,7 @@ export default function MeditationPage() {
                 href={returnToHref}
                 className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
               >
-                {journeyMode ? "次へ" : copy.completionPrimary}
+                {journeyMode ? journeyCopy.nextCta : copy.completionPrimary}
               </Link>
               {!journeyMode ? (
                 <Link
