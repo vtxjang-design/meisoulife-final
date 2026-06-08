@@ -70,6 +70,8 @@ export default function MeditationPage() {
   const [hasUserGesture, setHasUserGesture] = useState(false);
   const [ambientVideoFailed, setAmbientVideoFailed] = useState(false);
   const [showAmbientRetry, setShowAmbientRetry] = useState(false);
+  const [journeyMode, setJourneyMode] = useState(false);
+  const [returnToHref, setReturnToHref] = useState("/challenge");
   const audioContextRef = useRef<AudioContext | null>(null);
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
   const completionHandledRef = useRef(false);
@@ -79,8 +81,12 @@ export default function MeditationPage() {
   const content = copy.variants[meditationType];
   const durationVariant = getDurationVariant(totalSeconds);
   const durationTextSet = copy.durationTexts?.[durationVariant];
-  const topText =
-    meditationType === "morning" || meditationType === "night" ? content.topText : durationTextSet?.topText || content.topText;
+  const topText = journeyMode
+    ? "今ここで、\n60秒だけ呼吸に戻りましょう。"
+    : meditationType === "morning" || meditationType === "night"
+      ? content.topText
+      : durationTextSet?.topText || content.topText;
+  const introText = journeyMode ? "急がなくて大丈夫です。" : content.intro;
   const completionTitle =
     meditationType === "morning" || meditationType === "night"
       ? content.completionTitle
@@ -92,11 +98,15 @@ export default function MeditationPage() {
     const searchParams = new URLSearchParams(window.location.search);
     const nextDuration = normalizeDuration(searchParams.get("duration"));
     const nextType = normalizeMeditationType(searchParams.get("type"));
+    const nextJourneyMode = searchParams.get("journey") === "1";
+    const nextReturnTo = searchParams.get("returnTo");
 
     setTotalSeconds(nextDuration);
     setSecondsLeft(nextDuration);
     setMeditationType(nextType);
     setSoundEnabled(getNatureSoundPreference());
+    setJourneyMode(nextJourneyMode);
+    setReturnToHref(nextReturnTo || "/challenge");
     setAmbientVideoFailed(false);
     setShowAmbientRetry(false);
     completionHandledRef.current = false;
@@ -228,7 +238,7 @@ export default function MeditationPage() {
           <>
             <div className="space-y-4">
               <p className="text-sm uppercase tracking-[0.32em] text-gold/80">{topText}</p>
-              <p className="mx-auto max-w-2xl text-sm leading-7 text-white/60 sm:text-base">{content.intro}</p>
+              <p className="mx-auto max-w-2xl text-sm leading-7 text-white/60 sm:text-base">{introText}</p>
             </div>
 
             <div className="mt-12 flex min-h-[320px] w-full flex-col items-center justify-center">
@@ -288,34 +298,38 @@ export default function MeditationPage() {
             <h1 className="font-serif text-4xl text-white sm:text-5xl">{completionTitle}</h1>
             <p className="mx-auto max-w-xl whitespace-pre-line text-base leading-8 text-white/72">{copy.completionMessage}</p>
             <p className="text-sm leading-7 text-white/54">{copy.completionReturnText}</p>
-            <p className="mx-auto max-w-2xl text-base leading-8 text-white/68">{copy.completionBody}</p>
+            {!journeyMode ? <p className="mx-auto max-w-2xl text-base leading-8 text-white/68">{copy.completionBody}</p> : null}
             <div className="flex flex-col items-center gap-3">
               <Link
-                href="/challenge"
+                href={returnToHref}
                 className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
               >
-                {copy.completionPrimary}
+                {journeyMode ? "次へ" : copy.completionPrimary}
               </Link>
-              <Link
-                href="/"
-                className="inline-flex min-h-[52px] min-w-[240px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
-              >
-                {copy.completionSecondary}
-              </Link>
-            </div>
-            <div className="mx-auto max-w-2xl border-t border-white/10 pt-8">
-              <p className="text-base leading-8 text-white/68">{copy.coachPrompt}</p>
-              <div className="mt-5">
-                <a
-                  href={AI_COACH_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex min-h-[52px] min-w-[220px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
+              {!journeyMode ? (
+                <Link
+                  href="/"
+                  className="inline-flex min-h-[52px] min-w-[240px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
                 >
-                  {copy.coachButton}
-                </a>
-              </div>
+                  {copy.completionSecondary}
+                </Link>
+              ) : null}
             </div>
+            {!journeyMode ? (
+              <div className="mx-auto max-w-2xl border-t border-white/10 pt-8">
+                <p className="text-base leading-8 text-white/68">{copy.coachPrompt}</p>
+                <div className="mt-5">
+                  <a
+                    href={AI_COACH_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-[52px] min-w-[220px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
+                  >
+                    {copy.coachButton}
+                  </a>
+                </div>
+              </div>
+            ) : null}
           </div>
         )}
         </div>

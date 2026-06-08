@@ -1,6 +1,7 @@
 export const RHYTHM_JOURNEY_STORAGE_KEY = "meisoulife_rhythm_journey_progress";
 
 export type RhythmJourneyProgress = {
+  journeyStarted: boolean;
   currentDay: number;
   completedDays: number[];
   selectedOptions: Record<string, string>;
@@ -114,6 +115,7 @@ export function clampRhythmJourneyDay(day: number) {
 export function readRhythmJourneyProgress(): RhythmJourneyProgress {
   if (typeof window === "undefined") {
     return {
+      journeyStarted: false,
       currentDay: 1,
       completedDays: [],
       selectedOptions: {}
@@ -124,6 +126,7 @@ export function readRhythmJourneyProgress(): RhythmJourneyProgress {
 
   if (!stored) {
     return {
+      journeyStarted: false,
       currentDay: 1,
       completedDays: [],
       selectedOptions: {}
@@ -142,6 +145,7 @@ export function readRhythmJourneyProgress(): RhythmJourneyProgress {
       ) : {};
 
     return {
+      journeyStarted: Boolean(parsed.journeyStarted),
       currentDay: clampRhythmJourneyDay(parsed.currentDay ?? 1),
       completedDays,
       selectedOptions
@@ -149,6 +153,7 @@ export function readRhythmJourneyProgress(): RhythmJourneyProgress {
   } catch (_error) {
     window.localStorage.removeItem(RHYTHM_JOURNEY_STORAGE_KEY);
     return {
+      journeyStarted: false,
       currentDay: 1,
       completedDays: [],
       selectedOptions: {}

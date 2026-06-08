@@ -14,6 +14,7 @@ import {
 const DAILY_RHYTHM_ROUTE = "/program/basic";
 
 const emptyProgress: RhythmJourneyProgress = {
+  journeyStarted: false,
   currentDay: 1,
   completedDays: [],
   selectedOptions: {}
@@ -24,17 +25,49 @@ export function RhythmJourneyPage() {
   const [progress, setProgress] = useState<RhythmJourneyProgress>(emptyProgress);
   const [hydrated, setHydrated] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
+  const [showNaturePause, setShowNaturePause] = useState(false);
   const currentDay = useMemo(
     () => rhythmJourneyDays.find((item) => item.day === clampRhythmJourneyDay(progress.currentDay)) ?? rhythmJourneyDays[0],
     [progress.currentDay]
   );
   const selectedValue = progress.selectedOptions[String(currentDay.day)] ?? "";
   const isCompleted = progress.completedDays.includes(currentDay.day);
+  const day7RhythmSelection = progress.selectedOptions["7"] ?? "";
+  const day7RhythmMessage =
+    day7RhythmSelection === "☀️ 朝を整えたい"
+      ? "朝のリズムを\n育てていきましょう。"
+      : day7RhythmSelection === "🌿 昼を整えたい"
+        ? "昼のリズムを\n育てていきましょう。"
+        : day7RhythmSelection === "🌙 夜を整えたい"
+          ? "夜のリズムを\n育てていきましょう。"
+          : "";
+  const rhythmButtonLabel =
+    day7RhythmSelection === "☀️ 朝を整えたい"
+      ? "Morning Rhythmへ"
+      : day7RhythmSelection === "🌿 昼を整えたい"
+        ? "Day Rhythmへ"
+        : day7RhythmSelection === "🌙 夜を整えたい"
+          ? "Night Rhythmへ"
+          : "私のDaily Rhythmへ";
 
   useEffect(() => {
     const stored = readRhythmJourneyProgress();
-    setProgress(stored);
-    setShowIntro(stored.currentDay === 1 && stored.completedDays.length === 0);
+    const searchParams = typeof window === "undefined" ? null : new URLSearchParams(window.location.search);
+    const completedDayParam = Number(searchParams?.get("completedDay"));
+    const nextProgress =
+      Number.isInteger(completedDayParam) && completedDayParam >= 1 && completedDayParam <= rhythmJourneyDays.length
+        ? {
+            ...stored,
+            journeyStarted: true,
+            currentDay: clampRhythmJourneyDay(completedDayParam),
+            completedDays: Array.from(new Set([...stored.completedDays, completedDayParam])).sort((a, b) => a - b)
+          }
+        : stored;
+
+    setProgress(nextProgress);
+    writeRhythmJourneyProgress(nextProgress);
+    setShowIntro(!nextProgress.journeyStarted);
+    setShowNaturePause(false);
     setHydrated(true);
   }, []);
 
@@ -44,6 +77,12 @@ export function RhythmJourneyPage() {
   }
 
   function startJourney() {
+    const next = {
+      ...progress,
+      journeyStarted: true
+    };
+
+    updateProgress(next);
     setShowIntro(false);
   }
 
@@ -80,7 +119,29 @@ export function RhythmJourneyPage() {
     };
 
     updateProgress(next);
+    setShowNaturePause(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function startRecoveryMinute() {
+    const meditationType = currentDay.day === 7 ? "morning" : currentDay.day === 6 ? "night" : "default";
+    router.push(
+      `/meditation?duration=60&type=${meditationType}&journey=1&returnTo=${encodeURIComponent(
+        `/rhythm-journey?completedDay=${currentDay.day}`
+      )}`
+    );
+  }
+
+  function handleDay7RhythmSelect(option: string) {
+    const next = {
+      ...progress,
+      selectedOptions: {
+        ...progress.selectedOptions,
+        "7": option
+      }
+    };
+
+    updateProgress(next);
   }
 
   if (!hydrated) {
@@ -106,7 +167,7 @@ export function RhythmJourneyPage() {
             <p className="mt-3 text-lg leading-8 text-[#f4ead1]/92">自分のリズムを取り戻す旅</p>
             <div className="mt-7 rounded-[28px] border border-white/10 bg-[#f6f0e3]/10 px-5 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
               <p className="whitespace-pre-line text-base leading-8 text-white/82">
-                {"頑張らなくて大丈夫です。\n1日ひとつ、小さく整えていきましょう。"}
+                {"頑張らなくて大丈夫です。\n\n今日は、\nひとつだけ整えてみましょう。"}
               </p>
             </div>
             <button
@@ -114,8 +175,9 @@ export function RhythmJourneyPage() {
               onClick={startJourney}
               className="mt-8 inline-flex min-h-[56px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.22)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_46px_rgba(212,186,117,0.26)] sm:w-auto sm:min-w-[280px]"
             >
-              今日の小さな回復をはじめる
+              始める
             </button>
+            <p className="mt-4 text-sm text-white/54">約1分</p>
           </section>
         ) : (
           <section className="space-y-5">
@@ -195,49 +257,113 @@ export function RhythmJourneyPage() {
                     ) : null}
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={handleCompleteDay}
-                    className="inline-flex min-h-[56px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.2)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_46px_rgba(212,186,117,0.24)]"
-                  >
-                    今日の小さな回復を終える
-                  </button>
+                  {currentDay.day === 4 ? (
+                    showNaturePause ? (
+                      <div className="animate-meditation-fade-up rounded-[28px] border border-[#d8caa0]/18 bg-[linear-gradient(180deg,rgba(243,224,175,0.12),rgba(255,255,255,0.05))] px-5 py-6 text-center">
+                        <p className="whitespace-pre-line font-serif text-[24px] leading-[1.8] text-white sm:text-[28px]">
+                          {"今日は、\nスマホを少し休ませましょう。\n\n10分後に\n戻ってきてください。"}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={handleCompleteDay}
+                          className="mt-6 inline-flex min-h-[56px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.2)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_46px_rgba(212,186,117,0.24)]"
+                        >
+                          今日の小さな回復を終える
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setShowNaturePause(true)}
+                        className="inline-flex min-h-[56px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.2)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_46px_rgba(212,186,117,0.24)]"
+                      >
+                        画面を閉じる
+                      </button>
+                    )
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={startRecoveryMinute}
+                      className="inline-flex min-h-[56px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.2)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_46px_rgba(212,186,117,0.24)]"
+                    >
+                      60秒の回復へ
+                    </button>
+                  )}
                 </div>
               ) : (
                 <div className="animate-meditation-fade-up space-y-6">
                   <div className="rounded-[28px] border border-[#d8caa0]/18 bg-[linear-gradient(180deg,rgba(243,224,175,0.12),rgba(255,255,255,0.05))] px-5 py-6 text-center">
-                    <p className="text-sm uppercase tracking-[0.28em] text-[#f0d79c]">今日の分だけで十分です</p>
-                    <p className="mt-5 whitespace-pre-line font-serif text-[24px] leading-[1.8] text-white sm:text-[28px]">
-                      {currentDay.completion}
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col gap-3 sm:flex-row">
                     {currentDay.day < rhythmJourneyDays.length ? (
-                      <button
-                        type="button"
-                        onClick={handleNext}
-                        className="inline-flex min-h-[54px] flex-1 items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-3 text-sm font-semibold text-ink transition duration-300 hover:-translate-y-0.5"
-                      >
-                        次へ
-                      </button>
+                      <>
+                        <p className="text-sm uppercase tracking-[0.28em] text-[#f0d79c]">今日の分だけで十分です</p>
+                        <p className="mt-5 whitespace-pre-line font-serif text-[24px] leading-[1.8] text-white sm:text-[28px]">
+                          {currentDay.completion}
+                        </p>
+                      </>
                     ) : (
+                      <div className="space-y-5">
+                        <p className="whitespace-pre-line font-serif text-[24px] leading-[1.8] text-white sm:text-[28px]">
+                          {"7日間、\nお疲れさまでした。"}
+                        </p>
+                        <p className="whitespace-pre-line text-base leading-8 text-white/82">
+                          {"あなたは変わったのではなく、\n\n本来のリズムを\n思い出し始めました。"}
+                        </p>
+                        <p className="whitespace-pre-line text-base leading-8 text-[#f4ead1]/86">
+                          {"これから、\nどのリズムを育てたいですか？"}
+                        </p>
+                        <div className="flex flex-wrap justify-center gap-2.5">
+                          {["☀️ 朝を整えたい", "🌿 昼を整えたい", "🌙 夜を整えたい"].map((option) => {
+                            const selected = day7RhythmSelection === option;
+
+                            return (
+                              <button
+                                key={option}
+                                type="button"
+                                onClick={() => handleDay7RhythmSelect(option)}
+                                className={`rounded-full px-4 py-2.5 text-sm transition duration-200 ${
+                                  selected
+                                    ? "border border-[#f0d79c]/30 bg-[#f3e0af]/16 text-[#fff8e6]"
+                                    : "border border-white/10 bg-white/[0.04] text-white/72 hover:bg-white/[0.07]"
+                                }`}
+                              >
+                                {option}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        {day7RhythmMessage ? (
+                          <p className="whitespace-pre-line text-base leading-8 text-white/82">{day7RhythmMessage}</p>
+                        ) : null}
+                      </div>
+                    )}
+                  </div>
+
+                  {currentDay.day < rhythmJourneyDays.length ? (
+                    <button
+                      type="button"
+                      onClick={handleNext}
+                      className="inline-flex min-h-[54px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-3 text-sm font-semibold text-ink transition duration-300 hover:-translate-y-0.5"
+                    >
+                      次へ
+                    </button>
+                  ) : (
+                    <div className="flex flex-col gap-3">
                       <button
                         type="button"
                         onClick={handleNext}
-                        className="inline-flex min-h-[54px] flex-1 items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-3 text-sm font-semibold text-ink transition duration-300 hover:-translate-y-0.5"
+                        disabled={!day7RhythmSelection}
+                        className="inline-flex min-h-[54px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-3 text-sm font-semibold text-ink transition duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
                       >
-                        私のDaily Rhythmへ
+                        {rhythmButtonLabel}
                       </button>
-                    )}
-
-                    <Link
-                      href="/"
-                      className="inline-flex min-h-[54px] flex-1 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.07]"
-                    >
-                      戻ってきましょう
-                    </Link>
-                  </div>
+                      <Link
+                        href="/"
+                        className="inline-flex min-h-[54px] w-full items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.07]"
+                      >
+                        戻ってきましょう
+                      </Link>
+                    </div>
+                  )}
                 </div>
               )}
             </article>
