@@ -51,6 +51,11 @@ export function RhythmJourneyPage() {
     const stored = readRhythmJourneyProgress();
     const searchParams = typeof window === "undefined" ? null : new URLSearchParams(window.location.search);
     const completedDayParam = Number(searchParams?.get("completedDay"));
+    const requestedDayParam = Number(searchParams?.get("day"));
+    const hasRequestedDay =
+      Number.isInteger(requestedDayParam) &&
+      requestedDayParam >= 1 &&
+      requestedDayParam <= RHYTHM_JOURNEY_DAY_COUNT;
     const nextProgress =
       Number.isInteger(completedDayParam) && completedDayParam >= 1 && completedDayParam <= RHYTHM_JOURNEY_DAY_COUNT
         ? {
@@ -59,6 +64,12 @@ export function RhythmJourneyPage() {
             currentDay: clampRhythmJourneyDay(completedDayParam),
             completedDays: Array.from(new Set([...stored.completedDays, completedDayParam])).sort((a, b) => a - b)
           }
+        : hasRequestedDay
+          ? {
+              ...stored,
+              journeyStarted: true,
+              currentDay: clampRhythmJourneyDay(requestedDayParam)
+            }
         : stored;
 
     setProgress(nextProgress);

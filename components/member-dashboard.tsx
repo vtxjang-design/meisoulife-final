@@ -155,6 +155,7 @@ export function MemberDashboard({
   const copy = useLocaleCopy(dashboardCopy);
   const safeChallengeDay = Math.min(Math.max(challengeDay, 1), 7);
   const planLabel = membershipResolved && !membershipError ? copy.plans[planKey] : copy.checkingMembership;
+  const progressHref = `/rhythm-journey?day=${safeChallengeDay}`;
 
   return (
     <div className="grid gap-6">
@@ -206,7 +207,7 @@ export function MemberDashboard({
               <p className="text-sm uppercase tracking-[0.3em] text-gold">{copy.challengeEyebrow}</p>
               <h2 className="mt-3 text-2xl font-semibold text-white">{copy.challengeTitle}</h2>
             </div>
-            <Link href="/rhythm-journey" className="text-sm text-gold">
+            <Link href={progressHref} className="text-sm text-gold">
               {copy.openProgress}
             </Link>
           </div>
@@ -215,20 +216,22 @@ export function MemberDashboard({
               const day = index + 1;
               const active = day === safeChallengeDay;
               const completed = day < safeChallengeDay;
+              const dayHref = `/rhythm-journey?day=${day}`;
 
               return (
-                <div
+                <Link
                   key={day}
+                  href={dayHref}
                   className={`rounded-md border px-4 py-3 text-sm ${
                     active
                       ? "border-gold/60 bg-gold/10 text-white"
                       : completed
                         ? "border-moss/40 bg-moss/10 text-white/88"
                         : "border-white/10 bg-white/[0.03] text-white/68"
-                  }`}
+                  } transition hover:bg-white/[0.05] focus:outline-none focus:ring-2 focus:ring-gold/40`}
                 >
                   {copy.dayLabel} {day} · {title}
-                </div>
+                </Link>
               );
             })}
           </div>
