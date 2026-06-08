@@ -204,7 +204,7 @@ export function MemberDashboard({
               <p className="text-sm uppercase tracking-[0.3em] text-gold">{copy.challengeEyebrow}</p>
               <h2 className="mt-3 text-2xl font-semibold text-white">{copy.challengeTitle}</h2>
             </div>
-            <Link href="/challenge" className="text-sm text-gold">
+            <Link href="/rhythm-journey" className="text-sm text-gold">
               {copy.openProgress}
             </Link>
           </div>

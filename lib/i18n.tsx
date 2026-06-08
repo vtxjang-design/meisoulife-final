@@ -156,7 +156,7 @@ export const siteCopy = {
       close: "閉じる",
       mobileGuestTabs: [
         { href: "/", label: "ホーム" },
-        { href: "/challenge", label: "7日チャレンジ" },
+        { href: "/rhythm-journey", label: "7日間の小さな回復" },
         { href: "/pricing", label: "料金" },
         { href: "/community", label: "コミュニティ" },
         { href: "/leaders", label: "リーダー成長" }
@@ -170,7 +170,7 @@ export const siteCopy = {
       ],
       mobileGuestMenu: [
         { href: "/", label: "ホーム" },
-        { href: "/challenge", label: "7日チャレンジ" },
+        { href: "/rhythm-journey", label: "7日間の小さな回復" },
         { href: "/pricing", label: "料金" },
         { href: "/community", label: "コミュニティ" },
         { href: "/leaders", label: "リーダー成長" }
@@ -182,7 +182,7 @@ export const siteCopy = {
       ],
       nav: [
         { href: "/", label: "ホーム" },
-        { href: "/challenge", label: "7日チャレンジ" },
+        { href: "/rhythm-journey", label: "7日間の小さな回復" },
         { href: "/pricing", label: "料金" },
         { href: "/community", label: "コミュニティ" },
         { href: "/leaders", label: "リーダー成長" }
@@ -194,17 +194,17 @@ export const siteCopy = {
         { href: "/pricing", label: "料金" },
         { href: "/program/basic", label: "プログラム" },
         { href: "/community", label: "コミュニティ" },
-        { href: "/challenge", label: "無料で始める" }
+        { href: "/rhythm-journey", label: "7日間の小さな回復へ" }
       ]
     },
     community: {
       eyebrow: "COMMUNITY",
       headline: "ここは、がんばる場所ではありません。毎日、共に目覚め直す場所です。",
       subcopy:
-        "1分の静けさを一人で終わらせず、7日チャレンジとコミュニティのリズムで自然につなげます。",
+        "1分の静けさを一人で終わらせず、7日間の小さな回復とコミュニティのリズムへやさしくつなげます。",
       lineCommunityTitle: "7日間、共に始める入口",
       lineCommunityDescription:
-        "朝のリマインド、夜の声かけ、7日チャレンジ案内が届く無料コミュニティです。",
+        "朝のリマインド、夜の声かけ、7日間の小さな回復へつながる案内が届く無料コミュニティです。",
       lineCommunityCTA: "コミュニティに参加する",
       rhythmTitle: "無料参加から会員リズムへ",
       rhythmDescription:
@@ -267,7 +267,7 @@ export const siteCopy = {
       line1: "回復から共生へ。共生から地球経営へ。",
       line2: "瞑想life — 回復から共生へ。共生から地球経営へ。",
       links: [
-        { href: "/challenge", label: "無料参加" },
+        { href: "/rhythm-journey", label: "無料参加" },
         { href: "/pricing", label: "料金" },
         { href: "/community", label: "コミュニティ" },
         { href: "/leaders", label: "リーダー成長" },
@@ -514,7 +514,7 @@ export const siteCopy = {
           "瞑想lifeは、瞑想を売る場ではありません。毎日、共に目覚める生活リズムを育て、個人の回復から共生文化、地球経営へ進む場です。",
         items: [
           { step: "01", title: "今日の1分瞑想", description: "まずは1分、自分に戻る静けさを体験します。" },
-          { step: "02", title: "無料7日チャレンジ", description: "朝の1分、夜の3分を重ねながら、やさしい生活リズムをつくります。" },
+          { step: "02", title: "7日間の小さな回復", description: "朝の1分、夜の3分を重ねながら、やさしい生活リズムを思い出していきます。" },
           { step: "03", title: "LINEコミュニティ", description: "毎日、共に目覚め直すための声かけとリマインドを受け取ります。" },
           { step: "04", title: "月額メンバーシップ", description: "ひとりの回復を、共に生きる習慣へ育てていきます。" },
           { step: "05", title: "リーダー成長", description: "周りを明るくし、共生文化を支える人へ成長していきます。" }
@@ -541,9 +541,9 @@ export const siteCopy = {
             name: "Free",
             price: "¥0",
             description: "まずは7日間、やさしく整える。",
-            features: ["7日チャレンジ", "LINE参加リンク", "AIコーチ 1日3回まで"],
+            features: ["7日間の小さな回復", "LINE参加リンク", "AIコーチ 1日3回まで"],
             cta: "無料で始める",
-            href: "/challenge"
+            href: "/rhythm-journey"
           },
           {
             key: "basic",
@@ -620,7 +620,7 @@ export const siteCopy = {
       }
     },
     challengePage: {
-      eyebrow: "7-Day Rhythm Challenge",
+      eyebrow: "7 Days of Small Recovery",
       title: "7日間で、リズムに戻る",
       description: "1日10分だけ。小さく立ち止まり、呼吸と感覚を整えながら、自分に戻る流れを静かにつくっていきます。",
       rhythmEyebrow: "Just 10 minutes a day",
@@ -784,7 +784,7 @@ export const siteCopy = {
         bottomTitle: "このリズムを続けるために",
         bottomDescription: "Basicプログラムは、完璧に行うためのものではありません。戻る場所を持つための小さな入口です。",
         bottomPrimary: "今日の1分に戻る",
-        bottomSecondary: "7日チャレンジを見る",
+        bottomSecondary: "7日間の小さな回復を見る",
         bottomTertiary: "ホームへ戻る"
       },
       growth: {
@@ -1022,7 +1022,7 @@ export const siteCopy = {
       close: "닫기",
       mobileGuestTabs: [
         { href: "/", label: "홈" },
-        { href: "/challenge", label: "7일 챌린지" },
+        { href: "/rhythm-journey", label: "7일간의 작은 회복" },
         { href: "/pricing", label: "요금" },
         { href: "/community", label: "커뮤니티" },
         { href: "/leaders", label: "리더 성장" }
@@ -1036,7 +1036,7 @@ export const siteCopy = {
       ],
       mobileGuestMenu: [
         { href: "/", label: "홈" },
-        { href: "/challenge", label: "7일 챌린지" },
+        { href: "/rhythm-journey", label: "7일간의 작은 회복" },
         { href: "/pricing", label: "요금" },
         { href: "/community", label: "커뮤니티" },
         { href: "/leaders", label: "리더 성장" }
@@ -1048,7 +1048,7 @@ export const siteCopy = {
       ],
       nav: [
         { href: "/", label: "홈" },
-        { href: "/challenge", label: "7일 챌린지" },
+        { href: "/rhythm-journey", label: "7일간의 작은 회복" },
         { href: "/pricing", label: "요금" },
         { href: "/community", label: "커뮤니티" },
         { href: "/leaders", label: "리더 성장" }
@@ -1060,17 +1060,17 @@ export const siteCopy = {
         { href: "/pricing", label: "요금" },
         { href: "/program/basic", label: "프로그램" },
         { href: "/community", label: "커뮤니티" },
-        { href: "/challenge", label: "무료로 시작하기" }
+        { href: "/rhythm-journey", label: "7일간의 작은 회복으로" }
       ]
     },
     community: {
       eyebrow: "COMMUNITY",
       headline: "여기는 버티는 곳이 아닙니다. 매일 함께 깨어나는 곳입니다.",
       subcopy:
-        "1분의 고요를 혼자 끝내지 않고, 7일 챌린지와 커뮤니티 리듬을 통해 함께 이어갑니다.",
+        "1분의 고요를 혼자 끝내지 않고, 7일간의 작은 회복과 커뮤니티 리듬으로 부드럽게 이어갑니다.",
       lineCommunityTitle: "7일, 함께 시작하는 입구",
       lineCommunityDescription:
-        "아침 리마인드, 밤의 돌아보기, 7일 챌린지 안내가 이어지는 무료 커뮤니티입니다.",
+        "아침 리마인드, 밤의 돌아보기, 7일간의 작은 회복으로 이어지는 무료 커뮤니티입니다.",
       lineCommunityCTA: "커뮤니티 참여하기",
       rhythmTitle: "무료 참여에서 멤버 리듬으로",
       rhythmDescription:
@@ -1133,7 +1133,7 @@ export const siteCopy = {
       line1: "회복에서 공생으로. 공생에서 지구경영으로.",
       line2: "명상life — 회복에서 공생으로. 공생에서 지구경영으로.",
       links: [
-        { href: "/challenge", label: "무료 참여" },
+        { href: "/rhythm-journey", label: "무료 참여" },
         { href: "/pricing", label: "요금" },
         { href: "/community", label: "커뮤니티" },
         { href: "/leaders", label: "리더 성장" },
@@ -1380,7 +1380,7 @@ export const siteCopy = {
           "명상life는 명상을 파는 곳이 아닙니다. 매일 함께 깨어나는 생활 리듬을 키우고, 개인의 회복에서 공생 문화와 지구경영으로 나아가는 자리입니다.",
         items: [
           { step: "01", title: "오늘의 1분 명상", description: "먼저 1분, 자신에게 돌아오는 고요함을 체험합니다." },
-          { step: "02", title: "무료 7일 챌린지", description: "아침 1분, 밤 3분을 쌓아가며 부드러운 생활 리듬을 만듭니다." },
+          { step: "02", title: "7일간의 작은 회복", description: "아침 1분, 밤 3분을 쌓아가며 부드러운 생활 리듬을 되찾아갑니다." },
           { step: "03", title: "LINE 커뮤니티", description: "매일 함께 깨어나기 위한 리마인드와 따뜻한 연결을 받습니다." },
           { step: "04", title: "월간 멤버십", description: "한 사람의 회복을 함께 살아가는 습관으로 길러갑니다." },
           { step: "05", title: "리더 성장", description: "주변을 밝히고 공생 문화를 지탱하는 사람으로 성장합니다." }
@@ -1407,9 +1407,9 @@ export const siteCopy = {
             name: "Free",
             price: "¥0",
             description: "우선 7일 동안 부드럽게 정리합니다.",
-            features: ["7일 챌린지", "LINE 참여 링크", "AI 코치 1일 3회"],
+            features: ["7일간의 작은 회복", "LINE 참여 링크", "AI 코치 1일 3회"],
             cta: "무료로 시작하기",
-            href: "/challenge"
+            href: "/rhythm-journey"
           },
           {
             key: "basic",
@@ -1486,7 +1486,7 @@ export const siteCopy = {
       }
     },
     challengePage: {
-      eyebrow: "7-Day Rhythm Challenge",
+      eyebrow: "7 Days of Small Recovery",
       title: "7일 동안 리듬으로 돌아오기",
       description: "하루 10분만. 잠시 멈추고 호흡과 감각을 정돈하면서 자신에게 돌아오는 흐름을 조용히 만들어 갑니다.",
       rhythmEyebrow: "Just 10 minutes a day",
@@ -1650,7 +1650,7 @@ export const siteCopy = {
         bottomTitle: "이 리듬을 계속하기 위해",
         bottomDescription: "Basic 프로그램은 완벽하게 해내기 위한 것이 아닙니다. 다시 돌아올 자리를 만드는 작은 입구입니다.",
         bottomPrimary: "오늘의 1분으로 돌아가기",
-        bottomSecondary: "7일 챌린지 보기",
+        bottomSecondary: "7일간의 작은 회복 보기",
         bottomTertiary: "홈으로 돌아가기"
       },
       growth: {
@@ -1888,7 +1888,7 @@ export const siteCopy = {
       close: "Close",
       mobileGuestTabs: [
         { href: "/", label: "Home" },
-        { href: "/challenge", label: "Challenge" },
+        { href: "/rhythm-journey", label: "7 Days of Small Recovery" },
         { href: "/pricing", label: "Pricing" },
         { href: "/community", label: "Community" },
         { href: "/leaders", label: "Leader Growth" }
@@ -1902,7 +1902,7 @@ export const siteCopy = {
       ],
       mobileGuestMenu: [
         { href: "/", label: "Home" },
-        { href: "/challenge", label: "Challenge" },
+        { href: "/rhythm-journey", label: "7 Days of Small Recovery" },
         { href: "/pricing", label: "Pricing" },
         { href: "/community", label: "Community" },
         { href: "/leaders", label: "Leader Growth" }
@@ -1914,7 +1914,7 @@ export const siteCopy = {
       ],
       nav: [
         { href: "/", label: "Home" },
-        { href: "/challenge", label: "7-Day Challenge" },
+        { href: "/rhythm-journey", label: "7 Days of Small Recovery" },
         { href: "/pricing", label: "Pricing" },
         { href: "/community", label: "Community" },
         { href: "/leaders", label: "Leader Path" }
@@ -1926,7 +1926,7 @@ export const siteCopy = {
         { href: "/pricing", label: "Pricing" },
         { href: "/program/basic", label: "Programs" },
         { href: "/community", label: "Community" },
-        { href: "/challenge", label: "Start Free" }
+        { href: "/rhythm-journey", label: "Begin Gently" }
       ]
     },
     community: {
@@ -1999,7 +1999,7 @@ export const siteCopy = {
       line1: "From recovery to coexistence. From coexistence to earth stewardship.",
       line2: "Meisou Life — from recovery to coexistence. From coexistence to earth stewardship.",
       links: [
-        { href: "/challenge", label: "Free Join" },
+        { href: "/rhythm-journey", label: "Free Join" },
         { href: "/pricing", label: "Pricing" },
         { href: "/community", label: "Community" },
         { href: "/leaders", label: "Leader Path" },
@@ -2275,7 +2275,7 @@ export const siteCopy = {
             description: "Begin gently with seven days of reset.",
             features: ["7-day challenge", "LINE join link", "AI coach up to 3 times a day"],
             cta: "Start free",
-            href: "/challenge"
+            href: "/rhythm-journey"
           },
           {
             key: "basic",
@@ -2352,7 +2352,7 @@ export const siteCopy = {
       }
     },
     challengePage: {
-      eyebrow: "7-Day Rhythm Challenge",
+      eyebrow: "7 Days of Small Recovery",
       title: "Return to your rhythm in 7 days",
       description: "Just 10 minutes a day. Pause, breathe, and let each small practice bring you quietly back to yourself.",
       rhythmEyebrow: "Just 10 minutes a day",

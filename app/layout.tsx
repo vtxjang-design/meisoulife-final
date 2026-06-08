@@ -13,11 +13,11 @@ export const metadata: Metadata = {
     template: "%s | 瞑想life"
   },
   description:
-    "1分瞑想から始まり、7日チャレンジ、LINEコミュニティ、月額会員、リーダー成長へつながる共生リズム・プラットフォーム。",
+    "1分瞑想から始まり、7日間の小さな回復、LINEコミュニティ、月額会員、リーダー成長へつながる共生リズム・プラットフォーム。",
   openGraph: {
     title: "瞑想life",
     description:
-      "1分瞑想から始まり、7日チャレンジ、LINEコミュニティ、月額会員、リーダー成長へつながる共生リズム・プラットフォーム。",
+      "1分瞑想から始まり、7日間の小さな回復、LINEコミュニティ、月額会員、リーダー成長へつながる共生リズム・プラットフォーム。",
     url: absoluteUrl("/"),
     siteName: "瞑想life",
     locale: "ja_JP",

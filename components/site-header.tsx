@@ -27,14 +27,14 @@ export function SiteHeader() {
       if (isLoggedIn) {
         return [
           { href: "/meditation", label: oneMinuteLabel },
-          { href: "/challenge", label: rhythmLabel },
+          { href: "/rhythm-journey", label: rhythmLabel },
           { href: "/member", label: copy.header.myPage }
         ];
       }
 
       return [
         { href: "/meditation", label: oneMinuteLabel },
-        { href: "/challenge", label: rhythmLabel },
+        { href: "/rhythm-journey", label: rhythmLabel },
         { href: "/login", label: copy.header.login }
       ];
     }

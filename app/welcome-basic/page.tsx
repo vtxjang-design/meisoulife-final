@@ -125,7 +125,7 @@ export default function WelcomeBasicPage() {
               LINEコミュニティに参加
             </Link>
             <Link
-              href="/challenge"
+              href="/rhythm-journey"
               className="inline-flex min-h-14 w-full items-center justify-center rounded-full border border-emerald-200 bg-white px-6 py-4 text-base font-semibold text-emerald-700 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-emerald-50 sm:w-auto sm:min-w-[220px]"
             >
               1分瞑想を始める

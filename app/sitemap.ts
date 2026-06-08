@@ -4,7 +4,6 @@ import { absoluteUrl } from "@/lib/site";
 const routes = [
   "/",
   "/rhythm-journey",
-  "/challenge",
   "/coach",
   "/pricing",
   "/community",

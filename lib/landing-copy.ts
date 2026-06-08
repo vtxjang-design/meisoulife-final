@@ -1088,7 +1088,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
         {
           key: "habit",
           label: "이어지고 있는 작은 습관",
-          value: "7일 챌린지",
+          value: "7일간의 작은 회복",
           subtext: "무리 없이, 다시 돌아올 수 있는 리듬"
         }
       ]

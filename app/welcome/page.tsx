@@ -127,7 +127,7 @@ export default function WelcomePage() {
             </Link>
 
             <Link
-              href="/challenge"
+              href="/rhythm-journey"
               className="inline-flex min-h-[52px] min-w-[240px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
             >
               {copy.challengeButton}

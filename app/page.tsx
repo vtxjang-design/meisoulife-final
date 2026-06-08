@@ -13,7 +13,6 @@ import { FounderVisionSection } from "@/components/founder-vision-section";
 import { InstantMeditationSection } from "@/components/instant-meditation-section";
 import { LiveTogether } from "@/components/live-together";
 import { RhythmGarden } from "@/components/rhythm-garden";
-import { RhythmChallenge } from "@/components/rhythm-challenge";
 import { SectionHeading } from "@/components/section-heading";
 import { TogetherAwakeSection } from "@/components/together-awake-section";
 import { ZeroGateSection } from "@/components/zero-gate-section";
@@ -1285,8 +1284,6 @@ export default function HomePage() {
 
       <DailyRhythmLayer copy={landing.dailyRhythmLayer} />
 
-      <RhythmChallenge copy={landing.rhythmChallenge} />
-
       <section className="section-shell mt-16 sm:mt-20">
         <div className="overflow-hidden rounded-[34px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.14),transparent_22%),linear-gradient(180deg,#0b1520_0%,#0d1824_52%,#09111a_100%)] px-5 py-7 shadow-[0_24px_80px_rgba(7,17,31,0.2)] sm:px-8 sm:py-9">
           <SectionHeading eyebrow={founderHope.eyebrow} title={founderHope.title} description={founderHope.description} />
@@ -1460,7 +1457,7 @@ export default function HomePage() {
             </ul>
             <div className="relative z-20 mt-6">
               <Link
-                href="/challenge"
+                href="/rhythm-journey"
                 className="inline-flex min-h-[54px] w-full items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
               >
                 {landing.membership.freeCta}

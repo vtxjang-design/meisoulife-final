@@ -9,7 +9,7 @@ export function absoluteUrl(path = "/") {
 
 export function getLineInviteLinks() {
   return {
-    free: process.env.NEXT_PUBLIC_LINE_FREE_URL || process.env.LINE_FREE_INVITE_URL || absoluteUrl("/challenge"),
+    free: process.env.NEXT_PUBLIC_LINE_FREE_URL || process.env.LINE_FREE_INVITE_URL || absoluteUrl("/rhythm-journey"),
     member: process.env.LINE_MEMBER_INVITE_URL || absoluteUrl("/community"),
     leader: process.env.NEXT_PUBLIC_LEADER_FORM_URL || process.env.LINE_LEADER_INVITE_URL || absoluteUrl("/leaders")
   };
@@ -20,7 +20,7 @@ export function getWelcomeMemberLinks() {
 
   return {
     community: process.env.NEXT_PUBLIC_WELCOME_MEMBER_COMMUNITY_URL || invites.member,
-    meditationStart: process.env.NEXT_PUBLIC_WELCOME_MEMBER_MEDITATION_URL || absoluteUrl("/challenge"),
+    meditationStart: process.env.NEXT_PUBLIC_WELCOME_MEMBER_MEDITATION_URL || absoluteUrl("/rhythm-journey"),
     audioGuide: process.env.NEXT_PUBLIC_WELCOME_MEMBER_AUDIO_URL || absoluteUrl("/coach")
   };
 }

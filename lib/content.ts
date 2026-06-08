@@ -1,6 +1,6 @@
 export const navItems = [
   { href: "/", label: "ホーム" },
-  { href: "/challenge", label: "7日チャレンジ" },
+  { href: "/rhythm-journey", label: "7日間の小さな回復" },
   { href: "/coach", label: "AIコーチ" },
   { href: "/pricing", label: "料金" },
   { href: "/community", label: "コミュニティ" },
@@ -59,7 +59,7 @@ export const planCards = [
     name: "Free",
     price: "¥0",
     description: "まずは7日間、やさしく整える。",
-    features: ["7日チャレンジ", "LINE参加リンク", "AIコーチ 1日3回まで"],
+    features: ["7日間の小さな回復", "LINE参加リンク", "AIコーチ 1日3回まで"],
     cta: "無料で始める"
   },
   {
@@ -107,9 +107,9 @@ export const communityChannels = [
 export const serviceFlow = [
   {
     step: "01",
-    title: "無料7日チャレンジ",
+    title: "7日間の小さな回復",
     description: "朝3分の音声ガイドで、まず心が落ち着く感覚を取り戻します。",
-    href: "/challenge"
+    href: "/rhythm-journey"
   },
   {
     step: "02",

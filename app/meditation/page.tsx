@@ -75,7 +75,7 @@ export default function MeditationPage() {
   const [showAmbientRetry, setShowAmbientRetry] = useState(false);
   const [journeyMode, setJourneyMode] = useState(false);
   const [journeyDay, setJourneyDay] = useState<number | null>(null);
-  const [returnToHref, setReturnToHref] = useState("/challenge");
+  const [returnToHref, setReturnToHref] = useState("/rhythm-journey");
   const audioContextRef = useRef<AudioContext | null>(null);
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
   const completionHandledRef = useRef(false);
@@ -123,7 +123,7 @@ export default function MeditationPage() {
     setSoundEnabled(nextSoundEnabled);
     setJourneyMode(nextJourneyMode);
     setJourneyDay(Number.isInteger(resolvedJourneyDay) && resolvedJourneyDay >= 1 && resolvedJourneyDay <= 7 ? resolvedJourneyDay : null);
-    setReturnToHref(nextReturnTo || "/challenge");
+    setReturnToHref(nextReturnTo || "/rhythm-journey");
     setAmbientVideoFailed(false);
     setShowAmbientRetry(false);
     setHasUserGesture(Boolean(nextJourneyMode && pendingJourneyAudio));
