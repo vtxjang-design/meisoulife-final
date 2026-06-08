@@ -971,14 +971,7 @@ export default function HomePage() {
   }
 
   function scrollToRhythmChallenge() {
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    document.querySelector("#rhythm-challenge")?.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
+    router.push("/rhythm-journey");
   }
 
   function scrollToStateCheck() {
