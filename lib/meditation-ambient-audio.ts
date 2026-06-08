@@ -61,19 +61,30 @@ export function setNatureSoundPreference(enabled: boolean) {
 
 export async function startAmbientNatureAudio(
   audioRef: MutableRefObject<HTMLAudioElement | null>,
-  enabled = true
+  enabled = true,
+  source = AMBIENT_AUDIO_SRC,
+  targetVolume = TARGET_VOLUME
 ): Promise<AmbientAudioResult> {
   if (!enabled || typeof window === "undefined" || typeof Audio === "undefined") {
     return { started: false };
   }
 
+  const existingSource = audioRef.current?.dataset.meisoSrc;
+
+  if (audioRef.current && existingSource !== source) {
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
+    audioRef.current = null;
+  }
+
   if (!audioRef.current) {
     // TODO: If member-specific ambience is added later, select the source here
     // from Supabase/member preferences instead of a single shared file.
-    const audio = new Audio(AMBIENT_AUDIO_SRC);
+    const audio = new Audio(source);
     audio.loop = true;
     audio.preload = "auto";
-    audio.volume = TARGET_VOLUME;
+    audio.volume = targetVolume;
+    audio.dataset.meisoSrc = source;
     audioRef.current = audio;
   }
 
@@ -81,10 +92,10 @@ export async function startAmbientNatureAudio(
 
   try {
     console.log("Starting ambience audio");
-    audio.volume = TARGET_VOLUME;
+    audio.volume = targetVolume;
     await audio.play();
     console.log("Ambience audio playing");
-    await fadeVolume(audio, 0, TARGET_VOLUME, FADE_DURATION_MS);
+    await fadeVolume(audio, 0, targetVolume, FADE_DURATION_MS);
     return { started: true };
   } catch (error) {
     console.warn("Ambience audio failed", error);

@@ -1,4 +1,13 @@
 export const RHYTHM_JOURNEY_STORAGE_KEY = "meisoulife_rhythm_journey_progress";
+export const journeyAudioMap: Record<number, string> = {
+  1: "/audio/7day-recovery/day01-stop.mp3",
+  2: "/audio/7day-recovery/day02-breath.mp3",
+  3: "/audio/7day-recovery/day03-body.mp3",
+  4: "/audio/7day-recovery/day04-nature.mp3",
+  5: "/audio/7day-recovery/day05-gratitude.mp3",
+  6: "/audio/7day-recovery/day06-stillness.mp3",
+  7: "/audio/7day-recovery/day07-my-rhythm.mp3"
+};
 
 export type RhythmJourneyProgress = {
   journeyStarted: boolean;

@@ -126,7 +126,7 @@ export function RhythmJourneyPage() {
   function startRecoveryMinute() {
     const meditationType = currentDay.day === 7 ? "morning" : currentDay.day === 6 ? "night" : "default";
     router.push(
-      `/meditation?duration=60&type=${meditationType}&journey=1&returnTo=${encodeURIComponent(
+      `/meditation?duration=60&type=${meditationType}&journey=1&journeyDay=${currentDay.day}&returnTo=${encodeURIComponent(
         `/rhythm-journey?completedDay=${currentDay.day}`
       )}`
     );

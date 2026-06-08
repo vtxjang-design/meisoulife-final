@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useSiteCopy } from "@/lib/i18n";
 import { getNatureSoundPreference, setNatureSoundPreference, startAmbientNatureAudio, stopAmbientNatureAudio } from "@/lib/meditation-ambient-audio";
 import { handleMeditationComplete as triggerMeditationCompletion, supportsMeditationVibration } from "@/lib/meditation-completion";
+import { journeyAudioMap } from "@/lib/rhythm-journey";
 
 const CYCLE_SECONDS = 10;
 const INHALE_SECONDS = 4;
@@ -71,6 +72,7 @@ export default function MeditationPage() {
   const [ambientVideoFailed, setAmbientVideoFailed] = useState(false);
   const [showAmbientRetry, setShowAmbientRetry] = useState(false);
   const [journeyMode, setJourneyMode] = useState(false);
+  const [journeyDay, setJourneyDay] = useState<number | null>(null);
   const [returnToHref, setReturnToHref] = useState("/challenge");
   const audioContextRef = useRef<AudioContext | null>(null);
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -81,6 +83,9 @@ export default function MeditationPage() {
   const content = copy.variants[meditationType];
   const durationVariant = getDurationVariant(totalSeconds);
   const durationTextSet = copy.durationTexts?.[durationVariant];
+  const journeyAudioSource = journeyDay ? journeyAudioMap[journeyDay] : undefined;
+  const ambientAudioSource = journeyMode && journeyAudioSource ? journeyAudioSource : undefined;
+  const ambientAudioVolume = journeyMode ? 0.26 : undefined;
   const topText = journeyMode
     ? "今ここで、\n60秒だけ呼吸に戻りましょう。"
     : meditationType === "morning" || meditationType === "night"
@@ -99,6 +104,7 @@ export default function MeditationPage() {
     const nextDuration = normalizeDuration(searchParams.get("duration"));
     const nextType = normalizeMeditationType(searchParams.get("type"));
     const nextJourneyMode = searchParams.get("journey") === "1";
+    const nextJourneyDay = Number(searchParams.get("journeyDay"));
     const nextReturnTo = searchParams.get("returnTo");
 
     setTotalSeconds(nextDuration);
@@ -106,6 +112,7 @@ export default function MeditationPage() {
     setMeditationType(nextType);
     setSoundEnabled(getNatureSoundPreference());
     setJourneyMode(nextJourneyMode);
+    setJourneyDay(Number.isInteger(nextJourneyDay) && nextJourneyDay >= 1 && nextJourneyDay <= 7 ? nextJourneyDay : null);
     setReturnToHref(nextReturnTo || "/challenge");
     setAmbientVideoFailed(false);
     setShowAmbientRetry(false);
@@ -119,7 +126,7 @@ export default function MeditationPage() {
       setHasUserGesture(true);
 
       if (!isComplete && soundEnabled) {
-        startAmbientNatureAudio(ambientAudioRef, soundEnabled).then((result) => {
+        startAmbientNatureAudio(ambientAudioRef, soundEnabled, ambientAudioSource, ambientAudioVolume).then((result) => {
           setShowAmbientRetry(!result.started);
         });
       }
@@ -133,7 +140,7 @@ export default function MeditationPage() {
       window.removeEventListener("keydown", markGesture);
       stopAmbientNatureAudio(ambientAudioRef);
     };
-  }, [isComplete, soundEnabled]);
+  }, [ambientAudioSource, ambientAudioVolume, isComplete, soundEnabled]);
 
   useEffect(() => {
     if (secondsLeft <= 0) {
@@ -150,12 +157,12 @@ export default function MeditationPage() {
   }, [secondsLeft]);
 
   useEffect(() => {
-    if (isComplete || !soundEnabled || !hasUserGesture) {
+    if (isComplete || !soundEnabled || (!hasUserGesture && !journeyMode)) {
       stopAmbientNatureAudio(ambientAudioRef);
       return;
     }
 
-    startAmbientNatureAudio(ambientAudioRef, soundEnabled).then((result) => {
+    startAmbientNatureAudio(ambientAudioRef, soundEnabled, ambientAudioSource, ambientAudioVolume).then((result) => {
       setShowAmbientRetry(!result.started);
     });
 
@@ -164,7 +171,7 @@ export default function MeditationPage() {
         stopAmbientNatureAudio(ambientAudioRef);
       }
     };
-  }, [hasUserGesture, isComplete, soundEnabled]);
+  }, [ambientAudioSource, ambientAudioVolume, hasUserGesture, isComplete, journeyMode, soundEnabled]);
 
   useEffect(() => {
     if (!isComplete || completionHandledRef.current) {
@@ -192,7 +199,7 @@ export default function MeditationPage() {
     setSoundEnabled(next);
 
     if (next) {
-      const result = await startAmbientNatureAudio(ambientAudioRef, true);
+      const result = await startAmbientNatureAudio(ambientAudioRef, true, ambientAudioSource, ambientAudioVolume);
       setShowAmbientRetry(!result.started);
     } else {
       setShowAmbientRetry(false);
@@ -207,7 +214,7 @@ export default function MeditationPage() {
 
   async function handleAmbientRetry() {
     setHasUserGesture(true);
-    const result = await startAmbientNatureAudio(ambientAudioRef, soundEnabled);
+    const result = await startAmbientNatureAudio(ambientAudioRef, soundEnabled, ambientAudioSource, ambientAudioVolume);
     setShowAmbientRetry(!result.started);
   }
 
