@@ -1,24 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { getLocaleCopy, useLanguage } from "@/lib/i18n";
 
-const BASIC_CHECKIN_STORAGE_KEY = "meisoulife_basic_rhythm_check";
-
 type RhythmPhase = "morning" | "day" | "night";
-
-type CheckInState = {
-  state: string;
-};
 
 const basicHomeCopy = {
   jp: {
     sanctuaryEyebrow: "MEMBER SANCTUARY",
-    sanctuaryTitle: "静かなリズムの場所へようこそ。",
+    sanctuaryTitle: "静かなリズムの場所へ。",
     sanctuaryBody:
-      "ここは、\n一日の中で少しだけ自分に戻るための場所です。\n\n今日のあなたに必要なリズムを、\n3分だけ選んでください。",
+      "今日のあなたに必要な\n小さな扉を選んでください。",
     hero: {
       morning: {
         emoji: "☀️",
@@ -103,9 +97,9 @@ const basicHomeCopy = {
   },
   kr: {
     sanctuaryEyebrow: "MEMBER SANCTUARY",
-    sanctuaryTitle: "고요한 리듬의 장소에 오신 것을 환영합니다.",
+    sanctuaryTitle: "작은 쉼이\n하루를 바꿉니다.",
     sanctuaryBody:
-      "이곳은\n하루 속에서 잠시 자신에게 돌아오는 공간입니다.\n\n오늘 당신에게 필요한 리듬을\n3분만 선택해보세요.",
+      "오늘 당신에게 필요한\n리듬의 문을 선택하세요.",
     hero: {
       morning: {
         emoji: "☀️",
@@ -190,9 +184,9 @@ const basicHomeCopy = {
   },
   en: {
     sanctuaryEyebrow: "MEMBER SANCTUARY",
-    sanctuaryTitle: "Welcome to your quiet rhythm space.",
+    sanctuaryTitle: "Welcome to your sanctuary.",
     sanctuaryBody:
-      "This is a place to return to yourself\nfor a few moments in your day.\n\nChoose the rhythm you need today\nfor just 3 minutes.",
+      "Choose the rhythm\nthat calls you today.",
     hero: {
       morning: {
         emoji: "☀️",
@@ -277,14 +271,6 @@ const basicHomeCopy = {
   }
 } as const;
 
-function getTodayKey() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
 function getLocalRhythmPhase(): RhythmPhase {
   const hour = new Date().getHours();
 
@@ -307,32 +293,9 @@ function getDailyMessage(messages: readonly string[]) {
   return messages[dayOfYear % messages.length] ?? messages[0] ?? "";
 }
 
-function readStoredCheckIn(): { date: string; values: CheckInState } | null {
-  if (typeof window === "undefined") {
-    return null;
-  }
-
-  const raw = window.localStorage.getItem(BASIC_CHECKIN_STORAGE_KEY);
-  if (!raw) {
-    return null;
-  }
-
-  try {
-    return JSON.parse(raw) as { date: string; values: CheckInState };
-  } catch {
-    window.localStorage.removeItem(BASIC_CHECKIN_STORAGE_KEY);
-    return null;
-  }
-}
-
 function buildRhythmMeditationHref(rhythm: RhythmPhase) {
   // Existing safe Daily Rhythm flow currently enters through meditation.
   return `/meditation?duration=180&type=${rhythm}&returnTo=${encodeURIComponent(`/program/basic?rhythm=${rhythm}`)}`;
-}
-
-function buildStateRecoveryHref(state: string) {
-  // TODO: Replace with dedicated state-based recovery destinations once category routes are defined.
-  return `/meditation?duration=60&type=default&state=${encodeURIComponent(state)}&returnTo=${encodeURIComponent("/program/basic#state-recovery")}`;
 }
 
 function getGateSurfaceClasses(rhythm: RhythmPhase) {
@@ -356,44 +319,17 @@ export function BasicHome() {
     ? highlightedRhythm
     : getLocalRhythmPhase();
   const todayMessage = useMemo(() => getDailyMessage(copy.todayMessages), [copy.todayMessages]);
-  const [checkIn, setCheckIn] = useState<CheckInState>(() => {
-    const stored = readStoredCheckIn();
-    if (stored?.date === getTodayKey()) {
-      return stored.values;
-    }
-
-    return {
-      state: copy.checkIn.stateOptions[0]?.value ?? "calm"
-    };
-  });
-  const [savedMessage, setSavedMessage] = useState("");
-
-  function saveCheckIn(state: string) {
-    const nextState = { state };
-    setCheckIn(nextState);
-    try {
-      window.localStorage.setItem(
-        BASIC_CHECKIN_STORAGE_KEY,
-        JSON.stringify({
-          date: getTodayKey(),
-          values: nextState
-        })
-      );
-    } catch (error) {
-      console.warn("[basic-home] failed to save rhythm check", error);
-    } finally {
-      setSavedMessage(copy.checkIn.saved);
-    }
-  }
 
   return (
     <div className="section-shell py-14 sm:py-20">
       <div className="mx-auto max-w-6xl space-y-10 sm:space-y-12">
-        <section className="relative overflow-hidden rounded-[38px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(231,206,140,0.16),transparent_16%),radial-gradient(circle_at_left,rgba(67,104,91,0.22),transparent_24%),radial-gradient(circle_at_bottom_right,rgba(46,86,118,0.24),transparent_28%),linear-gradient(180deg,rgba(8,20,34,0.98),rgba(5,14,24,0.96))] px-6 py-8 shadow-[0_36px_120px_rgba(3,10,20,0.44)] sm:px-8 sm:py-10">
+        <section className="relative overflow-hidden rounded-[38px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(231,206,140,0.18),transparent_15%),radial-gradient(circle_at_left,rgba(67,104,91,0.24),transparent_22%),radial-gradient(circle_at_bottom_right,rgba(46,86,118,0.28),transparent_30%),linear-gradient(180deg,rgba(8,20,34,0.99),rgba(5,14,24,0.97))] px-6 py-10 shadow-[0_36px_120px_rgba(3,10,20,0.44)] sm:px-8 sm:py-12">
           <div className="pointer-events-none absolute inset-0">
-            <div className="absolute inset-x-0 top-0 h-48 bg-[radial-gradient(circle_at_top,rgba(241,222,170,0.20),transparent_62%)]" />
-            <div className="absolute -left-10 bottom-0 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(83,120,102,0.20),transparent_68%)] blur-2xl" />
-            <div className="absolute right-0 top-10 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgba(85,110,162,0.18),transparent_70%)] blur-3xl" />
+            <div className="absolute inset-x-0 top-0 h-56 bg-[radial-gradient(circle_at_top,rgba(241,222,170,0.24),transparent_58%)]" />
+            <div className="absolute left-[10%] top-[18%] h-32 w-32 rounded-full bg-gold/12 blur-3xl animate-pulse" />
+            <div className="absolute -left-10 bottom-0 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgba(83,120,102,0.22),transparent_68%)] blur-3xl" />
+            <div className="absolute right-0 top-10 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(85,110,162,0.18),transparent_70%)] blur-3xl" />
+            <div className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(180deg,transparent,rgba(4,10,18,0.42))]" />
           </div>
 
           <div className="relative max-w-3xl">
@@ -438,51 +374,6 @@ export function BasicHome() {
           <p className="mt-5 max-w-4xl whitespace-pre-line font-serif text-[28px] leading-[1.7] text-white/90 sm:text-[34px]">
             {todayMessage}
           </p>
-        </section>
-
-        <section>
-          <article className="rounded-[30px] border border-white/10 bg-white/[0.035] px-6 py-7 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">
-            <p className="text-sm uppercase tracking-[0.28em] text-gold/82">{copy.checkIn.title}</p>
-            <div className="mt-6 flex flex-wrap gap-2.5">
-              {copy.checkIn.stateOptions.map((option) => {
-                const selected = checkIn.state === option.value;
-                return (
-                  <button
-                    key={option.value}
-                    type="button"
-                    onClick={() => saveCheckIn(option.value)}
-                    className={`inline-flex min-h-[48px] items-center justify-center rounded-full border px-4 py-2.5 text-sm transition duration-200 ${
-                      selected
-                        ? "border-gold/30 bg-gold/12 text-white shadow-[0_12px_32px_rgba(212,186,117,0.12)]"
-                        : "border-white/10 bg-white/[0.03] text-white/72 hover:bg-white/[0.06]"
-                    }`}
-                  >
-                    {option.label}
-                  </button>
-                );
-              })}
-            </div>
-            {savedMessage ? <p className="mt-5 text-sm text-white/58">{savedMessage}</p> : null}
-          </article>
-        </section>
-
-        <section id="state-recovery" className="rounded-[30px] border border-white/10 bg-white/[0.035] px-6 py-7 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">
-          <p className="text-sm uppercase tracking-[0.28em] text-gold/82">{copy.stateRecoveryTitle}</p>
-          <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-            {copy.stateRecoveryItems.map((item) => (
-              <article key={item.key} className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
-                <p className="text-sm uppercase tracking-[0.24em] text-gold/80">{item.emoji} {item.title}</p>
-                <div className="mt-5">
-                  <Link
-                    href={buildStateRecoveryHref(item.key)}
-                    className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-4 py-2 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
-                  >
-                    {copy.stateRecoveryCta}
-                  </Link>
-                </div>
-              </article>
-            ))}
-          </div>
         </section>
 
         <section className="rounded-[30px] border border-gold/14 bg-gold/[0.05] px-6 py-7 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">

@@ -23,32 +23,33 @@ type MemberDashboardProps = {
 
 const dashboardCopy = {
   jp: {
-    eyebrow: "Member Space",
-    title: "静かな記録とつながり",
+    eyebrow: "RHYTHM GARDEN",
+    title: "今日のリズムが息づく場所",
     challengeStartedTitle: "チャレンジを開始しました",
     description:
-      "現在のプラン、旅の進み、継続の流れ、AIコーチ利用状況、コミュニティとのつながりをここで静かに確認できます。",
+      "プラン、旅の流れ、ともに歩く人たち、次の集いを、必要なときにここで静かに確かめられます。",
     leaderEyebrow: "Leader Program",
     leaderTitle: "リーダープログラムに招待されました",
     leaderBody:
       "継続実践、チェックイン、コミュニティ貢献が一定基準を超えました。次のステップへ進めます。",
-    currentPlan: "現在のプラン",
+    currentPlan: "今日のリズム",
     checkingMembership: "リズム空間を準備しています。",
-    challengeProgress: "チャレンジ進行",
-    streakCount: "継続日数",
-    aiUsage: "AIコーチ利用",
-    challengeEyebrow: "Challenge",
-    challengeTitle: "7日リズムの進行",
-    openProgress: "進捗を開く",
-    communityEyebrow: "Community",
-    communityTitle: "コミュニティ導線",
-    communityBody: "毎日のチェックイン、今日の小さな前進、質問、仲間とのつながりへすぐアクセスできます。",
-    communityCta: "コミュニティへ",
-    eventsEyebrow: "Upcoming live events",
+    challengeProgress: "旅の日",
+    streakCount: "歩いてきた日々",
+    aiUsage: "今日の気づき",
+    challengeEyebrow: "THE QUIET PATH",
+    challengeTitle: "7日間の小さな回復",
+    openProgress: "旅をひらく",
+    communityEyebrow: "ともに歩く人たち",
+    communityTitle: "ともに歩く人たち",
+    communityBody: "毎日の気づきや小さな前進を、同じ道を歩く仲間たちと静かに分かち合えます。",
+    communityCta: "仲間たちの場所へ",
+    eventsEyebrow: "次の集い",
     upgradeCta: "プランをアップグレード",
     registeredEmail: "登録メール",
     dayLabel: "Day",
     streakUnit: "日",
+    insightReady: "自分に戻る時間がここにあります。",
     plans: {
       free: "Freeメンバー",
       basic: "Basicメンバー",
@@ -67,31 +68,32 @@ const dashboardCopy = {
     events: ["毎週水曜 06:30 朝ライブ瞑想", "土曜 21:00 睡眠回復セッション"]
   },
   kr: {
-    eyebrow: "Member Space",
-    title: "조용한 기록과 연결",
+    eyebrow: "RHYTHM GARDEN",
+    title: "오늘의 리듬이 머무는 곳",
     challengeStartedTitle: "챌린지를 시작했습니다",
     description:
-      "현재 플랜, 여정의 흐름, 이어온 리듬, AI 코치 이용 현황, 커뮤니티 연결을 이곳에서 차분히 확인할 수 있습니다.",
+      "플랜, 여정의 흐름, 함께 걷는 사람들, 다음 모임을 필요할 때 이곳에서 조용히 확인할 수 있습니다.",
     leaderEyebrow: "Leader Program",
     leaderTitle: "리더 프로그램에 초대되었습니다",
     leaderBody: "지속 실천, 체크인, 커뮤니티 기여가 기준을 넘어 다음 단계로 나아갈 수 있습니다.",
-    currentPlan: "현재 플랜",
+    currentPlan: "오늘의 리듬",
     checkingMembership: "리듬 공간을 준비하고 있습니다.",
-    challengeProgress: "챌린지 진행",
-    streakCount: "연속 실천",
-    aiUsage: "AI 코치 이용",
-    challengeEyebrow: "Challenge",
-    challengeTitle: "7일 리듬 진행",
-    openProgress: "진행 보기",
-    communityEyebrow: "Community",
-    communityTitle: "커뮤니티 동선",
-    communityBody: "매일의 체크인, 오늘의 작은 전진, 질문, 함께 이어가는 연결로 바로 이동할 수 있습니다.",
-    communityCta: "커뮤니티로",
-    eventsEyebrow: "Upcoming live events",
+    challengeProgress: "여정의 날",
+    streakCount: "이어온 날들",
+    aiUsage: "오늘의 통찰",
+    challengeEyebrow: "THE QUIET PATH",
+    challengeTitle: "7일간의 작은 회복",
+    openProgress: "여정 열기",
+    communityEyebrow: "함께 걷는 사람들",
+    communityTitle: "함께 걷는 사람들",
+    communityBody: "매일의 작은 회복과 조용한 깨달음을, 같은 길을 걷는 사람들과 나눌 수 있습니다.",
+    communityCta: "함께 걷는 사람들로",
+    eventsEyebrow: "다가오는 모임",
     upgradeCta: "플랜 업그레이드",
     registeredEmail: "등록 이메일",
     dayLabel: "Day",
     streakUnit: "일",
+    insightReady: "자신에게 돌아오는 시간이 여기에 있습니다.",
     plans: {
       free: "Free 회원",
       basic: "Basic 회원",
@@ -102,33 +104,34 @@ const dashboardCopy = {
     events: ["매주 수요일 06:30 아침 라이브 명상", "토요일 21:00 수면 회복 세션"]
   },
   en: {
-    eyebrow: "Member Space",
-    title: "A quiet place for rhythm and connection",
+    eyebrow: "RHYTHM GARDEN",
+    title: "A place where today’s rhythm can breathe",
     challengeStartedTitle: "Your challenge has started",
     description:
-      "Your plan, journey progress, returning rhythm, AI coach usage, and community path live here quietly when you need them.",
+      "Your plan, journey path, fellow walkers, and upcoming gatherings live here quietly when you need them.",
     leaderEyebrow: "Leader Program",
     leaderTitle: "You have been invited to the leader program",
     leaderBody:
       "Your steady practice, check-ins, and community contribution have reached the next threshold.",
-    currentPlan: "Current plan",
+    currentPlan: "Today’s Rhythm",
     checkingMembership: "Preparing your rhythm space.",
-    challengeProgress: "Challenge progress",
-    streakCount: "Streak count",
-    aiUsage: "AI coach usage",
-    challengeEyebrow: "Challenge",
-    challengeTitle: "7-day rhythm progress",
-    openProgress: "Open progress",
-    communityEyebrow: "Community",
-    communityTitle: "Community path",
+    challengeProgress: "Journey Day",
+    streakCount: "Days of Practice",
+    aiUsage: "Today’s Insight",
+    challengeEyebrow: "THE QUIET PATH",
+    challengeTitle: "7 Days of Small Recovery",
+    openProgress: "Open the path",
+    communityEyebrow: "People Walking Together",
+    communityTitle: "People Walking Together",
     communityBody:
-      "Jump back into daily check-ins, small wins, questions, and the companionship that helps you continue.",
-    communityCta: "Go to community",
-    eventsEyebrow: "Upcoming live events",
+      "Return to small daily recoveries, shared questions, and the companionship of people walking the same path.",
+    communityCta: "Go to fellow walkers",
+    eventsEyebrow: "Upcoming Gatherings",
     upgradeCta: "Upgrade plan",
     registeredEmail: "Registered email",
     dayLabel: "Day",
     streakUnit: "days",
+    insightReady: "A quiet return to yourself is waiting here.",
     plans: {
       free: "Free",
       basic: "Basic Member",
@@ -156,6 +159,13 @@ export function MemberDashboard({
   const safeChallengeDay = Math.min(Math.max(challengeDay, 1), 7);
   const planLabel = membershipResolved && !membershipError ? copy.plans[planKey] : copy.checkingMembership;
   const progressHref = `/rhythm-journey?day=${safeChallengeDay}`;
+  const hour = new Date().getHours();
+  const todayRhythmLabel =
+    hour >= 5 && hour <= 11
+      ? copy.challengeDays[0]
+      : hour >= 12 && hour <= 17
+        ? copy.challengeDays[1]
+        : copy.challengeDays[6];
 
   return (
     <div className="grid gap-6">
@@ -176,26 +186,28 @@ export function MemberDashboard({
       ) : null}
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <div className="premium-card rounded-lg p-5">
+        <div className="premium-card rounded-[24px] border border-gold/14 bg-[radial-gradient(circle_at_top,rgba(232,196,118,0.16),transparent_44%),linear-gradient(180deg,rgba(18,30,48,0.88),rgba(10,20,34,0.92))] p-5">
           <p className="text-sm text-white/60">{copy.currentPlan}</p>
-          <p className="mt-2 text-2xl font-semibold text-white">{planLabel}</p>
+          <p className="mt-2 text-2xl font-semibold text-white">✦ {todayRhythmLabel}</p>
+          <p className="mt-2 text-sm text-white/58">{planLabel}</p>
         </div>
-        <div className="premium-card rounded-lg p-5">
+        <div className="premium-card rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(15,27,43,0.9),rgba(10,18,30,0.9))] p-5">
           <p className="text-sm text-white/60">{copy.challengeProgress}</p>
           <p className="mt-2 text-2xl font-semibold text-white">
             {copy.dayLabel} {safeChallengeDay}/7
           </p>
         </div>
-        <div className="premium-card rounded-lg p-5">
+        <div className="premium-card rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(16,32,36,0.9),rgba(10,22,26,0.92))] p-5">
           <p className="text-sm text-white/60">{copy.streakCount}</p>
           <p className="mt-2 text-2xl font-semibold text-white">
             {streakCount} {copy.streakUnit}
           </p>
         </div>
-        <div className="premium-card rounded-lg p-5">
+        <div className="premium-card rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(18,26,44,0.9),rgba(11,18,30,0.92))] p-5">
           <p className="text-sm text-white/60">{copy.aiUsage}</p>
-          <p className="mt-2 text-2xl font-semibold text-white">
-            {aiUsage.used}/{aiUsage.limit === "unlimited" ? "∞" : aiUsage.limit}
+          <p className="mt-2 text-base leading-7 text-white/82">{copy.insightReady}</p>
+          <p className="mt-3 text-sm text-white/50">
+            AI {aiUsage.used}/{aiUsage.limit === "unlimited" ? "∞" : aiUsage.limit}
           </p>
         </div>
       </div>
