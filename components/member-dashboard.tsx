@@ -40,6 +40,8 @@ const dashboardCopy = {
     challengeEyebrow: "THE QUIET PATH",
     challengeTitle: "7日間の小さな回復",
     openProgress: "旅をひらく",
+    gateDayPrefix: "第",
+    gateDaySuffix: "の門",
     communityEyebrow: "ともに歩く人たち",
     communityTitle: "ともに歩く人たち",
     communityBody: "毎日の気づきや小さな前進を、同じ道を歩く仲間たちと静かに分かち合えます。",
@@ -84,6 +86,8 @@ const dashboardCopy = {
     challengeEyebrow: "THE QUIET PATH",
     challengeTitle: "7일간의 작은 회복",
     openProgress: "여정 열기",
+    gateDayPrefix: "제",
+    gateDaySuffix: "의 문",
     communityEyebrow: "함께 걷는 사람들",
     communityTitle: "함께 걷는 사람들",
     communityBody: "매일의 작은 회복과 조용한 깨달음을, 같은 길을 걷는 사람들과 나눌 수 있습니다.",
@@ -121,6 +125,8 @@ const dashboardCopy = {
     challengeEyebrow: "THE QUIET PATH",
     challengeTitle: "7 Days of Small Recovery",
     openProgress: "Open the path",
+    gateDayPrefix: "Gate ",
+    gateDaySuffix: "",
     communityEyebrow: "People Walking Together",
     communityTitle: "People Walking Together",
     communityBody:
@@ -242,7 +248,11 @@ export function MemberDashboard({
                         : "border-white/10 bg-white/[0.03] text-white/68"
                   } transition hover:bg-white/[0.05] focus:outline-none focus:ring-2 focus:ring-gold/40`}
                 >
-                  {copy.dayLabel} {day} · {title}
+                  {copy.gateDayPrefix}
+                  {day}
+                  {copy.gateDaySuffix}
+                  {" — "}
+                  {title}
                 </Link>
               );
             })}

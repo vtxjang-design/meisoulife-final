@@ -18,16 +18,16 @@ type DashboardState = {
 
 const basicPageCopy = {
   jp: {
-    secondaryEyebrow: "Member Space",
-    secondaryBody: "プラン、旅の進み、コミュニティ、ライブ予定は、必要なときにここで静かに確認できます。"
+    secondaryEyebrow: "RHYTHM GARDEN",
+    secondaryBody: "旅の流れ、ともに歩く人たち、次の集いは、必要なときにここで静かに確かめられます。"
   },
   kr: {
-    secondaryEyebrow: "Member Space",
-    secondaryBody: "플랜, 여정의 흐름, 커뮤니티, 라이브 일정은 필요할 때 여기에서 차분히 확인할 수 있습니다."
+    secondaryEyebrow: "RHYTHM GARDEN",
+    secondaryBody: "여정의 흐름, 함께 걷는 사람들, 다음 모임은 필요할 때 이곳에서 조용히 확인할 수 있습니다."
   },
   en: {
-    secondaryEyebrow: "Member Space",
-    secondaryBody: "Plan, journey, community, and upcoming events stay here for you when you need them."
+    secondaryEyebrow: "RHYTHM GARDEN",
+    secondaryBody: "Journey, fellow travelers, and upcoming gatherings rest here quietly when you need them."
   }
 } as const;
 

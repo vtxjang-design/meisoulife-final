@@ -10,9 +10,9 @@ type RhythmPhase = "morning" | "day" | "night";
 const basicHomeCopy = {
   jp: {
     sanctuaryEyebrow: "MEMBER SANCTUARY",
-    sanctuaryTitle: "静かなリズムの場所へ。",
+    sanctuaryTitle: "今日のリズムが宿る場所",
     sanctuaryBody:
-      "今日のあなたに必要な\n小さな扉を選んでください。",
+      "少し立ち止まり、\n今日のあなたに必要な小さな扉を選んでください。",
     hero: {
       morning: {
         emoji: "☀️",
@@ -33,7 +33,8 @@ const basicHomeCopy = {
         button: "夜のリズムを始める"
       }
     },
-    todayMessageTitle: "今日の道しるべ",
+    gatesTitle: "TODAY'S GATE",
+    todayMessageTitle: "今日の気づき",
     todayMessages: [
       "自然は急ぎません。\nあなたも、急がなくて大丈夫です。",
       "今の一呼吸が、今日を少し変えてくれます。",
@@ -58,7 +59,7 @@ const basicHomeCopy = {
         key: "morning",
         emoji: "☀️",
         title: "朝の扉",
-        description: "今日を軽やかに始める",
+        description: "今日を軽やかにひらく",
         detail: "3分・Morning Gate",
         button: "朝のリズムを始める →"
       },
@@ -66,7 +67,7 @@ const basicHomeCopy = {
         key: "day",
         emoji: "🌿",
         title: "昼の扉",
-        description: "呼吸を整え、流れを戻す",
+        description: "もう一度中心に戻る",
         detail: "3分・Day Gate",
         button: "昼のリズムを始める →"
       },
@@ -99,7 +100,7 @@ const basicHomeCopy = {
     sanctuaryEyebrow: "MEMBER SANCTUARY",
     sanctuaryTitle: "작은 쉼이\n하루를 바꿉니다.",
     sanctuaryBody:
-      "오늘 당신에게 필요한\n리듬의 문을 선택하세요.",
+      "잠시 멈추고,\n오늘 당신에게 필요한 작은 문을 선택하세요.",
     hero: {
       morning: {
         emoji: "☀️",
@@ -120,7 +121,8 @@ const basicHomeCopy = {
         button: "밤 리듬 시작"
       }
     },
-    todayMessageTitle: "오늘의 표지석",
+    gatesTitle: "TODAY'S GATE",
+    todayMessageTitle: "오늘의 통찰",
     todayMessages: [
       "자연은 서두르지 않습니다.\n당신도 서두르지 않아도 괜찮습니다.",
       "지금 한 번의 숨이 오늘 하루를 조금 바꿀 수 있습니다.",
@@ -145,7 +147,7 @@ const basicHomeCopy = {
         key: "morning",
         emoji: "☀️",
         title: "아침의 문",
-        description: "오늘을 가볍게 시작하기",
+        description: "오늘을 가볍게 여는 문",
         detail: "3분 · Morning Gate",
         button: "아침 리듬 시작 →"
       },
@@ -153,7 +155,7 @@ const basicHomeCopy = {
         key: "day",
         emoji: "🌿",
         title: "낮의 문",
-        description: "호흡을 정리하고 흐름을 되찾기",
+        description: "다시 중심으로 돌아오는 문",
         detail: "3분 · Day Gate",
         button: "낮 리듬 시작 →"
       },
@@ -161,7 +163,7 @@ const basicHomeCopy = {
         key: "night",
         emoji: "🌙",
         title: "밤의 문",
-        description: "하루를 부드럽게 내려놓기",
+        description: "하루를 내려놓는 문",
         detail: "3분 · Night Gate",
         button: "밤 리듬 시작 →"
       }
@@ -184,9 +186,9 @@ const basicHomeCopy = {
   },
   en: {
     sanctuaryEyebrow: "MEMBER SANCTUARY",
-    sanctuaryTitle: "Welcome to your sanctuary.",
+    sanctuaryTitle: "A place where today's rhythm rests.",
     sanctuaryBody:
-      "Choose the rhythm\nthat calls you today.",
+      "Pause for a moment.\nChoose the gate that calls you today.",
     hero: {
       morning: {
         emoji: "☀️",
@@ -207,7 +209,8 @@ const basicHomeCopy = {
         button: "Start Night Rhythm"
       }
     },
-    todayMessageTitle: "Today’s Signpost",
+    gatesTitle: "TODAY'S GATE",
+    todayMessageTitle: "Today’s Insight",
     todayMessages: [
       "Nature does not hurry.\nYou do not need to hurry either.",
       "One breath now can gently change your day.",
@@ -232,7 +235,7 @@ const basicHomeCopy = {
         key: "morning",
         emoji: "☀️",
         title: "Morning Gate",
-        description: "Begin the day lightly",
+        description: "Begin gently",
         detail: "3 min · Morning Rhythm",
         button: "Start Morning Rhythm →"
       },
@@ -240,7 +243,7 @@ const basicHomeCopy = {
         key: "day",
         emoji: "🌿",
         title: "Day Gate",
-        description: "Settle your breath and return to flow",
+        description: "Return to center",
         detail: "3 min · Day Rhythm",
         button: "Start Day Rhythm →"
       },
@@ -248,7 +251,7 @@ const basicHomeCopy = {
         key: "night",
         emoji: "🌙",
         title: "Night Gate",
-        description: "Gently let the day go",
+        description: "Release the day",
         detail: "3 min · Night Rhythm",
         button: "Start Night Rhythm →"
       }
@@ -323,12 +326,15 @@ export function BasicHome() {
   return (
     <div className="section-shell py-14 sm:py-20">
       <div className="mx-auto max-w-6xl space-y-10 sm:space-y-12">
-        <section className="relative overflow-hidden rounded-[38px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(231,206,140,0.18),transparent_15%),radial-gradient(circle_at_left,rgba(67,104,91,0.24),transparent_22%),radial-gradient(circle_at_bottom_right,rgba(46,86,118,0.28),transparent_30%),linear-gradient(180deg,rgba(8,20,34,0.99),rgba(5,14,24,0.97))] px-6 py-10 shadow-[0_36px_120px_rgba(3,10,20,0.44)] sm:px-8 sm:py-12">
+        <section className="relative flex min-h-[78vh] flex-col justify-between overflow-hidden rounded-[38px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(231,206,140,0.18),transparent_15%),radial-gradient(circle_at_left,rgba(67,104,91,0.24),transparent_22%),radial-gradient(circle_at_bottom_right,rgba(46,86,118,0.28),transparent_30%),linear-gradient(180deg,rgba(8,20,34,0.99),rgba(5,14,24,0.97))] px-6 py-10 shadow-[0_36px_120px_rgba(3,10,20,0.44)] sm:px-8 sm:py-12">
           <div className="pointer-events-none absolute inset-0">
             <div className="absolute inset-x-0 top-0 h-56 bg-[radial-gradient(circle_at_top,rgba(241,222,170,0.24),transparent_58%)]" />
             <div className="absolute left-[10%] top-[18%] h-32 w-32 rounded-full bg-gold/12 blur-3xl animate-pulse" />
             <div className="absolute -left-10 bottom-0 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgba(83,120,102,0.22),transparent_68%)] blur-3xl" />
             <div className="absolute right-0 top-10 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(85,110,162,0.18),transparent_70%)] blur-3xl" />
+            <div className="absolute left-[18%] top-[34%] h-2 w-2 rounded-full bg-white/45 blur-[1px] animate-pulse" />
+            <div className="absolute left-[34%] top-[26%] h-1.5 w-1.5 rounded-full bg-gold/50 blur-[1px] animate-pulse" />
+            <div className="absolute right-[22%] top-[32%] h-2 w-2 rounded-full bg-white/35 blur-[1px] animate-pulse" />
             <div className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(180deg,transparent,rgba(4,10,18,0.42))]" />
           </div>
 
@@ -342,7 +348,9 @@ export function BasicHome() {
             </p>
           </div>
 
-          <div className="relative mt-10 grid gap-4 sm:grid-cols-3">
+          <div className="relative mt-10">
+            <p className="text-xs uppercase tracking-[0.3em] text-white/48">{copy.gatesTitle}</p>
+            <div className="mt-4 grid gap-4 sm:grid-cols-3">
             {copy.rhythmCards.map((card) => {
               const rhythm = card.key as RhythmPhase;
 
@@ -355,6 +363,7 @@ export function BasicHome() {
                 } ${getGateSurfaceClasses(rhythm)}`}
               >
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent_26%,rgba(6,10,20,0.24)_100%)] opacity-90" />
+                <div className="absolute -right-8 top-6 h-24 w-24 rounded-full bg-white/8 blur-2xl transition duration-500 group-hover:scale-125" />
                 <div className="relative">
                   <p className="text-sm uppercase tracking-[0.24em] text-gold/82">{card.emoji} {card.title}</p>
                   <p className="mt-3 min-h-[56px] text-sm leading-7 text-white/82">{card.description}</p>
@@ -366,6 +375,7 @@ export function BasicHome() {
               </Link>
             );
             })}
+            </div>
           </div>
         </section>
 
