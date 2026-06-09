@@ -18,19 +18,19 @@ const basicHomeCopy = {
         emoji: "☀️",
         title: "今日の朝のリズム",
         body: "今日を始める前に、\n3分だけ自分に戻ってみましょう。",
-        button: "今日のリズムを始める"
+        button: "リズムの扉を開く"
       },
       day: {
         emoji: "🌿",
         title: "今日の昼のリズム",
         body: "少し立ち止まり、\n呼吸をもう一度整えてみましょう。",
-        button: "今日のリズムを始める"
+        button: "リズムの扉を開く"
       },
       night: {
         emoji: "🌙",
         title: "今日の夜のリズム",
         body: "今日一日をやさしく手放し、\nゆっくり休んでみましょう。",
-        button: "今日のリズムを始める"
+        button: "リズムの扉を開く"
       }
     },
     gatesTitle: "TODAY'S GATE",
@@ -41,13 +41,13 @@ const basicHomeCopy = {
       streak: "歩いてきた日々",
       insight: "次の一歩は、すでにここで待っています。"
     },
-    todayMessageTitle: "今日の気づき",
+    todayMessageTitle: "今日の道しるべ",
     todayMessages: [
-      "自然は急ぎません。\nあなたも、急がなくて大丈夫です。",
-      "今の一呼吸が、今日を少し変えてくれます。",
-      "静けさは遠くにありません。\n今ここにあります。",
-      "今日の目標は、うまくやることではなく、目覚めていることです。",
-      "あなたのリズムは、すでにあなたの中にあります。"
+      "あなたのリズムは、すでにあなたの中にあります。",
+      "今日の目標は、もっと多くすることではなく、より目覚めていることです。",
+      "静けさは遠くにありません。",
+      "一つの呼吸が今日を変えてくれます。",
+      "自然は急ぎません。あなたも急がなくて大丈夫です。"
     ],
     checkIn: {
       title: "今の私の状態",
@@ -113,19 +113,19 @@ const basicHomeCopy = {
         emoji: "☀️",
         title: "오늘의 아침 리듬",
         body: "오늘을 시작하기 전에\n3분만 자신에게 돌아와 보세요.",
-        button: "오늘의 리듬 시작하기"
+        button: "리듬의 문 열기"
       },
       day: {
         emoji: "🌿",
         title: "오늘의 낮 리듬",
         body: "잠시 멈추고\n호흡을 다시 정리해보세요.",
-        button: "오늘의 리듬 시작하기"
+        button: "리듬의 문 열기"
       },
       night: {
         emoji: "🌙",
         title: "오늘의 밤 리듬",
         body: "오늘 하루를 부드럽게 내려놓고\n편안히 쉬어보세요.",
-        button: "오늘의 리듬 시작하기"
+        button: "리듬의 문 열기"
       }
     },
     gatesTitle: "TODAY'S GATE",
@@ -136,13 +136,13 @@ const basicHomeCopy = {
       streak: "이어온 날들",
       insight: "당신의 다음 걸음은 이미 여기에서 기다리고 있습니다."
     },
-    todayMessageTitle: "오늘의 통찰",
+    todayMessageTitle: "오늘의 표지석",
     todayMessages: [
-      "자연은 서두르지 않습니다.\n당신도 서두르지 않아도 괜찮습니다.",
-      "지금 한 번의 숨이 오늘 하루를 조금 바꿀 수 있습니다.",
-      "고요함은 멀리 있지 않습니다.\n지금 여기에 있습니다.",
-      "오늘의 목표는 잘하는 것이 아니라 깨어있는 것입니다.",
-      "당신의 리듬은 이미 당신 안에 있습니다."
+      "당신의 리듬은 이미 당신 안에 있습니다.",
+      "오늘의 목표는 더 많이 하는 것이 아니라 더 깨어있는 것입니다.",
+      "조용함은 멀리 있지 않습니다.",
+      "한 번의 숨이 오늘을 바꿀 수 있습니다.",
+      "자연은 서두르지 않습니다. 당신도 서두르지 않아도 괜찮습니다."
     ],
     checkIn: {
       title: "지금 내 상태",
@@ -208,19 +208,19 @@ const basicHomeCopy = {
         emoji: "☀️",
         title: "Today’s Morning Rhythm",
         body: "Before you begin your day,\ntake 3 minutes to return to yourself.",
-        button: "Begin Today's Rhythm"
+        button: "Open the Rhythm Gate"
       },
       day: {
         emoji: "🌿",
         title: "Today’s Day Rhythm",
         body: "Pause for a moment\nand gently settle your breath.",
-        button: "Begin Today's Rhythm"
+        button: "Open the Rhythm Gate"
       },
       night: {
         emoji: "🌙",
         title: "Today’s Night Rhythm",
         body: "Gently let go of the day\nand rest in your own rhythm.",
-        button: "Begin Today's Rhythm"
+        button: "Open the Rhythm Gate"
       }
     },
     gatesTitle: "TODAY'S GATE",
@@ -231,13 +231,13 @@ const basicHomeCopy = {
       streak: "Days of Practice",
       insight: "Your next step is already waiting."
     },
-    todayMessageTitle: "Today’s Insight",
+    todayMessageTitle: "Today’s Signpost",
     todayMessages: [
-      "Nature does not hurry.\nYou do not need to hurry either.",
-      "One breath now can gently change your day.",
-      "Stillness is not far away. It is here, now.",
-      "Today’s goal is not to do it perfectly, but to stay awake within yourself.",
-      "Your rhythm is already within you."
+      "Your rhythm is already within you.",
+      "Today’s goal is not to do more, but to be more awake.",
+      "Stillness is not far away.",
+      "One breath can change today.",
+      "Nature does not hurry. You do not need to hurry either."
     ],
     checkIn: {
       title: "My State Now",
@@ -390,14 +390,14 @@ export function BasicHome() {
               {copy.sanctuaryBody}
             </p>
             <Link
-              href={buildRhythmMeditationHref(rhythmPhase)}
+              href="#rhythm-gates"
               className="mt-8 inline-flex min-h-[54px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f2ddb0,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.22)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#e7cd92]"
             >
               {hero.button}
             </Link>
           </div>
 
-          <div className="relative mt-10">
+          <div id="rhythm-gates" className="relative mt-10 scroll-mt-24">
             <p className="text-xs uppercase tracking-[0.3em] text-white/48">{copy.gatesTitle}</p>
             <div className="mt-4 grid gap-4 sm:grid-cols-3">
             {copy.rhythmCards.map((card) => {

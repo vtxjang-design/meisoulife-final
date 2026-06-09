@@ -18,16 +18,16 @@ type DashboardState = {
 
 const basicPageCopy = {
   jp: {
-    secondaryEyebrow: "RHYTHM GARDEN",
-    secondaryBody: "旅の流れ、ともに歩く人たち、次の集いは、必要なときにここで静かに確かめられます。"
+    secondaryEyebrow: "QUIET RECORDS",
+    secondaryBody: "旅の流れと続いてきたリズムを静かに確認できます。"
   },
   kr: {
-    secondaryEyebrow: "RHYTHM GARDEN",
-    secondaryBody: "여정의 흐름, 함께 걷는 사람들, 다음 모임은 필요할 때 이곳에서 조용히 확인할 수 있습니다."
+    secondaryEyebrow: "QUIET RECORDS",
+    secondaryBody: "여정의 흐름과 이어온 리듬을 조용히 확인할 수 있습니다."
   },
   en: {
-    secondaryEyebrow: "RHYTHM GARDEN",
-    secondaryBody: "Journey, fellow travelers, and upcoming gatherings rest here quietly when you need them."
+    secondaryEyebrow: "QUIET RECORDS",
+    secondaryBody: "A quiet place to see your journey and rhythm."
   }
 } as const;
 

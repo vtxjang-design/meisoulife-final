@@ -38,10 +38,10 @@ const dashboardCopy = {
     streakCount: "歩いてきた日々",
     aiUsage: "今日の気づき",
     challengeEyebrow: "THE QUIET PATH",
-    challengeTitle: "7日間の小さな回復",
+    challengeTitle: "リズムの道",
     openProgress: "旅をひらく",
     gateDayPrefix: "第",
-    gateDaySuffix: "の門",
+    gateDaySuffix: "の扉",
     communityEyebrow: "ともに歩く人たち",
     communityTitle: "ともに歩く人たち",
     communityBody: "毎日の気づきや小さな前進を、同じ道を歩く仲間たちと静かに分かち合えます。",
@@ -58,15 +58,7 @@ const dashboardCopy = {
       growth: "Growthメンバー",
       inner_circle: "Inner Circleメンバー"
     },
-    challengeDays: [
-      "立ち止まる",
-      "呼吸",
-      "身体",
-      "感情",
-      "思考",
-      "感謝",
-      "本来の自分"
-    ],
+    challengeDays: ["立ち止まる庭", "呼吸の道", "からだの森", "感情の湖", "思考の丘", "感謝の展望台", "本来の私"],
     events: ["毎週水曜 06:30 朝ライブ瞑想", "土曜 21:00 睡眠回復セッション"]
   },
   kr: {
@@ -84,7 +76,7 @@ const dashboardCopy = {
     streakCount: "이어온 날들",
     aiUsage: "오늘의 통찰",
     challengeEyebrow: "THE QUIET PATH",
-    challengeTitle: "7일간의 작은 회복",
+    challengeTitle: "리듬의 길",
     openProgress: "여정 열기",
     gateDayPrefix: "제",
     gateDaySuffix: "의 문",
@@ -104,7 +96,7 @@ const dashboardCopy = {
       growth: "Growth 회원",
       inner_circle: "Inner Circle 회원"
     },
-    challengeDays: ["멈추기", "호흡", "몸", "감정", "생각", "감사", "본래의 나"],
+    challengeDays: ["멈춤의 정원", "호흡의 길", "몸의 숲길", "감정의 호수", "생각의 언덕", "감사의 전망대", "본래의 나"],
     events: ["매주 수요일 06:30 아침 라이브 명상", "토요일 21:00 수면 회복 세션"]
   },
   en: {
@@ -123,7 +115,7 @@ const dashboardCopy = {
     streakCount: "Days of Practice",
     aiUsage: "Today’s Insight",
     challengeEyebrow: "THE QUIET PATH",
-    challengeTitle: "7 Days of Small Recovery",
+    challengeTitle: "The Quiet Path",
     openProgress: "Open the path",
     gateDayPrefix: "Gate ",
     gateDaySuffix: "",
@@ -144,7 +136,7 @@ const dashboardCopy = {
       growth: "Growth Member",
       inner_circle: "Inner Circle Member"
     },
-    challengeDays: ["Pause", "Breath", "Body", "Emotion", "Thoughts", "Gratitude", "Return to Self"],
+    challengeDays: ["Garden of Pause", "Path of Breath", "Forest of Body", "Lake of Emotion", "Hill of Thought", "Viewpoint of Gratitude", "True Self"],
     events: ["Every Wednesday 06:30 Morning live meditation", "Saturday 21:00 Sleep recovery session"]
   }
 } as const;
@@ -191,35 +183,8 @@ export function MemberDashboard({
         </div>
       ) : null}
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <div className="premium-card rounded-[24px] border border-gold/14 bg-[radial-gradient(circle_at_top,rgba(232,196,118,0.16),transparent_44%),linear-gradient(180deg,rgba(18,30,48,0.88),rgba(10,20,34,0.92))] p-5">
-          <p className="text-sm text-white/60">{copy.currentPlan}</p>
-          <p className="mt-2 text-2xl font-semibold text-white">✦ {todayRhythmLabel}</p>
-          <p className="mt-2 text-sm text-white/58">{planLabel}</p>
-        </div>
-        <div className="premium-card rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(15,27,43,0.9),rgba(10,18,30,0.9))] p-5">
-          <p className="text-sm text-white/60">{copy.challengeProgress}</p>
-          <p className="mt-2 text-2xl font-semibold text-white">
-            {copy.dayLabel} {safeChallengeDay}/7
-          </p>
-        </div>
-        <div className="premium-card rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(16,32,36,0.9),rgba(10,22,26,0.92))] p-5">
-          <p className="text-sm text-white/60">{copy.streakCount}</p>
-          <p className="mt-2 text-2xl font-semibold text-white">
-            {streakCount} {copy.streakUnit}
-          </p>
-        </div>
-        <div className="premium-card rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(18,26,44,0.9),rgba(11,18,30,0.92))] p-5">
-          <p className="text-sm text-white/60">{copy.aiUsage}</p>
-          <p className="mt-2 text-base leading-7 text-white/82">{copy.insightReady}</p>
-          <p className="mt-3 text-sm text-white/50">
-            AI {aiUsage.used}/{aiUsage.limit === "unlimited" ? "∞" : aiUsage.limit}
-          </p>
-        </div>
-      </div>
-
       <div className="grid gap-6 lg:grid-cols-[1.35fr_0.95fr]">
-        <section className="premium-card rounded-lg p-6">
+        <section className="premium-card rounded-[28px] p-6">
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="text-sm uppercase tracking-[0.3em] text-gold">{copy.challengeEyebrow}</p>
@@ -229,7 +194,8 @@ export function MemberDashboard({
               {copy.openProgress}
             </Link>
           </div>
-          <div className="mt-6 grid gap-3">
+          <div className="relative mt-8 pl-6">
+            <div className="absolute bottom-3 left-[11px] top-3 w-px bg-gradient-to-b from-gold/50 via-white/16 to-transparent" />
             {copy.challengeDays.map((title, index) => {
               const day = index + 1;
               const active = day === safeChallengeDay;
@@ -240,19 +206,29 @@ export function MemberDashboard({
                 <Link
                   key={day}
                   href={dayHref}
-                  className={`rounded-md border px-4 py-3 text-sm ${
+                  className={`group relative mb-3 block rounded-[22px] border px-4 py-4 text-sm ${
                     active
-                      ? "border-gold/60 bg-gold/10 text-white"
+                      ? "border-gold/60 bg-gold/10 text-white shadow-[0_18px_40px_rgba(212,186,117,0.10)]"
                       : completed
                         ? "border-moss/40 bg-moss/10 text-white/88"
-                        : "border-white/10 bg-white/[0.03] text-white/68"
-                  } transition hover:bg-white/[0.05] focus:outline-none focus:ring-2 focus:ring-gold/40`}
+                        : "border-white/10 bg-white/[0.03] text-white/72"
+                  } transition hover:-translate-y-0.5 hover:bg-white/[0.05] focus:outline-none focus:ring-2 focus:ring-gold/40`}
                 >
-                  {copy.gateDayPrefix}
-                  {day}
-                  {copy.gateDaySuffix}
-                  {" — "}
-                  {title}
+                  <span
+                    className={`absolute -left-[25px] top-1/2 h-4 w-4 -translate-y-1/2 rounded-full border ${
+                      active
+                        ? "border-gold bg-gold/80 shadow-[0_0_14px_rgba(212,186,117,0.5)]"
+                        : completed
+                          ? "border-moss/60 bg-moss/50"
+                          : "border-white/18 bg-[#0a1524]"
+                    }`}
+                  />
+                  <span className="block text-xs uppercase tracking-[0.24em] text-gold/72">
+                    {copy.gateDayPrefix}
+                    {day}
+                    {copy.gateDaySuffix}
+                  </span>
+                  <span className="mt-2 block text-base font-semibold text-white">{title}</span>
                 </Link>
               );
             })}
@@ -290,6 +266,33 @@ export function MemberDashboard({
           </div>
         </section>
       </div>
+
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="premium-card rounded-[24px] border border-gold/14 bg-[radial-gradient(circle_at_top,rgba(232,196,118,0.16),transparent_44%),linear-gradient(180deg,rgba(18,30,48,0.88),rgba(10,20,34,0.92))] p-5">
+          <p className="text-sm text-white/60">{copy.currentPlan}</p>
+          <p className="mt-2 text-2xl font-semibold text-white">✦ {todayRhythmLabel}</p>
+          <p className="mt-2 text-sm text-white/58">{planLabel}</p>
+        </div>
+        <div className="premium-card rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(15,27,43,0.9),rgba(10,18,30,0.9))] p-5">
+          <p className="text-sm text-white/60">{copy.challengeProgress}</p>
+          <p className="mt-2 text-2xl font-semibold text-white">
+            {copy.dayLabel} {safeChallengeDay}/7
+          </p>
+        </div>
+        <div className="premium-card rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(16,32,36,0.9),rgba(10,22,26,0.92))] p-5">
+          <p className="text-sm text-white/60">{copy.streakCount}</p>
+          <p className="mt-2 text-2xl font-semibold text-white">
+            {streakCount} {copy.streakUnit}
+          </p>
+        </div>
+        <div className="premium-card rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(18,26,44,0.9),rgba(11,18,30,0.92))] p-5">
+          <p className="text-sm text-white/60">{copy.aiUsage}</p>
+          <p className="mt-2 text-base leading-7 text-white/82">{copy.insightReady}</p>
+          <p className="mt-3 text-sm text-white/50">
+            AI {aiUsage.used}/{aiUsage.limit === "unlimited" ? "∞" : aiUsage.limit}
+          </p>
+        </div>
+      </section>
 
       {registeredEmail ? <p className="text-sm text-white/50">{copy.registeredEmail}: {registeredEmail}</p> : null}
     </div>
