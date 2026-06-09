@@ -692,6 +692,10 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
             <div className="absolute left-[10%] top-[18%] h-32 w-32 rounded-full bg-gold/12 blur-3xl animate-pulse" />
             <div className="absolute -left-10 bottom-0 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgba(83,120,102,0.22),transparent_68%)] blur-3xl" />
             <div className="absolute right-0 top-10 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(85,110,162,0.18),transparent_70%)] blur-3xl" />
+            <div className="absolute right-[8%] top-[18%] hidden h-[380px] w-[280px] rounded-[40px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(244,226,170,0.16),transparent_24%),linear-gradient(180deg,rgba(24,36,58,0.58),rgba(7,17,31,0.08))] blur-[0.5px] lg:block" />
+            <div className="absolute right-[11%] top-[23%] hidden h-[280px] w-[180px] rounded-[999px] border border-gold/18 bg-[radial-gradient(circle_at_50%_20%,rgba(242,220,171,0.18),transparent_26%),radial-gradient(circle_at_50%_75%,rgba(87,126,108,0.18),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01))] shadow-[0_0_80px_rgba(212,175,55,0.12)] lg:block" />
+            <div className="absolute right-[16.5%] top-[33%] hidden h-20 w-20 rounded-full border border-white/12 bg-[radial-gradient(circle,rgba(255,255,255,0.18),rgba(255,255,255,0.02)_70%)] blur-sm lg:block" />
+            <div className="absolute left-[6%] bottom-[12%] hidden h-px w-[36%] bg-gradient-to-r from-transparent via-white/20 to-transparent lg:block" />
             <div className="absolute left-[18%] top-[34%] h-2 w-2 rounded-full bg-white/45 blur-[1px] animate-pulse" />
             <div className="absolute left-[34%] top-[26%] h-1.5 w-1.5 rounded-full bg-gold/50 blur-[1px] animate-pulse" />
             <div className="absolute right-[22%] top-[32%] h-2 w-2 rounded-full bg-white/35 blur-[1px] animate-pulse" />
@@ -700,6 +704,7 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
 
           <div className="relative max-w-3xl">
             <p className="text-sm uppercase tracking-[0.32em] text-gold/82">{copy.sanctuaryEyebrow}</p>
+            <p className="mt-5 max-w-md text-xs uppercase tracking-[0.36em] text-white/34">DIGITAL NATIONAL PARK</p>
             <h1 className="mt-5 font-serif text-[36px] leading-[1.18] text-white sm:text-[54px]">
               {copy.sanctuaryTitle}
             </h1>
@@ -782,6 +787,7 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
               <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-5 py-5">
                 <p className="text-sm text-white/56">{copy.todayMessageTitle}</p>
                 <p className="mt-2 text-base leading-7 text-white/82">{copy.todayGateItems.insight}</p>
+                <p className="mt-3 text-xs uppercase tracking-[0.28em] text-gold/58">YOUR NEXT STEP IS ALREADY WAITING</p>
               </article>
             </div>
           </div>
