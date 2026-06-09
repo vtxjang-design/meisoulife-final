@@ -23,8 +23,8 @@ type MemberDashboardProps = {
 
 const dashboardCopy = {
   jp: {
-    eyebrow: "RHYTHM GARDEN",
-    title: "今日のリズムが息づく場所",
+    eyebrow: "QUIET RECORDS",
+    title: "静かな記録",
     challengeStartedTitle: "チャレンジを開始しました",
     description:
       "プラン、旅の流れ、ともに歩く人たち、次の集いを、必要なときにここで静かに確かめられます。",
@@ -62,8 +62,8 @@ const dashboardCopy = {
     events: ["毎週水曜 06:30 朝ライブ瞑想", "土曜 21:00 睡眠回復セッション"]
   },
   kr: {
-    eyebrow: "RHYTHM GARDEN",
-    title: "오늘의 리듬이 머무는 곳",
+    eyebrow: "QUIET RECORDS",
+    title: "조용한 기록",
     challengeStartedTitle: "챌린지를 시작했습니다",
     description:
       "플랜, 여정의 흐름, 함께 걷는 사람들, 다음 모임을 필요할 때 이곳에서 조용히 확인할 수 있습니다.",
@@ -100,8 +100,8 @@ const dashboardCopy = {
     events: ["매주 수요일 06:30 아침 라이브 명상", "토요일 21:00 수면 회복 세션"]
   },
   en: {
-    eyebrow: "RHYTHM GARDEN",
-    title: "A place where today’s rhythm can breathe",
+    eyebrow: "QUIET RECORDS",
+    title: "Quiet Records",
     challengeStartedTitle: "Your challenge has started",
     description:
       "Your plan, journey path, fellow walkers, and upcoming gatherings live here quietly when you need them.",
@@ -136,7 +136,7 @@ const dashboardCopy = {
       growth: "Growth Member",
       inner_circle: "Inner Circle Member"
     },
-    challengeDays: ["Garden of Pause", "Path of Breath", "Forest of Body", "Lake of Emotion", "Hill of Thought", "Viewpoint of Gratitude", "True Self"],
+    challengeDays: ["Garden of Stillness", "Path of Breath", "Forest of Body", "Lake of Emotion", "Hill of Thought", "Viewpoint of Gratitude", "True Self"],
     events: ["Every Wednesday 06:30 Morning live meditation", "Saturday 21:00 Sleep recovery session"]
   }
 } as const;
@@ -184,7 +184,7 @@ export function MemberDashboard({
       ) : null}
 
       <div className="grid gap-6 lg:grid-cols-[1.35fr_0.95fr]">
-        <section className="premium-card rounded-[28px] p-6">
+        <section id="journey-path" className="premium-card rounded-[28px] p-6">
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="text-sm uppercase tracking-[0.3em] text-gold">{copy.challengeEyebrow}</p>
@@ -236,7 +236,7 @@ export function MemberDashboard({
         </section>
 
         <section className="grid gap-6">
-          <div className="premium-card rounded-lg p-6">
+          <div id="companions" className="premium-card rounded-lg p-6">
             <p className="text-sm uppercase tracking-[0.3em] text-gold">{copy.communityEyebrow}</p>
             <h3 className="mt-3 text-xl font-semibold text-white">{copy.communityTitle}</h3>
             <p className="mt-3 text-sm leading-7 text-white/72">{copy.communityBody}</p>
