@@ -9,7 +9,7 @@ type RhythmPhase = "morning" | "day" | "night";
 
 const basicHomeCopy = {
   jp: {
-    sanctuaryEyebrow: "MEMBER SANCTUARY",
+    sanctuaryEyebrow: "RHYTHM GARDEN",
     sanctuaryTitle: "小さな回復が\n大きな変化をつくります。",
     sanctuaryBody:
       "今日のリズムが\nあなたを待っています。",
@@ -34,9 +34,10 @@ const basicHomeCopy = {
       }
     },
     gatesTitle: "TODAY'S GATE",
-    todayGateTitle: "今日の扉",
+    todayGateTitle: "今日、開いている扉",
     todayGateItems: {
       rhythm: "今日のリズム",
+      openGate: "今日の扉",
       day: "旅の日",
       streak: "歩いてきた日々",
       insight: "次の一歩は、すでにここで待っています。"
@@ -104,7 +105,7 @@ const basicHomeCopy = {
     }
   },
   kr: {
-    sanctuaryEyebrow: "MEMBER SANCTUARY",
+    sanctuaryEyebrow: "RHYTHM GARDEN",
     sanctuaryTitle: "작은 쉼이\n하루를 바꿉니다.",
     sanctuaryBody:
       "오늘의 리듬이\n당신을 기다리고 있습니다.",
@@ -129,9 +130,10 @@ const basicHomeCopy = {
       }
     },
     gatesTitle: "TODAY'S GATE",
-    todayGateTitle: "오늘의 문",
+    todayGateTitle: "오늘 열려 있는 문",
     todayGateItems: {
       rhythm: "오늘의 리듬",
+      openGate: "오늘의 문",
       day: "여정의 날",
       streak: "이어온 날들",
       insight: "당신의 다음 걸음은 이미 여기에서 기다리고 있습니다."
@@ -199,7 +201,7 @@ const basicHomeCopy = {
     }
   },
   en: {
-    sanctuaryEyebrow: "MEMBER SANCTUARY",
+    sanctuaryEyebrow: "RHYTHM GARDEN",
     sanctuaryTitle: "Small moments of recovery\ncreate great change.",
     sanctuaryBody:
       "Today's rhythm\nis waiting for you.",
@@ -224,9 +226,10 @@ const basicHomeCopy = {
       }
     },
     gatesTitle: "TODAY'S GATE",
-    todayGateTitle: "Today's Gate",
+    todayGateTitle: "Today's Open Gate",
     todayGateItems: {
       rhythm: "Today's Rhythm",
+      openGate: "Open Gate",
       day: "Current Day",
       streak: "Days of Practice",
       insight: "Your next step is already waiting."
@@ -430,23 +433,40 @@ export function BasicHome() {
 
         <section className="rounded-[30px] border border-white/10 bg-white/[0.035] px-6 py-8 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">
           <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.todayGateTitle}</p>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            <article className="rounded-[22px] border border-gold/14 bg-gold/[0.06] px-5 py-5">
-              <p className="text-sm text-white/56">{copy.todayGateItems.rhythm}</p>
-              <p className="mt-2 text-xl font-semibold text-white">{copy.rhythmCards.find((card) => card.key === rhythmPhase)?.title}</p>
+          <div className="mt-5 grid gap-4 lg:grid-cols-[1.18fr_0.82fr]">
+            <article className={`relative overflow-hidden rounded-[26px] border border-gold/16 px-6 py-6 ${getGateSurfaceClasses(rhythmPhase)}`}>
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent_28%,rgba(4,8,18,0.28)_100%)]" />
+              <div className="relative">
+                <p className="text-xs uppercase tracking-[0.24em] text-gold/78">{copy.todayGateItems.openGate}</p>
+                <p className="mt-3 text-sm uppercase tracking-[0.24em] text-white/60">{copy.todayGateItems.rhythm}</p>
+                <p className="mt-2 text-2xl font-semibold text-white">
+                  {copy.rhythmCards.find((card) => card.key === rhythmPhase)?.emoji} {copy.rhythmCards.find((card) => card.key === rhythmPhase)?.title}
+                </p>
+                <p className="mt-3 max-w-md text-sm leading-7 text-white/78">
+                  {copy.rhythmCards.find((card) => card.key === rhythmPhase)?.description}
+                </p>
+                <Link
+                  href={buildRhythmMeditationHref(rhythmPhase)}
+                  className="mt-6 inline-flex min-h-[46px] items-center justify-center rounded-full border border-white/14 bg-white/[0.08] px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.12]"
+                >
+                  {copy.rhythmCards.find((card) => card.key === rhythmPhase)?.button}
+                </Link>
+              </div>
             </article>
-            <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-5 py-5">
-              <p className="text-sm text-white/56">{copy.todayGateItems.day}</p>
-              <p className="mt-2 text-xl font-semibold text-white">Day {journeyDay}</p>
-            </article>
-            <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-5 py-5">
-              <p className="text-sm text-white/56">{copy.todayGateItems.streak}</p>
-              <p className="mt-2 text-xl font-semibold text-white">{streakDays}</p>
-            </article>
-            <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-5 py-5">
-              <p className="text-sm text-white/56">{copy.todayMessageTitle}</p>
-              <p className="mt-2 text-base leading-7 text-white/82">{copy.todayGateItems.insight}</p>
-            </article>
+            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+              <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-5 py-5">
+                <p className="text-sm text-white/56">{copy.todayGateItems.day}</p>
+                <p className="mt-2 text-xl font-semibold text-white">Day {journeyDay}</p>
+              </article>
+              <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-5 py-5">
+                <p className="text-sm text-white/56">{copy.todayGateItems.streak}</p>
+                <p className="mt-2 text-xl font-semibold text-white">{streakDays}</p>
+              </article>
+              <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-5 py-5">
+                <p className="text-sm text-white/56">{copy.todayMessageTitle}</p>
+                <p className="mt-2 text-base leading-7 text-white/82">{copy.todayGateItems.insight}</p>
+              </article>
+            </div>
           </div>
         </section>
 
