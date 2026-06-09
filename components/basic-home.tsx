@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { getLocaleCopy, useLanguage } from "@/lib/i18n";
 
@@ -10,30 +10,37 @@ type RhythmPhase = "morning" | "day" | "night";
 const basicHomeCopy = {
   jp: {
     sanctuaryEyebrow: "MEMBER SANCTUARY",
-    sanctuaryTitle: "今日のリズムが宿る場所",
+    sanctuaryTitle: "小さな回復が\n大きな変化をつくります。",
     sanctuaryBody:
-      "少し立ち止まり、\n今日のあなたに必要な小さな扉を選んでください。",
+      "今日のリズムが\nあなたを待っています。",
     hero: {
       morning: {
         emoji: "☀️",
         title: "今日の朝のリズム",
         body: "今日を始める前に、\n3分だけ自分に戻ってみましょう。",
-        button: "朝のリズムを始める"
+        button: "今日のリズムを始める"
       },
       day: {
         emoji: "🌿",
         title: "今日の昼のリズム",
         body: "少し立ち止まり、\n呼吸をもう一度整えてみましょう。",
-        button: "昼のリズムを始める"
+        button: "今日のリズムを始める"
       },
       night: {
         emoji: "🌙",
         title: "今日の夜のリズム",
         body: "今日一日をやさしく手放し、\nゆっくり休んでみましょう。",
-        button: "夜のリズムを始める"
+        button: "今日のリズムを始める"
       }
     },
     gatesTitle: "TODAY'S GATE",
+    todayGateTitle: "今日の扉",
+    todayGateItems: {
+      rhythm: "今日のリズム",
+      day: "旅の日",
+      streak: "歩いてきた日々",
+      insight: "次の一歩は、すでにここで待っています。"
+    },
     todayMessageTitle: "今日の気づき",
     todayMessages: [
       "自然は急ぎません。\nあなたも、急がなくて大丈夫です。",
@@ -100,28 +107,35 @@ const basicHomeCopy = {
     sanctuaryEyebrow: "MEMBER SANCTUARY",
     sanctuaryTitle: "작은 쉼이\n하루를 바꿉니다.",
     sanctuaryBody:
-      "잠시 멈추고,\n오늘 당신에게 필요한 작은 문을 선택하세요.",
+      "오늘의 리듬이\n당신을 기다리고 있습니다.",
     hero: {
       morning: {
         emoji: "☀️",
         title: "오늘의 아침 리듬",
         body: "오늘을 시작하기 전에\n3분만 자신에게 돌아와 보세요.",
-        button: "아침 리듬 시작"
+        button: "오늘의 리듬 시작하기"
       },
       day: {
         emoji: "🌿",
         title: "오늘의 낮 리듬",
         body: "잠시 멈추고\n호흡을 다시 정리해보세요.",
-        button: "낮 리듬 시작"
+        button: "오늘의 리듬 시작하기"
       },
       night: {
         emoji: "🌙",
         title: "오늘의 밤 리듬",
         body: "오늘 하루를 부드럽게 내려놓고\n편안히 쉬어보세요.",
-        button: "밤 리듬 시작"
+        button: "오늘의 리듬 시작하기"
       }
     },
     gatesTitle: "TODAY'S GATE",
+    todayGateTitle: "오늘의 문",
+    todayGateItems: {
+      rhythm: "오늘의 리듬",
+      day: "여정의 날",
+      streak: "이어온 날들",
+      insight: "당신의 다음 걸음은 이미 여기에서 기다리고 있습니다."
+    },
     todayMessageTitle: "오늘의 통찰",
     todayMessages: [
       "자연은 서두르지 않습니다.\n당신도 서두르지 않아도 괜찮습니다.",
@@ -186,30 +200,37 @@ const basicHomeCopy = {
   },
   en: {
     sanctuaryEyebrow: "MEMBER SANCTUARY",
-    sanctuaryTitle: "A place where today's rhythm rests.",
+    sanctuaryTitle: "Small moments of recovery\ncreate great change.",
     sanctuaryBody:
-      "Pause for a moment.\nChoose the gate that calls you today.",
+      "Today's rhythm\nis waiting for you.",
     hero: {
       morning: {
         emoji: "☀️",
         title: "Today’s Morning Rhythm",
         body: "Before you begin your day,\ntake 3 minutes to return to yourself.",
-        button: "Start Morning Rhythm"
+        button: "Begin Today's Rhythm"
       },
       day: {
         emoji: "🌿",
         title: "Today’s Day Rhythm",
         body: "Pause for a moment\nand gently settle your breath.",
-        button: "Start Day Rhythm"
+        button: "Begin Today's Rhythm"
       },
       night: {
         emoji: "🌙",
         title: "Today’s Night Rhythm",
         body: "Gently let go of the day\nand rest in your own rhythm.",
-        button: "Start Night Rhythm"
+        button: "Begin Today's Rhythm"
       }
     },
     gatesTitle: "TODAY'S GATE",
+    todayGateTitle: "Today's Gate",
+    todayGateItems: {
+      rhythm: "Today's Rhythm",
+      day: "Current Day",
+      streak: "Days of Practice",
+      insight: "Your next step is already waiting."
+    },
     todayMessageTitle: "Today’s Insight",
     todayMessages: [
       "Nature does not hurry.\nYou do not need to hurry either.",
@@ -321,7 +342,29 @@ export function BasicHome() {
   const rhythmPhase = highlightedRhythm === "morning" || highlightedRhythm === "day" || highlightedRhythm === "night"
     ? highlightedRhythm
     : getLocalRhythmPhase();
+  const hero = copy.hero[rhythmPhase];
   const todayMessage = useMemo(() => getDailyMessage(copy.todayMessages), [copy.todayMessages]);
+  const [journeyDay, setJourneyDay] = useState(1);
+  const [streakDays, setStreakDays] = useState(3);
+
+  useEffect(() => {
+    try {
+      const journeyRaw = window.localStorage.getItem("meisoulife_rhythm_journey_progress");
+      const streakRaw = window.localStorage.getItem("meisoulife_basic_rhythm_check_streak");
+      const parsedJourney = Number.parseInt(journeyRaw || "", 10);
+      const parsedStreak = Number.parseInt(streakRaw || "", 10);
+
+      if (Number.isFinite(parsedJourney) && parsedJourney >= 1 && parsedJourney <= 7) {
+        setJourneyDay(parsedJourney);
+      }
+
+      if (Number.isFinite(parsedStreak) && parsedStreak > 0) {
+        setStreakDays(parsedStreak);
+      }
+    } catch (error) {
+      console.warn("[basic-home] failed to read local sanctuary state", error);
+    }
+  }, []);
 
   return (
     <div className="section-shell py-14 sm:py-20">
@@ -346,6 +389,12 @@ export function BasicHome() {
             <p className="mt-6 whitespace-pre-line text-base leading-[2] text-white/76 sm:text-lg sm:leading-[2.05]">
               {copy.sanctuaryBody}
             </p>
+            <Link
+              href={buildRhythmMeditationHref(rhythmPhase)}
+              className="mt-8 inline-flex min-h-[54px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f2ddb0,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.22)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#e7cd92]"
+            >
+              {hero.button}
+            </Link>
           </div>
 
           <div className="relative mt-10">
@@ -376,6 +425,28 @@ export function BasicHome() {
             );
             })}
             </div>
+          </div>
+        </section>
+
+        <section className="rounded-[30px] border border-white/10 bg-white/[0.035] px-6 py-8 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">
+          <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.todayGateTitle}</p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <article className="rounded-[22px] border border-gold/14 bg-gold/[0.06] px-5 py-5">
+              <p className="text-sm text-white/56">{copy.todayGateItems.rhythm}</p>
+              <p className="mt-2 text-xl font-semibold text-white">{copy.rhythmCards.find((card) => card.key === rhythmPhase)?.title}</p>
+            </article>
+            <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-5 py-5">
+              <p className="text-sm text-white/56">{copy.todayGateItems.day}</p>
+              <p className="mt-2 text-xl font-semibold text-white">Day {journeyDay}</p>
+            </article>
+            <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-5 py-5">
+              <p className="text-sm text-white/56">{copy.todayGateItems.streak}</p>
+              <p className="mt-2 text-xl font-semibold text-white">{streakDays}</p>
+            </article>
+            <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-5 py-5">
+              <p className="text-sm text-white/56">{copy.todayMessageTitle}</p>
+              <p className="mt-2 text-base leading-7 text-white/82">{copy.todayGateItems.insight}</p>
+            </article>
           </div>
         </section>
 
