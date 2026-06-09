@@ -6,6 +6,7 @@ import { useLocaleCopy } from "@/lib/i18n";
 type PlanKey = "free" | "basic" | "growth" | "inner_circle";
 
 type MemberDashboardProps = {
+  variant?: "default" | "basic";
   planKey: PlanKey;
   membershipResolved?: boolean;
   membershipError?: boolean;
@@ -142,6 +143,7 @@ const dashboardCopy = {
 } as const;
 
 export function MemberDashboard({
+  variant = "default",
   planKey,
   membershipResolved = true,
   membershipError = false,
@@ -165,6 +167,121 @@ export function MemberDashboard({
         ? copy.challengeDays[1]
         : copy.challengeDays[6];
 
+  const recordsSection = (
+    <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="premium-card rounded-[24px] border border-gold/14 bg-[radial-gradient(circle_at_top,rgba(232,196,118,0.16),transparent_44%),linear-gradient(180deg,rgba(18,30,48,0.88),rgba(10,20,34,0.92))] p-5">
+        <p className="text-sm text-white/60">{copy.currentPlan}</p>
+        <p className="mt-2 text-2xl font-semibold text-white">✦ {todayRhythmLabel}</p>
+        <p className="mt-2 text-sm text-white/58">{planLabel}</p>
+      </div>
+      <div className="premium-card rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(15,27,43,0.9),rgba(10,18,30,0.9))] p-5">
+        <p className="text-sm text-white/60">{copy.challengeProgress}</p>
+        <p className="mt-2 text-2xl font-semibold text-white">
+          {copy.dayLabel} {safeChallengeDay}/7
+        </p>
+      </div>
+      <div className="premium-card rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(16,32,36,0.9),rgba(10,22,26,0.92))] p-5">
+        <p className="text-sm text-white/60">{copy.streakCount}</p>
+        <p className="mt-2 text-2xl font-semibold text-white">
+          {streakCount} {copy.streakUnit}
+        </p>
+      </div>
+      <div className="premium-card rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(18,26,44,0.9),rgba(11,18,30,0.92))] p-5">
+        <p className="text-sm text-white/60">{copy.aiUsage}</p>
+        <p className="mt-2 text-base leading-7 text-white/82">{copy.insightReady}</p>
+        <p className="mt-3 text-sm text-white/50">
+          AI {aiUsage.used}/{aiUsage.limit === "unlimited" ? "∞" : aiUsage.limit}
+        </p>
+      </div>
+    </section>
+  );
+
+  const pathSection = (
+    <div className="grid gap-6 lg:grid-cols-[1.35fr_0.95fr]">
+      <section id="journey-path" className="premium-card rounded-[28px] p-6">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-sm uppercase tracking-[0.3em] text-gold">{copy.challengeEyebrow}</p>
+            <h2 className="mt-3 text-2xl font-semibold text-white">{copy.challengeTitle}</h2>
+          </div>
+          <Link href={progressHref} className="text-sm text-gold">
+            {copy.openProgress}
+          </Link>
+        </div>
+        <div className="relative mt-8 pl-6">
+          <div className="absolute bottom-3 left-[11px] top-3 w-px bg-gradient-to-b from-gold/50 via-white/16 to-transparent" />
+          {copy.challengeDays.map((title, index) => {
+            const day = index + 1;
+            const active = day === safeChallengeDay;
+            const completed = day < safeChallengeDay;
+            const dayHref = `/rhythm-journey?day=${day}`;
+
+            return (
+              <Link
+                key={day}
+                href={dayHref}
+                className={`group relative mb-3 block rounded-[22px] border px-4 py-4 text-sm ${
+                  active
+                    ? "border-gold/60 bg-gold/10 text-white shadow-[0_18px_40px_rgba(212,186,117,0.10)]"
+                    : completed
+                      ? "border-moss/40 bg-moss/10 text-white/88"
+                      : "border-white/10 bg-white/[0.03] text-white/72"
+                } transition hover:-translate-y-0.5 hover:bg-white/[0.05] focus:outline-none focus:ring-2 focus:ring-gold/40`}
+              >
+                <span
+                  className={`absolute -left-[25px] top-1/2 h-4 w-4 -translate-y-1/2 rounded-full border ${
+                    active
+                      ? "border-gold bg-gold/80 shadow-[0_0_14px_rgba(212,186,117,0.5)]"
+                      : completed
+                        ? "border-moss/60 bg-moss/50"
+                        : "border-white/18 bg-[#0a1524]"
+                  }`}
+                />
+                <span className="block text-xs uppercase tracking-[0.24em] text-gold/72">
+                  {copy.gateDayPrefix}
+                  {day}
+                  {copy.gateDaySuffix}
+                </span>
+                <span className="mt-2 block text-base font-semibold text-white">{title}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="grid gap-6">
+        <div id="companions" className="premium-card rounded-lg p-6">
+          <p className="text-sm uppercase tracking-[0.3em] text-gold">{copy.communityEyebrow}</p>
+          <h3 className="mt-3 text-xl font-semibold text-white">{copy.communityTitle}</h3>
+          <p className="mt-3 text-sm leading-7 text-white/72">{copy.communityBody}</p>
+          <Link
+            href={communityUrl}
+            className="mt-5 inline-flex rounded-md bg-white/10 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/15"
+          >
+            {copy.communityCta}
+          </Link>
+        </div>
+
+        <div className="premium-card rounded-lg p-6">
+          <p className="text-sm uppercase tracking-[0.3em] text-gold">{copy.eventsEyebrow}</p>
+          <div className="mt-4 grid gap-3">
+            {copy.events.map((event) => (
+              <div key={event} className="rounded-md border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/82">
+                {event}
+              </div>
+            ))}
+          </div>
+          <Link
+            href="/pricing"
+            className="mt-5 inline-flex rounded-md border border-gold/50 px-4 py-3 text-sm font-semibold text-gold transition hover:bg-gold/10"
+          >
+            {copy.upgradeCta}
+          </Link>
+        </div>
+      </section>
+    </div>
+  );
+
   return (
     <div className="grid gap-6">
       <div className="max-w-3xl">
@@ -183,116 +300,8 @@ export function MemberDashboard({
         </div>
       ) : null}
 
-      <div className="grid gap-6 lg:grid-cols-[1.35fr_0.95fr]">
-        <section id="journey-path" className="premium-card rounded-[28px] p-6">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <p className="text-sm uppercase tracking-[0.3em] text-gold">{copy.challengeEyebrow}</p>
-              <h2 className="mt-3 text-2xl font-semibold text-white">{copy.challengeTitle}</h2>
-            </div>
-            <Link href={progressHref} className="text-sm text-gold">
-              {copy.openProgress}
-            </Link>
-          </div>
-          <div className="relative mt-8 pl-6">
-            <div className="absolute bottom-3 left-[11px] top-3 w-px bg-gradient-to-b from-gold/50 via-white/16 to-transparent" />
-            {copy.challengeDays.map((title, index) => {
-              const day = index + 1;
-              const active = day === safeChallengeDay;
-              const completed = day < safeChallengeDay;
-              const dayHref = `/rhythm-journey?day=${day}`;
-
-              return (
-                <Link
-                  key={day}
-                  href={dayHref}
-                  className={`group relative mb-3 block rounded-[22px] border px-4 py-4 text-sm ${
-                    active
-                      ? "border-gold/60 bg-gold/10 text-white shadow-[0_18px_40px_rgba(212,186,117,0.10)]"
-                      : completed
-                        ? "border-moss/40 bg-moss/10 text-white/88"
-                        : "border-white/10 bg-white/[0.03] text-white/72"
-                  } transition hover:-translate-y-0.5 hover:bg-white/[0.05] focus:outline-none focus:ring-2 focus:ring-gold/40`}
-                >
-                  <span
-                    className={`absolute -left-[25px] top-1/2 h-4 w-4 -translate-y-1/2 rounded-full border ${
-                      active
-                        ? "border-gold bg-gold/80 shadow-[0_0_14px_rgba(212,186,117,0.5)]"
-                        : completed
-                          ? "border-moss/60 bg-moss/50"
-                          : "border-white/18 bg-[#0a1524]"
-                    }`}
-                  />
-                  <span className="block text-xs uppercase tracking-[0.24em] text-gold/72">
-                    {copy.gateDayPrefix}
-                    {day}
-                    {copy.gateDaySuffix}
-                  </span>
-                  <span className="mt-2 block text-base font-semibold text-white">{title}</span>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-
-        <section className="grid gap-6">
-          <div id="companions" className="premium-card rounded-lg p-6">
-            <p className="text-sm uppercase tracking-[0.3em] text-gold">{copy.communityEyebrow}</p>
-            <h3 className="mt-3 text-xl font-semibold text-white">{copy.communityTitle}</h3>
-            <p className="mt-3 text-sm leading-7 text-white/72">{copy.communityBody}</p>
-            <Link
-              href={communityUrl}
-              className="mt-5 inline-flex rounded-md bg-white/10 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/15"
-            >
-              {copy.communityCta}
-            </Link>
-          </div>
-
-          <div className="premium-card rounded-lg p-6">
-            <p className="text-sm uppercase tracking-[0.3em] text-gold">{copy.eventsEyebrow}</p>
-            <div className="mt-4 grid gap-3">
-              {copy.events.map((event) => (
-                <div key={event} className="rounded-md border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/82">
-                  {event}
-                </div>
-              ))}
-            </div>
-            <Link
-              href="/pricing"
-              className="mt-5 inline-flex rounded-md border border-gold/50 px-4 py-3 text-sm font-semibold text-gold transition hover:bg-gold/10"
-            >
-              {copy.upgradeCta}
-            </Link>
-          </div>
-        </section>
-      </div>
-
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <div className="premium-card rounded-[24px] border border-gold/14 bg-[radial-gradient(circle_at_top,rgba(232,196,118,0.16),transparent_44%),linear-gradient(180deg,rgba(18,30,48,0.88),rgba(10,20,34,0.92))] p-5">
-          <p className="text-sm text-white/60">{copy.currentPlan}</p>
-          <p className="mt-2 text-2xl font-semibold text-white">✦ {todayRhythmLabel}</p>
-          <p className="mt-2 text-sm text-white/58">{planLabel}</p>
-        </div>
-        <div className="premium-card rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(15,27,43,0.9),rgba(10,18,30,0.9))] p-5">
-          <p className="text-sm text-white/60">{copy.challengeProgress}</p>
-          <p className="mt-2 text-2xl font-semibold text-white">
-            {copy.dayLabel} {safeChallengeDay}/7
-          </p>
-        </div>
-        <div className="premium-card rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(16,32,36,0.9),rgba(10,22,26,0.92))] p-5">
-          <p className="text-sm text-white/60">{copy.streakCount}</p>
-          <p className="mt-2 text-2xl font-semibold text-white">
-            {streakCount} {copy.streakUnit}
-          </p>
-        </div>
-        <div className="premium-card rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(18,26,44,0.9),rgba(11,18,30,0.92))] p-5">
-          <p className="text-sm text-white/60">{copy.aiUsage}</p>
-          <p className="mt-2 text-base leading-7 text-white/82">{copy.insightReady}</p>
-          <p className="mt-3 text-sm text-white/50">
-            AI {aiUsage.used}/{aiUsage.limit === "unlimited" ? "∞" : aiUsage.limit}
-          </p>
-        </div>
-      </section>
+      {variant === "basic" ? recordsSection : pathSection}
+      {variant === "basic" ? pathSection : recordsSection}
 
       {registeredEmail ? <p className="text-sm text-white/50">{copy.registeredEmail}: {registeredEmail}</p> : null}
     </div>

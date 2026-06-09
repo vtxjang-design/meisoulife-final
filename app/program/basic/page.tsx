@@ -352,6 +352,7 @@ function BasicProgramContent() {
             </div>
 
             <MemberDashboard
+              variant="basic"
               planKey={plan}
               membershipResolved={planResolved && !planError}
               membershipError={Boolean(planError)}

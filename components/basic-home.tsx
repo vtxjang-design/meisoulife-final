@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { getLocaleCopy, useLanguage } from "@/lib/i18n";
 import { getTodayRhythmCheckIn } from "@/lib/today-rhythm-checkin";
-import { RHYTHM_JOURNEY_STORAGE_KEY } from "@/lib/rhythm-journey";
+import { getRhythmJourneyDay, RHYTHM_JOURNEY_STORAGE_KEY } from "@/lib/rhythm-journey";
 
 type RhythmPhase = "morning" | "day" | "night";
 type MarkerSleep = "good" | "normal" | "low";
@@ -26,6 +26,7 @@ type BasicHomeProps = {
 
 const MARKER_STONE_STORAGE_KEY = "meisoulife_marker_stone_v1";
 const LAST_GATE_STORAGE_KEY = "meisoulife_last_rhythm_gate";
+const TODAY_REFLECTION_STORAGE_KEY = "meisoulife_basic_daily_reflection_v1";
 
 const basicHomeCopy = {
   jp: {
@@ -61,6 +62,30 @@ const basicHomeCopy = {
       day: "旅の日",
       streak: "歩いてきた日々",
       insight: "次の一歩は、すでにここで待っています。"
+    },
+    openGate: {
+      title: "今日開いている扉",
+      practice: "今日は\n立ち止まる練習をします。",
+      cta: "扉を開く",
+      viewAll: "旅全体を見る"
+    },
+    aiGuide: {
+      title: "AIリズムガイド",
+      eyebrow: "今日の案内",
+      body: "急いで進むことよりも、\nリズムを失わないことが大切です。",
+      availability: "AI 1/3"
+    },
+    question: {
+      title: "今日の問い",
+      prompt: "今日あなたは\n何を手放したいですか？",
+      placeholder: "一行だけでも大丈夫です。",
+      saved: "今日の記録が静かに残りました。"
+    },
+    companions: {
+      title: "ともに歩く人たち",
+      body: "今日この道をともに歩く人たちがいます。",
+      walked: "128人が今日この道を歩きました",
+      present: "14人が今ここにいます"
     },
     todayMessageTitle: "今日の道しるべ",
     todayMessages: [
@@ -188,6 +213,30 @@ const basicHomeCopy = {
       streak: "이어온 날들",
       insight: "당신의 다음 걸음은 이미 여기에서 기다리고 있습니다."
     },
+    openGate: {
+      title: "오늘 열린 문",
+      practice: "오늘은\n멈추는 연습을 합니다.",
+      cta: "문 열기",
+      viewAll: "전체 여정 보기"
+    },
+    aiGuide: {
+      title: "AI 리듬 가이드",
+      eyebrow: "오늘의 안내",
+      body: "급하게 가는 것보다\n리듬을 잃지 않는 것이 중요합니다.",
+      availability: "AI 1/3"
+    },
+    question: {
+      title: "오늘의 질문",
+      prompt: "오늘 당신은\n무엇을 내려놓고 싶나요?",
+      placeholder: "한 줄만 적어도 충분합니다.",
+      saved: "오늘의 기록이 조용히 남았습니다."
+    },
+    companions: {
+      title: "함께 걷는 사람들",
+      body: "오늘 이 길을 함께 걷는 사람들이 있습니다.",
+      walked: "128명이 오늘 이 길을 걸었습니다",
+      present: "14명이 지금 함께 머물고 있습니다"
+    },
     todayMessageTitle: "오늘의 표지석",
     todayMessages: [
       "당신의 리듬은 이미 당신 안에 있습니다.",
@@ -313,6 +362,30 @@ const basicHomeCopy = {
       day: "Current Day",
       streak: "Days of Practice",
       insight: "Your next step is already waiting."
+    },
+    openGate: {
+      title: "Today’s Open Gate",
+      practice: "Today,\nwe practice pausing.",
+      cta: "Open Gate",
+      viewAll: "View Full Journey"
+    },
+    aiGuide: {
+      title: "AI Rhythm Guide",
+      eyebrow: "Today’s Guidance",
+      body: "More important than moving fast\nis not losing your rhythm.",
+      availability: "AI 1/3"
+    },
+    question: {
+      title: "Today’s Question",
+      prompt: "What would you like\nto let go of today?",
+      placeholder: "One line is enough.",
+      saved: "Today’s reflection has been quietly saved."
+    },
+    companions: {
+      title: "Walking Companions",
+      body: "There are people walking this path with you today.",
+      walked: "128 people walked this path today",
+      present: "14 are currently present"
     },
     todayMessageTitle: "Today’s Signpost",
     todayMessages: [
@@ -567,6 +640,40 @@ function buildMarkerMessage(
   return `A quiet, steady rhythm\nmay be enough for today.\n\nLet Gate ${currentDay} and the ${rhythmPhase} rhythm\nbring you back in a small, kind way.`;
 }
 
+function readTodayReflection() {
+  if (typeof window === "undefined") {
+    return "";
+  }
+
+  try {
+    const raw = window.localStorage.getItem(TODAY_REFLECTION_STORAGE_KEY);
+
+    if (!raw) {
+      return "";
+    }
+
+    const parsed = JSON.parse(raw) as { date?: string; text?: string };
+    return parsed?.date === getTodayKey() && typeof parsed.text === "string" ? parsed.text : "";
+  } catch (_error) {
+    window.localStorage.removeItem(TODAY_REFLECTION_STORAGE_KEY);
+    return "";
+  }
+}
+
+function saveTodayReflection(text: string) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.localStorage.setItem(
+    TODAY_REFLECTION_STORAGE_KEY,
+    JSON.stringify({
+      date: getTodayKey(),
+      text
+    })
+  );
+}
+
 function buildRhythmMeditationHref(rhythm: RhythmPhase) {
   // Existing safe Daily Rhythm flow currently enters through meditation.
   return `/meditation?duration=180&type=${rhythm}&returnTo=${encodeURIComponent(`/program/basic?rhythm=${rhythm}`)}`;
@@ -600,6 +707,8 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
   const [sleepStatus, setSleepStatus] = useState<MarkerSleep>("normal");
   const [stressStatus, setStressStatus] = useState<MarkerStress>("normal");
   const [lastGate, setLastGate] = useState<RhythmPhase>(rhythmPhase);
+  const [reflectionText, setReflectionText] = useState("");
+  const [reflectionSaved, setReflectionSaved] = useState(false);
 
   useEffect(() => {
     try {
@@ -627,6 +736,7 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
       }
 
       setSelectedMood(readTodayMood());
+      setReflectionText(readTodayReflection());
     } catch (error) {
       console.warn("[basic-home] failed to read local sanctuary state", error);
     }
@@ -683,6 +793,19 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
       }),
     [currentDay, journeyDay, language, lastGate, rhythmPhase, selectedMood, sleepStatus, stressStatus]
   );
+  const currentJourneyGate = useMemo(() => getRhythmJourneyDay(language, journeyDay), [language, journeyDay]);
+
+  function handleReflectionChange(next: string) {
+    setReflectionText(next);
+    setReflectionSaved(false);
+
+    try {
+      saveTodayReflection(next);
+      setReflectionSaved(true);
+    } catch (error) {
+      console.warn("[basic-home] failed to save today reflection", error);
+    }
+  }
 
   return (
     <div className="space-y-10 sm:space-y-12">
@@ -712,84 +835,11 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
               {copy.sanctuaryBody}
             </p>
             <Link
-              href="#rhythm-gates"
+              href="#today-open-gate"
               className="mt-8 inline-flex min-h-[54px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f2ddb0,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.22)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#e7cd92]"
             >
               {hero.button}
             </Link>
-          </div>
-
-          <div id="rhythm-gates" className="relative mt-10 scroll-mt-24">
-            <p className="text-xs uppercase tracking-[0.3em] text-white/48">{copy.gatesTitle}</p>
-            <p className="mt-3 text-sm leading-7 text-white/56">{copy.rhythmCardsTitle}</p>
-            <div className="mt-5 grid gap-4 sm:grid-cols-3">
-            {copy.rhythmCards.map((card) => {
-              const rhythm = card.key as RhythmPhase;
-
-              return (
-              <Link
-                key={card.key}
-                href={buildRhythmMeditationHref(rhythm)}
-                onClick={() => handleSelectGate(rhythm)}
-                className={`group relative overflow-hidden rounded-[30px] border px-5 py-5 transition duration-300 hover:-translate-y-1 ${
-                  rhythmPhase === card.key ? "border-gold/28 ring-1 ring-gold/18" : "border-white/10"
-                } ${getGateSurfaceClasses(rhythm)}`}
-              >
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent_26%,rgba(6,10,20,0.24)_100%)] opacity-90" />
-                <div className="absolute -right-8 top-6 h-24 w-24 rounded-full bg-white/8 blur-2xl transition duration-500 group-hover:scale-125" />
-                <div className="relative">
-                  <p className="text-sm uppercase tracking-[0.24em] text-gold/82">{card.emoji} {card.title}</p>
-                  <p className="mt-3 min-h-[56px] text-sm leading-7 text-white/82">{card.description}</p>
-                  <p className="mt-4 text-sm leading-7 text-white/58">{card.detail}</p>
-                  <div className="mt-6 inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/14 bg-white/[0.08] px-4 py-2 text-sm font-semibold text-white transition duration-300 group-hover:bg-white/[0.12]">
-                    {card.button}
-                  </div>
-                </div>
-              </Link>
-            );
-            })}
-            </div>
-          </div>
-        </section>
-
-        <section className="rounded-[30px] border border-white/10 bg-white/[0.035] px-6 py-8 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">
-          <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.todayGateTitle}</p>
-          <div className="mt-5 grid gap-4 lg:grid-cols-[1.18fr_0.82fr]">
-            <article className={`relative overflow-hidden rounded-[26px] border border-gold/16 px-6 py-6 ${getGateSurfaceClasses(rhythmPhase)}`}>
-              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent_28%,rgba(4,8,18,0.28)_100%)]" />
-              <div className="relative">
-                <p className="text-xs uppercase tracking-[0.24em] text-gold/78">{copy.todayGateItems.openGate}</p>
-                <p className="mt-3 text-sm uppercase tracking-[0.24em] text-white/60">{copy.todayGateItems.rhythm}</p>
-                <p className="mt-2 text-2xl font-semibold text-white">
-                  {copy.rhythmCards.find((card) => card.key === rhythmPhase)?.emoji} {copy.rhythmCards.find((card) => card.key === rhythmPhase)?.title}
-                </p>
-                <p className="mt-3 max-w-md text-sm leading-7 text-white/78">
-                  {copy.rhythmCards.find((card) => card.key === rhythmPhase)?.description}
-                </p>
-                <Link
-                  href={buildRhythmMeditationHref(rhythmPhase)}
-                  onClick={() => handleSelectGate(rhythmPhase)}
-                  className="mt-6 inline-flex min-h-[46px] items-center justify-center rounded-full border border-white/14 bg-white/[0.08] px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.12]"
-                >
-                  {copy.rhythmCards.find((card) => card.key === rhythmPhase)?.button}
-                </Link>
-              </div>
-            </article>
-            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-              <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-5 py-5">
-                <p className="text-sm text-white/56">{copy.todayGateItems.day}</p>
-                <p className="mt-2 text-xl font-semibold text-white">Day {journeyDay}</p>
-              </article>
-              <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-5 py-5">
-                <p className="text-sm text-white/56">{copy.todayGateItems.streak}</p>
-                <p className="mt-2 text-xl font-semibold text-white">{streakDays}</p>
-              </article>
-              <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-5 py-5">
-                <p className="text-sm text-white/56">{copy.todayMessageTitle}</p>
-                <p className="mt-2 text-base leading-7 text-white/82">{copy.todayGateItems.insight}</p>
-                <p className="mt-3 text-xs uppercase tracking-[0.28em] text-gold/58">YOUR NEXT STEP IS ALREADY WAITING</p>
-              </article>
-            </div>
           </div>
         </section>
 
@@ -866,6 +916,128 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
                 <p className="mt-3 text-sm leading-7 text-white/66">{copy.markerStone.guideBody}</p>
               </article>
             </div>
+          </div>
+        </section>
+
+        <section id="today-open-gate" className="rounded-[30px] border border-white/10 bg-white/[0.035] px-6 py-8 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">
+          <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.openGate.title}</p>
+          <div className="mt-5 grid gap-4 lg:grid-cols-[1.18fr_0.82fr]">
+            <article className={`relative overflow-hidden rounded-[26px] border border-gold/16 px-6 py-6 ${getGateSurfaceClasses(rhythmPhase)}`}>
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent_28%,rgba(4,8,18,0.28)_100%)]" />
+              <div className="relative">
+                <p className="text-xs uppercase tracking-[0.24em] text-gold/78">
+                  {language === "jp" ? `第${journeyDay}の扉` : language === "kr" ? `제${journeyDay}의 문` : `Gate ${journeyDay}`}
+                </p>
+                <p className="mt-3 text-2xl font-semibold text-white">{currentJourneyGate.title}</p>
+                <p className="mt-3 max-w-md whitespace-pre-line text-sm leading-7 text-white/78">{copy.openGate.practice}</p>
+                <Link
+                  href={`/rhythm-journey?day=${journeyDay}`}
+                  className="mt-6 inline-flex min-h-[46px] items-center justify-center rounded-full border border-white/14 bg-white/[0.08] px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.12]"
+                >
+                  {copy.openGate.cta}
+                </Link>
+              </div>
+            </article>
+            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+              <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-5 py-5">
+                <p className="text-sm text-white/56">{copy.todayGateItems.day}</p>
+                <p className="mt-2 text-xl font-semibold text-white">Day {journeyDay}</p>
+              </article>
+              <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-5 py-5">
+                <p className="text-sm text-white/56">{copy.todayGateItems.streak}</p>
+                <p className="mt-2 text-xl font-semibold text-white">{streakDays}</p>
+              </article>
+              <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-5 py-5">
+                <p className="text-sm text-white/56">{copy.todayMessageTitle}</p>
+                <p className="mt-2 text-base leading-7 text-white/82">{copy.todayGateItems.insight}</p>
+                <Link href="#journey-path" className="mt-3 inline-flex text-xs uppercase tracking-[0.28em] text-gold/58">
+                  {copy.openGate.viewAll}
+                </Link>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section className="rounded-[30px] border border-white/10 bg-white/[0.035] px-6 py-8 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">
+          <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.aiGuide.title}</p>
+          <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_220px]">
+            <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
+              <p className="text-xs uppercase tracking-[0.24em] text-white/44">{copy.aiGuide.eyebrow}</p>
+              <p className="mt-4 whitespace-pre-line font-serif text-[24px] leading-[1.8] text-white/88 sm:text-[28px]">
+                {copy.aiGuide.body}
+              </p>
+            </article>
+            <article className="rounded-[24px] border border-gold/14 bg-gold/[0.05] px-5 py-5">
+              <p className="text-sm text-white/60">{copy.aiGuide.eyebrow}</p>
+              <p className="mt-3 text-2xl font-semibold text-white">{copy.aiGuide.availability}</p>
+            </article>
+          </div>
+        </section>
+
+        <section className="rounded-[30px] border border-white/10 bg-white/[0.035] px-6 py-8 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">
+          <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.question.title}</p>
+          <p className="mt-5 whitespace-pre-line font-serif text-[24px] leading-[1.75] text-white/88 sm:text-[30px]">
+            {copy.question.prompt}
+          </p>
+          <div className="mt-5">
+            <textarea
+              value={reflectionText}
+              onChange={(event) => handleReflectionChange(event.target.value)}
+              placeholder={copy.question.placeholder}
+              className="min-h-[132px] w-full rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-4 text-base leading-7 text-white placeholder:text-white/32 outline-none transition focus:border-gold/34"
+            />
+            {reflectionSaved ? <p className="mt-3 text-sm text-gold/74">{copy.question.saved}</p> : null}
+          </div>
+        </section>
+
+        <section id="rhythm-gates" className="rounded-[30px] border border-white/10 bg-white/[0.035] px-6 py-8 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">
+          <p className="text-xs uppercase tracking-[0.3em] text-gold/78">{copy.gatesTitle}</p>
+          <p className="mt-3 text-sm leading-7 text-white/56">{copy.rhythmCardsTitle}</p>
+          <div className="mt-5 grid gap-4 sm:grid-cols-3">
+            {copy.rhythmCards.map((card) => {
+              const rhythm = card.key as RhythmPhase;
+
+              return (
+                <Link
+                  key={card.key}
+                  href={`/rhythm-journey?rhythm=${rhythm}`}
+                  onClick={() => handleSelectGate(rhythm)}
+                  className={`group relative overflow-hidden rounded-[30px] border px-5 py-5 transition duration-300 hover:-translate-y-1 ${
+                    rhythmPhase === card.key ? "border-gold/28 ring-1 ring-gold/18" : "border-white/10"
+                  } ${getGateSurfaceClasses(rhythm)}`}
+                >
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent_26%,rgba(6,10,20,0.24)_100%)] opacity-90" />
+                  <div className="absolute -right-8 top-6 h-24 w-24 rounded-full bg-white/8 blur-2xl transition duration-500 group-hover:scale-125" />
+                  <div className="relative">
+                    <p className="text-sm uppercase tracking-[0.24em] text-gold/82">{card.emoji} {card.title}</p>
+                    <p className="mt-3 min-h-[56px] text-sm leading-7 text-white/82">{card.description}</p>
+                    <p className="mt-4 text-sm leading-7 text-white/58">{card.detail}</p>
+                    <div className="mt-6 inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/14 bg-white/[0.08] px-4 py-2 text-sm font-semibold text-white transition duration-300 group-hover:bg-white/[0.12]">
+                      {language === "jp" ? "始める" : language === "kr" ? "시작하기" : "Begin"}
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+
+        <section id="companions" className="rounded-[30px] border border-white/10 bg-white/[0.035] px-6 py-8 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">
+          <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.companions.title}</p>
+          <p className="mt-4 text-base leading-8 text-white/74">{copy.companions.body}</p>
+          <div className="mt-6 flex items-center gap-3">
+            {["A", "M", "S", "K", "Y"].map((label, index) => (
+              <span
+                key={label}
+                className={`flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/[0.05] text-sm text-white/78 ${index > 0 ? "-ml-3" : ""}`}
+              >
+                {label}
+              </span>
+            ))}
+          </div>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            <div className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-white/74">{copy.companions.walked}</div>
+            <div className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-white/74">{copy.companions.present}</div>
           </div>
         </section>
 
