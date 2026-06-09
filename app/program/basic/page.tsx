@@ -107,7 +107,7 @@ function BasicProgramContent() {
 
   return (
     <div className="pb-16 sm:pb-24">
-      <BasicHome />
+      <BasicHome currentDay={dashboardState.challengeDay} streakCount={dashboardState.streakCount} />
 
       <section className="section-shell pt-10 sm:pt-14">
         <div className="mx-auto max-w-6xl">

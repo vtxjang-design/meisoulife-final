@@ -4,8 +4,28 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { getLocaleCopy, useLanguage } from "@/lib/i18n";
+import { getTodayRhythmCheckIn } from "@/lib/today-rhythm-checkin";
+import { RHYTHM_JOURNEY_STORAGE_KEY } from "@/lib/rhythm-journey";
 
 type RhythmPhase = "morning" | "day" | "night";
+type MarkerSleep = "good" | "normal" | "low";
+type MarkerStress = "low" | "normal" | "high";
+type MarkerMood = "calm" | "tired" | "sleepy" | "energy" | "thoughts" | "unknown";
+
+type MarkerStoneState = {
+  date: string;
+  sleep: MarkerSleep;
+  stress: MarkerStress;
+  lastGate: RhythmPhase;
+};
+
+type BasicHomeProps = {
+  currentDay?: number;
+  streakCount?: number;
+};
+
+const MARKER_STONE_STORAGE_KEY = "meisoulife_marker_stone_v1";
+const LAST_GATE_STORAGE_KEY = "meisoulife_last_rhythm_gate";
 
 const basicHomeCopy = {
   jp: {
@@ -50,6 +70,36 @@ const basicHomeCopy = {
       "一つの呼吸が今日を変えてくれます。",
       "自然は急ぎません。あなたも急がなくて大丈夫です。"
     ],
+    markerStone: {
+      title: "今日の標石",
+      bodyTitle: "今日の静かな読み取り",
+      note: "今の状態を少しだけ映して、今日に合う一文を置いておきます。",
+      mood: "今の気分",
+      sleep: "睡眠",
+      stress: "ストレス",
+      lastGate: "最後にくぐった扉",
+      sleepOptions: {
+        good: "良い",
+        normal: "普通",
+        low: "不足"
+      },
+      stressOptions: {
+        low: "低い",
+        normal: "普通",
+        high: "高い"
+      },
+      moods: {
+        calm: "穏やか",
+        tired: "少し疲れた",
+        sleepy: "眠い",
+        energy: "エネルギーが必要",
+        thoughts: "考えが多い",
+        unknown: "まだ選んでいません"
+      },
+      guideEyebrow: "RHYTHM GUIDE",
+      guideTitle: "AI Rhythm Guide 準備中",
+      guideBody: "今日はまだ軽い標石だけを置いています。次の段階で、この静かな文脈をAIガイドにつなげます。"
+    },
     checkIn: {
       title: "今の私の状態",
       stateOptions: [
@@ -146,6 +196,36 @@ const basicHomeCopy = {
       "한 번의 숨이 오늘을 바꿀 수 있습니다.",
       "자연은 서두르지 않습니다. 당신도 서두르지 않아도 괜찮습니다."
     ],
+    markerStone: {
+      title: "오늘의 표지석",
+      bodyTitle: "오늘의 조용한 읽기",
+      note: "지금의 상태를 조금 비추어 오늘에 어울리는 한 문장을 놓아둡니다.",
+      mood: "지금의 기분",
+      sleep: "수면",
+      stress: "스트레스",
+      lastGate: "마지막으로 지난 문",
+      sleepOptions: {
+        good: "좋음",
+        normal: "보통",
+        low: "부족"
+      },
+      stressOptions: {
+        low: "낮음",
+        normal: "보통",
+        high: "높음"
+      },
+      moods: {
+        calm: "편안함",
+        tired: "조금 지침",
+        sleepy: "피곤함",
+        energy: "에너지 필요",
+        thoughts: "생각이 많음",
+        unknown: "아직 선택하지 않음"
+      },
+      guideEyebrow: "RHYTHM GUIDE",
+      guideTitle: "AI 리듬 가이드를 준비하고 있습니다",
+      guideBody: "지금은 가벼운 표지석만 두고 있습니다. 다음 단계에서 이 조용한 맥락을 AI 가이드로 이어갈 수 있게 준비해 둡니다."
+    },
     checkIn: {
       title: "지금 내 상태",
       stateOptions: [
@@ -242,6 +322,36 @@ const basicHomeCopy = {
       "One breath can change today.",
       "Nature does not hurry. You do not need to hurry either."
     ],
+    markerStone: {
+      title: "Today’s Marker Stone",
+      bodyTitle: "A quiet reading for today",
+      note: "A small reading shaped by your current state, placed here for today.",
+      mood: "Mood",
+      sleep: "Sleep",
+      stress: "Stress",
+      lastGate: "Last gate",
+      sleepOptions: {
+        good: "Good",
+        normal: "Normal",
+        low: "Low"
+      },
+      stressOptions: {
+        low: "Low",
+        normal: "Normal",
+        high: "High"
+      },
+      moods: {
+        calm: "Calm",
+        tired: "A little tired",
+        sleepy: "Sleepy",
+        energy: "Need energy",
+        thoughts: "Many thoughts",
+        unknown: "Not chosen yet"
+      },
+      guideEyebrow: "RHYTHM GUIDE",
+      guideTitle: "AI Rhythm Guide is being prepared",
+      guideBody: "For now, we are placing only a light marker stone here. This structure is ready to hold a future AI rhythm guide without adding noise today."
+    },
     checkIn: {
       title: "My State Now",
       stateOptions: [
@@ -320,6 +430,143 @@ function getDailyMessage(messages: readonly string[]) {
   return messages[dayOfYear % messages.length] ?? messages[0] ?? "";
 }
 
+function getTodayKey(date = new Date()) {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, "0");
+  const day = `${date.getDate()}`.padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function readMarkerStoneState(): MarkerStoneState | null {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const raw = window.localStorage.getItem(MARKER_STONE_STORAGE_KEY);
+
+  if (!raw) {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(raw) as Partial<MarkerStoneState>;
+
+    if (
+      typeof parsed.date === "string" &&
+      (parsed.sleep === "good" || parsed.sleep === "normal" || parsed.sleep === "low") &&
+      (parsed.stress === "low" || parsed.stress === "normal" || parsed.stress === "high") &&
+      (parsed.lastGate === "morning" || parsed.lastGate === "day" || parsed.lastGate === "night")
+    ) {
+      return parsed as MarkerStoneState;
+    }
+  } catch (_error) {
+    window.localStorage.removeItem(MARKER_STONE_STORAGE_KEY);
+  }
+
+  return null;
+}
+
+function saveMarkerStoneState(next: MarkerStoneState) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.localStorage.setItem(MARKER_STONE_STORAGE_KEY, JSON.stringify(next));
+}
+
+function readLastGate() {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const raw = window.localStorage.getItem(LAST_GATE_STORAGE_KEY);
+
+  if (raw === "morning" || raw === "day" || raw === "night") {
+    return raw;
+  }
+
+  return null;
+}
+
+function readTodayMood(): MarkerMood {
+  const stored = getTodayRhythmCheckIn();
+
+  if (!stored || stored.date !== getTodayKey()) {
+    return "unknown";
+  }
+
+  switch (stored.moodKey) {
+    case "calm":
+    case "tired":
+    case "sleepy":
+    case "energy":
+    case "thoughts":
+      return stored.moodKey;
+    default:
+      return "unknown";
+  }
+}
+
+function buildMarkerMessage(
+  language: "jp" | "kr" | "en",
+  options: {
+    currentDay: number;
+    rhythmPhase: RhythmPhase;
+    mood: MarkerMood;
+    sleep: MarkerSleep;
+    stress: MarkerStress;
+    lastGate: RhythmPhase;
+  }
+) {
+  const { currentDay, rhythmPhase, mood, sleep, stress, lastGate } = options;
+
+  if (language === "jp") {
+    if (sleep === "low") {
+      return `第${currentDay}の扉に立つ今日は、\n休みの余白を少し多めに残してみましょう。\n\n最後に通った${lastGate === "night" ? "夜" : lastGate === "day" ? "昼" : "朝"}の扉の静けさが、\n今のあなたを支えてくれます。`;
+    }
+
+    if (stress === "high" || mood === "thoughts") {
+      return `今は、考えを進めるより\n中心に戻るほうが合いそうです。\n\n${rhythmPhase === "night" ? "夜" : rhythmPhase === "day" ? "昼" : "朝"}のリズムで、\nひと呼吸ずつ整えていきましょう。`;
+    }
+
+    if (mood === "energy") {
+      return `今日は少し光を足す日にしてみましょう。\n\n第${currentDay}の扉を急がずにくぐりながら、\n体の奥に残る力を呼び戻してみてください。`;
+    }
+
+    return `今日のあなたには、\n静かに続ける流れが似合っています。\n\n第${currentDay}の扉と${rhythmPhase === "night" ? "夜" : rhythmPhase === "day" ? "昼" : "朝"}のリズムを重ねて、\n小さく戻ってきましょう。`;
+  }
+
+  if (language === "kr") {
+    if (sleep === "low") {
+      return `오늘은 제${currentDay}의 문 앞에서\n쉬어갈 여백을 조금 더 남겨두면 좋겠습니다.\n\n마지막으로 지나온 ${lastGate === "night" ? "밤" : lastGate === "day" ? "낮" : "아침"}의 문이,\n지금의 당신을 조용히 받쳐줄 것입니다.`;
+    }
+
+    if (stress === "high" || mood === "thoughts") {
+      return `지금은 더 밀어가기보다\n중심으로 돌아오는 편이 잘 어울립니다.\n\n${rhythmPhase === "night" ? "밤" : rhythmPhase === "day" ? "낮" : "아침"}의 리듬에서,\n숨 하나씩 다시 정돈해 봅시다.`;
+    }
+
+    if (mood === "energy") {
+      return `오늘은 몸 안의 빛을\n조금 더 깨워도 좋겠습니다.\n\n제${currentDay}의 문을 서두르지 않고 지나며,\n남아 있는 힘을 다시 불러와 보세요.`;
+    }
+
+    return `오늘의 당신에게는\n조용히 이어가는 흐름이 어울립니다.\n\n제${currentDay}의 문과 ${rhythmPhase === "night" ? "밤" : rhythmPhase === "day" ? "낮" : "아침"}의 리듬을 겹쳐,\n작게 돌아와 보세요.`;
+  }
+
+  if (sleep === "low") {
+    return `At Gate ${currentDay},\nleave a little more room for rest today.\n\nThe calm of the ${lastGate} gate you last passed through\ncan keep holding you now.`;
+  }
+
+  if (stress === "high" || mood === "thoughts") {
+    return `Today may be better for returning to center\nthan for pushing forward.\n\nLet the ${rhythmPhase} rhythm\nsettle you one breath at a time.`;
+  }
+
+  if (mood === "energy") {
+    return `Today can be a day\nfor gently waking your inner light.\n\nAs you pass Gate ${currentDay},\ncall back the strength that is still with you.`;
+  }
+
+  return `A quiet, steady rhythm\nmay be enough for today.\n\nLet Gate ${currentDay} and the ${rhythmPhase} rhythm\nbring you back in a small, kind way.`;
+}
+
 function buildRhythmMeditationHref(rhythm: RhythmPhase) {
   // Existing safe Daily Rhythm flow currently enters through meditation.
   return `/meditation?duration=180&type=${rhythm}&returnTo=${encodeURIComponent(`/program/basic?rhythm=${rhythm}`)}`;
@@ -337,7 +584,7 @@ function getGateSurfaceClasses(rhythm: RhythmPhase) {
   return "bg-[radial-gradient(circle_at_top,rgba(110,138,208,0.22),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(58,90,148,0.18),transparent_42%),linear-gradient(180deg,rgba(20,35,61,0.92),rgba(9,18,34,0.96))] shadow-[0_22px_60px_rgba(79,111,178,0.16)]";
 }
 
-export function BasicHome() {
+export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
   const { language } = useLanguage();
   const copy = useMemo(() => getLocaleCopy(basicHomeCopy, language), [language]);
   const searchParams = useSearchParams();
@@ -347,27 +594,95 @@ export function BasicHome() {
     : getLocalRhythmPhase();
   const hero = copy.hero[rhythmPhase];
   const todayMessage = useMemo(() => getDailyMessage(copy.todayMessages), [copy.todayMessages]);
-  const [journeyDay, setJourneyDay] = useState(1);
-  const [streakDays, setStreakDays] = useState(3);
+  const [journeyDay, setJourneyDay] = useState(currentDay);
+  const [streakDays, setStreakDays] = useState(streakCount);
+  const [selectedMood, setSelectedMood] = useState<MarkerMood>("unknown");
+  const [sleepStatus, setSleepStatus] = useState<MarkerSleep>("normal");
+  const [stressStatus, setStressStatus] = useState<MarkerStress>("normal");
+  const [lastGate, setLastGate] = useState<RhythmPhase>(rhythmPhase);
 
   useEffect(() => {
     try {
-      const journeyRaw = window.localStorage.getItem("meisoulife_rhythm_journey_progress");
+      const journeyRaw = window.localStorage.getItem(RHYTHM_JOURNEY_STORAGE_KEY);
       const streakRaw = window.localStorage.getItem("meisoulife_basic_rhythm_check_streak");
-      const parsedJourney = Number.parseInt(journeyRaw || "", 10);
+      const markerState = readMarkerStoneState();
+      const savedLastGate = readLastGate();
       const parsedStreak = Number.parseInt(streakRaw || "", 10);
+      const parsedJourney = journeyRaw ? (JSON.parse(journeyRaw) as { currentDay?: number }) : null;
 
-      if (Number.isFinite(parsedJourney) && parsedJourney >= 1 && parsedJourney <= 7) {
-        setJourneyDay(parsedJourney);
+      if (typeof parsedJourney?.currentDay === "number" && parsedJourney.currentDay >= 1 && parsedJourney.currentDay <= 7) {
+        setJourneyDay(parsedJourney.currentDay);
       }
 
       if (Number.isFinite(parsedStreak) && parsedStreak > 0) {
         setStreakDays(parsedStreak);
       }
+
+      if (markerState?.date === getTodayKey()) {
+        setSleepStatus(markerState.sleep);
+        setStressStatus(markerState.stress);
+        setLastGate(markerState.lastGate);
+      } else if (savedLastGate) {
+        setLastGate(savedLastGate);
+      }
+
+      setSelectedMood(readTodayMood());
     } catch (error) {
       console.warn("[basic-home] failed to read local sanctuary state", error);
     }
   }, []);
+
+  useEffect(() => {
+    setJourneyDay(currentDay);
+  }, [currentDay]);
+
+  useEffect(() => {
+    setStreakDays(streakCount);
+  }, [streakCount]);
+
+  function persistMarkerState(next: Partial<Pick<MarkerStoneState, "sleep" | "stress" | "lastGate">>) {
+    const payload: MarkerStoneState = {
+      date: getTodayKey(),
+      sleep: next.sleep ?? sleepStatus,
+      stress: next.stress ?? stressStatus,
+      lastGate: next.lastGate ?? lastGate
+    };
+
+    saveMarkerStoneState(payload);
+  }
+
+  function handleSelectGate(gate: RhythmPhase) {
+    setLastGate(gate);
+
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(LAST_GATE_STORAGE_KEY, gate);
+    }
+
+    persistMarkerState({ lastGate: gate });
+  }
+
+  function handleSleepChange(next: MarkerSleep) {
+    setSleepStatus(next);
+    persistMarkerState({ sleep: next });
+  }
+
+  function handleStressChange(next: MarkerStress) {
+    setStressStatus(next);
+    persistMarkerState({ stress: next });
+  }
+
+  const markerMessage = useMemo(
+    () =>
+      buildMarkerMessage(language, {
+        currentDay: journeyDay,
+        rhythmPhase,
+        mood: selectedMood,
+        sleep: sleepStatus,
+        stress: stressStatus,
+        lastGate
+      }),
+    [currentDay, journeyDay, language, lastGate, rhythmPhase, selectedMood, sleepStatus, stressStatus]
+  );
 
   return (
     <div className="section-shell py-14 sm:py-20">
@@ -410,6 +725,7 @@ export function BasicHome() {
               <Link
                 key={card.key}
                 href={buildRhythmMeditationHref(rhythm)}
+                onClick={() => handleSelectGate(rhythm)}
                 className={`group relative overflow-hidden rounded-[30px] border px-5 py-5 transition duration-300 hover:-translate-y-1 ${
                   rhythmPhase === card.key ? "border-gold/28 ring-1 ring-gold/18" : "border-white/10"
                 } ${getGateSurfaceClasses(rhythm)}`}
@@ -447,6 +763,7 @@ export function BasicHome() {
                 </p>
                 <Link
                   href={buildRhythmMeditationHref(rhythmPhase)}
+                  onClick={() => handleSelectGate(rhythmPhase)}
                   className="mt-6 inline-flex min-h-[46px] items-center justify-center rounded-full border border-white/14 bg-white/[0.08] px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.12]"
                 >
                   {copy.rhythmCards.find((card) => card.key === rhythmPhase)?.button}
@@ -471,10 +788,76 @@ export function BasicHome() {
         </section>
 
         <section className="rounded-[30px] border border-white/10 bg-white/[0.035] px-6 py-8 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">
-          <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.todayMessageTitle}</p>
-          <p className="mt-5 max-w-4xl whitespace-pre-line font-serif text-[28px] leading-[1.7] text-white/90 sm:text-[34px]">
-            {todayMessage}
-          </p>
+          <div className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
+            <article className="rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-6 sm:px-6">
+              <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.markerStone.title}</p>
+              <p className="mt-3 text-sm leading-7 text-white/58">{copy.markerStone.note}</p>
+              <p className="mt-5 text-sm uppercase tracking-[0.24em] text-white/44">{copy.markerStone.bodyTitle}</p>
+              <p className="mt-4 max-w-4xl whitespace-pre-line font-serif text-[26px] leading-[1.75] text-white/90 sm:text-[32px]">
+                {markerMessage}
+              </p>
+              <p className="mt-5 text-sm leading-7 text-white/54">{todayMessage}</p>
+            </article>
+
+            <div className="grid gap-4">
+              <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
+                <div className="flex flex-wrap gap-2 text-sm text-white/66">
+                  <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5">
+                    {copy.markerStone.mood}: {copy.markerStone.moods[selectedMood]}
+                  </span>
+                  <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5">
+                    {copy.markerStone.lastGate}: {copy.rhythmCards.find((card) => card.key === lastGate)?.title}
+                  </span>
+                </div>
+
+                <div className="mt-5">
+                  <p className="text-sm text-white/58">{copy.markerStone.sleep}</p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {(["good", "normal", "low"] as const).map((option) => (
+                      <button
+                        key={option}
+                        type="button"
+                        onClick={() => handleSleepChange(option)}
+                        className={`min-h-[40px] rounded-full border px-3.5 py-2 text-sm transition ${
+                          sleepStatus === option
+                            ? "border-gold/34 bg-gold/10 text-white"
+                            : "border-white/10 bg-white/[0.03] text-white/66 hover:bg-white/[0.05]"
+                        }`}
+                      >
+                        {copy.markerStone.sleepOptions[option]}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-5">
+                  <p className="text-sm text-white/58">{copy.markerStone.stress}</p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {(["low", "normal", "high"] as const).map((option) => (
+                      <button
+                        key={option}
+                        type="button"
+                        onClick={() => handleStressChange(option)}
+                        className={`min-h-[40px] rounded-full border px-3.5 py-2 text-sm transition ${
+                          stressStatus === option
+                            ? "border-gold/34 bg-gold/10 text-white"
+                            : "border-white/10 bg-white/[0.03] text-white/66 hover:bg-white/[0.05]"
+                        }`}
+                      >
+                        {copy.markerStone.stressOptions[option]}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </article>
+
+              <article className="rounded-[24px] border border-gold/14 bg-gold/[0.05] px-5 py-5">
+                <p className="text-xs uppercase tracking-[0.26em] text-gold/78">{copy.markerStone.guideEyebrow}</p>
+                <p className="mt-3 text-lg font-semibold text-white">{copy.markerStone.guideTitle}</p>
+                <p className="mt-3 text-sm leading-7 text-white/66">{copy.markerStone.guideBody}</p>
+              </article>
+            </div>
+          </div>
         </section>
 
         <section className="rounded-[30px] border border-gold/14 bg-gold/[0.05] px-6 py-7 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">
