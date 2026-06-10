@@ -3,6 +3,7 @@ import { isLeaderCandidate } from "@/lib/leader";
 import { fetchLatestMembershipPlan } from "@/lib/membership";
 import { getMockDashboard } from "@/lib/mock-data";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 
 type DashboardPageProps = {
   searchParams: Promise<{
@@ -60,6 +61,20 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         candidateLeader: profile?.candidate_leader
       });
     }
+  }
+
+  if (planKey === "basic") {
+    const query = new URLSearchParams();
+
+    if (params.email) {
+      query.set("email", params.email);
+    }
+
+    if (params.challenge) {
+      query.set("challenge", params.challenge);
+    }
+
+    redirect(query.size > 0 ? `/program/basic?${query.toString()}` : "/program/basic");
   }
 
   return (
