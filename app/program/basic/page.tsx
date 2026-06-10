@@ -22,7 +22,7 @@ const basicPageCopy = {
     sidebarTitle: "RHYTHM GARDEN",
     sidebarSubtitle: "探検者の安息所",
     nav: [
-      { label: "安息所ホーム", href: "#sanctuary-home" },
+      { label: "安息所ホーム", href: "#marker-stone" },
       { label: "私のリズムの旅", href: "#journey-path" },
       { label: "今日の道", href: "#rhythm-gates" },
       { label: "7日間のリズム旅", href: "/rhythm-journey" },
@@ -56,7 +56,7 @@ const basicPageCopy = {
     sidebarTitle: "RHYTHM GARDEN",
     sidebarSubtitle: "탐험가의 안식처",
     nav: [
-      { label: "안식처 홈", href: "#sanctuary-home" },
+      { label: "안식처 홈", href: "#marker-stone" },
       { label: "나의 리듬 여정", href: "#journey-path" },
       { label: "오늘의 길", href: "#rhythm-gates" },
       { label: "7일 리듬 여정", href: "/rhythm-journey" },
@@ -90,7 +90,7 @@ const basicPageCopy = {
     sidebarTitle: "RHYTHM GARDEN",
     sidebarSubtitle: "Explorer Sanctuary",
     nav: [
-      { label: "Sanctuary Home", href: "#sanctuary-home" },
+      { label: "Sanctuary Home", href: "#marker-stone" },
       { label: "My Rhythm Journey", href: "#journey-path" },
       { label: "Today’s Path", href: "#rhythm-gates" },
       { label: "7-Day Rhythm Journey", href: "/rhythm-journey" },

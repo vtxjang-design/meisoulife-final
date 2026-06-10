@@ -30,29 +30,15 @@ const TODAY_REFLECTION_STORAGE_KEY = "meisoulife_basic_daily_reflection_v1";
 
 const basicHomeCopy = {
   jp: {
-    sanctuaryEyebrow: "RHYTHM GARDEN",
-    sanctuaryTitle: "あなただけの\n安息所へようこそ。",
-    sanctuaryBody:
-      "忙しい日常の中で少し立ち止まり、\n自分のリズムを取り戻す時間。\n\n今日のあなたの旅にも意味があります。",
-    hero: {
-      morning: {
-        emoji: "☀️",
-        title: "今日の朝のリズム",
-        body: "今日を始める前に、\n3分だけ自分に戻ってみましょう。",
-        button: "リズムの扉を開く"
-      },
-      day: {
-        emoji: "🌿",
-        title: "今日の昼のリズム",
-        body: "少し立ち止まり、\n呼吸をもう一度整えてみましょう。",
-        button: "リズムの扉を開く"
-      },
-      night: {
-        emoji: "🌙",
-        title: "今日の夜のリズム",
-        body: "今日一日をやさしく手放し、\nゆっくり休んでみましょう。",
-        button: "リズムの扉を開く"
-      }
+    sanctuaryEyebrow: "TODAY'S MARKER STONE",
+    continueJourney: "旅を続ける",
+    summaryCards: {
+      currentGate: "現在の扉",
+      progress: "旅の進み",
+      returnedDays: "戻ってきた日々",
+      insight: "今日の気づき",
+      progressValue: "リズムの道の Day {day}",
+      insightBody: "小さなリズムは、大きな変化になっていきます。"
     },
     gatesTitle: "今日のリズムゲート",
     todayGateTitle: "今日、開いている扉",
@@ -72,7 +58,7 @@ const basicHomeCopy = {
     aiGuide: {
       title: "AIリズムガイド",
       eyebrow: "今日の案内",
-      body: "急いで進むことよりも、\nリズムを失わないことが大切です。",
+      body: "今日は昨日よりも\n少し静かなリズムが似合っています。\n\n一呼吸をゆっくり取り、\n次へ進む前に余白を残しましょう。",
       availability: "AI 1/3"
     },
     question: {
@@ -99,6 +85,7 @@ const basicHomeCopy = {
       title: "今日の道しるべ",
       bodyTitle: "立ち止まる庭",
       note: "立ち止まっても大丈夫です。\n\nあなたのリズムは消えたのではなく\n少し休んでいただけです。",
+      heroNote: "今日は少し急がなくても大丈夫です。\n\n呼吸があなたを待っています。",
       mood: "今の気分",
       sleep: "睡眠",
       stress: "ストレス",
@@ -180,29 +167,15 @@ const basicHomeCopy = {
     }
   },
   kr: {
-    sanctuaryEyebrow: "RHYTHM GARDEN",
-    sanctuaryTitle: "당신만을 위한\n안식처에 오신 것을 환영합니다.",
-    sanctuaryBody:
-      "바쁜 일상 속에서 잠시 멈추고,\n나의 리듬을 회복하는 시간.\n\n오늘도 당신의 여정은 의미 있습니다.",
-    hero: {
-      morning: {
-        emoji: "☀️",
-        title: "오늘의 아침 리듬",
-        body: "오늘을 시작하기 전에\n3분만 자신에게 돌아와 보세요.",
-        button: "리듬의 문 열기"
-      },
-      day: {
-        emoji: "🌿",
-        title: "오늘의 낮 리듬",
-        body: "잠시 멈추고\n호흡을 다시 정리해보세요.",
-        button: "리듬의 문 열기"
-      },
-      night: {
-        emoji: "🌙",
-        title: "오늘의 밤 리듬",
-        body: "오늘 하루를 부드럽게 내려놓고\n편안히 쉬어보세요.",
-        button: "리듬의 문 열기"
-      }
+    sanctuaryEyebrow: "TODAY'S MARKER STONE",
+    continueJourney: "여정 계속하기",
+    summaryCards: {
+      currentGate: "현재의 문",
+      progress: "여정의 흐름",
+      returnedDays: "돌아온 날들",
+      insight: "오늘의 통찰",
+      progressValue: "리듬의 길 Day {day}",
+      insightBody: "작은 리듬은 큰 변화로 이어집니다."
     },
     gatesTitle: "오늘의 리듬 게이트",
     todayGateTitle: "오늘 열려 있는 문",
@@ -222,7 +195,7 @@ const basicHomeCopy = {
     aiGuide: {
       title: "AI 리듬 가이드",
       eyebrow: "오늘의 안내",
-      body: "급하게 가는 것보다\n리듬을 잃지 않는 것이 중요합니다.",
+      body: "오늘 당신의 리듬은 어제보다\n조금 더 조용해 보입니다.\n\n한 번 더 천천히 숨을 쉬고,\n다음으로 가기 전 여백을 남겨보세요.",
       availability: "AI 1/3"
     },
     question: {
@@ -249,6 +222,7 @@ const basicHomeCopy = {
       title: "오늘의 표지석",
       bodyTitle: "멈춤의 정원",
       note: "멈추어도 괜찮습니다.\n\n당신의 리듬은 사라진 것이 아니라\n잠시 쉬고 있었을 뿐입니다.",
+      heroNote: "오늘은 잠시 서두르지 않아도 됩니다.\n\n호흡이 당신을 기다리고 있습니다.",
       mood: "지금의 기분",
       sleep: "수면",
       stress: "스트레스",
@@ -330,29 +304,15 @@ const basicHomeCopy = {
     }
   },
   en: {
-    sanctuaryEyebrow: "RHYTHM GARDEN",
-    sanctuaryTitle: "Welcome to\nyour personal sanctuary.",
-    sanctuaryBody:
-      "A place to pause in the middle of daily life\nand recover your rhythm.\n\nYour journey today has meaning.",
-    hero: {
-      morning: {
-        emoji: "☀️",
-        title: "Today’s Morning Rhythm",
-        body: "Before you begin your day,\ntake 3 minutes to return to yourself.",
-        button: "Open the Rhythm Gate"
-      },
-      day: {
-        emoji: "🌿",
-        title: "Today’s Day Rhythm",
-        body: "Pause for a moment\nand gently settle your breath.",
-        button: "Open the Rhythm Gate"
-      },
-      night: {
-        emoji: "🌙",
-        title: "Today’s Night Rhythm",
-        body: "Gently let go of the day\nand rest in your own rhythm.",
-        button: "Open the Rhythm Gate"
-      }
+    sanctuaryEyebrow: "TODAY'S MARKER STONE",
+    continueJourney: "Continue Journey",
+    summaryCards: {
+      currentGate: "Current Gate",
+      progress: "Journey Progress",
+      returnedDays: "Days Returned",
+      insight: "Today's Insight",
+      progressValue: "Day {day} of the Rhythm Path",
+      insightBody: "Small rhythms become great transformations."
     },
     gatesTitle: "Today’s Rhythm Gates",
     todayGateTitle: "Today's Open Gate",
@@ -372,7 +332,7 @@ const basicHomeCopy = {
     aiGuide: {
       title: "AI Rhythm Guide",
       eyebrow: "Today’s Guidance",
-      body: "More important than moving fast\nis not losing your rhythm.",
+      body: "Today your rhythm feels quieter than yesterday.\n\nTake a slower breath and allow space\nbefore moving forward.",
       availability: "AI 1/3"
     },
     question: {
@@ -399,6 +359,7 @@ const basicHomeCopy = {
       title: "Today’s Marker Stone",
       bodyTitle: "Garden of Stillness",
       note: "It is okay to pause.\n\nYour rhythm has not disappeared.\nIt has only been resting for a while.",
+      heroNote: "Today, you do not need to hurry.\n\nYour breath is waiting for you.",
       mood: "Mood",
       sleep: "Sleep",
       stress: "Stress",
@@ -722,6 +683,10 @@ function getMarkerStoneCtaLabel(language: "jp" | "kr" | "en", rhythmPhase: Rhyth
   return "Open Night Gate";
 }
 
+function replaceDayToken(template: string, day: number) {
+  return template.replace("{day}", String(day));
+}
+
 export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
   const { language } = useLanguage();
   const copy = useMemo(() => getLocaleCopy(basicHomeCopy, language), [language]);
@@ -843,139 +808,84 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
 
   return (
     <div className="space-y-10 sm:space-y-12">
-        <section id="sanctuary-home" className="relative overflow-hidden rounded-[36px] border border-white/10 bg-[radial-gradient(circle_at_20%_20%,rgba(0,200,150,0.16),transparent_26%),radial-gradient(circle_at_78%_18%,rgba(212,178,106,0.15),transparent_22%),radial-gradient(circle_at_82%_24%,rgba(0,120,255,0.10),transparent_28%),linear-gradient(180deg,#071629,#05111F)] px-6 py-7 shadow-[0_34px_110px_rgba(3,10,20,0.40)] sm:px-8 sm:py-8">
+        <section id="marker-stone" className="relative min-h-[60vh] overflow-hidden rounded-[38px] border border-gold/16 bg-[radial-gradient(circle_at_18%_18%,rgba(0,200,150,0.18),transparent_28%),radial-gradient(circle_at_78%_14%,rgba(212,178,106,0.16),transparent_24%),radial-gradient(circle_at_85%_28%,rgba(0,120,255,0.10),transparent_28%),linear-gradient(180deg,#061326,#071a2e_48%,#0b2a2d_100%)] px-6 py-8 shadow-[0_40px_120px_rgba(3,10,20,0.46)] sm:min-h-[68vh] sm:px-8 sm:py-10">
+          <div id="sanctuary-home" className="absolute inset-0" />
           <div className="pointer-events-none absolute inset-0">
-            <div className="absolute inset-x-0 top-0 h-32 bg-[radial-gradient(circle_at_top,rgba(241,222,170,0.18),transparent_60%)]" />
-            <div className="absolute left-[10%] top-[8%] h-24 w-24 rounded-full bg-[radial-gradient(circle,rgba(212,178,106,0.18),transparent_72%)] blur-3xl animate-meditation-fog" />
-            <div className="absolute left-[22%] top-[24%] h-52 w-52 rounded-full bg-[radial-gradient(circle,rgba(0,200,150,0.14),transparent_70%)] blur-3xl animate-meditation-fog" />
-            <div className="absolute right-[8%] top-[8%] h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(0,120,255,0.10),transparent_72%)] blur-3xl animate-meditation-fog" />
-            <div className="absolute inset-x-[16%] bottom-[14%] h-px bg-gradient-to-r from-transparent via-white/16 to-transparent" />
+            <div className="absolute inset-x-0 top-0 h-40 bg-[radial-gradient(circle_at_top,rgba(241,222,170,0.18),transparent_60%)]" />
+            <div className="absolute left-[7%] top-[8%] h-28 w-28 rounded-full bg-[radial-gradient(circle,rgba(212,178,106,0.18),transparent_72%)] blur-3xl animate-meditation-fog" />
+            <div className="absolute left-[18%] top-[20%] h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(0,200,150,0.16),transparent_70%)] blur-3xl animate-meditation-fog" />
+            <div className="absolute right-[5%] top-[10%] h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(0,120,255,0.12),transparent_72%)] blur-3xl animate-meditation-fog" />
+            <div className="absolute right-[12%] top-[22%] h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(212,178,106,0.12),transparent_72%)] blur-3xl animate-meditation-float" />
+            <div className="absolute bottom-[10%] left-[8%] h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(59,137,121,0.14),transparent_74%)] blur-3xl animate-meditation-fog" />
+            <div className="absolute inset-x-[12%] bottom-[14%] h-px bg-gradient-to-r from-transparent via-white/16 to-transparent" />
+            <div className="absolute left-[16%] top-[28%] h-2 w-2 rounded-full bg-white/45 blur-[1px] animate-pulse" />
+            <div className="absolute left-[34%] top-[22%] h-1.5 w-1.5 rounded-full bg-gold/50 blur-[1px] animate-pulse" />
+            <div className="absolute right-[20%] top-[26%] h-2 w-2 rounded-full bg-white/35 blur-[1px] animate-pulse" />
           </div>
 
-          <div className="relative max-w-3xl">
-            <p className="text-sm uppercase tracking-[0.32em] text-gold/82">{copy.sanctuaryEyebrow}</p>
-            <div className="mt-5 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.28em] text-white/40">
-              <span>DIGITAL NATIONAL PARK</span>
-              <span className="h-1 w-1 rounded-full bg-gold/70" />
-              <span>Explorer Sanctuary</span>
-            </div>
-            <h1 className="mt-5 max-w-[12ch] font-serif text-[30px] leading-[1.2] text-white sm:text-[40px]">
-              {copy.sanctuaryTitle}
-            </h1>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-white/66 sm:text-base">
-              {todayMessage}
-            </p>
-          </div>
-        </section>
-
-        <section id="marker-stone" className={`${sanctuarySectionClass} border-gold/12 bg-[radial-gradient(circle_at_14%_18%,rgba(0,200,150,0.10),transparent_22%),radial-gradient(circle_at_88%_12%,rgba(212,178,106,0.12),transparent_22%),linear-gradient(180deg,rgba(10,20,40,0.68),rgba(6,15,28,0.82))]`}>
-          <div className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
-            <article className="rounded-[30px] border border-gold/14 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] px-5 py-6 shadow-[0_18px_60px_rgba(0,0,0,0.18)] sm:px-6">
-              <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.markerStone.title}</p>
-              <p className="mt-5 text-sm uppercase tracking-[0.24em] text-white/44">{copy.markerStone.bodyTitle}</p>
-              <p className="mt-4 max-w-4xl whitespace-pre-line font-serif text-[25px] leading-[1.9] text-white/92 sm:text-[32px]">
-                {copy.markerStone.note}
+          <div className="relative flex min-h-[52vh] flex-col justify-between sm:min-h-[58vh]">
+            <div className="max-w-3xl">
+              <p className="text-xs uppercase tracking-[0.36em] text-gold/82">{copy.sanctuaryEyebrow}</p>
+              <div className="mt-5 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.28em] text-white/40">
+                <span>Explorer Sanctuary</span>
+                <span className="h-1 w-1 rounded-full bg-gold/70" />
+                <span>Digital National Park</span>
+              </div>
+              <div className="mt-10">
+                <p className="text-sm uppercase tracking-[0.28em] text-white/48">Day {journeyDay}</p>
+                <h1 className="mt-3 max-w-[10ch] font-serif text-[40px] leading-[1.08] text-white sm:text-[66px]">
+                  {currentJourneyGate.title}
+                </h1>
+              </div>
+              <p className="mt-6 max-w-2xl whitespace-pre-line text-base leading-[1.95] text-white/80 sm:text-lg">
+                {copy.markerStone.heroNote}
               </p>
-              <div className="mt-6">
-                <Link
-                  href={`/rhythm-journey?rhythm=${rhythmPhase}`}
-                  onClick={() => handleSelectGate(rhythmPhase)}
-                  className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f2ddb0,#d4ba75)] px-5 py-3 text-sm font-semibold text-ink shadow-[0_18px_44px_rgba(212,178,106,0.18)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_52px_rgba(212,178,106,0.24)]"
-                >
-                  {markerCtaLabel}
-                </Link>
-              </div>
-              <div className="mt-6 rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.025))] px-4 py-4">
-                <p className="text-xs uppercase tracking-[0.24em] text-white/42">{copy.todayMessageTitle}</p>
-                <p className="mt-3 whitespace-pre-line text-sm leading-7 text-white/72">{markerMessage}</p>
-              </div>
-            </article>
+            </div>
 
-            <div className="grid gap-4">
-              <article className="rounded-[26px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] px-5 py-5">
-                <div className="flex flex-wrap gap-2 text-sm text-white/66">
-                  <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5">
-                    {copy.markerStone.mood}: {copy.markerStone.moods[selectedMood]}
-                  </span>
-                  <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5">
-                    {copy.markerStone.lastGate}: {copy.rhythmCards.find((card) => card.key === lastGate)?.title}
-                  </span>
-                </div>
-
-                <div className="mt-5">
-                  <p className="text-sm text-white/58">{copy.markerStone.sleep}</p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {(["good", "normal", "low"] as const).map((option) => (
-                      <button
-                        key={option}
-                        type="button"
-                        onClick={() => handleSleepChange(option)}
-                        className={`min-h-[40px] rounded-full border px-3.5 py-2 text-sm transition ${
-                          sleepStatus === option
-                            ? "border-gold/34 bg-gold/10 text-white"
-                            : "border-white/10 bg-white/[0.03] text-white/66 hover:bg-white/[0.05]"
-                        }`}
-                      >
-                        {copy.markerStone.sleepOptions[option]}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="mt-5">
-                  <p className="text-sm text-white/58">{copy.markerStone.stress}</p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {(["low", "normal", "high"] as const).map((option) => (
-                      <button
-                        key={option}
-                        type="button"
-                        onClick={() => handleStressChange(option)}
-                        className={`min-h-[40px] rounded-full border px-3.5 py-2 text-sm transition ${
-                          stressStatus === option
-                            ? "border-gold/34 bg-gold/10 text-white"
-                            : "border-white/10 bg-white/[0.03] text-white/66 hover:bg-white/[0.05]"
-                        }`}
-                      >
-                        {copy.markerStone.stressOptions[option]}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </article>
-
-              <article className="rounded-[26px] border border-gold/16 bg-[linear-gradient(180deg,rgba(212,178,106,0.10),rgba(255,255,255,0.02))] px-5 py-5 shadow-[0_18px_50px_rgba(212,178,106,0.08)]">
-                <p className="text-xs uppercase tracking-[0.26em] text-gold/78">{copy.markerStone.guideEyebrow}</p>
-                <p className="mt-3 text-lg font-semibold text-white">{copy.markerStone.guideTitle}</p>
-                <p className="mt-3 text-sm leading-7 text-white/66">{copy.markerStone.guideBody}</p>
-              </article>
+            <div className="relative mt-10 flex flex-wrap gap-3">
+              <Link
+                href={`/rhythm-journey?rhythm=${rhythmPhase}`}
+                onClick={() => handleSelectGate(rhythmPhase)}
+                className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f2ddb0,#d4ba75)] px-6 py-4 text-sm font-semibold text-ink shadow-[0_22px_54px_rgba(212,178,106,0.24)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_26px_60px_rgba(212,178,106,0.3)]"
+              >
+                {markerCtaLabel}
+              </Link>
+              <Link
+                href={`/rhythm-journey?day=${journeyDay}`}
+                className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-white/12 bg-white/[0.06] px-6 py-4 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.1]"
+              >
+                {copy.continueJourney}
+              </Link>
             </div>
           </div>
         </section>
 
         <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <article className="rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(14,28,46,0.80),rgba(7,17,29,0.90))] px-5 py-5 shadow-[0_18px_52px_rgba(5,14,26,0.18)]">
-            <p className="text-xs uppercase tracking-[0.24em] text-gold/76">{copy.todayGateItems.day}</p>
-            <p className="mt-3 text-2xl font-semibold text-white">Day {journeyDay} / 7</p>
-            <p className="mt-2 text-sm text-white/58">{currentJourneyGate.title}</p>
+            <p className="text-xs uppercase tracking-[0.24em] text-gold/76">{copy.summaryCards.currentGate}</p>
+            <p className="mt-3 text-2xl font-semibold text-white">{currentJourneyGate.title}</p>
+            <p className="mt-2 text-sm text-white/58">{copy.todayGateItems.openGate}</p>
           </article>
           <article className="rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(13,31,34,0.82),rgba(7,19,22,0.90))] px-5 py-5 shadow-[0_18px_52px_rgba(5,14,26,0.18)]">
-            <p className="text-xs uppercase tracking-[0.24em] text-gold/76">{copy.todayGateItems.streak}</p>
+            <p className="text-xs uppercase tracking-[0.24em] text-gold/76">{copy.summaryCards.progress}</p>
             <p className="mt-3 text-2xl font-semibold text-white">
-              {streakDays} {language === "jp" ? "日" : language === "kr" ? "일" : "days"}
+              {replaceDayToken(copy.summaryCards.progressValue, journeyDay)}
             </p>
-            <p className="mt-2 text-sm text-white/58">{todayMessage}</p>
+            <p className="mt-2 text-sm text-white/58">{copy.openGate.title}</p>
           </article>
           <article className="rounded-[28px] border border-[#2E7D6B]/24 bg-[linear-gradient(180deg,rgba(14,33,35,0.84),rgba(7,18,21,0.90))] px-5 py-5 shadow-[0_18px_52px_rgba(5,14,26,0.18)]">
-            <p className="text-xs uppercase tracking-[0.24em] text-gold/76">{copy.aiGuide.title}</p>
-            <p className="mt-3 text-lg font-semibold text-white">{copy.aiGuide.availability}</p>
-            <p className="mt-2 text-sm leading-7 text-white/62">{copy.aiGuide.body}</p>
+            <p className="text-xs uppercase tracking-[0.24em] text-gold/76">{copy.summaryCards.returnedDays}</p>
+            <p className="mt-3 text-2xl font-semibold text-white">
+              {streakDays} {language === "jp" ? "日" : language === "kr" ? "일" : "Days"}
+            </p>
+            <p className="mt-2 text-sm leading-7 text-white/62">{todayMessage}</p>
           </article>
           <article className={`relative overflow-hidden rounded-[28px] border border-gold/22 px-5 py-5 shadow-[0_18px_52px_rgba(212,178,106,0.10)] ${getGateSurfaceClasses(rhythmPhase)}`}>
             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),transparent_30%,rgba(6,10,20,0.24)_100%)]" />
             <div className="relative">
-              <p className="text-xs uppercase tracking-[0.24em] text-gold/76">{copy.todayGateItems.openGate}</p>
-              <p className="mt-3 text-xl font-semibold text-white">{copy.rhythmCards.find((card) => card.key === rhythmPhase)?.title}</p>
-              <p className="mt-2 text-sm leading-7 text-white/72">{copy.todayGateItems.insight}</p>
+              <p className="text-xs uppercase tracking-[0.24em] text-gold/76">{copy.summaryCards.insight}</p>
+              <p className="mt-3 text-xl font-semibold text-white">{copy.summaryCards.insightBody}</p>
+              <p className="mt-2 text-sm leading-7 text-white/72">{copy.aiGuide.availability}</p>
             </div>
           </article>
         </section>
@@ -1000,16 +910,18 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
             </article>
             <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
               <article className="rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] px-5 py-5">
-                <p className="text-sm text-white/56">{copy.todayGateItems.day}</p>
-                <p className="mt-2 text-xl font-semibold text-white">Day {journeyDay}</p>
+                <p className="text-sm text-white/56">{copy.summaryCards.currentGate}</p>
+                <p className="mt-2 text-xl font-semibold text-white">{currentJourneyGate.title}</p>
               </article>
               <article className="rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] px-5 py-5">
-                <p className="text-sm text-white/56">{copy.todayGateItems.streak}</p>
-                <p className="mt-2 text-xl font-semibold text-white">{streakDays}</p>
+                <p className="text-sm text-white/56">{copy.summaryCards.progress}</p>
+                <p className="mt-2 text-xl font-semibold text-white">{replaceDayToken(copy.summaryCards.progressValue, journeyDay)}</p>
               </article>
               <article className="rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] px-5 py-5">
-                <p className="text-sm text-white/56">{copy.todayMessageTitle}</p>
-                <p className="mt-2 text-base leading-7 text-white/82">{copy.todayGateItems.insight}</p>
+                <p className="text-sm text-white/56">{copy.summaryCards.returnedDays}</p>
+                <p className="mt-2 text-xl font-semibold text-white">
+                  {streakDays} {language === "jp" ? "日" : language === "kr" ? "일" : "Days"}
+                </p>
                 <Link href="#journey-path" className="mt-3 inline-flex text-xs uppercase tracking-[0.28em] text-gold/58">
                   {copy.openGate.viewAll}
                 </Link>
