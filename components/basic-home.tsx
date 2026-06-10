@@ -704,6 +704,24 @@ function getJourneyGateLabel(language: "jp" | "kr" | "en", day: number) {
   return `Gate ${ordinals[day - 1] ?? day}`;
 }
 
+function getMarkerStoneCtaLabel(language: "jp" | "kr" | "en", rhythmPhase: RhythmPhase) {
+  if (language === "jp") {
+    if (rhythmPhase === "morning") return "朝の扉を開く";
+    if (rhythmPhase === "day") return "昼の扉を開く";
+    return "夜の扉を開く";
+  }
+
+  if (language === "kr") {
+    if (rhythmPhase === "morning") return "아침의 문 열기";
+    if (rhythmPhase === "day") return "낮의 문 열기";
+    return "밤의 문 열기";
+  }
+
+  if (rhythmPhase === "morning") return "Open Morning Gate";
+  if (rhythmPhase === "day") return "Open Day Gate";
+  return "Open Night Gate";
+}
+
 export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
   const { language } = useLanguage();
   const copy = useMemo(() => getLocaleCopy(basicHomeCopy, language), [language]);
@@ -712,7 +730,6 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
   const rhythmPhase = highlightedRhythm === "morning" || highlightedRhythm === "day" || highlightedRhythm === "night"
     ? highlightedRhythm
     : getLocalRhythmPhase();
-  const hero = copy.hero[rhythmPhase];
   const todayMessage = useMemo(() => getDailyMessage(copy.todayMessages), [copy.todayMessages]);
   const [journeyDay, setJourneyDay] = useState(currentDay);
   const [streakDays, setStreakDays] = useState(streakCount);
@@ -822,42 +839,32 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
 
   const sanctuarySectionClass =
     "relative overflow-hidden rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(10,20,40,0.62),rgba(6,15,28,0.74))] px-6 py-8 shadow-[0_24px_90px_rgba(5,14,26,0.22)] backdrop-blur-[22px] sm:px-8";
+  const markerCtaLabel = getMarkerStoneCtaLabel(language, rhythmPhase);
 
   return (
     <div className="space-y-10 sm:space-y-12">
-        <section id="sanctuary-home" className="relative flex min-h-[76vh] flex-col justify-between overflow-hidden rounded-[40px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,178,106,0.18),transparent_16%),radial-gradient(circle_at_18%_24%,rgba(0,200,150,0.16),transparent_28%),radial-gradient(circle_at_74%_28%,rgba(0,120,255,0.12),transparent_32%),linear-gradient(180deg,#071629,#05111F)] px-6 py-10 shadow-[0_42px_140px_rgba(3,10,20,0.48)] sm:min-h-[88vh] sm:px-8 sm:py-12">
+        <section id="sanctuary-home" className="relative overflow-hidden rounded-[36px] border border-white/10 bg-[radial-gradient(circle_at_20%_20%,rgba(0,200,150,0.16),transparent_26%),radial-gradient(circle_at_78%_18%,rgba(212,178,106,0.15),transparent_22%),radial-gradient(circle_at_82%_24%,rgba(0,120,255,0.10),transparent_28%),linear-gradient(180deg,#071629,#05111F)] px-6 py-7 shadow-[0_34px_110px_rgba(3,10,20,0.40)] sm:px-8 sm:py-8">
           <div className="pointer-events-none absolute inset-0">
-            <div className="absolute inset-x-0 top-0 h-56 bg-[radial-gradient(circle_at_top,rgba(241,222,170,0.22),transparent_60%)]" />
-            <div className="absolute left-[8%] top-[12%] h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(212,178,106,0.18),transparent_72%)] blur-3xl animate-meditation-fog" />
-            <div className="absolute left-[16%] top-[28%] h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(0,200,150,0.16),transparent_70%)] blur-3xl animate-meditation-fog" />
-            <div className="absolute right-[2%] top-[8%] h-80 w-80 rounded-full bg-[radial-gradient(circle,rgba(0,120,255,0.12),transparent_72%)] blur-3xl animate-meditation-fog" />
-            <div className="absolute -left-8 bottom-0 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(46,125,107,0.24),transparent_72%)] blur-3xl" />
-            <div className="absolute inset-x-[14%] bottom-[18%] h-px bg-gradient-to-r from-transparent via-white/18 to-transparent" />
-            <div className="absolute inset-x-[22%] bottom-[12%] h-36 rounded-full bg-[radial-gradient(circle,rgba(17,54,76,0.20),transparent_70%)] blur-3xl" />
-            <div className="absolute right-[8%] top-[16%] hidden h-[400px] w-[300px] rounded-[44px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(244,226,170,0.14),transparent_24%),linear-gradient(180deg,rgba(19,32,55,0.52),rgba(7,17,31,0.06))] lg:block" />
-            <div className="absolute right-[11%] top-[21%] hidden h-[300px] w-[188px] rounded-[999px] border border-gold/18 bg-[radial-gradient(circle_at_50%_18%,rgba(242,220,171,0.18),transparent_26%),radial-gradient(circle_at_50%_72%,rgba(69,121,104,0.18),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.01))] shadow-[0_0_90px_rgba(212,178,106,0.12)] lg:block" />
-            <div className="absolute right-[16%] top-[31%] hidden h-24 w-24 rounded-full border border-white/12 bg-[radial-gradient(circle,rgba(255,255,255,0.18),rgba(255,255,255,0.02)_72%)] blur-sm lg:block" />
-            <div className="absolute left-[18%] top-[34%] h-2 w-2 rounded-full bg-white/45 blur-[1px] animate-pulse" />
-            <div className="absolute left-[34%] top-[24%] h-1.5 w-1.5 rounded-full bg-gold/50 blur-[1px] animate-pulse" />
-            <div className="absolute right-[22%] top-[30%] h-2 w-2 rounded-full bg-white/35 blur-[1px] animate-pulse" />
-            <div className="absolute inset-x-0 bottom-0 h-44 bg-[linear-gradient(180deg,transparent,rgba(4,10,18,0.48))]" />
+            <div className="absolute inset-x-0 top-0 h-32 bg-[radial-gradient(circle_at_top,rgba(241,222,170,0.18),transparent_60%)]" />
+            <div className="absolute left-[10%] top-[8%] h-24 w-24 rounded-full bg-[radial-gradient(circle,rgba(212,178,106,0.18),transparent_72%)] blur-3xl animate-meditation-fog" />
+            <div className="absolute left-[22%] top-[24%] h-52 w-52 rounded-full bg-[radial-gradient(circle,rgba(0,200,150,0.14),transparent_70%)] blur-3xl animate-meditation-fog" />
+            <div className="absolute right-[8%] top-[8%] h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(0,120,255,0.10),transparent_72%)] blur-3xl animate-meditation-fog" />
+            <div className="absolute inset-x-[16%] bottom-[14%] h-px bg-gradient-to-r from-transparent via-white/16 to-transparent" />
           </div>
 
           <div className="relative max-w-3xl">
             <p className="text-sm uppercase tracking-[0.32em] text-gold/82">{copy.sanctuaryEyebrow}</p>
-            <p className="mt-5 max-w-md text-xs uppercase tracking-[0.36em] text-white/34">DIGITAL NATIONAL PARK</p>
-            <h1 className="mt-5 max-w-[11ch] font-serif text-[38px] leading-[1.12] text-white sm:text-[58px]">
+            <div className="mt-5 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.28em] text-white/40">
+              <span>DIGITAL NATIONAL PARK</span>
+              <span className="h-1 w-1 rounded-full bg-gold/70" />
+              <span>Explorer Sanctuary</span>
+            </div>
+            <h1 className="mt-5 max-w-[12ch] font-serif text-[30px] leading-[1.2] text-white sm:text-[40px]">
               {copy.sanctuaryTitle}
             </h1>
-            <p className="mt-6 max-w-2xl whitespace-pre-line text-base leading-[2] text-white/78 sm:text-lg sm:leading-[2.05]">
-              {copy.sanctuaryBody}
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-white/66 sm:text-base">
+              {todayMessage}
             </p>
-            <Link
-              href="#today-open-gate"
-              className="mt-8 inline-flex min-h-[56px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f2ddb0,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_20px_50px_rgba(212,178,106,0.24)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_24px_56px_rgba(212,178,106,0.3)]"
-            >
-              {hero.button}
-            </Link>
           </div>
         </section>
 
@@ -869,11 +876,19 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
               <p className="mt-4 max-w-4xl whitespace-pre-line font-serif text-[25px] leading-[1.9] text-white/92 sm:text-[32px]">
                 {copy.markerStone.note}
               </p>
+              <div className="mt-6">
+                <Link
+                  href={`/rhythm-journey?rhythm=${rhythmPhase}`}
+                  onClick={() => handleSelectGate(rhythmPhase)}
+                  className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f2ddb0,#d4ba75)] px-5 py-3 text-sm font-semibold text-ink shadow-[0_18px_44px_rgba(212,178,106,0.18)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_52px_rgba(212,178,106,0.24)]"
+                >
+                  {markerCtaLabel}
+                </Link>
+              </div>
               <div className="mt-6 rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.025))] px-4 py-4">
                 <p className="text-xs uppercase tracking-[0.24em] text-white/42">{copy.todayMessageTitle}</p>
                 <p className="mt-3 whitespace-pre-line text-sm leading-7 text-white/72">{markerMessage}</p>
               </div>
-              <p className="mt-5 text-sm leading-7 text-white/58">{todayMessage}</p>
             </article>
 
             <div className="grid gap-4">
@@ -935,6 +950,34 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
               </article>
             </div>
           </div>
+        </section>
+
+        <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <article className="rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(14,28,46,0.80),rgba(7,17,29,0.90))] px-5 py-5 shadow-[0_18px_52px_rgba(5,14,26,0.18)]">
+            <p className="text-xs uppercase tracking-[0.24em] text-gold/76">{copy.todayGateItems.day}</p>
+            <p className="mt-3 text-2xl font-semibold text-white">Day {journeyDay} / 7</p>
+            <p className="mt-2 text-sm text-white/58">{currentJourneyGate.title}</p>
+          </article>
+          <article className="rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(13,31,34,0.82),rgba(7,19,22,0.90))] px-5 py-5 shadow-[0_18px_52px_rgba(5,14,26,0.18)]">
+            <p className="text-xs uppercase tracking-[0.24em] text-gold/76">{copy.todayGateItems.streak}</p>
+            <p className="mt-3 text-2xl font-semibold text-white">
+              {streakDays} {language === "jp" ? "日" : language === "kr" ? "일" : "days"}
+            </p>
+            <p className="mt-2 text-sm text-white/58">{todayMessage}</p>
+          </article>
+          <article className="rounded-[28px] border border-[#2E7D6B]/24 bg-[linear-gradient(180deg,rgba(14,33,35,0.84),rgba(7,18,21,0.90))] px-5 py-5 shadow-[0_18px_52px_rgba(5,14,26,0.18)]">
+            <p className="text-xs uppercase tracking-[0.24em] text-gold/76">{copy.aiGuide.title}</p>
+            <p className="mt-3 text-lg font-semibold text-white">{copy.aiGuide.availability}</p>
+            <p className="mt-2 text-sm leading-7 text-white/62">{copy.aiGuide.body}</p>
+          </article>
+          <article className={`relative overflow-hidden rounded-[28px] border border-gold/22 px-5 py-5 shadow-[0_18px_52px_rgba(212,178,106,0.10)] ${getGateSurfaceClasses(rhythmPhase)}`}>
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),transparent_30%,rgba(6,10,20,0.24)_100%)]" />
+            <div className="relative">
+              <p className="text-xs uppercase tracking-[0.24em] text-gold/76">{copy.todayGateItems.openGate}</p>
+              <p className="mt-3 text-xl font-semibold text-white">{copy.rhythmCards.find((card) => card.key === rhythmPhase)?.title}</p>
+              <p className="mt-2 text-sm leading-7 text-white/72">{copy.todayGateItems.insight}</p>
+            </div>
+          </article>
         </section>
 
         <section id="today-open-gate" className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_18%_20%,rgba(0,200,150,0.10),transparent_24%),radial-gradient(circle_at_82%_14%,rgba(212,178,106,0.11),transparent_20%),linear-gradient(180deg,rgba(10,20,40,0.64),rgba(6,15,28,0.78))]`}>

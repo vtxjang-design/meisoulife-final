@@ -286,10 +286,10 @@ export function MemberDashboard({
     <div className="grid gap-6">
       <div className="max-w-3xl">
         <p className="text-sm uppercase tracking-[0.3em] text-gold/90">{copy.eyebrow}</p>
-        <h1 className="mt-4 font-serif text-3xl leading-tight text-white sm:text-4xl">
+        <h1 className="mt-3 font-serif text-2xl leading-tight text-white sm:text-3xl">
           {challengeStarted ? copy.challengeStartedTitle : copy.title}
         </h1>
-        <p className="mt-4 text-base leading-8 text-white/72 sm:text-lg">{copy.description}</p>
+        <p className="mt-3 text-sm leading-7 text-white/60 sm:text-base">{copy.description}</p>
       </div>
 
       {candidateLeader ? (
