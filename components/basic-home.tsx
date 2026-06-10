@@ -96,9 +96,9 @@ const basicHomeCopy = {
       "自然は急ぎません。あなたも急がなくて大丈夫です。"
     ],
     markerStone: {
-      title: "今日の標石",
+      title: "今日の道しるべ",
       bodyTitle: "立ち止まる庭",
-      note: "昨日の忙しさの中で浅くなった呼吸を覚えています。\n疲れた心を安息所にそっと置いてください。\n今日の道しるべは、あなたがもう少し深く呼吸できるように\n静かにここで待っています。\n\n— AIリズムガイド",
+      note: "立ち止まっても大丈夫です。\n\nあなたのリズムは消えたのではなく\n少し休んでいただけです。",
       mood: "今の気分",
       sleep: "睡眠",
       stress: "ストレス",
@@ -248,7 +248,7 @@ const basicHomeCopy = {
     markerStone: {
       title: "오늘의 표지석",
       bodyTitle: "멈춤의 정원",
-      note: "어제의 분주함 속에서 가빠졌던 숨을 기억합니다.\n고단한 마음을 안식처에 잠시 내려두세요.\n오늘의 표지석은 당신이 더 깊게 호흡할 수 있도록\n조용히 자리를 지킵니다.\n\n— AI 리듬 가이드",
+      note: "멈추어도 괜찮습니다.\n\n당신의 리듬은 사라진 것이 아니라\n잠시 쉬고 있었을 뿐입니다.",
       mood: "지금의 기분",
       sleep: "수면",
       stress: "스트레스",
@@ -398,7 +398,7 @@ const basicHomeCopy = {
     markerStone: {
       title: "Today’s Marker Stone",
       bodyTitle: "Garden of Stillness",
-      note: "I remember the breath that became shallow in yesterday’s busyness.\nPlace your tired heart gently in this sanctuary.\nToday’s marker stone quietly waits here\nso you can breathe a little deeper.\n\n— AI Rhythm Guide",
+      note: "It is okay to pause.\n\nYour rhythm has not disappeared.\nIt has only been resting for a while.",
       mood: "Mood",
       sleep: "Sleep",
       stress: "Stress",
@@ -691,6 +691,19 @@ function getGateSurfaceClasses(rhythm: RhythmPhase) {
   return "bg-[radial-gradient(circle_at_top,rgba(110,138,208,0.22),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(58,90,148,0.18),transparent_42%),linear-gradient(180deg,rgba(20,35,61,0.92),rgba(9,18,34,0.96))] shadow-[0_22px_60px_rgba(79,111,178,0.16)]";
 }
 
+function getJourneyGateLabel(language: "jp" | "kr" | "en", day: number) {
+  if (language === "jp") {
+    return `第${day}の扉`;
+  }
+
+  if (language === "kr") {
+    return `제${day}의 문`;
+  }
+
+  const ordinals = ["One", "Two", "Three", "Four", "Five", "Six", "Seven"];
+  return `Gate ${ordinals[day - 1] ?? day}`;
+}
+
 export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
   const { language } = useLanguage();
   const copy = useMemo(() => getLocaleCopy(basicHomeCopy, language), [language]);
@@ -931,9 +944,7 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
               <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent_28%,rgba(4,8,18,0.28)_100%)]" />
               <div className="absolute inset-x-[12%] top-0 h-24 rounded-full bg-gold/12 blur-3xl" />
               <div className="relative">
-                <p className="text-xs uppercase tracking-[0.24em] text-gold/78">
-                  {language === "jp" ? `第${journeyDay}の扉` : language === "kr" ? `제${journeyDay}의 문` : `Gate ${journeyDay}`}
-                </p>
+                <p className="text-xs uppercase tracking-[0.24em] text-gold/78">{getJourneyGateLabel(language, journeyDay)}</p>
                 <p className="mt-3 text-2xl font-semibold text-white">{currentJourneyGate.title}</p>
                 <p className="mt-3 max-w-md whitespace-pre-line text-sm leading-7 text-white/78">{copy.openGate.practice}</p>
                 <Link
