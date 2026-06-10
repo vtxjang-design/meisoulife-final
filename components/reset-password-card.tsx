@@ -27,9 +27,49 @@ export function ResetPasswordCard() {
     const params = new URLSearchParams(window.location.search);
     setNextPath(params.get("next"));
 
-    async function checkSession() {
+    async function prepareRecoverySession() {
       if (!supabase) {
         return;
+      }
+
+      const url = new URL(window.location.href);
+      const searchParams = url.searchParams;
+      const hashParams = new URLSearchParams(url.hash.startsWith("#") ? url.hash.slice(1) : url.hash);
+
+      try {
+        const code = searchParams.get("code");
+        const tokenHash = searchParams.get("token_hash");
+        const type = searchParams.get("type");
+        const accessToken = hashParams.get("access_token");
+        const refreshToken = hashParams.get("refresh_token");
+
+        if (code) {
+          const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+          if (error) {
+            throw error;
+          }
+        } else if (tokenHash && type === "recovery") {
+          const { error } = await supabase.auth.verifyOtp({
+            token_hash: tokenHash,
+            type: "recovery"
+          });
+
+          if (error) {
+            throw error;
+          }
+        } else if (accessToken && refreshToken) {
+          const { error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken
+          });
+
+          if (error) {
+            throw error;
+          }
+        }
+      } catch (error) {
+        console.error("[reset-password] failed to prepare recovery session", error);
       }
 
       const { data, error } = await supabase.auth.getSession();
@@ -39,6 +79,7 @@ export function ResetPasswordCard() {
       }
 
       if (error || !data.session) {
+        console.error("[reset-password] recovery session not available", error);
         setMessage(copy.loginPage.resetPageInvalid);
         setReady(false);
         return;
@@ -47,7 +88,7 @@ export function ResetPasswordCard() {
       setReady(true);
     }
 
-    void checkSession();
+    void prepareRecoverySession();
 
     return () => {
       active = false;
@@ -75,14 +116,17 @@ export function ResetPasswordCard() {
       });
 
       if (error) {
+        console.error("[reset-password] update password failed", error);
         throw error;
       }
 
       await supabase.auth.signOut();
       setMessage(copy.loginPage.resetPageSuccess);
       setReady(false);
+      router.push(loginHref);
       router.refresh();
     } catch (error) {
+      console.error("[reset-password] update password error", error);
       setMessage(
         error instanceof Error && error.message
           ? `${copy.loginPage.resetPageError} (${error.message})`

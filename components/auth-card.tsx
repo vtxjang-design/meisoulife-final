@@ -30,8 +30,7 @@ export function AuthCard({ mode }: AuthCardProps) {
 
   function buildResetRedirectTarget() {
     const next = nextPath && nextPath.startsWith("/") ? nextPath : "/dashboard";
-    const resetPagePath = `/reset-password?next=${encodeURIComponent(next)}`;
-    return `${window.location.origin}/auth/callback?next=${encodeURIComponent(resetPagePath)}`;
+    return `${window.location.origin}/auth/update-password?next=${encodeURIComponent(next)}`;
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -119,16 +118,23 @@ export function AuthCard({ mode }: AuthCardProps) {
         throw new Error("supabase unavailable");
       }
 
+      if (!email.trim()) {
+        setMessage(copy.loginPage.resetRequestEmailRequired);
+        return;
+      }
+
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: buildResetRedirectTarget()
       });
 
       if (error) {
+        console.error("[auth-card] reset password request failed", error);
         throw error;
       }
 
       setMessage(copy.loginPage.resetRequestSuccess);
     } catch (error) {
+      console.error("[auth-card] reset password request error", error);
       setMessage(
         error instanceof Error && error.message
           ? `${copy.loginPage.resetRequestError} (${error.message})`
@@ -163,7 +169,7 @@ export function AuthCard({ mode }: AuthCardProps) {
           disabled={loading || !isAvailable}
           className="mt-6 inline-flex w-full items-center justify-center rounded-md bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:opacity-60"
         >
-          {loading ? copy.loginPage.loading : copy.loginPage.resetRequestButton}
+          {loading ? copy.loginPage.resetRequestSending : copy.loginPage.resetRequestButton}
         </button>
         <button
           type="button"
