@@ -24,8 +24,8 @@ type MemberDashboardProps = {
 
 const dashboardCopy = {
   jp: {
-    eyebrow: "QUIET RECORDS",
-    title: "静かな記録",
+    eyebrow: "RECOVERY RECORDS",
+    title: "回復記録",
     challengeStartedTitle: "チャレンジを開始しました",
     description:
       "プラン、旅の流れ、ともに歩く人たち、次の集いを、必要なときにここで静かに確かめられます。",
@@ -38,7 +38,7 @@ const dashboardCopy = {
     challengeProgress: "旅の日",
     streakCount: "歩いてきた日々",
     aiUsage: "今日の気づき",
-    challengeEyebrow: "THE QUIET PATH",
+    challengeEyebrow: "THE RHYTHM PATH",
     challengeTitle: "リズムの道",
     openProgress: "旅をひらく",
     gateDayPrefix: "第",
@@ -63,8 +63,8 @@ const dashboardCopy = {
     events: ["毎週水曜 06:30 朝ライブ瞑想", "土曜 21:00 睡眠回復セッション"]
   },
   kr: {
-    eyebrow: "QUIET RECORDS",
-    title: "조용한 기록",
+    eyebrow: "RECOVERY RECORDS",
+    title: "회복 기록",
     challengeStartedTitle: "챌린지를 시작했습니다",
     description:
       "플랜, 여정의 흐름, 함께 걷는 사람들, 다음 모임을 필요할 때 이곳에서 조용히 확인할 수 있습니다.",
@@ -76,7 +76,7 @@ const dashboardCopy = {
     challengeProgress: "여정의 날",
     streakCount: "이어온 날들",
     aiUsage: "오늘의 통찰",
-    challengeEyebrow: "THE QUIET PATH",
+    challengeEyebrow: "THE RHYTHM PATH",
     challengeTitle: "리듬의 길",
     openProgress: "여정 열기",
     gateDayPrefix: "제",
@@ -101,8 +101,8 @@ const dashboardCopy = {
     events: ["매주 수요일 06:30 아침 라이브 명상", "토요일 21:00 수면 회복 세션"]
   },
   en: {
-    eyebrow: "QUIET RECORDS",
-    title: "Quiet Records",
+    eyebrow: "RECOVERY RECORDS",
+    title: "Recovery Records",
     challengeStartedTitle: "Your challenge has started",
     description:
       "Your plan, journey path, fellow walkers, and upcoming gatherings live here quietly when you need them.",
@@ -115,8 +115,8 @@ const dashboardCopy = {
     challengeProgress: "Journey Day",
     streakCount: "Days of Practice",
     aiUsage: "Today’s Insight",
-    challengeEyebrow: "THE QUIET PATH",
-    challengeTitle: "The Quiet Path",
+    challengeEyebrow: "THE RHYTHM PATH",
+    challengeTitle: "The Rhythm Path",
     openProgress: "Open the path",
     gateDayPrefix: "Gate ",
     gateDaySuffix: "",
@@ -169,24 +169,24 @@ export function MemberDashboard({
 
   const recordsSection = (
     <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-      <div className="premium-card rounded-[24px] border border-gold/14 bg-[radial-gradient(circle_at_top,rgba(232,196,118,0.16),transparent_44%),linear-gradient(180deg,rgba(18,30,48,0.88),rgba(10,20,34,0.92))] p-5">
+      <div className="premium-card rounded-[26px] border border-gold/16 bg-[radial-gradient(circle_at_top,rgba(212,178,106,0.16),transparent_42%),linear-gradient(180deg,rgba(18,30,48,0.88),rgba(10,20,34,0.92))] p-5">
         <p className="text-sm text-white/60">{copy.currentPlan}</p>
         <p className="mt-2 text-2xl font-semibold text-white">✦ {todayRhythmLabel}</p>
         <p className="mt-2 text-sm text-white/58">{planLabel}</p>
       </div>
-      <div className="premium-card rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(15,27,43,0.9),rgba(10,18,30,0.9))] p-5">
+      <div className="premium-card rounded-[26px] border border-white/10 bg-[linear-gradient(180deg,rgba(15,27,43,0.9),rgba(10,18,30,0.9))] p-5">
         <p className="text-sm text-white/60">{copy.challengeProgress}</p>
         <p className="mt-2 text-2xl font-semibold text-white">
           {copy.dayLabel} {safeChallengeDay}/7
         </p>
       </div>
-      <div className="premium-card rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(16,32,36,0.9),rgba(10,22,26,0.92))] p-5">
+      <div className="premium-card rounded-[26px] border border-white/10 bg-[linear-gradient(180deg,rgba(16,32,36,0.9),rgba(10,22,26,0.92))] p-5">
         <p className="text-sm text-white/60">{copy.streakCount}</p>
         <p className="mt-2 text-2xl font-semibold text-white">
           {streakCount} {copy.streakUnit}
         </p>
       </div>
-      <div className="premium-card rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(18,26,44,0.9),rgba(11,18,30,0.92))] p-5">
+      <div className="premium-card rounded-[26px] border border-white/10 bg-[linear-gradient(180deg,rgba(18,26,44,0.9),rgba(11,18,30,0.92))] p-5">
         <p className="text-sm text-white/60">{copy.aiUsage}</p>
         <p className="mt-2 text-base leading-7 text-white/82">{copy.insightReady}</p>
         <p className="mt-3 text-sm text-white/50">
@@ -198,7 +198,7 @@ export function MemberDashboard({
 
   const pathSection = (
     <div className="grid gap-6 lg:grid-cols-[1.35fr_0.95fr]">
-      <section id="journey-path" className="premium-card rounded-[28px] p-6">
+      <section id="journey-path" className="premium-card rounded-[30px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(46,125,107,0.10),transparent_28%),linear-gradient(180deg,rgba(12,23,38,0.88),rgba(7,15,27,0.92))] p-6">
         <div className="flex items-center justify-between gap-4">
           <div>
             <p className="text-sm uppercase tracking-[0.3em] text-gold">{copy.challengeEyebrow}</p>
@@ -250,7 +250,7 @@ export function MemberDashboard({
       </section>
 
       <section className="grid gap-6">
-        <div id="companions" className="premium-card rounded-lg p-6">
+        <div id="companions" className="premium-card rounded-[28px] bg-[linear-gradient(180deg,rgba(16,28,44,0.88),rgba(9,16,28,0.92))] p-6">
           <p className="text-sm uppercase tracking-[0.3em] text-gold">{copy.communityEyebrow}</p>
           <h3 className="mt-3 text-xl font-semibold text-white">{copy.communityTitle}</h3>
           <p className="mt-3 text-sm leading-7 text-white/72">{copy.communityBody}</p>
@@ -262,7 +262,7 @@ export function MemberDashboard({
           </Link>
         </div>
 
-        <div className="premium-card rounded-lg p-6">
+        <div className="premium-card rounded-[28px] bg-[linear-gradient(180deg,rgba(16,32,36,0.88),rgba(8,20,24,0.92))] p-6">
           <p className="text-sm uppercase tracking-[0.3em] text-gold">{copy.eventsEyebrow}</p>
           <div className="mt-4 grid gap-3">
             {copy.events.map((event) => (

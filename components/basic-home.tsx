@@ -807,59 +807,64 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
     }
   }
 
+  const sanctuarySectionClass =
+    "relative overflow-hidden rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(10,20,40,0.62),rgba(6,15,28,0.74))] px-6 py-8 shadow-[0_24px_90px_rgba(5,14,26,0.22)] backdrop-blur-[22px] sm:px-8";
+
   return (
     <div className="space-y-10 sm:space-y-12">
-        <section id="sanctuary-home" className="relative flex min-h-[72vh] flex-col justify-between overflow-hidden rounded-[38px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(231,206,140,0.18),transparent_15%),radial-gradient(circle_at_left,rgba(67,104,91,0.24),transparent_22%),radial-gradient(circle_at_bottom_right,rgba(46,86,118,0.28),transparent_30%),linear-gradient(180deg,rgba(8,20,34,0.99),rgba(5,14,24,0.97))] px-6 py-10 shadow-[0_36px_120px_rgba(3,10,20,0.44)] sm:min-h-[82vh] sm:px-8 sm:py-12">
+        <section id="sanctuary-home" className="relative flex min-h-[76vh] flex-col justify-between overflow-hidden rounded-[40px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,178,106,0.18),transparent_16%),radial-gradient(circle_at_18%_24%,rgba(0,200,150,0.16),transparent_28%),radial-gradient(circle_at_74%_28%,rgba(0,120,255,0.12),transparent_32%),linear-gradient(180deg,#071629,#05111F)] px-6 py-10 shadow-[0_42px_140px_rgba(3,10,20,0.48)] sm:min-h-[88vh] sm:px-8 sm:py-12">
           <div className="pointer-events-none absolute inset-0">
-            <div className="absolute inset-x-0 top-0 h-56 bg-[radial-gradient(circle_at_top,rgba(241,222,170,0.24),transparent_58%)]" />
-            <div className="absolute left-[10%] top-[18%] h-32 w-32 rounded-full bg-gold/12 blur-3xl animate-pulse" />
-            <div className="absolute -left-10 bottom-0 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgba(83,120,102,0.22),transparent_68%)] blur-3xl" />
-            <div className="absolute right-0 top-10 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(85,110,162,0.18),transparent_70%)] blur-3xl" />
-            <div className="absolute right-[8%] top-[18%] hidden h-[380px] w-[280px] rounded-[40px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(244,226,170,0.16),transparent_24%),linear-gradient(180deg,rgba(24,36,58,0.58),rgba(7,17,31,0.08))] blur-[0.5px] lg:block" />
-            <div className="absolute right-[11%] top-[23%] hidden h-[280px] w-[180px] rounded-[999px] border border-gold/18 bg-[radial-gradient(circle_at_50%_20%,rgba(242,220,171,0.18),transparent_26%),radial-gradient(circle_at_50%_75%,rgba(87,126,108,0.18),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01))] shadow-[0_0_80px_rgba(212,175,55,0.12)] lg:block" />
-            <div className="absolute right-[16.5%] top-[33%] hidden h-20 w-20 rounded-full border border-white/12 bg-[radial-gradient(circle,rgba(255,255,255,0.18),rgba(255,255,255,0.02)_70%)] blur-sm lg:block" />
-            <div className="absolute left-[6%] bottom-[12%] hidden h-px w-[36%] bg-gradient-to-r from-transparent via-white/20 to-transparent lg:block" />
+            <div className="absolute inset-x-0 top-0 h-56 bg-[radial-gradient(circle_at_top,rgba(241,222,170,0.22),transparent_60%)]" />
+            <div className="absolute left-[8%] top-[12%] h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(212,178,106,0.18),transparent_72%)] blur-3xl animate-meditation-fog" />
+            <div className="absolute left-[16%] top-[28%] h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(0,200,150,0.16),transparent_70%)] blur-3xl animate-meditation-fog" />
+            <div className="absolute right-[2%] top-[8%] h-80 w-80 rounded-full bg-[radial-gradient(circle,rgba(0,120,255,0.12),transparent_72%)] blur-3xl animate-meditation-fog" />
+            <div className="absolute -left-8 bottom-0 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(46,125,107,0.24),transparent_72%)] blur-3xl" />
+            <div className="absolute inset-x-[14%] bottom-[18%] h-px bg-gradient-to-r from-transparent via-white/18 to-transparent" />
+            <div className="absolute inset-x-[22%] bottom-[12%] h-36 rounded-full bg-[radial-gradient(circle,rgba(17,54,76,0.20),transparent_70%)] blur-3xl" />
+            <div className="absolute right-[8%] top-[16%] hidden h-[400px] w-[300px] rounded-[44px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(244,226,170,0.14),transparent_24%),linear-gradient(180deg,rgba(19,32,55,0.52),rgba(7,17,31,0.06))] lg:block" />
+            <div className="absolute right-[11%] top-[21%] hidden h-[300px] w-[188px] rounded-[999px] border border-gold/18 bg-[radial-gradient(circle_at_50%_18%,rgba(242,220,171,0.18),transparent_26%),radial-gradient(circle_at_50%_72%,rgba(69,121,104,0.18),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.01))] shadow-[0_0_90px_rgba(212,178,106,0.12)] lg:block" />
+            <div className="absolute right-[16%] top-[31%] hidden h-24 w-24 rounded-full border border-white/12 bg-[radial-gradient(circle,rgba(255,255,255,0.18),rgba(255,255,255,0.02)_72%)] blur-sm lg:block" />
             <div className="absolute left-[18%] top-[34%] h-2 w-2 rounded-full bg-white/45 blur-[1px] animate-pulse" />
-            <div className="absolute left-[34%] top-[26%] h-1.5 w-1.5 rounded-full bg-gold/50 blur-[1px] animate-pulse" />
-            <div className="absolute right-[22%] top-[32%] h-2 w-2 rounded-full bg-white/35 blur-[1px] animate-pulse" />
-            <div className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(180deg,transparent,rgba(4,10,18,0.42))]" />
+            <div className="absolute left-[34%] top-[24%] h-1.5 w-1.5 rounded-full bg-gold/50 blur-[1px] animate-pulse" />
+            <div className="absolute right-[22%] top-[30%] h-2 w-2 rounded-full bg-white/35 blur-[1px] animate-pulse" />
+            <div className="absolute inset-x-0 bottom-0 h-44 bg-[linear-gradient(180deg,transparent,rgba(4,10,18,0.48))]" />
           </div>
 
           <div className="relative max-w-3xl">
             <p className="text-sm uppercase tracking-[0.32em] text-gold/82">{copy.sanctuaryEyebrow}</p>
             <p className="mt-5 max-w-md text-xs uppercase tracking-[0.36em] text-white/34">DIGITAL NATIONAL PARK</p>
-            <h1 className="mt-5 font-serif text-[36px] leading-[1.18] text-white sm:text-[54px]">
+            <h1 className="mt-5 max-w-[11ch] font-serif text-[38px] leading-[1.12] text-white sm:text-[58px]">
               {copy.sanctuaryTitle}
             </h1>
-            <p className="mt-6 whitespace-pre-line text-base leading-[2] text-white/76 sm:text-lg sm:leading-[2.05]">
+            <p className="mt-6 max-w-2xl whitespace-pre-line text-base leading-[2] text-white/78 sm:text-lg sm:leading-[2.05]">
               {copy.sanctuaryBody}
             </p>
             <Link
               href="#today-open-gate"
-              className="mt-8 inline-flex min-h-[54px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f2ddb0,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.22)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#e7cd92]"
+              className="mt-8 inline-flex min-h-[56px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f2ddb0,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_20px_50px_rgba(212,178,106,0.24)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_24px_56px_rgba(212,178,106,0.3)]"
             >
               {hero.button}
             </Link>
           </div>
         </section>
 
-        <section id="marker-stone" className="rounded-[30px] border border-white/10 bg-white/[0.035] px-6 py-8 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">
+        <section id="marker-stone" className={`${sanctuarySectionClass} border-gold/12 bg-[radial-gradient(circle_at_14%_18%,rgba(0,200,150,0.10),transparent_22%),radial-gradient(circle_at_88%_12%,rgba(212,178,106,0.12),transparent_22%),linear-gradient(180deg,rgba(10,20,40,0.68),rgba(6,15,28,0.82))]`}>
           <div className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
-            <article className="rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-6 sm:px-6">
+            <article className="rounded-[30px] border border-gold/14 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] px-5 py-6 shadow-[0_18px_60px_rgba(0,0,0,0.18)] sm:px-6">
               <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.markerStone.title}</p>
               <p className="mt-5 text-sm uppercase tracking-[0.24em] text-white/44">{copy.markerStone.bodyTitle}</p>
-              <p className="mt-4 max-w-4xl whitespace-pre-line font-serif text-[24px] leading-[1.85] text-white/90 sm:text-[30px]">
+              <p className="mt-4 max-w-4xl whitespace-pre-line font-serif text-[25px] leading-[1.9] text-white/92 sm:text-[32px]">
                 {copy.markerStone.note}
               </p>
-              <div className="mt-5 rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4">
+              <div className="mt-6 rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.025))] px-4 py-4">
                 <p className="text-xs uppercase tracking-[0.24em] text-white/42">{copy.todayMessageTitle}</p>
                 <p className="mt-3 whitespace-pre-line text-sm leading-7 text-white/72">{markerMessage}</p>
               </div>
-              <p className="mt-5 text-sm leading-7 text-white/54">{todayMessage}</p>
+              <p className="mt-5 text-sm leading-7 text-white/58">{todayMessage}</p>
             </article>
 
             <div className="grid gap-4">
-              <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
+              <article className="rounded-[26px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] px-5 py-5">
                 <div className="flex flex-wrap gap-2 text-sm text-white/66">
                   <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5">
                     {copy.markerStone.mood}: {copy.markerStone.moods[selectedMood]}
@@ -910,7 +915,7 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
                 </div>
               </article>
 
-              <article className="rounded-[24px] border border-gold/14 bg-gold/[0.05] px-5 py-5">
+              <article className="rounded-[26px] border border-gold/16 bg-[linear-gradient(180deg,rgba(212,178,106,0.10),rgba(255,255,255,0.02))] px-5 py-5 shadow-[0_18px_50px_rgba(212,178,106,0.08)]">
                 <p className="text-xs uppercase tracking-[0.26em] text-gold/78">{copy.markerStone.guideEyebrow}</p>
                 <p className="mt-3 text-lg font-semibold text-white">{copy.markerStone.guideTitle}</p>
                 <p className="mt-3 text-sm leading-7 text-white/66">{copy.markerStone.guideBody}</p>
@@ -919,11 +924,12 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
           </div>
         </section>
 
-        <section id="today-open-gate" className="rounded-[30px] border border-white/10 bg-white/[0.035] px-6 py-8 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">
+        <section id="today-open-gate" className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_18%_20%,rgba(0,200,150,0.10),transparent_24%),radial-gradient(circle_at_82%_14%,rgba(212,178,106,0.11),transparent_20%),linear-gradient(180deg,rgba(10,20,40,0.64),rgba(6,15,28,0.78))]`}>
           <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.openGate.title}</p>
           <div className="mt-5 grid gap-4 lg:grid-cols-[1.18fr_0.82fr]">
-            <article className={`relative overflow-hidden rounded-[26px] border border-gold/16 px-6 py-6 ${getGateSurfaceClasses(rhythmPhase)}`}>
+            <article className={`relative overflow-hidden rounded-[30px] border border-gold/24 px-6 py-6 shadow-[0_24px_72px_rgba(0,0,0,0.26)] ${getGateSurfaceClasses(rhythmPhase)}`}>
               <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent_28%,rgba(4,8,18,0.28)_100%)]" />
+              <div className="absolute inset-x-[12%] top-0 h-24 rounded-full bg-gold/12 blur-3xl" />
               <div className="relative">
                 <p className="text-xs uppercase tracking-[0.24em] text-gold/78">
                   {language === "jp" ? `第${journeyDay}の扉` : language === "kr" ? `제${journeyDay}의 문` : `Gate ${journeyDay}`}
@@ -939,15 +945,15 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
               </div>
             </article>
             <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-              <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-5 py-5">
+              <article className="rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] px-5 py-5">
                 <p className="text-sm text-white/56">{copy.todayGateItems.day}</p>
                 <p className="mt-2 text-xl font-semibold text-white">Day {journeyDay}</p>
               </article>
-              <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-5 py-5">
+              <article className="rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] px-5 py-5">
                 <p className="text-sm text-white/56">{copy.todayGateItems.streak}</p>
                 <p className="mt-2 text-xl font-semibold text-white">{streakDays}</p>
               </article>
-              <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-5 py-5">
+              <article className="rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] px-5 py-5">
                 <p className="text-sm text-white/56">{copy.todayMessageTitle}</p>
                 <p className="mt-2 text-base leading-7 text-white/82">{copy.todayGateItems.insight}</p>
                 <Link href="#journey-path" className="mt-3 inline-flex text-xs uppercase tracking-[0.28em] text-gold/58">
@@ -958,23 +964,23 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
           </div>
         </section>
 
-        <section className="rounded-[30px] border border-white/10 bg-white/[0.035] px-6 py-8 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">
+        <section className={`${sanctuarySectionClass} bg-[linear-gradient(180deg,rgba(10,20,40,0.62),rgba(6,15,28,0.76))]`}>
           <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.aiGuide.title}</p>
           <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_220px]">
-            <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
+            <article className="rounded-[26px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] px-5 py-5">
               <p className="text-xs uppercase tracking-[0.24em] text-white/44">{copy.aiGuide.eyebrow}</p>
               <p className="mt-4 whitespace-pre-line font-serif text-[24px] leading-[1.8] text-white/88 sm:text-[28px]">
                 {copy.aiGuide.body}
               </p>
             </article>
-            <article className="rounded-[24px] border border-gold/14 bg-gold/[0.05] px-5 py-5">
+            <article className="rounded-[26px] border border-[#2E7D6B]/22 bg-[linear-gradient(180deg,rgba(46,125,107,0.14),rgba(255,255,255,0.02))] px-5 py-5">
               <p className="text-sm text-white/60">{copy.aiGuide.eyebrow}</p>
               <p className="mt-3 text-2xl font-semibold text-white">{copy.aiGuide.availability}</p>
             </article>
           </div>
         </section>
 
-        <section className="rounded-[30px] border border-white/10 bg-white/[0.035] px-6 py-8 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">
+        <section className={`${sanctuarySectionClass} bg-[linear-gradient(180deg,rgba(10,20,40,0.62),rgba(6,15,28,0.76))]`}>
           <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.question.title}</p>
           <p className="mt-5 whitespace-pre-line font-serif text-[24px] leading-[1.75] text-white/88 sm:text-[30px]">
             {copy.question.prompt}
@@ -990,7 +996,7 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
           </div>
         </section>
 
-        <section id="rhythm-gates" className="rounded-[30px] border border-white/10 bg-white/[0.035] px-6 py-8 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">
+        <section id="rhythm-gates" className={`${sanctuarySectionClass} bg-[linear-gradient(180deg,rgba(10,20,40,0.62),rgba(6,15,28,0.78))]`}>
           <p className="text-xs uppercase tracking-[0.3em] text-gold/78">{copy.gatesTitle}</p>
           <p className="mt-3 text-sm leading-7 text-white/56">{copy.rhythmCardsTitle}</p>
           <div className="mt-5 grid gap-4 sm:grid-cols-3">
@@ -1003,11 +1009,12 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
                   href={`/rhythm-journey?rhythm=${rhythm}`}
                   onClick={() => handleSelectGate(rhythm)}
                   className={`group relative overflow-hidden rounded-[30px] border px-5 py-5 transition duration-300 hover:-translate-y-1 ${
-                    rhythmPhase === card.key ? "border-gold/28 ring-1 ring-gold/18" : "border-white/10"
+                    rhythmPhase === card.key ? "border-gold/34 ring-1 ring-gold/22 shadow-[0_20px_60px_rgba(212,178,106,0.14)]" : "border-white/10"
                   } ${getGateSurfaceClasses(rhythm)}`}
                 >
                   <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent_26%,rgba(6,10,20,0.24)_100%)] opacity-90" />
                   <div className="absolute -right-8 top-6 h-24 w-24 rounded-full bg-white/8 blur-2xl transition duration-500 group-hover:scale-125" />
+                  <div className="absolute inset-x-[18%] top-0 h-14 rounded-full bg-white/8 blur-2xl opacity-70" />
                   <div className="relative">
                     <p className="text-sm uppercase tracking-[0.24em] text-gold/82">{card.emoji} {card.title}</p>
                     <p className="mt-3 min-h-[56px] text-sm leading-7 text-white/82">{card.description}</p>
@@ -1022,7 +1029,7 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
           </div>
         </section>
 
-        <section id="companions" className="rounded-[30px] border border-white/10 bg-white/[0.035] px-6 py-8 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">
+        <section id="companions" className={`${sanctuarySectionClass} bg-[linear-gradient(180deg,rgba(10,20,40,0.60),rgba(6,15,28,0.74))]`}>
           <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.companions.title}</p>
           <p className="mt-4 text-base leading-8 text-white/74">{copy.companions.body}</p>
           <div className="mt-6 flex items-center gap-3">
@@ -1041,7 +1048,7 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
           </div>
         </section>
 
-        <section className="rounded-[30px] border border-gold/14 bg-gold/[0.05] px-6 py-7 shadow-[0_20px_72px_rgba(7,17,31,0.16)] sm:px-8">
+        <section className="rounded-[32px] border border-gold/14 bg-[radial-gradient(circle_at_top,rgba(212,178,106,0.12),transparent_26%),linear-gradient(180deg,rgba(10,20,40,0.62),rgba(6,15,28,0.78))] px-6 py-7 shadow-[0_24px_80px_rgba(5,14,26,0.24)] sm:px-8">
           <p className="text-sm uppercase tracking-[0.28em] text-gold/82">{copy.journey.title}</p>
           <p className="mt-4 text-base leading-8 text-white/76">{copy.journey.body}</p>
           <div className="mt-5">

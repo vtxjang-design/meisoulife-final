@@ -49,7 +49,7 @@ const basicPageCopy = {
       memberError: "会員状態を一時的に確認できませんでした。更新してもう一度お試しください。",
       aiLabel: "AI 1/3"
     },
-    secondaryEyebrow: "QUIET RECORDS",
+    secondaryEyebrow: "RECOVERY RECORDS",
     secondaryBody: "旅の流れと続いてきたリズムを静かに確認できます。"
   },
   kr: {
@@ -83,7 +83,7 @@ const basicPageCopy = {
       memberError: "회원 상태를 잠시 확인할 수 없습니다. 새로고침 후 다시 시도해주세요.",
       aiLabel: "AI 1/3"
     },
-    secondaryEyebrow: "QUIET RECORDS",
+    secondaryEyebrow: "RECOVERY RECORDS",
     secondaryBody: "여정의 흐름과 이어온 리듬을 조용히 확인할 수 있습니다."
   },
   en: {
@@ -117,7 +117,7 @@ const basicPageCopy = {
       memberError: "We could not confirm your membership status. Please refresh and try again.",
       aiLabel: "AI 1/3"
     },
-    secondaryEyebrow: "QUIET RECORDS",
+    secondaryEyebrow: "RECOVERY RECORDS",
     secondaryBody: "A quiet place to see your journey and rhythm."
   }
 } as const;
@@ -155,7 +155,7 @@ function BasicSidebar() {
         </div>
       </div>
 
-      <aside className="glass-panel sticky top-24 hidden h-fit rounded-[30px] bg-[radial-gradient(circle_at_top,rgba(212,175,55,0.12),transparent_22%),linear-gradient(180deg,rgba(17,26,43,0.82),rgba(9,16,28,0.78))] p-5 lg:block">
+      <aside className="glass-panel sticky top-24 hidden h-fit rounded-[32px] bg-[radial-gradient(circle_at_top,rgba(212,178,106,0.12),transparent_22%),radial-gradient(circle_at_28%_22%,rgba(0,200,150,0.10),transparent_26%),linear-gradient(180deg,rgba(17,26,43,0.82),rgba(9,16,28,0.78))] p-5 shadow-[0_24px_70px_rgba(4,10,20,0.24)] lg:block">
         <p className="text-xs uppercase tracking-[0.32em] text-gold/80">{copy.sidebarTitle}</p>
         <p className="mt-3 font-serif text-xl leading-tight text-white">{copy.sidebarSubtitle}</p>
         <nav className="mt-6 space-y-2">
@@ -206,7 +206,7 @@ function BasicCompanionPanel({
 
   return (
     <aside className="space-y-4 lg:pt-8">
-      <div className="glass-panel rounded-[28px] bg-[radial-gradient(circle_at_top,rgba(212,175,55,0.10),transparent_28%),linear-gradient(180deg,rgba(17,26,43,0.78),rgba(9,16,28,0.72))] p-5">
+      <div className="glass-panel rounded-[30px] bg-[radial-gradient(circle_at_top,rgba(212,178,106,0.10),transparent_28%),radial-gradient(circle_at_22%_24%,rgba(0,200,150,0.10),transparent_28%),linear-gradient(180deg,rgba(17,26,43,0.78),rgba(9,16,28,0.72))] p-5 shadow-[0_20px_60px_rgba(4,10,20,0.22)]">
         <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.companion.progressTitle}</p>
         <p className="mt-3 text-2xl font-semibold text-white">Day {safeDay} / 7</p>
         <p className="mt-2 text-sm text-white/58">{copy.companion.progressSubtitle}</p>
@@ -228,19 +228,19 @@ function BasicCompanionPanel({
         </div>
       </div>
 
-      <div className="glass-panel rounded-[28px] bg-[linear-gradient(180deg,rgba(15,27,43,0.78),rgba(10,18,30,0.72))] p-5">
+      <div className="glass-panel rounded-[30px] bg-[linear-gradient(180deg,rgba(15,27,43,0.78),rgba(10,18,30,0.72))] p-5 shadow-[0_20px_60px_rgba(4,10,20,0.18)]">
         <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.companion.insightTitle}</p>
         <p className="mt-3 text-base leading-7 text-white/82">{copy.companion.insightBody}</p>
         <p className="mt-4 text-sm text-white/50">{copy.companion.aiLabel}</p>
       </div>
 
-      <div className="glass-panel rounded-[28px] bg-[linear-gradient(180deg,rgba(16,32,36,0.78),rgba(10,22,26,0.72))] p-5">
+      <div className="glass-panel rounded-[30px] bg-[linear-gradient(180deg,rgba(16,32,36,0.78),rgba(10,22,26,0.72))] p-5 shadow-[0_20px_60px_rgba(4,10,20,0.18)]">
         <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.companion.continuedTitle}</p>
         <p className="mt-3 text-2xl font-semibold text-white">{streakCount} {language === "jp" ? "日" : language === "kr" ? "일" : "days"}</p>
         <p className="mt-2 text-sm text-white/56">{memberStatus}</p>
       </div>
 
-      <div id="upcoming-gatherings" className="glass-panel rounded-[28px] bg-[linear-gradient(180deg,rgba(18,26,44,0.78),rgba(11,18,30,0.72))] p-5">
+      <div id="upcoming-gatherings" className="glass-panel rounded-[30px] bg-[linear-gradient(180deg,rgba(18,26,44,0.78),rgba(11,18,30,0.72))] p-5 shadow-[0_20px_60px_rgba(4,10,20,0.18)]">
         <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.companion.gatheringsTitle}</p>
         <div className="mt-4 grid gap-3">
           <div className="rounded-[18px] border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/78">
@@ -336,8 +336,8 @@ function BasicProgramContent() {
   }, [mock.challengeDay, mock.streakCount, session?.user?.id]);
 
   return (
-    <div className="section-shell relative pb-16 pt-6 sm:pb-24 sm:pt-8">
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[780px] rounded-[48px] bg-[radial-gradient(circle_at_18%_12%,rgba(212,175,55,0.10),transparent_22%),radial-gradient(circle_at_82%_18%,rgba(46,125,107,0.16),transparent_26%),radial-gradient(circle_at_50%_54%,rgba(129,168,185,0.08),transparent_28%),linear-gradient(180deg,rgba(5,12,22,0.28),transparent_72%)] blur-sm" />
+    <div className="section-shell relative pb-20 pt-6 sm:pb-28 sm:pt-8">
+      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[940px] rounded-[56px] bg-[radial-gradient(circle_at_18%_12%,rgba(212,178,106,0.10),transparent_22%),radial-gradient(circle_at_72%_16%,rgba(0,200,150,0.14),transparent_24%),radial-gradient(circle_at_86%_22%,rgba(0,120,255,0.09),transparent_22%),radial-gradient(circle_at_50%_54%,rgba(129,168,185,0.08),transparent_28%),linear-gradient(180deg,rgba(5,12,22,0.34),transparent_74%)] blur-sm" />
       <div className="grid gap-5 lg:grid-cols-[230px_minmax(0,1fr)_310px] xl:grid-cols-[250px_minmax(0,1fr)_330px]">
         <BasicSidebar />
 
