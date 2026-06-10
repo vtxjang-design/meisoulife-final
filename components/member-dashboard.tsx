@@ -169,24 +169,24 @@ export function MemberDashboard({
 
   const recordsSection = (
     <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-      <div className="premium-card rounded-[26px] border border-gold/16 bg-[radial-gradient(circle_at_top,rgba(212,178,106,0.16),transparent_42%),linear-gradient(180deg,rgba(18,30,48,0.88),rgba(10,20,34,0.92))] p-5">
+      <div className="premium-card rounded-[26px] border border-[rgba(115,231,210,0.14)] bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.10),transparent_38%),linear-gradient(180deg,rgba(18,30,48,0.88),rgba(10,20,34,0.92))] p-5">
         <p className="text-sm text-white/60">{copy.currentPlan}</p>
         <p className="mt-2 text-2xl font-semibold text-white">✦ {todayRhythmLabel}</p>
         <p className="mt-2 text-sm text-white/58">{planLabel}</p>
       </div>
-      <div className="premium-card rounded-[26px] border border-white/10 bg-[linear-gradient(180deg,rgba(15,27,43,0.9),rgba(10,18,30,0.9))] p-5">
+      <div className="premium-card rounded-[26px] border border-[rgba(89,193,255,0.12)] bg-[radial-gradient(circle_at_top_right,rgba(89,193,255,0.08),transparent_38%),linear-gradient(180deg,rgba(15,27,43,0.9),rgba(10,18,30,0.9))] p-5">
         <p className="text-sm text-white/60">{copy.challengeProgress}</p>
         <p className="mt-2 text-2xl font-semibold text-white">
           {copy.dayLabel} {safeChallengeDay}/7
         </p>
       </div>
-      <div className="premium-card rounded-[26px] border border-white/10 bg-[linear-gradient(180deg,rgba(16,32,36,0.9),rgba(10,22,26,0.92))] p-5">
+      <div className="premium-card rounded-[26px] border border-[rgba(76,183,151,0.14)] bg-[radial-gradient(circle_at_bottom_left,rgba(76,183,151,0.08),transparent_38%),linear-gradient(180deg,rgba(16,32,36,0.9),rgba(10,22,26,0.92))] p-5">
         <p className="text-sm text-white/60">{copy.streakCount}</p>
         <p className="mt-2 text-2xl font-semibold text-white">
           {streakCount} {copy.streakUnit}
         </p>
       </div>
-      <div className="premium-card rounded-[26px] border border-white/10 bg-[linear-gradient(180deg,rgba(18,26,44,0.9),rgba(11,18,30,0.92))] p-5">
+      <div className="premium-card rounded-[26px] border border-[rgba(115,231,210,0.10)] bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.06),transparent_36%),linear-gradient(180deg,rgba(18,26,44,0.9),rgba(11,18,30,0.92))] p-5">
         <p className="text-sm text-white/60">{copy.aiUsage}</p>
         <p className="mt-2 text-base leading-7 text-white/82">{copy.insightReady}</p>
         <p className="mt-3 text-sm text-white/50">
@@ -198,7 +198,7 @@ export function MemberDashboard({
 
   const pathSection = (
     <div className="grid gap-6 lg:grid-cols-[1.35fr_0.95fr]">
-      <section id="journey-path" className="premium-card rounded-[30px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(46,125,107,0.10),transparent_28%),linear-gradient(180deg,rgba(12,23,38,0.88),rgba(7,15,27,0.92))] p-6">
+      <section id="journey-path" className="premium-card rounded-[30px] border border-[rgba(115,231,210,0.12)] bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.08),transparent_28%),radial-gradient(circle_at_top,rgba(46,125,107,0.10),transparent_28%),linear-gradient(180deg,rgba(12,23,38,0.88),rgba(7,15,27,0.92))] p-6">
         <div className="flex items-center justify-between gap-4">
           <div>
             <p className="text-sm uppercase tracking-[0.3em] text-gold">{copy.challengeEyebrow}</p>
@@ -250,7 +250,7 @@ export function MemberDashboard({
       </section>
 
       <section className="grid gap-6">
-        <div id="companions" className="premium-card rounded-[28px] bg-[linear-gradient(180deg,rgba(16,28,44,0.88),rgba(9,16,28,0.92))] p-6">
+        <div id="companions" className="premium-card rounded-[28px] border border-[rgba(89,193,255,0.10)] bg-[radial-gradient(circle_at_top_right,rgba(89,193,255,0.06),transparent_34%),linear-gradient(180deg,rgba(16,28,44,0.88),rgba(9,16,28,0.92))] p-6">
           <p className="text-sm uppercase tracking-[0.3em] text-gold">{copy.communityEyebrow}</p>
           <h3 className="mt-3 text-xl font-semibold text-white">{copy.communityTitle}</h3>
           <p className="mt-3 text-sm leading-7 text-white/72">{copy.communityBody}</p>
@@ -262,7 +262,7 @@ export function MemberDashboard({
           </Link>
         </div>
 
-        <div className="premium-card rounded-[28px] bg-[linear-gradient(180deg,rgba(16,32,36,0.88),rgba(8,20,24,0.92))] p-6">
+        <div className="premium-card rounded-[28px] border border-[rgba(76,183,151,0.10)] bg-[radial-gradient(circle_at_bottom_left,rgba(76,183,151,0.06),transparent_34%),linear-gradient(180deg,rgba(16,32,36,0.88),rgba(8,20,24,0.92))] p-6">
           <p className="text-sm uppercase tracking-[0.3em] text-gold">{copy.eventsEyebrow}</p>
           <div className="mt-4 grid gap-3">
             {copy.events.map((event) => (
