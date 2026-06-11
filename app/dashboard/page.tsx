@@ -5,6 +5,22 @@ import { getMockDashboard } from "@/lib/mock-data";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
+function getProgramRoute(plan: "free" | "basic" | "growth" | "inner_circle") {
+  if (plan === "growth") {
+    return "/program/growth";
+  }
+
+  if (plan === "inner_circle") {
+    return "/program/inner";
+  }
+
+  if (plan === "basic") {
+    return "/program/basic";
+  }
+
+  return null;
+}
+
 type DashboardPageProps = {
   searchParams: Promise<{
     email?: string;
@@ -63,7 +79,9 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     }
   }
 
-  if (planKey === "basic") {
+  const programRoute = getProgramRoute(planKey);
+
+  if (programRoute) {
     const query = new URLSearchParams();
 
     if (params.email) {
@@ -74,7 +92,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       query.set("challenge", params.challenge);
     }
 
-    redirect(query.size > 0 ? `/program/basic?${query.toString()}` : "/program/basic");
+    redirect(query.size > 0 ? `${programRoute}?${query.toString()}` : programRoute);
   }
 
   return (
