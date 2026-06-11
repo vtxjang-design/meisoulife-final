@@ -155,7 +155,7 @@ function BasicSidebar() {
         </div>
       </div>
 
-      <aside className="glass-panel sticky top-24 hidden h-fit rounded-[32px] bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.10),transparent_24%),radial-gradient(circle_at_top_right,rgba(89,193,255,0.08),transparent_28%),linear-gradient(180deg,rgba(14,28,46,0.84),rgba(8,22,34,0.80),rgba(9,34,42,0.78))] p-5 shadow-[0_28px_80px_rgba(4,10,20,0.28)] lg:block">
+      <aside className="glass-panel sticky top-24 hidden h-fit rounded-[32px] bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.16),transparent_38%),radial-gradient(circle_at_top_right,rgba(89,193,255,0.14),transparent_42%),linear-gradient(180deg,rgba(14,28,46,0.82),rgba(8,22,34,0.78),rgba(9,34,42,0.76))] p-5 shadow-[0_28px_80px_rgba(4,10,20,0.28)] lg:block">
         <p className="text-xs uppercase tracking-[0.32em] text-gold/80">{copy.sidebarTitle}</p>
         <p className="mt-3 font-serif text-xl leading-tight text-white">{copy.sidebarSubtitle}</p>
         <nav className="mt-6 space-y-2">
@@ -206,7 +206,7 @@ function BasicCompanionPanel({
 
   return (
     <aside className="space-y-4 lg:pt-8">
-      <div className="glass-panel rounded-[30px] bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.10),transparent_28%),radial-gradient(circle_at_top_right,rgba(89,193,255,0.08),transparent_28%),linear-gradient(180deg,rgba(14,28,46,0.82),rgba(8,22,34,0.76),rgba(9,34,42,0.74))] p-5 shadow-[0_24px_68px_rgba(4,10,20,0.24)]">
+      <div className="glass-panel rounded-[30px] bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.16),transparent_42%),radial-gradient(circle_at_top_right,rgba(89,193,255,0.14),transparent_42%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(14,28,46,0.80),rgba(8,22,34,0.74),rgba(9,34,42,0.72))] p-5 shadow-[0_24px_68px_rgba(4,10,20,0.24)]">
         <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.companion.progressTitle}</p>
         <p className="mt-3 text-2xl font-semibold text-white">Day {safeDay} / 7</p>
         <p className="mt-2 text-sm text-white/58">{copy.companion.progressSubtitle}</p>
@@ -228,19 +228,19 @@ function BasicCompanionPanel({
         </div>
       </div>
 
-      <div className="glass-panel rounded-[30px] bg-[radial-gradient(circle_at_top_left,rgba(89,193,255,0.06),transparent_30%),linear-gradient(180deg,rgba(15,27,43,0.80),rgba(10,18,30,0.74),rgba(9,30,38,0.70))] p-5 shadow-[0_24px_68px_rgba(4,10,20,0.22)]">
+      <div className="glass-panel rounded-[30px] bg-[radial-gradient(circle_at_top_left,rgba(89,193,255,0.12),transparent_42%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(15,27,43,0.78),rgba(10,18,30,0.72),rgba(9,30,38,0.68))] p-5 shadow-[0_24px_68px_rgba(4,10,20,0.22)]">
         <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.companion.insightTitle}</p>
         <p className="mt-3 text-base leading-7 text-white/82">{copy.companion.insightBody}</p>
         <p className="mt-4 text-sm text-white/50">{copy.companion.aiLabel}</p>
       </div>
 
-      <div className="glass-panel rounded-[30px] bg-[radial-gradient(circle_at_bottom_left,rgba(76,183,151,0.08),transparent_30%),linear-gradient(180deg,rgba(16,32,36,0.80),rgba(10,22,26,0.74),rgba(11,36,40,0.70))] p-5 shadow-[0_24px_68px_rgba(4,10,20,0.22)]">
+      <div className="glass-panel rounded-[30px] bg-[radial-gradient(circle_at_bottom_left,rgba(76,183,151,0.12),transparent_42%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(16,32,36,0.78),rgba(10,22,26,0.72),rgba(11,36,40,0.68))] p-5 shadow-[0_24px_68px_rgba(4,10,20,0.22)]">
         <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.companion.continuedTitle}</p>
         <p className="mt-3 text-2xl font-semibold text-white">{streakCount} {language === "jp" ? "日" : language === "kr" ? "일" : "days"}</p>
         <p className="mt-2 text-sm text-white/56">{memberStatus}</p>
       </div>
 
-      <div id="upcoming-gatherings" className="glass-panel rounded-[30px] bg-[radial-gradient(circle_at_top_right,rgba(115,231,210,0.08),transparent_28%),linear-gradient(180deg,rgba(18,26,44,0.80),rgba(11,18,30,0.74),rgba(9,30,38,0.70))] p-5 shadow-[0_24px_68px_rgba(4,10,20,0.22)]">
+      <div id="upcoming-gatherings" className="glass-panel rounded-[30px] bg-[radial-gradient(circle_at_top_right,rgba(115,231,210,0.14),transparent_40%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(18,26,44,0.78),rgba(11,18,30,0.72),rgba(9,30,38,0.68))] p-5 shadow-[0_24px_68px_rgba(4,10,20,0.22)]">
         <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.companion.gatheringsTitle}</p>
         <div className="mt-4 grid gap-3">
           <div className="rounded-[18px] border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/78">
@@ -336,10 +336,13 @@ function BasicProgramContent() {
   }, [mock.challengeDay, mock.streakCount, session?.user?.id]);
 
   return (
-    <div className="section-shell relative pb-20 pt-6 sm:pb-28 sm:pt-8">
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[1100px] rounded-[56px] bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.20),transparent_35%),radial-gradient(circle_at_top_right,rgba(89,193,255,0.16),transparent_40%),linear-gradient(180deg,#041221_0%,#082038_40%,#0B2F3D_70%,#103845_100%)] blur-sm" />
-      <div className="pointer-events-none absolute inset-x-[10%] top-28 -z-10 h-56 rounded-full bg-[radial-gradient(circle,rgba(115,231,210,0.10),transparent_70%)] blur-3xl" />
-      <div className="pointer-events-none absolute right-[4%] top-48 -z-10 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgba(89,193,255,0.10),transparent_72%)] blur-3xl" />
+    <div className="section-shell relative min-h-screen overflow-hidden pb-20 pt-6 sm:pb-28 sm:pt-8">
+      <div className="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(circle_at_20%_20%,rgba(115,231,210,0.18),transparent_45%),radial-gradient(circle_at_80%_30%,rgba(89,193,255,0.16),transparent_50%),radial-gradient(circle_at_50%_80%,rgba(70,220,200,0.12),transparent_60%),linear-gradient(180deg,#041221_0%,#082038_42%,#0B2F3D_74%,#103845_100%)]" />
+      <div className="pointer-events-none absolute inset-x-[-6%] top-[-4%] -z-10 h-[560px] rounded-full bg-[radial-gradient(circle,rgba(115,231,210,0.26),transparent_68%)] blur-[130px]" />
+      <div className="pointer-events-none absolute right-[-14%] top-[8%] -z-10 h-[620px] w-[620px] rounded-full bg-[radial-gradient(circle,rgba(89,193,255,0.22),transparent_70%)] blur-[150px]" />
+      <div className="pointer-events-none absolute left-[14%] top-[28%] -z-10 h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle,rgba(115,231,210,0.16),transparent_72%)] blur-[144px]" />
+      <div className="pointer-events-none absolute inset-x-[8%] bottom-[8%] -z-10 h-[520px] rounded-full bg-[radial-gradient(circle,rgba(70,220,200,0.14),transparent_74%)] blur-[148px]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[1400px] rounded-[56px] bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.30),transparent_54%),radial-gradient(circle_at_top_right,rgba(89,193,255,0.26),transparent_60%),radial-gradient(circle_at_50%_78%,rgba(70,220,200,0.12),transparent_62%),linear-gradient(180deg,rgba(4,18,33,0.18),rgba(8,32,56,0.08)_42%,rgba(16,56,69,0.04)_100%)]" />
       <div className="grid gap-5 lg:grid-cols-[230px_minmax(0,1fr)_310px] xl:grid-cols-[250px_minmax(0,1fr)_330px]">
         <BasicSidebar />
 
