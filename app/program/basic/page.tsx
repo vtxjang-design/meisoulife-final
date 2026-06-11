@@ -347,9 +347,14 @@ function BasicProgramContent() {
         <BasicSidebar />
 
         <main className="min-w-0">
-          <BasicHome currentDay={dashboardState.challengeDay} streakCount={dashboardState.streakCount} />
+          <BasicHome
+            currentDay={dashboardState.challengeDay}
+            streakCount={dashboardState.streakCount}
+            planKey={plan}
+            membershipResolved={planResolved && !planError}
+          />
 
-          <section id="quiet-records" className="pt-10 sm:pt-14">
+          <section id="member-records-secondary" className="pt-10 sm:pt-14">
             <div className="mb-6 max-w-2xl">
               <p className="text-xs uppercase tracking-[0.28em] text-white/42">{copy.secondaryEyebrow}</p>
               <p className="mt-3 text-sm leading-7 text-white/60">{copy.secondaryBody}</p>

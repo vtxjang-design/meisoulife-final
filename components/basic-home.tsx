@@ -802,9 +802,10 @@ export function BasicHome({ currentDay = 1, streakCount = 3, planKey = "basic", 
   const copy = useMemo(() => getLocaleCopy(basicHomeCopy, language), [language]);
   const searchParams = useSearchParams();
   const highlightedRhythm = searchParams.get("rhythm") as RhythmPhase | null;
-  const rhythmPhase = highlightedRhythm === "morning" || highlightedRhythm === "day" || highlightedRhythm === "night"
-    ? highlightedRhythm
-    : getLocalRhythmPhase();
+  const rhythmPhase =
+    highlightedRhythm === "morning" || highlightedRhythm === "day" || highlightedRhythm === "night"
+      ? highlightedRhythm
+      : getLocalRhythmPhase();
   const todayMessage = useMemo(() => getDailyMessage(copy.todayMessages), [copy.todayMessages]);
   const [journeyDay, setJourneyDay] = useState(currentDay);
   const [streakDays, setStreakDays] = useState(streakCount);
@@ -828,15 +829,12 @@ export function BasicHome({ currentDay = 1, streakCount = 3, planKey = "basic", 
       const parsedStreak = Number.parseInt(streakRaw || "", 10);
       const parsedJourney = journeyRaw ? (JSON.parse(journeyRaw) as { currentDay?: number }) : null;
 
-      if (challengeProgress.completedDays.length > 0) {
-        setCompletedDays(challengeProgress.completedDays);
-      }
-
+      setCompletedDays(challengeProgress.completedDays);
       setCompletedToday(returnRhythm.isCompletedToday);
 
       if (typeof parsedJourney?.currentDay === "number" && parsedJourney.currentDay >= 1 && parsedJourney.currentDay <= 7) {
         setJourneyDay(parsedJourney.currentDay);
-      } else if (challengeProgress.currentDay >= 1) {
+      } else {
         setJourneyDay(challengeProgress.currentDay);
       }
 
@@ -888,16 +886,6 @@ export function BasicHome({ currentDay = 1, streakCount = 3, planKey = "basic", 
     persistMarkerState({ lastGate: gate });
   }
 
-  function handleSleepChange(next: MarkerSleep) {
-    setSleepStatus(next);
-    persistMarkerState({ sleep: next });
-  }
-
-  function handleStressChange(next: MarkerStress) {
-    setStressStatus(next);
-    persistMarkerState({ stress: next });
-  }
-
   const markerMessage = useMemo(
     () =>
       buildMarkerMessage(language, {
@@ -908,7 +896,7 @@ export function BasicHome({ currentDay = 1, streakCount = 3, planKey = "basic", 
         stress: stressStatus,
         lastGate
       }),
-    [currentDay, journeyDay, language, lastGate, rhythmPhase, selectedMood, sleepStatus, stressStatus]
+    [journeyDay, language, lastGate, rhythmPhase, selectedMood, sleepStatus, stressStatus]
   );
   const currentJourneyGate = useMemo(() => getRhythmJourneyDay(language, journeyDay), [language, journeyDay]);
   const isBasicMember = membershipResolved ? planKey !== "free" : true;
@@ -928,211 +916,259 @@ export function BasicHome({ currentDay = 1, streakCount = 3, planKey = "basic", 
 
   const sanctuarySectionClass =
     "relative overflow-hidden rounded-[34px] border border-[rgba(115,231,210,0.14)] bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.14),transparent_42%),radial-gradient(circle_at_top_right,rgba(89,193,255,0.14),transparent_46%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(8,26,46,0.66),rgba(8,32,48,0.70)_55%,rgba(10,42,52,0.72)_100%)] px-6 py-8 shadow-[0_28px_110px_rgba(4,12,24,0.28)] backdrop-blur-[24px] sm:px-8";
-  const markerCtaLabel = getMarkerStoneCtaLabel(language, rhythmPhase);
 
   return (
     <div className="space-y-10 sm:space-y-12">
-        <section id="marker-stone" className="relative min-h-[60vh] overflow-hidden rounded-[38px] border border-[rgba(115,231,210,0.20)] bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.30),transparent_52%),radial-gradient(circle_at_top_right,rgba(89,193,255,0.26),transparent_58%),linear-gradient(180deg,#041221_0%,#082038_40%,#0B2F3D_70%,#103845_100%)] px-6 py-8 shadow-[0_42px_128px_rgba(3,10,20,0.5)] sm:min-h-[68vh] sm:px-8 sm:py-10">
-          <div id="sanctuary-home" className="absolute inset-0" />
-          <div className="pointer-events-none absolute inset-0">
-            <div className="absolute inset-x-0 top-0 h-40 bg-[radial-gradient(circle_at_top,rgba(241,222,170,0.14),transparent_58%)]" />
-            <div className="absolute left-[4%] top-[4%] h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(115,231,210,0.24),transparent_72%)] blur-3xl animate-meditation-fog" />
-            <div className="absolute left-[12%] top-[16%] h-[30rem] w-[30rem] rounded-full bg-[radial-gradient(circle,rgba(64,189,165,0.26),transparent_72%)] blur-[88px] animate-meditation-fog" />
-            <div className="absolute right-[2%] top-[6%] h-[32rem] w-[32rem] rounded-full bg-[radial-gradient(circle,rgba(89,193,255,0.24),transparent_74%)] blur-[96px] animate-meditation-fog" />
-            <div className="absolute right-[14%] top-[24%] h-48 w-48 rounded-full bg-[radial-gradient(circle,rgba(212,178,106,0.10),transparent_72%)] blur-3xl animate-meditation-float" />
-            <div className="absolute bottom-[6%] left-[8%] h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(62,150,139,0.22),transparent_76%)] blur-[88px] animate-meditation-fog" />
-            <div className="absolute inset-x-[6%] bottom-[14%] h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
-            <div className="absolute inset-x-[18%] bottom-[8%] h-40 rounded-full bg-[radial-gradient(circle,rgba(65,159,147,0.20),transparent_74%)] blur-[88px]" />
-            <div className="absolute left-[16%] top-[28%] h-2 w-2 rounded-full bg-white/40 blur-[1px] animate-pulse" />
-            <div className="absolute left-[34%] top-[22%] h-1.5 w-1.5 rounded-full bg-[#73E7D2]/70 blur-[1px] animate-pulse" />
-            <div className="absolute right-[20%] top-[26%] h-2 w-2 rounded-full bg-white/30 blur-[1px] animate-pulse" />
+      <section
+        id="marker-stone"
+        className="relative min-h-[56vh] overflow-hidden rounded-[38px] border border-[rgba(115,231,210,0.20)] bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.30),transparent_52%),radial-gradient(circle_at_top_right,rgba(89,193,255,0.26),transparent_58%),linear-gradient(180deg,#041221_0%,#082038_40%,#0B2F3D_70%,#103845_100%)] px-6 py-8 shadow-[0_42px_128px_rgba(3,10,20,0.5)] sm:min-h-[62vh] sm:px-8 sm:py-10"
+      >
+        <div id="sanctuary-home" className="absolute inset-0" />
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute inset-x-0 top-0 h-40 bg-[radial-gradient(circle_at_top,rgba(241,222,170,0.14),transparent_58%)]" />
+          <div className="absolute left-[12%] top-[16%] h-[30rem] w-[30rem] rounded-full bg-[radial-gradient(circle,rgba(64,189,165,0.26),transparent_72%)] blur-[88px] animate-meditation-fog" />
+          <div className="absolute right-[2%] top-[6%] h-[32rem] w-[32rem] rounded-full bg-[radial-gradient(circle,rgba(89,193,255,0.24),transparent_74%)] blur-[96px] animate-meditation-fog" />
+          <div className="absolute inset-x-[18%] bottom-[8%] h-40 rounded-full bg-[radial-gradient(circle,rgba(65,159,147,0.20),transparent_74%)] blur-[88px]" />
+        </div>
+
+        <div className="relative flex min-h-[48vh] flex-col justify-between sm:min-h-[54vh]">
+          <div className="max-w-3xl">
+            <p className="text-xs uppercase tracking-[0.36em] text-gold/82">{copy.sanctuaryEyebrow}</p>
+            <div className="mt-10">
+              <p className="text-sm uppercase tracking-[0.28em] text-white/48">{copy.hero.title}</p>
+              <h1 className="mt-3 max-w-[16ch] font-serif text-[34px] leading-[1.12] text-white sm:text-[56px]">{copy.hero.subtitle}</h1>
+            </div>
+            <p className="mt-6 max-w-xl text-base leading-[1.95] text-white/72 sm:text-lg">{copy.markerStone.support}</p>
           </div>
 
-          <div className="relative flex min-h-[52vh] flex-col justify-between sm:min-h-[58vh]">
-            <div className="max-w-3xl">
-              <p className="text-xs uppercase tracking-[0.36em] text-gold/82">{copy.sanctuaryEyebrow}</p>
-              <div className="mt-10">
-                <p className="text-sm uppercase tracking-[0.28em] text-white/48">{copy.markerStone.title}</p>
-                <h1 className="mt-3 max-w-[13ch] font-serif text-[36px] leading-[1.12] text-white sm:text-[58px]">
-                  {copy.markerStone.subtitle}
-                </h1>
-              </div>
-              <p className="mt-6 max-w-xl whitespace-pre-line text-base leading-[1.95] text-white/72 sm:text-lg">
-                {copy.markerStone.support}
-              </p>
-            </div>
-
-            <div className="relative mt-10 flex flex-wrap gap-3">
-              <Link
-                href={`/rhythm-journey?rhythm=${rhythmPhase}`}
-                onClick={() => handleSelectGate(rhythmPhase)}
-                className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f2ddb0,#d4ba75)] px-6 py-4 text-sm font-semibold text-ink shadow-[0_22px_54px_rgba(212,178,106,0.22)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_26px_60px_rgba(212,178,106,0.28)]"
-              >
-                {markerCtaLabel}
-              </Link>
-              <Link
-                href={`/rhythm-journey?day=${journeyDay}`}
-                className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-[rgba(115,231,210,0.18)] bg-white/[0.05] px-6 py-4 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.1]"
-              >
-                {copy.continueJourney}
-              </Link>
-            </div>
+          <div className="relative mt-10 flex flex-wrap gap-3">
+            <Link
+              href={buildRhythmMeditationHref("morning")}
+              onClick={() => handleSelectGate("morning")}
+              className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f2ddb0,#d4ba75)] px-6 py-4 text-sm font-semibold text-ink shadow-[0_22px_54px_rgba(212,178,106,0.22)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_26px_60px_rgba(212,178,106,0.28)]"
+            >
+              {copy.hero.primaryCta}
+            </Link>
+            <Link
+              href="#rhythm-room"
+              className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-[rgba(115,231,210,0.18)] bg-white/[0.05] px-6 py-4 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.1]"
+            >
+              {copy.hero.secondaryCta}
+            </Link>
           </div>
+        </div>
+      </section>
+
+      {!isBasicMember ? (
+        <section className={sanctuarySectionClass}>
+          <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.hero.title}</p>
+          <h2 className="mt-4 text-2xl font-semibold text-white sm:text-3xl">{copy.upgrade.title}</h2>
+          <p className="mt-4 max-w-2xl text-sm leading-8 text-white/72">{copy.upgrade.body}</p>
+          <Link
+            href="/pricing"
+            className="mt-6 inline-flex min-h-[48px] items-center justify-center rounded-full border border-gold/30 bg-gold/[0.12] px-5 py-3 text-sm font-semibold text-white transition hover:bg-gold/[0.18]"
+          >
+            {copy.upgrade.cta}
+          </Link>
         </section>
+      ) : null}
 
-        <section className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
-          <article className="relative overflow-hidden rounded-[30px] border border-[rgba(115,231,210,0.16)] bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.14),transparent_42%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(14,28,46,0.80),rgba(7,17,29,0.90))] px-6 py-6 shadow-[0_24px_64px_rgba(5,14,26,0.22)] backdrop-blur-xl">
+      <section id="rhythm-room" className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_18%_20%,rgba(115,231,210,0.14),transparent_34%),radial-gradient(circle_at_82%_14%,rgba(89,193,255,0.16),transparent_36%),linear-gradient(180deg,rgba(10,24,42,0.66),rgba(7,24,36,0.76),rgba(9,38,46,0.78))]`}>
+        <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+          <article className="relative overflow-hidden rounded-[30px] border border-[rgba(115,231,210,0.16)] bg-[linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(14,28,46,0.80),rgba(7,17,29,0.90))] px-6 py-6 backdrop-blur-xl">
             <div className="absolute left-6 top-6 h-2.5 w-2.5 rounded-full bg-[#73E7D2] shadow-[0_0_16px_rgba(115,231,210,0.72)]" />
             <p className="pl-5 text-xs uppercase tracking-[0.24em] text-gold/76">{copy.summaryCards.currentGate}</p>
             <p className="mt-4 text-[30px] font-semibold leading-tight text-white sm:text-[34px]">{currentJourneyGate.title}</p>
             <p className="mt-3 text-sm leading-7 text-white/60">{copy.markerStone.heroNote}</p>
           </article>
-          <article className="rounded-[30px] border border-[rgba(89,193,255,0.14)] bg-[radial-gradient(circle_at_top_right,rgba(89,193,255,0.12),transparent_44%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(13,31,34,0.82),rgba(7,19,22,0.90))] px-6 py-6 shadow-[0_24px_64px_rgba(5,14,26,0.22)] backdrop-blur-xl">
+          <article className="rounded-[30px] border border-[rgba(89,193,255,0.14)] bg-[linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(13,31,34,0.82),rgba(7,19,22,0.90))] px-6 py-6 backdrop-blur-xl">
             <p className="text-xs uppercase tracking-[0.24em] text-gold/76">{copy.summaryCards.progress}</p>
-            <p className="mt-4 text-[30px] font-semibold leading-tight text-white sm:text-[34px]">
-              {replaceDayToken(copy.summaryCards.progressValue, journeyDay)}
-            </p>
+            <p className="mt-4 text-[30px] font-semibold leading-tight text-white sm:text-[34px]">{replaceDayToken(copy.summaryCards.progressValue, journeyDay)}</p>
             <p className="mt-3 text-sm leading-7 text-white/60">{copy.openGate.title}</p>
           </article>
-        </section>
+        </div>
+      </section>
 
-        <section id="today-open-gate" className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_18%_20%,rgba(115,231,210,0.14),transparent_34%),radial-gradient(circle_at_82%_14%,rgba(89,193,255,0.16),transparent_36%),linear-gradient(180deg,rgba(10,24,42,0.66),rgba(7,24,36,0.76),rgba(9,38,46,0.78))]`}>
-          <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.openGate.title}</p>
-          <div className="mt-5 grid gap-4 lg:grid-cols-[1.18fr_0.82fr]">
-            <article className={`relative overflow-hidden rounded-[30px] border border-[rgba(115,231,210,0.20)] px-6 py-6 shadow-[0_24px_72px_rgba(0,0,0,0.28)] ${getGateSurfaceClasses(rhythmPhase)}`}>
-              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent_28%,rgba(4,8,18,0.28)_100%)]" />
-              <div className="absolute inset-x-[12%] top-0 h-24 rounded-full bg-[rgba(115,231,210,0.12)] blur-3xl" />
-              <div className="relative">
-                <p className="text-xs uppercase tracking-[0.24em] text-gold/78">{getJourneyGateLabel(language, journeyDay)}</p>
-                <p className="mt-3 text-2xl font-semibold text-white">{currentJourneyGate.title}</p>
-                <p className="mt-3 max-w-md whitespace-pre-line text-sm leading-7 text-white/78">{copy.openGate.practice}</p>
-                <Link
-                  href={`/rhythm-journey?day=${journeyDay}`}
-                  className="mt-6 inline-flex min-h-[46px] items-center justify-center rounded-full border border-white/14 bg-white/[0.08] px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.12]"
+      <section id="rhythm-gates" className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_bottom_left,rgba(76,183,151,0.12),transparent_40%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.64),rgba(8,28,42,0.74),rgba(9,36,44,0.78))]`}>
+        <p className="text-xs uppercase tracking-[0.3em] text-gold/78">{copy.routineSection.title}</p>
+        <p className="mt-3 text-sm leading-7 text-white/56">{copy.routineSection.description}</p>
+        <div className="mt-5 grid gap-4 sm:grid-cols-3">
+          {copy.rhythmCards.map((card) => {
+            const rhythm = card.key as RhythmPhase;
+            const completed = completedToday && lastGate === rhythm;
+
+            return (
+              <article
+                key={card.key}
+                className={`group relative overflow-hidden rounded-[30px] border px-5 py-5 ${
+                  rhythmPhase === rhythm ? "border-[rgba(115,231,210,0.28)] ring-1 ring-[rgba(115,231,210,0.18)]" : "border-white/10"
+                } ${getGateSurfaceClasses(rhythm)}`}
+              >
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent_26%,rgba(6,10,20,0.24)_100%)] opacity-90" />
+                <div className="relative">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-sm uppercase tracking-[0.24em] text-gold/82">{card.emoji} {card.title}</p>
+                    <span className={`rounded-full px-3 py-1 text-[11px] font-semibold tracking-[0.18em] ${completed ? "bg-gold/[0.18] text-gold" : "bg-white/[0.08] text-white/70"}`}>
+                      {completed ? copy.routineSection.completed : copy.routineSection.ready}
+                    </span>
+                  </div>
+                  <p className="mt-4 min-h-[48px] text-base leading-7 text-white/88">{card.description}</p>
+                  <p className="mt-3 text-sm leading-7 text-white/60">{card.detail}</p>
+                  <Link
+                    href={buildRhythmMeditationHref(rhythm)}
+                    onClick={() => handleSelectGate(rhythm)}
+                    className="mt-6 inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/14 bg-white/[0.08] px-4 py-2 text-sm font-semibold text-white transition duration-300 group-hover:bg-white/[0.12]"
+                  >
+                    {copy.routineSection.action}
+                  </Link>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <section id="journey-path" className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.12),transparent_38%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.64),rgba(8,28,42,0.74),rgba(9,36,44,0.78))]`}>
+        <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.journeyPath.title}</p>
+        <p className="mt-3 text-sm leading-7 text-white/56">{copy.journeyPath.description}</p>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {Array.from({ length: 7 }, (_, index) => {
+            const day = index + 1;
+            const dayCopy = getRhythmJourneyDay(language, day);
+            const completed = completedDays.includes(day);
+            const active = !completed && day === journeyDay;
+            const locked = !completed && day > journeyDay;
+
+            return (
+              <article
+                key={day}
+                className={`rounded-[28px] border px-5 py-5 transition ${
+                  active
+                    ? "border-gold/60 bg-gold/10 text-white shadow-[0_18px_40px_rgba(212,186,117,0.10)]"
+                    : completed
+                      ? "border-moss/40 bg-moss/10 text-white/88"
+                      : locked
+                        ? "border-white/8 bg-white/[0.03] text-white/60"
+                        : "border-white/10 bg-white/[0.04] text-white/72"
+                }`}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-xs uppercase tracking-[0.24em] text-gold/78">{getJourneyGateLabel(language, day)}</p>
+                  <span className="rounded-full border border-white/10 px-3 py-1 text-[11px] text-white/62">
+                    {completed ? copy.journeyPath.completed : active ? copy.journeyPath.active : copy.journeyPath.locked}
+                  </span>
+                </div>
+                <p className="mt-3 text-xl font-semibold text-white">{dayCopy.title}</p>
+                <p className="mt-2 text-sm leading-7 text-white/58">{dayCopy.subtitle}</p>
+                {locked ? (
+                  <span className="mt-5 inline-flex min-h-[42px] items-center justify-center rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm font-semibold text-white/42">
+                    {copy.journeyPath.locked}
+                  </span>
+                ) : (
+                  <Link
+                    href={`/rhythm-journey?day=${day}`}
+                    className="mt-5 inline-flex min-h-[42px] items-center justify-center rounded-full border border-white/14 bg-white/[0.08] px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/[0.12]"
+                  >
+                    {copy.journeyPath.enter}
+                  </Link>
+                )}
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <section id="quiet-records" className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_right,rgba(89,193,255,0.12),transparent_38%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.64),rgba(8,28,42,0.74),rgba(9,36,44,0.78))]`}>
+        <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.records.title}</p>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
+            <p className="text-sm text-white/56">{copy.records.checkIn}</p>
+            <p className="mt-3 text-sm leading-7 text-white/82">{selectedMood === "unknown" ? copy.routineSection.ready : copy.checkIn.saved}</p>
+          </article>
+          <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
+            <p className="text-sm text-white/56">{copy.records.streak}</p>
+            <p className="mt-3 text-xl font-semibold text-white">{streakDays} {language === "jp" ? "日" : language === "kr" ? "일" : "days"}</p>
+          </article>
+          <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
+            <p className="text-sm text-white/56">{copy.records.completed}</p>
+            <p className="mt-3 text-xl font-semibold text-white">{completedPracticeCount}</p>
+          </article>
+          <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
+            <p className="text-sm text-white/56">{copy.records.insight}</p>
+            <p className="mt-3 text-sm leading-7 text-white/82">{todayMessage}</p>
+          </article>
+        </div>
+      </section>
+
+      <section className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.12),transparent_38%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.64),rgba(8,28,42,0.74),rgba(9,36,44,0.78))]`}>
+        <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.aiGuide.title}</p>
+        <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_220px]">
+          <article className="rounded-[26px] border border-[rgba(115,231,210,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] px-5 py-5 shadow-[0_18px_50px_rgba(4,12,24,0.18)]">
+            <p className="text-xs uppercase tracking-[0.24em] text-white/44">{copy.aiGuide.eyebrow}</p>
+            <p className="mt-4 whitespace-pre-line font-serif text-[24px] leading-[1.8] text-white/88 sm:text-[28px]">
+              {copy.aiGuide.body}
+            </p>
+          </article>
+          <article className="rounded-[26px] border border-[rgba(76,183,151,0.20)] bg-[linear-gradient(180deg,rgba(46,125,107,0.16),rgba(255,255,255,0.02))] px-5 py-5 shadow-[0_18px_50px_rgba(4,12,24,0.18)]">
+            <p className="text-sm text-white/60">{copy.todayMessageTitle}</p>
+            <p className="mt-3 text-base leading-8 text-white/82">{todayMessage}</p>
+            <p className="mt-4 text-sm leading-7 text-white/52">{markerMessage}</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="companions" className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_left,rgba(89,193,255,0.12),transparent_40%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.62),rgba(8,28,42,0.72),rgba(9,36,44,0.76))]`}>
+        <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+          <div>
+            <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.companions.title}</p>
+            <p className="mt-4 text-base leading-8 text-white/74">{copy.companions.body}</p>
+            <div className="mt-6 flex items-center gap-3">
+              {["A", "M", "S", "K", "Y"].map((label, index) => (
+                <span
+                  key={label}
+                  className={`flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/[0.05] text-sm text-white/78 ${index > 0 ? "-ml-3" : ""}`}
                 >
-                  {copy.openGate.cta}
-                </Link>
-              </div>
-            </article>
-            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-              <article className="rounded-[24px] border border-white/10 bg-[linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] px-5 py-5">
-                <p className="text-sm text-white/56">{copy.summaryCards.currentGate}</p>
-                <p className="mt-2 text-xl font-semibold text-white">{currentJourneyGate.title}</p>
-              </article>
-              <article className="rounded-[24px] border border-white/10 bg-[linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] px-5 py-5">
-                <p className="text-sm text-white/56">{copy.summaryCards.progress}</p>
-                <p className="mt-2 text-xl font-semibold text-white">{replaceDayToken(copy.summaryCards.progressValue, journeyDay)}</p>
-              </article>
-              <article className="rounded-[24px] border border-white/10 bg-[linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] px-5 py-5">
-                <p className="text-sm text-white/56">{copy.summaryCards.returnedDays}</p>
-                <p className="mt-2 text-xl font-semibold text-white">
-                  {streakDays} {language === "jp" ? "日" : language === "kr" ? "일" : "Days"}
-                </p>
-                <Link href="#journey-path" className="mt-3 inline-flex text-xs uppercase tracking-[0.28em] text-gold/58">
-                  {copy.openGate.viewAll}
-                </Link>
-              </article>
+                  {label}
+                </span>
+              ))}
+            </div>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <div className="rounded-[22px] border border-[rgba(115,231,210,0.12)] bg-white/[0.03] px-4 py-4 text-sm text-white/74">{copy.companions.walked}</div>
+              <div className="rounded-[22px] border border-[rgba(89,193,255,0.12)] bg-white/[0.03] px-4 py-4 text-sm text-white/74">{copy.companions.present}</div>
             </div>
           </div>
-        </section>
-
-        <section className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.12),transparent_38%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.64),rgba(8,28,42,0.74),rgba(9,36,44,0.78))]`}>
-          <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.aiGuide.title}</p>
-          <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_220px]">
-            <article className="rounded-[26px] border border-[rgba(115,231,210,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] px-5 py-5 shadow-[0_18px_50px_rgba(4,12,24,0.18)]">
-              <p className="text-xs uppercase tracking-[0.24em] text-white/44">{copy.aiGuide.eyebrow}</p>
-              <p className="mt-4 whitespace-pre-line font-serif text-[24px] leading-[1.8] text-white/88 sm:text-[28px]">
-                {copy.aiGuide.body}
-              </p>
-            </article>
-            <article className="rounded-[26px] border border-[rgba(76,183,151,0.20)] bg-[linear-gradient(180deg,rgba(46,125,107,0.16),rgba(255,255,255,0.02))] px-5 py-5 shadow-[0_18px_50px_rgba(4,12,24,0.18)]">
-              <p className="text-sm text-white/60">{copy.todayMessageTitle}</p>
-              <p className="mt-3 text-base leading-8 text-white/82">{todayMessage}</p>
-              <p className="mt-4 text-sm leading-7 text-white/52">{markerMessage}</p>
-            </article>
-          </div>
-        </section>
-
-        <section className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_right,rgba(89,193,255,0.12),transparent_38%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.64),rgba(8,28,42,0.74),rgba(9,36,44,0.78))]`}>
-          <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.question.title}</p>
-          <p className="mt-5 whitespace-pre-line font-serif text-[24px] leading-[1.75] text-white/88 sm:text-[30px]">
-            {copy.question.prompt}
-          </p>
-          <div className="mt-5">
-            <textarea
-              value={reflectionText}
-              onChange={(event) => handleReflectionChange(event.target.value)}
-              placeholder={copy.question.placeholder}
-              className="min-h-[132px] w-full rounded-[24px] border border-[rgba(115,231,210,0.14)] bg-white/[0.03] px-5 py-4 text-base leading-7 text-white placeholder:text-white/32 outline-none transition focus:border-[rgba(115,231,210,0.34)]"
-            />
-            {reflectionSaved ? <p className="mt-3 text-sm text-gold/74">{copy.question.saved}</p> : null}
-          </div>
-        </section>
-
-        <section id="rhythm-gates" className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_bottom_left,rgba(76,183,151,0.12),transparent_40%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.64),rgba(8,28,42,0.74),rgba(9,36,44,0.78))]`}>
-          <p className="text-xs uppercase tracking-[0.3em] text-gold/78">{copy.gatesTitle}</p>
-          <p className="mt-3 text-sm leading-7 text-white/56">{copy.rhythmCardsTitle}</p>
-          <div className="mt-5 grid gap-4 sm:grid-cols-3">
-            {copy.rhythmCards.map((card) => {
-              const rhythm = card.key as RhythmPhase;
-
-              return (
-                <Link
-                  key={card.key}
-                  href={`/rhythm-journey?rhythm=${rhythm}`}
-                  onClick={() => handleSelectGate(rhythm)}
-                  className={`group relative overflow-hidden rounded-[30px] border px-5 py-5 transition duration-300 hover:-translate-y-1 ${
-                    rhythmPhase === card.key ? "border-[rgba(115,231,210,0.28)] ring-1 ring-[rgba(115,231,210,0.18)] shadow-[0_20px_60px_rgba(64,189,165,0.12)]" : "border-white/10"
-                  } ${getGateSurfaceClasses(rhythm)}`}
-                >
-                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent_26%,rgba(6,10,20,0.24)_100%)] opacity-90" />
-                  <div className="absolute -right-8 top-6 h-24 w-24 rounded-full bg-white/8 blur-2xl transition duration-500 group-hover:scale-125" />
-                  <div className="absolute inset-x-[18%] top-0 h-14 rounded-full bg-white/8 blur-2xl opacity-70" />
-                  <div className="relative">
-                    <p className="text-sm uppercase tracking-[0.24em] text-gold/82">{card.emoji} {card.title}</p>
-                    <p className="mt-3 min-h-[56px] text-sm leading-7 text-white/82">{card.description}</p>
-                    <p className="mt-4 text-sm leading-7 text-white/58">{card.detail}</p>
-                    <div className="mt-6 inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/14 bg-white/[0.08] px-4 py-2 text-sm font-semibold text-white transition duration-300 group-hover:bg-white/[0.12]">
-                      {language === "jp" ? "始める" : language === "kr" ? "시작하기" : "Begin"}
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-
-        <section id="companions" className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_left,rgba(89,193,255,0.12),transparent_40%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.62),rgba(8,28,42,0.72),rgba(9,36,44,0.76))]`}>
-          <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.companions.title}</p>
-          <p className="mt-4 text-base leading-8 text-white/74">{copy.companions.body}</p>
-          <div className="mt-6 flex items-center gap-3">
-            {["A", "M", "S", "K", "Y"].map((label, index) => (
-              <span
-                key={label}
-                className={`flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/[0.05] text-sm text-white/78 ${index > 0 ? "-ml-3" : ""}`}
-              >
-                {label}
-              </span>
-            ))}
-          </div>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-[22px] border border-[rgba(115,231,210,0.12)] bg-white/[0.03] px-4 py-4 text-sm text-white/74">{copy.companions.walked}</div>
-            <div className="rounded-[22px] border border-[rgba(89,193,255,0.12)] bg-white/[0.03] px-4 py-4 text-sm text-white/74">{copy.companions.present}</div>
-          </div>
-        </section>
-
-        <section className="rounded-[32px] border border-[rgba(115,231,210,0.12)] bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.12),transparent_38%),radial-gradient(circle_at_top,rgba(212,178,106,0.08),transparent_22%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.62),rgba(8,28,42,0.74),rgba(9,36,44,0.78))] px-6 py-7 shadow-[0_24px_80px_rgba(5,14,26,0.26)] sm:px-8">
-          <p className="text-sm uppercase tracking-[0.28em] text-gold/82">{copy.journey.title}</p>
-          <p className="mt-4 text-base leading-8 text-white/76">{copy.journey.body}</p>
-          <div className="mt-5">
+          <div className="grid gap-3">
+            <div className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-white/78">
+              {language === "jp" ? "次のライブ瞑想: 毎週水曜 06:30" : language === "kr" ? "다음 라이브 명상: 매주 수요일 06:30" : "Next live meditation: Every Wednesday 06:30"}
+            </div>
+            <div className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-white/78">
+              {language === "jp" ? "週間回復セッション: 土曜 21:00" : language === "kr" ? "주간 회복 세션: 토요일 21:00" : "Weekly recovery session: Saturday 21:00"}
+            </div>
             <Link
-              href="/rhythm-journey"
-              className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
+              href="/community"
+              className="mt-2 inline-flex min-h-[48px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
             >
-              {copy.journey.cta}
+              {language === "jp" ? "コミュニティへ" : language === "kr" ? "커뮤니티로" : "Enter Community"}
             </Link>
           </div>
-        </section>
+        </div>
+      </section>
+
+      <section className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_right,rgba(89,193,255,0.12),transparent_38%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.64),rgba(8,28,42,0.74),rgba(9,36,44,0.78))]`}>
+        <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.question.title}</p>
+        <p className="mt-5 whitespace-pre-line font-serif text-[24px] leading-[1.75] text-white/88 sm:text-[30px]">
+          {copy.question.prompt}
+        </p>
+        <div className="mt-5">
+          <textarea
+            value={reflectionText}
+            onChange={(event) => handleReflectionChange(event.target.value)}
+            placeholder={copy.question.placeholder}
+            className="min-h-[132px] w-full rounded-[24px] border border-[rgba(115,231,210,0.14)] bg-white/[0.03] px-5 py-4 text-base leading-7 text-white placeholder:text-white/32 outline-none transition focus:border-[rgba(115,231,210,0.34)]"
+          />
+          {reflectionSaved ? <p className="mt-3 text-sm text-gold/74">{copy.question.saved}</p> : null}
+        </div>
+      </section>
     </div>
   );
 }
