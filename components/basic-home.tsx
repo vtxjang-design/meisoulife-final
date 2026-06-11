@@ -3,11 +3,14 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { getChallengeRhythmProgress } from "@/lib/challenge-rhythm";
 import { getLocaleCopy, useLanguage } from "@/lib/i18n";
 import { getTodayRhythmCheckIn } from "@/lib/today-rhythm-checkin";
+import { getReturnRhythmSnapshot } from "@/lib/return-rhythm";
 import { getRhythmJourneyDay, RHYTHM_JOURNEY_STORAGE_KEY } from "@/lib/rhythm-journey";
 
 type RhythmPhase = "morning" | "day" | "night";
+type PlanKey = "free" | "basic" | "growth" | "inner_circle";
 type MarkerSleep = "good" | "normal" | "low";
 type MarkerStress = "low" | "normal" | "high";
 type MarkerMood = "calm" | "tired" | "sleepy" | "energy" | "thoughts" | "unknown";
@@ -22,6 +25,8 @@ type MarkerStoneState = {
 type BasicHomeProps = {
   currentDay?: number;
   streakCount?: number;
+  planKey?: PlanKey;
+  membershipResolved?: boolean;
 };
 
 const MARKER_STONE_STORAGE_KEY = "meisoulife_marker_stone_v1";
@@ -30,6 +35,19 @@ const TODAY_REFLECTION_STORAGE_KEY = "meisoulife_basic_daily_reflection_v1";
 
 const basicHomeCopy = {
   jp: {
+    hero: {
+      title: "ベーシック探究ルーム",
+      subtitle: "今日のリズムを整え、自分の道を静かに歩みます。",
+      primaryCta: "朝の扉を開く",
+      secondaryCta: "今日のリズムに会う"
+    },
+    routineSection: {
+      title: "今日のリズム",
+      description: "朝・昼・夜の小さな実践から、今日を静かに整えていきましょう。",
+      ready: "準備完了",
+      completed: "完了",
+      action: "始める"
+    },
     sanctuaryEyebrow: "EXPLORER SANCTUARY",
     continueJourney: "今日のリズムに会う",
     summaryCards: {
@@ -130,28 +148,43 @@ const basicHomeCopy = {
       {
         key: "morning",
         emoji: "☀️",
-        title: "朝の扉",
-        description: "呼吸を目覚めさせる時間",
-        detail: "一日を始めながら、心の扉を開きます。",
-        button: "朝のリズムを始める →"
+        title: "朝のリズム",
+        description: "一日を始める1分呼吸",
+        detail: "朝の扉を開き、静かに始めます。",
+        button: "始める"
       },
       {
         key: "day",
         emoji: "🌿",
-        title: "昼の扉",
-        description: "今ここにとどまる時間",
-        detail: "忙しさの中でも、自分を忘れない時間。",
-        button: "昼のリズムを始める →"
+        title: "昼のリセット",
+        description: "乱れたエネルギーを整える",
+        detail: "流れを戻し、呼吸を静かに整えます。",
+        button: "始める"
       },
       {
         key: "night",
         emoji: "🌙",
-        title: "夜の扉",
-        description: "一日を手放す時間",
-        detail: "すべてを手放し、自分へ帰ります。",
-        button: "夜のリズムを始める →"
+        title: "夜の回復",
+        description: "今日を手放し、深い休息へ",
+        detail: "夜の扉から、ゆっくり休息へ戻ります。",
+        button: "始める"
       }
     ],
+    journeyPath: {
+      title: "7日間の小さな回復",
+      description: "今日の扉を確かめながら、7日間の道を静かに進みます。",
+      active: "今日の実践",
+      completed: "完了",
+      locked: "準備中",
+      enter: "入る"
+    },
+    records: {
+      title: "個人の回復記録",
+      checkIn: "今日のチェックイン",
+      streak: "現在のストリーク",
+      completed: "完了した実践",
+      insight: "今日の気づき"
+    },
     stateRecoveryTitle: "今の状態から選ぶ",
     stateRecoveryItems: [
       { key: "sleep", emoji: "😴", title: "睡眠回復" },
@@ -166,9 +199,27 @@ const basicHomeCopy = {
       title: "7日間の小さな回復",
       body: "いつでも、また戻ってこられます。",
       cta: "もう一度たどる"
+    },
+    upgrade: {
+      title: "ベーシックメンバーの空間を準備しています",
+      body: "会員状態が整うと、毎日のリズム実践と回復記録がここに静かに集まります。",
+      cta: "プランを見る"
     }
   },
   kr: {
+    hero: {
+      title: "베이직 탐험방",
+      subtitle: "오늘의 리듬을 회복하고, 나의 길을 조용히 이어갑니다.",
+      primaryCta: "아침의 문 열기",
+      secondaryCta: "오늘의 리듬 만나기"
+    },
+    routineSection: {
+      title: "오늘의 리듬",
+      description: "아침, 낮, 밤의 작은 실천으로 오늘을 조용히 정돈해 봅니다.",
+      ready: "준비됨",
+      completed: "완료",
+      action: "시작하기"
+    },
     sanctuaryEyebrow: "EXPLORER SANCTUARY",
     continueJourney: "오늘의 리듬 만나기",
     summaryCards: {
@@ -269,28 +320,43 @@ const basicHomeCopy = {
       {
         key: "morning",
         emoji: "☀️",
-        title: "아침의 문",
-        description: "숨을 깨우는 시간",
-        detail: "하루를 시작하며 마음의 문을 엽니다.",
-        button: "아침 리듬 시작 →"
+        title: "아침 리듬",
+        description: "하루를 여는 1분 호흡",
+        detail: "아침의 문을 열고 조용히 시작합니다.",
+        button: "시작하기"
       },
       {
         key: "day",
         emoji: "🌿",
-        title: "낮의 문",
-        description: "지금 여기에 머무는 시간",
-        detail: "분주함 속에서도 나를 잊지 않는 시간.",
-        button: "낮 리듬 시작 →"
+        title: "낮 리셋",
+        description: "흐트러진 에너지를 다시 정돈하기",
+        detail: "흐름을 되찾고 호흡을 다시 세웁니다.",
+        button: "시작하기"
       },
       {
         key: "night",
         emoji: "🌙",
-        title: "밤의 문",
-        description: "하루를 내려놓는 시간",
-        detail: "모든 것을 내려놓고 나에게 돌아갑니다.",
-        button: "밤 리듬 시작 →"
+        title: "밤 회복",
+        description: "오늘을 내려놓고 깊은 쉼으로",
+        detail: "밤의 문을 지나 깊은 회복으로 돌아갑니다.",
+        button: "시작하기"
       }
     ],
+    journeyPath: {
+      title: "7일간의 작은 회복",
+      description: "오늘의 문을 확인하며, 7일의 길을 조용히 이어갑니다.",
+      active: "오늘의 실천",
+      completed: "완료",
+      locked: "준비 중",
+      enter: "들어가기"
+    },
+    records: {
+      title: "개인 회복 기록",
+      checkIn: "오늘의 체크인",
+      streak: "현재 스트릭",
+      completed: "완료한 실천",
+      insight: "오늘의 통찰"
+    },
     stateRecoveryTitle: "지금 상태에서 선택하기",
     stateRecoveryItems: [
       { key: "sleep", emoji: "😴", title: "수면 회복" },
@@ -305,9 +371,27 @@ const basicHomeCopy = {
       title: "7일간의 작은 회복",
       body: "언제든 다시 돌아올 수 있습니다.",
       cta: "다시 이어가기"
+    },
+    upgrade: {
+      title: "베이직 멤버 공간을 준비하고 있습니다",
+      body: "멤버십 상태가 연결되면 매일의 리듬 실천과 회복 기록이 이곳에 조용히 모입니다.",
+      cta: "플랜 보기"
     }
   },
   en: {
+    hero: {
+      title: "Basic Exploration Room",
+      subtitle: "Restore today’s rhythm and continue your path quietly.",
+      primaryCta: "Open Morning Gate",
+      secondaryCta: "Meet Today’s Rhythm"
+    },
+    routineSection: {
+      title: "Today’s Rhythm",
+      description: "Return through a small morning, day, or night practice and keep the room alive each day.",
+      ready: "Ready",
+      completed: "Completed",
+      action: "Begin"
+    },
     sanctuaryEyebrow: "EXPLORER SANCTUARY",
     continueJourney: "Meet Today’s Rhythm",
     summaryCards: {
@@ -408,28 +492,43 @@ const basicHomeCopy = {
       {
         key: "morning",
         emoji: "☀️",
-        title: "Morning Gate",
-        description: "Time to awaken the breath",
-        detail: "Open the door of your heart as the day begins.",
-        button: "Start Morning Rhythm →"
+        title: "Morning Rhythm",
+        description: "A one-minute breath to begin the day",
+        detail: "Open the morning gate and begin lightly.",
+        button: "Begin"
       },
       {
         key: "day",
         emoji: "🌿",
-        title: "Day Gate",
-        description: "Time to stay here, now",
-        detail: "A moment to remember yourself in the middle of the day.",
-        button: "Start Day Rhythm →"
+        title: "Day Reset",
+        description: "Restore scattered energy",
+        detail: "Return to flow and settle your breath.",
+        button: "Begin"
       },
       {
         key: "night",
         emoji: "🌙",
-        title: "Night Gate",
-        description: "Time to let the day go",
-        detail: "Let everything go and return to yourself.",
-        button: "Start Night Rhythm →"
+        title: "Night Recovery",
+        description: "Release the day into deep rest",
+        detail: "Move through the night gate and return to rest.",
+        button: "Begin"
       }
     ],
+    journeyPath: {
+      title: "7-Day Recovery Journey",
+      description: "Keep the seven-day path visible, but enter only the day that is asking for you now.",
+      active: "Active",
+      completed: "Completed",
+      locked: "Locked",
+      enter: "Enter"
+    },
+    records: {
+      title: "Personal Recovery Record",
+      checkIn: "Today’s Check-In",
+      streak: "Current Streak",
+      completed: "Completed Practices",
+      insight: "Today’s Insight"
+    },
     stateRecoveryTitle: "Choose From Your Current State",
     stateRecoveryItems: [
       { key: "sleep", emoji: "😴", title: "Sleep Recovery" },
@@ -444,6 +543,11 @@ const basicHomeCopy = {
       title: "7-Day Small Recovery",
       body: "You can return to this journey anytime.",
       cta: "Return to the Journey"
+    },
+    upgrade: {
+      title: "Preparing the Basic member room",
+      body: "Once membership is connected, your daily rhythm practices and recovery records will gather here quietly.",
+      cta: "View Plans"
     }
   }
 } as const;
@@ -693,7 +797,7 @@ function replaceDayToken(template: string, day: number) {
   return template.replace("{day}", String(day));
 }
 
-export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
+export function BasicHome({ currentDay = 1, streakCount = 3, planKey = "basic", membershipResolved = true }: BasicHomeProps) {
   const { language } = useLanguage();
   const copy = useMemo(() => getLocaleCopy(basicHomeCopy, language), [language]);
   const searchParams = useSearchParams();
@@ -710,6 +814,8 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
   const [lastGate, setLastGate] = useState<RhythmPhase>(rhythmPhase);
   const [reflectionText, setReflectionText] = useState("");
   const [reflectionSaved, setReflectionSaved] = useState(false);
+  const [completedDays, setCompletedDays] = useState<number[]>([]);
+  const [completedToday, setCompletedToday] = useState(false);
 
   useEffect(() => {
     try {
@@ -717,11 +823,21 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
       const streakRaw = window.localStorage.getItem("meisoulife_basic_rhythm_check_streak");
       const markerState = readMarkerStoneState();
       const savedLastGate = readLastGate();
+      const challengeProgress = getChallengeRhythmProgress();
+      const returnRhythm = getReturnRhythmSnapshot();
       const parsedStreak = Number.parseInt(streakRaw || "", 10);
       const parsedJourney = journeyRaw ? (JSON.parse(journeyRaw) as { currentDay?: number }) : null;
 
+      if (challengeProgress.completedDays.length > 0) {
+        setCompletedDays(challengeProgress.completedDays);
+      }
+
+      setCompletedToday(returnRhythm.isCompletedToday);
+
       if (typeof parsedJourney?.currentDay === "number" && parsedJourney.currentDay >= 1 && parsedJourney.currentDay <= 7) {
         setJourneyDay(parsedJourney.currentDay);
+      } else if (challengeProgress.currentDay >= 1) {
+        setJourneyDay(challengeProgress.currentDay);
       }
 
       if (Number.isFinite(parsedStreak) && parsedStreak > 0) {
@@ -795,6 +911,8 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
     [currentDay, journeyDay, language, lastGate, rhythmPhase, selectedMood, sleepStatus, stressStatus]
   );
   const currentJourneyGate = useMemo(() => getRhythmJourneyDay(language, journeyDay), [language, journeyDay]);
+  const isBasicMember = membershipResolved ? planKey !== "free" : true;
+  const completedPracticeCount = completedDays.length + (completedToday && !completedDays.includes(journeyDay) ? 1 : 0);
 
   function handleReflectionChange(next: string) {
     setReflectionText(next);
