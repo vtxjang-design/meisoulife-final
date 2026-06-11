@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { SectionHeading } from "@/components/section-heading";
 import type { LandingCopy } from "@/lib/landing-copy";
@@ -196,6 +195,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const audioContextRef = useRef<AudioContext | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const playerRef = useRef<HTMLDivElement | null>(null);
+  const resetContainerRef = useRef<HTMLDivElement | null>(null);
   const timerRef = useRef<number | null>(null);
   const completionHandledRef = useRef(false);
   const pendingAutoStartRef = useRef(false);
@@ -430,6 +430,30 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     await syncVideoAudio(true, true);
   }
 
+  async function handleEnterFullscreen() {
+    const container = resetContainerRef.current;
+
+    if (!container) {
+      return;
+    }
+
+    try {
+      if (document.fullscreenElement !== container) {
+        if (container.requestFullscreen) {
+          await container.requestFullscreen();
+        } else if ("webkitRequestFullscreen" in container) {
+          await (
+            container as HTMLDivElement & {
+              webkitRequestFullscreen?: () => Promise<void> | void;
+            }
+          ).webkitRequestFullscreen?.();
+        }
+      }
+    } catch (error) {
+      console.warn("Failed to enter ZERO GATE fullscreen", error);
+    }
+  }
+
   async function handleMeditationComplete() {
     await playMeditationCompletion({
       hasUserGesture,
@@ -479,6 +503,22 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
 
   return (
     <section id="one-minute-experience" className="section-shell mt-16">
+      <style jsx>{`
+        .zero-gate-reset-container:fullscreen,
+        .zero-gate-reset-container:-webkit-full-screen {
+          width: 100vw;
+          height: 100vh;
+          max-width: none;
+          border-radius: 0;
+        }
+
+        .zero-gate-reset-container:fullscreen video,
+        .zero-gate-reset-container:-webkit-full-screen video {
+          width: 100vw;
+          height: 100vh;
+          object-fit: cover;
+        }
+      `}</style>
       <div id="one-minute-meditation" />
       <div className="rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-8 shadow-[0_24px_80px_rgba(7,17,31,0.24)] sm:px-8 sm:py-10">
         <SectionHeading eyebrow={copy.eyebrow} title={copy.title} description={copy.description} align="center" />
@@ -548,22 +588,29 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                 >
                   {soundEnabled ? copy.soundOn : copy.soundOff}
                 </button>
-                <Link
-                  href="/meditation"
+                <button
+                  type="button"
+                  onClick={handleEnterFullscreen}
                   className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-4 py-3 text-sm font-medium text-white/82 transition duration-300 hover:bg-white/[0.06]"
                 >
                   {copy.fullscreen}
-                </Link>
+                </button>
               </div>
             </div>
           </div>
           <div className="order-1 flex justify-center lg:order-2">
-            <div ref={playerRef} className="relative min-h-[480px] w-full overflow-hidden rounded-[32px] border border-white/10 bg-[#08111b]">
+            <div
+              ref={(node) => {
+                playerRef.current = node;
+                resetContainerRef.current = node;
+              }}
+              className="zero-gate-reset-container relative min-h-[480px] w-full overflow-hidden rounded-[32px] border border-white/10 bg-[#08111b]"
+            >
               {activeVideoSource && !videoFailed ? (
                 <video
                   key={activeVideoSource}
                   ref={videoRef}
-                  className={`absolute inset-0 z-0 h-full w-full object-cover opacity-[0.68] blur-[1.5px] transition-opacity duration-700 ${sanctuaryVisual.videoClassName}`}
+                  className={`absolute inset-0 z-[1] h-full w-full object-cover opacity-[0.68] blur-[1.5px] transition-opacity duration-700 ${sanctuaryVisual.videoClassName}`}
                   autoPlay
                   muted
                   loop
@@ -579,28 +626,28 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                 </video>
               ) : (
                 <div
-                  className="absolute inset-0 z-0 bg-cover bg-center opacity-[0.42]"
+                  className="absolute inset-0 z-[1] bg-cover bg-center opacity-[0.42]"
                   style={{ backgroundImage: `url(${sanctuaryVisual.poster})` }}
                 />
               )}
-              <div className={`absolute inset-0 z-10 ${sanctuaryVisual.glowClassName}`} />
-              <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_82%_18%,rgba(255,255,255,0.05),transparent_20%),radial-gradient(circle_at_74%_32%,rgba(212,186,117,0.07),transparent_34%)] opacity-50 blur-2xl" />
-              <div className={`absolute inset-0 z-10 ${sanctuaryVisual.overlayClassName}`} />
-              <div className="absolute inset-0 z-10 bg-[linear-gradient(180deg,rgba(3,9,16,0.06),rgba(3,9,16,0.18)_36%,rgba(3,9,16,0.34)_100%)] backdrop-blur-[0.5px]" />
+              <div className={`absolute inset-0 z-[2] ${sanctuaryVisual.glowClassName}`} />
+              <div className="absolute inset-0 z-[2] bg-[radial-gradient(circle_at_82%_18%,rgba(255,255,255,0.05),transparent_20%),radial-gradient(circle_at_74%_32%,rgba(212,186,117,0.07),transparent_34%)] opacity-50 blur-2xl" />
+              <div className={`absolute inset-0 z-[2] ${sanctuaryVisual.overlayClassName}`} />
+              <div className="absolute inset-0 z-[2] bg-[linear-gradient(180deg,rgba(3,9,16,0.06),rgba(3,9,16,0.18)_36%,rgba(3,9,16,0.34)_100%)] backdrop-blur-[0.5px]" />
               {videoLoading ? (
-                <div className="absolute inset-0 z-20 flex items-center justify-center">
+                <div className="absolute inset-0 z-[3] flex items-center justify-center">
                   <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/12 bg-[#07111b]/62 backdrop-blur-md">
                     <span className="h-6 w-6 animate-spin rounded-full border-2 border-white/22 border-t-white/90" />
                   </div>
                 </div>
               ) : null}
               {videoFailed ? (
-                <div className="absolute inset-x-5 top-5 z-20 rounded-[20px] border border-white/10 bg-[#07111b]/72 px-4 py-3 text-sm leading-6 text-white/72 backdrop-blur-md">
+                <div className="absolute inset-x-5 top-5 z-[3] rounded-[20px] border border-white/10 bg-[#07111b]/72 px-4 py-3 text-sm leading-6 text-white/72 backdrop-blur-md">
                   {copy.audioError}
                 </div>
               ) : null}
               {audioBlocked ? (
-                <div className="absolute inset-x-5 bottom-5 z-20">
+                <div className="absolute inset-x-5 bottom-5 z-[3]">
                   <button
                     type="button"
                     onClick={handleEnableAudio}
@@ -610,7 +657,16 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                   </button>
                 </div>
               ) : null}
-              <div className="relative z-20 flex min-h-[480px] items-center justify-center px-4 py-8">
+              <div className="absolute right-5 top-5 z-[3]">
+                <button
+                  type="button"
+                  onClick={handleEnterFullscreen}
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/12 bg-[#07111b]/38 px-4 py-2 text-sm font-medium text-white/82 backdrop-blur-md transition duration-300 hover:bg-[#07111b]/52"
+                >
+                  {copy.fullscreen}
+                </button>
+              </div>
+              <div className="relative z-[2] flex min-h-[480px] items-center justify-center px-4 py-8">
                 <div className="relative flex flex-col items-center">
                   <div className="absolute inset-0 -z-10 rounded-full bg-[radial-gradient(circle,rgba(212,186,117,0.1),transparent_66%)] blur-3xl" />
                   <div className="relative flex h-[288px] w-[288px] items-center justify-center sm:h-[328px] sm:w-[328px]">
