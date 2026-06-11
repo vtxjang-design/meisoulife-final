@@ -41,6 +41,7 @@ const basicHomeCopy = {
       primaryCta: "朝の扉を開く",
       secondaryCta: "今日のリズムに会う"
     },
+    memberBadge: "Basicメンバー空間",
     routineSection: {
       title: "今日のリズム",
       description: "朝・昼・夜の小さな実践から、今日を静かに整えていきましょう。",
@@ -73,6 +74,11 @@ const basicHomeCopy = {
       cta: "扉を開く",
       viewAll: "旅全体を見る"
     },
+    todayJourney: {
+      title: "今日の旅",
+      description: "いまこの瞬間、静かに立ち止まり、自分に戻ります。",
+      cta: "今日の扉をひらく"
+    },
     aiGuide: {
       title: "今日の気づき",
       eyebrow: "静かな案内",
@@ -88,8 +94,9 @@ const basicHomeCopy = {
     companions: {
       title: "今日ともに歩く人たち",
       body: "今日この道をともに歩く人たちがいます。",
-      walked: "128人が今日この道を歩きました",
-      present: "14人が今ここにいます"
+      walked: "今日は12人がリズムを実践しました。",
+      present: "今週は47人がともに歩んでいます。",
+      cta: "仲間たちの場所へ"
     },
     todayMessageTitle: "今日の道しるべ",
     todayMessages: [
@@ -171,7 +178,7 @@ const basicHomeCopy = {
       }
     ],
     journeyPath: {
-      title: "7日間の小さな回復",
+      title: "7日間の回復の道",
       description: "今日の扉を確かめながら、7日間の道を静かに進みます。",
       active: "今日の実践",
       completed: "完了",
@@ -184,6 +191,11 @@ const basicHomeCopy = {
       streak: "現在のストリーク",
       completed: "完了した実践",
       insight: "今日の気づき"
+    },
+    sessions: {
+      title: "次にともに過ごす時間",
+      first: "毎週水曜 06:30 朝ライブ瞑想",
+      second: "土曜 21:00 睡眠回復セッション"
     },
     stateRecoveryTitle: "今の状態から選ぶ",
     stateRecoveryItems: [
@@ -213,6 +225,7 @@ const basicHomeCopy = {
       primaryCta: "아침의 문 열기",
       secondaryCta: "오늘의 리듬 만나기"
     },
+    memberBadge: "Basic 멤버 공간",
     routineSection: {
       title: "오늘의 리듬",
       description: "아침, 낮, 밤의 작은 실천으로 오늘을 조용히 정돈해 봅니다.",
@@ -245,6 +258,11 @@ const basicHomeCopy = {
       cta: "문 열기",
       viewAll: "전체 여정 보기"
     },
+    todayJourney: {
+      title: "오늘의 여정",
+      description: "지금 이 순간, 잠시 멈추어 나에게 돌아옵니다.",
+      cta: "오늘의 문 열기"
+    },
     aiGuide: {
       title: "오늘의 통찰",
       eyebrow: "조용한 안내",
@@ -260,8 +278,9 @@ const basicHomeCopy = {
     companions: {
       title: "오늘 함께 걷는 사람들",
       body: "오늘 이 길을 함께 걷는 사람들이 있습니다.",
-      walked: "128명이 오늘 이 길을 걸었습니다",
-      present: "14명이 지금 함께 머물고 있습니다"
+      walked: "오늘 12명이 리듬을 실천했습니다.",
+      present: "이번 주 47명이 함께 걷고 있습니다.",
+      cta: "함께 걷는 사람들로"
     },
     todayMessageTitle: "오늘의 표지석",
     todayMessages: [
@@ -343,7 +362,7 @@ const basicHomeCopy = {
       }
     ],
     journeyPath: {
-      title: "7일간의 작은 회복",
+      title: "7일 회복의 길",
       description: "오늘의 문을 확인하며, 7일의 길을 조용히 이어갑니다.",
       active: "오늘의 실천",
       completed: "완료",
@@ -356,6 +375,11 @@ const basicHomeCopy = {
       streak: "현재 스트릭",
       completed: "완료한 실천",
       insight: "오늘의 통찰"
+    },
+    sessions: {
+      title: "다음 함께하는 시간",
+      first: "매주 수요일 06:30 아침 라이브 명상",
+      second: "토요일 21:00 수면 회복 세션"
     },
     stateRecoveryTitle: "지금 상태에서 선택하기",
     stateRecoveryItems: [
@@ -385,6 +409,7 @@ const basicHomeCopy = {
       primaryCta: "Open Morning Gate",
       secondaryCta: "Meet Today’s Rhythm"
     },
+    memberBadge: "Basic Member Space",
     routineSection: {
       title: "Today’s Rhythm",
       description: "Return through a small morning, day, or night practice and keep the room alive each day.",
@@ -417,6 +442,11 @@ const basicHomeCopy = {
       cta: "Open Gate",
       viewAll: "View Full Journey"
     },
+    todayJourney: {
+      title: "Today’s Journey",
+      description: "Pause for a moment and return to yourself.",
+      cta: "Open Today’s Gate"
+    },
     aiGuide: {
       title: "Today's Insight",
       eyebrow: "Quiet Guidance",
@@ -430,10 +460,11 @@ const basicHomeCopy = {
       saved: "Today’s reflection has been quietly saved."
     },
     companions: {
-      title: "Walking Together Today",
+      title: "People Walking Together",
       body: "There are people walking this path with you today.",
-      walked: "128 people walked this path today",
-      present: "14 are currently present"
+      walked: "12 people practiced their rhythm today.",
+      present: "47 people are walking together this week.",
+      cta: "Enter the Community"
     },
     todayMessageTitle: "Today’s Signpost",
     todayMessages: [
@@ -515,7 +546,7 @@ const basicHomeCopy = {
       }
     ],
     journeyPath: {
-      title: "7-Day Recovery Journey",
+      title: "7-Day Recovery Path",
       description: "Keep the seven-day path visible, but enter only the day that is asking for you now.",
       active: "Active",
       completed: "Completed",
@@ -528,6 +559,11 @@ const basicHomeCopy = {
       streak: "Current Streak",
       completed: "Completed Practices",
       insight: "Today’s Insight"
+    },
+    sessions: {
+      title: "Next Shared Practice",
+      first: "Every Wednesday 06:30 Morning Live Meditation",
+      second: "Saturday 21:00 Sleep Recovery Session"
     },
     stateRecoveryTitle: "Choose From Your Current State",
     stateRecoveryItems: [
@@ -797,6 +833,18 @@ function replaceDayToken(template: string, day: number) {
   return template.replace("{day}", String(day));
 }
 
+function getStreakReward(language: "jp" | "kr" | "en", streakDays: number) {
+  if (language === "jp") {
+    return `小さな回復が続いて\n${streakDays}日目\n種が静かに根を下ろしています。`;
+  }
+
+  if (language === "kr") {
+    return `작은 회복이 이어진 지\n${streakDays}일째\n씨앗이 뿌리를 내리고 있습니다.`;
+  }
+
+  return `Your small recovery has continued for\n${streakDays} days\nA seed is quietly taking root.`;
+}
+
 export function BasicHome({ currentDay = 1, streakCount = 3, planKey = "basic", membershipResolved = true }: BasicHomeProps) {
   const { language } = useLanguage();
   const copy = useMemo(() => getLocaleCopy(basicHomeCopy, language), [language]);
@@ -934,6 +982,9 @@ export function BasicHome({ currentDay = 1, streakCount = 3, planKey = "basic", 
         <div className="relative flex min-h-[48vh] flex-col justify-between sm:min-h-[54vh]">
           <div className="max-w-3xl">
             <p className="text-xs uppercase tracking-[0.36em] text-gold/82">{copy.sanctuaryEyebrow}</p>
+            <p className="mt-5 inline-flex rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-[11px] uppercase tracking-[0.24em] text-white/68">
+              {copy.memberBadge}
+            </p>
             <div className="mt-10">
               <p className="text-sm uppercase tracking-[0.28em] text-white/48">{copy.hero.title}</p>
               <h1 className="mt-3 max-w-[16ch] font-serif text-[34px] leading-[1.12] text-white sm:text-[56px]">{copy.hero.subtitle}</h1>
@@ -973,22 +1024,6 @@ export function BasicHome({ currentDay = 1, streakCount = 3, planKey = "basic", 
         </section>
       ) : null}
 
-      <section id="rhythm-room" className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_18%_20%,rgba(115,231,210,0.14),transparent_34%),radial-gradient(circle_at_82%_14%,rgba(89,193,255,0.16),transparent_36%),linear-gradient(180deg,rgba(10,24,42,0.66),rgba(7,24,36,0.76),rgba(9,38,46,0.78))]`}>
-        <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
-          <article className="relative overflow-hidden rounded-[30px] border border-[rgba(115,231,210,0.16)] bg-[linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(14,28,46,0.80),rgba(7,17,29,0.90))] px-6 py-6 backdrop-blur-xl">
-            <div className="absolute left-6 top-6 h-2.5 w-2.5 rounded-full bg-[#73E7D2] shadow-[0_0_16px_rgba(115,231,210,0.72)]" />
-            <p className="pl-5 text-xs uppercase tracking-[0.24em] text-gold/76">{copy.summaryCards.currentGate}</p>
-            <p className="mt-4 text-[30px] font-semibold leading-tight text-white sm:text-[34px]">{currentJourneyGate.title}</p>
-            <p className="mt-3 text-sm leading-7 text-white/60">{copy.markerStone.heroNote}</p>
-          </article>
-          <article className="rounded-[30px] border border-[rgba(89,193,255,0.14)] bg-[linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(13,31,34,0.82),rgba(7,19,22,0.90))] px-6 py-6 backdrop-blur-xl">
-            <p className="text-xs uppercase tracking-[0.24em] text-gold/76">{copy.summaryCards.progress}</p>
-            <p className="mt-4 text-[30px] font-semibold leading-tight text-white sm:text-[34px]">{replaceDayToken(copy.summaryCards.progressValue, journeyDay)}</p>
-            <p className="mt-3 text-sm leading-7 text-white/60">{copy.openGate.title}</p>
-          </article>
-        </div>
-      </section>
-
       <section id="rhythm-gates" className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_bottom_left,rgba(76,183,151,0.12),transparent_40%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.64),rgba(8,28,42,0.74),rgba(9,36,44,0.78))]`}>
         <p className="text-xs uppercase tracking-[0.3em] text-gold/78">{copy.routineSection.title}</p>
         <p className="mt-3 text-sm leading-7 text-white/56">{copy.routineSection.description}</p>
@@ -1025,6 +1060,32 @@ export function BasicHome({ currentDay = 1, streakCount = 3, planKey = "basic", 
               </article>
             );
           })}
+        </div>
+      </section>
+
+      <section id="rhythm-room" className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_18%_20%,rgba(115,231,210,0.14),transparent_34%),radial-gradient(circle_at_82%_14%,rgba(89,193,255,0.16),transparent_36%),linear-gradient(180deg,rgba(10,24,42,0.66),rgba(7,24,36,0.76),rgba(9,38,46,0.78))]`}>
+        <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+          <article className={`relative overflow-hidden rounded-[30px] border border-[rgba(115,231,210,0.20)] px-6 py-6 shadow-[0_24px_72px_rgba(0,0,0,0.28)] ${getGateSurfaceClasses(rhythmPhase)}`}>
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent_28%,rgba(4,8,18,0.28)_100%)]" />
+            <div className="absolute inset-x-[12%] top-0 h-24 rounded-full bg-[rgba(115,231,210,0.12)] blur-3xl" />
+            <div className="relative">
+              <p className="text-xs uppercase tracking-[0.24em] text-gold/78">{copy.todayJourney.title}</p>
+              <p className="mt-4 text-sm uppercase tracking-[0.24em] text-white/58">Day {journeyDay}</p>
+              <p className="mt-3 text-[30px] font-semibold leading-tight text-white sm:text-[34px]">{currentJourneyGate.title}</p>
+              <p className="mt-4 max-w-md text-sm leading-7 text-white/78">{copy.todayJourney.description}</p>
+              <Link
+                href={`/rhythm-journey?day=${journeyDay}`}
+                className="mt-6 inline-flex min-h-[46px] items-center justify-center rounded-full border border-white/14 bg-white/[0.08] px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.12]"
+              >
+                {copy.todayJourney.cta}
+              </Link>
+            </div>
+          </article>
+          <article className="rounded-[30px] border border-[rgba(89,193,255,0.14)] bg-[linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(13,31,34,0.82),rgba(7,19,22,0.90))] px-6 py-6 backdrop-blur-xl">
+            <p className="text-xs uppercase tracking-[0.24em] text-gold/76">{copy.summaryCards.progress}</p>
+            <p className="mt-4 text-[30px] font-semibold leading-tight text-white sm:text-[34px]">{replaceDayToken(copy.summaryCards.progressValue, journeyDay)}</p>
+            <p className="mt-3 text-sm leading-7 text-white/60">{copy.markerStone.heroNote}</p>
+          </article>
         </div>
       </section>
 
@@ -1087,7 +1148,7 @@ export function BasicHome({ currentDay = 1, streakCount = 3, planKey = "basic", 
           </article>
           <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
             <p className="text-sm text-white/56">{copy.records.streak}</p>
-            <p className="mt-3 text-xl font-semibold text-white">{streakDays} {language === "jp" ? "日" : language === "kr" ? "일" : "days"}</p>
+            <p className="mt-3 whitespace-pre-line text-sm leading-7 text-white/84">{getStreakReward(language, streakDays)}</p>
           </article>
           <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
             <p className="text-sm text-white/56">{copy.records.completed}</p>
@@ -1137,20 +1198,22 @@ export function BasicHome({ currentDay = 1, streakCount = 3, planKey = "basic", 
               <div className="rounded-[22px] border border-[rgba(89,193,255,0.12)] bg-white/[0.03] px-4 py-4 text-sm text-white/74">{copy.companions.present}</div>
             </div>
           </div>
-          <div className="grid gap-3">
-            <div className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-white/78">
-              {language === "jp" ? "次のライブ瞑想: 毎週水曜 06:30" : language === "kr" ? "다음 라이브 명상: 매주 수요일 06:30" : "Next live meditation: Every Wednesday 06:30"}
-            </div>
-            <div className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-white/78">
-              {language === "jp" ? "週間回復セッション: 土曜 21:00" : language === "kr" ? "주간 회복 세션: 토요일 21:00" : "Weekly recovery session: Saturday 21:00"}
-            </div>
+          <div className="flex items-end">
             <Link
               href="/community"
-              className="mt-2 inline-flex min-h-[48px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
+              className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
             >
-              {language === "jp" ? "コミュニティへ" : language === "kr" ? "커뮤니티로" : "Enter Community"}
+              {copy.companions.cta}
             </Link>
           </div>
+        </div>
+      </section>
+
+      <section className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.12),transparent_38%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.62),rgba(8,28,42,0.72),rgba(9,36,44,0.76))]`}>
+        <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.sessions.title}</p>
+        <div className="mt-5 grid gap-3">
+          <div className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-white/78">{copy.sessions.first}</div>
+          <div className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-white/78">{copy.sessions.second}</div>
         </div>
       </section>
 
