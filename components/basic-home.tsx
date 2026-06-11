@@ -155,26 +155,26 @@ const basicHomeCopy = {
       {
         key: "morning",
         emoji: "☀️",
-        title: "朝のリズム",
+        title: "朝の扉を開く",
         description: "一日を始める1分呼吸",
         detail: "朝の扉を開き、静かに始めます。",
-        button: "始める"
+        button: "入る"
       },
       {
         key: "day",
         emoji: "🌿",
-        title: "昼のリセット",
+        title: "昼の扉を開く",
         description: "乱れたエネルギーを整える",
         detail: "流れを戻し、呼吸を静かに整えます。",
-        button: "始める"
+        button: "入る"
       },
       {
         key: "night",
         emoji: "🌙",
-        title: "夜の回復",
+        title: "夜の扉を開く",
         description: "今日を手放し、深い休息へ",
         detail: "夜の扉から、ゆっくり休息へ戻ります。",
-        button: "始める"
+        button: "入る"
       }
     ],
     journeyPath: {
@@ -339,26 +339,26 @@ const basicHomeCopy = {
       {
         key: "morning",
         emoji: "☀️",
-        title: "아침 리듬",
+        title: "🌅 아침의 문 열기",
         description: "하루를 여는 1분 호흡",
         detail: "아침의 문을 열고 조용히 시작합니다.",
-        button: "시작하기"
+        button: "들어가기"
       },
       {
         key: "day",
         emoji: "🌿",
-        title: "낮 리셋",
+        title: "☀️ 낮의 문 열기",
         description: "흐트러진 에너지를 다시 정돈하기",
         detail: "흐름을 되찾고 호흡을 다시 세웁니다.",
-        button: "시작하기"
+        button: "들어가기"
       },
       {
         key: "night",
         emoji: "🌙",
-        title: "밤 회복",
+        title: "🌙 밤의 문 열기",
         description: "오늘을 내려놓고 깊은 쉼으로",
         detail: "밤의 문을 지나 깊은 회복으로 돌아갑니다.",
-        button: "시작하기"
+        button: "들어가기"
       }
     ],
     journeyPath: {
@@ -523,26 +523,26 @@ const basicHomeCopy = {
       {
         key: "morning",
         emoji: "☀️",
-        title: "Morning Rhythm",
+        title: "Open Morning Gate",
         description: "A one-minute breath to begin the day",
         detail: "Open the morning gate and begin lightly.",
-        button: "Begin"
+        button: "Enter"
       },
       {
         key: "day",
         emoji: "🌿",
-        title: "Day Reset",
+        title: "Open Day Gate",
         description: "Restore scattered energy",
         detail: "Return to flow and settle your breath.",
-        button: "Begin"
+        button: "Enter"
       },
       {
         key: "night",
         emoji: "🌙",
-        title: "Night Recovery",
+        title: "Open Night Gate",
         description: "Release the day into deep rest",
         detail: "Move through the night gate and return to rest.",
-        button: "Begin"
+        button: "Enter"
       }
     ],
     journeyPath: {
@@ -969,7 +969,7 @@ export function BasicHome({ currentDay = 1, streakCount = 3, planKey = "basic", 
     <div className="space-y-10 sm:space-y-12">
       <section
         id="marker-stone"
-        className="relative min-h-[56vh] overflow-hidden rounded-[38px] border border-[rgba(115,231,210,0.20)] bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.30),transparent_52%),radial-gradient(circle_at_top_right,rgba(89,193,255,0.26),transparent_58%),linear-gradient(180deg,#041221_0%,#082038_40%,#0B2F3D_70%,#103845_100%)] px-6 py-8 shadow-[0_42px_128px_rgba(3,10,20,0.5)] sm:min-h-[62vh] sm:px-8 sm:py-10"
+        className="relative overflow-hidden rounded-[38px] border border-[rgba(115,231,210,0.20)] bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.30),transparent_52%),radial-gradient(circle_at_top_right,rgba(89,193,255,0.26),transparent_58%),linear-gradient(180deg,#041221_0%,#082038_40%,#0B2F3D_70%,#103845_100%)] px-6 py-8 shadow-[0_42px_128px_rgba(3,10,20,0.5)] sm:px-8 sm:py-10"
       >
         <div id="sanctuary-home" className="absolute inset-0" />
         <div className="pointer-events-none absolute inset-0">
@@ -979,33 +979,54 @@ export function BasicHome({ currentDay = 1, streakCount = 3, planKey = "basic", 
           <div className="absolute inset-x-[18%] bottom-[8%] h-40 rounded-full bg-[radial-gradient(circle,rgba(65,159,147,0.20),transparent_74%)] blur-[88px]" />
         </div>
 
-        <div className="relative flex min-h-[48vh] flex-col justify-between sm:min-h-[54vh]">
+        <div className="relative">
           <div className="max-w-3xl">
             <p className="text-xs uppercase tracking-[0.36em] text-gold/82">{copy.sanctuaryEyebrow}</p>
             <p className="mt-5 inline-flex rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-[11px] uppercase tracking-[0.24em] text-white/68">
               {copy.memberBadge}
             </p>
-            <div className="mt-10">
-              <p className="text-sm uppercase tracking-[0.28em] text-white/48">{copy.hero.title}</p>
+            <div className="mt-8">
+              <p className="text-sm uppercase tracking-[0.28em] text-white/48">{copy.routineSection.title}</p>
               <h1 className="mt-3 max-w-[16ch] font-serif text-[34px] leading-[1.12] text-white sm:text-[56px]">{copy.hero.subtitle}</h1>
             </div>
             <p className="mt-6 max-w-xl text-base leading-[1.95] text-white/72 sm:text-lg">{copy.markerStone.support}</p>
           </div>
 
-          <div className="relative mt-10 flex flex-wrap gap-3">
-            <Link
-              href={buildRhythmMeditationHref("morning")}
-              onClick={() => handleSelectGate("morning")}
-              className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f2ddb0,#d4ba75)] px-6 py-4 text-sm font-semibold text-ink shadow-[0_22px_54px_rgba(212,178,106,0.22)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_26px_60px_rgba(212,178,106,0.28)]"
-            >
-              {copy.hero.primaryCta}
-            </Link>
-            <Link
-              href="#rhythm-room"
-              className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-[rgba(115,231,210,0.18)] bg-white/[0.05] px-6 py-4 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.1]"
-            >
-              {copy.hero.secondaryCta}
-            </Link>
+          <div className="mt-10 grid gap-4 sm:grid-cols-3">
+            {copy.rhythmCards.map((card) => {
+              const rhythm = card.key as RhythmPhase;
+              const completed = completedToday && lastGate === rhythm;
+
+              return (
+                <article
+                  key={card.key}
+                  className={`group relative overflow-hidden rounded-[32px] border px-5 py-6 transition duration-300 hover:-translate-y-1 ${
+                    rhythmPhase === rhythm ? "border-[rgba(115,231,210,0.28)] ring-1 ring-[rgba(115,231,210,0.18)] shadow-[0_20px_60px_rgba(64,189,165,0.12)]" : "border-white/10"
+                  } ${getGateSurfaceClasses(rhythm)}`}
+                >
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent_26%,rgba(6,10,20,0.24)_100%)] opacity-90" />
+                  <div className="absolute -right-8 top-6 h-24 w-24 rounded-full bg-white/8 blur-2xl transition duration-500 group-hover:scale-125" />
+                  <div className="absolute inset-x-[18%] top-0 h-14 rounded-full bg-white/8 blur-2xl opacity-70" />
+                  <div className="relative">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="text-sm font-semibold tracking-[0.04em] text-gold/90">{card.title}</p>
+                      <span className={`rounded-full px-3 py-1 text-[11px] font-semibold tracking-[0.18em] ${completed ? "bg-gold/[0.18] text-gold" : "bg-white/[0.08] text-white/70"}`}>
+                        {completed ? copy.routineSection.completed : copy.routineSection.ready}
+                      </span>
+                    </div>
+                    <p className="mt-4 min-h-[48px] text-base leading-7 text-white/88">{card.description}</p>
+                    <p className="mt-3 text-sm leading-7 text-white/60">{card.detail}</p>
+                    <Link
+                      href={buildRhythmMeditationHref(rhythm)}
+                      onClick={() => handleSelectGate(rhythm)}
+                      className="mt-6 inline-flex min-h-[46px] items-center justify-center rounded-full border border-white/14 bg-white/[0.08] px-5 py-3 text-sm font-semibold text-white transition duration-300 group-hover:bg-white/[0.12]"
+                    >
+                      {card.button}
+                    </Link>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -1023,45 +1044,6 @@ export function BasicHome({ currentDay = 1, streakCount = 3, planKey = "basic", 
           </Link>
         </section>
       ) : null}
-
-      <section id="rhythm-gates" className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_bottom_left,rgba(76,183,151,0.12),transparent_40%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.64),rgba(8,28,42,0.74),rgba(9,36,44,0.78))]`}>
-        <p className="text-xs uppercase tracking-[0.3em] text-gold/78">{copy.routineSection.title}</p>
-        <p className="mt-3 text-sm leading-7 text-white/56">{copy.routineSection.description}</p>
-        <div className="mt-5 grid gap-4 sm:grid-cols-3">
-          {copy.rhythmCards.map((card) => {
-            const rhythm = card.key as RhythmPhase;
-            const completed = completedToday && lastGate === rhythm;
-
-            return (
-              <article
-                key={card.key}
-                className={`group relative overflow-hidden rounded-[30px] border px-5 py-5 ${
-                  rhythmPhase === rhythm ? "border-[rgba(115,231,210,0.28)] ring-1 ring-[rgba(115,231,210,0.18)]" : "border-white/10"
-                } ${getGateSurfaceClasses(rhythm)}`}
-              >
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent_26%,rgba(6,10,20,0.24)_100%)] opacity-90" />
-                <div className="relative">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-sm uppercase tracking-[0.24em] text-gold/82">{card.emoji} {card.title}</p>
-                    <span className={`rounded-full px-3 py-1 text-[11px] font-semibold tracking-[0.18em] ${completed ? "bg-gold/[0.18] text-gold" : "bg-white/[0.08] text-white/70"}`}>
-                      {completed ? copy.routineSection.completed : copy.routineSection.ready}
-                    </span>
-                  </div>
-                  <p className="mt-4 min-h-[48px] text-base leading-7 text-white/88">{card.description}</p>
-                  <p className="mt-3 text-sm leading-7 text-white/60">{card.detail}</p>
-                  <Link
-                    href={buildRhythmMeditationHref(rhythm)}
-                    onClick={() => handleSelectGate(rhythm)}
-                    className="mt-6 inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/14 bg-white/[0.08] px-4 py-2 text-sm font-semibold text-white transition duration-300 group-hover:bg-white/[0.12]"
-                  >
-                    {copy.routineSection.action}
-                  </Link>
-                </div>
-              </article>
-            );
-          })}
-        </div>
-      </section>
 
       <section id="rhythm-room" className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_18%_20%,rgba(115,231,210,0.14),transparent_34%),radial-gradient(circle_at_82%_14%,rgba(89,193,255,0.16),transparent_36%),linear-gradient(180deg,rgba(10,24,42,0.66),rgba(7,24,36,0.76),rgba(9,38,46,0.78))]`}>
         <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
