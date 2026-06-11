@@ -30,14 +30,14 @@ const TODAY_REFLECTION_STORAGE_KEY = "meisoulife_basic_daily_reflection_v1";
 
 const basicHomeCopy = {
   jp: {
-    sanctuaryEyebrow: "TODAY'S MARKER STONE",
-    continueJourney: "旅を続ける",
+    sanctuaryEyebrow: "EXPLORER SANCTUARY",
+    continueJourney: "今日のリズムに会う",
     summaryCards: {
-      currentGate: "現在の扉",
-      progress: "旅の進み",
+      currentGate: "今日のリズム",
+      progress: "旅の日",
       returnedDays: "戻ってきた日々",
       insight: "今日の気づき",
-      progressValue: "リズムの道の Day {day}",
+      progressValue: "Day {day} / 7",
       insightBody: "小さなリズムは、大きな変化になっていきます。"
     },
     gatesTitle: "今日のリズムゲート",
@@ -56,10 +56,10 @@ const basicHomeCopy = {
       viewAll: "旅全体を見る"
     },
     aiGuide: {
-      title: "AIリズムガイド",
-      eyebrow: "今日の案内",
+      title: "今日の気づき",
+      eyebrow: "静かな案内",
       body: "今日は昨日よりも\n少し静かなリズムが似合っています。\n\n一呼吸をゆっくり取り、\n次へ進む前に余白を残しましょう。",
-      availability: "AI 1/3"
+      availability: "急がずに進むことが、今日のリズムを守ってくれます。"
     },
     question: {
       title: "今日の問い",
@@ -68,7 +68,7 @@ const basicHomeCopy = {
       saved: "今日の記録が静かに残りました。"
     },
     companions: {
-      title: "ともに歩く人たち",
+      title: "今日ともに歩く人たち",
       body: "今日この道をともに歩く人たちがいます。",
       walked: "128人が今日この道を歩きました",
       present: "14人が今ここにいます"
@@ -82,7 +82,9 @@ const basicHomeCopy = {
       "自然は急ぎません。あなたも急がなくて大丈夫です。"
     ],
     markerStone: {
-      title: "今日の道しるべ",
+      title: "Today's Marker Stone",
+      subtitle: "今、どんなリズムの上にいますか。",
+      support: "小さな立ち止まりが、一日の向きを変えてくれます。",
       bodyTitle: "立ち止まる庭",
       note: "立ち止まっても大丈夫です。\n\nあなたのリズムは消えたのではなく\n少し休んでいただけです。",
       heroNote: "今日は少し急がなくても大丈夫です。\n\n呼吸があなたを待っています。",
@@ -167,14 +169,14 @@ const basicHomeCopy = {
     }
   },
   kr: {
-    sanctuaryEyebrow: "TODAY'S MARKER STONE",
-    continueJourney: "여정 계속하기",
+    sanctuaryEyebrow: "EXPLORER SANCTUARY",
+    continueJourney: "오늘의 리듬 만나기",
     summaryCards: {
-      currentGate: "현재의 문",
-      progress: "여정의 흐름",
+      currentGate: "Today's Rhythm",
+      progress: "여정의 날",
       returnedDays: "돌아온 날들",
       insight: "오늘의 통찰",
-      progressValue: "리듬의 길 Day {day}",
+      progressValue: "Day {day} / 7",
       insightBody: "작은 리듬은 큰 변화로 이어집니다."
     },
     gatesTitle: "오늘의 리듬 게이트",
@@ -193,10 +195,10 @@ const basicHomeCopy = {
       viewAll: "전체 여정 보기"
     },
     aiGuide: {
-      title: "AI 리듬 가이드",
-      eyebrow: "오늘의 안내",
+      title: "오늘의 통찰",
+      eyebrow: "조용한 안내",
       body: "오늘 당신의 리듬은 어제보다\n조금 더 조용해 보입니다.\n\n한 번 더 천천히 숨을 쉬고,\n다음으로 가기 전 여백을 남겨보세요.",
-      availability: "AI 1/3"
+      availability: "급히 가는 것보다, 오늘의 리듬을 잃지 않는 것이 더 중요합니다."
     },
     question: {
       title: "오늘의 질문",
@@ -205,7 +207,7 @@ const basicHomeCopy = {
       saved: "오늘의 기록이 조용히 남았습니다."
     },
     companions: {
-      title: "함께 걷는 사람들",
+      title: "오늘 함께 걷는 사람들",
       body: "오늘 이 길을 함께 걷는 사람들이 있습니다.",
       walked: "128명이 오늘 이 길을 걸었습니다",
       present: "14명이 지금 함께 머물고 있습니다"
@@ -219,7 +221,9 @@ const basicHomeCopy = {
       "자연은 서두르지 않습니다. 당신도 서두르지 않아도 괜찮습니다."
     ],
     markerStone: {
-      title: "오늘의 표지석",
+      title: "오늘의 Marker Stone",
+      subtitle: "지금 당신은 어떤 리듬 위에 있습니까?",
+      support: "작은 멈춤이 하루의 방향을 바꿉니다.",
       bodyTitle: "멈춤의 정원",
       note: "멈추어도 괜찮습니다.\n\n당신의 리듬은 사라진 것이 아니라\n잠시 쉬고 있었을 뿐입니다.",
       heroNote: "오늘은 잠시 서두르지 않아도 됩니다.\n\n호흡이 당신을 기다리고 있습니다.",
@@ -304,14 +308,14 @@ const basicHomeCopy = {
     }
   },
   en: {
-    sanctuaryEyebrow: "TODAY'S MARKER STONE",
-    continueJourney: "Continue Journey",
+    sanctuaryEyebrow: "EXPLORER SANCTUARY",
+    continueJourney: "Meet Today’s Rhythm",
     summaryCards: {
-      currentGate: "Current Gate",
-      progress: "Journey Progress",
+      currentGate: "Today's Rhythm",
+      progress: "Journey Day",
       returnedDays: "Days Returned",
       insight: "Today's Insight",
-      progressValue: "Day {day} of the Rhythm Path",
+      progressValue: "Day {day} / 7",
       insightBody: "Small rhythms become great transformations."
     },
     gatesTitle: "Today’s Rhythm Gates",
@@ -330,10 +334,10 @@ const basicHomeCopy = {
       viewAll: "View Full Journey"
     },
     aiGuide: {
-      title: "AI Rhythm Guide",
-      eyebrow: "Today’s Guidance",
+      title: "Today's Insight",
+      eyebrow: "Quiet Guidance",
       body: "Today your rhythm feels quieter than yesterday.\n\nTake a slower breath and allow space\nbefore moving forward.",
-      availability: "AI 1/3"
+      availability: "More important than moving fast is staying with your rhythm."
     },
     question: {
       title: "Today’s Question",
@@ -342,7 +346,7 @@ const basicHomeCopy = {
       saved: "Today’s reflection has been quietly saved."
     },
     companions: {
-      title: "Walking Companions",
+      title: "Walking Together Today",
       body: "There are people walking this path with you today.",
       walked: "128 people walked this path today",
       present: "14 are currently present"
@@ -357,6 +361,8 @@ const basicHomeCopy = {
     ],
     markerStone: {
       title: "Today’s Marker Stone",
+      subtitle: "What rhythm are you standing on right now?",
+      support: "A small pause can change the direction of a day.",
       bodyTitle: "Garden of Stillness",
       note: "It is okay to pause.\n\nYour rhythm has not disappeared.\nIt has only been resting for a while.",
       heroNote: "Today, you do not need to hurry.\n\nYour breath is waiting for you.",
@@ -827,19 +833,14 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
           <div className="relative flex min-h-[52vh] flex-col justify-between sm:min-h-[58vh]">
             <div className="max-w-3xl">
               <p className="text-xs uppercase tracking-[0.36em] text-gold/82">{copy.sanctuaryEyebrow}</p>
-              <div className="mt-5 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.28em] text-white/40">
-                <span>Explorer Sanctuary</span>
-                <span className="h-1 w-1 rounded-full bg-gold/70" />
-                <span>Digital National Park</span>
-              </div>
               <div className="mt-10">
-                <p className="text-sm uppercase tracking-[0.28em] text-white/48">Day {journeyDay}</p>
-                <h1 className="mt-3 max-w-[10ch] font-serif text-[40px] leading-[1.08] text-white sm:text-[66px]">
-                  {currentJourneyGate.title}
+                <p className="text-sm uppercase tracking-[0.28em] text-white/48">{copy.markerStone.title}</p>
+                <h1 className="mt-3 max-w-[13ch] font-serif text-[36px] leading-[1.12] text-white sm:text-[58px]">
+                  {copy.markerStone.subtitle}
                 </h1>
               </div>
-              <p className="mt-6 max-w-2xl whitespace-pre-line text-base leading-[1.95] text-white/80 sm:text-lg">
-                {copy.markerStone.heroNote}
+              <p className="mt-6 max-w-xl whitespace-pre-line text-base leading-[1.95] text-white/72 sm:text-lg">
+                {copy.markerStone.support}
               </p>
             </div>
 
@@ -861,34 +862,19 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
           </div>
         </section>
 
-        <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <article className="rounded-[28px] border border-[rgba(115,231,210,0.14)] bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.12),transparent_42%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(14,28,46,0.80),rgba(7,17,29,0.90))] px-5 py-5 shadow-[0_22px_58px_rgba(5,14,26,0.22)] backdrop-blur-xl">
-            <p className="text-xs uppercase tracking-[0.24em] text-gold/76">{copy.summaryCards.currentGate}</p>
-            <p className="mt-3 text-2xl font-semibold text-white">{currentJourneyGate.title}</p>
-            <p className="mt-2 text-sm text-white/58">{copy.todayGateItems.openGate}</p>
+        <section className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+          <article className="relative overflow-hidden rounded-[30px] border border-[rgba(115,231,210,0.16)] bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.14),transparent_42%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(14,28,46,0.80),rgba(7,17,29,0.90))] px-6 py-6 shadow-[0_24px_64px_rgba(5,14,26,0.22)] backdrop-blur-xl">
+            <div className="absolute left-6 top-6 h-2.5 w-2.5 rounded-full bg-[#73E7D2] shadow-[0_0_16px_rgba(115,231,210,0.72)]" />
+            <p className="pl-5 text-xs uppercase tracking-[0.24em] text-gold/76">{copy.summaryCards.currentGate}</p>
+            <p className="mt-4 text-[30px] font-semibold leading-tight text-white sm:text-[34px]">{currentJourneyGate.title}</p>
+            <p className="mt-3 text-sm leading-7 text-white/60">{copy.markerStone.heroNote}</p>
           </article>
-          <article className="rounded-[28px] border border-[rgba(89,193,255,0.14)] bg-[radial-gradient(circle_at_top_right,rgba(89,193,255,0.12),transparent_44%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(13,31,34,0.82),rgba(7,19,22,0.90))] px-5 py-5 shadow-[0_22px_58px_rgba(5,14,26,0.22)] backdrop-blur-xl">
+          <article className="rounded-[30px] border border-[rgba(89,193,255,0.14)] bg-[radial-gradient(circle_at_top_right,rgba(89,193,255,0.12),transparent_44%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(13,31,34,0.82),rgba(7,19,22,0.90))] px-6 py-6 shadow-[0_24px_64px_rgba(5,14,26,0.22)] backdrop-blur-xl">
             <p className="text-xs uppercase tracking-[0.24em] text-gold/76">{copy.summaryCards.progress}</p>
-            <p className="mt-3 text-2xl font-semibold text-white">
+            <p className="mt-4 text-[30px] font-semibold leading-tight text-white sm:text-[34px]">
               {replaceDayToken(copy.summaryCards.progressValue, journeyDay)}
             </p>
-            <p className="mt-2 text-sm text-white/58">{copy.openGate.title}</p>
-          </article>
-          <article className="rounded-[28px] border border-[rgba(76,183,151,0.18)] bg-[radial-gradient(circle_at_bottom_left,rgba(76,183,151,0.14),transparent_42%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(14,33,35,0.84),rgba(7,18,21,0.90))] px-5 py-5 shadow-[0_22px_58px_rgba(5,14,26,0.22)] backdrop-blur-xl">
-            <p className="text-xs uppercase tracking-[0.24em] text-gold/76">{copy.summaryCards.returnedDays}</p>
-            <p className="mt-3 text-2xl font-semibold text-white">
-              {streakDays} {language === "jp" ? "日" : language === "kr" ? "일" : "Days"}
-            </p>
-            <p className="mt-2 text-sm leading-7 text-white/62">{todayMessage}</p>
-          </article>
-          <article className={`relative overflow-hidden rounded-[28px] border border-[rgba(115,231,210,0.14)] px-5 py-5 shadow-[0_22px_58px_rgba(5,14,26,0.22)] ${getGateSurfaceClasses(rhythmPhase)}`}>
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),transparent_30%,rgba(6,10,20,0.24)_100%)]" />
-            <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04))]" />
-            <div className="relative">
-              <p className="text-xs uppercase tracking-[0.24em] text-gold/76">{copy.summaryCards.insight}</p>
-              <p className="mt-3 text-xl font-semibold text-white">{copy.summaryCards.insightBody}</p>
-              <p className="mt-2 text-sm leading-7 text-white/72">{copy.aiGuide.availability}</p>
-            </div>
+            <p className="mt-3 text-sm leading-7 text-white/60">{copy.openGate.title}</p>
           </article>
         </section>
 
@@ -942,8 +928,9 @@ export function BasicHome({ currentDay = 1, streakCount = 3 }: BasicHomeProps) {
               </p>
             </article>
             <article className="rounded-[26px] border border-[rgba(76,183,151,0.20)] bg-[linear-gradient(180deg,rgba(46,125,107,0.16),rgba(255,255,255,0.02))] px-5 py-5 shadow-[0_18px_50px_rgba(4,12,24,0.18)]">
-              <p className="text-sm text-white/60">{copy.aiGuide.eyebrow}</p>
-              <p className="mt-3 text-2xl font-semibold text-white">{copy.aiGuide.availability}</p>
+              <p className="text-sm text-white/60">{copy.todayMessageTitle}</p>
+              <p className="mt-3 text-base leading-8 text-white/82">{todayMessage}</p>
+              <p className="mt-4 text-sm leading-7 text-white/52">{markerMessage}</p>
             </article>
           </div>
         </section>

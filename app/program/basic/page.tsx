@@ -47,7 +47,7 @@ const basicPageCopy = {
       memberLabel: "Basicメンバー",
       memberFallback: "リズム空間を準備しています。",
       memberError: "会員状態を一時的に確認できませんでした。更新してもう一度お試しください。",
-      aiLabel: "AI 1/3"
+      aiLabel: "急がずに進むことが、今日のリズムを守ってくれます。"
     },
     secondaryEyebrow: "RECOVERY RECORDS",
     secondaryBody: "旅の流れと続いてきたリズムを静かに確認できます。"
@@ -81,7 +81,7 @@ const basicPageCopy = {
       memberLabel: "Basic 회원",
       memberFallback: "리듬 공간을 준비하고 있습니다.",
       memberError: "회원 상태를 잠시 확인할 수 없습니다. 새로고침 후 다시 시도해주세요.",
-      aiLabel: "AI 1/3"
+      aiLabel: "급히 가는 것보다, 오늘의 리듬을 잃지 않는 것이 더 중요합니다."
     },
     secondaryEyebrow: "RECOVERY RECORDS",
     secondaryBody: "여정의 흐름과 이어온 리듬을 조용히 확인할 수 있습니다."
@@ -115,7 +115,7 @@ const basicPageCopy = {
       memberLabel: "Basic Member",
       memberFallback: "Preparing your rhythm space.",
       memberError: "We could not confirm your membership status. Please refresh and try again.",
-      aiLabel: "AI 1/3"
+      aiLabel: "More important than moving fast is staying with your rhythm."
     },
     secondaryEyebrow: "RECOVERY RECORDS",
     secondaryBody: "A quiet place to see your journey and rhythm."

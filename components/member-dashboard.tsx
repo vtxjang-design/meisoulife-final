@@ -43,8 +43,8 @@ const dashboardCopy = {
     openProgress: "旅をひらく",
     gateDayPrefix: "第",
     gateDaySuffix: "の扉",
-    communityEyebrow: "ともに歩く人たち",
-    communityTitle: "ともに歩く人たち",
+    communityEyebrow: "今日ともに歩く人たち",
+    communityTitle: "今日ともに歩く人たち",
     communityBody: "毎日の気づきや小さな前進を、同じ道を歩く仲間たちと静かに分かち合えます。",
     communityCta: "仲間たちの場所へ",
     eventsEyebrow: "次の集い",
@@ -81,8 +81,8 @@ const dashboardCopy = {
     openProgress: "여정 열기",
     gateDayPrefix: "제",
     gateDaySuffix: "의 문",
-    communityEyebrow: "함께 걷는 사람들",
-    communityTitle: "함께 걷는 사람들",
+    communityEyebrow: "오늘 함께 걷는 사람들",
+    communityTitle: "오늘 함께 걷는 사람들",
     communityBody: "매일의 작은 회복과 조용한 깨달음을, 같은 길을 걷는 사람들과 나눌 수 있습니다.",
     communityCta: "함께 걷는 사람들로",
     eventsEyebrow: "다가오는 모임",
@@ -120,8 +120,8 @@ const dashboardCopy = {
     openProgress: "Open the path",
     gateDayPrefix: "Gate ",
     gateDaySuffix: "",
-    communityEyebrow: "People Walking Together",
-    communityTitle: "People Walking Together",
+    communityEyebrow: "Walking Together Today",
+    communityTitle: "Walking Together Today",
     communityBody:
       "Return to small daily recoveries, shared questions, and the companionship of people walking the same path.",
     communityCta: "Go to fellow walkers",
@@ -149,7 +149,7 @@ export function MemberDashboard({
   membershipError = false,
   challengeDay = 1,
   streakCount,
-  aiUsage,
+  aiUsage: _aiUsage,
   candidateLeader = false,
   communityUrl = "/community",
   challengeStarted = false,
@@ -190,7 +190,7 @@ export function MemberDashboard({
         <p className="text-sm text-white/60">{copy.aiUsage}</p>
         <p className="mt-2 text-base leading-7 text-white/82">{copy.insightReady}</p>
         <p className="mt-3 text-sm text-white/50">
-          AI {aiUsage.used}/{aiUsage.limit === "unlimited" ? "∞" : aiUsage.limit}
+          {copy.communityBody}
         </p>
       </div>
     </section>
