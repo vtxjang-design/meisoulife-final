@@ -21,7 +21,7 @@ export function AuthCard({ mode }: AuthCardProps) {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [nextPath, setNextPath] = useState<string | null>(null);
-  const redirectTarget = nextPath && nextPath.startsWith("/") ? nextPath : "/dashboard";
+  const redirectTarget = nextPath && nextPath.startsWith("/") ? nextPath : "/program/basic";
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -29,7 +29,7 @@ export function AuthCard({ mode }: AuthCardProps) {
   }, []);
 
   function buildResetRedirectTarget() {
-    const next = nextPath && nextPath.startsWith("/") ? nextPath : "/dashboard";
+    const next = nextPath && nextPath.startsWith("/") ? nextPath : "/program/basic";
     return `${window.location.origin}/auth/update-password?next=${encodeURIComponent(next)}`;
   }
 

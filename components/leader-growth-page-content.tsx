@@ -99,7 +99,7 @@ export function LeaderGrowthPageContent({ leaderFormUrl, candidateLeader, progre
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <Link
-                href="/dashboard"
+                href="/program/basic"
                 className="inline-flex items-center justify-center rounded-md bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92]"
               >
                 {leaders.dashboardButton}

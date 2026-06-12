@@ -212,7 +212,7 @@ export function PostPaymentSuccessContent({ lineUrl, tier }: PostPaymentSuccessC
 
           <div className="mt-5 flex justify-center">
             <Link
-              href={tier ? PROGRAM_ROUTES[tier] : "/dashboard"}
+              href={tier ? PROGRAM_ROUTES[tier] : "/program/basic"}
               className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-6 py-4 text-center text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
             >
               {copy.memberButton}

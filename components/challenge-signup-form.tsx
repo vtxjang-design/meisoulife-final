@@ -50,7 +50,7 @@ export function ChallengeSignupForm() {
         throw new Error(data.error || "challenge signup failed");
       }
 
-      router.push(`/dashboard?email=${encodeURIComponent(formState.email)}&challenge=started`);
+      router.push(`/program/basic?email=${encodeURIComponent(formState.email)}&challenge=started`);
     } catch (error) {
       setMessage(copy.challengeForm.error);
     } finally {

@@ -4,7 +4,7 @@ export const navItems = [
   { href: "/coach", label: "AIコーチ" },
   { href: "/pricing", label: "料金" },
   { href: "/community", label: "コミュニティ" },
-  { href: "/dashboard", label: "ダッシュボード" },
+  { href: "/program/basic", label: "ベーシック" },
   { href: "/leaders", label: "リーダー成長" },
   { href: "/retreats", label: "リトリート" }
 ] as const;

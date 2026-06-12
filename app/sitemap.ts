@@ -7,7 +7,7 @@ const routes = [
   "/coach",
   "/pricing",
   "/community",
-  "/dashboard",
+  "/program/basic",
   "/login",
   "/signup",
   "/welcome-basic",
