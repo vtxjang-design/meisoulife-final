@@ -80,15 +80,34 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
       const { data: profile } = await supabase
         .from("users")
-        .select("current_plan, candidate_leader, paid_days, check_in_count, helpful_comments, challenge_day")
+        .select("id, current_plan, candidate_leader, paid_days, check_in_count, helpful_comments, challenge_day")
         .eq("auth_user_id", user.id)
         .maybeSingle();
+
+      const { data: subscription } = profile?.id
+        ? await supabase
+            .from("subscriptions")
+            .select("plan_key, status")
+            .eq("user_id", profile.id)
+            .order("created_at", { ascending: false })
+            .limit(1)
+            .maybeSingle()
+        : { data: null };
 
       if (planKey === "free") {
         if (profile?.current_plan === "basic" || profile?.current_plan === "growth" || profile?.current_plan === "inner_circle") {
           planKey = profile.current_plan;
           membershipResolved = true;
         }
+      }
+
+      if (
+        planKey === "free" &&
+        (subscription?.status === "active" || subscription?.status === "trialing") &&
+        (subscription.plan_key === "basic" || subscription.plan_key === "growth" || subscription.plan_key === "inner_circle")
+      ) {
+        planKey = subscription.plan_key;
+        membershipResolved = true;
       }
 
       if (typeof profile?.challenge_day === "number" && profile.challenge_day > 0) {

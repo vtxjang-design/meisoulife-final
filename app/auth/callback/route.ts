@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
 
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
     console.error("[auth-callback] Missing Supabase public environment variables");
-    return NextResponse.redirect(new URL("/member?debug=1", request.url));
+    return NextResponse.redirect(new URL("/login?debug=1", request.url));
   }
 
   const response = NextResponse.redirect(new URL(next, request.url));
@@ -49,12 +49,12 @@ export async function GET(request: NextRequest) {
     error = result.error;
   } else {
     console.error("[auth-callback] Missing auth code or token_hash");
-    return NextResponse.redirect(new URL("/member?debug=1", request.url));
+    return NextResponse.redirect(new URL("/login?debug=1", request.url));
   }
 
   if (error) {
     console.error("[auth-callback] Failed to complete auth callback", error.message);
-    return NextResponse.redirect(new URL("/member?debug=1", request.url));
+    return NextResponse.redirect(new URL("/login?debug=1", request.url));
   }
 
   console.log("[auth-callback] Session established");

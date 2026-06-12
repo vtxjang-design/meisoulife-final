@@ -30,15 +30,42 @@ export default async function MemberPage({ searchParams }: MemberPageProps) {
     initialPlan = membershipState.plan;
     initialEmail = user.email || "";
 
-    if (membershipState.plan === "basic") {
+    const { data: profile } = await supabase
+      .from("users")
+      .select("id, current_plan")
+      .eq("auth_user_id", user.id)
+      .maybeSingle();
+
+    const { data: subscription } = profile?.id
+      ? await supabase
+          .from("subscriptions")
+          .select("plan_key, status")
+          .eq("user_id", profile.id)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle()
+      : { data: null };
+
+    if (initialPlan === "free") {
+      if (profile?.current_plan === "basic" || profile?.current_plan === "growth" || profile?.current_plan === "inner_circle") {
+        initialPlan = profile.current_plan;
+      } else if (
+        (subscription?.status === "active" || subscription?.status === "trialing") &&
+        (subscription.plan_key === "basic" || subscription.plan_key === "growth" || subscription.plan_key === "inner_circle")
+      ) {
+        initialPlan = subscription.plan_key;
+      }
+    }
+
+    if (initialPlan === "basic") {
       redirect("/program/basic");
     }
 
-    if (membershipState.plan === "growth") {
+    if (initialPlan === "growth") {
       redirect("/program/growth");
     }
 
-    if (membershipState.plan === "inner_circle") {
+    if (initialPlan === "inner_circle") {
       redirect("/program/inner");
     }
   }

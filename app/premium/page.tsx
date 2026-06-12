@@ -22,7 +22,7 @@ export default async function PremiumPage({ searchParams }: PremiumPageProps) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/member");
+    redirect("/login?next=/premium");
   }
 
   const membership = await fetchLatestMembershipPlan(supabase, user.id, "[premium]");
