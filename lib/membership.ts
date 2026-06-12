@@ -21,8 +21,22 @@ export type MembershipFetchResult = {
 const ACTIVE_MEMBERSHIP_STATUSES = ["active", "trialing"];
 
 export function normalizeMembershipPlan(plan: string | null | undefined): MembershipPlanKey {
-  if (plan === "basic" || plan === "growth" || plan === "inner_circle") {
-    return plan;
+  if (!plan) {
+    return "free";
+  }
+
+  const normalized = plan.toLowerCase().replace(/[-\s]/g, "_");
+
+  if (normalized === "basic") {
+    return "basic";
+  }
+
+  if (normalized === "growth" || normalized === "leader") {
+    return "growth";
+  }
+
+  if (normalized === "inner_circle" || normalized === "premium") {
+    return "inner_circle";
   }
 
   return "free";
@@ -71,8 +85,12 @@ export async function fetchLatestMembershipPlan(
 
     if (activeMembership) {
       const selectedPlan = normalizeMembershipPlan(activeMembership.plan);
-      console.log(`${logPrefix} membership query result`, activeMembership);
-      console.log(`${logPrefix} selected plan`, selectedPlan);
+      console.log(`${logPrefix} membership query result`, {
+        rawMembership: activeMembership,
+        rawPlan: activeMembership.plan ?? null,
+        normalizedPlan: selectedPlan,
+        membershipStatus: activeMembership.status ?? null
+      });
 
       return {
         plan: selectedPlan,
@@ -102,8 +120,12 @@ export async function fetchLatestMembershipPlan(
     }
 
     const selectedPlan = normalizeMembershipPlan(fallbackMembership?.plan);
-    console.log(`${logPrefix} membership query result`, fallbackMembership);
-    console.log(`${logPrefix} selected plan`, selectedPlan);
+    console.log(`${logPrefix} membership query result`, {
+      rawMembership: fallbackMembership,
+      rawPlan: fallbackMembership?.plan ?? null,
+      normalizedPlan: selectedPlan,
+      membershipStatus: fallbackMembership?.status ?? null
+    });
 
     return {
       plan: selectedPlan,
