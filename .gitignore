@@ -5,3 +5,7 @@ node_modules/
 meisoulife-web/
 .next/
 node_modules/
+.next_build_backup/
+.next_build_backup_2/
+.tmp-basic-*.png
+meisoulife-final/
