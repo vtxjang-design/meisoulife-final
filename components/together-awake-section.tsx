@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { SectionHeading } from "@/components/section-heading";
 import { useLocaleCopy } from "@/lib/i18n";
+import { fetchLatestMembershipPlan } from "@/lib/membership";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 const sectionCopy = {
@@ -85,16 +86,9 @@ export function TogetherAwakeSection() {
         return;
       }
 
-      const { data: membership } = await supabase
-        .from("memberships")
-        .select("subscription_status")
-        .eq("user_id", session.user.id)
-        .in("subscription_status", ["active", "trialing"])
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
+      const membership = await fetchLatestMembershipPlan(supabase, session.user.id, "[together-awake-section]");
 
-      if (active && membership) {
+      if (active && membership.resolved && membership.plan !== "free") {
         setHasPaidMembership(true);
       }
     }

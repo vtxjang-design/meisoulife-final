@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { PremiumPageContent } from "@/components/premium-page-content";
+import { fetchLatestMembershipPlan, normalizeMembershipPlan } from "@/lib/membership";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 type PremiumPageProps = {
@@ -24,23 +25,14 @@ export default async function PremiumPage({ searchParams }: PremiumPageProps) {
     redirect("/member");
   }
 
-  const { data: membership } = await supabase
-    .from("memberships")
-    .select("plan, subscription_status")
-    .eq("user_id", user.id)
-    .in("subscription_status", ["active", "trialing"])
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+  const membership = await fetchLatestMembershipPlan(supabase, user.id, "[premium]");
 
-  if (!membership) {
+  if (!membership.resolved || membership.plan === "free") {
     redirect("/membership");
   }
 
-  const normalizedPlan =
-    membership.plan === "growth" || membership.plan === "inner_circle" || membership.plan === "basic"
-      ? membership.plan
-      : "basic";
+  const normalizedPlan = normalizeMembershipPlan(membership.plan);
+  const premiumPlan = normalizedPlan === "free" ? "basic" : normalizedPlan;
 
-  return <PremiumPageContent plan={normalizedPlan} success={params?.success === "true"} />;
+  return <PremiumPageContent plan={premiumPlan} success={params?.success === "true"} />;
 }

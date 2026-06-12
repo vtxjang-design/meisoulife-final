@@ -8,7 +8,7 @@ type MembershipSyncInput = {
   user_id?: string | null;
   email?: string | null;
   plan?: string | null;
-  subscription_status?: string | null;
+  status?: string | null;
   amount_total?: number | null;
 };
 
@@ -120,7 +120,7 @@ async function upsertMembership(record: MembershipSyncInput) {
 
   const resolvedUserId = await resolveMembershipUserId(record.email, record.user_id);
   const resolvedPlan = getMembershipPlan(record);
-  const resolvedStatus = record.subscription_status || "active";
+  const resolvedStatus = record.status || "active";
 
   if (!resolvedUserId) {
     console.warn("[stripe-webhook] membership sync skipped because user_id could not be resolved", {
@@ -136,13 +136,13 @@ async function upsertMembership(record: MembershipSyncInput) {
       {
         user_id: resolvedUserId,
         plan: resolvedPlan,
-        subscription_status: resolvedStatus
+        status: resolvedStatus
       },
       {
         onConflict: "user_id"
       }
     )
-    .select("user_id, plan, subscription_status")
+    .select("user_id, plan, status")
     .maybeSingle();
 
   if (error) {
@@ -175,10 +175,10 @@ async function upsertMembership(record: MembershipSyncInput) {
       .from("memberships")
       .update({
         plan: resolvedPlan,
-        subscription_status: resolvedStatus
+        status: resolvedStatus
       })
       .eq("id", existingMembership.id)
-      .select("user_id, plan, subscription_status")
+      .select("user_id, plan, status")
       .maybeSingle();
 
     if (fallbackError) {
@@ -200,7 +200,7 @@ async function syncUserPlan(record: {
   userId?: string | null;
   email?: string | null;
   plan?: string | null;
-  subscription_status?: string | null;
+  status?: string | null;
 }) {
   const supabase = getSupabaseAdminClient();
 
@@ -209,10 +209,7 @@ async function syncUserPlan(record: {
   }
 
   const resolvedUserId = await resolveMembershipUserId(record.email, record.userId);
-  const currentPlan =
-    record.subscription_status === "active" || record.subscription_status === "trialing"
-      ? normalizeMembershipPlan(record.plan) || "free"
-      : "free";
+  const currentPlan = record.status === "active" || record.status === "trialing" ? normalizeMembershipPlan(record.plan) || "free" : "free";
   const { error } = await supabase.from("users").upsert(
     {
       auth_user_id: resolvedUserId || null,
@@ -318,14 +315,14 @@ async function handleCheckoutCompleted(stripe: Stripe, session: Stripe.Checkout.
     user_id: userId,
     email: session.customer_details?.email || session.customer_email || null,
     plan,
-    subscription_status: "active",
+    status: "active",
     amount_total: session.amount_total ?? null,
   });
   await syncUserPlan({
     userId,
     email: session.customer_details?.email || session.customer_email || null,
     plan,
-    subscription_status: "active"
+    status: "active"
   });
 
   const customerEmail = session.customer_details?.email || session.customer_email || null;
@@ -391,14 +388,14 @@ async function handleInvoicePaid(stripe: Stripe, invoice: Stripe.Invoice) {
     user_id: subscription?.metadata?.user_id || null,
     email: invoice.customer_email || null,
     plan: subscription?.metadata?.plan || resolvePlanFromAmount(invoice.amount_paid || invoice.amount_due || null) || null,
-    subscription_status: "active",
+    status: "active",
     amount_total: invoice.amount_paid || invoice.amount_due || null,
   });
   await syncUserPlan({
     userId: subscription?.metadata?.user_id || null,
     email: invoice.customer_email || null,
     plan: subscription?.metadata?.plan || null,
-    subscription_status: "active"
+    status: "active"
   });
 }
 
@@ -411,13 +408,13 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
     user_id: subscription.metadata?.user_id || null,
     email: subscription.metadata?.email || null,
     plan: subscription.metadata?.plan || null,
-    subscription_status: subscription.status
+    status: subscription.status
   });
   await syncUserPlan({
     userId: subscription.metadata?.user_id || null,
     email: subscription.metadata?.email || null,
     plan: subscription.metadata?.plan || null,
-    subscription_status: subscription.status
+    status: subscription.status
   });
 }
 
@@ -426,13 +423,13 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     user_id: subscription.metadata?.user_id || null,
     email: subscription.metadata?.email || null,
     plan: subscription.metadata?.plan || null,
-    subscription_status: "canceled"
+    status: "canceled"
   });
   await syncUserPlan({
     userId: subscription.metadata?.user_id || null,
     email: subscription.metadata?.email || null,
     plan: subscription.metadata?.plan || null,
-    subscription_status: "canceled"
+    status: "canceled"
   });
 }
 
@@ -447,14 +444,14 @@ async function handleInvoiceFailed(stripe: Stripe, invoice: Stripe.Invoice) {
     user_id: subscription?.metadata?.user_id || null,
     email: invoice.customer_email || null,
     plan: subscription?.metadata?.plan || resolvePlanFromAmount(invoice.amount_due || null) || null,
-    subscription_status: "past_due",
+    status: "past_due",
     amount_total: invoice.amount_due || null,
   });
   await syncUserPlan({
     userId: subscription?.metadata?.user_id || null,
     email: invoice.customer_email || null,
     plan: subscription?.metadata?.plan || null,
-    subscription_status: "past_due"
+    status: "past_due"
   });
 }
 

@@ -2,7 +2,7 @@ export type MembershipPlanKey = "free" | "basic" | "growth" | "inner_circle";
 
 type MembershipRow = {
   plan: string | null;
-  subscription_status?: string | null;
+  status?: string | null;
   created_at?: string | null;
 };
 
@@ -13,7 +13,7 @@ type MembershipClient = {
 export type MembershipFetchResult = {
   plan: MembershipPlanKey;
   resolved: boolean;
-  subscriptionStatus: string | null;
+  membershipStatus: string | null;
   table: "memberships";
   errorMessage: string | null;
 };
@@ -33,11 +33,12 @@ async function queryLatestMembership(
   userId: string,
   activeOnly: boolean
 ) {
-  const baseQuery = supabase.from("memberships").select("plan, subscription_status, created_at").eq("user_id", userId);
+  const baseQuery = supabase.from("memberships").select("plan, status, created_at").eq("user_id", userId);
 
-  const orderedQuery = activeOnly && typeof baseQuery.in === "function"
-    ? baseQuery.in("subscription_status", ACTIVE_MEMBERSHIP_STATUSES).order("created_at", { ascending: false })
-    : baseQuery.order("created_at", { ascending: false });
+  const orderedQuery =
+    activeOnly && typeof baseQuery.in === "function"
+      ? baseQuery.in("status", ACTIVE_MEMBERSHIP_STATUSES).order("created_at", { ascending: false })
+      : baseQuery.order("created_at", { ascending: false });
 
   return orderedQuery.limit(1).maybeSingle();
 }
@@ -59,7 +60,7 @@ export async function fetchLatestMembershipPlan(
         return {
           plan: "free",
           resolved: false,
-          subscriptionStatus: null,
+          membershipStatus: null,
           table: "memberships",
           errorMessage: activeError.message ?? "Unknown memberships query error"
         };
@@ -76,7 +77,7 @@ export async function fetchLatestMembershipPlan(
       return {
         plan: selectedPlan,
         resolved: true,
-        subscriptionStatus: activeMembership.subscription_status ?? null,
+        membershipStatus: activeMembership.status ?? null,
         table: "memberships",
         errorMessage: null
       };
@@ -91,7 +92,7 @@ export async function fetchLatestMembershipPlan(
         return {
           plan: "free",
           resolved: false,
-          subscriptionStatus: null,
+          membershipStatus: null,
           table: "memberships",
           errorMessage: fallbackError.message ?? "Unknown memberships fallback query error"
         };
@@ -107,7 +108,7 @@ export async function fetchLatestMembershipPlan(
     return {
       plan: selectedPlan,
       resolved: true,
-      subscriptionStatus: fallbackMembership?.subscription_status ?? null,
+      membershipStatus: fallbackMembership?.status ?? null,
       table: "memberships",
       errorMessage: null
     };
@@ -116,7 +117,7 @@ export async function fetchLatestMembershipPlan(
   return {
     plan: "free",
     resolved: false,
-    subscriptionStatus: null,
+    membershipStatus: null,
     table: "memberships",
     errorMessage: "Membership lookup exhausted without a successful response"
   };
