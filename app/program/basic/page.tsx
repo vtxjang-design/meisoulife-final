@@ -19,19 +19,10 @@ const basicPageCopy = {
     sidebarTitle: "RHYTHM GARDEN",
     sidebarSubtitle: "探検者の安息所",
     nav: [
-      { label: "探険家の安息所", href: "#marker-stone" },
-      { label: "今日のリズム", href: "#today-rhythm-gates" },
-      { label: "私のリズムの旅", href: "#journey-path" },
-      { label: "7日間のリズム旅", href: "/rhythm-journey" },
-      { label: "静かな記録", href: "#quiet-records" },
-      { label: "私の気づき", href: "#marker-stone" },
-      { label: "ともに歩く人たち", href: "#companions" },
-      { label: "コミュニティ", href: "/community" },
-      { label: "集い", href: "#upcoming-gatherings" },
-      { label: "物語", disabled: true },
-      { label: "私の場所", href: "/program/basic" },
-      { label: "プロフィール", href: "/member" },
-      { label: "設定", disabled: true }
+      { label: "ホーム", href: "#marker-stone" },
+      { label: "記録", href: "#quiet-records" },
+      { label: "仲間", href: "#companions" },
+      { label: "その他", href: "#upcoming-gatherings" }
     ],
     companion: {
       progressTitle: "旅の進行状況",
@@ -51,19 +42,10 @@ const basicPageCopy = {
     sidebarTitle: "RHYTHM GARDEN",
     sidebarSubtitle: "탐험가의 안식처",
     nav: [
-      { label: "탐험가의 안식처", href: "#marker-stone" },
-      { label: "오늘의 리듬", href: "#today-rhythm-gates" },
-      { label: "나의 리듬 여정", href: "#journey-path" },
-      { label: "7일 리듬 여정", href: "/rhythm-journey" },
-      { label: "회복 기록", href: "#quiet-records" },
-      { label: "나의 통찰", href: "#marker-stone" },
-      { label: "함께 걷는 사람들", href: "#companions" },
-      { label: "커뮤니티", href: "/community" },
-      { label: "모임", href: "#upcoming-gatherings" },
-      { label: "이야기", disabled: true },
-      { label: "나의 공간", href: "/program/basic" },
-      { label: "프로필", href: "/member" },
-      { label: "설정", disabled: true }
+      { label: "홈", href: "#marker-stone" },
+      { label: "기록", href: "#quiet-records" },
+      { label: "사람들", href: "#companions" },
+      { label: "더보기", href: "#upcoming-gatherings" }
     ],
     companion: {
       progressTitle: "여정 진행 현황",
@@ -83,19 +65,10 @@ const basicPageCopy = {
     sidebarTitle: "RHYTHM GARDEN",
     sidebarSubtitle: "Explorer Sanctuary",
     nav: [
-      { label: "Explorer Sanctuary", href: "#marker-stone" },
-      { label: "Today's Rhythm", href: "#today-rhythm-gates" },
-      { label: "My Rhythm Journey", href: "#journey-path" },
-      { label: "7-Day Rhythm Journey", href: "/rhythm-journey" },
-      { label: "Recovery Records", href: "#quiet-records" },
-      { label: "My Insights", href: "#marker-stone" },
-      { label: "Walking Together", href: "#companions" },
-      { label: "Community", href: "/community" },
-      { label: "Gatherings", href: "#upcoming-gatherings" },
-      { label: "Stories", disabled: true },
-      { label: "My Space", href: "/program/basic" },
-      { label: "Profile", href: "/member" },
-      { label: "Settings", disabled: true }
+      { label: "Home", href: "#marker-stone" },
+      { label: "Records", href: "#quiet-records" },
+      { label: "People", href: "#companions" },
+      { label: "More", href: "#upcoming-gatherings" }
     ],
     companion: {
       progressTitle: "Journey Progress",
@@ -121,28 +94,15 @@ function BasicSidebar() {
     <>
       <div className="glass-panel overflow-x-auto rounded-[22px] px-4 py-3 lg:hidden">
         <div className="flex min-w-max items-center gap-2">
-          {copy.nav.map((item) => {
-            if ("href" in item) {
-              return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-white/72 transition hover:bg-white/[0.07]"
-                >
-                  {item.label}
-                </Link>
-              );
-            }
-
-            return (
-              <span
-                key={item.label}
-                className="rounded-full border border-white/8 bg-white/[0.03] px-3 py-2 text-xs text-white/35"
-              >
-                {item.label}
-              </span>
-            );
-          })}
+          {copy.nav.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-white/72 transition hover:bg-white/[0.07]"
+            >
+              {item.label}
+            </Link>
+          ))}
         </div>
       </div>
 
@@ -150,28 +110,15 @@ function BasicSidebar() {
         <p className="text-xs uppercase tracking-[0.32em] text-gold/80">{copy.sidebarTitle}</p>
         <p className="mt-3 font-serif text-xl leading-tight text-white">{copy.sidebarSubtitle}</p>
         <nav className="mt-6 space-y-2">
-          {copy.nav.map((item) => {
-            if ("href" in item) {
-              return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className="block rounded-[16px] border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white/76 transition hover:-translate-y-0.5 hover:bg-white/[0.07]"
-                >
-                  {item.label}
-                </Link>
-              );
-            }
-
-            return (
-              <span
-                key={item.label}
-                className="block rounded-[16px] border border-white/6 bg-white/[0.025] px-4 py-3 text-sm text-white/34"
-              >
-                {item.label}
-              </span>
-            );
-          })}
+          {copy.nav.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              className="block rounded-[16px] border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white/76 transition hover:-translate-y-0.5 hover:bg-white/[0.07]"
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
       </aside>
     </>
@@ -196,59 +143,66 @@ function BasicCompanionPanel({
   const memberStatus = planError ? copy.companion.memberError : planResolved ? copy.companion.memberLabel : copy.companion.memberFallback;
 
   return (
-    <aside className="space-y-4 lg:pt-8">
-      <div className="glass-panel rounded-[30px] bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.16),transparent_42%),radial-gradient(circle_at_top_right,rgba(89,193,255,0.14),transparent_42%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(14,28,46,0.80),rgba(8,22,34,0.74),rgba(9,34,42,0.72))] p-5 shadow-[0_24px_68px_rgba(4,10,20,0.24)]">
-        <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.companion.progressTitle}</p>
-        <p className="mt-3 text-2xl font-semibold text-white">Day {safeDay} / 7</p>
-        <p className="mt-2 text-sm text-white/58">{copy.companion.progressSubtitle}</p>
-        <div className="mt-5 flex gap-2">
-          {Array.from({ length: 7 }, (_, index) => {
-            const day = index + 1;
-            const active = day === safeDay;
-            const completed = day < safeDay;
+    <section id="upcoming-gatherings" className="mt-10 space-y-4">
+      <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+        <div className="glass-panel rounded-[30px] bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.16),transparent_42%),radial-gradient(circle_at_top_right,rgba(89,193,255,0.14),transparent_42%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(14,28,46,0.80),rgba(8,22,34,0.74),rgba(9,34,42,0.72))] p-5 shadow-[0_24px_68px_rgba(4,10,20,0.24)]">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.companion.progressTitle}</p>
+              <p className="mt-3 text-2xl font-semibold text-white">Day {safeDay} / 7</p>
+              <p className="mt-2 text-sm text-white/58">{copy.companion.progressSubtitle}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-xs uppercase tracking-[0.24em] text-white/40">{copy.companion.continuedTitle}</p>
+              <p className="mt-2 text-xl font-semibold text-white">
+                {streakCount} {language === "jp" ? "日" : language === "kr" ? "일" : "days"}
+              </p>
+              <p className="mt-2 text-sm text-white/56">{memberStatus}</p>
+            </div>
+          </div>
+          <div className="mt-5 flex gap-2">
+            {Array.from({ length: 7 }, (_, index) => {
+              const day = index + 1;
+              const active = day === safeDay;
+              const completed = day < safeDay;
 
-            return (
-              <span
-                key={day}
-                className={`h-2.5 flex-1 rounded-full ${
-                  active ? "bg-gold shadow-[0_0_16px_rgba(212,175,55,0.45)]" : completed ? "bg-moss/70" : "bg-white/12"
-                }`}
-              />
-            );
-          })}
+              return (
+                <span
+                  key={day}
+                  className={`h-2.5 flex-1 rounded-full ${
+                    active ? "bg-gold shadow-[0_0_16px_rgba(212,175,55,0.45)]" : completed ? "bg-moss/70" : "bg-white/12"
+                  }`}
+                />
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="glass-panel rounded-[30px] bg-[radial-gradient(circle_at_top_right,rgba(115,231,210,0.14),transparent_40%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(18,26,44,0.78),rgba(11,18,30,0.72),rgba(9,30,38,0.68))] p-5 shadow-[0_24px_68px_rgba(4,10,20,0.22)]">
+          <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.companion.gatheringsTitle}</p>
+          <div className="mt-4 grid gap-3">
+            <div className="rounded-[18px] border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/78">
+              {language === "jp" ? "毎週水曜 06:30 朝ライブ瞑想" : language === "kr" ? "매주 수요일 06:30 아침 라이브 명상" : "Every Wednesday 06:30 Morning live meditation"}
+            </div>
+            <div className="rounded-[18px] border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/78">
+              {language === "jp" ? "土曜 21:00 睡眠回復セッション" : language === "kr" ? "토요일 21:00 수면 회복 세션" : "Saturday 21:00 Sleep recovery session"}
+            </div>
+          </div>
+          <Link
+            href="/community"
+            className="mt-5 inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
+          >
+            {copy.companion.gatheringsCta}
+          </Link>
         </div>
       </div>
 
-      <div className="glass-panel rounded-[30px] bg-[radial-gradient(circle_at_top_left,rgba(89,193,255,0.12),transparent_42%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(15,27,43,0.78),rgba(10,18,30,0.72),rgba(9,30,38,0.68))] p-5 shadow-[0_24px_68px_rgba(4,10,20,0.22)]">
+      <div className="glass-panel rounded-[28px] bg-[radial-gradient(circle_at_top_left,rgba(89,193,255,0.12),transparent_42%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(15,27,43,0.78),rgba(10,18,30,0.72),rgba(9,30,38,0.68))] p-5 shadow-[0_24px_68px_rgba(4,10,20,0.22)]">
         <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.companion.insightTitle}</p>
         <p className="mt-3 text-base leading-7 text-white/82">{copy.companion.insightBody}</p>
         <p className="mt-4 text-sm text-white/50">{copy.companion.aiLabel}</p>
       </div>
-
-      <div className="glass-panel rounded-[30px] bg-[radial-gradient(circle_at_bottom_left,rgba(76,183,151,0.12),transparent_42%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(16,32,36,0.78),rgba(10,22,26,0.72),rgba(11,36,40,0.68))] p-5 shadow-[0_24px_68px_rgba(4,10,20,0.22)]">
-        <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.companion.continuedTitle}</p>
-        <p className="mt-3 text-2xl font-semibold text-white">{streakCount} {language === "jp" ? "日" : language === "kr" ? "일" : "days"}</p>
-        <p className="mt-2 text-sm text-white/56">{memberStatus}</p>
-      </div>
-
-      <div id="upcoming-gatherings" className="glass-panel rounded-[30px] bg-[radial-gradient(circle_at_top_right,rgba(115,231,210,0.14),transparent_40%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(18,26,44,0.78),rgba(11,18,30,0.72),rgba(9,30,38,0.68))] p-5 shadow-[0_24px_68px_rgba(4,10,20,0.22)]">
-        <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.companion.gatheringsTitle}</p>
-        <div className="mt-4 grid gap-3">
-          <div className="rounded-[18px] border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/78">
-            {language === "jp" ? "毎週水曜 06:30 朝ライブ瞑想" : language === "kr" ? "매주 수요일 06:30 아침 라이브 명상" : "Every Wednesday 06:30 Morning live meditation"}
-          </div>
-          <div className="rounded-[18px] border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/78">
-            {language === "jp" ? "土曜 21:00 睡眠回復セッション" : language === "kr" ? "토요일 21:00 수면 회복 세션" : "Saturday 21:00 Sleep recovery session"}
-          </div>
-        </div>
-        <Link
-          href="/community"
-          className="mt-5 inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
-        >
-          {copy.companion.gatheringsCta}
-        </Link>
-      </div>
-    </aside>
+    </section>
   );
 }
 
@@ -368,7 +322,7 @@ function BasicProgramContent() {
       <div className="pointer-events-none absolute left-[14%] top-[28%] -z-10 h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle,rgba(115,231,210,0.16),transparent_72%)] blur-[144px]" />
       <div className="pointer-events-none absolute inset-x-[8%] bottom-[8%] -z-10 h-[520px] rounded-full bg-[radial-gradient(circle,rgba(70,220,200,0.14),transparent_74%)] blur-[148px]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[1400px] rounded-[56px] bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.30),transparent_54%),radial-gradient(circle_at_top_right,rgba(89,193,255,0.26),transparent_60%),radial-gradient(circle_at_50%_78%,rgba(70,220,200,0.12),transparent_62%),linear-gradient(180deg,rgba(4,18,33,0.18),rgba(8,32,56,0.08)_42%,rgba(16,56,69,0.04)_100%)]" />
-      <div className="grid gap-5 lg:grid-cols-[230px_minmax(0,1fr)_310px] xl:grid-cols-[250px_minmax(0,1fr)_330px]">
+      <div className="grid gap-5 lg:grid-cols-[230px_minmax(0,1fr)] xl:grid-cols-[250px_minmax(0,1fr)]">
         <BasicSidebar />
 
         <main className="min-w-0">
@@ -390,14 +344,13 @@ function BasicProgramContent() {
             membershipResolved={planResolved && !planError}
             defaultRhythm={defaultRhythm}
           />
+          <BasicCompanionPanel
+            challengeDay={dashboardState.challengeDay}
+            streakCount={dashboardState.streakCount}
+            planResolved={planResolved && !planError}
+            planError={planError}
+          />
         </main>
-
-        <BasicCompanionPanel
-          challengeDay={dashboardState.challengeDay}
-          streakCount={dashboardState.streakCount}
-          planResolved={planResolved && !planError}
-          planError={planError}
-        />
       </div>
     </div>
   );

@@ -39,13 +39,13 @@ const basicHomeCopy = {
     hero: {
       title: "本来の自分へ",
       subtitle: "朝・昼・夜\n\n一日三回の回復習慣",
-      support: "小さな毎日のリズムは、人生を変える習慣になっていきます。",
+      support: "小さなリズムが、\n毎日を静かに整えていきます。",
       primaryCta: "今日のリズムを始める"
     },
     memberBadge: "Basicメンバー空間",
     routineSection: {
       title: "今日のリズム",
-      description: "朝・昼・夜の小さな実践から、今日を静かに整えていきましょう。",
+      description: "朝・昼・夜の3つの扉から、\n今の自分に合うものを選びましょう。",
       ready: "準備完了",
       completed: "完了",
       action: "始める"
@@ -151,7 +151,7 @@ const basicHomeCopy = {
       ],
       saved: "今日の状態を記録しました。"
     },
-    rhythmCardsTitle: "今日、どの扉から自分へ戻りますか。",
+    rhythmCardsTitle: "今のあなたに合う扉を、ひとつ選びましょう。",
     rhythmCards: [
       {
         key: "morning",
@@ -229,13 +229,13 @@ const basicHomeCopy = {
     hero: {
       title: "본래의 나에게",
       subtitle: "아침 · 낮 · 밤\n\n하루 세 번의 회복 습관",
-      support: "작은 일상의 리듬은 삶을 바꾸는 습관이 됩니다.",
+      support: "작은 리듬이,\n하루를 조용히 바꿔갑니다.",
       primaryCta: "오늘의 리듬 시작하기"
     },
     memberBadge: "Basic 멤버 공간",
     routineSection: {
       title: "오늘의 리듬",
-      description: "아침, 낮, 밤의 작은 실천으로 오늘을 조용히 정돈해 봅니다.",
+      description: "아침 · 낮 · 밤의 세 문 중,\n지금 필요한 리듬을 고릅니다.",
       ready: "준비됨",
       completed: "완료",
       action: "시작하기"
@@ -341,7 +341,7 @@ const basicHomeCopy = {
       ],
       saved: "오늘의 상태를 기록했습니다."
     },
-    rhythmCardsTitle: "오늘은 어느 문으로 나를 돌볼까요.",
+    rhythmCardsTitle: "지금 필요한 문을 하나 고르세요.",
     rhythmCards: [
       {
         key: "morning",
@@ -419,13 +419,13 @@ const basicHomeCopy = {
     hero: {
       title: "Back to Yourself",
       subtitle: "Morning · Day · Night\n\nThree moments of recovery",
-      support: "Small daily rhythms become life-changing habits.",
+      support: "Small rhythms\nquietly shape the day.",
       primaryCta: "Begin Today’s Rhythm"
     },
     memberBadge: "Basic Member Space",
     routineSection: {
       title: "Today’s Rhythm",
-      description: "Return through a small morning, day, or night practice and keep the room alive each day.",
+      description: "Choose the one gate\nthat fits you now.",
       ready: "Ready",
       completed: "Completed",
       action: "Begin"
@@ -531,7 +531,7 @@ const basicHomeCopy = {
       ],
       saved: "Your state has been recorded for today."
     },
-    rhythmCardsTitle: "Which gate will help you return to yourself today?",
+    rhythmCardsTitle: "Choose one gate for now.",
     rhythmCards: [
       {
         key: "morning",
@@ -1053,7 +1053,7 @@ export function BasicHome({
                   <div className="relative">
                     <div className="flex items-center justify-between gap-3">
                       <p className="text-sm font-semibold tracking-[0.04em] text-gold/90">{card.title}</p>
-                      <span className={`rounded-full px-3 py-1 text-[11px] font-semibold tracking-[0.18em] ${completed ? "bg-gold/[0.18] text-gold" : "bg-white/[0.08] text-white/70"}`}>
+                      <span className={`rounded-full px-3 py-1 text-[11px] font-semibold tracking-[0.12em] ${completed ? "bg-gold/[0.18] text-gold" : "bg-white/[0.08] text-white/70"}`}>
                         {completed ? copy.routineSection.completed : copy.routineSection.ready}
                       </span>
                     </div>
@@ -1072,7 +1072,6 @@ export function BasicHome({
                         ))}
                       </div>
                     ) : null}
-                    {"purpose" in card ? <p className="mt-4 text-xs uppercase tracking-[0.24em] text-gold/78">{card.purpose}</p> : null}
                     <Link
                       href={buildRhythmMeditationHref(rhythm)}
                       onClick={() => handleSelectGate(rhythm)}
@@ -1189,28 +1188,6 @@ export function BasicHome({
         </div>
       </section>
 
-      <section id="quiet-records" className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_right,rgba(89,193,255,0.12),transparent_38%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.64),rgba(8,28,42,0.74),rgba(9,36,44,0.78))]`}>
-        <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.records.title}</p>
-        <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
-            <p className="text-sm text-white/56">{copy.records.checkIn}</p>
-            <p className="mt-3 text-sm leading-7 text-white/82">{selectedMood === "unknown" ? copy.routineSection.ready : copy.checkIn.saved}</p>
-          </article>
-          <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
-            <p className="text-sm text-white/56">{copy.records.streak}</p>
-            <p className="mt-3 whitespace-pre-line text-sm leading-7 text-white/84">{getStreakReward(language, streakDays)}</p>
-          </article>
-          <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
-            <p className="text-sm text-white/56">{copy.records.completed}</p>
-            <p className="mt-3 text-xl font-semibold text-white">{completedPracticeCount}</p>
-          </article>
-          <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
-            <p className="text-sm text-white/56">{copy.records.insight}</p>
-            <p className="mt-3 text-sm leading-7 text-white/82">{todayMessage}</p>
-          </article>
-        </div>
-      </section>
-
       <section id="companions" className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_left,rgba(89,193,255,0.12),transparent_40%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.62),rgba(8,28,42,0.72),rgba(9,36,44,0.76))]`}>
         <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
           <div>
@@ -1239,6 +1216,28 @@ export function BasicHome({
               {copy.companions.cta}
             </Link>
           </div>
+        </div>
+      </section>
+
+      <section id="quiet-records" className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_right,rgba(89,193,255,0.12),transparent_38%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.64),rgba(8,28,42,0.74),rgba(9,36,44,0.78))]`}>
+        <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.records.title}</p>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
+            <p className="text-sm text-white/56">{copy.records.checkIn}</p>
+            <p className="mt-3 text-sm leading-7 text-white/82">{selectedMood === "unknown" ? copy.routineSection.ready : copy.checkIn.saved}</p>
+          </article>
+          <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
+            <p className="text-sm text-white/56">{copy.records.streak}</p>
+            <p className="mt-3 whitespace-pre-line text-sm leading-7 text-white/84">{getStreakReward(language, streakDays)}</p>
+          </article>
+          <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
+            <p className="text-sm text-white/56">{copy.records.completed}</p>
+            <p className="mt-3 text-xl font-semibold text-white">{completedPracticeCount}</p>
+          </article>
+          <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
+            <p className="text-sm text-white/56">{copy.records.insight}</p>
+            <p className="mt-3 text-sm leading-7 text-white/82">{todayMessage}</p>
+          </article>
         </div>
       </section>
 
