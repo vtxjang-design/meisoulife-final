@@ -1,13 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useAuthState } from "@/components/auth-provider";
 import { BasicHome } from "@/components/basic-home";
-import { ProgramAccessGuard } from "@/components/program-access-guard";
 import { getLocaleCopy, useLanguage } from "@/lib/i18n";
 import { getMockDashboard } from "@/lib/mock-data";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 type DashboardState = {
@@ -254,8 +253,11 @@ function BasicCompanionPanel({
 }
 
 function BasicProgramContent() {
-  const { plan, planResolved, planError, session } = useAuthState();
-  useLanguage();
+  const { plan, planResolved, planError, session, authResolved, isLoggedIn } = useAuthState();
+  const { language } = useLanguage();
+  const copy = getLocaleCopy(basicPageCopy, language);
+  const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const mock = getMockDashboard();
   const [dashboardState, setDashboardState] = useState<DashboardState>({
@@ -267,6 +269,23 @@ function BasicProgramContent() {
     highlightedRhythm === "morning" || highlightedRhythm === "day" || highlightedRhythm === "night"
       ? highlightedRhythm
       : undefined;
+
+  useEffect(() => {
+    if (!authResolved) {
+      return;
+    }
+
+    if (isLoggedIn) {
+      return;
+    }
+
+    const nextPath =
+      typeof window !== "undefined"
+        ? `${window.location.pathname}${window.location.search}${window.location.hash}`
+        : pathname;
+
+    router.replace(`/login?next=${encodeURIComponent(nextPath)}`);
+  }, [authResolved, isLoggedIn, pathname, router]);
 
   useEffect(() => {
     let active = true;
@@ -323,6 +342,24 @@ function BasicProgramContent() {
     };
   }, [mock.challengeDay, mock.streakCount, session?.user?.id]);
 
+  if (!authResolved || !isLoggedIn) {
+    return (
+      <div className="section-shell py-16 sm:py-24">
+        <div className="mx-auto max-w-3xl">
+          <div className="premium-card rounded-[28px] p-8 text-center sm:p-12">
+            <p className="text-lg text-white/72">
+              {language === "jp"
+                ? "ログイン状態を確認しています..."
+                : language === "kr"
+                  ? "로그인 상태를 확인하고 있습니다..."
+                  : "Checking your login status..."}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="section-shell relative min-h-screen overflow-hidden pb-20 pt-6 sm:pb-28 sm:pt-8">
       <div className="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(circle_at_20%_20%,rgba(115,231,210,0.18),transparent_45%),radial-gradient(circle_at_80%_30%,rgba(89,193,255,0.16),transparent_50%),radial-gradient(circle_at_50%_80%,rgba(70,220,200,0.12),transparent_60%),linear-gradient(180deg,#041221_0%,#082038_42%,#0B2F3D_74%,#103845_100%)]" />
@@ -335,6 +372,17 @@ function BasicProgramContent() {
         <BasicSidebar />
 
         <main className="min-w-0">
+          {planError || !planResolved ? (
+            <div className="mb-4 rounded-[20px] border border-gold/18 bg-[linear-gradient(135deg,rgba(212,175,55,0.10),rgba(115,231,210,0.07))] px-5 py-4 text-sm leading-7 text-white/78 shadow-[0_18px_52px_rgba(4,10,20,0.18)]">
+              {planError
+                ? language === "jp"
+                  ? "会員状態の確認に時間がかかっていますが、今日のリズム空間はそのままご利用いただけます。"
+                  : language === "kr"
+                    ? "멤버십 상태 확인이 지연되고 있지만, 오늘의 리듬 공간은 그대로 이용하실 수 있습니다."
+                    : "Membership verification is taking a little longer, but your daily rhythm space is still available."
+                : copy.companion.memberFallback}
+            </div>
+          ) : null}
           <BasicHome
             currentDay={dashboardState.challengeDay}
             streakCount={dashboardState.streakCount}
@@ -357,8 +405,18 @@ function BasicProgramContent() {
 
 export default function BasicProgramPage() {
   return (
-    <ProgramAccessGuard>
+    <Suspense
+      fallback={
+        <div className="section-shell py-16 sm:py-24">
+          <div className="mx-auto max-w-3xl">
+            <div className="premium-card rounded-[28px] p-8 text-center sm:p-12">
+              <p className="text-lg text-white/72">Preparing your rhythm space...</p>
+            </div>
+          </div>
+        </div>
+      }
+    >
       <BasicProgramContent />
-    </ProgramAccessGuard>
+    </Suspense>
   );
 }
