@@ -21,10 +21,9 @@ type ZeroGateCard = {
 const zeroGateCopy = {
   jp: {
     eyebrow: "ZERO GATE — 1分リセット",
-    title: "今のあなたは、\nどこから整えますか？",
-    description:
-      "すぐわかる実用的な入口から始めて、静かな1分の中で自分のリズムへ戻ります。",
-    encouragement: "少しずつで、大丈夫です。",
+    title: "今日は\nどんな回復が\n必要ですか？",
+    description: "1分で整う\n\n心・体・呼吸",
+    encouragement: "",
     gates: [
       { key: "overload", emoji: "🧠", label: "脳過負荷", worldName: "「思考を空ける森」", description: "頭の中が複雑すぎるとき" },
       { key: "anxiety", emoji: "😨", label: "不安", worldName: "「安全の洞窟」", description: "心が不安なとき" },
@@ -36,10 +35,9 @@ const zeroGateCopy = {
   },
   kr: {
     eyebrow: "ZERO GATE — 1분 리셋",
-    title: "오늘은 어떤 상태를\n먼저 돌보고 싶으세요?",
-    description:
-      "지금의 상태에 맞는\n작은 리셋부터 시작해보세요.\n조용한 1분 안에서\n다시 내 리듬을 찾게 됩니다.",
-    encouragement: "천천히여도 충분합니다.",
+    title: "오늘은\n어떤 회복이\n필요한가요?",
+    description: "1분이면 충분합니다\n\n마음 · 몸 · 호흡",
+    encouragement: "",
     gates: [
       { key: "overload", emoji: "🧠", label: "뇌과부하", worldName: "「생각 비우는 숲」", description: "머리가 너무 복잡할 때" },
       { key: "anxiety", emoji: "😨", label: "불안", worldName: "「안전의 동굴」", description: "마음이 불안할 때" },
@@ -51,10 +49,9 @@ const zeroGateCopy = {
   },
   en: {
     eyebrow: "ZERO GATE — 1-Minute Reset",
-    title: "What kind of gate do you need right now?",
-    description:
-      "Begin with a practical entry you can recognize instantly, then return to your rhythm through one quiet minute.",
-    encouragement: "A quiet minute is enough to begin.",
+    title: "What kind of\nrecovery\ndo you need today?",
+    description: "One minute\nto reset\n\nMind · Body · Breath",
+    encouragement: "",
     gates: [
       { key: "overload", emoji: "🧠", label: "Mental Overload", worldName: '"Forest of Empty Thoughts"', description: "When your mind feels too crowded" },
       { key: "anxiety", emoji: "😨", label: "Anxiety", worldName: '"Cave of Safety"', description: "When your heart feels uneasy" },
@@ -83,7 +80,9 @@ export function ZeroGateSection({ onEnterGate }: ZeroGateSectionProps) {
         <div className="relative max-w-[17ch] sm:max-w-3xl">
           <SectionHeading eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
         </div>
-        <p className="relative mt-5 max-w-[16ch] text-sm leading-7 text-white/48 sm:max-w-none">{copy.encouragement}</p>
+        {copy.encouragement ? (
+          <p className="relative mt-5 max-w-[16ch] text-sm leading-7 text-white/48 sm:max-w-none">{copy.encouragement}</p>
+        ) : null}
         <div className="relative mt-5 grid grid-cols-2 gap-3 xl:grid-cols-3 xl:gap-4">
           {copy.gates.map((gate) => (
             <GateCard

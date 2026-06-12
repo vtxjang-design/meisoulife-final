@@ -180,10 +180,12 @@ export function RhythmJourneyPage() {
         {showIntro ? (
           <section className="overflow-hidden rounded-[34px] border border-[#f3e8c8]/20 bg-[radial-gradient(circle_at_top,rgba(244,232,198,0.18),transparent_22%),linear-gradient(180deg,rgba(246,239,226,0.18),rgba(196,219,205,0.08))] px-6 py-8 shadow-[0_24px_80px_rgba(7,17,31,0.14)] backdrop-blur-[14px] sm:px-8 sm:py-10">
             <p className="text-sm uppercase tracking-[0.28em] text-[#f0d79c]">{journeyCopy.entryEyebrow}</p>
-            <h1 className="mt-4 font-serif text-[34px] leading-[1.24] text-white sm:text-[44px]">
+            <h1 className="mt-4 max-w-[10ch] whitespace-pre-line font-serif text-[32px] leading-[1.18] text-white sm:max-w-none sm:text-[44px] sm:leading-[1.24]">
               {journeyCopy.title}
             </h1>
-            <p className="mt-3 text-lg leading-8 text-[#f4ead1]/92">{journeyCopy.subtitle}</p>
+            <p className="mt-3 max-w-[14ch] whitespace-pre-line text-lg leading-[1.7] text-[#f4ead1]/92 sm:max-w-[18ch] sm:leading-8">
+              {journeyCopy.subtitle}
+            </p>
             <div className="mt-7 rounded-[28px] border border-white/10 bg-[#f6f0e3]/10 px-5 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
               <p className="whitespace-pre-line text-base leading-8 text-white/82">
                 {journeyCopy.entryBody}
@@ -203,8 +205,12 @@ export function RhythmJourneyPage() {
             <div className="flex items-center justify-between gap-4 px-1">
               <div>
                 <p className="text-sm uppercase tracking-[0.28em] text-[#f0d79c]">{journeyCopy.todayEyebrow}</p>
-                <h1 className="mt-3 font-serif text-[30px] leading-[1.24] text-white sm:text-[40px]">{currentDay.title}</h1>
-                <p className="mt-2 text-base leading-7 text-white/70">{currentDay.subtitle}</p>
+                <h1 className="mt-3 max-w-[12ch] font-serif text-[30px] leading-[1.2] text-white sm:max-w-none sm:text-[40px] sm:leading-[1.24]">
+                  {currentDay.title}
+                </h1>
+                <p className="mt-2 max-w-[16ch] whitespace-pre-line text-base leading-[1.68] text-white/70 sm:max-w-[22ch] sm:leading-7">
+                  {currentDay.subtitle}
+                </p>
               </div>
               <div className="rounded-full border border-white/10 bg-white/[0.06] px-4 py-2 text-sm text-white/68">
                 {currentDay.day} / {RHYTHM_JOURNEY_DAY_COUNT}

@@ -81,8 +81,8 @@ export type RhythmJourneyLocaleContent = {
 
 const rhythmJourneyContent: Record<Language, RhythmJourneyLocaleContent> = {
   jp: {
-    title: "7日間の小さな回復",
-    subtitle: "自分のリズムを取り戻す旅",
+    title: "7日間の\n小さな回復",
+    subtitle: "一日ひとつ\n\n自分を整える",
     entryEyebrow: "毎日の小さなリズム",
     entryBody: "頑張らなくて大丈夫です。\n\n今日は、\nひとつだけ整えてみましょう。",
     startCta: "始める",
@@ -238,8 +238,8 @@ const rhythmJourneyContent: Record<Language, RhythmJourneyLocaleContent> = {
     ]
   },
   kr: {
-    title: "7일간의 작은 회복",
-    subtitle: "나의 리듬을 되찾는 여정",
+    title: "7일간의\n작은 회복",
+    subtitle: "하루 하나씩\n\n나를 회복하는 시간",
     entryEyebrow: "매일의 작은 리듬",
     entryBody: "애쓰지 않아도 괜찮습니다.\n\n오늘은,\n하나만 가볍게 정돈해 봅니다.",
     startCta: "시작하기",
@@ -395,8 +395,8 @@ const rhythmJourneyContent: Record<Language, RhythmJourneyLocaleContent> = {
     ]
   },
   en: {
-    title: "7 Days of Small Recovery",
-    subtitle: "A journey back to your own rhythm",
+    title: "7 Days\nof Recovery",
+    subtitle: "One day at a time\n\nReturn to yourself",
     entryEyebrow: "A small rhythm for each day",
     entryBody: "You do not need to try hard.\n\nToday,\nlet us gently restore just one thing.",
     startCta: "Begin",

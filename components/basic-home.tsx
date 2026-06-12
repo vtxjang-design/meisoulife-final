@@ -37,8 +37,8 @@ const TODAY_REFLECTION_STORAGE_KEY = "meisoulife_basic_daily_reflection_v1";
 const basicHomeCopy = {
   jp: {
     hero: {
-      title: "生活リズムを育てる場所",
-      subtitle: "一日三回、\n本来の自分に戻ります。",
+      title: "本来の自分へ",
+      subtitle: "朝・昼・夜\n\n一日三回の回復習慣",
       support: "小さな毎日のリズムは、人生を変える習慣になっていきます。",
       primaryCta: "今日のリズムを始める"
     },
@@ -93,8 +93,8 @@ const basicHomeCopy = {
       saved: "今日の記録が静かに残りました。"
     },
     companions: {
-      title: "今日ここにいる仲間たち",
-      body: "今日この静かな場所に、ともにいる仲間たちがいます。",
+      title: "ともに歩く人たち",
+      body: "今日この静かな場所に、ともに歩く人たちがいます。",
       walked: "今日は12人がリズムを実践しました。",
       present: "今週は47人がともに歩んでいます。",
       cta: "仲間たちの場所へ"
@@ -227,8 +227,8 @@ const basicHomeCopy = {
   },
   kr: {
     hero: {
-      title: "생활리듬을 만드는 곳",
-      subtitle: "하루 세 번,\n본래의 나로 돌아옵니다.",
+      title: "본래의 나에게",
+      subtitle: "아침 · 낮 · 밤\n\n하루 세 번의 회복 습관",
       support: "작은 일상의 리듬은 삶을 바꾸는 습관이 됩니다.",
       primaryCta: "오늘의 리듬 시작하기"
     },
@@ -283,8 +283,8 @@ const basicHomeCopy = {
       saved: "오늘의 기록이 조용히 남았습니다."
     },
     companions: {
-      title: "오늘 함께 머무는 사람들",
-      body: "오늘 이 조용한 공간에 함께 머무는 사람들이 있습니다.",
+      title: "함께 걷는 사람들",
+      body: "오늘 이 조용한 공간에 함께 걷는 사람들이 있습니다.",
       walked: "오늘 12명이 리듬을 실천했습니다.",
       present: "이번 주 47명이 함께 걷고 있습니다.",
       cta: "함께 걷는 사람들로"
@@ -383,7 +383,7 @@ const basicHomeCopy = {
       enter: "들어가기"
     },
     records: {
-      title: "조용한 기록",
+      title: "회복 기록",
       checkIn: "오늘의 체크인",
       streak: "현재 스트릭",
       completed: "완료한 실천",
@@ -417,10 +417,10 @@ const basicHomeCopy = {
   },
   en: {
     hero: {
-      title: "Build Your Daily Rhythm",
-      subtitle: "Return to your true self,\nthree times a day.",
+      title: "Back to Yourself",
+      subtitle: "Morning · Day · Night\n\nThree moments of recovery",
       support: "Small daily rhythms become life-changing habits.",
-      primaryCta: "Start Today’s Rhythm"
+      primaryCta: "Begin Today’s Rhythm"
     },
     memberBadge: "Basic Member Space",
     routineSection: {
@@ -473,8 +473,8 @@ const basicHomeCopy = {
       saved: "Today’s reflection has been quietly saved."
     },
     companions: {
-      title: "People Here With You",
-      body: "There are people sharing this quiet space with you today.",
+      title: "Walking Together",
+      body: "There are people walking through this quiet space with you today.",
       walked: "12 people practiced their rhythm today.",
       present: "47 people are walking together this week.",
       cta: "Enter the Community"
@@ -573,7 +573,7 @@ const basicHomeCopy = {
       enter: "Enter"
     },
     records: {
-      title: "Quiet Records",
+      title: "Recovery Records",
       checkIn: "Today’s Check-In",
       streak: "Current Streak",
       completed: "Completed Practices",
@@ -1011,13 +1011,17 @@ export function BasicHome({
               {copy.memberBadge}
             </p>
             <div className="mt-8 space-y-4">
-              <p className="text-sm uppercase tracking-[0.28em] text-white/48">{copy.routineSection.title}</p>
-              <h1 className="max-w-[14ch] font-serif text-[34px] leading-[1.12] text-white sm:text-[56px]">{copy.hero.title}</h1>
-              <p className="max-w-[18ch] whitespace-pre-line font-serif text-[24px] leading-[1.5] text-white/88 sm:text-[34px]">
+              <p className="text-sm uppercase tracking-[0.24em] text-white/48">{copy.routineSection.title}</p>
+              <h1 className="max-w-[11ch] whitespace-pre-line font-serif text-[32px] leading-[1.12] text-white sm:max-w-[14ch] sm:text-[56px]">
+                {copy.hero.title}
+              </h1>
+              <p className="max-w-[14ch] whitespace-pre-line font-serif text-[22px] leading-[1.45] text-white/88 sm:max-w-[18ch] sm:text-[34px] sm:leading-[1.5]">
                 {copy.hero.subtitle}
               </p>
             </div>
-            <p className="mt-6 max-w-2xl text-base leading-[1.95] text-white/72 sm:text-lg">{copy.hero.support}</p>
+            <p className="mt-6 max-w-[23ch] text-base leading-[1.75] text-white/72 sm:max-w-2xl sm:text-lg sm:leading-[1.95]">
+              {copy.hero.support}
+            </p>
             <Link
               href="#today-rhythm-gates"
               className="mt-8 inline-flex min-h-[50px] items-center justify-center rounded-full border border-[rgba(115,231,210,0.22)] bg-white/[0.08] px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.12]"
@@ -1027,7 +1031,9 @@ export function BasicHome({
           </div>
 
           <div id="today-rhythm-gates" className="mt-10">
-            <p className="mb-4 text-sm leading-7 text-white/62">{copy.rhythmCardsTitle}</p>
+            <p className="mb-4 max-w-[20ch] text-sm leading-[1.7] text-white/62 sm:max-w-[30ch] sm:leading-7">
+              {copy.rhythmCardsTitle}
+            </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-3">
             {copy.rhythmCards.map((card) => {
@@ -1051,8 +1057,12 @@ export function BasicHome({
                         {completed ? copy.routineSection.completed : copy.routineSection.ready}
                       </span>
                     </div>
-                    <p className="mt-4 min-h-[48px] text-base leading-7 text-white/88">{card.description}</p>
-                    <p className="mt-3 text-sm leading-7 text-white/60">{card.detail}</p>
+                    <p className="mt-4 min-h-[48px] max-w-[16ch] text-base leading-[1.6] text-white/88 sm:max-w-none sm:leading-7">
+                      {card.description}
+                    </p>
+                    <p className="mt-3 max-w-[24ch] text-sm leading-[1.7] text-white/60 sm:max-w-none sm:leading-7">
+                      {card.detail}
+                    </p>
                     {"programs" in card && Array.isArray(card.programs) ? (
                       <div className="mt-4 space-y-2">
                         {card.programs.map((program) => (
@@ -1100,7 +1110,9 @@ export function BasicHome({
             <div className="relative">
               <p className="text-xs uppercase tracking-[0.24em] text-gold/78">{copy.markerStone.title}</p>
               <p className="mt-4 text-sm uppercase tracking-[0.24em] text-white/58">{copy.markerStone.bodyTitle}</p>
-              <p className="mt-3 whitespace-pre-line text-[28px] font-semibold leading-[1.55] text-white sm:text-[34px]">{copy.markerStone.note}</p>
+              <p className="mt-3 max-w-[14ch] whitespace-pre-line text-[26px] font-semibold leading-[1.45] text-white sm:max-w-none sm:text-[34px] sm:leading-[1.55]">
+                {copy.markerStone.note}
+              </p>
               <p className="mt-4 max-w-md text-sm leading-7 text-white/72">{markerMessage}</p>
               <Link
                 href={`/rhythm-journey?day=${journeyDay}`}
@@ -1113,7 +1125,9 @@ export function BasicHome({
           <article className="rounded-[30px] border border-[rgba(89,193,255,0.14)] bg-[linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(13,31,34,0.82),rgba(7,19,22,0.90))] px-6 py-6 backdrop-blur-xl">
             <p className="text-xs uppercase tracking-[0.24em] text-gold/76">{copy.openGate.title}</p>
             <p className="mt-4 text-sm uppercase tracking-[0.24em] text-white/58">{getJourneyGateLabel(language, journeyDay)}</p>
-            <p className="mt-3 text-[30px] font-semibold leading-tight text-white sm:text-[34px]">{currentJourneyGate.title}</p>
+            <p className="mt-3 max-w-[12ch] text-[30px] font-semibold leading-[1.18] text-white sm:max-w-none sm:text-[34px]">
+              {currentJourneyGate.title}
+            </p>
             <p className="mt-4 whitespace-pre-line text-sm leading-7 text-white/68">{copy.openGate.practice}</p>
             <Link
               href={`/rhythm-journey?day=${journeyDay}`}
@@ -1233,13 +1247,13 @@ export function BasicHome({
         <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_220px]">
           <article className="rounded-[26px] border border-[rgba(115,231,210,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] px-5 py-5 shadow-[0_18px_50px_rgba(4,12,24,0.18)]">
             <p className="text-xs uppercase tracking-[0.24em] text-white/44">{copy.aiGuide.eyebrow}</p>
-            <p className="mt-4 whitespace-pre-line font-serif text-[24px] leading-[1.8] text-white/88 sm:text-[28px]">
+            <p className="mt-4 max-w-[16ch] whitespace-pre-line font-serif text-[22px] leading-[1.7] text-white/88 sm:max-w-none sm:text-[28px] sm:leading-[1.8]">
               {copy.aiGuide.body}
             </p>
           </article>
           <article className="rounded-[26px] border border-[rgba(76,183,151,0.20)] bg-[linear-gradient(180deg,rgba(46,125,107,0.16),rgba(255,255,255,0.02))] px-5 py-5 shadow-[0_18px_50px_rgba(4,12,24,0.18)]">
             <p className="text-sm text-white/60">{copy.todayMessageTitle}</p>
-            <p className="mt-3 text-base leading-8 text-white/82">{todayMessage}</p>
+            <p className="mt-3 max-w-[20ch] text-base leading-[1.75] text-white/82 sm:max-w-none sm:leading-8">{todayMessage}</p>
             <p className="mt-4 text-sm leading-7 text-white/52">{markerMessage}</p>
           </article>
         </div>
@@ -1255,7 +1269,7 @@ export function BasicHome({
 
       <section className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_right,rgba(89,193,255,0.12),transparent_38%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.64),rgba(8,28,42,0.74),rgba(9,36,44,0.78))]`}>
         <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.question.title}</p>
-        <p className="mt-5 whitespace-pre-line font-serif text-[24px] leading-[1.75] text-white/88 sm:text-[30px]">
+        <p className="mt-5 max-w-[15ch] whitespace-pre-line font-serif text-[22px] leading-[1.6] text-white/88 sm:max-w-none sm:text-[30px] sm:leading-[1.75]">
           {copy.question.prompt}
         </p>
         <div className="mt-5">
