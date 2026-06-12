@@ -25,6 +25,8 @@ type DashboardPageProps = {
   searchParams: Promise<{
     email?: string;
     challenge?: string;
+    gate?: string;
+    rhythm?: string;
   }>;
 };
 
@@ -90,6 +92,14 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
     if (params.challenge) {
       query.set("challenge", params.challenge);
+    }
+
+    if (params.gate) {
+      query.set("gate", params.gate);
+    }
+
+    if (params.rhythm) {
+      query.set("rhythm", params.rhythm);
     }
 
     redirect(query.size > 0 ? `${programRoute}?${query.toString()}` : programRoute);

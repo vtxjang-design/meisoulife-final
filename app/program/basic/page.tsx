@@ -7,6 +7,7 @@ import { BasicHome } from "@/components/basic-home";
 import { ProgramAccessGuard } from "@/components/program-access-guard";
 import { getLocaleCopy, useLanguage } from "@/lib/i18n";
 import { getMockDashboard } from "@/lib/mock-data";
+import { useSearchParams } from "next/navigation";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 type DashboardState = {
@@ -255,11 +256,17 @@ function BasicCompanionPanel({
 function BasicProgramContent() {
   const { plan, planResolved, planError, session } = useAuthState();
   useLanguage();
+  const searchParams = useSearchParams();
   const mock = getMockDashboard();
   const [dashboardState, setDashboardState] = useState<DashboardState>({
     challengeDay: mock.challengeDay,
     streakCount: mock.streakCount
   });
+  const highlightedRhythm = searchParams.get("rhythm") ?? searchParams.get("gate");
+  const defaultRhythm =
+    highlightedRhythm === "morning" || highlightedRhythm === "day" || highlightedRhythm === "night"
+      ? highlightedRhythm
+      : undefined;
 
   useEffect(() => {
     let active = true;
@@ -333,6 +340,7 @@ function BasicProgramContent() {
             streakCount={dashboardState.streakCount}
             planKey={plan}
             membershipResolved={planResolved && !planError}
+            defaultRhythm={defaultRhythm}
           />
         </main>
 

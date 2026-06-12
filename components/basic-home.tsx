@@ -27,6 +27,7 @@ type BasicHomeProps = {
   streakCount?: number;
   planKey?: PlanKey;
   membershipResolved?: boolean;
+  defaultRhythm?: RhythmPhase;
 };
 
 const MARKER_STONE_STORAGE_KEY = "meisoulife_marker_stone_v1";
@@ -348,7 +349,7 @@ const basicHomeCopy = {
         title: "🌅 아침의 문 열기",
         description: "오늘 하루를 시작하는 3분",
         detail: "호흡으로 하루를 시작하고 오늘의 리듬을 설정합니다.",
-        programs: ["긍정 확언", "뇌와 근력 깨우기", "비전 스크린"],
+        programs: ["긍정 확언", "뇌와 근력 깨우기", "비전 스크린 명상"],
         purpose: "하루의 방향 설정",
         button: "들어가기"
       },
@@ -863,15 +864,21 @@ function getStreakReward(language: "jp" | "kr" | "en", streakDays: number) {
   return `Your small recovery has continued for\n${streakDays} days\nA seed is quietly taking root.`;
 }
 
-export function BasicHome({ currentDay = 1, streakCount = 3, planKey = "basic", membershipResolved = true }: BasicHomeProps) {
+export function BasicHome({
+  currentDay = 1,
+  streakCount = 3,
+  planKey = "basic",
+  membershipResolved = true,
+  defaultRhythm
+}: BasicHomeProps) {
   const { language } = useLanguage();
   const copy = useMemo(() => getLocaleCopy(basicHomeCopy, language), [language]);
   const searchParams = useSearchParams();
-  const highlightedRhythm = searchParams.get("rhythm") as RhythmPhase | null;
+  const highlightedRhythm = (searchParams.get("rhythm") ?? searchParams.get("gate")) as RhythmPhase | null;
   const rhythmPhase =
     highlightedRhythm === "morning" || highlightedRhythm === "day" || highlightedRhythm === "night"
       ? highlightedRhythm
-      : getLocalRhythmPhase();
+      : defaultRhythm ?? getLocalRhythmPhase();
   const todayMessage = useMemo(() => getDailyMessage(copy.todayMessages), [copy.todayMessages]);
   const [journeyDay, setJourneyDay] = useState(currentDay);
   const [streakDays, setStreakDays] = useState(streakCount);
