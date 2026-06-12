@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
   const tokenHash = requestUrl.searchParams.get("token_hash");
   const type = requestUrl.searchParams.get("type");
   const nextParam = requestUrl.searchParams.get("next");
-  const next = nextParam?.startsWith("/") ? nextParam : "/member";
+  const next = nextParam?.startsWith("/") ? nextParam : "/dashboard";
 
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
     console.error("[auth-callback] Missing Supabase public environment variables");

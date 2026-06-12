@@ -1,6 +1,6 @@
 import { MemberDashboard } from "@/components/member-dashboard";
 import { isLeaderCandidate } from "@/lib/leader";
-import { fetchLatestMembershipPlan } from "@/lib/membership";
+import { fetchLatestMembershipPlan, normalizeMembershipPlan } from "@/lib/membership";
 import { getMockDashboard } from "@/lib/mock-data";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
@@ -35,6 +35,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   const supabase = await getSupabaseServerClient();
   const mock = getMockDashboard();
   let planKey: "free" | "basic" | "growth" | "inner_circle" = "free";
+  let activeMembershipRoute: string | null = null;
   let membershipResolved = false;
   let candidateLeader = false;
   let streakCount = mock.streakCount;
@@ -50,6 +51,32 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       const membershipState = await fetchLatestMembershipPlan(supabase, user.id, "[dashboard]");
       membershipResolved = membershipState.resolved;
       planKey = membershipState.plan;
+
+      const { data: membership } = await supabase
+        .from("memberships")
+        .select("plan, status")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (membership?.status === "active" || membership?.status === "trialing") {
+        const normalizedMembershipPlan = normalizeMembershipPlan(membership.plan);
+
+        if (normalizedMembershipPlan === "growth") {
+          activeMembershipRoute = "/program/growth";
+        } else if (normalizedMembershipPlan === "inner_circle") {
+          activeMembershipRoute = "/program/inner";
+        } else {
+          activeMembershipRoute = "/program/basic";
+        }
+
+        if (planKey === "free") {
+          planKey =
+            normalizedMembershipPlan === "free" ? "basic" : normalizedMembershipPlan;
+          membershipResolved = true;
+        }
+      }
 
       const { data: profile } = await supabase
         .from("users")
@@ -81,7 +108,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     }
   }
 
-  const programRoute = getProgramRoute(planKey);
+  const programRoute = activeMembershipRoute ?? getProgramRoute(planKey);
 
   if (programRoute) {
     const query = new URLSearchParams();
