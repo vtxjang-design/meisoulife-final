@@ -28,7 +28,7 @@ export function SiteHeader() {
         return [
           { href: "/meditation", label: oneMinuteLabel },
           { href: "/rhythm-journey", label: rhythmLabel },
-          { href: "/member", label: copy.header.myPage }
+          { href: programHref, label: copy.header.myPage }
         ];
       }
 

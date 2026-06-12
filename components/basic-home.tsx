@@ -93,8 +93,8 @@ const basicHomeCopy = {
       saved: "今日の記録が静かに残りました。"
     },
     companions: {
-      title: "今日ともに歩く人たち",
-      body: "今日この道をともに歩く人たちがいます。",
+      title: "今日ここにいる仲間たち",
+      body: "今日この静かな場所に、ともにいる仲間たちがいます。",
       walked: "今日は12人がリズムを実践しました。",
       present: "今週は47人がともに歩んでいます。",
       cta: "仲間たちの場所へ"
@@ -193,7 +193,7 @@ const basicHomeCopy = {
       enter: "入る"
     },
     records: {
-      title: "個人の回復記録",
+      title: "静かな記録",
       checkIn: "今日のチェックイン",
       streak: "現在のストリーク",
       completed: "完了した実践",
@@ -283,8 +283,8 @@ const basicHomeCopy = {
       saved: "오늘의 기록이 조용히 남았습니다."
     },
     companions: {
-      title: "오늘 함께 걷는 사람들",
-      body: "오늘 이 길을 함께 걷는 사람들이 있습니다.",
+      title: "오늘 함께 머무는 사람들",
+      body: "오늘 이 조용한 공간에 함께 머무는 사람들이 있습니다.",
       walked: "오늘 12명이 리듬을 실천했습니다.",
       present: "이번 주 47명이 함께 걷고 있습니다.",
       cta: "함께 걷는 사람들로"
@@ -383,7 +383,7 @@ const basicHomeCopy = {
       enter: "들어가기"
     },
     records: {
-      title: "개인 회복 기록",
+      title: "조용한 기록",
       checkIn: "오늘의 체크인",
       streak: "현재 스트릭",
       completed: "완료한 실천",
@@ -473,8 +473,8 @@ const basicHomeCopy = {
       saved: "Today’s reflection has been quietly saved."
     },
     companions: {
-      title: "People Walking Together",
-      body: "There are people walking this path with you today.",
+      title: "People Here With You",
+      body: "There are people sharing this quiet space with you today.",
       walked: "12 people practiced their rhythm today.",
       present: "47 people are walking together this week.",
       cta: "Enter the Community"
@@ -573,7 +573,7 @@ const basicHomeCopy = {
       enter: "Enter"
     },
     records: {
-      title: "Personal Recovery Record",
+      title: "Quiet Records",
       checkIn: "Today’s Check-In",
       streak: "Current Streak",
       completed: "Completed Practices",
