@@ -4,17 +4,14 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useAuthState } from "@/components/auth-provider";
 import { BasicHome } from "@/components/basic-home";
-import { MemberDashboard } from "@/components/member-dashboard";
 import { ProgramAccessGuard } from "@/components/program-access-guard";
 import { getLocaleCopy, useLanguage } from "@/lib/i18n";
-import { isLeaderCandidate } from "@/lib/leader";
 import { getMockDashboard } from "@/lib/mock-data";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 type DashboardState = {
   challengeDay: number;
   streakCount: number;
-  candidateLeader: boolean;
 };
 
 const basicPageCopy = {
@@ -24,7 +21,7 @@ const basicPageCopy = {
     nav: [
       { label: "安息所ホーム", href: "#marker-stone" },
       { label: "私のリズムの旅", href: "#journey-path" },
-      { label: "今日の道", href: "#rhythm-gates" },
+      { label: "今日の道", href: "#today-rhythm-gates" },
       { label: "7日間のリズム旅", href: "/rhythm-journey" },
       { label: "回復記録", href: "#quiet-records" },
       { label: "私の気づき", href: "#marker-stone" },
@@ -49,8 +46,6 @@ const basicPageCopy = {
       memberError: "会員状態を一時的に確認できませんでした。更新してもう一度お試しください。",
       aiLabel: "急がずに進むことが、今日のリズムを守ってくれます。"
     },
-    secondaryEyebrow: "RECOVERY RECORDS",
-    secondaryBody: "旅の流れと続いてきたリズムを静かに確認できます。"
   },
   kr: {
     sidebarTitle: "RHYTHM GARDEN",
@@ -58,7 +53,7 @@ const basicPageCopy = {
     nav: [
       { label: "안식처 홈", href: "#marker-stone" },
       { label: "나의 리듬 여정", href: "#journey-path" },
-      { label: "오늘의 길", href: "#rhythm-gates" },
+      { label: "오늘의 길", href: "#today-rhythm-gates" },
       { label: "7일 리듬 여정", href: "/rhythm-journey" },
       { label: "회복 기록", href: "#quiet-records" },
       { label: "나의 통찰", href: "#marker-stone" },
@@ -83,8 +78,6 @@ const basicPageCopy = {
       memberError: "회원 상태를 잠시 확인할 수 없습니다. 새로고침 후 다시 시도해주세요.",
       aiLabel: "급히 가는 것보다, 오늘의 리듬을 잃지 않는 것이 더 중요합니다."
     },
-    secondaryEyebrow: "RECOVERY RECORDS",
-    secondaryBody: "여정의 흐름과 이어온 리듬을 조용히 확인할 수 있습니다."
   },
   en: {
     sidebarTitle: "RHYTHM GARDEN",
@@ -92,7 +85,7 @@ const basicPageCopy = {
     nav: [
       { label: "Sanctuary Home", href: "#marker-stone" },
       { label: "My Rhythm Journey", href: "#journey-path" },
-      { label: "Today’s Path", href: "#rhythm-gates" },
+      { label: "Today’s Path", href: "#today-rhythm-gates" },
       { label: "7-Day Rhythm Journey", href: "/rhythm-journey" },
       { label: "Recovery Records", href: "#quiet-records" },
       { label: "My Insights", href: "#marker-stone" },
@@ -117,8 +110,6 @@ const basicPageCopy = {
       memberError: "We could not confirm your membership status. Please refresh and try again.",
       aiLabel: "More important than moving fast is staying with your rhythm."
     },
-    secondaryEyebrow: "RECOVERY RECORDS",
-    secondaryBody: "A quiet place to see your journey and rhythm."
   }
 } as const;
 
@@ -262,14 +253,12 @@ function BasicCompanionPanel({
 }
 
 function BasicProgramContent() {
-  const { plan, planResolved, planError, userEmail, session } = useAuthState();
-  const { language } = useLanguage();
-  const copy = getLocaleCopy(basicPageCopy, language);
+  const { plan, planResolved, planError, session } = useAuthState();
+  useLanguage();
   const mock = getMockDashboard();
   const [dashboardState, setDashboardState] = useState<DashboardState>({
     challengeDay: mock.challengeDay,
-    streakCount: mock.streakCount,
-    candidateLeader: false
+    streakCount: mock.streakCount
   });
 
   useEffect(() => {
@@ -280,8 +269,7 @@ function BasicProgramContent() {
     if (!supabase || !userId) {
       setDashboardState({
         challengeDay: mock.challengeDay,
-        streakCount: mock.streakCount,
-        candidateLeader: false
+        streakCount: mock.streakCount
       });
       return;
     }
@@ -291,7 +279,7 @@ function BasicProgramContent() {
     async function loadDashboardState() {
       const { data: profile, error } = await safeSupabase
         .from("users")
-        .select("candidate_leader, paid_days, check_in_count, helpful_comments, challenge_day")
+        .select("check_in_count, challenge_day")
         .eq("auth_user_id", userId)
         .maybeSingle();
 
@@ -306,8 +294,7 @@ function BasicProgramContent() {
         });
         setDashboardState({
           challengeDay: mock.challengeDay,
-          streakCount: mock.streakCount,
-          candidateLeader: false
+          streakCount: mock.streakCount
         });
         return;
       }
@@ -318,13 +305,7 @@ function BasicProgramContent() {
         streakCount:
           typeof profile?.check_in_count === "number" && profile.check_in_count > 0
             ? profile.check_in_count
-            : mock.streakCount,
-        candidateLeader: isLeaderCandidate({
-          paidDays: profile?.paid_days || 0,
-          checkInCount: profile?.check_in_count || 0,
-          helpfulComments: profile?.helpful_comments || 0,
-          candidateLeader: profile?.candidate_leader
-        })
+            : mock.streakCount
       });
     }
 
@@ -353,27 +334,6 @@ function BasicProgramContent() {
             planKey={plan}
             membershipResolved={planResolved && !planError}
           />
-
-          <section id="member-records-secondary" className="pt-10 sm:pt-14">
-            <div className="mb-6 max-w-2xl">
-              <p className="text-xs uppercase tracking-[0.28em] text-white/42">{copy.secondaryEyebrow}</p>
-              <p className="mt-3 text-sm leading-7 text-white/60">{copy.secondaryBody}</p>
-              {planError ? <p className="mt-3 text-sm text-white/46">{planError}</p> : null}
-            </div>
-
-            <MemberDashboard
-              variant="basic"
-              planKey={plan}
-              membershipResolved={planResolved && !planError}
-              membershipError={Boolean(planError)}
-              challengeDay={dashboardState.challengeDay}
-              streakCount={dashboardState.streakCount}
-              aiUsage={mock.aiUsage}
-              candidateLeader={dashboardState.candidateLeader}
-              communityUrl={plan === "free" ? mock.communityLinks.free : mock.communityLinks.paid}
-              registeredEmail={userEmail}
-            />
-          </section>
         </main>
 
         <BasicCompanionPanel
