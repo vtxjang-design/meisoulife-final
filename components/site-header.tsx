@@ -42,7 +42,7 @@ export function SiteHeader() {
     if (isLoggedIn) {
       return copy.header.mobileMemberTabs.map((tab) => ({
         ...tab,
-        href: tab.href === "/program/basic" ? programHref : tab.href
+        href: tab.href === "/program/basic" || tab.href === "/member" ? programHref : tab.href
       }));
     }
 
@@ -231,7 +231,7 @@ export function SiteHeader() {
                 {memberBadgeLabel}
               </span>
               <Link
-                href="/member"
+                href={programHref}
                 className="hidden rounded-md border border-white/15 px-4 py-2 text-sm text-white/90 transition hover:border-gold/60 hover:text-white sm:inline-flex"
                 title={userEmail || memberCenterLabel}
               >
@@ -349,7 +349,7 @@ export function SiteHeader() {
 
                   <div className="flex flex-col gap-3">
                     <Link
-                      href="/member"
+                      href={programHref}
                       onClick={() => setMobileOpen(false)}
                       className="inline-flex min-h-[52px] w-full items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
                     >

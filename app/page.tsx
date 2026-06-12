@@ -990,7 +990,7 @@ export default function HomePage() {
       return;
     }
 
-    router.push("/member");
+    router.push("/dashboard");
   }
 
   async function handleGiftShare() {

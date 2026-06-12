@@ -1059,7 +1059,7 @@ export function MemberEntryContent({
           </a>
           {isLoggedIn ? (
             <Link
-              href="/dashboard"
+              href={recommendedProgramHref}
               className="relative z-20 inline-flex min-h-[60px] items-center justify-center rounded-[24px] border border-white/12 bg-white/[0.04] px-5 py-4 text-center text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
             >
               {copy.actions.dashboard}
@@ -1089,7 +1089,7 @@ export function MemberEntryContent({
             </a>
             {isLoggedIn ? (
               <Link
-                href="/dashboard"
+                href={recommendedProgramHref}
                 className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
               >
                 {copy.actions.dashboard}

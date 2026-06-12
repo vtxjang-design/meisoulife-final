@@ -10,6 +10,12 @@ type PostPaymentSuccessContentProps = {
   tier: SuccessTier;
 };
 
+const PROGRAM_ROUTES: Record<Exclude<SuccessTier, null>, string> = {
+  basic: "/program/basic",
+  growth: "/program/growth",
+  inner_circle: "/program/inner"
+};
+
 const successCopy = {
   jp: {
     badge: "🌿 ようこそ",
@@ -206,7 +212,7 @@ export function PostPaymentSuccessContent({ lineUrl, tier }: PostPaymentSuccessC
 
           <div className="mt-5 flex justify-center">
             <Link
-              href="/member"
+              href={tier ? PROGRAM_ROUTES[tier] : "/dashboard"}
               className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-6 py-4 text-center text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
             >
               {copy.memberButton}
