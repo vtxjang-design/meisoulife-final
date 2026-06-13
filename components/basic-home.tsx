@@ -7,7 +7,7 @@ import { getChallengeRhythmProgress } from "@/lib/challenge-rhythm";
 import { getLocaleCopy, useLanguage } from "@/lib/i18n";
 import { getTodayRhythmCheckIn } from "@/lib/today-rhythm-checkin";
 import { getReturnRhythmSnapshot } from "@/lib/return-rhythm";
-import { getRhythmJourneyDay, RHYTHM_JOURNEY_STORAGE_KEY } from "@/lib/rhythm-journey";
+import { RHYTHM_JOURNEY_STORAGE_KEY } from "@/lib/rhythm-journey";
 
 type RhythmPhase = "morning" | "day" | "night";
 type PlanKey = "free" | "basic" | "growth" | "inner_circle";
@@ -38,7 +38,7 @@ const basicHomeCopy = {
   jp: {
     hero: {
       title: "本来の自分へ",
-      subtitle: "朝・昼・夜\n\n一日三回の回復習慣",
+      subtitle: "朝・昼・夜\n\n静かに戻る場所",
       support: "小さなリズムが、\n毎日を静かに整えていきます。",
       primaryCta: "今日のリズムを始める"
     },
@@ -81,10 +81,10 @@ const basicHomeCopy = {
       cta: "今日の扉をひらく"
     },
     aiGuide: {
-      title: "今日の気づき",
-      eyebrow: "静かな案内",
-      body: "今日は昨日よりも\n少し静かなリズムが似合っています。\n\n一呼吸をゆっくり取り、\n次へ進む前に余白を残しましょう。",
-      availability: "急がずに進むことが、今日のリズムを守ってくれます。"
+      title: "今日の静かな一文",
+      eyebrow: "QUIET MESSAGE",
+      body: "今日は昨日よりも\n少し静かなリズムで大丈夫です。",
+      availability: ""
     },
     question: {
       title: "今日の問い",
@@ -99,13 +99,11 @@ const basicHomeCopy = {
       present: "今週は47人がともに歩んでいます。",
       cta: "仲間たちの場所へ"
     },
-    todayMessageTitle: "今日の道しるべ",
+    todayMessageTitle: "今日の静かな一文",
     todayMessages: [
-      "あなたのリズムは、すでにあなたの中にあります。",
-      "今日の目標は、もっと多くすることではなく、より目覚めていることです。",
-      "静けさは遠くにありません。",
-      "一つの呼吸が今日を変えてくれます。",
-      "自然は急ぎません。あなたも急がなくて大丈夫です。"
+      "今日は昨日よりも\n少し静かなリズムで大丈夫です。",
+      "急がずに戻ることも、\n今日の大切な実践です。",
+      "今の呼吸だけで、\n十分に整い始めています。"
     ],
     markerStone: {
       title: "Today's Marker Stone",
@@ -155,20 +153,20 @@ const basicHomeCopy = {
     rhythmCards: [
       {
         key: "morning",
-        emoji: "🌅",
-        title: "朝の扉を開く",
+        emoji: "☀️",
+        title: "☀️ 朝",
         description: "今日を始める3分",
-        detail: "呼吸で一日を始め、今日のリズムを整えます。",
+        detail: "",
         programs: ["肯定のアファメーション", "脳と筋力を目覚めさせる", "ビジョンスクリーン瞑想"],
         purpose: "一日の方向を整える",
         button: "入る"
       },
       {
         key: "day",
-        emoji: "☀️",
-        title: "昼の扉を開く",
-        description: "乱れたリズムを整える",
-        detail: "少し立ち止まり、中心へ戻ります。",
+        emoji: "🌿",
+        title: "🌿 昼",
+        description: "中心へ戻る1分",
+        detail: "",
         programs: ["1分筋力", "脳リラックス", "気力チャージ"],
         purpose: "中心に戻る",
         button: "入る"
@@ -176,9 +174,9 @@ const basicHomeCopy = {
       {
         key: "night",
         emoji: "🌙",
-        title: "夜の扉を開く",
-        description: "一日を手放し眠りへ",
-        detail: "一日を整え、やさしい睡眠を迎えます。",
+        title: "🌙 夜",
+        description: "手放して眠る3分",
+        detail: "",
         programs: ["手放す時間", "睡眠の準備", "感謝の瞑想"],
         purpose: "深い回復と休息",
         button: "入る"
@@ -220,15 +218,15 @@ const basicHomeCopy = {
       cta: "もう一度たどる"
     },
     upgrade: {
-      title: "ベーシックメンバーの空間を準備しています",
-      body: "会員状態が整うと、毎日のリズム実践と回復記録がここに静かに集まります。",
+      title: "Basicで開く静かなリズム",
+      body: "この場所では、朝・昼・夜のリズムを静かに続けていきます。",
       cta: "プランを見る"
     }
   },
   kr: {
     hero: {
       title: "본래의 나에게",
-      subtitle: "아침 · 낮 · 밤\n\n하루 세 번의 회복 습관",
+      subtitle: "아침 · 낮 · 밤\n\n조용히 돌아오는 곳",
       support: "작은 리듬이,\n하루를 조용히 바꿔갑니다.",
       primaryCta: "오늘의 리듬 시작하기"
     },
@@ -271,10 +269,10 @@ const basicHomeCopy = {
       cta: "오늘의 문 열기"
     },
     aiGuide: {
-      title: "오늘의 통찰",
-      eyebrow: "조용한 안내",
-      body: "오늘 당신의 리듬은 어제보다\n조금 더 조용해 보입니다.\n\n한 번 더 천천히 숨을 쉬고,\n다음으로 가기 전 여백을 남겨보세요.",
-      availability: "급히 가는 것보다, 오늘의 리듬을 잃지 않는 것이 더 중요합니다."
+      title: "오늘의 조용한 문장",
+      eyebrow: "QUIET MESSAGE",
+      body: "오늘은 어제보다\n조금 천천히 가도 괜찮습니다.",
+      availability: ""
     },
     question: {
       title: "오늘의 질문",
@@ -289,13 +287,11 @@ const basicHomeCopy = {
       present: "이번 주 47명이 함께 걷고 있습니다.",
       cta: "함께 걷는 사람들로"
     },
-    todayMessageTitle: "오늘의 표지석",
+    todayMessageTitle: "오늘의 조용한 문장",
     todayMessages: [
-      "당신의 리듬은 이미 당신 안에 있습니다.",
-      "오늘의 목표는 더 많이 하는 것이 아니라 더 깨어있는 것입니다.",
-      "조용함은 멀리 있지 않습니다.",
-      "한 번의 숨이 오늘을 바꿀 수 있습니다.",
-      "자연은 서두르지 않습니다. 당신도 서두르지 않아도 괜찮습니다."
+      "오늘은 어제보다\n조금 천천히 가도 괜찮습니다.",
+      "서두르지 않고 돌아오는 것도\n좋은 리듬입니다.",
+      "지금의 호흡만으로도\n이미 충분히 시작되고 있습니다."
     ],
     markerStone: {
       title: "오늘의 Marker Stone",
@@ -345,20 +341,20 @@ const basicHomeCopy = {
     rhythmCards: [
       {
         key: "morning",
-        emoji: "🌅",
-        title: "🌅 아침의 문 열기",
+        emoji: "☀️",
+        title: "☀️ 아침",
         description: "오늘 하루를 시작하는 3분",
-        detail: "호흡으로 하루를 시작하고 오늘의 리듬을 설정합니다.",
+        detail: "",
         programs: ["긍정 확언", "뇌와 근력 깨우기", "비전 스크린 명상"],
         purpose: "하루의 방향 설정",
         button: "들어가기"
       },
       {
         key: "day",
-        emoji: "☀️",
-        title: "☀️ 낮의 문 열기",
-        description: "흐트러진 리듬을 다시 모으기",
-        detail: "잠시 멈추고 중심으로 돌아옵니다.",
+        emoji: "🌿",
+        title: "🌿 낮",
+        description: "중심으로 돌아오는 1분",
+        detail: "",
         programs: ["1분 근력", "뇌 릴렉스", "기운 충전"],
         purpose: "중심으로 돌아가기",
         button: "들어가기"
@@ -366,9 +362,9 @@ const basicHomeCopy = {
       {
         key: "night",
         emoji: "🌙",
-        title: "🌙 밤의 문 열기",
-        description: "오늘을 내려놓고 잠으로 가기",
-        detail: "하루를 정리하고 편안한 수면을 준비합니다.",
+        title: "🌙 밤",
+        description: "내려놓고 잠드는 3분",
+        detail: "",
         programs: ["내려놓기", "수면 준비", "감사 명상"],
         purpose: "깊은 회복과 휴식",
         button: "들어가기"
@@ -410,15 +406,15 @@ const basicHomeCopy = {
       cta: "다시 이어가기"
     },
     upgrade: {
-      title: "베이직 멤버 공간을 준비하고 있습니다",
-      body: "멤버십 상태가 연결되면 매일의 리듬 실천과 회복 기록이 이곳에 조용히 모입니다.",
+      title: "Basic에서 시작되는 조용한 리듬",
+      body: "이곳에서는 아침 · 낮 · 밤의 리듬을 조용히 이어갑니다.",
       cta: "플랜 보기"
     }
   },
   en: {
     hero: {
       title: "Back to Yourself",
-      subtitle: "Morning · Day · Night\n\nThree moments of recovery",
+      subtitle: "Morning · Day · Night\n\nA Quiet Place to Return",
       support: "Small rhythms\nquietly shape the day.",
       primaryCta: "Begin Today’s Rhythm"
     },
@@ -461,10 +457,10 @@ const basicHomeCopy = {
       cta: "Open Today’s Gate"
     },
     aiGuide: {
-      title: "Today's Insight",
-      eyebrow: "Quiet Guidance",
-      body: "Today your rhythm feels quieter than yesterday.\n\nTake a slower breath and allow space\nbefore moving forward.",
-      availability: "More important than moving fast is staying with your rhythm."
+      title: "Today's Quiet Message",
+      eyebrow: "QUIET MESSAGE",
+      body: "Today,\na slower rhythm is enough.",
+      availability: ""
     },
     question: {
       title: "Today’s Question",
@@ -479,13 +475,11 @@ const basicHomeCopy = {
       present: "47 people are walking together this week.",
       cta: "Enter the Community"
     },
-    todayMessageTitle: "Today’s Signpost",
+    todayMessageTitle: "Today's Quiet Message",
     todayMessages: [
-      "Your rhythm is already within you.",
-      "Today’s goal is not to do more, but to be more awake.",
-      "Stillness is not far away.",
-      "One breath can change today.",
-      "Nature does not hurry. You do not need to hurry either."
+      "Today,\na slower rhythm is enough.",
+      "Returning gently\nis enough for today.",
+      "This breath alone\ncan begin the return."
     ],
     markerStone: {
       title: "Today’s Marker Stone",
@@ -535,20 +529,20 @@ const basicHomeCopy = {
     rhythmCards: [
       {
         key: "morning",
-        emoji: "🌅",
-        title: "Open Morning Gate",
-        description: "3 minutes to begin your day.",
-        detail: "Begin with breath and set the rhythm for today.",
+        emoji: "☀️",
+        title: "☀️ Morning",
+        description: "3 minutes to begin",
+        detail: "",
         programs: ["Positive Affirmation", "Brain & Strength Activation", "Vision Screen Meditation"],
         purpose: "Set direction for the day",
         button: "Enter"
       },
       {
         key: "day",
-        emoji: "☀️",
-        title: "Open Day Gate",
-        description: "Reconnect with your rhythm.",
-        detail: "Pause for a moment and return to center.",
+        emoji: "🌿",
+        title: "🌿 Day",
+        description: "1 minute to return",
+        detail: "",
         programs: ["1-Minute Strength", "Brain Relaxation", "Energy Recharge"],
         purpose: "Return to center",
         button: "Enter"
@@ -556,9 +550,9 @@ const basicHomeCopy = {
       {
         key: "night",
         emoji: "🌙",
-        title: "Open Night Gate",
-        description: "Let go of today and prepare for sleep.",
-        detail: "Release the day and settle into rest.",
+        title: "🌙 Night",
+        description: "3 minutes to release",
+        detail: "",
         programs: ["Letting Go", "Sleep Preparation", "Gratitude Meditation"],
         purpose: "Deep recovery and rest",
         button: "Enter"
@@ -600,8 +594,8 @@ const basicHomeCopy = {
       cta: "Return to the Journey"
     },
     upgrade: {
-      title: "Preparing the Basic member room",
-      body: "Once membership is connected, your daily rhythm practices and recovery records will gather here quietly.",
+      title: "A quiet rhythm opens in Basic",
+      body: "This place is for gently returning through morning, day, and night.",
       cta: "View Plans"
     }
   }
@@ -830,6 +824,40 @@ function getJourneyGateLabel(language: "jp" | "kr" | "en", day: number) {
   return `Gate ${ordinals[day - 1] ?? day}`;
 }
 
+function getSanctuaryJourneyTitle(language: "jp" | "kr" | "en", day: number) {
+  const titles = {
+    jp: [
+      "🌱 Day 1 立ち止まる庭",
+      "🌿 Day 2 呼吸の道",
+      "🌲 Day 3 身体の森",
+      "🌊 Day 4 感情の湖",
+      "⛰ Day 5 思考の丘",
+      "🌌 Day 6 静けさの空",
+      "✨ Day 7 私のリズム"
+    ],
+    kr: [
+      "🌱 Day 1 멈추는 정원",
+      "🌿 Day 2 호흡의 길",
+      "🌲 Day 3 몸의 숲",
+      "🌊 Day 4 감정의 호수",
+      "⛰ Day 5 생각의 언덕",
+      "🌌 Day 6 고요의 하늘",
+      "✨ Day 7 나의 리듬"
+    ],
+    en: [
+      "🌱 Day 1 Garden of Pause",
+      "🌿 Day 2 Path of Breath",
+      "🌲 Day 3 Forest of Body",
+      "🌊 Day 4 Lake of Emotion",
+      "⛰ Day 5 Hill of Thought",
+      "🌌 Day 6 Sky of Stillness",
+      "✨ Day 7 My Rhythm"
+    ]
+  } as const;
+
+  return titles[language][day - 1] ?? titles[language][0];
+}
+
 function getMarkerStoneCtaLabel(language: "jp" | "kr" | "en", rhythmPhase: RhythmPhase) {
   if (language === "jp") {
     if (rhythmPhase === "morning") return "朝の扉を開く";
@@ -971,7 +999,6 @@ export function BasicHome({
       }),
     [journeyDay, language, lastGate, rhythmPhase, selectedMood, sleepStatus, stressStatus]
   );
-  const currentJourneyGate = useMemo(() => getRhythmJourneyDay(language, journeyDay), [language, journeyDay]);
   const isBasicMember = membershipResolved ? planKey !== "free" : true;
   const completedPracticeCount = completedDays.length + (completedToday && !completedDays.includes(journeyDay) ? 1 : 0);
 
@@ -1038,7 +1065,6 @@ export function BasicHome({
           <div className="grid gap-4 sm:grid-cols-3">
             {copy.rhythmCards.map((card) => {
               const rhythm = card.key as RhythmPhase;
-              const completed = completedToday && lastGate === rhythm;
 
               return (
                 <article
@@ -1051,27 +1077,10 @@ export function BasicHome({
                   <div className="absolute -right-8 top-6 h-24 w-24 rounded-full bg-white/8 blur-2xl transition duration-500 group-hover:scale-125" />
                   <div className="absolute inset-x-[18%] top-0 h-14 rounded-full bg-white/8 blur-2xl opacity-70" />
                   <div className="relative">
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="text-sm font-semibold tracking-[0.04em] text-gold/90">{card.title}</p>
-                      <span className={`rounded-full px-3 py-1 text-[11px] font-semibold tracking-[0.12em] ${completed ? "bg-gold/[0.18] text-gold" : "bg-white/[0.08] text-white/70"}`}>
-                        {completed ? copy.routineSection.completed : copy.routineSection.ready}
-                      </span>
-                    </div>
+                    <p className="text-base font-semibold tracking-[0.04em] text-gold/90">{card.title}</p>
                     <p className="mt-4 min-h-[48px] max-w-[16ch] text-base leading-[1.6] text-white/88 sm:max-w-none sm:leading-7">
                       {card.description}
                     </p>
-                    <p className="mt-3 max-w-[24ch] text-sm leading-[1.7] text-white/60 sm:max-w-none sm:leading-7">
-                      {card.detail}
-                    </p>
-                    {"programs" in card && Array.isArray(card.programs) ? (
-                      <div className="mt-4 space-y-2">
-                        {card.programs.map((program) => (
-                          <div key={program} className="rounded-[16px] border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-white/76">
-                            {program}
-                          </div>
-                        ))}
-                      </div>
-                    ) : null}
                     <Link
                       href={buildRhythmMeditationHref(rhythm)}
                       onClick={() => handleSelectGate(rhythm)}
@@ -1124,8 +1133,8 @@ export function BasicHome({
           <article className="rounded-[30px] border border-[rgba(89,193,255,0.14)] bg-[linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(13,31,34,0.82),rgba(7,19,22,0.90))] px-6 py-6 backdrop-blur-xl">
             <p className="text-xs uppercase tracking-[0.24em] text-gold/76">{copy.openGate.title}</p>
             <p className="mt-4 text-sm uppercase tracking-[0.24em] text-white/58">{getJourneyGateLabel(language, journeyDay)}</p>
-            <p className="mt-3 max-w-[12ch] text-[30px] font-semibold leading-[1.18] text-white sm:max-w-none sm:text-[34px]">
-              {currentJourneyGate.title}
+            <p className="mt-3 max-w-[15ch] text-[26px] font-semibold leading-[1.28] text-white sm:max-w-none sm:text-[30px]">
+              {getSanctuaryJourneyTitle(language, journeyDay)}
             </p>
             <p className="mt-4 whitespace-pre-line text-sm leading-7 text-white/68">{copy.openGate.practice}</p>
             <Link
@@ -1144,7 +1153,6 @@ export function BasicHome({
         <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {Array.from({ length: 7 }, (_, index) => {
             const day = index + 1;
-            const dayCopy = getRhythmJourneyDay(language, day);
             const completed = completedDays.includes(day);
             const active = !completed && day === journeyDay;
             const locked = !completed && day > journeyDay;
@@ -1168,8 +1176,7 @@ export function BasicHome({
                     {completed ? copy.journeyPath.completed : active ? copy.journeyPath.active : copy.journeyPath.locked}
                   </span>
                 </div>
-                <p className="mt-3 text-xl font-semibold text-white">{dayCopy.title}</p>
-                <p className="mt-2 text-sm leading-7 text-white/58">{dayCopy.subtitle}</p>
+                <p className="mt-3 text-lg font-semibold leading-[1.45] text-white">{getSanctuaryJourneyTitle(language, day)}</p>
                 {locked ? (
                   <span className="mt-5 inline-flex min-h-[42px] items-center justify-center rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm font-semibold text-white/42">
                     {copy.journeyPath.locked}
@@ -1185,6 +1192,24 @@ export function BasicHome({
               </article>
             );
           })}
+        </div>
+      </section>
+
+      <section className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.12),transparent_38%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.64),rgba(8,28,42,0.74),rgba(9,36,44,0.78))]`}>
+        <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.aiGuide.title}</p>
+        <div className="mt-5 rounded-[28px] border border-[rgba(115,231,210,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] px-5 py-6 shadow-[0_18px_50px_rgba(4,12,24,0.18)]">
+          <p className="text-xs uppercase tracking-[0.24em] text-white/44">{copy.aiGuide.eyebrow}</p>
+          <p className="mt-4 max-w-[16ch] whitespace-pre-line font-serif text-[22px] leading-[1.7] text-white/88 sm:max-w-none sm:text-[28px] sm:leading-[1.8]">
+            {copy.aiGuide.body}
+          </p>
+        </div>
+      </section>
+
+      <section className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.12),transparent_38%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.62),rgba(8,28,42,0.72),rgba(9,36,44,0.76))]`}>
+        <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.sessions.title}</p>
+        <div className="mt-5 grid gap-3">
+          <div className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-white/78">{copy.sessions.first}</div>
+          <div className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-white/78">{copy.sessions.second}</div>
         </div>
       </section>
 
@@ -1238,31 +1263,6 @@ export function BasicHome({
             <p className="text-sm text-white/56">{copy.records.insight}</p>
             <p className="mt-3 text-sm leading-7 text-white/82">{todayMessage}</p>
           </article>
-        </div>
-      </section>
-
-      <section className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.12),transparent_38%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.64),rgba(8,28,42,0.74),rgba(9,36,44,0.78))]`}>
-        <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.aiGuide.title}</p>
-        <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_220px]">
-          <article className="rounded-[26px] border border-[rgba(115,231,210,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] px-5 py-5 shadow-[0_18px_50px_rgba(4,12,24,0.18)]">
-            <p className="text-xs uppercase tracking-[0.24em] text-white/44">{copy.aiGuide.eyebrow}</p>
-            <p className="mt-4 max-w-[16ch] whitespace-pre-line font-serif text-[22px] leading-[1.7] text-white/88 sm:max-w-none sm:text-[28px] sm:leading-[1.8]">
-              {copy.aiGuide.body}
-            </p>
-          </article>
-          <article className="rounded-[26px] border border-[rgba(76,183,151,0.20)] bg-[linear-gradient(180deg,rgba(46,125,107,0.16),rgba(255,255,255,0.02))] px-5 py-5 shadow-[0_18px_50px_rgba(4,12,24,0.18)]">
-            <p className="text-sm text-white/60">{copy.todayMessageTitle}</p>
-            <p className="mt-3 max-w-[20ch] text-base leading-[1.75] text-white/82 sm:max-w-none sm:leading-8">{todayMessage}</p>
-            <p className="mt-4 text-sm leading-7 text-white/52">{markerMessage}</p>
-          </article>
-        </div>
-      </section>
-
-      <section className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.12),transparent_38%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.62),rgba(8,28,42,0.72),rgba(9,36,44,0.76))]`}>
-        <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.sessions.title}</p>
-        <div className="mt-5 grid gap-3">
-          <div className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-white/78">{copy.sessions.first}</div>
-          <div className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-white/78">{copy.sessions.second}</div>
         </div>
       </section>
 
