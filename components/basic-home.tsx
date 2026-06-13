@@ -207,9 +207,10 @@ const basicHomeCopy = {
       streak: "続いている日々"
     },
     sessions: {
-      title: "次の集い",
-      first: "毎週水曜 06:30 朝ライブ瞑想",
-      second: "土曜 21:00 睡眠回復セッション"
+      title: "次のリズム",
+      first: "明日の朝の扉が\n静かに待っています。",
+      second: "小さな一歩で、\nまた本来の自分へ戻れます。",
+      cta: "明日のリズムを見る"
     },
     stateRecoveryTitle: "今の状態から選ぶ",
     stateRecoveryItems: [
@@ -404,9 +405,10 @@ const basicHomeCopy = {
       streak: "이어온 날들"
     },
     sessions: {
-      title: "다음 모임",
-      first: "매주 수요일 06:30 아침 라이브 명상",
-      second: "토요일 21:00 수면 회복 세션"
+      title: "다음 리듬",
+      first: "내일 아침의 문이\n조용히 기다리고 있습니다.",
+      second: "작은 한 걸음으로\n다시 본래의 나에게 돌아옵니다.",
+      cta: "내일의 리듬 보기"
     },
     stateRecoveryTitle: "지금 상태에서 선택하기",
     stateRecoveryItems: [
@@ -601,9 +603,10 @@ const basicHomeCopy = {
       streak: "Returning Days"
     },
     sessions: {
-      title: "Next Gathering",
-      first: "Every Wednesday 06:30 Morning Live Meditation",
-      second: "Saturday 21:00 Sleep Recovery Session"
+      title: "Next Rhythm",
+      first: "Tomorrow’s morning door\nis quietly waiting.",
+      second: "One small step\nbrings you back to yourself.",
+      cta: "See Tomorrow’s Rhythm"
     },
     stateRecoveryTitle: "Choose From Your Current State",
     stateRecoveryItems: [
@@ -1331,9 +1334,15 @@ export function BasicHome({
 
       <section className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.12),transparent_38%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.62),rgba(8,28,42,0.72),rgba(9,36,44,0.76))]`}>
         <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.sessions.title}</p>
-        <div className="mt-5 grid gap-3">
-          <div className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-white/78">{copy.sessions.first}</div>
-          <div className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-white/78">{copy.sessions.second}</div>
+        <div className="mt-5 rounded-[26px] border border-[rgba(115,231,210,0.14)] bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] px-5 py-6">
+          <p className="whitespace-pre-line text-base leading-8 text-white/84">{copy.sessions.first}</p>
+          <p className="mt-4 whitespace-pre-line text-sm leading-7 text-white/66">{copy.sessions.second}</p>
+          <Link
+            href="#today-rhythm-gates"
+            className="mt-6 inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/12 bg-white/[0.05] px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
+          >
+            {copy.sessions.cta}
+          </Link>
         </div>
       </section>
 

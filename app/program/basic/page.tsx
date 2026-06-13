@@ -30,8 +30,9 @@ const basicPageCopy = {
       insightTitle: "今日の気づき",
       insightBody: "自分へ帰る時間がここにあります。",
       continuedTitle: "続いてきた日々",
-      gatheringsTitle: "これからの集い",
-      gatheringsCta: "集いを見る",
+      gatheringsTitle: "Growthで開く時間",
+      gatheringsBody: "ライブ瞑想やともに深める実践は、Growthで静かに開いていきます。",
+      gatheringsCta: "Growthを見る",
       memberLabel: "Basicメンバー",
       memberFallback: "リズム空間を準備しています。",
       memberError: "会員状態を一時的に確認できませんでした。更新してもう一度お試しください。",
@@ -53,8 +54,9 @@ const basicPageCopy = {
       insightTitle: "오늘의 통찰",
       insightBody: "자신에게 돌아오는 시간이 여기에 있습니다.",
       continuedTitle: "이어온 날들",
-      gatheringsTitle: "다가오는 모임",
-      gatheringsCta: "모임 더 보기",
+      gatheringsTitle: "Growth에서 열리는 시간",
+      gatheringsBody: "라이브 명상과 함께 깊어지는 실천은 Growth에서 조용히 열립니다.",
+      gatheringsCta: "Growth 보기",
       memberLabel: "Basic 회원",
       memberFallback: "리듬 공간을 준비하고 있습니다.",
       memberError: "회원 상태를 잠시 확인할 수 없습니다. 새로고침 후 다시 시도해주세요.",
@@ -76,8 +78,9 @@ const basicPageCopy = {
       insightTitle: "Today’s Insight",
       insightBody: "The time to return to yourself is here.",
       continuedTitle: "Continued Days",
-      gatheringsTitle: "Upcoming Gatherings",
-      gatheringsCta: "View Gatherings",
+      gatheringsTitle: "What Opens in Growth",
+      gatheringsBody: "Live meditation and deeper shared practice quietly open in Growth.",
+      gatheringsCta: "See Growth",
       memberLabel: "Basic Member",
       memberFallback: "Preparing your rhythm space.",
       memberError: "We could not confirm your membership status. Please refresh and try again.",
@@ -180,16 +183,9 @@ function BasicCompanionPanel({
 
         <div className="glass-panel rounded-[30px] bg-[radial-gradient(circle_at_top_right,rgba(115,231,210,0.14),transparent_40%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(18,26,44,0.78),rgba(11,18,30,0.72),rgba(9,30,38,0.68))] p-5 shadow-[0_24px_68px_rgba(4,10,20,0.22)]">
           <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.companion.gatheringsTitle}</p>
-          <div className="mt-4 grid gap-3">
-            <div className="rounded-[18px] border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/78">
-              {language === "jp" ? "毎週水曜 06:30 朝ライブ瞑想" : language === "kr" ? "매주 수요일 06:30 아침 라이브 명상" : "Every Wednesday 06:30 Morning live meditation"}
-            </div>
-            <div className="rounded-[18px] border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/78">
-              {language === "jp" ? "土曜 21:00 睡眠回復セッション" : language === "kr" ? "토요일 21:00 수면 회복 세션" : "Saturday 21:00 Sleep recovery session"}
-            </div>
-          </div>
+          <p className="mt-4 text-sm leading-7 text-white/74">{copy.companion.gatheringsBody}</p>
           <Link
-            href="/community"
+            href="/pricing"
             className="mt-5 inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
           >
             {copy.companion.gatheringsCta}
