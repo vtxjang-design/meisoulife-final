@@ -1033,21 +1033,21 @@ export default function HomePage() {
 
       <section className="section-shell relative overflow-hidden pt-3 sm:pt-20">
         <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[470px] sm:hidden">
-          <div className="absolute left-[3%] top-7 h-32 w-32 rounded-full bg-gold/[0.13] blur-[84px] animate-meditation-ambient-breathe motion-reduce:animate-none" />
-          <div className="absolute right-[1%] top-14 h-56 w-56 rounded-full bg-emerald-200/[0.11] blur-[102px] animate-meditation-fog motion-reduce:animate-none" />
-          <div className="absolute right-[-16%] top-[-2%] h-[248px] w-[46%] overflow-hidden opacity-[0.18] mix-blend-screen">
+          <div className="absolute left-[1%] top-8 h-28 w-28 rounded-full bg-gold/[0.11] blur-[72px] animate-meditation-ambient-breathe motion-reduce:animate-none" />
+          <div className="absolute right-[4%] top-20 h-32 w-32 rounded-full bg-emerald-200/[0.09] blur-[72px] animate-meditation-fog motion-reduce:animate-none" />
+          <div className="absolute right-[4%] top-[13%] h-[172px] w-[32%] overflow-hidden opacity-[0.22] mix-blend-screen">
             <img
               src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80"
               alt=""
               aria-hidden="true"
-              className="h-full w-full scale-[1.12] object-cover blur-[4px] animate-meditation-video-breathe motion-reduce:animate-none [mask-image:radial-gradient(ellipse_at_24%_42%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.88)_26%,rgba(0,0,0,0.46)_58%,transparent_86%)] [-webkit-mask-image:radial-gradient(ellipse_at_24%_42%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.88)_26%,rgba(0,0,0,0.46)_58%,transparent_86%)]"
+              className="h-full w-full scale-[1.04] object-cover object-center blur-[1.5px] animate-meditation-video-breathe motion-reduce:animate-none [mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)] [-webkit-mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)]"
             />
           </div>
-          <div className="absolute right-[4%] top-10 h-32 w-24 rounded-full bg-white/[0.025] blur-[72px] animate-meditation-float motion-reduce:animate-none" />
+          <div className="absolute right-[12%] top-16 h-24 w-20 rounded-full bg-white/[0.02] blur-[54px] animate-meditation-float motion-reduce:animate-none" />
           <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_34%),linear-gradient(180deg,rgba(7,16,28,0.04),rgba(7,16,28,0.02)_28%,rgba(7,16,28,0))]" />
-          <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_78%_20%,rgba(126,162,171,0.16),transparent_18%),radial-gradient(circle_at_80%_32%,rgba(255,246,214,0.06),transparent_14%),linear-gradient(90deg,rgba(5,18,24,0.03)_0%,rgba(5,18,24,0.04)_32%,rgba(5,18,24,0.08)_52%,rgba(5,18,24,0.18)_70%,rgba(5,18,24,0.34)_100%)]" />
-          <div className="absolute inset-x-0 top-0 h-full bg-[linear-gradient(90deg,rgba(5,16,24,0.02)_0%,rgba(5,16,24,0.03)_28%,rgba(5,16,24,0.06)_48%,rgba(5,16,24,0.14)_64%,rgba(5,16,24,0.34)_100%),linear-gradient(180deg,rgba(5,18,24,0.02),rgba(5,18,24,0.08)_38%,rgba(5,18,24,0.3)_100%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_56%,rgba(8,28,36,0.16),transparent_22%),linear-gradient(180deg,transparent_0%,rgba(3,10,18,0.04)_34%,rgba(3,10,18,0.2)_78%,rgba(3,10,18,0.34)_100%)]" />
+          <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_82%_22%,rgba(126,162,171,0.12),transparent_16%),radial-gradient(circle_at_80%_32%,rgba(255,246,214,0.04),transparent_12%),linear-gradient(90deg,rgba(5,18,24,0.02)_0%,rgba(5,18,24,0.03)_26%,rgba(5,18,24,0.08)_48%,rgba(5,18,24,0.24)_68%,rgba(5,18,24,0.46)_100%)]" />
+          <div className="absolute inset-x-0 top-0 h-full bg-[linear-gradient(90deg,rgba(4,14,22,0.22)_0%,rgba(4,14,22,0.16)_28%,rgba(4,14,22,0.14)_44%,rgba(4,14,22,0.18)_56%,rgba(4,14,22,0.34)_72%,rgba(4,14,22,0.54)_100%),linear-gradient(180deg,rgba(5,18,24,0.04),rgba(5,18,24,0.1)_40%,rgba(5,18,24,0.32)_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_56%,rgba(8,28,36,0.12),transparent_18%),linear-gradient(180deg,rgba(3,10,18,0.02)_0%,rgba(3,10,18,0.08)_30%,rgba(3,10,18,0.24)_74%,rgba(3,10,18,0.4)_100%)]" />
         </div>
         <div className="grid gap-8 lg:grid-cols-[1.24fr_0.76fr] lg:items-center lg:gap-16 xl:gap-20">
           <div className="space-y-5 sm:space-y-8 lg:space-y-9">
@@ -1199,7 +1199,7 @@ export default function HomePage() {
       <ZeroGateSection onEnterGate={handleZeroGateEnter} />
 
       <section className="section-shell mt-10 sm:mt-14">
-        <div className="overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] px-5 py-7 shadow-[0_20px_72px_rgba(7,17,31,0.18)] sm:px-8 sm:py-8">
+        <div className="overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.08),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.018))] px-5 py-7 shadow-[0_20px_72px_rgba(7,17,31,0.18)] sm:bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] sm:px-8 sm:py-8">
           <SectionHeading eyebrow={returnLoop.eyebrow} title={returnLoop.title} description={returnLoop.description} />
           <div className="mt-6 grid gap-3 lg:grid-cols-3 lg:gap-4">
             {returnLoop.steps.map((step) => (
