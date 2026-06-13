@@ -29,15 +29,16 @@ const AI_COACH_URL =
 const heroCopy = {
   jp: {
     eyebrow: "AI時代の人間回復",
-    title: "AIと情報に疲れた、\n心と脳が静かに戻る場所。",
+    lead: "AIと情報に疲れたあなたへ",
+    title: "心と脳が静かに戻る場所",
     mobileLead: "AIと情報に疲れた\nあなたへ",
     mobileTitle: "心と脳が\n静かに戻る場所",
     supporting:
-      "少し立ち止まり、\n自分のリズムへ戻る。\n急がなくても大丈夫です。",
+      "少し立ち止まり、\n自分のリズムへ戻る。\n\n大丈夫。\n急がなくても。",
     mobileSupporting:
-      "少し立ち止まり、\n自分のリズムへ戻る。\n\n急がなくても大丈夫です。",
+      "少し立ち止まり、\n自分のリズムへ戻る。\n\n大丈夫。\n急がなくても。",
     subtitle: "無料・60秒・登録不要",
-    primary: "今日のリセットを選ぶ",
+    primary: "1分リセットを始める",
     secondary: "7日間の小さな回復",
     ctaSupport: "あなたのリズムを取り戻す、小さな7日間。",
     tertiaryGuest: "無料で始める",
@@ -53,15 +54,16 @@ const heroCopy = {
   },
   kr: {
     eyebrow: "AI 시대의 인간 회복",
-    title: "AI와 정보에 지친 하루,\n마음과 뇌가\n잠시 쉬어가는 곳.",
+    lead: "AI와 정보에 지친 당신에게",
+    title: "마음과 뇌가 고요히 돌아오는 곳",
     mobileLead: "AI와 정보에 지친\n당신에게",
     mobileTitle: "마음과 뇌가\n고요히 돌아오는 곳",
     supporting:
-      "잠시 멈추고,\n내 리듬으로 돌아오는\n조용한 1분.",
+      "잠시 멈추고,\n나의 리듬으로 돌아옵니다.\n\n괜찮습니다.\n서두르지 않아도 됩니다.",
     mobileSupporting:
-      "잠시 멈추고,\n나의 리듬으로 돌아옵니다.\n\n서두르지 않아도 괜찮습니다.",
+      "잠시 멈추고,\n나의 리듬으로 돌아옵니다.\n\n괜찮습니다.\n서두르지 않아도 됩니다.",
     subtitle: "무료 · 60초 · 가입 불필요",
-    primary: "오늘의 리셋 고르기",
+    primary: "1분 리셋 시작하기",
     secondary: "7일간의 작은 회복",
     ctaSupport: "나의 리듬을 되찾는 작은 7일.",
     tertiaryGuest: "무료로 시작하기",
@@ -77,15 +79,16 @@ const heroCopy = {
   },
   en: {
     eyebrow: "Human Recovery in the AI Age",
-    title: "AI and information overload,\nan exhausting day,\nwhere your mind and brain\ncan briefly rest.",
+    lead: "For minds tired by AI and information",
+    title: "A quiet place to return",
     mobileLead: "For minds tired\nby AI and information",
     mobileTitle: "A quiet place\nto return",
     supporting:
-      "Pause.\nBreathe.\nReturn to your rhythm.\n\nThere is no need to rush.",
+      "Pause for a moment,\nand return to your rhythm.\n\nYou do not need to hurry.",
     mobileSupporting:
-      "Pause for a moment,\nand return to your rhythm.\n\nThere is no need to hurry.",
+      "Pause for a moment,\nand return to your rhythm.\n\nYou do not need to hurry.",
     subtitle: "Free · 60 seconds · No signup",
-    primary: "Choose Today’s Reset",
+    primary: "Start 1-Minute Reset",
     secondary: "7 Days of Small Recovery",
     ctaSupport: "A small 7-day journey to return to your rhythm.",
     tertiaryGuest: "Start Free",
@@ -921,9 +924,6 @@ export default function HomePage() {
   const returnMemoryLine = lastMoodLabel
     ? `${returnEntry.memory.calm} ${lastMoodLabel}`
     : returnEntry.memory.return;
-  const heroTitleLines = hero.title.split("\n");
-  const heroAccentLine = language === "jp" ? heroTitleLines[0] : null;
-  const heroMainLines = language === "jp" ? heroTitleLines.slice(1) : heroTitleLines;
   const heroMobileLead = hero.mobileLead;
   const heroMobileMain = hero.mobileTitle;
   const heroMobileSupporting = hero.mobileSupporting;
@@ -1049,7 +1049,7 @@ export default function HomePage() {
           <div className="absolute inset-x-0 top-0 h-full bg-[linear-gradient(90deg,rgba(4,14,22,0.22)_0%,rgba(4,14,22,0.16)_28%,rgba(4,14,22,0.14)_44%,rgba(4,14,22,0.18)_56%,rgba(4,14,22,0.34)_72%,rgba(4,14,22,0.54)_100%),linear-gradient(180deg,rgba(5,18,24,0.04),rgba(5,18,24,0.1)_40%,rgba(5,18,24,0.32)_100%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_56%,rgba(8,28,36,0.12),transparent_18%),linear-gradient(180deg,rgba(3,10,18,0.02)_0%,rgba(3,10,18,0.08)_30%,rgba(3,10,18,0.24)_74%,rgba(3,10,18,0.4)_100%)]" />
         </div>
-        <div className="grid gap-8 lg:grid-cols-[1.24fr_0.76fr] lg:items-center lg:gap-16 xl:gap-20">
+        <div className="grid gap-8 lg:grid-cols-[1.42fr_0.58fr] lg:items-center lg:gap-14 xl:gap-16">
           <div className="space-y-5 sm:space-y-8 lg:space-y-9">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm uppercase tracking-[0.34em] text-gold/85">{hero.eyebrow}</p>
@@ -1070,51 +1070,45 @@ export default function HomePage() {
             </div>
 
             <div className="space-y-5 sm:space-y-6 lg:space-y-4.5">
-              <div className="space-y-5 sm:hidden">
+              <div className="mx-auto w-[78%] max-w-[320px] space-y-5 sm:hidden">
                 <p
-                  className={`hero-measure keep-phrase whitespace-pre-line font-serif text-[clamp(1.22rem,5.4vw,1.58rem)] leading-[1.24] text-gold/84 ${
-                    language === "en" ? "max-w-[14ch]" : "max-w-[12ch]"
-                  }`}
+                  className="hero-measure keep-phrase whitespace-pre-line font-serif text-[clamp(1.22rem,5.4vw,1.58rem)] leading-[1.24] text-gold/84"
                 >
                   {heroMobileLead}
                 </p>
                 <h1
-                  className={`hero-measure word-balance keep-phrase whitespace-pre-line font-serif text-[clamp(2.5rem,10vw,4.5rem)] leading-[1.18] tracking-[-0.03em] text-white ${
-                    language === "kr"
-                      ? "max-w-[9.6ch]"
-                      : language === "en"
-                        ? "max-w-[9.4ch]"
-                        : "max-w-[9.4ch]"
-                  }`}
+                  className="hero-measure word-balance keep-phrase whitespace-pre-line font-serif text-[clamp(2.5rem,10vw,4.5rem)] leading-[1.18] tracking-[-0.03em] text-white"
                 >
                   {heroMobileMain}
                 </h1>
               </div>
-              <div className="hidden space-y-5 sm:block sm:space-y-6 lg:space-y-4.5">
-                {heroAccentLine ? (
-                  <p className="keep-phrase max-w-[12ch] font-serif text-[20px] leading-[1.3] text-gold/84 sm:max-w-none sm:text-[28px] sm:leading-[1.45] lg:text-[30px]">
-                    {heroAccentLine}
-                  </p>
-                ) : null}
-                <h1 className={`hero-measure word-balance keep-phrase whitespace-pre-line font-serif text-[40px] leading-[1.2] tracking-[-0.03em] text-white sm:max-w-[11.5ch] sm:text-[56px] sm:leading-[1.18] lg:max-w-[680px] lg:text-[64px] lg:leading-[1.1] lg:tracking-[-0.015em] xl:text-[68px] ${
-                  language === "kr" ? "max-w-[12.2ch]" : language === "en" ? "max-w-[13.6ch]" : "max-w-[12.4ch]"
-                }`}>
-                  {heroMainLines.join("\n")}
+              <div className="hidden space-y-4 sm:block sm:space-y-5 lg:space-y-4.5">
+                <p
+                  className={`keep-phrase word-balance font-serif text-[20px] leading-[1.38] text-gold/84 sm:text-[28px] sm:leading-[1.38] lg:text-[30px] ${
+                    language === "en" ? "max-w-[20ch]" : "max-w-[15ch]"
+                  }`}
+                >
+                  {hero.lead}
+                </p>
+                <h1
+                  className={`hero-measure word-balance keep-phrase whitespace-pre-line font-serif text-[40px] leading-[1.16] tracking-[-0.03em] text-white sm:text-[56px] sm:leading-[1.14] lg:max-w-[720px] lg:text-[64px] lg:leading-[1.08] lg:tracking-[-0.015em] xl:text-[68px] ${
+                    language === "kr" ? "max-w-[12.4ch]" : language === "en" ? "max-w-[13.8ch]" : "max-w-[12.6ch]"
+                  }`}
+                >
+                  {hero.title}
                 </h1>
               </div>
               <p
-                className={`body-measure keep-phrase whitespace-pre-line text-[14px] leading-[1.88] text-white/68 sm:hidden ${
-                  language === "kr" ? "max-w-[17.2ch]" : "max-w-[19ch]"
-                }`}
+                className="body-measure mx-auto w-[76%] max-w-[304px] keep-phrase whitespace-pre-line text-[14px] leading-[1.88] text-white/68 sm:hidden"
               >
                 {heroMobileSupporting}
               </p>
-              <p className={`body-measure keep-phrase hidden whitespace-pre-line text-white/68 sm:block sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.82] lg:max-w-[560px] lg:text-[17px] lg:leading-[1.78] lg:text-white/82 ${
+              <p className={`body-measure keep-phrase hidden whitespace-pre-line text-white/68 sm:block sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.82] lg:max-w-[520px] lg:text-[17px] lg:leading-[1.82] lg:text-white/82 ${
                 language === "kr" ? "sm:max-w-[16.5ch]" : ""
               }`}>
                 {hero.supporting}
               </p>
-              <p className="max-w-[22ch] pt-1 text-[11px] leading-5 text-white/48 sm:max-w-none sm:text-xl sm:leading-9 lg:text-[13px] lg:leading-7 lg:text-white/56">
+              <p className="mx-auto w-[76%] max-w-[304px] pt-1 text-[11px] leading-5 text-white/48 sm:mx-0 sm:w-auto sm:max-w-none sm:text-xl sm:leading-9 lg:text-[13px] lg:leading-7 lg:text-white/56">
                 {hero.subtitle}
               </p>
             </div>
@@ -1162,26 +1156,26 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="relative hidden overflow-hidden rounded-[34px] bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.012))] p-5 shadow-[0_22px_72px_rgba(3,10,18,0.14)] lg:block lg:rounded-[36px] lg:p-6 xl:p-7">
+          <div className="relative hidden w-full max-w-[360px] justify-self-end overflow-hidden rounded-[34px] bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.012))] p-4 shadow-[0_22px_72px_rgba(3,10,18,0.14)] lg:block lg:rounded-[36px] lg:p-5 xl:max-w-[390px] xl:p-6">
             <img
               src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1400&q=80"
               alt={hero.visualAlt}
-              className="relative z-0 h-[420px] w-full rounded-[26px] object-cover object-center opacity-[0.9] lg:h-[500px]"
+              className="relative z-0 h-[360px] w-full rounded-[26px] object-cover object-center opacity-[0.82] contrast-[1.08] saturate-[0.9] brightness-[0.92] lg:h-[420px]"
             />
             <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(4,12,22,0.24),rgba(4,12,22,0.78))]" />
-            <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_78%_14%,rgba(236,206,132,0.16),transparent_17%),radial-gradient(circle_at_70%_24%,rgba(176,203,184,0.08),transparent_22%),linear-gradient(90deg,rgba(5,11,20,0.92)_0%,rgba(5,11,20,0.58)_34%,rgba(5,11,20,0.18)_68%,rgba(5,11,20,0.02)_100%)]" />
-            <div className="pointer-events-none absolute inset-x-8 top-8 z-10 rounded-[24px] bg-[#07111a]/22 px-6 py-5 backdrop-blur-[16px]">
-              <p className="max-w-[22ch] whitespace-pre-line text-[15px] leading-8 text-white/86">
+            <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_76%_18%,rgba(236,206,132,0.16),transparent_16%),radial-gradient(circle_at_72%_26%,rgba(176,203,184,0.08),transparent_24%),linear-gradient(90deg,rgba(5,11,20,0.94)_0%,rgba(5,11,20,0.68)_38%,rgba(5,11,20,0.24)_72%,rgba(5,11,20,0.06)_100%)]" />
+            <div className="pointer-events-none absolute inset-x-6 top-6 z-10 rounded-[24px] bg-[#07111a]/24 px-5 py-4 backdrop-blur-[16px]">
+              <p className="max-w-[18ch] whitespace-pre-line text-[14px] leading-7 text-white/88">
                 {heroPanel.intro}
               </p>
-              <p className="mt-3 text-sm text-gold/74">{heroPanel.pace}</p>
+              <p className="mt-2.5 text-[12px] text-gold/74">{heroPanel.pace}</p>
             </div>
-            <div className="pointer-events-none absolute inset-x-8 bottom-8 z-10 rounded-[26px] bg-[#06111d]/42 px-5 py-5 shadow-[0_18px_48px_rgba(0,0,0,0.14)] backdrop-blur-[18px]">
+            <div className="pointer-events-none absolute inset-x-6 bottom-6 z-10 rounded-[26px] bg-[#06111d]/42 px-4 py-4 shadow-[0_18px_48px_rgba(0,0,0,0.14)] backdrop-blur-[18px]">
               <div className="flex flex-wrap gap-3">
                 {heroPanelCards.map((card, index) => (
                   <div
                     key={index}
-                    className="rounded-full bg-white/[0.045] px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
+                    className="rounded-full bg-white/[0.045] px-3.5 py-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
                   >
                     <div className="flex items-center gap-2.5">
                       <span className="text-[12px] text-gold/76">{card.label}</span>
@@ -1190,7 +1184,7 @@ export default function HomePage() {
                   </div>
                 ))}
               </div>
-              <p className="mt-4 max-w-[30ch] text-sm leading-7 text-white/58">{heroPanel.footer}</p>
+              <p className="mt-3 max-w-[26ch] text-[13px] leading-6 text-white/58">{heroPanel.footer}</p>
             </div>
           </div>
         </div>
