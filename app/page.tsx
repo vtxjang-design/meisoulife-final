@@ -1072,14 +1072,14 @@ export default function HomePage() {
             <div className="space-y-5 sm:space-y-6 lg:space-y-4.5">
               <div className="space-y-5 sm:hidden">
                 <p
-                  className={`whitespace-pre-line font-serif text-[clamp(1.22rem,5.4vw,1.58rem)] leading-[1.24] text-gold/84 ${
+                  className={`hero-measure keep-phrase whitespace-pre-line font-serif text-[clamp(1.22rem,5.4vw,1.58rem)] leading-[1.24] text-gold/84 ${
                     language === "en" ? "max-w-[14ch]" : "max-w-[12ch]"
                   }`}
                 >
                   {heroMobileLead}
                 </p>
                 <h1
-                  className={`whitespace-pre-line font-serif text-[clamp(2.625rem,10.8vw,4rem)] leading-[1.18] tracking-[-0.03em] text-white ${
+                  className={`hero-measure word-balance keep-phrase whitespace-pre-line font-serif text-[clamp(2.5rem,10vw,4.5rem)] leading-[1.18] tracking-[-0.03em] text-white ${
                     language === "kr"
                       ? "max-w-[9.6ch]"
                       : language === "en"
@@ -1092,24 +1092,24 @@ export default function HomePage() {
               </div>
               <div className="hidden space-y-5 sm:block sm:space-y-6 lg:space-y-4.5">
                 {heroAccentLine ? (
-                  <p className="max-w-[12ch] font-serif text-[20px] leading-[1.3] text-gold/84 sm:max-w-none sm:text-[28px] sm:leading-[1.45] lg:text-[30px]">
+                  <p className="keep-phrase max-w-[12ch] font-serif text-[20px] leading-[1.3] text-gold/84 sm:max-w-none sm:text-[28px] sm:leading-[1.45] lg:text-[30px]">
                     {heroAccentLine}
                   </p>
                 ) : null}
-                <h1 className={`whitespace-pre-line text-balance font-serif text-[40px] leading-[1.2] tracking-[-0.03em] text-white sm:max-w-[11.5ch] sm:text-[56px] sm:leading-[1.18] lg:max-w-[620px] lg:text-[64px] lg:leading-[1.1] lg:tracking-[-0.015em] xl:text-[68px] ${
+                <h1 className={`hero-measure word-balance keep-phrase whitespace-pre-line font-serif text-[40px] leading-[1.2] tracking-[-0.03em] text-white sm:max-w-[11.5ch] sm:text-[56px] sm:leading-[1.18] lg:max-w-[680px] lg:text-[64px] lg:leading-[1.1] lg:tracking-[-0.015em] xl:text-[68px] ${
                   language === "kr" ? "max-w-[12.2ch]" : language === "en" ? "max-w-[13.6ch]" : "max-w-[12.4ch]"
                 }`}>
                   {heroMainLines.join("\n")}
                 </h1>
               </div>
               <p
-                className={`whitespace-pre-line text-[14px] leading-[1.88] text-white/68 sm:hidden ${
+                className={`body-measure keep-phrase whitespace-pre-line text-[14px] leading-[1.88] text-white/68 sm:hidden ${
                   language === "kr" ? "max-w-[17.2ch]" : "max-w-[19ch]"
                 }`}
               >
                 {heroMobileSupporting}
               </p>
-              <p className={`hidden whitespace-pre-line text-white/68 sm:block sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.82] lg:max-w-[420px] lg:text-[17px] lg:leading-[1.78] lg:text-white/82 ${
+              <p className={`body-measure keep-phrase hidden whitespace-pre-line text-white/68 sm:block sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.82] lg:max-w-[560px] lg:text-[17px] lg:leading-[1.78] lg:text-white/82 ${
                 language === "kr" ? "sm:max-w-[16.5ch]" : ""
               }`}>
                 {hero.supporting}
@@ -1123,14 +1123,14 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={scrollToZeroGate}
-                className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold/90 px-4.5 py-3 text-[14px] font-semibold leading-none text-ink shadow-[0_14px_30px_rgba(212,186,117,0.16)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#e7cd92] lg:min-h-[60px] lg:px-9 lg:text-[17px] lg:shadow-[0_18px_36px_rgba(212,186,117,0.18)]"
+                className="button-nowrap inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold/90 px-4.5 py-3 text-[14px] font-semibold leading-none text-ink shadow-[0_14px_30px_rgba(212,186,117,0.16)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#e7cd92] lg:min-h-[60px] lg:px-9 lg:text-[17px] lg:shadow-[0_18px_36px_rgba(212,186,117,0.18)]"
               >
                 {hero.primary}
               </button>
               <button
                 type="button"
                 onClick={scrollToRhythmChallenge}
-                className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-2 text-[13px] font-medium leading-none text-white/68 transition duration-300 hover:bg-white/[0.07] hover:text-white lg:min-h-[60px] lg:px-10 lg:text-[16px] lg:text-white/78"
+                className="button-nowrap inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-2 text-[13px] font-medium leading-none text-white/68 transition duration-300 hover:bg-white/[0.07] hover:text-white lg:min-h-[60px] lg:px-10 lg:text-[16px] lg:text-white/78"
               >
                 {hero.secondary}
               </button>

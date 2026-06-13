@@ -24,7 +24,7 @@ export default function PricingPage() {
       </div>
 
       <div className="mt-8 rounded-[24px] border border-white/10 bg-white/[0.03] p-6 sm:p-7">
-        <p className="whitespace-pre-line text-lg leading-8 text-white/78 sm:text-xl">{pricing.supportText}</p>
+        <p className="body-measure word-balance keep-phrase whitespace-pre-line text-lg leading-8 text-white/78 sm:text-xl">{pricing.supportText}</p>
       </div>
 
       <div className="mt-10 grid gap-6 lg:grid-cols-3 lg:items-stretch">
@@ -35,7 +35,7 @@ export default function PricingPage() {
           >
             <div className="space-y-4">
               <p className="text-sm font-medium tracking-[0.28em] text-emerald-700">{plan.name}</p>
-              <p className="text-base font-semibold leading-7 text-zinc-900">{plan.emotionalCopy}</p>
+              <p className="word-balance keep-phrase text-base font-semibold leading-7 text-zinc-900">{plan.emotionalCopy}</p>
               <div className="space-y-2">
                 <div className="flex items-end gap-2">
                   <p className="text-4xl font-semibold tracking-tight text-zinc-900 sm:text-5xl">{plan.price}</p>
@@ -63,7 +63,7 @@ export default function PricingPage() {
               {plan.key === "basic" ? (
                 <CheckoutButton
                   plan="basic"
-                  className="relative z-50 min-h-[52px] w-full cursor-pointer rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="button-nowrap relative z-50 min-h-[52px] w-full cursor-pointer rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {plan.cta}
                 </CheckoutButton>
@@ -71,7 +71,7 @@ export default function PricingPage() {
               {plan.key === "leader" ? (
                 <CheckoutButton
                   plan="growth"
-                  className="relative z-50 min-h-[52px] w-full cursor-pointer rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="button-nowrap relative z-50 min-h-[52px] w-full cursor-pointer rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {plan.cta}
                 </CheckoutButton>
@@ -79,7 +79,7 @@ export default function PricingPage() {
               {plan.key === "premium" ? (
                 <CheckoutButton
                   plan="inner-circle"
-                  className="relative z-50 min-h-[52px] w-full cursor-pointer rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="button-nowrap relative z-50 min-h-[52px] w-full cursor-pointer rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {plan.cta}
                 </CheckoutButton>
@@ -104,11 +104,11 @@ export default function PricingPage() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-sm uppercase tracking-[0.28em] text-gold">{pricing.voicesEyebrow}</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl">{pricing.voicesTitle}</h2>
+            <h2 className="word-balance keep-phrase mt-3 text-[clamp(1.75rem,7vw,3rem)] font-semibold tracking-tight text-white">{pricing.voicesTitle}</h2>
           </div>
           <Link
             href="/community"
-            className="inline-flex items-center justify-center rounded-full border border-white/15 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+            className="button-nowrap inline-flex items-center justify-center rounded-full border border-white/15 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
           >
             {pricing.voicesButton}
           </Link>

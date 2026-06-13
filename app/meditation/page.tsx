@@ -414,8 +414,8 @@ export default function MeditationPage() {
                     key={`${journeyDay}-${journeyGuidanceStage}`}
                     className="animate-fade-in space-y-3 transition-opacity duration-300"
                   >
-                    <p className="text-xs uppercase tracking-[0.28em] text-gold/72">{topText}</p>
-                    <p className="mx-auto max-w-xl whitespace-pre-line text-center text-xl leading-[1.9] text-white/92 sm:text-2xl">
+                    <p className="keep-phrase text-xs uppercase tracking-[0.28em] text-gold/72">{topText}</p>
+                    <p className="body-measure word-balance keep-phrase mx-auto whitespace-pre-line text-center text-xl leading-[1.9] text-white/92 sm:text-2xl">
                       {journeyOverlayMessage}
                     </p>
                   </div>
@@ -424,8 +424,8 @@ export default function MeditationPage() {
                     key={`${journeyDay}-${journeyGuidanceStage}`}
                     className="animate-fade-in space-y-3 transition-opacity duration-300"
                   >
-                    <p className="text-xs uppercase tracking-[0.28em] text-gold/72">{topText}</p>
-                    <p className="mx-auto max-w-xl text-center text-sm leading-7 text-white/62 sm:text-base">
+                    <p className="keep-phrase text-xs uppercase tracking-[0.28em] text-gold/72">{topText}</p>
+                    <p className="body-measure keep-phrase mx-auto text-center text-sm leading-7 text-white/62 sm:text-base">
                       {introText}
                     </p>
                   </div>
@@ -433,8 +433,8 @@ export default function MeditationPage() {
               </div>
             ) : (
               <div className="space-y-4">
-                <p className="text-sm uppercase tracking-[0.32em] text-gold/80">{topText}</p>
-                <p className="mx-auto max-w-2xl text-sm leading-7 text-white/60 sm:text-base">{introText}</p>
+                <p className="keep-phrase text-sm uppercase tracking-[0.32em] text-gold/80">{topText}</p>
+                <p className="body-measure keep-phrase mx-auto text-sm leading-7 text-white/60 sm:text-base">{introText}</p>
               </div>
             )}
 
@@ -445,7 +445,7 @@ export default function MeditationPage() {
                   <button
                     type="button"
                     onClick={handleJourneyAudioStart}
-                    className="mt-4 inline-flex min-h-[44px] items-center justify-center rounded-full border border-gold/20 bg-gold/10 px-4 py-2 text-sm font-semibold text-gold transition hover:bg-gold/15 hover:text-[#f5e4b5]"
+                    className="button-nowrap mt-4 inline-flex min-h-[44px] items-center justify-center rounded-full border border-gold/20 bg-gold/10 px-4 py-2 text-sm font-semibold text-gold transition hover:bg-gold/15 hover:text-[#f5e4b5]"
                   >
                     {journeyCopy.audioStart}
                   </button>
@@ -457,7 +457,7 @@ export default function MeditationPage() {
                   <button
                     type="button"
                     onClick={handleVibrationToggle}
-                    className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
+                    className="button-nowrap inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
                     aria-pressed={vibrationEnabled}
                   >
                     {vibrationEnabled ? copy.vibrationOn : copy.vibrationOff}
@@ -466,7 +466,7 @@ export default function MeditationPage() {
                 <button
                   type="button"
                   onClick={handleSoundToggle}
-                  className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
+                  className="button-nowrap inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
                   aria-pressed={soundEnabled}
                 >
                   {soundEnabled ? `🔊 ${journeyMode ? journeyCopy.audioOn : copy.soundOn}` : `🔊 ${journeyMode ? journeyCopy.audioOff : copy.soundOff}`}
@@ -475,7 +475,7 @@ export default function MeditationPage() {
                   <button
                     type="button"
                     onClick={handleJourneyAudioStart}
-                    className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-gold/20 bg-gold/10 px-3 py-1.5 text-xs font-medium text-gold transition hover:bg-gold/15 hover:text-[#f5e4b5]"
+                    className="button-nowrap inline-flex min-h-[36px] items-center justify-center rounded-full border border-gold/20 bg-gold/10 px-3 py-1.5 text-xs font-medium text-gold transition hover:bg-gold/15 hover:text-[#f5e4b5]"
                   >
                     {journeyCopy.audioStart}
                   </button>
@@ -484,7 +484,7 @@ export default function MeditationPage() {
                   <button
                     type="button"
                     onClick={handleAmbientRetry}
-                    className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
+                    className="button-nowrap inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
                   >
                     {copy.natureLabel}
                   </button>

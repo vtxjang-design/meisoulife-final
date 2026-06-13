@@ -434,7 +434,7 @@ const basicHomeCopy = {
   en: {
     hero: {
       title: "Back to Yourself",
-      subtitle: "Morning · Noon · Night\n\nA Quiet Place to Return",
+      subtitle: "Morning · Day · Night\n\nA Quiet Place to Return",
       support: "Small rhythms\nquietly shape the day.",
       primaryCta: "Begin Today’s Rhythm"
     },
@@ -1119,26 +1119,26 @@ export function BasicHome({
             </p>
             <div className="mt-8 space-y-4">
               <p className="text-sm uppercase tracking-[0.24em] text-white/48">{copy.routineSection.title}</p>
-              <h1 className="max-w-[11ch] whitespace-pre-line font-serif text-[clamp(2rem,8vw,3.5rem)] leading-[1.12] text-white sm:max-w-[14ch]">
-                {copy.hero.title}
-              </h1>
-              <p className="max-w-[14ch] whitespace-pre-line font-serif text-[clamp(1.375rem,5vw,2.125rem)] leading-[1.45] text-white/88 sm:max-w-[18ch] sm:leading-[1.5]">
-                {copy.hero.subtitle}
-              </p>
-            </div>
-            <p className="mt-6 max-w-[22ch] text-base leading-[1.75] text-white/66 sm:max-w-2xl sm:text-lg sm:leading-[1.95]">
+            <h1 className="hero-measure word-balance keep-phrase max-w-[11ch] whitespace-pre-line font-serif text-[clamp(2.25rem,9vw,4.5rem)] leading-[1.14] text-white sm:max-w-[14ch]">
+              {copy.hero.title}
+            </h1>
+            <p className="hero-measure word-balance keep-phrase max-w-[14ch] whitespace-pre-line font-serif text-[clamp(1.3rem,5vw,2.2rem)] leading-[1.4] text-white/88 sm:max-w-[18ch] sm:leading-[1.48]">
+              {copy.hero.subtitle}
+            </p>
+          </div>
+            <p className="body-measure keep-phrase mt-6 max-w-[22ch] text-base leading-[1.75] text-white/66 sm:max-w-2xl sm:text-lg sm:leading-[1.95]">
               {copy.hero.support}
             </p>
             <Link
               href="#today-rhythm-gates"
-              className="mt-8 inline-flex min-h-[50px] items-center justify-center rounded-full border border-[rgba(115,231,210,0.22)] bg-white/[0.08] px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.12]"
+              className="button-nowrap mt-8 inline-flex min-h-[50px] items-center justify-center rounded-full border border-[rgba(115,231,210,0.22)] bg-white/[0.08] px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.12]"
             >
               {copy.hero.primaryCta}
             </Link>
           </div>
 
           <div id="today-rhythm-gates" className="mt-10">
-            <p className="mb-4 max-w-[20ch] text-sm leading-[1.7] text-white/62 sm:max-w-[30ch] sm:leading-7">
+            <p className="body-measure keep-phrase mb-4 max-w-[20ch] text-sm leading-[1.7] text-white/62 sm:max-w-[30ch] sm:leading-7">
               {copy.rhythmCardsTitle}
             </p>
           </div>
@@ -1157,14 +1157,14 @@ export function BasicHome({
                   <div className="absolute -right-8 top-6 h-24 w-24 rounded-full bg-white/8 blur-2xl transition duration-500 group-hover:scale-125" />
                   <div className="absolute inset-x-[18%] top-0 h-14 rounded-full bg-white/8 blur-2xl opacity-70" />
                   <div className="relative">
-                    <p className="text-base font-semibold tracking-[0.04em] text-gold/90">{card.title}</p>
-                    <p className="mt-4 min-h-[48px] max-w-[16ch] text-base leading-[1.6] text-white/88 sm:max-w-none sm:leading-7">
+                    <p className="keep-phrase text-base font-semibold tracking-[0.04em] text-gold/90">{card.title}</p>
+                    <p className="word-balance keep-phrase mt-4 min-h-[48px] max-w-[16ch] text-base leading-[1.6] text-white/88 sm:max-w-none sm:leading-7">
                       {card.description}
                     </p>
                     <Link
                       href={buildRhythmMeditationHref(rhythm)}
                       onClick={() => handleSelectGate(rhythm)}
-                      className="mt-6 inline-flex min-h-[46px] items-center justify-center rounded-full border border-white/14 bg-white/[0.08] px-5 py-3 text-sm font-semibold text-white transition duration-300 group-hover:bg-white/[0.12]"
+                      className="button-nowrap mt-6 inline-flex min-h-[46px] items-center justify-center rounded-full border border-white/14 bg-white/[0.08] px-5 py-3 text-sm font-semibold text-white transition duration-300 group-hover:bg-white/[0.12]"
                     >
                       {card.button}
                     </Link>
@@ -1206,13 +1206,13 @@ export function BasicHome({
           <article className="rounded-[30px] border border-[rgba(212,178,106,0.20)] bg-[radial-gradient(circle_at_top,rgba(241,222,170,0.12),transparent_42%),linear-gradient(180deg,rgba(34,30,38,0.88),rgba(18,27,39,0.92),rgba(16,32,42,0.96))] px-6 py-6 shadow-[0_24px_72px_rgba(0,0,0,0.28)] backdrop-blur-xl">
             <p className="text-xs uppercase tracking-[0.24em] text-gold/76">🌱 {copy.openGate.title}</p>
             <p className="mt-4 text-sm uppercase tracking-[0.24em] text-white/52">{getJourneyGateLabel(language, journeyDay)}</p>
-            <p className="mt-3 max-w-[15ch] text-[26px] font-semibold leading-[1.28] text-white sm:max-w-none sm:text-[30px]">
+            <p className="word-balance keep-phrase mt-3 max-w-[15ch] text-[26px] font-semibold leading-[1.28] text-white sm:max-w-none sm:text-[30px]">
               {getSanctuaryJourneyTitle(language, journeyDay)}
             </p>
             <p className="mt-4 whitespace-pre-line text-sm leading-7 text-white/70">{copy.openGate.practice}</p>
             <Link
               href={`/rhythm-journey?day=${journeyDay}`}
-              className="mt-6 inline-flex min-h-[46px] items-center justify-center rounded-full border border-[rgba(212,178,106,0.24)] bg-white/[0.08] px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.12]"
+              className="button-nowrap mt-6 inline-flex min-h-[46px] items-center justify-center rounded-full border border-[rgba(212,178,106,0.24)] bg-white/[0.08] px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.12]"
             >
               {copy.openGate.cta}
             </Link>
@@ -1223,7 +1223,7 @@ export function BasicHome({
             <div className="relative">
               <p className="text-xs uppercase tracking-[0.24em] text-gold/78">{copy.markerStone.title}</p>
               <p className="mt-4 text-sm uppercase tracking-[0.24em] text-white/58">{copy.markerStone.bodyTitle}</p>
-              <p className="mt-3 max-w-[14ch] whitespace-pre-line text-[24px] font-semibold leading-[1.5] text-white sm:max-w-none sm:text-[30px] sm:leading-[1.6]">
+              <p className="word-balance keep-phrase mt-3 max-w-[14ch] whitespace-pre-line text-[24px] font-semibold leading-[1.5] text-white sm:max-w-none sm:text-[30px] sm:leading-[1.6]">
                 {copy.markerStone.heroNote}
               </p>
               <p className="mt-4 max-w-md text-sm leading-7 text-white/68">{markerMessage}</p>
@@ -1268,15 +1268,15 @@ export function BasicHome({
                     {statusLabel}
                   </p>
                 </div>
-                <p className="mt-4 text-lg font-semibold leading-[1.45] text-white">{getSanctuaryJourneyTitle(language, day)}</p>
+                <p className="word-balance keep-phrase mt-4 text-lg font-semibold leading-[1.45] text-white">{getSanctuaryJourneyTitle(language, day)}</p>
                 {locked ? (
-                  <span className="mt-5 inline-flex min-h-[42px] items-center justify-center rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm font-semibold text-white/42">
+                  <span className="button-nowrap mt-5 inline-flex min-h-[42px] items-center justify-center rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm font-semibold text-white/42">
                     {copy.journeyPath.locked}
                   </span>
                 ) : (
                   <Link
                     href={`/rhythm-journey?day=${day}`}
-                    className="mt-5 inline-flex min-h-[42px] items-center justify-center rounded-full border border-white/14 bg-white/[0.08] px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/[0.12]"
+                    className="button-nowrap mt-5 inline-flex min-h-[42px] items-center justify-center rounded-full border border-white/14 bg-white/[0.08] px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/[0.12]"
                   >
                     {copy.journeyPath.enter}
                   </Link>

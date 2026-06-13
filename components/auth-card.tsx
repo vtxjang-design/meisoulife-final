@@ -151,7 +151,7 @@ export function AuthCard({ mode }: AuthCardProps) {
         <div className="grid gap-5">
           <div>
             <h2 className="text-xl font-semibold text-white">{copy.loginPage.resetRequestTitle}</h2>
-            <p className="mt-2 text-sm leading-7 text-white/68">{copy.loginPage.resetRequestSubtitle}</p>
+            <p className="body-measure keep-phrase mt-2 text-sm leading-7 text-white/68">{copy.loginPage.resetRequestSubtitle}</p>
           </div>
           <label className="grid gap-2 text-sm text-white/76">
             <span>{copy.loginPage.email}</span>
@@ -167,7 +167,7 @@ export function AuthCard({ mode }: AuthCardProps) {
         <button
           type="submit"
           disabled={loading || !isAvailable}
-          className="mt-6 inline-flex w-full items-center justify-center rounded-md bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:opacity-60"
+          className="button-nowrap mt-6 inline-flex w-full items-center justify-center rounded-md bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:opacity-60"
         >
           {loading ? copy.loginPage.resetRequestSending : copy.loginPage.resetRequestButton}
         </button>
@@ -177,7 +177,7 @@ export function AuthCard({ mode }: AuthCardProps) {
             setView("auth");
             setMessage("");
           }}
-          className="mt-4 inline-flex w-full items-center justify-center rounded-md border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white/82 transition hover:bg-white/[0.06]"
+          className="button-nowrap mt-4 inline-flex w-full items-center justify-center rounded-md border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white/82 transition hover:bg-white/[0.06]"
         >
           {copy.loginPage.resetRequestBack}
         </button>
@@ -226,7 +226,7 @@ export function AuthCard({ mode }: AuthCardProps) {
       <button
         type="submit"
         disabled={loading || !isAvailable}
-        className="mt-6 inline-flex w-full items-center justify-center rounded-md bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:opacity-60"
+        className="button-nowrap mt-6 inline-flex w-full items-center justify-center rounded-md bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:opacity-60"
       >
         {loading ? copy.loginPage.loading : mode === "signup" ? copy.loginPage.signupButton : copy.loginPage.button}
       </button>
@@ -237,7 +237,7 @@ export function AuthCard({ mode }: AuthCardProps) {
             setView("reset");
             setMessage("");
           }}
-          className="mt-4 inline-flex text-sm text-white/72 transition hover:text-white"
+          className="button-nowrap mt-4 inline-flex text-sm text-white/72 transition hover:text-white"
         >
           {copy.loginPage.forgotPassword}
         </button>

@@ -12,15 +12,16 @@ export function SectionHeading({
   align = "left"
 }: SectionHeadingProps) {
   const alignment = align === "center" ? "mx-auto max-w-3xl text-center" : "max-w-3xl";
+  const textAlignment = align === "center" ? "mx-auto" : "";
 
   return (
     <div className={alignment}>
       <p className="text-sm uppercase tracking-[0.3em] text-gold/90">{eyebrow}</p>
-      <h2 className="mt-3.5 max-w-[13ch] whitespace-pre-line text-balance font-serif text-[30px] leading-[1.22] text-white sm:max-w-[16ch] sm:text-4xl sm:leading-[1.24]">
+      <h2 className={`word-balance keep-phrase hero-measure mt-3.5 whitespace-pre-line font-serif text-[clamp(1.75rem,7vw,3rem)] leading-[1.2] text-white ${textAlignment}`}>
         {title}
       </h2>
       {description ? (
-        <p className="mt-3.5 max-w-[18ch] whitespace-pre-line text-base leading-[1.72] text-white/72 sm:max-w-[28ch] sm:text-lg sm:leading-[1.82]">
+        <p className={`body-measure word-balance keep-phrase mt-3.5 whitespace-pre-line text-[clamp(1rem,4vw,1.25rem)] leading-[1.75] text-white/72 ${textAlignment}`}>
           {description}
         </p>
       ) : null}

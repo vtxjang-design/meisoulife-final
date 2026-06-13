@@ -39,7 +39,7 @@ export default function LoginPage() {
         <div className="flex justify-center">
           <Link
             href="/signup"
-            className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
+            className="button-nowrap inline-flex min-h-[48px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
           >
             {t.signupButton}
           </Link>

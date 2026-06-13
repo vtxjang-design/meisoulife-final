@@ -60,6 +60,27 @@ a {
     serif;
 }
 
+.word-balance {
+  text-wrap: balance;
+}
+
+.keep-phrase {
+  word-break: keep-all;
+  overflow-wrap: normal;
+}
+
+.hero-measure {
+  max-width: min(90vw, 760px);
+}
+
+.body-measure {
+  max-width: min(88vw, 680px);
+}
+
+.button-nowrap {
+  white-space: nowrap;
+}
+
 img {
   max-width: 100%;
   height: auto;

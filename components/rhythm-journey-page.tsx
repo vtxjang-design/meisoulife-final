@@ -180,10 +180,10 @@ export function RhythmJourneyPage() {
         {showIntro ? (
           <section className="overflow-hidden rounded-[34px] border border-[#f3e8c8]/20 bg-[radial-gradient(circle_at_top,rgba(244,232,198,0.18),transparent_22%),linear-gradient(180deg,rgba(246,239,226,0.18),rgba(196,219,205,0.08))] px-6 py-8 shadow-[0_24px_80px_rgba(7,17,31,0.14)] backdrop-blur-[14px] sm:px-8 sm:py-10">
             <p className="text-sm uppercase tracking-[0.28em] text-[#f0d79c]">{journeyCopy.entryEyebrow}</p>
-            <h1 className="mt-4 max-w-[10ch] whitespace-pre-line font-serif text-[32px] leading-[1.18] text-white sm:max-w-none sm:text-[44px] sm:leading-[1.24]">
+            <h1 className="hero-measure word-balance keep-phrase mt-4 max-w-[10ch] whitespace-pre-line font-serif text-[clamp(2rem,10vw,4.5rem)] leading-[1.16] text-white sm:max-w-none sm:leading-[1.22]">
               {journeyCopy.title}
             </h1>
-            <p className="mt-3 max-w-[14ch] whitespace-pre-line text-lg leading-[1.7] text-[#f4ead1]/92 sm:max-w-[18ch] sm:leading-8">
+            <p className="hero-measure word-balance keep-phrase mt-3 max-w-[14ch] whitespace-pre-line text-lg leading-[1.7] text-[#f4ead1]/92 sm:max-w-[18ch] sm:leading-8">
               {journeyCopy.subtitle}
             </p>
             <div className="mt-7 rounded-[28px] border border-white/10 bg-[#f6f0e3]/10 px-5 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
@@ -194,7 +194,7 @@ export function RhythmJourneyPage() {
             <button
               type="button"
               onClick={startJourney}
-              className="mt-8 inline-flex min-h-[56px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.22)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_46px_rgba(212,186,117,0.26)] sm:w-auto sm:min-w-[280px]"
+              className="button-nowrap mt-8 inline-flex min-h-[56px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.22)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_46px_rgba(212,186,117,0.26)] sm:w-auto sm:min-w-[280px]"
             >
               {journeyCopy.startCta}
             </button>
@@ -205,10 +205,10 @@ export function RhythmJourneyPage() {
             <div className="flex items-center justify-between gap-4 px-1">
               <div>
                 <p className="text-sm uppercase tracking-[0.28em] text-[#f0d79c]">{journeyCopy.todayEyebrow}</p>
-                <h1 className="mt-3 max-w-[12ch] font-serif text-[30px] leading-[1.2] text-white sm:max-w-none sm:text-[40px] sm:leading-[1.24]">
+                <h1 className="hero-measure word-balance keep-phrase mt-3 max-w-[12ch] font-serif text-[clamp(1.875rem,8vw,3rem)] leading-[1.18] text-white sm:max-w-none sm:leading-[1.24]">
                   {currentDay.title}
                 </h1>
-                <p className="mt-2 max-w-[16ch] whitespace-pre-line text-base leading-[1.68] text-white/70 sm:max-w-[22ch] sm:leading-7">
+                <p className="body-measure word-balance keep-phrase mt-2 max-w-[16ch] whitespace-pre-line text-base leading-[1.68] text-white/70 sm:max-w-[22ch] sm:leading-7">
                   {currentDay.subtitle}
                 </p>
               </div>
@@ -252,7 +252,7 @@ export function RhythmJourneyPage() {
                               key={option.value}
                               type="button"
                               onClick={() => handleSelectOption(option.value)}
-                              className={`rounded-full px-4 py-2.5 text-sm transition duration-200 ${
+                            className={`button-nowrap rounded-full px-4 py-2.5 text-sm transition duration-200 ${
                                 selected
                                   ? "border border-[#f0d79c]/30 bg-[#f3e0af]/16 text-[#fff8e6]"
                                   : "border border-white/10 bg-white/[0.04] text-white/72 hover:bg-white/[0.07]"
@@ -291,16 +291,16 @@ export function RhythmJourneyPage() {
                         <button
                           type="button"
                           onClick={handleCompleteDay}
-                          className="mt-6 inline-flex min-h-[56px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.2)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_46px_rgba(212,186,117,0.24)]"
-                        >
-                          {journeyCopy.finishDayCta}
-                        </button>
+                        className="button-nowrap mt-6 inline-flex min-h-[56px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.2)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_46px_rgba(212,186,117,0.24)]"
+                      >
+                        {journeyCopy.finishDayCta}
+                      </button>
                       </div>
                     ) : (
                       <button
                         type="button"
                         onClick={() => setShowNaturePause(true)}
-                        className="inline-flex min-h-[56px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.2)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_46px_rgba(212,186,117,0.24)]"
+                        className="button-nowrap inline-flex min-h-[56px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.2)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_46px_rgba(212,186,117,0.24)]"
                       >
                         {journeyCopy.natureLeaveCta}
                       </button>
@@ -309,7 +309,7 @@ export function RhythmJourneyPage() {
                     <button
                       type="button"
                       onClick={startRecoveryMinute}
-                      className="inline-flex min-h-[56px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.2)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_46px_rgba(212,186,117,0.24)]"
+                      className="button-nowrap inline-flex min-h-[56px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.2)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_46px_rgba(212,186,117,0.24)]"
                     >
                       {journeyCopy.recoveryCta}
                     </button>
@@ -345,7 +345,7 @@ export function RhythmJourneyPage() {
                                 key={option.value}
                                 href={getDailyRhythmRoute(option.value)}
                                 onClick={() => handleDay7RhythmSelect(option.value)}
-                                className={`flex min-h-[72px] items-center justify-center rounded-[24px] px-4 py-4 text-center text-sm font-semibold transition duration-200 ${
+                              className={`button-nowrap flex min-h-[72px] items-center justify-center rounded-[24px] px-4 py-4 text-center text-sm font-semibold transition duration-200 ${
                                   selected
                                     ? "border border-[#f0d79c]/30 bg-[#f3e0af]/16 text-[#fff8e6]"
                                     : "border border-white/10 bg-white/[0.04] text-white/72 hover:bg-white/[0.07]"
@@ -367,7 +367,7 @@ export function RhythmJourneyPage() {
                     <button
                       type="button"
                       onClick={handleNext}
-                      className="inline-flex min-h-[54px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-3 text-sm font-semibold text-ink transition duration-300 hover:-translate-y-0.5"
+                      className="button-nowrap inline-flex min-h-[54px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-3 text-sm font-semibold text-ink transition duration-300 hover:-translate-y-0.5"
                     >
                       {journeyCopy.nextCta}
                     </button>
@@ -376,14 +376,14 @@ export function RhythmJourneyPage() {
                       {day7RhythmSelection ? (
                         <Link
                           href={getDailyRhythmRoute(day7RhythmSelection)}
-                          className="inline-flex min-h-[54px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-3 text-sm font-semibold text-ink transition duration-300 hover:-translate-y-0.5"
+                          className="button-nowrap inline-flex min-h-[54px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-3 text-sm font-semibold text-ink transition duration-300 hover:-translate-y-0.5"
                         >
                           {rhythmButtonLabel}
                         </Link>
                       ) : null}
                       <Link
                         href="/"
-                        className="inline-flex min-h-[54px] w-full items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.07]"
+                        className="button-nowrap inline-flex min-h-[54px] w-full items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.07]"
                       >
                         {journeyCopy.returnHomeCta}
                       </Link>
