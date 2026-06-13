@@ -68,6 +68,7 @@ export type RhythmJourneyLocaleContent = {
   returnHomeCta: string;
   timerTopText: string;
   timerSubText: string;
+  audioPrompt: string;
   audioStart: string;
   audioOn: string;
   audioOff: string;
@@ -100,7 +101,8 @@ const rhythmJourneyContent: Record<Language, RhythmJourneyLocaleContent> = {
     returnHomeCta: "戻ってきましょう",
     timerTopText: "今ここで、\n60秒だけ呼吸に戻りましょう。",
     timerSubText: "急がなくて大丈夫です。",
-    audioStart: "自然音をはじめる",
+    audioPrompt: "静かに音を始めます。",
+    audioStart: "音を始める",
     audioOn: "自然音 ON",
     audioOff: "自然音 OFF",
     day7Title: "7日間、\nお疲れさまでした。",
@@ -257,7 +259,8 @@ const rhythmJourneyContent: Record<Language, RhythmJourneyLocaleContent> = {
     returnHomeCta: "다시 돌아오기",
     timerTopText: "지금 여기에서,\n60초만 호흡으로 돌아가 봅니다.",
     timerSubText: "서두르지 않아도 괜찮습니다.",
-    audioStart: "자연음을 시작하기",
+    audioPrompt: "고요한 소리를 시작합니다.",
+    audioStart: "소리 시작하기",
     audioOn: "자연음 ON",
     audioOff: "자연음 OFF",
     day7Title: "7일간,\n수고 많으셨습니다.",
@@ -414,7 +417,8 @@ const rhythmJourneyContent: Record<Language, RhythmJourneyLocaleContent> = {
     returnHomeCta: "Return gently",
     timerTopText: "Right here,\nlet us return to the breath for 60 seconds.",
     timerSubText: "There is no need to rush.",
-    audioStart: "Start nature sound",
+    audioPrompt: "Begin the quiet sound.",
+    audioStart: "Start Sound",
     audioOn: "Nature sound ON",
     audioOff: "Nature sound OFF",
     day7Title: "Thank you\nfor these 7 days.",

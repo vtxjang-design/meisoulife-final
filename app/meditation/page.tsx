@@ -87,6 +87,7 @@ export default function MeditationPage() {
   const [hasUserGesture, setHasUserGesture] = useState(false);
   const [ambientVideoFailed, setAmbientVideoFailed] = useState(false);
   const [showAmbientRetry, setShowAmbientRetry] = useState(false);
+  const [needsUserStart, setNeedsUserStart] = useState(false);
   const [journeyMode, setJourneyMode] = useState(false);
   const [journeyDay, setJourneyDay] = useState<number | null>(null);
   const [returnToHref, setReturnToHref] = useState("/rhythm-journey");
@@ -150,7 +151,8 @@ export default function MeditationPage() {
     setReturnToHref(nextReturnTo || "/rhythm-journey");
     setAmbientVideoFailed(false);
     setShowAmbientRetry(false);
-    setHasUserGesture(Boolean(nextJourneyMode && pendingJourneyAudio));
+    setNeedsUserStart(false);
+    setHasUserGesture(false);
     completionHandledRef.current = false;
     console.log("[Journey Audio] journeyMode:", nextJourneyMode);
     console.log("[Journey Audio] journeyDay:", resolvedJourneyDay);
@@ -164,7 +166,7 @@ export default function MeditationPage() {
     console.log("[Journey Audio] audio element:", ambientAudioRef.current);
   }, []);
 
-  async function handleAmbientStartResult(result: { started: boolean }) {
+  async function handleAmbientStartResult(result: { started: boolean; error?: unknown }, manual = false) {
     if (journeyMode && journeyDay) {
       console.log("[Journey Audio] journeyMode:", journeyMode);
       console.log("[Journey Audio] journeyDay:", journeyDay);
@@ -182,6 +184,7 @@ export default function MeditationPage() {
       }
 
       setShowAmbientRetry(false);
+      setNeedsUserStart(false);
       setSoundEnabled(true);
       setNatureSoundPreference(true);
 
@@ -196,7 +199,11 @@ export default function MeditationPage() {
     if (journeyMode) {
       setSoundEnabled(false);
       setNatureSoundPreference(false);
+      setNeedsUserStart(true);
       console.warn("[Journey Audio] play failed");
+      if (result.error) {
+        console.error(`[Journey Audio] ${manual ? "manual start" : "autoplay"} failed:`, result.error);
+      }
 
       if (typeof window !== "undefined") {
         console.warn("[Journey Audio] exact pending state kept for manual retry");
@@ -244,6 +251,7 @@ export default function MeditationPage() {
       console.log("[Journey Audio] audio element:", ambientAudioRef.current);
       await audio.play();
       console.log("[Journey Audio] play started");
+      setNeedsUserStart(false);
       setSoundEnabled(true);
       setNatureSoundPreference(true);
       setShowAmbientRetry(false);
@@ -254,7 +262,8 @@ export default function MeditationPage() {
     } catch (error) {
       setSoundEnabled(false);
       setNatureSoundPreference(false);
-      setShowAmbientRetry(true);
+      setNeedsUserStart(true);
+      console.error("Audio playback failed:", error);
       console.warn("[Journey Audio] manual start failed", error);
     }
   }
@@ -265,7 +274,7 @@ export default function MeditationPage() {
     const markGesture = () => {
       setHasUserGesture(true);
 
-      if (!isComplete && soundEnabled) {
+      if (!isComplete && soundEnabled && !journeyMode) {
         startAmbientNatureAudio(ambientAudioRef, soundEnabled, ambientAudioSource, ambientAudioVolume).then((result) => {
           void handleAmbientStartResult(result);
         });
@@ -297,8 +306,12 @@ export default function MeditationPage() {
   }, [secondsLeft]);
 
   useEffect(() => {
-    if (isComplete || !soundEnabled || (!hasUserGesture && !journeyMode)) {
+    if (isComplete || !soundEnabled) {
       stopAmbientNatureAudio(ambientAudioRef);
+      return;
+    }
+
+    if (!hasUserGesture || journeyMode) {
       return;
     }
 
@@ -312,6 +325,16 @@ export default function MeditationPage() {
       }
     };
   }, [ambientAudioSource, ambientAudioVolume, hasUserGesture, isComplete, journeyMode, soundEnabled]);
+
+  useEffect(() => {
+    if (!journeyMode || !ambientAudioSource || !soundEnabled || isComplete) {
+      return;
+    }
+
+    startAmbientNatureAudio(ambientAudioRef, true, ambientAudioSource, ambientAudioVolume).then((result) => {
+      void handleAmbientStartResult(result);
+    });
+  }, [ambientAudioSource, ambientAudioVolume, isComplete, journeyMode, soundEnabled]);
 
   useEffect(() => {
     if (!isComplete || completionHandledRef.current) {
@@ -338,11 +361,12 @@ export default function MeditationPage() {
 
     if (next) {
       const result = await startAmbientNatureAudio(ambientAudioRef, true, ambientAudioSource, ambientAudioVolume);
-      await handleAmbientStartResult(result);
+      await handleAmbientStartResult(result, true);
     } else {
       setSoundEnabled(false);
       setNatureSoundPreference(false);
       setShowAmbientRetry(false);
+      setNeedsUserStart(false);
       stopAmbientNatureAudio(ambientAudioRef);
     }
   }
@@ -355,7 +379,7 @@ export default function MeditationPage() {
   async function handleAmbientRetry() {
     setHasUserGesture(true);
     const result = await startAmbientNatureAudio(ambientAudioRef, soundEnabled, ambientAudioSource, ambientAudioVolume);
-    await handleAmbientStartResult(result);
+    await handleAmbientStartResult(result, true);
   }
 
   return (
@@ -415,6 +439,19 @@ export default function MeditationPage() {
             )}
 
             <div className="mt-12 flex min-h-[320px] w-full flex-col items-center justify-center">
+              {journeyMode && needsUserStart ? (
+                <div className="mb-6 w-full max-w-md rounded-[24px] border border-[rgba(212,178,106,0.18)] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-5 text-center shadow-[0_18px_50px_rgba(4,12,24,0.18)]">
+                  <p className="text-sm leading-7 text-white/76">{journeyCopy.audioPrompt}</p>
+                  <button
+                    type="button"
+                    onClick={handleJourneyAudioStart}
+                    className="mt-4 inline-flex min-h-[44px] items-center justify-center rounded-full border border-gold/20 bg-gold/10 px-4 py-2 text-sm font-semibold text-gold transition hover:bg-gold/15 hover:text-[#f5e4b5]"
+                  >
+                    {journeyCopy.audioStart}
+                  </button>
+                </div>
+              ) : null}
+
               <div className="mb-6 flex items-center gap-2">
                 {vibrationSupported ? (
                   <button
@@ -434,7 +471,7 @@ export default function MeditationPage() {
                 >
                   {soundEnabled ? `🔊 ${journeyMode ? journeyCopy.audioOn : copy.soundOn}` : `🔊 ${journeyMode ? journeyCopy.audioOff : copy.soundOff}`}
                 </button>
-                {journeyMode && (!soundEnabled || showAmbientRetry) ? (
+                {journeyMode && !needsUserStart && showAmbientRetry ? (
                   <button
                     type="button"
                     onClick={handleJourneyAudioStart}

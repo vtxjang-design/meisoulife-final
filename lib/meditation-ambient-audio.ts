@@ -9,6 +9,7 @@ const FADE_DURATION_MS = 2000;
 
 type AmbientAudioResult = {
   started: boolean;
+  error?: unknown;
 };
 
 function fadeVolume(
@@ -101,8 +102,9 @@ export async function startAmbientNatureAudio(
     await fadeVolume(audio, 0, targetVolume, FADE_DURATION_MS);
     return { started: true };
   } catch (error) {
+    console.error("Audio playback failed:", error);
     console.warn("Ambience audio failed", error);
-    return { started: false };
+    return { started: false, error };
   }
 }
 
