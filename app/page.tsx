@@ -30,9 +30,12 @@ const heroCopy = {
   jp: {
     eyebrow: "AI時代の人間回復",
     title: "AIと情報に疲れた、\n心と脳が静かに戻る場所。",
-    mobileTitle: "AIと情報に疲れたあなたへ\n\n心と脳が\n静かに戻る場所",
+    mobileLead: "AIと情報に疲れた\nあなたへ",
+    mobileTitle: "心と脳が\n静かに戻る場所",
     supporting:
       "少し立ち止まり、\n自分のリズムへ戻る。\n急がなくても大丈夫です。",
+    mobileSupporting:
+      "少し立ち止まり、\n自分のリズムへ戻る。\n\n急がなくても大丈夫です。",
     subtitle: "無料・60秒・登録不要",
     primary: "今日のリセットを選ぶ",
     secondary: "7日間の小さな回復",
@@ -51,9 +54,12 @@ const heroCopy = {
   kr: {
     eyebrow: "AI 시대의 인간 회복",
     title: "AI와 정보에 지친 하루,\n마음과 뇌가\n잠시 쉬어가는 곳.",
-    mobileTitle: "AI와 정보에 지친 당신에게\n\n마음과 뇌가\n고요히 돌아오는 곳",
+    mobileLead: "AI와 정보에 지친\n당신에게",
+    mobileTitle: "마음과 뇌가\n고요히 돌아오는 곳",
     supporting:
       "잠시 멈추고,\n내 리듬으로 돌아오는\n조용한 1분.",
+    mobileSupporting:
+      "잠시 멈추고,\n나의 리듬으로 돌아옵니다.\n\n서두르지 않아도 괜찮습니다.",
     subtitle: "무료 · 60초 · 가입 불필요",
     primary: "오늘의 리셋 고르기",
     secondary: "7일간의 작은 회복",
@@ -72,9 +78,12 @@ const heroCopy = {
   en: {
     eyebrow: "Human Recovery in the AI Age",
     title: "AI and information overload,\nan exhausting day,\nwhere your mind and brain\ncan briefly rest.",
-    mobileTitle: "For minds tired\nby AI and information\n\nA quiet place\nto return",
+    mobileLead: "For minds tired\nby AI and information",
+    mobileTitle: "A quiet place\nto return",
     supporting:
       "Pause.\nBreathe.\nReturn to your rhythm.\n\nThere is no need to rush.",
+    mobileSupporting:
+      "Pause for a moment,\nand return to your rhythm.\n\nThere is no need to hurry.",
     subtitle: "Free · 60 seconds · No signup",
     primary: "Choose Today’s Reset",
     secondary: "7 Days of Small Recovery",
@@ -915,9 +924,9 @@ export default function HomePage() {
   const heroTitleLines = hero.title.split("\n");
   const heroAccentLine = language === "jp" ? heroTitleLines[0] : null;
   const heroMainLines = language === "jp" ? heroTitleLines.slice(1) : heroTitleLines;
-  const heroMobileTitleGroups = hero.mobileTitle.split("\n\n");
-  const heroMobileAccent = heroMobileTitleGroups[0] ?? "";
-  const heroMobileMain = heroMobileTitleGroups[1] ?? heroMobileTitleGroups[0] ?? "";
+  const heroMobileLead = hero.mobileLead;
+  const heroMobileMain = hero.mobileTitle;
+  const heroMobileSupporting = hero.mobileSupporting;
   const heroPanelCards = [
     {
       label: heroPanel.cards[0].label,
@@ -1061,21 +1070,21 @@ export default function HomePage() {
             </div>
 
             <div className="space-y-5 sm:space-y-6 lg:space-y-4.5">
-              <div className="space-y-4 sm:hidden">
+              <div className="space-y-5 sm:hidden">
                 <p
-                  className={`whitespace-pre-line font-serif text-[clamp(1.12rem,4.8vw,1.42rem)] leading-[1.26] text-gold/84 ${
-                    language === "en" ? "max-w-[13ch]" : "max-w-[14ch]"
+                  className={`whitespace-pre-line font-serif text-[clamp(1.22rem,5.4vw,1.58rem)] leading-[1.24] text-gold/84 ${
+                    language === "en" ? "max-w-[14ch]" : "max-w-[12ch]"
                   }`}
                 >
-                  {heroMobileAccent}
+                  {heroMobileLead}
                 </p>
                 <h1
-                  className={`whitespace-pre-line font-serif text-[clamp(2.15rem,9.2vw,2.75rem)] leading-[1.2] tracking-[-0.03em] text-white ${
+                  className={`whitespace-pre-line font-serif text-[clamp(2.625rem,10.8vw,4rem)] leading-[1.18] tracking-[-0.03em] text-white ${
                     language === "kr"
-                      ? "max-w-[8.4ch]"
+                      ? "max-w-[9.6ch]"
                       : language === "en"
-                        ? "max-w-[10ch]"
-                        : "max-w-[8.8ch]"
+                        ? "max-w-[9.4ch]"
+                        : "max-w-[9.4ch]"
                   }`}
                 >
                   {heroMobileMain}
@@ -1093,8 +1102,15 @@ export default function HomePage() {
                   {heroMainLines.join("\n")}
                 </h1>
               </div>
-              <p className={`whitespace-pre-line text-[14px] leading-[1.82] text-white/68 sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.82] lg:max-w-[420px] lg:text-[17px] lg:leading-[1.78] lg:text-white/82 ${
-                language === "kr" ? "max-w-[16.5ch]" : "max-w-[19ch]"
+              <p
+                className={`whitespace-pre-line text-[14px] leading-[1.88] text-white/68 sm:hidden ${
+                  language === "kr" ? "max-w-[17.2ch]" : "max-w-[19ch]"
+                }`}
+              >
+                {heroMobileSupporting}
+              </p>
+              <p className={`hidden whitespace-pre-line text-white/68 sm:block sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.82] lg:max-w-[420px] lg:text-[17px] lg:leading-[1.78] lg:text-white/82 ${
+                language === "kr" ? "sm:max-w-[16.5ch]" : ""
               }`}>
                 {hero.supporting}
               </p>
