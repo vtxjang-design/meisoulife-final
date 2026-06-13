@@ -88,7 +88,12 @@ const basicHomeCopy = {
     },
     question: {
       title: "今日の問い",
-      prompt: "今日、\n何を手放したいですか？",
+      prompts: [
+        "今日、\n何を手放したいですか？",
+        "今日、\n誰に感謝していますか？",
+        "今日、\n体は何を求めていますか？",
+        "今日、\n何を明日に回せますか？"
+      ],
       placeholder: "一行だけでも大丈夫です。",
       saved: "今日の記録が静かに残りました。"
     },
@@ -97,6 +102,7 @@ const basicHomeCopy = {
       body: "今日この静かな場所に、ともに歩く人たちがいます。",
       walked: "今日は12人がリズムを実践しました。",
       present: "今週は47人がともに歩んでいます。",
+      live: "今この瞬間、誰かが朝の扉を開いています。",
       cta: "仲間たちの場所へ"
     },
     todayMessageTitle: "今日の静かな一文",
@@ -185,17 +191,20 @@ const basicHomeCopy = {
     journeyPath: {
       title: "本来の自分に戻る道",
       description: "今日はひとつの入口だけで十分です。静かな道を、自分の歩幅で進みましょう。",
-      active: "今日の道",
-      completed: "歩いてきた道",
-      locked: "これからの道",
+      active: "今日",
+      completed: "歩いている道",
+      next: "次の道",
+      locked: "先の道",
       enter: "静かに入る"
     },
     records: {
-      title: "静かな記録",
-      checkIn: "今日のチェックイン",
-      streak: "現在のストリーク",
-      completed: "完了した実践",
-      insight: "今日の気づき"
+      title: "リズムの記録",
+      morning: "朝",
+      day: "昼",
+      night: "夜",
+      todayScore: "今日のリズム",
+      weekScore: "今週のリズム",
+      streak: "続いている日々"
     },
     sessions: {
       title: "次の集い",
@@ -276,7 +285,12 @@ const basicHomeCopy = {
     },
     question: {
       title: "오늘의 질문",
-      prompt: "오늘 무엇을\n내려놓고 싶나요?",
+      prompts: [
+        "오늘 무엇을\n내려놓고 싶나요?",
+        "오늘 누구에게\n감사하고 있나요?",
+        "오늘 몸은\n무엇을 원하나요?",
+        "오늘 무엇을\n내일로 미뤄도 될까요?"
+      ],
       placeholder: "한 줄만 적어도 괜찮습니다.",
       saved: "오늘의 기록이 조용히 남았습니다."
     },
@@ -285,6 +299,7 @@ const basicHomeCopy = {
       body: "오늘 이 조용한 공간에 함께 걷는 사람들이 있습니다.",
       walked: "오늘 12명이 리듬을 실천했습니다.",
       present: "이번 주 47명이 함께 걷고 있습니다.",
+      live: "지금 이 순간, 누군가가 아침의 문을 열고 있습니다.",
       cta: "함께 걷는 사람들로"
     },
     todayMessageTitle: "오늘의 조용한 문장",
@@ -373,17 +388,20 @@ const basicHomeCopy = {
     journeyPath: {
       title: "본래의 나로 돌아가는 길",
       description: "오늘은 하나의 입구면 충분합니다. 조용한 길을 내 속도로 이어가세요.",
-      active: "오늘의 길",
-      completed: "걸어온 길",
-      locked: "앞으로의 길",
+      active: "오늘",
+      completed: "걷는 길",
+      next: "다음 길",
+      locked: "앞의 길",
       enter: "조용히 들어가기"
     },
     records: {
-      title: "회복 기록",
-      checkIn: "오늘의 체크인",
-      streak: "현재 스트릭",
-      completed: "완료한 실천",
-      insight: "오늘의 통찰"
+      title: "리듬 기록",
+      morning: "아침",
+      day: "낮",
+      night: "밤",
+      todayScore: "오늘의 리듬",
+      weekScore: "이번 주 리듬",
+      streak: "이어온 날들"
     },
     sessions: {
       title: "다음 모임",
@@ -414,7 +432,7 @@ const basicHomeCopy = {
   en: {
     hero: {
       title: "Back to Yourself",
-      subtitle: "Morning · Day · Night\n\nA Quiet Place to Return",
+      subtitle: "Morning · Noon · Night\n\nA Quiet Place to Return",
       support: "Small rhythms\nquietly shape the day.",
       primaryCta: "Begin Today’s Rhythm"
     },
@@ -464,7 +482,12 @@ const basicHomeCopy = {
     },
     question: {
       title: "Today’s Question",
-      prompt: "What would you like\nto release today?",
+      prompts: [
+        "What would you like\nto release today?",
+        "Who are you grateful for today?",
+        "What does your body need today?",
+        "What can wait until tomorrow?"
+      ],
       placeholder: "One line is enough.",
       saved: "Today’s reflection has been quietly saved."
     },
@@ -473,6 +496,7 @@ const basicHomeCopy = {
       body: "There are people walking through this quiet space with you today.",
       walked: "12 people practiced their rhythm today.",
       present: "47 people are walking together this week.",
+      live: "Someone is opening the Morning Door right now.",
       cta: "Enter the Community"
     },
     todayMessageTitle: "Today's Quiet Message",
@@ -540,7 +564,7 @@ const basicHomeCopy = {
       {
         key: "day",
         emoji: "🌿",
-        title: "🌿 Day",
+        title: "🌿 Noon",
         description: "1 minute to return",
         detail: "",
         programs: ["1-Minute Strength", "Brain Relaxation", "Energy Recharge"],
@@ -561,17 +585,20 @@ const basicHomeCopy = {
     journeyPath: {
       title: "The Path Back to Your True Self",
       description: "One entrance is enough for today. Walk the quiet trail at your own pace.",
-      active: "Today’s Path",
-      completed: "Walked Path",
-      locked: "Waiting Path",
+      active: "Today",
+      completed: "Walking",
+      next: "Next",
+      locked: "Ahead",
       enter: "Enter Gently"
     },
     records: {
-      title: "Recovery Records",
-      checkIn: "Today’s Check-In",
-      streak: "Current Streak",
-      completed: "Completed Practices",
-      insight: "Today’s Insight"
+      title: "Rhythm Record",
+      morning: "Morning",
+      day: "Noon",
+      night: "Night",
+      todayScore: "Today’s Rhythm",
+      weekScore: "Weekly Rhythm",
+      streak: "Returning Days"
     },
     sessions: {
       title: "Next Gathering",
@@ -772,7 +799,12 @@ function readTodayReflection() {
       return "";
     }
 
-    const parsed = JSON.parse(raw) as { date?: string; text?: string };
+    const parsed = JSON.parse(raw) as { date?: string; text?: string; entries?: Record<string, string> };
+
+    if (parsed && typeof parsed.entries === "object" && parsed.entries !== null) {
+      return typeof parsed.entries[getTodayKey()] === "string" ? parsed.entries[getTodayKey()] : "";
+    }
+
     return parsed?.date === getTodayKey() && typeof parsed.text === "string" ? parsed.text : "";
   } catch (_error) {
     window.localStorage.removeItem(TODAY_REFLECTION_STORAGE_KEY);
@@ -785,11 +817,30 @@ function saveTodayReflection(text: string) {
     return;
   }
 
+  let entries: Record<string, string> = {};
+
+  try {
+    const raw = window.localStorage.getItem(TODAY_REFLECTION_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw) as { entries?: Record<string, string>; date?: string; text?: string };
+      if (parsed && typeof parsed.entries === "object" && parsed.entries !== null) {
+        entries = parsed.entries;
+      } else if (parsed?.date && typeof parsed.text === "string") {
+        entries = { [parsed.date]: parsed.text };
+      }
+    }
+  } catch (_error) {
+    entries = {};
+  }
+
+  entries[getTodayKey()] = text;
+
   window.localStorage.setItem(
     TODAY_REFLECTION_STORAGE_KEY,
     JSON.stringify({
       date: getTodayKey(),
-      text
+      text,
+      entries
     })
   );
 }
@@ -907,7 +958,7 @@ export function BasicHome({
     highlightedRhythm === "morning" || highlightedRhythm === "day" || highlightedRhythm === "night"
       ? highlightedRhythm
       : defaultRhythm ?? getLocalRhythmPhase();
-  const todayMessage = useMemo(() => getDailyMessage(copy.todayMessages), [copy.todayMessages]);
+  const todayQuestion = useMemo(() => getDailyMessage(copy.question.prompts), [copy.question.prompts]);
   const [journeyDay, setJourneyDay] = useState(currentDay);
   const [streakDays, setStreakDays] = useState(streakCount);
   const [selectedMood, setSelectedMood] = useState<MarkerMood>("unknown");
@@ -1000,7 +1051,32 @@ export function BasicHome({
     [journeyDay, language, lastGate, rhythmPhase, selectedMood, sleepStatus, stressStatus]
   );
   const isBasicMember = membershipResolved ? planKey !== "free" : true;
-  const completedPracticeCount = completedDays.length + (completedToday && !completedDays.includes(journeyDay) ? 1 : 0);
+  const todayRhythmScore = Math.min(
+    100,
+    (selectedMood !== "unknown" ? 28 : 12) +
+      (completedToday ? 32 : 14) +
+      (sleepStatus === "good" ? 22 : sleepStatus === "normal" ? 16 : 8) +
+      (stressStatus === "low" ? 18 : stressStatus === "normal" ? 12 : 6)
+  );
+  const weeklyRhythmScore = Math.min(100, Math.round(((completedDays.length + (completedToday ? 1 : 0)) / 7) * 100));
+
+  function getGateRecordState(gate: RhythmPhase) {
+    if (completedToday && lastGate === gate) {
+      if (language === "jp") return "静かに開きました";
+      if (language === "kr") return "조용히 열렸습니다";
+      return "Opened gently";
+    }
+
+    if (rhythmPhase === gate) {
+      if (language === "jp") return "今日の入口です";
+      if (language === "kr") return "오늘의 입구입니다";
+      return "Today’s entrance";
+    }
+
+    if (language === "jp") return "静かに待っています";
+    if (language === "kr") return "조용히 기다리고 있습니다";
+    return "Waiting quietly";
+  }
 
   function handleReflectionChange(next: string) {
     setReflectionText(next);
@@ -1130,20 +1206,12 @@ export function BasicHome({
               {getSanctuaryJourneyTitle(language, journeyDay)}
             </p>
             <p className="mt-4 whitespace-pre-line text-sm leading-7 text-white/70">{copy.openGate.practice}</p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link
-                href={`/rhythm-journey?day=${journeyDay}`}
-                className="inline-flex min-h-[46px] items-center justify-center rounded-full border border-[rgba(212,178,106,0.24)] bg-white/[0.08] px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.12]"
-              >
-                {copy.openGate.cta}
-              </Link>
-              <Link
-                href={`/rhythm-journey?day=${journeyDay}`}
-                className="inline-flex min-h-[46px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white/76 transition hover:bg-white/[0.08]"
-              >
-                {copy.openGate.viewAll}
-              </Link>
-            </div>
+            <Link
+              href={`/rhythm-journey?day=${journeyDay}`}
+              className="mt-6 inline-flex min-h-[46px] items-center justify-center rounded-full border border-[rgba(212,178,106,0.24)] bg-white/[0.08] px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.12]"
+            >
+              {copy.openGate.cta}
+            </Link>
           </article>
           <article className={`relative overflow-hidden rounded-[30px] border border-[rgba(115,231,210,0.20)] px-6 py-6 shadow-[0_24px_72px_rgba(0,0,0,0.28)] ${getGateSurfaceClasses(rhythmPhase)}`}>
             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent_28%,rgba(4,8,18,0.28)_100%)]" />
@@ -1169,6 +1237,13 @@ export function BasicHome({
             const completed = completedDays.includes(day);
             const active = !completed && day === journeyDay;
             const locked = !completed && day > journeyDay;
+            const statusLabel = completed
+              ? copy.journeyPath.completed
+              : active
+                ? copy.journeyPath.active
+                : day === journeyDay + 1
+                  ? copy.journeyPath.next
+                  : copy.journeyPath.locked;
 
             return (
               <article
@@ -1186,7 +1261,7 @@ export function BasicHome({
                 <div className="flex items-center gap-3">
                   <span className={`h-2.5 w-2.5 rounded-full ${active ? "bg-gold shadow-[0_0_18px_rgba(212,178,106,0.8)]" : completed ? "bg-[rgba(115,231,210,0.85)]" : "bg-white/18"}`} />
                   <p className="text-xs uppercase tracking-[0.24em] text-gold/78">
-                    {completed ? copy.journeyPath.completed : active ? copy.journeyPath.active : copy.journeyPath.locked}
+                    {statusLabel}
                   </p>
                 </div>
                 <p className="mt-4 text-lg font-semibold leading-[1.45] text-white">{getSanctuaryJourneyTitle(language, day)}</p>
@@ -1208,18 +1283,10 @@ export function BasicHome({
         </div>
       </section>
 
-      <section className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.12),transparent_38%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.62),rgba(8,28,42,0.72),rgba(9,36,44,0.76))]`}>
-        <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.sessions.title}</p>
-        <div className="mt-5 grid gap-3">
-          <div className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-white/78">{copy.sessions.first}</div>
-          <div className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-white/78">{copy.sessions.second}</div>
-        </div>
-      </section>
-
       <section className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_right,rgba(89,193,255,0.12),transparent_38%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.64),rgba(8,28,42,0.74),rgba(9,36,44,0.78))]`}>
         <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.question.title}</p>
         <p className="mt-5 max-w-[15ch] whitespace-pre-line font-serif text-[22px] leading-[1.6] text-white/88 sm:max-w-none sm:text-[30px] sm:leading-[1.75]">
-          {copy.question.prompt}
+          {todayQuestion}
         </p>
         <div className="mt-5">
           <textarea
@@ -1232,46 +1299,23 @@ export function BasicHome({
         </div>
       </section>
 
-      <section id="quiet-records" className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_right,rgba(89,193,255,0.12),transparent_38%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.64),rgba(8,28,42,0.74),rgba(9,36,44,0.78))]`}>
-        <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.records.title}</p>
-        <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
-            <p className="text-sm text-white/56">{copy.records.checkIn}</p>
-            <p className="mt-3 text-sm leading-7 text-white/82">{selectedMood === "unknown" ? copy.routineSection.ready : copy.checkIn.saved}</p>
-          </article>
-          <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
-            <p className="text-sm text-white/56">{copy.records.streak}</p>
-            <p className="mt-3 whitespace-pre-line text-sm leading-7 text-white/84">{getStreakReward(language, streakDays)}</p>
-          </article>
-          <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
-            <p className="text-sm text-white/56">{copy.records.completed}</p>
-            <p className="mt-3 text-xl font-semibold text-white">{completedPracticeCount}</p>
-          </article>
-          <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
-            <p className="text-sm text-white/56">{copy.records.insight}</p>
-            <p className="mt-3 text-sm leading-7 text-white/82">{todayMessage}</p>
-          </article>
-        </div>
-      </section>
-
       <section id="companions" className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_left,rgba(89,193,255,0.12),transparent_40%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.62),rgba(8,28,42,0.72),rgba(9,36,44,0.76))]`}>
         <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
           <div>
             <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.companions.title}</p>
             <p className="mt-4 text-base leading-8 text-white/74">{copy.companions.body}</p>
             <div className="mt-6 flex items-center gap-3">
-              {["A", "M", "S", "K", "Y"].map((label, index) => (
+              {["emerald", "aqua", "gold"].map((tone, index) => (
                 <span
-                  key={label}
-                  className={`flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/[0.05] text-sm text-white/78 ${index > 0 ? "-ml-3" : ""}`}
-                >
-                  {label}
-                </span>
+                  key={tone}
+                  className={`h-11 w-11 rounded-full border border-white/12 ${index === 0 ? "bg-[radial-gradient(circle,rgba(115,231,210,0.65),rgba(115,231,210,0.12))]" : index === 1 ? "bg-[radial-gradient(circle,rgba(89,193,255,0.58),rgba(89,193,255,0.10))]" : "bg-[radial-gradient(circle,rgba(212,178,106,0.62),rgba(212,178,106,0.12))]"} ${index > 0 ? "-ml-3" : ""}`}
+                />
               ))}
             </div>
-            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            <div className="mt-5 grid gap-3 sm:grid-cols-3">
               <div className="rounded-[22px] border border-[rgba(115,231,210,0.12)] bg-white/[0.03] px-4 py-4 text-sm text-white/74">{copy.companions.walked}</div>
               <div className="rounded-[22px] border border-[rgba(89,193,255,0.12)] bg-white/[0.03] px-4 py-4 text-sm text-white/74">{copy.companions.present}</div>
+              <div className="rounded-[22px] border border-[rgba(212,178,106,0.14)] bg-white/[0.03] px-4 py-4 text-sm text-white/74">{copy.companions.live}</div>
             </div>
           </div>
           <div className="flex items-end">
@@ -1282,6 +1326,45 @@ export function BasicHome({
               {copy.companions.cta}
             </Link>
           </div>
+        </div>
+      </section>
+
+      <section className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_left,rgba(115,231,210,0.12),transparent_38%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.62),rgba(8,28,42,0.72),rgba(9,36,44,0.76))]`}>
+        <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.sessions.title}</p>
+        <div className="mt-5 grid gap-3">
+          <div className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-white/78">{copy.sessions.first}</div>
+          <div className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-white/78">{copy.sessions.second}</div>
+        </div>
+      </section>
+
+      <section id="quiet-records" className={`${sanctuarySectionClass} bg-[radial-gradient(circle_at_top_right,rgba(89,193,255,0.12),transparent_38%),linear-gradient(135deg,rgba(115,231,210,0.08),rgba(89,193,255,0.04)),linear-gradient(180deg,rgba(10,24,42,0.64),rgba(8,28,42,0.74),rgba(9,36,44,0.78))]`}>
+        <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{copy.records.title}</p>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
+            <p className="text-sm text-white/56">{copy.records.morning}</p>
+            <p className="mt-3 text-sm leading-7 text-white/82">{getGateRecordState("morning")}</p>
+          </article>
+          <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
+            <p className="text-sm text-white/56">{copy.records.day}</p>
+            <p className="mt-3 text-sm leading-7 text-white/82">{getGateRecordState("day")}</p>
+          </article>
+          <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
+            <p className="text-sm text-white/56">{copy.records.night}</p>
+            <p className="mt-3 text-sm leading-7 text-white/82">{getGateRecordState("night")}</p>
+          </article>
+          <article className="rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-sm text-white/56">{copy.records.todayScore}</p>
+                <p className="mt-3 text-2xl font-semibold text-white">{todayRhythmScore}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm text-white/56">{copy.records.weekScore}</p>
+                <p className="mt-3 text-xl font-semibold text-white/86">{weeklyRhythmScore}</p>
+              </div>
+            </div>
+            <p className="mt-4 whitespace-pre-line text-sm leading-7 text-white/70">{getStreakReward(language, streakDays)}</p>
+          </article>
         </div>
       </section>
     </div>
