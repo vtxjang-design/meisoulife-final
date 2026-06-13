@@ -30,6 +30,7 @@ const heroCopy = {
   jp: {
     eyebrow: "AI時代の人間回復",
     title: "AIと情報に疲れた、\n心と脳が静かに戻る場所。",
+    mobileTitle: "AIと情報に疲れたあなたへ\n\n心と脳が\n静かに戻る場所",
     supporting:
       "少し立ち止まり、\n自分のリズムへ戻る。\n急がなくても大丈夫です。",
     subtitle: "無料・60秒・登録不要",
@@ -50,6 +51,7 @@ const heroCopy = {
   kr: {
     eyebrow: "AI 시대의 인간 회복",
     title: "AI와 정보에 지친 하루,\n마음과 뇌가\n잠시 쉬어가는 곳.",
+    mobileTitle: "AI와 정보에 지친 당신에게\n\n마음과 뇌가\n고요히 돌아오는 곳",
     supporting:
       "잠시 멈추고,\n내 리듬으로 돌아오는\n조용한 1분.",
     subtitle: "무료 · 60초 · 가입 불필요",
@@ -70,6 +72,7 @@ const heroCopy = {
   en: {
     eyebrow: "Human Recovery in the AI Age",
     title: "AI and information overload,\nan exhausting day,\nwhere your mind and brain\ncan briefly rest.",
+    mobileTitle: "For minds tired\nby AI and information\n\nA quiet place\nto return",
     supporting:
       "Pause.\nBreathe.\nReturn to your rhythm.\n\nThere is no need to rush.",
     subtitle: "Free · 60 seconds · No signup",
@@ -912,6 +915,9 @@ export default function HomePage() {
   const heroTitleLines = hero.title.split("\n");
   const heroAccentLine = language === "jp" ? heroTitleLines[0] : null;
   const heroMainLines = language === "jp" ? heroTitleLines.slice(1) : heroTitleLines;
+  const heroMobileTitleGroups = hero.mobileTitle.split("\n\n");
+  const heroMobileAccent = heroMobileTitleGroups[0] ?? "";
+  const heroMobileMain = heroMobileTitleGroups[1] ?? heroMobileTitleGroups[0] ?? "";
   const heroPanelCards = [
     {
       label: heroPanel.cards[0].label,
@@ -1055,16 +1061,38 @@ export default function HomePage() {
             </div>
 
             <div className="space-y-5 sm:space-y-6 lg:space-y-4.5">
-              {heroAccentLine ? (
-                <p className="max-w-[12ch] font-serif text-[20px] leading-[1.3] text-gold/84 sm:max-w-none sm:text-[28px] sm:leading-[1.45] lg:text-[30px]">
-                  {heroAccentLine}
+              <div className="space-y-4 sm:hidden">
+                <p
+                  className={`whitespace-pre-line font-serif text-[clamp(1.12rem,4.8vw,1.42rem)] leading-[1.26] text-gold/84 ${
+                    language === "en" ? "max-w-[13ch]" : "max-w-[14ch]"
+                  }`}
+                >
+                  {heroMobileAccent}
                 </p>
-              ) : null}
-              <h1 className={`whitespace-pre-line text-balance font-serif text-[40px] leading-[1.2] tracking-[-0.03em] text-white sm:max-w-[11.5ch] sm:text-[56px] sm:leading-[1.18] lg:max-w-[620px] lg:text-[64px] lg:leading-[1.1] lg:tracking-[-0.015em] xl:text-[68px] ${
-                language === "kr" ? "max-w-[12.2ch]" : language === "en" ? "max-w-[13.6ch]" : "max-w-[12.4ch]"
-              }`}>
-                {heroMainLines.join("\n")}
-              </h1>
+                <h1
+                  className={`whitespace-pre-line font-serif text-[clamp(2.15rem,9.2vw,2.75rem)] leading-[1.2] tracking-[-0.03em] text-white ${
+                    language === "kr"
+                      ? "max-w-[8.4ch]"
+                      : language === "en"
+                        ? "max-w-[10ch]"
+                        : "max-w-[8.8ch]"
+                  }`}
+                >
+                  {heroMobileMain}
+                </h1>
+              </div>
+              <div className="hidden space-y-5 sm:block sm:space-y-6 lg:space-y-4.5">
+                {heroAccentLine ? (
+                  <p className="max-w-[12ch] font-serif text-[20px] leading-[1.3] text-gold/84 sm:max-w-none sm:text-[28px] sm:leading-[1.45] lg:text-[30px]">
+                    {heroAccentLine}
+                  </p>
+                ) : null}
+                <h1 className={`whitespace-pre-line text-balance font-serif text-[40px] leading-[1.2] tracking-[-0.03em] text-white sm:max-w-[11.5ch] sm:text-[56px] sm:leading-[1.18] lg:max-w-[620px] lg:text-[64px] lg:leading-[1.1] lg:tracking-[-0.015em] xl:text-[68px] ${
+                  language === "kr" ? "max-w-[12.2ch]" : language === "en" ? "max-w-[13.6ch]" : "max-w-[12.4ch]"
+                }`}>
+                  {heroMainLines.join("\n")}
+                </h1>
+              </div>
               <p className={`whitespace-pre-line text-[14px] leading-[1.82] text-white/68 sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.82] lg:max-w-[420px] lg:text-[17px] lg:leading-[1.78] lg:text-white/82 ${
                 language === "kr" ? "max-w-[16.5ch]" : "max-w-[19ch]"
               }`}>
