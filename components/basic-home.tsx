@@ -850,7 +850,8 @@ function saveTodayReflection(text: string) {
 
 function buildRhythmMeditationHref(rhythm: RhythmPhase) {
   // Existing safe Daily Rhythm flow currently enters through meditation.
-  return `/meditation?duration=180&type=${rhythm}&returnTo=${encodeURIComponent(`/program/basic?rhythm=${rhythm}`)}`;
+  const duration = rhythm === "day" ? 60 : 180;
+  return `/meditation?duration=${duration}&type=${rhythm}&returnTo=${encodeURIComponent(`/program/basic?rhythm=${rhythm}`)}`;
 }
 
 function getGateSurfaceClasses(rhythm: RhythmPhase) {

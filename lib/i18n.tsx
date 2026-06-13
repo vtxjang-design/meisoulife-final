@@ -900,8 +900,8 @@ export const siteCopy = {
           completionTitle: "朝のリズムが整いました。今日を静かに始めましょう。"
         },
         day: {
-          topText: "今ここで、60秒だけ呼吸に戻りましょう",
-          intro: "忙しさの流れを一度ほどいて、自分の中心に短く戻る時間です。",
+          topText: "今ここで、\n1分だけ中心へ戻りましょう。",
+          intro: "忙しさの流れから少し離れ、\n呼吸とともに整える時間です。",
           completionTitle: "60秒、今ここに戻りました。"
         },
         night: {
@@ -1785,8 +1785,8 @@ export const siteCopy = {
           completionTitle: "아침의 리듬이 정돈되었습니다. 오늘을 조용히 시작해봅시다."
         },
         day: {
-          topText: "지금 여기서, 60초만 호흡으로 돌아와 봅시다",
-          intro: "바쁨의 흐름을 잠시 풀고, 자신의 중심으로 짧게 돌아오는 시간입니다.",
+          topText: "지금 여기에서,\n1분만 중심으로 돌아가 봅시다.",
+          intro: "바쁨의 흐름에서 잠시 벗어나,\n호흡과 함께 정돈하는 시간입니다.",
           completionTitle: "60초 동안, 지금 여기로 돌아왔습니다."
         },
         night: {
@@ -2670,8 +2670,8 @@ export const siteCopy = {
           completionTitle: "The morning rhythm is settled. Begin the day quietly."
         },
         day: {
-          topText: "Return to your breath for just 60 seconds",
-          intro: "Step out of the rush for a moment and return to your own center.",
+          topText: "Right here,\nreturn to your center for one minute.",
+          intro: "Step out of the rush for a moment,\nand settle with your breath.",
           completionTitle: "For 60 seconds, you returned to the present."
         },
         night: {
