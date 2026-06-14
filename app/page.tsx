@@ -1127,43 +1127,53 @@ export default function HomePage() {
             <div className="pointer-events-none absolute inset-0 z-0 rounded-[32px] bg-[radial-gradient(circle_at_84%_28%,rgba(255,223,168,0.34),transparent_14%),radial-gradient(circle_at_72%_24%,rgba(236,206,132,0.18),transparent_18%),radial-gradient(circle_at_52%_44%,rgba(176,203,184,0.09),transparent_24%),linear-gradient(90deg,rgba(5,11,20,0.88)_0%,rgba(5,11,20,0.58)_28%,rgba(5,11,20,0.14)_62%,rgba(5,11,20,0.02)_100%)]" />
             <div className="pointer-events-none absolute bottom-[10%] right-[8%] z-0 h-[42%] w-[30%] rounded-full bg-[radial-gradient(circle,rgba(255,228,170,0.22),rgba(255,228,170,0.04)_54%,transparent_74%)] blur-[34px]" />
             <div className="pointer-events-none absolute bottom-[0%] right-[14%] z-0 h-[28%] w-[14%] rounded-full bg-[linear-gradient(180deg,rgba(233,196,122,0.22),rgba(233,196,122,0.02))] opacity-40 blur-[8px]" />
-            <div className="absolute right-[6.5%] top-[11%] z-20 w-[38%] rounded-[28px] border border-white/8 bg-[linear-gradient(180deg,rgba(30,37,47,0.34),rgba(14,20,28,0.2))] px-6 py-5 shadow-[0_18px_48px_rgba(5,12,22,0.16),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-[16px]">
-              <p className="max-w-[17ch] whitespace-pre-line text-[14px] leading-7 text-white/90">
+            <div
+              className={`absolute right-[6.5%] top-[11%] z-20 rounded-[28px] border border-white/8 bg-[linear-gradient(180deg,rgba(30,37,47,0.34),rgba(14,20,28,0.2))] px-6 py-5 shadow-[0_18px_48px_rgba(5,12,22,0.16),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-[16px] ${
+                language === "jp" ? "w-[42%]" : "w-[38%]"
+              }`}
+            >
+              <p
+                className={`whitespace-pre-line text-[14px] text-white/90 ${
+                  language === "jp"
+                    ? "keep-phrase max-w-[20ch] leading-[1.9]"
+                    : "max-w-[17ch] leading-7"
+                }`}
+              >
                 {heroPanel.intro}
               </p>
-              <div className="mt-6 border-t border-white/10 pt-5">
+              <div className="mt-7 border-t border-white/10 pt-6">
                 <div className="flex items-center gap-2 text-[13px] text-white/86">
                   <span className="text-gold/80">~</span>
-                  <span>{heroPanel.rhythmLabel}</span>
+                  <span className={language === "jp" ? "keep-phrase whitespace-nowrap" : ""}>{heroPanel.rhythmLabel}</span>
                 </div>
-                <div className="mt-5 space-y-3.5">
-                  <div className="flex items-center justify-between text-[14px] text-white/88">
-                    <div className="flex items-center gap-3">
+                <div className="mt-6 space-y-4">
+                  <div className="flex items-center justify-between gap-4 text-[14px] text-white/88">
+                    <div className="flex min-w-0 items-center gap-3">
                       <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gold/[0.14] text-[15px]">☀</span>
-                      <span>{heroPanel.morning}</span>
+                      <span className={language === "jp" ? "keep-phrase whitespace-nowrap" : ""}>{heroPanel.morning}</span>
                     </div>
-                    <span className="text-white/76">{heroPanel.morningDuration}</span>
+                    <span className="shrink-0 text-white/76">{heroPanel.morningDuration}</span>
                   </div>
-                  <div className="flex items-center justify-between text-[14px] text-white/88">
-                    <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-between gap-4 text-[14px] text-white/88">
+                    <div className="flex min-w-0 items-center gap-3">
                       <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-300/[0.12] text-[15px]">🌿</span>
-                      <span>{heroPanel.day}</span>
+                      <span className={language === "jp" ? "keep-phrase whitespace-nowrap" : ""}>{heroPanel.day}</span>
                     </div>
-                    <span className="text-white/76">{heroPanel.dayDuration}</span>
+                    <span className="shrink-0 text-white/76">{heroPanel.dayDuration}</span>
                   </div>
-                  <div className="flex items-center justify-between text-[14px] text-white/88">
-                    <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-between gap-4 text-[14px] text-white/88">
+                    <div className="flex min-w-0 items-center gap-3">
                       <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-indigo-300/[0.12] text-[15px]">☾</span>
-                      <span>{heroPanel.night}</span>
+                      <span className={language === "jp" ? "keep-phrase whitespace-nowrap" : ""}>{heroPanel.night}</span>
                     </div>
-                    <span className="text-white/76">{heroPanel.nightDuration}</span>
+                    <span className="shrink-0 text-white/76">{heroPanel.nightDuration}</span>
                   </div>
                 </div>
               </div>
-              <div className="mt-5 border-t border-white/10 pt-4.5">
-                <div className="flex items-center justify-between text-[13px] text-white/80">
-                  <span>{heroPanel.progressLabel}</span>
-                  <span>{heroJourneyDay}/7</span>
+              <div className="mt-7 border-t border-white/10 pt-5.5">
+                <div className="flex items-center justify-between gap-4 text-[13px] text-white/80">
+                  <span className={language === "jp" ? "keep-phrase whitespace-nowrap" : ""}>{heroPanel.progressLabel}</span>
+                  <span className="shrink-0">{heroJourneyDay}/7</span>
                 </div>
                 <div className="mt-3 h-2 rounded-full bg-white/[0.08]">
                   <div
