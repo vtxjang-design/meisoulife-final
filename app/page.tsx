@@ -996,12 +996,12 @@ export default function HomePage() {
         <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[470px] sm:hidden">
           <div className="absolute left-[1%] top-8 h-28 w-28 rounded-full bg-gold/[0.11] blur-[72px] animate-meditation-ambient-breathe motion-reduce:animate-none" />
           <div className="absolute right-[4%] top-20 h-32 w-32 rounded-full bg-emerald-200/[0.09] blur-[72px] animate-meditation-fog motion-reduce:animate-none" />
-          <div className="absolute right-[6%] top-[14%] h-[156px] w-[26%] overflow-hidden opacity-[0.18] mix-blend-screen">
+          <div className="absolute right-[7%] top-[15%] h-[146px] w-[24%] overflow-hidden opacity-[0.15] mix-blend-screen">
             <img
               src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80"
               alt=""
               aria-hidden="true"
-              className="h-full w-full scale-[1.02] object-cover object-center blur-[1px] animate-meditation-video-breathe motion-reduce:animate-none [mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)] [-webkit-mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)]"
+              className="h-full w-full scale-[1.01] object-cover object-center blur-[1px] animate-meditation-video-breathe motion-reduce:animate-none [mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)] [-webkit-mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)]"
             />
           </div>
           <div className="absolute right-[12%] top-16 h-24 w-20 rounded-full bg-white/[0.02] blur-[54px] animate-meditation-float motion-reduce:animate-none" />
@@ -1127,41 +1127,40 @@ export default function HomePage() {
             <div className="pointer-events-none absolute inset-0 z-0 rounded-[32px] bg-[radial-gradient(circle_at_84%_28%,rgba(255,223,168,0.34),transparent_14%),radial-gradient(circle_at_72%_24%,rgba(236,206,132,0.18),transparent_18%),radial-gradient(circle_at_52%_44%,rgba(176,203,184,0.09),transparent_24%),linear-gradient(90deg,rgba(5,11,20,0.88)_0%,rgba(5,11,20,0.58)_28%,rgba(5,11,20,0.14)_62%,rgba(5,11,20,0.02)_100%)]" />
             <div className="pointer-events-none absolute bottom-[10%] right-[8%] z-0 h-[42%] w-[30%] rounded-full bg-[radial-gradient(circle,rgba(255,228,170,0.22),rgba(255,228,170,0.04)_54%,transparent_74%)] blur-[34px]" />
             <div className="pointer-events-none absolute bottom-[0%] right-[14%] z-0 h-[28%] w-[14%] rounded-full bg-[linear-gradient(180deg,rgba(233,196,122,0.22),rgba(233,196,122,0.02))] opacity-40 blur-[8px]" />
-            <div className="absolute right-[6%] top-[10%] z-20 w-[42%] rounded-[30px] border border-white/12 bg-[linear-gradient(180deg,rgba(30,37,47,0.48),rgba(14,20,28,0.34))] px-6 py-6 shadow-[0_28px_72px_rgba(5,12,22,0.22),inset_0_1px_0_rgba(255,255,255,0.09)] backdrop-blur-[20px]">
-              <p className="max-w-[18ch] whitespace-pre-line text-[14px] leading-7 text-white/90">
+            <div className="absolute right-[6.5%] top-[11%] z-20 w-[38%] rounded-[28px] border border-white/8 bg-[linear-gradient(180deg,rgba(30,37,47,0.34),rgba(14,20,28,0.2))] px-6 py-5 shadow-[0_18px_48px_rgba(5,12,22,0.16),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-[16px]">
+              <p className="max-w-[17ch] whitespace-pre-line text-[14px] leading-7 text-white/90">
                 {heroPanel.intro}
               </p>
-              <p className="mt-2.5 text-[12px] text-gold/74">{heroPanel.pace}</p>
-              <div className="mt-7 border-t border-white/14 pt-6">
+              <div className="mt-6 border-t border-white/10 pt-5">
                 <div className="flex items-center gap-2 text-[13px] text-white/86">
                   <span className="text-gold/80">~</span>
                   <span>{heroPanel.rhythmLabel}</span>
                 </div>
-                <div className="mt-5 space-y-4">
+                <div className="mt-5 space-y-3.5">
                   <div className="flex items-center justify-between text-[14px] text-white/88">
                     <div className="flex items-center gap-3">
-                      <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-gold/[0.18] text-[16px]">☀</span>
+                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gold/[0.14] text-[15px]">☀</span>
                       <span>{heroPanel.morning}</span>
                     </div>
                     <span className="text-white/76">{heroPanel.morningDuration}</span>
                   </div>
                   <div className="flex items-center justify-between text-[14px] text-white/88">
                     <div className="flex items-center gap-3">
-                      <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-emerald-300/[0.16] text-[16px]">🌿</span>
+                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-300/[0.12] text-[15px]">🌿</span>
                       <span>{heroPanel.day}</span>
                     </div>
                     <span className="text-white/76">{heroPanel.dayDuration}</span>
                   </div>
                   <div className="flex items-center justify-between text-[14px] text-white/88">
                     <div className="flex items-center gap-3">
-                      <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-indigo-300/[0.16] text-[16px]">☾</span>
+                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-indigo-300/[0.12] text-[15px]">☾</span>
                       <span>{heroPanel.night}</span>
                     </div>
                     <span className="text-white/76">{heroPanel.nightDuration}</span>
                   </div>
                 </div>
               </div>
-              <div className="mt-6 border-t border-white/14 pt-5">
+              <div className="mt-5 border-t border-white/10 pt-4.5">
                 <div className="flex items-center justify-between text-[13px] text-white/80">
                   <span>{heroPanel.progressLabel}</span>
                   <span>{heroJourneyDay}/7</span>
@@ -1173,7 +1172,6 @@ export default function HomePage() {
                   />
                 </div>
               </div>
-              <p className="mt-6 max-w-[24ch] text-[13px] leading-6 text-white/58">{heroPanel.footer}</p>
             </div>
           </div>
         </div>
