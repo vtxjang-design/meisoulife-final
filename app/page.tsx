@@ -30,9 +30,9 @@ const heroCopy = {
   jp: {
     eyebrow: "AI時代の人間回復",
     lead: "",
-    title: "心と脳が静かに\n戻る場所",
+    title: "心と脳が\n静かに戻る場所",
     mobileLead: "",
-    mobileTitle: "心と脳が静かに\n戻る場所",
+    mobileTitle: "心と脳が\n静かに戻る場所",
     supporting:
       "少し立ち止まり、\n自分のリズムへ戻る。\n\n急がなくていい。\n変わろうとしなくていい。\n\nまずは、\n自分に戻る1分から。",
     mobileSupporting:
@@ -1040,7 +1040,9 @@ export default function HomePage() {
                   </p>
                 ) : null}
                 <h1
-                  className="hero-measure word-balance keep-phrase whitespace-pre-line font-serif text-[clamp(2.5rem,10vw,4.5rem)] leading-[1.18] tracking-[-0.03em] text-white"
+                  className={`hero-measure word-balance keep-phrase whitespace-pre-line font-serif text-[clamp(2.5rem,10vw,4.5rem)] tracking-[-0.03em] text-white ${
+                    language === "jp" ? "leading-[1.1]" : "leading-[1.18]"
+                  }`}
                 >
                   {heroMobileMain}
                 </h1>
@@ -1056,7 +1058,11 @@ export default function HomePage() {
                   </p>
                 ) : null}
                 <h1
-                  className={`hero-measure word-balance keep-phrase whitespace-pre-line font-serif text-[40px] leading-[1.16] tracking-[-0.03em] text-white sm:text-[56px] sm:leading-[1.14] lg:max-w-[720px] lg:text-[64px] lg:leading-[1.07] lg:tracking-[-0.015em] xl:text-[68px] ${
+                  className={`hero-measure word-balance keep-phrase whitespace-pre-line font-serif text-[40px] tracking-[-0.03em] text-white sm:text-[56px] lg:max-w-[720px] lg:text-[64px] lg:tracking-[-0.015em] xl:text-[68px] ${
+                    language === "jp"
+                      ? "leading-[1.08] sm:leading-[1.07] lg:leading-[1.01]"
+                      : "leading-[1.16] sm:leading-[1.14] lg:leading-[1.07]"
+                  } ${
                     language === "jp" ? "max-w-[8.3ch]" : language === "kr" ? "max-w-[12.4ch]" : language === "en" ? "max-w-[13.8ch]" : "max-w-[12.6ch]"
                   }`}
                 >
