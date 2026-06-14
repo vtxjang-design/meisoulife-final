@@ -55,9 +55,9 @@ const heroCopy = {
   kr: {
     eyebrow: "AI 시대 인간 회복",
     lead: "",
-    title: "몸과 마음,\n그리고 뇌가\n조용히 돌아오는 곳",
+    title: "몸과 마음이\n조용히 돌아오는 곳",
     mobileLead: "",
-    mobileTitle: "몸과 마음,\n그리고 뇌가\n조용히 돌아오는 곳",
+    mobileTitle: "몸과 마음이\n조용히 돌아오는 곳",
     supporting:
       "잠시 멈추고,\n나의 리듬으로 돌아갑니다.\n\n서두르지 않아도 됩니다.\n억지로 바뀌지 않아도 됩니다.\n\n먼저,\n나에게 돌아오는 1분부터.",
     mobileSupporting:
@@ -80,9 +80,9 @@ const heroCopy = {
   en: {
     eyebrow: "Human Recovery\nfor the AI Era",
     lead: "",
-    title: "A Place Where\nMind and Brain\nReturn to Stillness",
+    title: "Return to\nStillness",
     mobileLead: "",
-    mobileTitle: "A Place Where\nMind and Brain\nReturn to Stillness",
+    mobileTitle: "Return to\nStillness",
     supporting:
       "Pause for a moment.\n\nReturn to your natural rhythm.\n\nYou do not need to rush.\n\nYou do not need to force change.\n\nJust begin with\none minute\nto return to yourself.",
     mobileSupporting:
@@ -1010,7 +1010,7 @@ export default function HomePage() {
           <div className="absolute inset-x-0 top-0 h-full bg-[linear-gradient(90deg,rgba(4,14,22,0.22)_0%,rgba(4,14,22,0.16)_28%,rgba(4,14,22,0.14)_44%,rgba(4,14,22,0.18)_56%,rgba(4,14,22,0.34)_72%,rgba(4,14,22,0.54)_100%),linear-gradient(180deg,rgba(5,18,24,0.04),rgba(5,18,24,0.1)_40%,rgba(5,18,24,0.32)_100%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_56%,rgba(8,28,36,0.12),transparent_18%),linear-gradient(180deg,rgba(3,10,18,0.02)_0%,rgba(3,10,18,0.08)_30%,rgba(3,10,18,0.24)_74%,rgba(3,10,18,0.4)_100%)]" />
         </div>
-        <div className="grid gap-8 lg:grid-cols-[1.06fr_0.94fr] lg:items-center lg:gap-10 xl:grid-cols-[1.04fr_0.96fr] xl:gap-12">
+        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-10 xl:grid-cols-[1.08fr_0.92fr] xl:gap-11">
           <div className="space-y-5 sm:space-y-8 lg:space-y-9">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="whitespace-pre-line text-sm uppercase tracking-[0.34em] text-gold/85">{hero.eyebrow}</p>
@@ -1041,7 +1041,7 @@ export default function HomePage() {
                 ) : null}
                 <h1
                   className={`hero-measure word-balance keep-phrase whitespace-pre-line font-serif text-[clamp(2.5rem,10vw,4.5rem)] tracking-[-0.03em] text-white ${
-                    language === "jp" ? "leading-[1.1]" : language === "kr" ? "leading-[1.12]" : "leading-[1.14]"
+                    language === "jp" ? "leading-[1.1]" : language === "kr" ? "leading-[1.12]" : "leading-[1.13]"
                   }`}
                 >
                   {heroMobileMain}
@@ -1065,7 +1065,7 @@ export default function HomePage() {
                         ? "leading-[1.1] sm:leading-[1.08] lg:leading-[1.04]"
                         : "leading-[1.12] sm:leading-[1.1] lg:leading-[1.05]"
                   } ${
-                    language === "jp" ? "max-w-[8.3ch]" : language === "kr" ? "max-w-[11.2ch]" : language === "en" ? "max-w-[13.6ch]" : "max-w-[12.6ch]"
+                    language === "jp" ? "max-w-[8.3ch]" : language === "kr" ? "max-w-[9.8ch]" : language === "en" ? "max-w-[8.6ch]" : "max-w-[12.6ch]"
                   }`}
                 >
                   {hero.title}
@@ -1104,73 +1104,75 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="relative hidden overflow-hidden lg:-mr-4 lg:block xl:-mr-6">
+          <div className="relative hidden overflow-hidden lg:-mr-1 lg:block xl:-mr-2">
             <img
               src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1400&q=80"
               alt={hero.visualAlt}
-              className="relative z-0 h-[510px] w-full rounded-[32px] object-cover object-center opacity-[0.97] contrast-[1.1] saturate-[0.95] brightness-[0.95] lg:h-[620px]"
+              className="relative z-0 h-[495px] w-full rounded-[32px] object-cover object-center opacity-[0.97] contrast-[1.08] saturate-[0.94] brightness-[0.95] lg:h-[600px]"
             />
             <div className="pointer-events-none absolute inset-0 z-0 rounded-[32px] bg-[linear-gradient(180deg,rgba(4,12,22,0.08),rgba(4,12,22,0.56))]" />
             <div className="pointer-events-none absolute inset-0 z-0 rounded-[32px] bg-[radial-gradient(circle_at_84%_26%,rgba(255,223,168,0.42),transparent_13%),radial-gradient(circle_at_73%_25%,rgba(236,206,132,0.22),transparent_18%),radial-gradient(circle_at_56%_52%,rgba(186,214,201,0.11),transparent_24%),radial-gradient(circle_at_72%_78%,rgba(142,183,188,0.10),transparent_22%),linear-gradient(90deg,rgba(5,11,20,0.92)_0%,rgba(5,11,20,0.62)_26%,rgba(5,11,20,0.16)_60%,rgba(5,11,20,0.02)_100%)]" />
             <div className="pointer-events-none absolute bottom-[9%] right-[7%] z-0 h-[44%] w-[32%] rounded-full bg-[radial-gradient(circle,rgba(255,228,170,0.24),rgba(255,228,170,0.05)_54%,transparent_74%)] blur-[38px]" />
             <div className="pointer-events-none absolute bottom-[4%] left-[34%] z-0 h-[18%] w-[30%] rounded-full bg-[radial-gradient(circle,rgba(212,228,218,0.10),transparent_70%)] blur-[26px]" />
             <div
-              className={`absolute right-[6%] top-[11%] z-20 rounded-[28px] border border-white/6 bg-[linear-gradient(180deg,rgba(30,37,47,0.2),rgba(14,20,28,0.12))] py-4.5 shadow-[0_18px_48px_rgba(5,12,22,0.11),inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-[14px] ${
-                language === "jp" ? "w-[42.5%] px-5.5" : "w-[35%] px-5.5"
+              className={`absolute right-[6.5%] top-[11.5%] z-20 rounded-[28px] border border-white/5 bg-[linear-gradient(180deg,rgba(30,37,47,0.16),rgba(14,20,28,0.1))] py-5 shadow-[0_14px_34px_rgba(5,12,22,0.09),inset_0_1px_0_rgba(255,255,255,0.03)] backdrop-blur-[13px] ${
+                language === "jp" ? "w-[38.5%] px-6" : language === "kr" ? "w-[32%] px-5.5" : "w-[30.5%] px-5.5"
               }`}
             >
               <p
-                className={`whitespace-pre-line text-[14px] text-white/90 ${
+                className={`whitespace-pre-line text-[12.5px] text-white/82 ${
                   language === "jp"
-                    ? "keep-phrase max-w-[20ch] leading-[1.9]"
-                    : "max-w-[17ch] leading-7"
+                    ? "keep-phrase max-w-[19ch] leading-[1.88]"
+                    : language === "kr"
+                      ? "keep-phrase max-w-[14.5ch] leading-[1.78]"
+                      : "max-w-[14.5ch] leading-[1.76]"
                 }`}
               >
                 {heroPanel.intro}
               </p>
-              <div className="mt-8 border-t border-white/10 pt-6.5">
-                <div className="flex items-center gap-2 text-[13px] text-white/86">
+              <div className="mt-7 border-t border-white/8 pt-5.5">
+                <div className="flex items-center gap-2 text-[11.5px] text-white/72">
                   <span className="text-gold/80">~</span>
-                  <span className={language === "jp" ? "keep-phrase whitespace-nowrap" : ""}>{heroPanel.rhythmLabel}</span>
+                  <span className={`${language === "jp" || language === "kr" ? "keep-phrase whitespace-nowrap" : ""}`}>{heroPanel.rhythmLabel}</span>
                 </div>
-                <div className="mt-6.5 space-y-4.5">
+                <div className="mt-5.5 space-y-4">
                   <div
-                    className={`grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3.5 text-white/88 ${
-                      language === "jp" ? "text-[13.5px]" : "text-[14px]"
+                    className={`grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3.5 text-white/80 ${
+                      language === "jp" ? "text-[12.5px]" : language === "kr" ? "text-[12px]" : "text-[12px]"
                     }`}
                   >
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gold/[0.14] text-[15px]">☀</span>
-                    <span className={language === "jp" ? "keep-phrase whitespace-nowrap" : ""}>{heroPanel.morning}</span>
-                    <span className="justify-self-end whitespace-nowrap text-white/72">{heroPanel.morningDuration}</span>
+                    <span className="inline-flex h-7 w-7 items-center justify-center self-center rounded-full bg-gold/[0.12] text-[13px]">☀</span>
+                    <span className={`${language === "jp" || language === "kr" ? "keep-phrase whitespace-nowrap" : ""} self-center overflow-hidden text-ellipsis leading-[1.35]`}>{heroPanel.morning}</span>
+                    <span className="justify-self-end self-center whitespace-nowrap text-[11.5px] leading-none text-white/60">{heroPanel.morningDuration}</span>
                   </div>
                   <div
-                    className={`grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3.5 text-white/88 ${
-                      language === "jp" ? "text-[13.5px]" : "text-[14px]"
+                    className={`grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3.5 text-white/80 ${
+                      language === "jp" ? "text-[12.5px]" : language === "kr" ? "text-[12px]" : "text-[12px]"
                     }`}
                   >
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-300/[0.12] text-[15px]">🌿</span>
-                    <span className={language === "jp" ? "keep-phrase whitespace-nowrap" : ""}>{heroPanel.day}</span>
-                    <span className="justify-self-end whitespace-nowrap text-white/72">{heroPanel.dayDuration}</span>
+                    <span className="inline-flex h-7 w-7 items-center justify-center self-center rounded-full bg-emerald-300/[0.1] text-[13px]">🌿</span>
+                    <span className={`${language === "jp" || language === "kr" ? "keep-phrase whitespace-nowrap" : ""} self-center overflow-hidden text-ellipsis leading-[1.35]`}>{heroPanel.day}</span>
+                    <span className="justify-self-end self-center whitespace-nowrap text-[11.5px] leading-none text-white/60">{heroPanel.dayDuration}</span>
                   </div>
                   <div
-                    className={`grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3.5 text-white/88 ${
-                      language === "jp" ? "text-[13.5px]" : "text-[14px]"
+                    className={`grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3.5 text-white/80 ${
+                      language === "jp" ? "text-[12.5px]" : language === "kr" ? "text-[12px]" : "text-[12px]"
                     }`}
                   >
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-indigo-300/[0.12] text-[15px]">☾</span>
-                    <span className={language === "jp" ? "keep-phrase whitespace-nowrap" : ""}>{heroPanel.night}</span>
-                    <span className="justify-self-end whitespace-nowrap text-white/72">{heroPanel.nightDuration}</span>
+                    <span className="inline-flex h-7 w-7 items-center justify-center self-center rounded-full bg-indigo-300/[0.1] text-[13px]">☾</span>
+                    <span className={`${language === "jp" || language === "kr" ? "keep-phrase whitespace-nowrap" : ""} self-center overflow-hidden text-ellipsis leading-[1.35]`}>{heroPanel.night}</span>
+                    <span className="justify-self-end self-center whitespace-nowrap text-[11.5px] leading-none text-white/60">{heroPanel.nightDuration}</span>
                   </div>
                 </div>
               </div>
-              <div className="mt-8 border-t border-white/10 pt-6">
-                <div className="flex items-end justify-between gap-4 text-[13px] text-white/80">
-                  <span className={language === "jp" ? "keep-phrase whitespace-nowrap" : ""}>{heroPanel.progressLabel}</span>
-                  <span className="shrink-0 text-[11px] text-white/48">{heroJourneyDay}/7</span>
+              <div className="mt-7 border-t border-white/8 pt-5.5">
+                <div className="flex items-end justify-between gap-3 text-[11.5px] text-white/66">
+                  <span className={`${language === "jp" || language === "kr" ? "keep-phrase whitespace-nowrap" : ""} min-w-0 overflow-hidden text-ellipsis leading-[1.35]`}>{heroPanel.progressLabel}</span>
+                  <span className="shrink-0 text-[10px] text-white/40">{heroJourneyDay}/7</span>
                 </div>
-                <div className="mt-2.5 h-2 rounded-full bg-white/[0.08]">
+                <div className="mt-2.5 h-[7px] rounded-full bg-white/[0.07]">
                   <div
-                    className="h-full rounded-full bg-gold/85"
+                    className="h-full rounded-full bg-gold/78"
                     style={{ width: `${(heroJourneyDay / 7) * 100}%` }}
                   />
                 </div>
