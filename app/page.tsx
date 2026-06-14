@@ -149,6 +149,21 @@ const returnLoopCopy = {
   }
 } as const;
 
+const journeyBridgeCopy = {
+  jp: {
+    eyebrow: "小さな回復を続けるなら",
+    title: "7日間の小さな回復"
+  },
+  kr: {
+    eyebrow: "작은 회복을 이어가고 싶다면",
+    title: "7일간의 작은 회복"
+  },
+  en: {
+    eyebrow: "If you want to continue the small recovery",
+    title: "7 Days of Small Recovery"
+  }
+} as const;
+
 const nationalParkCopy = {
   jp: {
     eyebrow: "DIGITAL NATIONAL PARK",
@@ -829,6 +844,7 @@ export default function HomePage() {
   const nationalPark = useLocaleCopy(nationalParkCopy);
   const returnEntry = useLocaleCopy(returnEntryCopy);
   const returnLoop = useLocaleCopy(returnLoopCopy);
+  const journeyBridge = useLocaleCopy(journeyBridgeCopy);
   const quietGarden = useLocaleCopy(quietGardenCopy);
   const whyReturn = useLocaleCopy(whyReturnCopy);
   const finalCta = useLocaleCopy(finalCtaCopy);
@@ -1189,6 +1205,17 @@ export default function HomePage() {
 
       <section className="section-shell mt-10 sm:mt-14">
         <div className="overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.08),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.018))] px-5 py-7 shadow-[0_20px_72px_rgba(7,17,31,0.18)] sm:bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] sm:px-8 sm:py-8">
+          <div className="mb-6 sm:hidden">
+            <p className="text-[11px] tracking-[0.12em] text-white/42">{journeyBridge.eyebrow}</p>
+            <button
+              type="button"
+              onClick={scrollToRhythmChallenge}
+              className="mt-2 inline-flex items-center gap-2 rounded-full border border-white/8 bg-white/[0.03] px-3 py-2 text-sm text-white/82 transition hover:bg-white/[0.05]"
+            >
+              <span className="h-1 w-1 rounded-full bg-gold/70" />
+              {journeyBridge.title}
+            </button>
+          </div>
           <SectionHeading eyebrow={returnLoop.eyebrow} title={returnLoop.title} description={returnLoop.description} />
           <div className="mt-6 grid gap-3 lg:grid-cols-3 lg:gap-4">
             {returnLoop.steps.map((step) => (

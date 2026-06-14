@@ -88,7 +88,7 @@ export function ZeroGateSection({ onEnterGate }: ZeroGateSectionProps) {
         {copy.encouragement ? (
           <p className="relative mt-5 max-w-[16ch] text-sm leading-7 text-white/48 sm:max-w-none">{copy.encouragement}</p>
         ) : null}
-        <div className="relative mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:gap-4 xl:grid-cols-3">
+        <div className="relative mt-6 grid grid-cols-2 gap-2.5 sm:mt-7 sm:gap-3 lg:gap-4 xl:grid-cols-3">
           {copy.gates.map((gate) => (
             <GateCard
               key={gate.key}
