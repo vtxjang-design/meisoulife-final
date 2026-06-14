@@ -29,14 +29,14 @@ const AI_COACH_URL =
 const heroCopy = {
   jp: {
     eyebrow: "AI時代の人間回復",
-    lead: "AIと情報に疲れたあなたへ",
-    title: "心と脳が静かに戻る場所",
-    mobileLead: "AIと情報に疲れた\nあなたへ",
-    mobileTitle: "心と脳が\n静かに戻る場所",
+    lead: "",
+    title: "心と脳が静かに\n戻る場所",
+    mobileLead: "",
+    mobileTitle: "心と脳が静かに\n戻る場所",
     supporting:
-      "少し立ち止まり、\n自分のリズムへ戻る。\n\n大丈夫。\n急がなくても。",
+      "少し立ち止まり、\n自分のリズムへ戻る。\n\n急がなくていい。\n変わろうとしなくていい。\n\nまずは、\n自分に戻る1分から。",
     mobileSupporting:
-      "少し立ち止まり、\n自分のリズムへ戻る。\n\n大丈夫。\n急がなくても。",
+      "少し立ち止まり、\n自分のリズムへ戻る。\n\n急がなくていい。\n変わろうとしなくていい。\n\nまずは、\n自分に戻る1分から。",
     subtitle: "無料・60秒・登録不要",
     primary: "1分リセットを始める",
     secondary: "7日間の小さな回復",
@@ -1010,7 +1010,7 @@ export default function HomePage() {
           <div className="absolute inset-x-0 top-0 h-full bg-[linear-gradient(90deg,rgba(4,14,22,0.22)_0%,rgba(4,14,22,0.16)_28%,rgba(4,14,22,0.14)_44%,rgba(4,14,22,0.18)_56%,rgba(4,14,22,0.34)_72%,rgba(4,14,22,0.54)_100%),linear-gradient(180deg,rgba(5,18,24,0.04),rgba(5,18,24,0.1)_40%,rgba(5,18,24,0.32)_100%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_56%,rgba(8,28,36,0.12),transparent_18%),linear-gradient(180deg,rgba(3,10,18,0.02)_0%,rgba(3,10,18,0.08)_30%,rgba(3,10,18,0.24)_74%,rgba(3,10,18,0.4)_100%)]" />
         </div>
-        <div className="grid gap-8 lg:grid-cols-[0.98fr_1.02fr] lg:items-center lg:gap-12 xl:grid-cols-[0.95fr_1.05fr] xl:gap-14">
+        <div className="grid gap-8 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:gap-10 xl:grid-cols-[1fr_1fr] xl:gap-12">
           <div className="space-y-5 sm:space-y-8 lg:space-y-9">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm uppercase tracking-[0.34em] text-gold/85">{hero.eyebrow}</p>
@@ -1032,28 +1032,32 @@ export default function HomePage() {
 
             <div className="space-y-5 sm:space-y-6 lg:space-y-4.5">
               <div className="mx-auto w-[78%] max-w-[320px] space-y-5 sm:hidden">
-                <p
-                  className="hero-measure keep-phrase whitespace-pre-line font-serif text-[clamp(1.22rem,5.4vw,1.58rem)] leading-[1.24] text-gold/84"
-                >
-                  {heroMobileLead}
-                </p>
+                {heroMobileLead ? (
+                  <p
+                    className="hero-measure keep-phrase whitespace-pre-line font-serif text-[clamp(1.22rem,5.4vw,1.58rem)] leading-[1.24] text-gold/84"
+                  >
+                    {heroMobileLead}
+                  </p>
+                ) : null}
                 <h1
                   className="hero-measure word-balance keep-phrase whitespace-pre-line font-serif text-[clamp(2.5rem,10vw,4.5rem)] leading-[1.18] tracking-[-0.03em] text-white"
                 >
                   {heroMobileMain}
                 </h1>
               </div>
-              <div className="hidden space-y-4 sm:block sm:space-y-5 lg:space-y-4.5">
-                <p
-                  className={`keep-phrase word-balance font-serif text-[20px] leading-[1.38] text-gold/84 sm:text-[28px] sm:leading-[1.38] lg:text-[30px] ${
-                    language === "en" ? "max-w-[20ch]" : "max-w-[15ch]"
-                  }`}
-                >
-                  {hero.lead}
-                </p>
+              <div className="hidden space-y-4 sm:block sm:space-y-4.5 lg:space-y-4">
+                {hero.lead ? (
+                  <p
+                    className={`keep-phrase word-balance font-serif text-[20px] leading-[1.38] text-gold/84 sm:text-[28px] sm:leading-[1.38] lg:text-[30px] ${
+                      language === "en" ? "max-w-[20ch]" : "max-w-[15ch]"
+                    }`}
+                  >
+                    {hero.lead}
+                  </p>
+                ) : null}
                 <h1
-                  className={`hero-measure word-balance keep-phrase whitespace-pre-line font-serif text-[40px] leading-[1.16] tracking-[-0.03em] text-white sm:text-[56px] sm:leading-[1.14] lg:max-w-[720px] lg:text-[64px] lg:leading-[1.08] lg:tracking-[-0.015em] xl:text-[68px] ${
-                    language === "kr" ? "max-w-[12.4ch]" : language === "en" ? "max-w-[13.8ch]" : "max-w-[12.6ch]"
+                  className={`hero-measure word-balance keep-phrase whitespace-pre-line font-serif text-[40px] leading-[1.16] tracking-[-0.03em] text-white sm:text-[56px] sm:leading-[1.14] lg:max-w-[720px] lg:text-[64px] lg:leading-[1.07] lg:tracking-[-0.015em] xl:text-[68px] ${
+                    language === "jp" ? "max-w-[8.3ch]" : language === "kr" ? "max-w-[12.4ch]" : language === "en" ? "max-w-[13.8ch]" : "max-w-[12.6ch]"
                   }`}
                 >
                   {hero.title}
@@ -1065,71 +1069,46 @@ export default function HomePage() {
                 {heroMobileSupporting}
               </p>
               <p className={`body-measure keep-phrase hidden whitespace-pre-line text-white/68 sm:block sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.82] lg:max-w-[520px] lg:text-[17px] lg:leading-[1.82] lg:text-white/82 ${
-                language === "kr" ? "sm:max-w-[16.5ch]" : ""
+                language === "jp" ? "sm:max-w-[19ch] lg:max-w-[18ch]" : language === "kr" ? "sm:max-w-[16.5ch]" : ""
               }`}>
                 {hero.supporting}
               </p>
-              <p className="mx-auto w-[76%] max-w-[304px] pt-1 text-[11px] leading-5 text-white/48 sm:mx-0 sm:w-auto sm:max-w-none sm:text-xl sm:leading-9 lg:text-[13px] lg:leading-7 lg:text-white/56">
+              <p className="mx-auto w-[76%] max-w-[304px] pt-0.5 text-[11px] leading-5 text-white/48 sm:mx-0 sm:w-auto sm:max-w-none sm:text-xl sm:leading-9 lg:text-[13px] lg:leading-7 lg:text-white/56">
                 {hero.subtitle}
               </p>
             </div>
 
-            <div className="relative z-20 flex flex-col gap-3 pt-2.5 sm:flex-row sm:flex-wrap lg:gap-5 lg:pt-2.5">
+            <div className="relative z-20 flex flex-col gap-3 pt-3 sm:flex-row sm:flex-wrap lg:gap-5 lg:pt-3">
               <button
                 type="button"
                 onClick={scrollToZeroGate}
-                className="button-nowrap inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold/90 px-4.5 py-3 text-[14px] font-semibold leading-none text-ink shadow-[0_14px_30px_rgba(212,186,117,0.16)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#e7cd92] lg:min-h-[60px] lg:px-9 lg:text-[17px] lg:shadow-[0_18px_36px_rgba(212,186,117,0.18)]"
+                className="button-nowrap inline-flex min-h-[56px] items-center justify-center rounded-full bg-gold/90 px-5.5 py-3.5 text-[14px] font-semibold leading-none text-ink shadow-[0_14px_30px_rgba(212,186,117,0.16)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#e7cd92] lg:min-h-[66px] lg:px-10 lg:text-[17px] lg:shadow-[0_18px_36px_rgba(212,186,117,0.18)]"
               >
                 {hero.primary}
               </button>
               <button
                 type="button"
                 onClick={scrollToRhythmChallenge}
-                className="button-nowrap inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-2 text-[13px] font-medium leading-none text-white/68 transition duration-300 hover:bg-white/[0.07] hover:text-white lg:min-h-[60px] lg:px-10 lg:text-[16px] lg:text-white/78"
+                className="button-nowrap inline-flex min-h-[48px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-4.5 py-2.5 text-[13px] font-medium leading-none text-white/68 transition duration-300 hover:bg-white/[0.07] hover:text-white lg:min-h-[66px] lg:px-11 lg:text-[16px] lg:text-white/78"
               >
                 {hero.secondary}
               </button>
             </div>
-
-            <p className="max-w-[26ch] text-[12px] leading-6 text-white/56 sm:max-w-[34ch] sm:text-[14px] sm:leading-7 lg:max-w-[420px] lg:text-[14px] lg:leading-7 lg:text-white/58">
-              {hero.ctaSupport}
-            </p>
-
-            <p className="hidden max-w-[28ch] text-[12px] leading-6 text-white/50 sm:max-w-none lg:block lg:pt-0.5 lg:text-[13px] lg:leading-7 lg:text-white/54">
-              {hero.note}
-            </p>
-
-            <button
-              type="button"
-              onClick={scrollToRhythmChallenge}
-              className="inline-flex w-fit items-center gap-2 pt-1 text-[12px] font-medium text-white/46 transition hover:text-white/72"
-            >
-              <span className="h-1 w-1 rounded-full bg-gold/72" />
-              {hero.scrollHint}
-            </button>
-
-            <div className="hidden flex-wrap gap-2 pt-0.5 sm:flex">
-              {hero.proof.map((item) => (
-                <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[12px] text-white/56">
-                  {item}
-                </span>
-              ))}
-            </div>
           </div>
 
-          <div className="relative hidden overflow-hidden lg:-mr-2 lg:block xl:-mr-4">
+          <div className="relative hidden overflow-hidden lg:-mr-8 lg:block xl:-mr-12">
             <img
               src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1400&q=80"
               alt={hero.visualAlt}
-              className="relative z-0 h-[500px] w-full rounded-[32px] object-cover object-center opacity-[0.97] contrast-[1.08] saturate-[0.98] brightness-[0.95] lg:h-[600px]"
+              className="relative z-0 h-[520px] w-full rounded-[32px] object-cover object-center opacity-[0.98] contrast-[1.12] saturate-[0.96] brightness-[0.94] lg:h-[640px]"
             />
             <div className="pointer-events-none absolute inset-0 z-0 rounded-[32px] bg-[linear-gradient(180deg,rgba(4,12,22,0.08),rgba(4,12,22,0.56))]" />
-            <div className="pointer-events-none absolute inset-0 z-0 rounded-[32px] bg-[radial-gradient(circle_at_84%_28%,rgba(255,223,168,0.34),transparent_14%),radial-gradient(circle_at_72%_24%,rgba(236,206,132,0.18),transparent_18%),radial-gradient(circle_at_52%_44%,rgba(176,203,184,0.09),transparent_24%),linear-gradient(90deg,rgba(5,11,20,0.88)_0%,rgba(5,11,20,0.58)_28%,rgba(5,11,20,0.14)_62%,rgba(5,11,20,0.02)_100%)]" />
-            <div className="pointer-events-none absolute bottom-[10%] right-[8%] z-0 h-[42%] w-[30%] rounded-full bg-[radial-gradient(circle,rgba(255,228,170,0.22),rgba(255,228,170,0.04)_54%,transparent_74%)] blur-[34px]" />
-            <div className="pointer-events-none absolute bottom-[0%] right-[14%] z-0 h-[28%] w-[14%] rounded-full bg-[linear-gradient(180deg,rgba(233,196,122,0.22),rgba(233,196,122,0.02))] opacity-40 blur-[8px]" />
+            <div className="pointer-events-none absolute inset-0 z-0 rounded-[32px] bg-[radial-gradient(circle_at_84%_26%,rgba(255,223,168,0.42),transparent_13%),radial-gradient(circle_at_73%_25%,rgba(236,206,132,0.22),transparent_18%),radial-gradient(circle_at_56%_52%,rgba(186,214,201,0.11),transparent_24%),radial-gradient(circle_at_72%_78%,rgba(142,183,188,0.10),transparent_22%),linear-gradient(90deg,rgba(5,11,20,0.92)_0%,rgba(5,11,20,0.62)_26%,rgba(5,11,20,0.16)_60%,rgba(5,11,20,0.02)_100%)]" />
+            <div className="pointer-events-none absolute bottom-[9%] right-[7%] z-0 h-[44%] w-[32%] rounded-full bg-[radial-gradient(circle,rgba(255,228,170,0.24),rgba(255,228,170,0.05)_54%,transparent_74%)] blur-[38px]" />
+            <div className="pointer-events-none absolute bottom-[4%] left-[34%] z-0 h-[18%] w-[30%] rounded-full bg-[radial-gradient(circle,rgba(212,228,218,0.10),transparent_70%)] blur-[26px]" />
             <div
-              className={`absolute right-[6.5%] top-[11%] z-20 rounded-[28px] border border-white/8 bg-[linear-gradient(180deg,rgba(30,37,47,0.34),rgba(14,20,28,0.2))] py-5 shadow-[0_18px_48px_rgba(5,12,22,0.16),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-[16px] ${
-                language === "jp" ? "w-[44%] px-5.5" : "w-[38%] px-6"
+              className={`absolute right-[5%] top-[10%] z-20 rounded-[28px] border border-white/7 bg-[linear-gradient(180deg,rgba(30,37,47,0.26),rgba(14,20,28,0.16))] py-5 shadow-[0_18px_48px_rgba(5,12,22,0.14),inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-[15px] ${
+                language === "jp" ? "w-[48%] px-6" : "w-[40%] px-6"
               }`}
             >
               <p
