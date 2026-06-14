@@ -53,15 +53,15 @@ const heroCopy = {
     visualAlt: "Forest light and stillness"
   },
   kr: {
-    eyebrow: "AI 시대의 인간 회복",
-    lead: "AI와 정보에 지친 당신에게",
-    title: "마음과 뇌가 고요히 돌아오는 곳",
-    mobileLead: "AI와 정보에 지친\n당신에게",
-    mobileTitle: "마음과 뇌가\n고요히 돌아오는 곳",
+    eyebrow: "AI 시대 인간 회복",
+    lead: "",
+    title: "몸과 마음,\n그리고 뇌가\n조용히 돌아오는 곳",
+    mobileLead: "",
+    mobileTitle: "몸과 마음,\n그리고 뇌가\n조용히 돌아오는 곳",
     supporting:
-      "잠시 멈추고,\n나의 리듬으로 돌아옵니다.\n\n괜찮습니다.\n서두르지 않아도 됩니다.",
+      "잠시 멈추고,\n나의 리듬으로 돌아갑니다.\n\n서두르지 않아도 됩니다.\n억지로 바뀌지 않아도 됩니다.\n\n먼저,\n나에게 돌아오는 1분부터.",
     mobileSupporting:
-      "잠시 멈추고,\n나의 리듬으로 돌아옵니다.\n\n괜찮습니다.\n서두르지 않아도 됩니다.",
+      "잠시 멈추고,\n나의 리듬으로 돌아갑니다.\n\n서두르지 않아도 됩니다.\n억지로 바뀌지 않아도 됩니다.\n\n먼저,\n나에게 돌아오는 1분부터.",
     subtitle: "무료 · 60초 · 가입 불필요",
     primary: "1분 리셋 시작하기",
     secondary: "7일간의 작은 회복",
@@ -78,18 +78,18 @@ const heroCopy = {
     visualAlt: "Forest light and stillness"
   },
   en: {
-    eyebrow: "Human Recovery in the AI Age",
-    lead: "For minds tired by AI and information",
-    title: "A quiet place to return",
-    mobileLead: "For minds tired\nby AI and information",
-    mobileTitle: "A quiet place\nto return",
+    eyebrow: "Human Recovery\nfor the AI Era",
+    lead: "",
+    title: "A Place Where\nMind and Brain\nReturn to Stillness",
+    mobileLead: "",
+    mobileTitle: "A Place Where\nMind and Brain\nReturn to Stillness",
     supporting:
-      "Pause for a moment,\nand return to your rhythm.\n\nYou do not need to hurry.",
+      "Pause for a moment.\n\nReturn to your natural rhythm.\n\nYou do not need to rush.\n\nYou do not need to force change.\n\nJust begin with\none minute\nto return to yourself.",
     mobileSupporting:
-      "Pause for a moment,\nand return to your rhythm.\n\nYou do not need to hurry.",
+      "Pause for a moment.\n\nReturn to your natural rhythm.\n\nYou do not need to rush.\n\nYou do not need to force change.\n\nJust begin with\none minute\nto return to yourself.",
     subtitle: "Free · 60 seconds · No signup",
     primary: "Start 1-Minute Reset",
-    secondary: "7 Days of Small Recovery",
+    secondary: "7-Day Small Recovery",
     ctaSupport: "A small 7-day journey to return to your rhythm.",
     tertiaryGuest: "Start Free",
     tertiaryFree: "Today's Check-In",
@@ -1010,10 +1010,10 @@ export default function HomePage() {
           <div className="absolute inset-x-0 top-0 h-full bg-[linear-gradient(90deg,rgba(4,14,22,0.22)_0%,rgba(4,14,22,0.16)_28%,rgba(4,14,22,0.14)_44%,rgba(4,14,22,0.18)_56%,rgba(4,14,22,0.34)_72%,rgba(4,14,22,0.54)_100%),linear-gradient(180deg,rgba(5,18,24,0.04),rgba(5,18,24,0.1)_40%,rgba(5,18,24,0.32)_100%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_56%,rgba(8,28,36,0.12),transparent_18%),linear-gradient(180deg,rgba(3,10,18,0.02)_0%,rgba(3,10,18,0.08)_30%,rgba(3,10,18,0.24)_74%,rgba(3,10,18,0.4)_100%)]" />
         </div>
-        <div className="grid gap-8 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:gap-10 xl:grid-cols-[1fr_1fr] xl:gap-12">
+        <div className="grid gap-8 lg:grid-cols-[1.06fr_0.94fr] lg:items-center lg:gap-10 xl:grid-cols-[1.04fr_0.96fr] xl:gap-12">
           <div className="space-y-5 sm:space-y-8 lg:space-y-9">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm uppercase tracking-[0.34em] text-gold/85">{hero.eyebrow}</p>
+              <p className="whitespace-pre-line text-sm uppercase tracking-[0.34em] text-gold/85">{hero.eyebrow}</p>
               <div className="hidden w-fit rounded-full border border-white/10 bg-white/[0.03] p-1 md:inline-flex lg:hidden">
                 {languageButtons.map((button) => (
                   <button
@@ -1030,7 +1030,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="space-y-5 sm:space-y-6 lg:space-y-4.5">
+            <div className="space-y-4.5 sm:space-y-5.5 lg:space-y-4">
               <div className="mx-auto w-[78%] max-w-[320px] space-y-5 sm:hidden">
                 {heroMobileLead ? (
                   <p
@@ -1041,7 +1041,7 @@ export default function HomePage() {
                 ) : null}
                 <h1
                   className={`hero-measure word-balance keep-phrase whitespace-pre-line font-serif text-[clamp(2.5rem,10vw,4.5rem)] tracking-[-0.03em] text-white ${
-                    language === "jp" ? "leading-[1.1]" : "leading-[1.18]"
+                    language === "jp" ? "leading-[1.1]" : language === "kr" ? "leading-[1.12]" : "leading-[1.14]"
                   }`}
                 >
                   {heroMobileMain}
@@ -1061,9 +1061,11 @@ export default function HomePage() {
                   className={`hero-measure word-balance keep-phrase whitespace-pre-line font-serif text-[40px] tracking-[-0.03em] text-white sm:text-[56px] lg:max-w-[720px] lg:text-[64px] lg:tracking-[-0.015em] xl:text-[68px] ${
                     language === "jp"
                       ? "leading-[1.08] sm:leading-[1.07] lg:leading-[1.01]"
-                      : "leading-[1.16] sm:leading-[1.14] lg:leading-[1.07]"
+                      : language === "kr"
+                        ? "leading-[1.1] sm:leading-[1.08] lg:leading-[1.04]"
+                        : "leading-[1.12] sm:leading-[1.1] lg:leading-[1.05]"
                   } ${
-                    language === "jp" ? "max-w-[8.3ch]" : language === "kr" ? "max-w-[12.4ch]" : language === "en" ? "max-w-[13.8ch]" : "max-w-[12.6ch]"
+                    language === "jp" ? "max-w-[8.3ch]" : language === "kr" ? "max-w-[11.2ch]" : language === "en" ? "max-w-[13.6ch]" : "max-w-[12.6ch]"
                   }`}
                 >
                   {hero.title}
@@ -1074,8 +1076,8 @@ export default function HomePage() {
               >
                 {heroMobileSupporting}
               </p>
-              <p className={`body-measure keep-phrase hidden whitespace-pre-line text-white/68 sm:block sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.82] lg:max-w-[520px] lg:text-[17px] lg:leading-[1.82] lg:text-white/82 ${
-                language === "jp" ? "sm:max-w-[19ch] lg:max-w-[18ch]" : language === "kr" ? "sm:max-w-[16.5ch]" : ""
+              <p className={`body-measure keep-phrase hidden whitespace-pre-line text-white/68 sm:block sm:max-w-[32ch] sm:text-[18px] sm:leading-[1.78] lg:max-w-[520px] lg:text-[17px] lg:leading-[1.78] lg:text-white/82 ${
+                language === "jp" ? "sm:max-w-[19ch] lg:max-w-[18ch]" : language === "kr" ? "sm:max-w-[17.5ch] lg:max-w-[16.5ch]" : language === "en" ? "sm:max-w-[22ch] lg:max-w-[21ch]" : ""
               }`}>
                 {hero.supporting}
               </p>
@@ -1102,19 +1104,19 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="relative hidden overflow-hidden lg:-mr-8 lg:block xl:-mr-12">
+          <div className="relative hidden overflow-hidden lg:-mr-4 lg:block xl:-mr-6">
             <img
               src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1400&q=80"
               alt={hero.visualAlt}
-              className="relative z-0 h-[520px] w-full rounded-[32px] object-cover object-center opacity-[0.98] contrast-[1.12] saturate-[0.96] brightness-[0.94] lg:h-[640px]"
+              className="relative z-0 h-[510px] w-full rounded-[32px] object-cover object-center opacity-[0.97] contrast-[1.1] saturate-[0.95] brightness-[0.95] lg:h-[620px]"
             />
             <div className="pointer-events-none absolute inset-0 z-0 rounded-[32px] bg-[linear-gradient(180deg,rgba(4,12,22,0.08),rgba(4,12,22,0.56))]" />
             <div className="pointer-events-none absolute inset-0 z-0 rounded-[32px] bg-[radial-gradient(circle_at_84%_26%,rgba(255,223,168,0.42),transparent_13%),radial-gradient(circle_at_73%_25%,rgba(236,206,132,0.22),transparent_18%),radial-gradient(circle_at_56%_52%,rgba(186,214,201,0.11),transparent_24%),radial-gradient(circle_at_72%_78%,rgba(142,183,188,0.10),transparent_22%),linear-gradient(90deg,rgba(5,11,20,0.92)_0%,rgba(5,11,20,0.62)_26%,rgba(5,11,20,0.16)_60%,rgba(5,11,20,0.02)_100%)]" />
             <div className="pointer-events-none absolute bottom-[9%] right-[7%] z-0 h-[44%] w-[32%] rounded-full bg-[radial-gradient(circle,rgba(255,228,170,0.24),rgba(255,228,170,0.05)_54%,transparent_74%)] blur-[38px]" />
             <div className="pointer-events-none absolute bottom-[4%] left-[34%] z-0 h-[18%] w-[30%] rounded-full bg-[radial-gradient(circle,rgba(212,228,218,0.10),transparent_70%)] blur-[26px]" />
             <div
-              className={`absolute right-[5%] top-[10%] z-20 rounded-[28px] border border-white/7 bg-[linear-gradient(180deg,rgba(30,37,47,0.26),rgba(14,20,28,0.16))] py-5 shadow-[0_18px_48px_rgba(5,12,22,0.14),inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-[15px] ${
-                language === "jp" ? "w-[48%] px-6" : "w-[40%] px-6"
+              className={`absolute right-[6%] top-[11%] z-20 rounded-[28px] border border-white/6 bg-[linear-gradient(180deg,rgba(30,37,47,0.2),rgba(14,20,28,0.12))] py-4.5 shadow-[0_18px_48px_rgba(5,12,22,0.11),inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-[14px] ${
+                language === "jp" ? "w-[42.5%] px-5.5" : "w-[35%] px-5.5"
               }`}
             >
               <p
