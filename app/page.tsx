@@ -50,7 +50,7 @@ const heroCopy = {
     proof: ["情報過多に", "疲れた心に", "考えすぎに"],
     visualCopy: "情報に引かれるのではなく、\n自分へ戻るための静かな入口。",
     visualLabel: "Quiet Forest Entry",
-    visualAlt: "Forest light and stillness"
+    visualAlt: "Dawn lake with mist and calm water"
   },
   kr: {
     eyebrow: "AI 시대 인간 회복",
@@ -75,7 +75,7 @@ const heroCopy = {
     proof: ["과부하일 때", "지쳤을 때", "생각이 많을 때"],
     visualCopy: "정보의 흐름보다,\n나 자신에게 돌아오는 숨의 입구.",
     visualLabel: "Quiet Forest Entry",
-    visualAlt: "Forest light and stillness"
+    visualAlt: "Dawn lake with mist and calm water"
   },
   en: {
     eyebrow: "Human Recovery\nfor the AI Era",
@@ -100,7 +100,7 @@ const heroCopy = {
     proof: ["for stress", "for overload", "for overthinking"],
     visualCopy: "A quiet forest entrance for returning\nto breath instead of noise.",
     visualLabel: "Quiet Forest Entry",
-    visualAlt: "Forest light and stillness"
+    visualAlt: "Dawn lake with mist and calm water"
   }
 } as const;
 
@@ -864,7 +864,6 @@ export default function HomePage() {
   const heroMobileLead = hero.mobileLead;
   const heroMobileMain = hero.mobileTitle;
   const heroMobileSupporting = hero.mobileSupporting;
-  const heroJourneyDay = Math.min(Math.max(challengeProgress.currentDay, 1), 7);
 
   function scrollToOneMinute() {
     if (typeof window === "undefined") {
@@ -953,12 +952,12 @@ export default function HomePage() {
         <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[470px] sm:hidden">
           <div className="absolute left-[1%] top-8 h-28 w-28 rounded-full bg-gold/[0.11] blur-[72px] animate-meditation-ambient-breathe motion-reduce:animate-none" />
           <div className="absolute right-[4%] top-20 h-32 w-32 rounded-full bg-emerald-200/[0.09] blur-[72px] animate-meditation-fog motion-reduce:animate-none" />
-          <div className="absolute right-[7%] top-[15%] h-[146px] w-[24%] overflow-hidden opacity-[0.15] mix-blend-screen">
+          <div className="absolute right-[7%] top-[15%] h-[146px] w-[24%] overflow-hidden opacity-[0.13] mix-blend-screen">
             <img
-              src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80"
+              src="https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=900&q=80"
               alt=""
               aria-hidden="true"
-              className="h-full w-full scale-[1.01] object-cover object-center blur-[1px] animate-meditation-video-breathe motion-reduce:animate-none [mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)] [-webkit-mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)]"
+              className="h-full w-full scale-[1.01] object-cover object-center opacity-[0.94] animate-meditation-video-breathe motion-reduce:animate-none [mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)] [-webkit-mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)]"
             />
           </div>
           <div className="absolute right-[12%] top-16 h-24 w-20 rounded-full bg-white/[0.02] blur-[54px] animate-meditation-float motion-reduce:animate-none" />
@@ -967,7 +966,7 @@ export default function HomePage() {
           <div className="absolute inset-x-0 top-0 h-full bg-[linear-gradient(90deg,rgba(4,14,22,0.22)_0%,rgba(4,14,22,0.16)_28%,rgba(4,14,22,0.14)_44%,rgba(4,14,22,0.18)_56%,rgba(4,14,22,0.34)_72%,rgba(4,14,22,0.54)_100%),linear-gradient(180deg,rgba(5,18,24,0.04),rgba(5,18,24,0.1)_40%,rgba(5,18,24,0.32)_100%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_56%,rgba(8,28,36,0.12),transparent_18%),linear-gradient(180deg,rgba(3,10,18,0.02)_0%,rgba(3,10,18,0.08)_30%,rgba(3,10,18,0.24)_74%,rgba(3,10,18,0.4)_100%)]" />
         </div>
-        <div className="grid gap-8 lg:grid-cols-[1.16fr_0.84fr] lg:items-center lg:gap-11 xl:grid-cols-[1.14fr_0.86fr] xl:gap-12">
+        <div className="grid gap-8 lg:grid-cols-[1.24fr_0.76fr] lg:items-center lg:gap-12 xl:grid-cols-[1.22fr_0.78fr] xl:gap-14">
           <div className="space-y-5 sm:space-y-8 lg:space-y-9">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="whitespace-pre-line text-sm uppercase tracking-[0.34em] text-gold/85">{hero.eyebrow}</p>
@@ -1061,90 +1060,12 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="relative hidden overflow-hidden pl-4 lg:block xl:pl-6">
+          <div className="relative hidden overflow-hidden pl-8 lg:block xl:pl-10">
             <img
-              src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1400&q=80"
+              src="https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=1400&q=80"
               alt={hero.visualAlt}
-              className="relative z-0 h-[470px] w-full rounded-[32px] object-cover object-center opacity-[0.97] contrast-[1.08] saturate-[0.94] brightness-[0.95] lg:h-[570px]"
+              className="relative z-0 h-[420px] w-full rounded-[32px] object-cover object-center opacity-[0.98] contrast-[1.08] saturate-[0.94] brightness-[0.98] lg:h-[500px]"
             />
-            <div className="pointer-events-none absolute inset-0 z-0 rounded-[32px] bg-[linear-gradient(180deg,rgba(4,12,22,0.08),rgba(4,12,22,0.56))]" />
-            <div className="pointer-events-none absolute inset-0 z-0 rounded-[32px] bg-[radial-gradient(circle_at_84%_26%,rgba(255,223,168,0.42),transparent_13%),radial-gradient(circle_at_73%_25%,rgba(236,206,132,0.22),transparent_18%),radial-gradient(circle_at_56%_52%,rgba(186,214,201,0.11),transparent_24%),radial-gradient(circle_at_72%_78%,rgba(142,183,188,0.10),transparent_22%),linear-gradient(90deg,rgba(5,11,20,0.92)_0%,rgba(5,11,20,0.62)_26%,rgba(5,11,20,0.16)_60%,rgba(5,11,20,0.02)_100%)]" />
-            <div className="pointer-events-none absolute bottom-[9%] right-[7%] z-0 h-[44%] w-[32%] rounded-full bg-[radial-gradient(circle,rgba(255,228,170,0.24),rgba(255,228,170,0.05)_54%,transparent_74%)] blur-[38px]" />
-            <div className="pointer-events-none absolute bottom-[4%] left-[34%] z-0 h-[18%] w-[30%] rounded-full bg-[radial-gradient(circle,rgba(212,228,218,0.10),transparent_70%)] blur-[26px]" />
-            <div
-              className={`absolute right-[8%] top-[12%] z-20 rounded-[28px] border border-white/5 bg-[linear-gradient(180deg,rgba(30,37,47,0.16),rgba(14,20,28,0.1))] py-4.5 shadow-[0_14px_34px_rgba(5,12,22,0.09),inset_0_1px_0_rgba(255,255,255,0.03)] backdrop-blur-[13px] ${
-                language === "jp" ? "w-[33.5%] px-5.5" : language === "kr" ? "w-[28.5%] px-5" : "w-[26.5%] px-5"
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <span className="h-2 w-2 rounded-full bg-gold/72" />
-                <div className="flex items-center gap-2.5">
-                  <span className="h-[1px] w-10 bg-white/10" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-white/32" />
-                </div>
-              </div>
-              <div className="mt-7 border-t border-white/8 pt-5.5">
-                <div className="flex items-center gap-2.5">
-                  <span className="inline-flex h-1.5 w-1.5 rounded-full bg-gold/74" />
-                  <span className="h-[1px] flex-1 bg-white/8" />
-                  <span className="h-[1px] w-7 bg-white/8" />
-                </div>
-                <div className="mt-5.5 space-y-4.5">
-                  <div
-                    className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3.5 text-white/72"
-                  >
-                    <span className="inline-flex h-7 w-7 items-center justify-center self-center rounded-full bg-gold/[0.12] text-[13px]">☀</span>
-                    <span className="self-center">
-                      <span className="block h-[1px] w-full rounded-full bg-gradient-to-r from-gold/55 via-white/18 to-transparent" />
-                    </span>
-                    <span className="justify-self-end self-center whitespace-nowrap text-[11px] leading-none text-white/52">3m</span>
-                  </div>
-                  <div
-                    className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3.5 text-white/72"
-                  >
-                    <span className="inline-flex h-7 w-7 items-center justify-center self-center rounded-full bg-emerald-300/[0.1] text-[13px]">🌿</span>
-                    <span className="self-center">
-                      <span className="block h-[1px] w-[78%] rounded-full bg-gradient-to-r from-emerald-200/46 via-white/16 to-transparent" />
-                    </span>
-                    <span className="justify-self-end self-center whitespace-nowrap text-[11px] leading-none text-white/52">1m</span>
-                  </div>
-                  <div
-                    className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3.5 text-white/72"
-                  >
-                    <span className="inline-flex h-7 w-7 items-center justify-center self-center rounded-full bg-indigo-300/[0.1] text-[13px]">☾</span>
-                    <span className="self-center">
-                      <span className="block h-[1px] w-[88%] rounded-full bg-gradient-to-r from-indigo-200/42 via-white/16 to-transparent" />
-                    </span>
-                    <span className="justify-self-end self-center whitespace-nowrap text-[11px] leading-none text-white/52">3m</span>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-7 border-t border-white/8 pt-5.5">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-1.5">
-                    {Array.from({ length: 3 }).map((_, index) => (
-                      <span
-                        key={index}
-                        className={`h-1.5 rounded-full ${
-                          index === 0
-                            ? "w-5 bg-gold/72"
-                            : index === 1
-                              ? "w-3 bg-white/22"
-                              : "w-2 bg-white/14"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <span className="shrink-0 text-[10px] text-white/38">{heroJourneyDay}/7</span>
-                </div>
-                <div className="mt-2.5 h-[7px] rounded-full bg-white/[0.07]">
-                  <div
-                    className="h-full rounded-full bg-gold/78"
-                    style={{ width: `${(heroJourneyDay / 7) * 100}%` }}
-                  />
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
