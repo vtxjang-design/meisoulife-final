@@ -1141,41 +1141,41 @@ export default function HomePage() {
               >
                 {heroPanel.intro}
               </p>
-              <div className="mt-7 border-t border-white/10 pt-6">
+              <div className="mt-8 border-t border-white/10 pt-6.5">
                 <div className="flex items-center gap-2 text-[13px] text-white/86">
                   <span className="text-gold/80">~</span>
                   <span className={language === "jp" ? "keep-phrase whitespace-nowrap" : ""}>{heroPanel.rhythmLabel}</span>
                 </div>
-                <div className="mt-6 space-y-4">
+                <div className="mt-6.5 space-y-4.5">
                   <div className="flex items-center justify-between gap-4 text-[14px] text-white/88">
-                    <div className="flex min-w-0 items-center gap-3">
+                    <div className="flex min-w-0 items-center gap-3.5">
                       <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gold/[0.14] text-[15px]">☀</span>
                       <span className={language === "jp" ? "keep-phrase whitespace-nowrap" : ""}>{heroPanel.morning}</span>
                     </div>
-                    <span className="shrink-0 text-white/76">{heroPanel.morningDuration}</span>
+                    <span className="shrink-0 pl-2 text-white/72">{heroPanel.morningDuration}</span>
                   </div>
                   <div className="flex items-center justify-between gap-4 text-[14px] text-white/88">
-                    <div className="flex min-w-0 items-center gap-3">
+                    <div className="flex min-w-0 items-center gap-3.5">
                       <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-300/[0.12] text-[15px]">🌿</span>
                       <span className={language === "jp" ? "keep-phrase whitespace-nowrap" : ""}>{heroPanel.day}</span>
                     </div>
-                    <span className="shrink-0 text-white/76">{heroPanel.dayDuration}</span>
+                    <span className="shrink-0 pl-2 text-white/72">{heroPanel.dayDuration}</span>
                   </div>
                   <div className="flex items-center justify-between gap-4 text-[14px] text-white/88">
-                    <div className="flex min-w-0 items-center gap-3">
+                    <div className="flex min-w-0 items-center gap-3.5">
                       <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-indigo-300/[0.12] text-[15px]">☾</span>
                       <span className={language === "jp" ? "keep-phrase whitespace-nowrap" : ""}>{heroPanel.night}</span>
                     </div>
-                    <span className="shrink-0 text-white/76">{heroPanel.nightDuration}</span>
+                    <span className="shrink-0 pl-2 text-white/72">{heroPanel.nightDuration}</span>
                   </div>
                 </div>
               </div>
-              <div className="mt-7 border-t border-white/10 pt-5.5">
-                <div className="flex items-center justify-between gap-4 text-[13px] text-white/80">
+              <div className="mt-8 border-t border-white/10 pt-6">
+                <div className="flex items-end justify-between gap-4 text-[13px] text-white/80">
                   <span className={language === "jp" ? "keep-phrase whitespace-nowrap" : ""}>{heroPanel.progressLabel}</span>
-                  <span className="shrink-0">{heroJourneyDay}/7</span>
+                  <span className="shrink-0 text-[11px] text-white/48">{heroJourneyDay}/7</span>
                 </div>
-                <div className="mt-3 h-2 rounded-full bg-white/[0.08]">
+                <div className="mt-2.5 h-2 rounded-full bg-white/[0.08]">
                   <div
                     className="h-full rounded-full bg-gold/85"
                     style={{ width: `${(heroJourneyDay / 7) * 100}%` }}
