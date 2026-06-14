@@ -214,76 +214,40 @@ const heroPanelCopy = {
     intro: "自分へ戻る、\n静かな入口。",
     pace: "今日も、あなたのペースで。",
     footer: "AIと共に生きる時代、心の回復力は、新しい力になる。",
-    cards: [
-      {
-        label: "◐",
-        accent: "☾",
-        prefix: "今は",
-        suffix: "のリズム",
-        note: ""
-      },
-      {
-        label: "◐",
-        accent: "◌",
-        note: ""
-      },
-      {
-        label: "◐",
-        accent: "↺",
-        main: "1分",
-        note: ""
-      }
-    ]
+    rhythmLabel: "今日のリズム",
+    morning: "朝のリセット",
+    day: "集中リセット",
+    night: "夜のリセット",
+    progressLabel: "7日間の小さな回復",
+    morningDuration: "3分",
+    dayDuration: "1分",
+    nightDuration: "3分"
   },
   kr: {
     intro: "나 자신에게 돌아오는,\n조용한 입구.",
     pace: "오늘도, 당신의 속도로.",
     footer: "AI와 함께 살아가는 시대, 마음의 회복력은 새로운 힘이 됩니다.",
-    cards: [
-      {
-        label: "◐",
-        accent: "☾",
-        prefix: "지금은 ",
-        suffix: " 리듬",
-        note: ""
-      },
-      {
-        label: "◐",
-        accent: "◌",
-        note: ""
-      },
-      {
-        label: "◐",
-        accent: "↺",
-        main: "1분",
-        note: ""
-      }
-    ]
+    rhythmLabel: "오늘의 리듬",
+    morning: "아침 리셋",
+    day: "집중 리셋",
+    night: "밤 리셋",
+    progressLabel: "7일간의 작은 회복",
+    morningDuration: "3분",
+    dayDuration: "1분",
+    nightDuration: "3분"
   },
   en: {
     intro: "A quiet entrance,\nback to yourself.",
     pace: "Today as well, at your own pace.",
     footer: "In the age of living with AI, the power to recover your mind becomes a new kind of strength.",
-    cards: [
-      {
-        label: "◐",
-        accent: "☾",
-        prefix: "It is ",
-        suffix: " rhythm",
-        note: ""
-      },
-      {
-        label: "◐",
-        accent: "◌",
-        note: ""
-      },
-      {
-        label: "◐",
-        accent: "↺",
-        main: "1 min",
-        note: ""
-      }
-    ]
+    rhythmLabel: "Today's Rhythm",
+    morning: "Morning Reset",
+    day: "Focus Reset",
+    night: "Night Reset",
+    progressLabel: "7 Days of Small Recovery",
+    morningDuration: "3 min",
+    dayDuration: "1 min",
+    nightDuration: "3 min"
   }
 } as const;
 
@@ -943,26 +907,7 @@ export default function HomePage() {
   const heroMobileLead = hero.mobileLead;
   const heroMobileMain = hero.mobileTitle;
   const heroMobileSupporting = hero.mobileSupporting;
-  const heroPanelCards = [
-    {
-      label: heroPanel.cards[0].label,
-      accent: heroPanel.cards[0].accent,
-      main: `${heroPanel.cards[0].prefix}${site.home.rhythmSignals.anchors[returnRhythm.timeAnchor]}\n${heroPanel.cards[0].suffix}`,
-      note: heroPanel.cards[0].note
-    },
-    {
-      label: heroPanel.cards[1].label,
-      accent: heroPanel.cards[1].accent,
-      main: `${challengeProgress.completedDays.length}/7`,
-      note: heroPanel.cards[1].note
-    },
-    {
-      label: heroPanel.cards[2].label,
-      accent: heroPanel.cards[2].accent,
-      main: heroPanel.cards[2].main,
-      note: heroPanel.cards[2].note
-    }
-  ];
+  const heroJourneyDay = Math.min(Math.max(challengeProgress.currentDay, 1), 7);
 
   function scrollToOneMinute() {
     if (typeof window === "undefined") {
@@ -1065,7 +1010,7 @@ export default function HomePage() {
           <div className="absolute inset-x-0 top-0 h-full bg-[linear-gradient(90deg,rgba(4,14,22,0.22)_0%,rgba(4,14,22,0.16)_28%,rgba(4,14,22,0.14)_44%,rgba(4,14,22,0.18)_56%,rgba(4,14,22,0.34)_72%,rgba(4,14,22,0.54)_100%),linear-gradient(180deg,rgba(5,18,24,0.04),rgba(5,18,24,0.1)_40%,rgba(5,18,24,0.32)_100%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_56%,rgba(8,28,36,0.12),transparent_18%),linear-gradient(180deg,rgba(3,10,18,0.02)_0%,rgba(3,10,18,0.08)_30%,rgba(3,10,18,0.24)_74%,rgba(3,10,18,0.4)_100%)]" />
         </div>
-        <div className="grid gap-8 lg:grid-cols-[1.24fr_0.76fr] lg:items-center lg:gap-16 xl:gap-20">
+        <div className="grid gap-8 lg:grid-cols-[0.98fr_1.02fr] lg:items-center lg:gap-12 xl:grid-cols-[0.95fr_1.05fr] xl:gap-14">
           <div className="space-y-5 sm:space-y-8 lg:space-y-9">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm uppercase tracking-[0.34em] text-gold/85">{hero.eyebrow}</p>
@@ -1176,34 +1121,59 @@ export default function HomePage() {
             <img
               src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1400&q=80"
               alt={hero.visualAlt}
-              className="relative z-0 h-[470px] w-full rounded-[30px] object-cover object-center opacity-[0.96] contrast-[1.08] saturate-[0.98] brightness-[0.95] lg:h-[560px]"
+              className="relative z-0 h-[500px] w-full rounded-[32px] object-cover object-center opacity-[0.97] contrast-[1.08] saturate-[0.98] brightness-[0.95] lg:h-[600px]"
             />
-            <div className="pointer-events-none absolute inset-0 z-0 rounded-[30px] bg-[linear-gradient(180deg,rgba(4,12,22,0.1),rgba(4,12,22,0.62))]" />
-            <div className="pointer-events-none absolute inset-0 z-0 rounded-[30px] bg-[radial-gradient(circle_at_84%_24%,rgba(255,223,168,0.3),transparent_14%),radial-gradient(circle_at_68%_22%,rgba(236,206,132,0.18),transparent_18%),radial-gradient(circle_at_58%_44%,rgba(176,203,184,0.1),transparent_24%),linear-gradient(90deg,rgba(5,11,20,0.88)_0%,rgba(5,11,20,0.56)_34%,rgba(5,11,20,0.16)_72%,rgba(5,11,20,0.02)_100%)]" />
-            <div className="pointer-events-none absolute bottom-[16%] right-[14%] z-0 h-[38%] w-[34%] rounded-full bg-[radial-gradient(circle,rgba(255,228,170,0.22),rgba(255,228,170,0.04)_54%,transparent_74%)] blur-[30px]" />
-            <div className="pointer-events-none absolute inset-y-[8%] right-[5%] z-10 w-[46%] rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(23,31,42,0.44),rgba(12,19,29,0.3))] shadow-[0_24px_56px_rgba(5,12,22,0.18),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-[18px]" />
-            <div className="pointer-events-none absolute right-[9%] top-[12%] z-20 max-w-[36%] rounded-[24px]">
+            <div className="pointer-events-none absolute inset-0 z-0 rounded-[32px] bg-[linear-gradient(180deg,rgba(4,12,22,0.08),rgba(4,12,22,0.56))]" />
+            <div className="pointer-events-none absolute inset-0 z-0 rounded-[32px] bg-[radial-gradient(circle_at_84%_28%,rgba(255,223,168,0.34),transparent_14%),radial-gradient(circle_at_72%_24%,rgba(236,206,132,0.18),transparent_18%),radial-gradient(circle_at_52%_44%,rgba(176,203,184,0.09),transparent_24%),linear-gradient(90deg,rgba(5,11,20,0.88)_0%,rgba(5,11,20,0.58)_28%,rgba(5,11,20,0.14)_62%,rgba(5,11,20,0.02)_100%)]" />
+            <div className="pointer-events-none absolute bottom-[10%] right-[8%] z-0 h-[42%] w-[30%] rounded-full bg-[radial-gradient(circle,rgba(255,228,170,0.22),rgba(255,228,170,0.04)_54%,transparent_74%)] blur-[34px]" />
+            <div className="pointer-events-none absolute bottom-[0%] right-[14%] z-0 h-[28%] w-[14%] rounded-full bg-[linear-gradient(180deg,rgba(233,196,122,0.22),rgba(233,196,122,0.02))] opacity-40 blur-[8px]" />
+            <div className="absolute right-[6%] top-[10%] z-20 w-[42%] rounded-[30px] border border-white/12 bg-[linear-gradient(180deg,rgba(30,37,47,0.48),rgba(14,20,28,0.34))] px-6 py-6 shadow-[0_28px_72px_rgba(5,12,22,0.22),inset_0_1px_0_rgba(255,255,255,0.09)] backdrop-blur-[20px]">
               <p className="max-w-[18ch] whitespace-pre-line text-[14px] leading-7 text-white/90">
                 {heroPanel.intro}
               </p>
               <p className="mt-2.5 text-[12px] text-gold/74">{heroPanel.pace}</p>
-            </div>
-            <div className="pointer-events-none absolute bottom-[12%] right-[9%] z-20 max-w-[36%]">
-              <div className="space-y-3">
-                {heroPanelCards.map((card, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between rounded-full bg-white/[0.045] px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <span className="text-[12px] text-gold/76">{card.label}</span>
-                      <span className="text-[12px] text-white/90 whitespace-pre-line">{card.main}</span>
+              <div className="mt-7 border-t border-white/14 pt-6">
+                <div className="flex items-center gap-2 text-[13px] text-white/86">
+                  <span className="text-gold/80">~</span>
+                  <span>{heroPanel.rhythmLabel}</span>
+                </div>
+                <div className="mt-5 space-y-4">
+                  <div className="flex items-center justify-between text-[14px] text-white/88">
+                    <div className="flex items-center gap-3">
+                      <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-gold/[0.18] text-[16px]">☀</span>
+                      <span>{heroPanel.morning}</span>
                     </div>
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/12" />
+                    <span className="text-white/76">{heroPanel.morningDuration}</span>
                   </div>
-                ))}
+                  <div className="flex items-center justify-between text-[14px] text-white/88">
+                    <div className="flex items-center gap-3">
+                      <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-emerald-300/[0.16] text-[16px]">🌿</span>
+                      <span>{heroPanel.day}</span>
+                    </div>
+                    <span className="text-white/76">{heroPanel.dayDuration}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-[14px] text-white/88">
+                    <div className="flex items-center gap-3">
+                      <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-indigo-300/[0.16] text-[16px]">☾</span>
+                      <span>{heroPanel.night}</span>
+                    </div>
+                    <span className="text-white/76">{heroPanel.nightDuration}</span>
+                  </div>
+                </div>
               </div>
-              <p className="mt-5 max-w-[26ch] text-[13px] leading-6 text-white/58">{heroPanel.footer}</p>
+              <div className="mt-6 border-t border-white/14 pt-5">
+                <div className="flex items-center justify-between text-[13px] text-white/80">
+                  <span>{heroPanel.progressLabel}</span>
+                  <span>{heroJourneyDay}/7</span>
+                </div>
+                <div className="mt-3 h-2 rounded-full bg-white/[0.08]">
+                  <div
+                    className="h-full rounded-full bg-gold/85"
+                    style={{ width: `${(heroJourneyDay / 7) * 100}%` }}
+                  />
+                </div>
+              </div>
+              <p className="mt-6 max-w-[24ch] text-[13px] leading-6 text-white/58">{heroPanel.footer}</p>
             </div>
           </div>
         </div>
