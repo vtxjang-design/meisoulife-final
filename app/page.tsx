@@ -1172,37 +1172,38 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="relative hidden overflow-hidden rounded-[34px] bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.012))] p-5 shadow-[0_22px_72px_rgba(3,10,18,0.14)] lg:-mr-2 lg:block lg:rounded-[36px] lg:p-6 xl:-mr-4 xl:p-7">
+          <div className="relative hidden overflow-hidden lg:-mr-2 lg:block xl:-mr-4">
             <img
               src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1400&q=80"
               alt={hero.visualAlt}
-              className="relative z-0 h-[446px] w-full rounded-[26px] object-cover object-center opacity-[0.92] contrast-[1.06] saturate-[0.96] lg:h-[530px]"
+              className="relative z-0 h-[470px] w-full rounded-[30px] object-cover object-center opacity-[0.96] contrast-[1.08] saturate-[0.98] brightness-[0.95] lg:h-[560px]"
             />
-            <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(4,12,22,0.18),rgba(4,12,22,0.7))]" />
-            <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_78%_14%,rgba(236,206,132,0.18),transparent_16%),radial-gradient(circle_at_72%_26%,rgba(176,203,184,0.1),transparent_24%),radial-gradient(circle_at_64%_72%,rgba(122,167,181,0.14),transparent_20%),linear-gradient(90deg,rgba(5,11,20,0.84)_0%,rgba(5,11,20,0.48)_30%,rgba(5,11,20,0.14)_66%,rgba(5,11,20,0.02)_100%)]" />
-            <div className="pointer-events-none absolute bottom-[18%] right-[18%] z-0 h-[34%] w-[30%] rounded-full bg-[radial-gradient(circle,rgba(255,228,170,0.2),rgba(255,228,170,0.02)_56%,transparent_74%)] blur-[28px]" />
-            <div className="pointer-events-none absolute bottom-[14%] right-[24%] z-0 h-[26%] w-[12%] rotate-[14deg] rounded-full border border-white/8 opacity-24 blur-[1px]" />
-            <div className="pointer-events-none absolute inset-x-6 top-6 z-10 rounded-[24px] bg-[#07111a]/18 px-5 py-4 backdrop-blur-[14px]">
-              <p className="max-w-[18ch] whitespace-pre-line text-[14px] leading-7 text-white/88">
+            <div className="pointer-events-none absolute inset-0 z-0 rounded-[30px] bg-[linear-gradient(180deg,rgba(4,12,22,0.1),rgba(4,12,22,0.62))]" />
+            <div className="pointer-events-none absolute inset-0 z-0 rounded-[30px] bg-[radial-gradient(circle_at_84%_24%,rgba(255,223,168,0.3),transparent_14%),radial-gradient(circle_at_68%_22%,rgba(236,206,132,0.18),transparent_18%),radial-gradient(circle_at_58%_44%,rgba(176,203,184,0.1),transparent_24%),linear-gradient(90deg,rgba(5,11,20,0.88)_0%,rgba(5,11,20,0.56)_34%,rgba(5,11,20,0.16)_72%,rgba(5,11,20,0.02)_100%)]" />
+            <div className="pointer-events-none absolute bottom-[16%] right-[14%] z-0 h-[38%] w-[34%] rounded-full bg-[radial-gradient(circle,rgba(255,228,170,0.22),rgba(255,228,170,0.04)_54%,transparent_74%)] blur-[30px]" />
+            <div className="pointer-events-none absolute inset-y-[8%] right-[5%] z-10 w-[46%] rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(23,31,42,0.44),rgba(12,19,29,0.3))] shadow-[0_24px_56px_rgba(5,12,22,0.18),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-[18px]" />
+            <div className="pointer-events-none absolute right-[9%] top-[12%] z-20 max-w-[36%] rounded-[24px]">
+              <p className="max-w-[18ch] whitespace-pre-line text-[14px] leading-7 text-white/90">
                 {heroPanel.intro}
               </p>
               <p className="mt-2.5 text-[12px] text-gold/74">{heroPanel.pace}</p>
             </div>
-            <div className="pointer-events-none absolute inset-x-6 bottom-6 z-10 rounded-[24px] bg-[#06111d]/30 px-4 py-4 shadow-[0_18px_48px_rgba(0,0,0,0.12)] backdrop-blur-[14px]">
-              <div className="flex flex-wrap gap-3">
+            <div className="pointer-events-none absolute bottom-[12%] right-[9%] z-20 max-w-[36%]">
+              <div className="space-y-3">
                 {heroPanelCards.map((card, index) => (
                   <div
                     key={index}
-                    className="rounded-full bg-white/[0.04] px-3.5 py-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
+                    className="flex items-center justify-between rounded-full bg-white/[0.045] px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
                   >
                     <div className="flex items-center gap-2.5">
                       <span className="text-[12px] text-gold/76">{card.label}</span>
                       <span className="text-[12px] text-white/90 whitespace-pre-line">{card.main}</span>
                     </div>
+                    <span className="h-1.5 w-1.5 rounded-full bg-white/12" />
                   </div>
                 ))}
               </div>
-              <p className="mt-3 max-w-[26ch] text-[13px] leading-6 text-white/58">{heroPanel.footer}</p>
+              <p className="mt-5 max-w-[26ch] text-[13px] leading-6 text-white/58">{heroPanel.footer}</p>
             </div>
           </div>
         </div>
