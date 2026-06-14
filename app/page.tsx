@@ -1051,12 +1051,12 @@ export default function HomePage() {
         <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[470px] sm:hidden">
           <div className="absolute left-[1%] top-8 h-28 w-28 rounded-full bg-gold/[0.11] blur-[72px] animate-meditation-ambient-breathe motion-reduce:animate-none" />
           <div className="absolute right-[4%] top-20 h-32 w-32 rounded-full bg-emerald-200/[0.09] blur-[72px] animate-meditation-fog motion-reduce:animate-none" />
-          <div className="absolute right-[4%] top-[13%] h-[172px] w-[32%] overflow-hidden opacity-[0.22] mix-blend-screen">
+          <div className="absolute right-[6%] top-[14%] h-[156px] w-[26%] overflow-hidden opacity-[0.18] mix-blend-screen">
             <img
               src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80"
               alt=""
               aria-hidden="true"
-              className="h-full w-full scale-[1.04] object-cover object-center blur-[1.5px] animate-meditation-video-breathe motion-reduce:animate-none [mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)] [-webkit-mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)]"
+              className="h-full w-full scale-[1.02] object-cover object-center blur-[1px] animate-meditation-video-breathe motion-reduce:animate-none [mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)] [-webkit-mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)]"
             />
           </div>
           <div className="absolute right-[12%] top-16 h-24 w-20 rounded-full bg-white/[0.02] blur-[54px] animate-meditation-float motion-reduce:animate-none" />
@@ -1065,7 +1065,7 @@ export default function HomePage() {
           <div className="absolute inset-x-0 top-0 h-full bg-[linear-gradient(90deg,rgba(4,14,22,0.22)_0%,rgba(4,14,22,0.16)_28%,rgba(4,14,22,0.14)_44%,rgba(4,14,22,0.18)_56%,rgba(4,14,22,0.34)_72%,rgba(4,14,22,0.54)_100%),linear-gradient(180deg,rgba(5,18,24,0.04),rgba(5,18,24,0.1)_40%,rgba(5,18,24,0.32)_100%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_56%,rgba(8,28,36,0.12),transparent_18%),linear-gradient(180deg,rgba(3,10,18,0.02)_0%,rgba(3,10,18,0.08)_30%,rgba(3,10,18,0.24)_74%,rgba(3,10,18,0.4)_100%)]" />
         </div>
-        <div className="grid gap-8 lg:grid-cols-[1.42fr_0.58fr] lg:items-center lg:gap-14 xl:gap-16">
+        <div className="grid gap-8 lg:grid-cols-[1.24fr_0.76fr] lg:items-center lg:gap-16 xl:gap-20">
           <div className="space-y-5 sm:space-y-8 lg:space-y-9">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm uppercase tracking-[0.34em] text-gold/85">{hero.eyebrow}</p>
@@ -1172,9 +1172,14 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="relative hidden w-full max-w-[340px] justify-self-end overflow-hidden rounded-[34px] border border-white/6 bg-[radial-gradient(circle_at_68%_20%,rgba(212,186,117,0.16),transparent_18%),radial-gradient(circle_at_34%_22%,rgba(109,183,172,0.16),transparent_22%),radial-gradient(circle_at_54%_72%,rgba(79,138,164,0.15),transparent_32%),linear-gradient(180deg,rgba(9,22,38,0.94),rgba(7,17,30,0.88))] p-4 shadow-[0_22px_72px_rgba(3,10,18,0.14)] lg:block lg:rounded-[36px] lg:p-5 xl:max-w-[360px] xl:p-6">
-            <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_16%,rgba(255,245,219,0.12),transparent_18%),radial-gradient(circle_at_56%_34%,rgba(87,145,157,0.18),transparent_26%),linear-gradient(180deg,rgba(5,11,20,0.12),rgba(5,11,20,0.5)_52%,rgba(5,11,20,0.82)_100%)]" />
-            <div className="pointer-events-none absolute inset-[12%] z-0 rounded-[28px] border border-white/5 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.05),transparent_36%),linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01))] opacity-70 blur-[0.5px]" />
+          <div className="relative hidden overflow-hidden rounded-[34px] bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.012))] p-5 shadow-[0_22px_72px_rgba(3,10,18,0.14)] lg:block lg:rounded-[36px] lg:p-6 xl:p-7">
+            <img
+              src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1400&q=80"
+              alt={hero.visualAlt}
+              className="relative z-0 h-[420px] w-full rounded-[26px] object-cover object-center opacity-[0.9] lg:h-[500px]"
+            />
+            <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(4,12,22,0.24),rgba(4,12,22,0.78))]" />
+            <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_78%_14%,rgba(236,206,132,0.16),transparent_17%),radial-gradient(circle_at_70%_24%,rgba(176,203,184,0.08),transparent_22%),linear-gradient(90deg,rgba(5,11,20,0.92)_0%,rgba(5,11,20,0.58)_34%,rgba(5,11,20,0.18)_68%,rgba(5,11,20,0.02)_100%)]" />
             <div className="pointer-events-none absolute inset-x-6 top-6 z-10 rounded-[24px] bg-[#07111a]/24 px-5 py-4 backdrop-blur-[16px]">
               <p className="max-w-[18ch] whitespace-pre-line text-[14px] leading-7 text-white/88">
                 {heroPanel.intro}
