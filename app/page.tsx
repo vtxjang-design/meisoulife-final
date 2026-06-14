@@ -1156,14 +1156,9 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="relative hidden w-full max-w-[360px] justify-self-end overflow-hidden rounded-[34px] bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.012))] p-4 shadow-[0_22px_72px_rgba(3,10,18,0.14)] lg:block lg:rounded-[36px] lg:p-5 xl:max-w-[390px] xl:p-6">
-            <img
-              src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1400&q=80"
-              alt={hero.visualAlt}
-              className="relative z-0 h-[360px] w-full rounded-[26px] object-cover object-center opacity-[0.82] contrast-[1.08] saturate-[0.9] brightness-[0.92] lg:h-[420px]"
-            />
-            <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(4,12,22,0.24),rgba(4,12,22,0.78))]" />
-            <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_76%_18%,rgba(236,206,132,0.16),transparent_16%),radial-gradient(circle_at_72%_26%,rgba(176,203,184,0.08),transparent_24%),linear-gradient(90deg,rgba(5,11,20,0.94)_0%,rgba(5,11,20,0.68)_38%,rgba(5,11,20,0.24)_72%,rgba(5,11,20,0.06)_100%)]" />
+          <div className="relative hidden w-full max-w-[340px] justify-self-end overflow-hidden rounded-[34px] border border-white/6 bg-[radial-gradient(circle_at_68%_20%,rgba(212,186,117,0.16),transparent_18%),radial-gradient(circle_at_34%_22%,rgba(109,183,172,0.16),transparent_22%),radial-gradient(circle_at_54%_72%,rgba(79,138,164,0.15),transparent_32%),linear-gradient(180deg,rgba(9,22,38,0.94),rgba(7,17,30,0.88))] p-4 shadow-[0_22px_72px_rgba(3,10,18,0.14)] lg:block lg:rounded-[36px] lg:p-5 xl:max-w-[360px] xl:p-6">
+            <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_16%,rgba(255,245,219,0.12),transparent_18%),radial-gradient(circle_at_56%_34%,rgba(87,145,157,0.18),transparent_26%),linear-gradient(180deg,rgba(5,11,20,0.12),rgba(5,11,20,0.5)_52%,rgba(5,11,20,0.82)_100%)]" />
+            <div className="pointer-events-none absolute inset-[12%] z-0 rounded-[28px] border border-white/5 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.05),transparent_36%),linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01))] opacity-70 blur-[0.5px]" />
             <div className="pointer-events-none absolute inset-x-6 top-6 z-10 rounded-[24px] bg-[#07111a]/24 px-5 py-4 backdrop-blur-[16px]">
               <p className="max-w-[18ch] whitespace-pre-line text-[14px] leading-7 text-white/88">
                 {heroPanel.intro}
