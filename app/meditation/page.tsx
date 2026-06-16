@@ -67,6 +67,49 @@ const affirmationGateCopy = {
   }
 } as const;
 
+const energyGateCopy = {
+  jp: {
+    title: "脳と身体を目覚めさせる",
+    subtitle: "まだ身体が完全に起きていないとき",
+    duration: "3:00",
+    audioLabel: "朝のエネルギーリチュアル",
+    pause: "一度止める",
+    resume: "続ける",
+    inhale: "吸う",
+    exhale: "吐く",
+    completionTitle: "身体が目覚めました。",
+    completionMessage: "今日のエネルギーとともに進みましょう。",
+    completionNote: "少しずつ身体を開きながら、一日を始めていけば大丈夫です。",
+    completionButton: "朝の扉へ戻る",
+    openingFade: "脳と身体を目覚めさせる",
+    integration: "脳と身体を目覚めさせる",
+    openingLines: [
+      { at: 15, key: "open-1", text: "目を閉じてください。" },
+      { at: 23, key: "open-2", text: "ゆっくり息を吸います。" },
+      { at: 32, key: "open-3", text: "身体の感覚を感じてみましょう。" },
+      { at: 40, key: "open-4", text: "あなたの身体は今、少しずつ目覚めています。" }
+    ],
+    awarenessLines: [
+      { at: 52, key: "body-1", text: "肩の力をやさしく緩めます。" },
+      { at: 64, key: "body-2", text: "胸を軽く開きます。" },
+      { at: 76, key: "body-3", text: "おへその下を感じます。" },
+      { at: 88, key: "body-4", text: "手の先、足の先まで意識を向けます。" }
+    ],
+    energyLines: [
+      { at: 102, key: "energy-1", text: "息を吸うたびに、新しいエネルギーが入ってきます。" },
+      { at: 116, key: "energy-2", text: "息を吐くたびに、身体が軽く目覚めていきます。" },
+      { at: 132, key: "energy-3", text: "今日は生命力で動きます。" },
+      { at: 140, key: "energy-4", text: "今日は元気に生きます。" },
+      { at: 148, key: "energy-5", text: "今日は身体とともに目覚めます。" }
+    ],
+    closingLines: [
+      { at: 170, key: "close-1", text: "ありがとうございます。" },
+      { at: 175, key: "close-2", text: "身体が少し目覚めました。" },
+      { at: 179, key: "close-3", text: "今日のエネルギーとともに、一日を始めましょう。" }
+    ]
+  }
+} as const;
+
 function normalizeDuration(value: string | null) {
   const parsed = Number(value);
 
@@ -140,7 +183,16 @@ function getJourneyGuidanceStage(elapsedSeconds: number, totalSeconds: number) {
   return "breathing";
 }
 
-function getAffirmationStage(elapsedSeconds: number) {
+function getMorningGateStage(door: MeditationDoor, elapsedSeconds: number) {
+  if (door === "energy") {
+    if (elapsedSeconds < 15) return "openingFade";
+    if (elapsedSeconds < 45) return "openingNarration";
+    if (elapsedSeconds < 100) return "bodyAwareness";
+    if (elapsedSeconds < 150) return "energy";
+    if (elapsedSeconds < 170) return "integration";
+    return "closing";
+  }
+
   if (elapsedSeconds < 15) return "openingFade";
   if (elapsedSeconds < 35) return "openingNarration";
   if (elapsedSeconds < 80) return "breathing";
@@ -154,6 +206,7 @@ export default function MeditationPage() {
   const copy = useSiteCopy().meditationPage;
   const journeyCopy = useMemo(() => getRhythmJourneyContent(language), [language]);
   const affirmationCopy = affirmationGateCopy.jp;
+  const energyCopy = energyGateCopy.jp;
   const [totalSeconds, setTotalSeconds] = useState(60);
   const [secondsLeft, setSecondsLeft] = useState(60);
   const [meditationType, setMeditationType] = useState<MeditationType>("default");
@@ -178,6 +231,9 @@ export default function MeditationPage() {
   const phase = useMemo(() => getBreathPhase(elapsedTotalSeconds), [elapsedTotalSeconds]);
   const isComplete = secondsLeft <= 0;
   const isAffirmationGate = meditationType === "morning" && meditationDoor === "affirmation";
+  const isEnergyGate = meditationType === "morning" && meditationDoor === "energy";
+  const isStructuredMorningGate = isAffirmationGate || isEnergyGate;
+  const morningGateCopy = isEnergyGate ? energyCopy : affirmationCopy;
   const content = copy.variants[meditationType];
   const durationVariant = getDurationVariant(totalSeconds);
   const durationTextSet = copy.durationTexts?.[durationVariant];
@@ -186,7 +242,7 @@ export default function MeditationPage() {
   const ambientAudioSource = journeyMode && journeyAudioSource ? journeyAudioSource : undefined;
   const ambientAudioVolume = journeyMode ? 0.65 : undefined;
   const journeyGuidanceStage = getJourneyGuidanceStage(elapsedTotalSeconds, totalSeconds);
-  const affirmationStage = isAffirmationGate ? getAffirmationStage(elapsedTotalSeconds) : null;
+  const affirmationStage = isStructuredMorningGate ? getMorningGateStage(meditationDoor, elapsedTotalSeconds) : null;
   const topText = journeyMode
     ? journeyCopy.timerTopText
     : meditationType === "morning" || meditationType === "night"
@@ -207,7 +263,7 @@ export default function MeditationPage() {
           ? journeyGuidance.closing
           : null
       : null;
-  const affirmationProgress = isAffirmationGate ? Math.min(100, (elapsedTotalSeconds / AFFIRMATION_TOTAL_SECONDS) * 100) : 0;
+  const affirmationProgress = isStructuredMorningGate ? Math.min(100, (elapsedTotalSeconds / AFFIRMATION_TOTAL_SECONDS) * 100) : 0;
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -225,7 +281,10 @@ export default function MeditationPage() {
       ? nextJourneyDay
       : Number(storedJourneyDay);
 
-    const resolvedDuration = nextType === "morning" && nextDoor === "affirmation" ? AFFIRMATION_TOTAL_SECONDS : nextDuration;
+    const resolvedDuration =
+      nextType === "morning" && (nextDoor === "affirmation" || nextDoor === "energy")
+        ? AFFIRMATION_TOTAL_SECONDS
+        : nextDuration;
     setTotalSeconds(resolvedDuration);
     setSecondsLeft(resolvedDuration);
     setMeditationType(nextType);
@@ -435,14 +494,16 @@ export default function MeditationPage() {
   }, [isComplete, hasUserGesture, soundEnabled, vibrationEnabled]);
 
   useEffect(() => {
-    if (!isAffirmationGate || isComplete || isPaused || typeof window === "undefined") {
+    if (!isStructuredMorningGate || isComplete || isPaused || typeof window === "undefined") {
       return;
     }
 
     const allLines = [
-      ...affirmationCopy.openingLines,
-      ...affirmationCopy.affirmationLines,
-      ...affirmationCopy.closingLines
+      ...morningGateCopy.openingLines,
+      ...("awarenessLines" in morningGateCopy ? morningGateCopy.awarenessLines : []),
+      ...("affirmationLines" in morningGateCopy ? morningGateCopy.affirmationLines : []),
+      ...("energyLines" in morningGateCopy ? morningGateCopy.energyLines : []),
+      ...morningGateCopy.closingLines
     ];
     const nextLine = allLines.find(
       (line) => elapsedTotalSeconds >= line.at && !spokenAffirmationKeysRef.current.has(line.key)
@@ -468,27 +529,27 @@ export default function MeditationPage() {
         console.warn("[affirmation-gate] speech synthesis unavailable", error);
       }
     }
-  }, [affirmationCopy.affirmationLines, affirmationCopy.closingLines, affirmationCopy.openingLines, elapsedTotalSeconds, isAffirmationGate, isComplete, isPaused]);
+  }, [elapsedTotalSeconds, isComplete, isPaused, isStructuredMorningGate, morningGateCopy]);
 
   useEffect(() => {
-    if (!isAffirmationGate || typeof window === "undefined") {
+    if (!isStructuredMorningGate || typeof window === "undefined") {
       return;
     }
 
     if (affirmationStage === "openingFade") {
-      setAffirmationMessage(affirmationCopy.openingFade);
+      setAffirmationMessage(morningGateCopy.openingFade);
       return;
     }
 
-    if (affirmationStage === "breathing") {
-      setAffirmationMessage(phase === "inhale" ? affirmationCopy.inhale : affirmationCopy.exhale);
+    if (affirmationStage === "breathing" || affirmationStage === "bodyAwareness") {
+      setAffirmationMessage(phase === "inhale" ? morningGateCopy.inhale : morningGateCopy.exhale);
       return;
     }
 
     if (affirmationStage === "integration") {
-      setAffirmationMessage(affirmationCopy.integration);
+      setAffirmationMessage(morningGateCopy.integration);
     }
-  }, [affirmationCopy.inhale, affirmationCopy.exhale, affirmationCopy.integration, affirmationCopy.openingFade, affirmationStage, isAffirmationGate, phase]);
+  }, [affirmationStage, isStructuredMorningGate, morningGateCopy, phase]);
 
   useEffect(() => {
     return () => {
@@ -551,7 +612,7 @@ export default function MeditationPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_20%),linear-gradient(180deg,#07111f_0%,#0d1b2d_45%,#10273a_100%)] px-6 py-10 text-white">
       <div className="relative flex min-h-[480px] w-full max-w-3xl flex-col items-center overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.04] px-6 py-8 text-center shadow-[0_30px_80px_rgba(0,0,0,0.28)] sm:px-8 sm:py-10">
-        {!ambientVideoFailed && !isAffirmationGate ? (
+        {!ambientVideoFailed && !isStructuredMorningGate ? (
           <video
             className="absolute inset-0 z-0 h-full w-full object-cover opacity-85"
             autoPlay
@@ -568,23 +629,23 @@ export default function MeditationPage() {
         ) : (
           <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_28%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.14),transparent_34%),linear-gradient(180deg,rgba(4,10,19,0.76)_0%,rgba(8,18,32,0.88)_100%)]" />
         )}
-        {isAffirmationGate ? (
+        {isStructuredMorningGate ? (
           <>
             <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top,rgba(244,220,160,0.16),transparent_24%),radial-gradient(circle_at_bottom,rgba(125,162,108,0.12),transparent_34%),linear-gradient(180deg,rgba(34,42,72,0.92)_0%,rgba(18,29,48,0.92)_48%,rgba(12,22,37,0.96)_100%)]" />
             <div className="absolute left-[8%] top-[10%] z-0 h-48 w-48 rounded-full bg-gold/10 blur-[80px]" />
             <div className="absolute right-[10%] top-[14%] z-0 h-44 w-44 rounded-full bg-emerald-200/[0.08] blur-[90px]" />
           </>
         ) : null}
-        <div className={`absolute inset-0 z-10 ${isAffirmationGate ? "bg-[linear-gradient(180deg,rgba(4,10,19,0.18),rgba(4,10,19,0.36))]" : "bg-black/25"}`} />
+        <div className={`absolute inset-0 z-10 ${isStructuredMorningGate ? "bg-[linear-gradient(180deg,rgba(4,10,19,0.18),rgba(4,10,19,0.36))]" : "bg-black/25"}`} />
 
         <div className="relative z-20 flex w-full flex-col items-center text-center">
         {!isComplete ? (
           <>
-            {isAffirmationGate ? (
+            {isStructuredMorningGate ? (
               <div className="w-full max-w-xl space-y-4">
-                <p className="text-xs uppercase tracking-[0.28em] text-gold/74">{affirmationCopy.audioLabel}</p>
-                <h1 className="font-serif text-3xl text-white sm:text-4xl">{affirmationCopy.title}</h1>
-                <p className="text-sm leading-7 text-white/68">{affirmationCopy.subtitle}</p>
+                <p className="text-xs uppercase tracking-[0.28em] text-gold/74">{morningGateCopy.audioLabel}</p>
+                <h1 className="font-serif text-3xl text-white sm:text-4xl">{morningGateCopy.title}</h1>
+                <p className="text-sm leading-7 text-white/68">{morningGateCopy.subtitle}</p>
                 <div className="mx-auto mt-4 h-[6px] w-full max-w-md overflow-hidden rounded-full bg-white/10">
                   <div
                     className="h-full rounded-full bg-gold/80 transition-[width] duration-700"
@@ -592,14 +653,14 @@ export default function MeditationPage() {
                   />
                 </div>
                 <div className="flex items-center justify-center gap-3 text-sm text-white/54">
-                  <span>{affirmationCopy.duration}</span>
+                  <span>{morningGateCopy.duration}</span>
                   <span className="h-1 w-1 rounded-full bg-white/24" />
                   <button
                     type="button"
                     onClick={handlePauseToggle}
                     className="button-nowrap inline-flex min-h-[34px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/72 transition hover:bg-white/[0.08] hover:text-white"
                   >
-                    {isPaused ? affirmationCopy.resume : affirmationCopy.pause}
+                    {isPaused ? morningGateCopy.resume : morningGateCopy.pause}
                   </button>
                 </div>
               </div>
@@ -687,7 +748,7 @@ export default function MeditationPage() {
                 ) : null}
               </div>
               <p className="text-2xl font-medium text-white/72 transition-all duration-300 ease-out sm:text-3xl">
-                {isAffirmationGate && affirmationStage === "breathing"
+                {isStructuredMorningGate && (affirmationStage === "breathing" || affirmationStage === "bodyAwareness")
                   ? affirmationMessage
                   : copy.phases[phase]}
               </p>
@@ -705,7 +766,7 @@ export default function MeditationPage() {
                 </div>
               </div>
 
-              {isAffirmationGate ? (
+              {isStructuredMorningGate ? (
                 <div className="mt-8 min-h-[92px] max-w-xl space-y-3">
                   <p className="mx-auto whitespace-pre-line font-serif text-2xl leading-[1.8] text-white/90 sm:text-[32px] sm:leading-[1.9]">
                     {affirmationMessage}
@@ -716,12 +777,12 @@ export default function MeditationPage() {
 
             <div className="mt-8">
               <p className="text-sm font-medium tracking-[0.18em] text-white/68 transition-opacity duration-300 sm:text-base">
-                {isAffirmationGate
-                  ? affirmationStage === "breathing"
+                {isStructuredMorningGate
+                  ? affirmationStage === "breathing" || affirmationStage === "bodyAwareness"
                     ? phase === "inhale"
-                      ? affirmationCopy.inhale
-                      : affirmationCopy.exhale
-                    : affirmationCopy.title
+                      ? morningGateCopy.inhale
+                      : morningGateCopy.exhale
+                    : morningGateCopy.title
                   : copy.bottomText[phase]}
               </p>
             </div>
@@ -729,23 +790,23 @@ export default function MeditationPage() {
         ) : (
           <div className="animate-fade-in space-y-8">
             <h1 className="font-serif text-4xl text-white sm:text-5xl">
-              {isAffirmationGate ? affirmationCopy.completionTitle : completionTitle}
+              {isStructuredMorningGate ? morningGateCopy.completionTitle : completionTitle}
             </h1>
             <p className="mx-auto max-w-xl whitespace-pre-line text-base leading-8 text-white/72">
-              {isAffirmationGate ? affirmationCopy.completionMessage : copy.completionMessage}
+              {isStructuredMorningGate ? morningGateCopy.completionMessage : copy.completionMessage}
             </p>
             <p className="text-sm leading-7 text-white/54">
-              {isAffirmationGate ? affirmationCopy.completionNote : copy.completionReturnText}
+              {isStructuredMorningGate ? morningGateCopy.completionNote : copy.completionReturnText}
             </p>
-            {!journeyMode && !isAffirmationGate ? <p className="mx-auto max-w-2xl text-base leading-8 text-white/68">{copy.completionBody}</p> : null}
+            {!journeyMode && !isStructuredMorningGate ? <p className="mx-auto max-w-2xl text-base leading-8 text-white/68">{copy.completionBody}</p> : null}
             <div className="flex flex-col items-center gap-3">
               <Link
                 href={returnToHref}
                 className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
               >
-                {isAffirmationGate ? affirmationCopy.completionButton : journeyMode ? journeyCopy.nextCta : copy.completionPrimary}
+                {isStructuredMorningGate ? morningGateCopy.completionButton : journeyMode ? journeyCopy.nextCta : copy.completionPrimary}
               </Link>
-              {!journeyMode && !isAffirmationGate ? (
+              {!journeyMode && !isStructuredMorningGate ? (
                 <Link
                   href="/"
                   className="inline-flex min-h-[52px] min-w-[240px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
@@ -754,7 +815,7 @@ export default function MeditationPage() {
                 </Link>
               ) : null}
             </div>
-            {!journeyMode && !isAffirmationGate ? (
+            {!journeyMode && !isStructuredMorningGate ? (
               <div className="mx-auto max-w-2xl border-t border-white/10 pt-8">
                 <p className="text-base leading-8 text-white/68">{copy.coachPrompt}</p>
                 <div className="mt-5">
