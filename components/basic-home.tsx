@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getChallengeRhythmProgress } from "@/lib/challenge-rhythm";
 import { getLocaleCopy, useLanguage } from "@/lib/i18n";
 import { getTodayRhythmCheckIn } from "@/lib/today-rhythm-checkin";
@@ -16,6 +16,9 @@ type SmallDoor = {
   title: string;
   subtitle: string;
   description: string;
+  guidance: string;
+  openingTitle: string;
+  openingBreath: string;
 };
 type PlanKey = "free" | "basic" | "growth" | "inner_circle";
 type MarkerSleep = "good" | "normal" | "low";
@@ -175,28 +178,37 @@ const basicHomeCopy = {
         button: "入る",
         layerTitle: "今日を整える3分",
         layerDescription: "今日の始まりはここから。\n今の自分に合う小さな扉を選びましょう。",
-        layerResult: ["Awakening", "Motivation", "Direction"],
+        layerResult: ["✨ 目覚め", "✨ 活力", "✨ 方向性"],
         smallDoors: [
           {
             key: "affirmation",
             emoji: "✨",
             title: "Affirmation Gate",
             subtitle: "今日の自分を選ぶ",
-            description: "Positive affirmation practice"
+            description: "Positive affirmation practice",
+            guidance: "朝を前向きに始めたいとき",
+            openingTitle: "今日の自分を選びます",
+            openingBreath: "深く息を吸ってください"
           },
           {
             key: "energy",
             emoji: "🔥",
             title: "Energy Gate",
             subtitle: "脳と身体を目覚めさせる",
-            description: "Brain and body awakening"
+            description: "Brain and body awakening",
+            guidance: "まだ身体が起きていないとき",
+            openingTitle: "眠っていた力を起こします",
+            openingBreath: "ゆっくり呼吸を整えてください"
           },
           {
             key: "vision",
             emoji: "🌄",
             title: "Vision Gate",
             subtitle: "今日の方向を見る",
-            description: "Vision screen meditation"
+            description: "Vision screen meditation",
+            guidance: "集中して進みたいとき",
+            openingTitle: "今日の方向を見つめます",
+            openingBreath: "視線をやさしく内側へ戻してください"
           }
         ]
       },
@@ -211,28 +223,37 @@ const basicHomeCopy = {
         button: "入る",
         layerTitle: "中心に戻る1分",
         layerDescription: "忙しさから少し離れて、\nいま必要な整え方を選びましょう。",
-        layerResult: ["Focus recovery", "Stress reduction", "Energy restoration"],
+        layerResult: ["✨ 集中", "✨ 安定", "✨ 回復"],
         smallDoors: [
           {
             key: "focus",
             emoji: "🎯",
             title: "Focus Gate",
             subtitle: "集中を取り戻す",
-            description: "Focus reset"
+            description: "Focus reset",
+            guidance: "気持ちが散っているとき",
+            openingTitle: "集中を静かに呼び戻します",
+            openingBreath: "ひと呼吸して中心へ戻りましょう"
           },
           {
             key: "relax",
             emoji: "🌿",
             title: "Relax Gate",
             subtitle: "脳を休ませる",
-            description: "Brain relaxation"
+            description: "Brain relaxation",
+            guidance: "頭を少し休ませたいとき",
+            openingTitle: "考えをやわらかくほどきます",
+            openingBreath: "肩の力をそっと抜いてください"
           },
           {
             key: "vitality",
             emoji: "⚡",
             title: "Vitality Gate",
             subtitle: "気力を充電する",
-            description: "Energy recharge"
+            description: "Energy recharge",
+            guidance: "もう少し力を満たしたいとき",
+            openingTitle: "静かに気力を満たします",
+            openingBreath: "胸の奥まで息を届けてください"
           }
         ]
       },
@@ -247,28 +268,37 @@ const basicHomeCopy = {
         button: "入る",
         layerTitle: "静かに眠る3分",
         layerDescription: "今日をやさしく整えて、\n眠りへ向かう小さな扉を選びましょう。",
-        layerResult: ["Relaxation", "Mental clarity", "Better sleep"],
+        layerResult: ["✨ 手放し", "✨ 静けさ", "✨ 睡眠"],
         smallDoors: [
           {
             key: "release",
             emoji: "🍂",
             title: "Release Gate",
             subtitle: "手放しの時間",
-            description: "Letting go"
+            description: "Letting go",
+            guidance: "今日の重さを下ろしたいとき",
+            openingTitle: "一日の重さをほどきます",
+            openingBreath: "吐く息を少し長くしてみてください"
           },
           {
             key: "gratitude",
             emoji: "🙏",
             title: "Gratitude Gate",
             subtitle: "感謝の時間",
-            description: "Gratitude meditation"
+            description: "Gratitude meditation",
+            guidance: "心をやさしく整えたいとき",
+            openingTitle: "小さな感謝に触れていきます",
+            openingBreath: "静かに胸へ意識を向けてください"
           },
           {
             key: "sleep",
             emoji: "🌙",
             title: "Sleep Gate",
             subtitle: "深い眠りへの準備",
-            description: "Sleep preparation"
+            description: "Sleep preparation",
+            guidance: "深く休む準備をしたいとき",
+            openingTitle: "眠りのための静けさを整えます",
+            openingBreath: "まぶたの奥をゆるめてください"
           }
         ]
       }
@@ -277,6 +307,11 @@ const basicHomeCopy = {
       eyebrow: "SMALL DOOR SELECTION",
       choose: "今のあなたに合う小さな扉を選びましょう。",
       resultLabel: "静かに開いていくもの",
+      recommendLabel: "おすすめ",
+      progressLabel: "今日のリズム",
+      progressMorning: "朝",
+      progressDay: "昼",
+      progressNight: "夜",
       enter: "この扉へ入る",
       close: "閉じる"
     },
@@ -458,28 +493,37 @@ const basicHomeCopy = {
         button: "들어가기",
         layerTitle: "오늘을 정돈하는 3분",
         layerDescription: "오늘의 시작은 여기입니다.\n지금 필요한 작은 문을 골라보세요.",
-        layerResult: ["Awakening", "Motivation", "Direction"],
+        layerResult: ["✨ 깨어남", "✨ 활력", "✨ 방향"],
         smallDoors: [
           {
             key: "affirmation",
             emoji: "✨",
             title: "Affirmation Gate",
             subtitle: "오늘의 나를 선택하기",
-            description: "Positive affirmation practice"
+            description: "Positive affirmation practice",
+            guidance: "아침을 조금 더 밝게 시작하고 싶을 때",
+            openingTitle: "오늘의 나를 선택합니다",
+            openingBreath: "깊게 숨을 들이쉬어 보세요"
           },
           {
             key: "energy",
             emoji: "🔥",
             title: "Energy Gate",
             subtitle: "뇌와 몸을 깨우기",
-            description: "Brain and body awakening"
+            description: "Brain and body awakening",
+            guidance: "아직 몸이 완전히 깨어나지 않았을 때",
+            openingTitle: "잠든 힘을 깨웁니다",
+            openingBreath: "천천히 호흡을 고르게 해보세요"
           },
           {
             key: "vision",
             emoji: "🌄",
             title: "Vision Gate",
             subtitle: "오늘의 방향 보기",
-            description: "Vision screen meditation"
+            description: "Vision screen meditation",
+            guidance: "집중해서 나아가고 싶을 때",
+            openingTitle: "오늘의 방향을 바라봅니다",
+            openingBreath: "시선을 부드럽게 안으로 돌려보세요"
           }
         ]
       },
@@ -494,28 +538,37 @@ const basicHomeCopy = {
         button: "들어가기",
         layerTitle: "중심으로 돌아오는 1분",
         layerDescription: "분주함에서 잠시 벗어나,\n지금 필요한 정돈의 문을 골라보세요.",
-        layerResult: ["Focus recovery", "Stress reduction", "Energy restoration"],
+        layerResult: ["✨ 집중", "✨ 안정", "✨ 회복"],
         smallDoors: [
           {
             key: "focus",
             emoji: "🎯",
             title: "Focus Gate",
             subtitle: "집중을 되찾기",
-            description: "Focus reset"
+            description: "Focus reset",
+            guidance: "마음이 흩어져 있을 때",
+            openingTitle: "집중을 조용히 되찾습니다",
+            openingBreath: "한 번 숨을 고르고 중심으로 돌아오세요"
           },
           {
             key: "relax",
             emoji: "🌿",
             title: "Relax Gate",
             subtitle: "뇌를 쉬게 하기",
-            description: "Brain relaxation"
+            description: "Brain relaxation",
+            guidance: "머리를 잠시 쉬게 하고 싶을 때",
+            openingTitle: "생각의 결을 부드럽게 풉니다",
+            openingBreath: "어깨 힘을 살짝 놓아보세요"
           },
           {
             key: "vitality",
             emoji: "⚡",
             title: "Vitality Gate",
             subtitle: "기운 충전하기",
-            description: "Energy recharge"
+            description: "Energy recharge",
+            guidance: "조금 더 힘을 채우고 싶을 때",
+            openingTitle: "조용히 기운을 채웁니다",
+            openingBreath: "가슴 깊이 숨을 보내보세요"
           }
         ]
       },
@@ -530,28 +583,37 @@ const basicHomeCopy = {
         button: "들어가기",
         layerTitle: "조용히 잠드는 3분",
         layerDescription: "오늘을 부드럽게 가라앉히고,\n잠으로 가는 작은 문을 골라보세요.",
-        layerResult: ["Relaxation", "Mental clarity", "Better sleep"],
+        layerResult: ["✨ 내려놓기", "✨ 고요", "✨ 잠"],
         smallDoors: [
           {
             key: "release",
             emoji: "🍂",
             title: "Release Gate",
             subtitle: "내려놓는 시간",
-            description: "Letting go"
+            description: "Letting go",
+            guidance: "오늘의 무게를 내려놓고 싶을 때",
+            openingTitle: "하루의 무게를 풀어냅니다",
+            openingBreath: "내쉬는 숨을 조금 길게 해보세요"
           },
           {
             key: "gratitude",
             emoji: "🙏",
             title: "Gratitude Gate",
             subtitle: "감사의 시간",
-            description: "Gratitude meditation"
+            description: "Gratitude meditation",
+            guidance: "마음을 부드럽게 정돈하고 싶을 때",
+            openingTitle: "작은 감사와 만납니다",
+            openingBreath: "가슴 쪽으로 조용히 주의를 모아보세요"
           },
           {
             key: "sleep",
             emoji: "🌙",
             title: "Sleep Gate",
             subtitle: "깊은 잠을 준비하기",
-            description: "Sleep preparation"
+            description: "Sleep preparation",
+            guidance: "깊게 쉬기 위한 준비가 필요할 때",
+            openingTitle: "잠을 위한 고요를 정돈합니다",
+            openingBreath: "눈가의 힘을 천천히 풀어주세요"
           }
         ]
       }
@@ -560,6 +622,11 @@ const basicHomeCopy = {
       eyebrow: "SMALL DOOR SELECTION",
       choose: "지금의 나에게 맞는 작은 문을 골라보세요.",
       resultLabel: "조용히 열리는 흐름",
+      recommendLabel: "추천",
+      progressLabel: "오늘의 리듬",
+      progressMorning: "아침",
+      progressDay: "낮",
+      progressNight: "밤",
       enter: "이 문으로 들어가기",
       close: "닫기"
     },
@@ -741,28 +808,37 @@ const basicHomeCopy = {
         button: "Enter",
         layerTitle: "3 minutes to shape today",
         layerDescription: "Today begins here.\nChoose the small door you need.",
-        layerResult: ["Awakening", "Motivation", "Direction"],
+        layerResult: ["✨ Awakening", "✨ Energy", "✨ Direction"],
         smallDoors: [
           {
             key: "affirmation",
             emoji: "✨",
             title: "Affirmation Gate",
             subtitle: "Choose who you are today",
-            description: "Positive affirmation practice"
+            description: "Positive affirmation practice",
+            guidance: "When you want to begin the day with a brighter heart",
+            openingTitle: "You are choosing who you are today",
+            openingBreath: "Take one deep breath"
           },
           {
             key: "energy",
             emoji: "🔥",
             title: "Energy Gate",
             subtitle: "Wake brain and body",
-            description: "Brain and body awakening"
+            description: "Brain and body awakening",
+            guidance: "When your energy has not fully awakened yet",
+            openingTitle: "You are waking your inner energy",
+            openingBreath: "Let your breath become steady"
           },
           {
             key: "vision",
             emoji: "🌄",
             title: "Vision Gate",
             subtitle: "See today’s direction",
-            description: "Vision screen meditation"
+            description: "Vision screen meditation",
+            guidance: "When you want a clearer direction today",
+            openingTitle: "You are meeting today’s direction",
+            openingBreath: "Soften your gaze inward"
           }
         ]
       },
@@ -777,28 +853,37 @@ const basicHomeCopy = {
         button: "Enter",
         layerTitle: "1 minute to return to center",
         layerDescription: "Reconnect with your center.\nChoose the small door you need now.",
-        layerResult: ["Focus recovery", "Stress reduction", "Energy restoration"],
+        layerResult: ["✨ Focus", "✨ Steadiness", "✨ Recovery"],
         smallDoors: [
           {
             key: "focus",
             emoji: "🎯",
             title: "Focus Gate",
             subtitle: "Recover focus",
-            description: "Focus reset"
+            description: "Focus reset",
+            guidance: "When your attention feels scattered",
+            openingTitle: "You are gathering your focus",
+            openingBreath: "Take one breath back to center"
           },
           {
             key: "relax",
             emoji: "🌿",
             title: "Relax Gate",
             subtitle: "Let the brain rest",
-            description: "Brain relaxation"
+            description: "Brain relaxation",
+            guidance: "When your mind needs a softer place to rest",
+            openingTitle: "You are letting thought soften",
+            openingBreath: "Relax your shoulders gently"
           },
           {
             key: "vitality",
             emoji: "⚡",
             title: "Vitality Gate",
             subtitle: "Recharge your energy",
-            description: "Energy recharge"
+            description: "Energy recharge",
+            guidance: "When you want to refill your energy a little",
+            openingTitle: "You are welcoming energy back",
+            openingBreath: "Send your breath deep into the chest"
           }
         ]
       },
@@ -813,28 +898,37 @@ const basicHomeCopy = {
         button: "Enter",
         layerTitle: "3 minutes to sleep in quiet",
         layerDescription: "Let today settle peacefully.\nChoose the small door you need.",
-        layerResult: ["Relaxation", "Mental clarity", "Better sleep"],
+        layerResult: ["✨ Release", "✨ Stillness", "✨ Sleep"],
         smallDoors: [
           {
             key: "release",
             emoji: "🍂",
             title: "Release Gate",
             subtitle: "A moment to let go",
-            description: "Letting go"
+            description: "Letting go",
+            guidance: "When you want to set down the weight of today",
+            openingTitle: "You are letting the day fall away",
+            openingBreath: "Make the exhale a little longer"
           },
           {
             key: "gratitude",
             emoji: "🙏",
             title: "Gratitude Gate",
             subtitle: "A moment of gratitude",
-            description: "Gratitude meditation"
+            description: "Gratitude meditation",
+            guidance: "When you want to settle the heart gently",
+            openingTitle: "You are meeting a small gratitude",
+            openingBreath: "Bring your attention softly to the heart"
           },
           {
             key: "sleep",
             emoji: "🌙",
             title: "Sleep Gate",
             subtitle: "Prepare for deep sleep",
-            description: "Sleep preparation"
+            description: "Sleep preparation",
+            guidance: "When you want to prepare for deeper rest",
+            openingTitle: "You are preparing for quiet sleep",
+            openingBreath: "Let the eyes soften from within"
           }
         ]
       }
@@ -843,6 +937,11 @@ const basicHomeCopy = {
       eyebrow: "SMALL DOOR SELECTION",
       choose: "Choose the smaller door that fits you now.",
       resultLabel: "What quietly opens here",
+      recommendLabel: "Recommended",
+      progressLabel: "Today's Rhythm",
+      progressMorning: "Morning",
+      progressDay: "Day",
+      progressNight: "Night",
       enter: "Enter this door",
       close: "Close"
     },
@@ -1246,6 +1345,10 @@ export function BasicHome({
   const [completedDays, setCompletedDays] = useState<number[]>([]);
   const [completedToday, setCompletedToday] = useState(false);
   const [activeDoorLayer, setActiveDoorLayer] = useState<RhythmPhase | null>(null);
+  const [transitionDoor, setTransitionDoor] = useState<{
+    phase: RhythmPhase;
+    door: SmallDoor;
+  } | null>(null);
 
   useEffect(() => {
     try {
@@ -1340,6 +1443,32 @@ export function BasicHome({
     setActiveDoorLayer(null);
   }
 
+  function getRecommendedDoor(phase: RhythmPhase): string {
+    if (phase === "morning") {
+      if (selectedMood === "sleepy" || sleepStatus === "low") return "energy";
+      if (selectedMood === "thoughts") return "vision";
+      return "affirmation";
+    }
+
+    if (phase === "day") {
+      if (stressStatus === "high" || selectedMood === "thoughts") return "relax";
+      if (selectedMood === "energy") return "vitality";
+      return "focus";
+    }
+
+    if (stressStatus === "high" || selectedMood === "thoughts") return "release";
+    if (sleepStatus === "low" || selectedMood === "sleepy") return "sleep";
+    return "gratitude";
+  }
+
+  function handleEnterSmallDoor(phase: RhythmPhase, door: SmallDoor) {
+    setTransitionDoor({ phase, door });
+
+    window.setTimeout(() => {
+      window.location.href = buildRhythmMeditationHref(phase, door.key);
+    }, 950);
+  }
+
   const markerMessage = useMemo(
     () =>
       buildMarkerMessage(language, {
@@ -1363,6 +1492,11 @@ export function BasicHome({
   const weeklyRhythmScore = Math.min(100, Math.round(((completedDays.length + (completedToday ? 1 : 0)) / 7) * 100));
   const activeDoorCard = activeDoorLayer ? copy.rhythmCards.find((card) => card.key === activeDoorLayer) : null;
   const activeDoorPhase = activeDoorCard ? (activeDoorCard.key as RhythmPhase) : null;
+  const recommendedDoorKey = activeDoorPhase ? getRecommendedDoor(activeDoorPhase) : null;
+  const recommendedDoor =
+    activeDoorCard && recommendedDoorKey
+      ? activeDoorCard.smallDoors.find((door) => door.key === recommendedDoorKey) ?? activeDoorCard.smallDoors[0]
+      : null;
 
   function getGateRecordState(gate: RhythmPhase) {
     if (completedToday && lastGate === gate) {
@@ -1510,10 +1644,11 @@ export function BasicHome({
 
               <div className="mt-6 grid gap-3">
                 {activeDoorCard.smallDoors.map((smallDoor: SmallDoor) => (
-                  <Link
+                  <button
                     key={smallDoor.key}
-                    href={buildRhythmMeditationHref(activeDoorPhase, smallDoor.key)}
-                    className="group rounded-[24px] border border-white/10 bg-white/[0.05] px-4 py-4 transition hover:bg-white/[0.08]"
+                    type="button"
+                    onClick={() => handleEnterSmallDoor(activeDoorPhase, smallDoor)}
+                    className="group w-full rounded-[24px] border border-white/10 bg-white/[0.05] px-4 py-4 text-left transition hover:bg-white/[0.08]"
                   >
                     <div className="flex items-start gap-4">
                       <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] text-[18px] text-white/84">
@@ -1525,15 +1660,33 @@ export function BasicHome({
                           <span className="text-sm text-white/56">{copy.doorLayer.enter}</span>
                         </div>
                         <p className="mt-2 keep-phrase text-sm text-gold/82">{smallDoor.subtitle}</p>
+                        <p className="mt-2 text-sm leading-7 text-white/74">{smallDoor.guidance}</p>
                         <p className="mt-2 text-sm leading-7 text-white/62">{smallDoor.description}</p>
                       </div>
                     </div>
-                  </Link>
+                  </button>
                 ))}
               </div>
 
+              {recommendedDoor ? (
+                <div className="mt-6 rounded-[24px] border border-[rgba(212,178,106,0.16)] bg-gold/[0.06] px-4 py-4">
+                  <p className="text-xs uppercase tracking-[0.22em] text-gold/74">{copy.doorLayer.recommendLabel}</p>
+                  <p className="mt-3 text-base font-semibold text-white">{recommendedDoor.title}</p>
+                  <p className="mt-2 text-sm leading-7 text-white/70">
+                    {language === "jp"
+                      ? `今日は ${recommendedDoor.title} がおすすめです。`
+                      : language === "kr"
+                        ? `오늘은 ${recommendedDoor.title} 가 잘 어울립니다.`
+                        : `${recommendedDoor.title} may fit today best.`}
+                  </p>
+                </div>
+              ) : null}
+
               <div className="mt-6 rounded-[24px] border border-white/10 bg-white/[0.04] px-4 py-4">
-                <p className="text-xs uppercase tracking-[0.22em] text-gold/74">{copy.doorLayer.resultLabel}</p>
+                <div className="flex items-center justify-between gap-4">
+                  <p className="text-xs uppercase tracking-[0.22em] text-gold/74">{copy.doorLayer.resultLabel}</p>
+                  <p className="text-xs uppercase tracking-[0.22em] text-white/40">{copy.doorLayer.progressLabel}</p>
+                </div>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {activeDoorCard.layerResult.map((result) => (
                     <span
@@ -1544,9 +1697,31 @@ export function BasicHome({
                     </span>
                   ))}
                 </div>
+                <div className="mt-4 flex items-center gap-2 text-sm text-white/62">
+                  <span className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5">
+                    {copy.doorLayer.progressMorning} {lastGate === "morning" ? "✓" : "○"}
+                  </span>
+                  <span className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5">
+                    {copy.doorLayer.progressDay} {lastGate === "day" ? "✓" : "○"}
+                  </span>
+                  <span className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5">
+                    {copy.doorLayer.progressNight} {lastGate === "night" ? "✓" : "○"}
+                  </span>
+                </div>
               </div>
             </div>
           </section>
+        </div>
+      ) : null}
+
+      {transitionDoor ? (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-[rgba(3,8,18,0.72)] px-6 backdrop-blur-[12px]">
+          <div className="w-full max-w-md rounded-[30px] border border-[rgba(212,178,106,0.18)] bg-[radial-gradient(circle_at_top,rgba(241,222,170,0.12),transparent_40%),linear-gradient(180deg,rgba(18,28,44,0.86),rgba(8,18,30,0.9))] px-6 py-8 text-center shadow-[0_32px_120px_rgba(4,12,24,0.42)]">
+            <p className="text-3xl">{transitionDoor.door.emoji}</p>
+            <p className="mt-4 text-lg font-semibold text-white">{transitionDoor.door.title}</p>
+            <p className="mt-3 text-sm text-gold/82">{transitionDoor.door.openingTitle}</p>
+            <p className="mt-5 text-sm leading-7 text-white/68">{transitionDoor.door.openingBreath}</p>
+          </div>
         </div>
       ) : null}
 
