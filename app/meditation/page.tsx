@@ -15,9 +15,57 @@ const AI_COACH_URL =
   "https://chatgpt.com/g/g-69f968bc9a408191a3e5f943912666c0-quiet-rhythm-guide";
 const JOURNEY_AUDIO_PENDING_KEY = "meisoulife_journey_audio_pending";
 const JOURNEY_AUDIO_DAY_KEY = "meisoulife_journey_day";
+const AFFIRMATION_TOTAL_SECONDS = 180;
 
 type BreathPhase = "inhale" | "hold" | "exhale";
 type MeditationType = "default" | "morning" | "day" | "night";
+type MeditationDoor =
+  | "affirmation"
+  | "energy"
+  | "vision"
+  | "focus"
+  | "relax"
+  | "vitality"
+  | "release"
+  | "gratitude"
+  | "sleep"
+  | null;
+
+const affirmationGateCopy = {
+  jp: {
+    title: "今日の自分を選ぶ",
+    subtitle: "朝を少し明るく始めたいとき",
+    duration: "3:00",
+    audioLabel: "朝のリチュアル",
+    pause: "一度止める",
+    resume: "続ける",
+    inhale: "吸う",
+    exhale: "吐く",
+    completionTitle: "今日の自分を選びました。",
+    completionMessage: "静かに、一日を始めましょう。",
+    completionNote: "朝の光に合わせて、ゆっくり進めば大丈夫です。",
+    completionButton: "朝の扉へ戻る",
+    openingFade: "今日の自分を選ぶ",
+    integration: "今日の自分を選ぶ",
+    openingLines: [
+      { at: 15, key: "open-1", text: "目を閉じてください。" },
+      { at: 21, key: "open-2", text: "新しい一日が始まりました。" },
+      { at: 28, key: "open-3", text: "ゆっくり息を吸います。" }
+    ],
+    affirmationLines: [
+      { at: 80, key: "affirm-1", text: "今日は目覚めて生きます。" },
+      { at: 90, key: "affirm-2", text: "今日は前向きに進みます。" },
+      { at: 100, key: "affirm-3", text: "今日は中心を失いません。" },
+      { at: 110, key: "affirm-4", text: "今日は成長を選びます。" },
+      { at: 120, key: "affirm-5", text: "今日は自分を信じます。" }
+    ],
+    closingLines: [
+      { at: 160, key: "close-1", text: "いいですね。" },
+      { at: 168, key: "close-2", text: "今日の一日が始まります。" },
+      { at: 176, key: "close-3", text: "今日の自分を選びましょう。" }
+    ]
+  }
+} as const;
 
 function normalizeDuration(value: string | null) {
   const parsed = Number(value);
@@ -35,6 +83,24 @@ function normalizeMeditationType(value: string | null): MeditationType {
   }
 
   return "default";
+}
+
+function normalizeDoor(value: string | null): MeditationDoor {
+  if (
+    value === "affirmation" ||
+    value === "energy" ||
+    value === "vision" ||
+    value === "focus" ||
+    value === "relax" ||
+    value === "vitality" ||
+    value === "release" ||
+    value === "gratitude" ||
+    value === "sleep"
+  ) {
+    return value;
+  }
+
+  return null;
 }
 
 function formatRemainingTime(seconds: number) {
@@ -74,13 +140,24 @@ function getJourneyGuidanceStage(elapsedSeconds: number, totalSeconds: number) {
   return "breathing";
 }
 
+function getAffirmationStage(elapsedSeconds: number) {
+  if (elapsedSeconds < 15) return "openingFade";
+  if (elapsedSeconds < 35) return "openingNarration";
+  if (elapsedSeconds < 80) return "breathing";
+  if (elapsedSeconds < 130) return "affirmation";
+  if (elapsedSeconds < 160) return "integration";
+  return "closing";
+}
+
 export default function MeditationPage() {
   const { language } = useLanguage();
   const copy = useSiteCopy().meditationPage;
   const journeyCopy = useMemo(() => getRhythmJourneyContent(language), [language]);
+  const affirmationCopy = affirmationGateCopy.jp;
   const [totalSeconds, setTotalSeconds] = useState(60);
   const [secondsLeft, setSecondsLeft] = useState(60);
   const [meditationType, setMeditationType] = useState<MeditationType>("default");
+  const [meditationDoor, setMeditationDoor] = useState<MeditationDoor>(null);
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [vibrationEnabled, setVibrationEnabled] = useState(true);
   const [vibrationSupported, setVibrationSupported] = useState(false);
@@ -88,15 +165,19 @@ export default function MeditationPage() {
   const [ambientVideoFailed, setAmbientVideoFailed] = useState(false);
   const [showAmbientRetry, setShowAmbientRetry] = useState(false);
   const [needsUserStart, setNeedsUserStart] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [affirmationMessage, setAffirmationMessage] = useState<string | null>(null);
   const [journeyMode, setJourneyMode] = useState(false);
   const [journeyDay, setJourneyDay] = useState<number | null>(null);
   const [returnToHref, setReturnToHref] = useState("/rhythm-journey");
   const audioContextRef = useRef<AudioContext | null>(null);
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
   const completionHandledRef = useRef(false);
+  const spokenAffirmationKeysRef = useRef<Set<string>>(new Set());
   const elapsedTotalSeconds = totalSeconds - secondsLeft;
   const phase = useMemo(() => getBreathPhase(elapsedTotalSeconds), [elapsedTotalSeconds]);
   const isComplete = secondsLeft <= 0;
+  const isAffirmationGate = meditationType === "morning" && meditationDoor === "affirmation";
   const content = copy.variants[meditationType];
   const durationVariant = getDurationVariant(totalSeconds);
   const durationTextSet = copy.durationTexts?.[durationVariant];
@@ -105,6 +186,7 @@ export default function MeditationPage() {
   const ambientAudioSource = journeyMode && journeyAudioSource ? journeyAudioSource : undefined;
   const ambientAudioVolume = journeyMode ? 0.65 : undefined;
   const journeyGuidanceStage = getJourneyGuidanceStage(elapsedTotalSeconds, totalSeconds);
+  const affirmationStage = isAffirmationGate ? getAffirmationStage(elapsedTotalSeconds) : null;
   const topText = journeyMode
     ? journeyCopy.timerTopText
     : meditationType === "morning" || meditationType === "night"
@@ -125,11 +207,13 @@ export default function MeditationPage() {
           ? journeyGuidance.closing
           : null
       : null;
+  const affirmationProgress = isAffirmationGate ? Math.min(100, (elapsedTotalSeconds / AFFIRMATION_TOTAL_SECONDS) * 100) : 0;
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const nextDuration = normalizeDuration(searchParams.get("duration"));
     const nextType = normalizeMeditationType(searchParams.get("type"));
+    const nextDoor = normalizeDoor(searchParams.get("door"));
     const nextJourneyMode = searchParams.get("journey") === "1";
     const nextJourneyDay = Number(searchParams.get("day"));
     const nextReturnTo = searchParams.get("returnTo");
@@ -141,9 +225,11 @@ export default function MeditationPage() {
       ? nextJourneyDay
       : Number(storedJourneyDay);
 
-    setTotalSeconds(nextDuration);
-    setSecondsLeft(nextDuration);
+    const resolvedDuration = nextType === "morning" && nextDoor === "affirmation" ? AFFIRMATION_TOTAL_SECONDS : nextDuration;
+    setTotalSeconds(resolvedDuration);
+    setSecondsLeft(resolvedDuration);
     setMeditationType(nextType);
+    setMeditationDoor(nextDoor);
     const nextSoundEnabled = nextJourneyMode && pendingJourneyAudio ? true : getNatureSoundPreference();
     setSoundEnabled(nextSoundEnabled);
     setJourneyMode(nextJourneyMode);
@@ -153,6 +239,9 @@ export default function MeditationPage() {
     setShowAmbientRetry(false);
     setNeedsUserStart(false);
     setHasUserGesture(false);
+    setIsPaused(false);
+    setAffirmationMessage(null);
+    spokenAffirmationKeysRef.current = new Set();
     completionHandledRef.current = false;
     console.log("[Journey Audio] journeyMode:", nextJourneyMode);
     console.log("[Journey Audio] journeyDay:", resolvedJourneyDay);
@@ -292,7 +381,7 @@ export default function MeditationPage() {
   }, [ambientAudioSource, ambientAudioVolume, isComplete, soundEnabled]);
 
   useEffect(() => {
-    if (secondsLeft <= 0) {
+    if (secondsLeft <= 0 || isPaused) {
       return;
     }
 
@@ -303,7 +392,7 @@ export default function MeditationPage() {
     return () => {
       window.clearTimeout(timer);
     };
-  }, [secondsLeft]);
+  }, [isPaused, secondsLeft]);
 
   useEffect(() => {
     if (isComplete || !soundEnabled) {
@@ -345,6 +434,70 @@ export default function MeditationPage() {
     runMeditationComplete();
   }, [isComplete, hasUserGesture, soundEnabled, vibrationEnabled]);
 
+  useEffect(() => {
+    if (!isAffirmationGate || isComplete || isPaused || typeof window === "undefined") {
+      return;
+    }
+
+    const allLines = [
+      ...affirmationCopy.openingLines,
+      ...affirmationCopy.affirmationLines,
+      ...affirmationCopy.closingLines
+    ];
+    const nextLine = allLines.find(
+      (line) => elapsedTotalSeconds >= line.at && !spokenAffirmationKeysRef.current.has(line.key)
+    );
+
+    if (!nextLine) {
+      return;
+    }
+
+    spokenAffirmationKeysRef.current.add(nextLine.key);
+    setAffirmationMessage(nextLine.text);
+
+    if ("speechSynthesis" in window) {
+      try {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(nextLine.text);
+        utterance.lang = "ja-JP";
+        utterance.rate = 0.9;
+        utterance.pitch = 0.92;
+        utterance.volume = 0.92;
+        window.speechSynthesis.speak(utterance);
+      } catch (error) {
+        console.warn("[affirmation-gate] speech synthesis unavailable", error);
+      }
+    }
+  }, [affirmationCopy.affirmationLines, affirmationCopy.closingLines, affirmationCopy.openingLines, elapsedTotalSeconds, isAffirmationGate, isComplete, isPaused]);
+
+  useEffect(() => {
+    if (!isAffirmationGate || typeof window === "undefined") {
+      return;
+    }
+
+    if (affirmationStage === "openingFade") {
+      setAffirmationMessage(affirmationCopy.openingFade);
+      return;
+    }
+
+    if (affirmationStage === "breathing") {
+      setAffirmationMessage(phase === "inhale" ? affirmationCopy.inhale : affirmationCopy.exhale);
+      return;
+    }
+
+    if (affirmationStage === "integration") {
+      setAffirmationMessage(affirmationCopy.integration);
+    }
+  }, [affirmationCopy.inhale, affirmationCopy.exhale, affirmationCopy.integration, affirmationCopy.openingFade, affirmationStage, isAffirmationGate, phase]);
+
+  useEffect(() => {
+    return () => {
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
   async function runMeditationComplete() {
     await stopAmbientNatureAudio(ambientAudioRef);
     await triggerMeditationCompletion({
@@ -382,10 +535,23 @@ export default function MeditationPage() {
     await handleAmbientStartResult(result, true);
   }
 
+  function handlePauseToggle() {
+    setHasUserGesture(true);
+    setIsPaused((current) => {
+      const next = !current;
+
+      if (next && typeof window !== "undefined" && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+
+      return next;
+    });
+  }
+
   return (
     <main className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_20%),linear-gradient(180deg,#07111f_0%,#0d1b2d_45%,#10273a_100%)] px-6 py-10 text-white">
       <div className="relative flex min-h-[480px] w-full max-w-3xl flex-col items-center overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.04] px-6 py-8 text-center shadow-[0_30px_80px_rgba(0,0,0,0.28)] sm:px-8 sm:py-10">
-        {!ambientVideoFailed ? (
+        {!ambientVideoFailed && !isAffirmationGate ? (
           <video
             className="absolute inset-0 z-0 h-full w-full object-cover opacity-85"
             autoPlay
@@ -402,12 +568,42 @@ export default function MeditationPage() {
         ) : (
           <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_28%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.14),transparent_34%),linear-gradient(180deg,rgba(4,10,19,0.76)_0%,rgba(8,18,32,0.88)_100%)]" />
         )}
-        <div className="absolute inset-0 z-10 bg-black/25" />
+        {isAffirmationGate ? (
+          <>
+            <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top,rgba(244,220,160,0.16),transparent_24%),radial-gradient(circle_at_bottom,rgba(125,162,108,0.12),transparent_34%),linear-gradient(180deg,rgba(34,42,72,0.92)_0%,rgba(18,29,48,0.92)_48%,rgba(12,22,37,0.96)_100%)]" />
+            <div className="absolute left-[8%] top-[10%] z-0 h-48 w-48 rounded-full bg-gold/10 blur-[80px]" />
+            <div className="absolute right-[10%] top-[14%] z-0 h-44 w-44 rounded-full bg-emerald-200/[0.08] blur-[90px]" />
+          </>
+        ) : null}
+        <div className={`absolute inset-0 z-10 ${isAffirmationGate ? "bg-[linear-gradient(180deg,rgba(4,10,19,0.18),rgba(4,10,19,0.36))]" : "bg-black/25"}`} />
 
         <div className="relative z-20 flex w-full flex-col items-center text-center">
         {!isComplete ? (
           <>
-            {journeyMode ? (
+            {isAffirmationGate ? (
+              <div className="w-full max-w-xl space-y-4">
+                <p className="text-xs uppercase tracking-[0.28em] text-gold/74">{affirmationCopy.audioLabel}</p>
+                <h1 className="font-serif text-3xl text-white sm:text-4xl">{affirmationCopy.title}</h1>
+                <p className="text-sm leading-7 text-white/68">{affirmationCopy.subtitle}</p>
+                <div className="mx-auto mt-4 h-[6px] w-full max-w-md overflow-hidden rounded-full bg-white/10">
+                  <div
+                    className="h-full rounded-full bg-gold/80 transition-[width] duration-700"
+                    style={{ width: `${affirmationProgress}%` }}
+                  />
+                </div>
+                <div className="flex items-center justify-center gap-3 text-sm text-white/54">
+                  <span>{affirmationCopy.duration}</span>
+                  <span className="h-1 w-1 rounded-full bg-white/24" />
+                  <button
+                    type="button"
+                    onClick={handlePauseToggle}
+                    className="button-nowrap inline-flex min-h-[34px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/72 transition hover:bg-white/[0.08] hover:text-white"
+                  >
+                    {isPaused ? affirmationCopy.resume : affirmationCopy.pause}
+                  </button>
+                </div>
+              </div>
+            ) : journeyMode ? (
               <div className="flex min-h-[112px] w-full items-center justify-center">
                 {journeyOverlayMessage ? (
                   <div
@@ -491,7 +687,9 @@ export default function MeditationPage() {
                 ) : null}
               </div>
               <p className="text-2xl font-medium text-white/72 transition-all duration-300 ease-out sm:text-3xl">
-                {copy.phases[phase]}
+                {isAffirmationGate && affirmationStage === "breathing"
+                  ? affirmationMessage
+                  : copy.phases[phase]}
               </p>
 
               <div className="relative mt-10 flex h-56 w-56 items-center justify-center sm:h-72 sm:w-72">
@@ -506,28 +704,48 @@ export default function MeditationPage() {
                   <p className="text-5xl font-serif text-white/88 sm:text-6xl">{formatRemainingTime(secondsLeft)}</p>
                 </div>
               </div>
+
+              {isAffirmationGate ? (
+                <div className="mt-8 min-h-[92px] max-w-xl space-y-3">
+                  <p className="mx-auto whitespace-pre-line font-serif text-2xl leading-[1.8] text-white/90 sm:text-[32px] sm:leading-[1.9]">
+                    {affirmationMessage}
+                  </p>
+                </div>
+              ) : null}
             </div>
 
             <div className="mt-8">
               <p className="text-sm font-medium tracking-[0.18em] text-white/68 transition-opacity duration-300 sm:text-base">
-                {copy.bottomText[phase]}
+                {isAffirmationGate
+                  ? affirmationStage === "breathing"
+                    ? phase === "inhale"
+                      ? affirmationCopy.inhale
+                      : affirmationCopy.exhale
+                    : affirmationCopy.title
+                  : copy.bottomText[phase]}
               </p>
             </div>
           </>
         ) : (
           <div className="animate-fade-in space-y-8">
-            <h1 className="font-serif text-4xl text-white sm:text-5xl">{completionTitle}</h1>
-            <p className="mx-auto max-w-xl whitespace-pre-line text-base leading-8 text-white/72">{copy.completionMessage}</p>
-            <p className="text-sm leading-7 text-white/54">{copy.completionReturnText}</p>
-            {!journeyMode ? <p className="mx-auto max-w-2xl text-base leading-8 text-white/68">{copy.completionBody}</p> : null}
+            <h1 className="font-serif text-4xl text-white sm:text-5xl">
+              {isAffirmationGate ? affirmationCopy.completionTitle : completionTitle}
+            </h1>
+            <p className="mx-auto max-w-xl whitespace-pre-line text-base leading-8 text-white/72">
+              {isAffirmationGate ? affirmationCopy.completionMessage : copy.completionMessage}
+            </p>
+            <p className="text-sm leading-7 text-white/54">
+              {isAffirmationGate ? affirmationCopy.completionNote : copy.completionReturnText}
+            </p>
+            {!journeyMode && !isAffirmationGate ? <p className="mx-auto max-w-2xl text-base leading-8 text-white/68">{copy.completionBody}</p> : null}
             <div className="flex flex-col items-center gap-3">
               <Link
                 href={returnToHref}
                 className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
               >
-                {journeyMode ? journeyCopy.nextCta : copy.completionPrimary}
+                {isAffirmationGate ? affirmationCopy.completionButton : journeyMode ? journeyCopy.nextCta : copy.completionPrimary}
               </Link>
-              {!journeyMode ? (
+              {!journeyMode && !isAffirmationGate ? (
                 <Link
                   href="/"
                   className="inline-flex min-h-[52px] min-w-[240px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
@@ -536,7 +754,7 @@ export default function MeditationPage() {
                 </Link>
               ) : null}
             </div>
-            {!journeyMode ? (
+            {!journeyMode && !isAffirmationGate ? (
               <div className="mx-auto max-w-2xl border-t border-white/10 pt-8">
                 <p className="text-base leading-8 text-white/68">{copy.coachPrompt}</p>
                 <div className="mt-5">
