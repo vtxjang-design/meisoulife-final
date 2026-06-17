@@ -183,9 +183,9 @@ const basicHomeCopy = {
           {
             key: "affirmation",
             emoji: "✨",
-            title: "Affirmation Gate",
+            title: "今日の自分を選ぶ",
             subtitle: "今日の自分を選ぶ",
-            description: "Positive affirmation practice",
+            description: "静かに一日を選びなおす、朝の3分。",
             guidance: "朝を前向きに始めたいとき",
             openingTitle: "今日の自分を選びます",
             openingBreath: "深く息を吸ってください"
@@ -193,9 +193,9 @@ const basicHomeCopy = {
           {
             key: "energy",
             emoji: "🔥",
-            title: "Energy Gate",
+            title: "脳と身体を目覚めさせる",
             subtitle: "脳と身体を目覚めさせる",
-            description: "Brain and body awakening",
+            description: "身体の感覚をやさしく目覚めさせる、朝の3分。",
             guidance: "まだ身体が起きていないとき",
             openingTitle: "眠っていた力を起こします",
             openingBreath: "ゆっくり呼吸を整えてください"
@@ -203,7 +203,7 @@ const basicHomeCopy = {
           {
             key: "vision",
             emoji: "🌄",
-            title: "Vision Gate",
+            title: "ビジョンスクリーン瞑想",
             subtitle: "ビジョンスクリーン瞑想",
             description: "今日の一日を、心の中で静かに描く3分。",
             guidance: "今日の方向を静かに選びたいとき",
@@ -308,12 +308,16 @@ const basicHomeCopy = {
       choose: "今のあなたに合う小さな扉を選びましょう。",
       resultLabel: "静かに開いていくもの",
       recommendLabel: "おすすめ",
+      recommendText: "今日は {title} がおすすめです。",
       progressLabel: "今日のリズム",
       progressMorning: "朝",
       progressDay: "昼",
       progressNight: "夜",
       enter: "この扉へ入る",
-      close: "閉じる"
+      close: "閉じる",
+      stateOpened: "静かに開きました",
+      stateToday: "今日の入口です",
+      stateWaiting: "静かに待っています"
     },
     journeyPath: {
       title: "本来の自分に戻る道",
@@ -498,9 +502,9 @@ const basicHomeCopy = {
           {
             key: "affirmation",
             emoji: "✨",
-            title: "Affirmation Gate",
+            title: "오늘의 나를 선택하기",
             subtitle: "오늘의 나를 선택하기",
-            description: "Positive affirmation practice",
+            description: "조용히 오늘의 나를 선택하는 아침 3분.",
             guidance: "아침을 조금 더 밝게 시작하고 싶을 때",
             openingTitle: "오늘의 나를 선택합니다",
             openingBreath: "깊게 숨을 들이쉬어 보세요"
@@ -508,9 +512,9 @@ const basicHomeCopy = {
           {
             key: "energy",
             emoji: "🔥",
-            title: "Energy Gate",
+            title: "뇌와 몸을 깨우기",
             subtitle: "뇌와 몸을 깨우기",
-            description: "Brain and body awakening",
+            description: "몸의 감각을 부드럽게 깨우는 아침 3분.",
             guidance: "아직 몸이 완전히 깨어나지 않았을 때",
             openingTitle: "잠든 힘을 깨웁니다",
             openingBreath: "천천히 호흡을 고르게 해보세요"
@@ -518,7 +522,7 @@ const basicHomeCopy = {
           {
             key: "vision",
             emoji: "🌄",
-            title: "Vision Gate",
+            title: "비전 스크린 명상",
             subtitle: "비전 스크린 명상",
             description: "오늘 하루의 방향을 마음속에 조용히 그리는 3분.",
             guidance: "오늘의 방향을 조용히 그리고 싶을 때",
@@ -623,12 +627,16 @@ const basicHomeCopy = {
       choose: "지금의 나에게 맞는 작은 문을 골라보세요.",
       resultLabel: "조용히 열리는 흐름",
       recommendLabel: "추천",
+      recommendText: "오늘은 {title} 가 잘 어울립니다.",
       progressLabel: "오늘의 리듬",
       progressMorning: "아침",
       progressDay: "낮",
       progressNight: "밤",
       enter: "이 문으로 들어가기",
-      close: "닫기"
+      close: "닫기",
+      stateOpened: "조용히 열렸습니다",
+      stateToday: "오늘의 입구입니다",
+      stateWaiting: "조용히 기다리고 있습니다"
     },
     journeyPath: {
       title: "본래의 나로 돌아가는 길",
@@ -813,9 +821,9 @@ const basicHomeCopy = {
           {
             key: "affirmation",
             emoji: "✨",
-            title: "Affirmation Gate",
+            title: "Choose Today’s Self",
             subtitle: "Choose who you are today",
-            description: "Positive affirmation practice",
+            description: "A quiet 3-minute morning ritual to choose how you begin.",
             guidance: "When you want to begin the day with a brighter heart",
             openingTitle: "You are choosing who you are today",
             openingBreath: "Take one deep breath"
@@ -823,9 +831,9 @@ const basicHomeCopy = {
           {
             key: "energy",
             emoji: "🔥",
-            title: "Energy Gate",
+            title: "Wake Brain and Body",
             subtitle: "Wake brain and body",
-            description: "Brain and body awakening",
+            description: "A gentle 3-minute ritual to awaken the body and attention.",
             guidance: "When your energy has not fully awakened yet",
             openingTitle: "You are waking your inner energy",
             openingBreath: "Let your breath become steady"
@@ -833,7 +841,7 @@ const basicHomeCopy = {
           {
             key: "vision",
             emoji: "🌄",
-            title: "Vision Gate",
+            title: "Vision Screen Meditation",
             subtitle: "Vision Screen Meditation",
             description: "A quiet 3-minute meditation to visualize the direction of your day.",
             guidance: "When you want to choose the direction of the day quietly",
@@ -938,12 +946,16 @@ const basicHomeCopy = {
       choose: "Choose the smaller door that fits you now.",
       resultLabel: "What quietly opens here",
       recommendLabel: "Recommended",
+      recommendText: "{title} may fit today best.",
       progressLabel: "Today's Rhythm",
       progressMorning: "Morning",
       progressDay: "Day",
       progressNight: "Night",
       enter: "Enter this door",
-      close: "Close"
+      close: "Close",
+      stateOpened: "Opened gently",
+      stateToday: "Today's entrance",
+      stateWaiting: "Waiting quietly"
     },
     journeyPath: {
       title: "The Path Back to Your True Self",
@@ -1500,20 +1512,14 @@ export function BasicHome({
 
   function getGateRecordState(gate: RhythmPhase) {
     if (completedToday && lastGate === gate) {
-      if (language === "jp") return "静かに開きました";
-      if (language === "kr") return "조용히 열렸습니다";
-      return "Opened gently";
+      return copy.doorLayer.stateOpened;
     }
 
     if (rhythmPhase === gate) {
-      if (language === "jp") return "今日の入口です";
-      if (language === "kr") return "오늘의 입구입니다";
-      return "Today’s entrance";
+      return copy.doorLayer.stateToday;
     }
 
-    if (language === "jp") return "静かに待っています";
-    if (language === "kr") return "조용히 기다리고 있습니다";
-    return "Waiting quietly";
+    return copy.doorLayer.stateWaiting;
   }
 
   function handleReflectionChange(next: string) {
@@ -1673,11 +1679,7 @@ export function BasicHome({
                   <p className="text-xs uppercase tracking-[0.22em] text-gold/74">{copy.doorLayer.recommendLabel}</p>
                   <p className="mt-3 text-base font-semibold text-white">{recommendedDoor.title}</p>
                   <p className="mt-2 text-sm leading-7 text-white/70">
-                    {language === "jp"
-                      ? `今日は ${recommendedDoor.title} がおすすめです。`
-                      : language === "kr"
-                        ? `오늘은 ${recommendedDoor.title} 가 잘 어울립니다.`
-                        : `${recommendedDoor.title} may fit today best.`}
+                    {copy.doorLayer.recommendText.replace("{title}", recommendedDoor.title)}
                   </p>
                 </div>
               ) : null}

@@ -100,6 +100,72 @@ const affirmationGateCopy = {
       { at: 168, key: "close-2", text: "今日の一日が始まります。" },
       { at: 176, key: "close-3", text: "今日の自分を選びましょう。" }
     ]
+  },
+  kr: {
+    title: "오늘의 나를 선택하기",
+    subtitle: "아침을 조금 더 밝게 시작하고 싶을 때",
+    duration: "3:00",
+    audioLabel: "아침 리추얼",
+    pause: "잠시 멈추기",
+    resume: "이어가기",
+    inhale: "들이쉬기",
+    exhale: "내쉬기",
+    completionTitle: "오늘의 나를 선택했습니다.",
+    completionMessage: "조용히 하루를 시작해 봅시다.",
+    completionNote: "아침의 빛처럼 천천히, 지금의 나로 하루를 열면 충분합니다.",
+    completionButton: "아침의 문으로 돌아가기",
+    openingFade: "오늘의 나를 선택하기",
+    integration: "오늘의 나를 선택하기",
+    openingLines: [
+      { at: 15, key: "open-1", text: "눈을 감아보세요." },
+      { at: 21, key: "open-2", text: "새로운 하루가 시작되었습니다." },
+      { at: 28, key: "open-3", text: "천천히 숨을 들이마십니다." }
+    ],
+    affirmationLines: [
+      { at: 80, key: "affirm-1", text: "오늘 나는 깨어 있는 마음으로 살아갑니다." },
+      { at: 90, key: "affirm-2", text: "오늘 나는 밝은 방향으로 나아갑니다." },
+      { at: 100, key: "affirm-3", text: "오늘 나는 중심을 잃지 않습니다." },
+      { at: 110, key: "affirm-4", text: "오늘 나는 성장하는 나를 선택합니다." },
+      { at: 120, key: "affirm-5", text: "오늘 나는 나 자신을 믿습니다." }
+    ],
+    closingLines: [
+      { at: 160, key: "close-1", text: "좋습니다." },
+      { at: 168, key: "close-2", text: "오늘의 하루가 시작됩니다." },
+      { at: 176, key: "close-3", text: "오늘의 나를 선택해 봅시다." }
+    ]
+  },
+  en: {
+    title: "Choose Today’s Self",
+    subtitle: "When you want to begin the morning a little brighter",
+    duration: "3:00",
+    audioLabel: "Morning Ritual",
+    pause: "Pause",
+    resume: "Continue",
+    inhale: "Inhale",
+    exhale: "Exhale",
+    completionTitle: "You have chosen who you are today.",
+    completionMessage: "Let the day begin quietly from here.",
+    completionNote: "You do not need to rush. Begin slowly, like morning light returning.",
+    completionButton: "Return to Morning Gate",
+    openingFade: "Choose Today’s Self",
+    integration: "Choose Today’s Self",
+    openingLines: [
+      { at: 15, key: "open-1", text: "Gently close your eyes." },
+      { at: 21, key: "open-2", text: "A new day has begun." },
+      { at: 28, key: "open-3", text: "Slowly breathe in." }
+    ],
+    affirmationLines: [
+      { at: 80, key: "affirm-1", text: "Today, I live awake to this moment." },
+      { at: 90, key: "affirm-2", text: "Today, I move forward with quiet positivity." },
+      { at: 100, key: "affirm-3", text: "Today, I do not lose my center." },
+      { at: 110, key: "affirm-4", text: "Today, I choose growth with gentleness." },
+      { at: 120, key: "affirm-5", text: "Today, I trust myself." }
+    ],
+    closingLines: [
+      { at: 160, key: "close-1", text: "Good." },
+      { at: 168, key: "close-2", text: "Your day is beginning now." },
+      { at: 176, key: "close-3", text: "Let yourself begin as you are." }
+    ]
   }
 } as const;
 
@@ -142,6 +208,86 @@ const energyGateCopy = {
       { at: 170, key: "close-1", text: "ありがとうございます。" },
       { at: 175, key: "close-2", text: "身体が少し目覚めました。" },
       { at: 179, key: "close-3", text: "今日のエネルギーとともに、一日を始めましょう。" }
+    ]
+  },
+  kr: {
+    title: "뇌와 몸을 깨우기",
+    subtitle: "아직 몸이 완전히 깨어나지 않았을 때",
+    duration: "3:00",
+    audioLabel: "아침 에너지 리추얼",
+    pause: "잠시 멈추기",
+    resume: "이어가기",
+    inhale: "들이쉬기",
+    exhale: "내쉬기",
+    completionTitle: "몸이 깨어났습니다.",
+    completionMessage: "오늘의 에너지와 함께 나아가 봅시다.",
+    completionNote: "조금씩 몸을 열어가며, 자연스럽게 하루를 시작하면 충분합니다.",
+    completionButton: "아침의 문으로 돌아가기",
+    openingFade: "뇌와 몸을 깨우기",
+    integration: "뇌와 몸을 깨우기",
+    openingLines: [
+      { at: 15, key: "open-1", text: "눈을 감아보세요." },
+      { at: 23, key: "open-2", text: "천천히 숨을 들이마십니다." },
+      { at: 32, key: "open-3", text: "몸의 감각을 느껴봅시다." },
+      { at: 40, key: "open-4", text: "당신의 몸은 지금, 조금씩 깨어나고 있습니다." }
+    ],
+    awarenessLines: [
+      { at: 52, key: "body-1", text: "어깨의 힘을 부드럽게 풀어봅니다." },
+      { at: 64, key: "body-2", text: "가슴을 가볍게 열어봅니다." },
+      { at: 76, key: "body-3", text: "배 아래쪽의 중심을 느껴봅니다." },
+      { at: 88, key: "body-4", text: "손끝과 발끝까지 의식을 넓혀봅니다." }
+    ],
+    energyLines: [
+      { at: 102, key: "energy-1", text: "숨을 들이쉴 때마다 새로운 에너지가 들어옵니다." },
+      { at: 116, key: "energy-2", text: "숨을 내쉴 때마다 몸이 가볍게 깨어납니다." },
+      { at: 132, key: "energy-3", text: "오늘 나는 생명력으로 움직입니다." },
+      { at: 140, key: "energy-4", text: "오늘 나는 생기 있게 살아갑니다." },
+      { at: 148, key: "energy-5", text: "오늘 나는 몸과 함께 깨어납니다." }
+    ],
+    closingLines: [
+      { at: 170, key: "close-1", text: "감사합니다." },
+      { at: 175, key: "close-2", text: "몸이 조금 깨어났습니다." },
+      { at: 179, key: "close-3", text: "오늘의 에너지와 함께 하루를 시작해 봅시다." }
+    ]
+  },
+  en: {
+    title: "Wake Brain and Body",
+    subtitle: "When your body has not fully awakened yet",
+    duration: "3:00",
+    audioLabel: "Morning Energy Ritual",
+    pause: "Pause",
+    resume: "Continue",
+    inhale: "Inhale",
+    exhale: "Exhale",
+    completionTitle: "Your body has awakened.",
+    completionMessage: "Move into the day with this gentle energy.",
+    completionNote: "You only need to open a little. Let the day begin naturally from here.",
+    completionButton: "Return to Morning Gate",
+    openingFade: "Wake Brain and Body",
+    integration: "Wake Brain and Body",
+    openingLines: [
+      { at: 15, key: "open-1", text: "Close your eyes gently." },
+      { at: 23, key: "open-2", text: "Slowly breathe in." },
+      { at: 32, key: "open-3", text: "Feel the sensations in your body." },
+      { at: 40, key: "open-4", text: "Your body is beginning to wake, little by little." }
+    ],
+    awarenessLines: [
+      { at: 52, key: "body-1", text: "Let the tension in your shoulders soften." },
+      { at: 64, key: "body-2", text: "Gently open your chest." },
+      { at: 76, key: "body-3", text: "Feel the space below your navel." },
+      { at: 88, key: "body-4", text: "Extend your awareness to your fingertips and toes." }
+    ],
+    energyLines: [
+      { at: 102, key: "energy-1", text: "With every inhale, new energy enters." },
+      { at: 116, key: "energy-2", text: "With every exhale, your body wakes a little more lightly." },
+      { at: 132, key: "energy-3", text: "Today, I move with living energy." },
+      { at: 140, key: "energy-4", text: "Today, I live with warmth and vitality." },
+      { at: 148, key: "energy-5", text: "Today, I awaken together with my body." }
+    ],
+    closingLines: [
+      { at: 170, key: "close-1", text: "Thank you." },
+      { at: 175, key: "close-2", text: "Your body has awakened a little more." },
+      { at: 179, key: "close-3", text: "Begin the day together with this energy." }
     ]
   }
 } as const;
@@ -427,9 +573,10 @@ export default function MeditationPage() {
   const { language } = useLanguage();
   const copy = useSiteCopy().meditationPage;
   const journeyCopy = useMemo(() => getRhythmJourneyContent(language), [language]);
-  const affirmationCopy = affirmationGateCopy.jp;
-  const energyCopy = energyGateCopy.jp;
-  const visionCopy = visionGateCopy[(language === "kr" || language === "en" || language === "jp") ? language : "jp"];
+  const localizedLanguage = language === "kr" || language === "en" || language === "jp" ? language : "jp";
+  const affirmationCopy = affirmationGateCopy[localizedLanguage];
+  const energyCopy = energyGateCopy[localizedLanguage];
+  const visionCopy = visionGateCopy[localizedLanguage];
   const [totalSeconds, setTotalSeconds] = useState(60);
   const [secondsLeft, setSecondsLeft] = useState(60);
   const [meditationType, setMeditationType] = useState<MeditationType>("default");
