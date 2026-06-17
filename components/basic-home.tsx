@@ -204,11 +204,11 @@ const basicHomeCopy = {
             key: "vision",
             emoji: "🌄",
             title: "Vision Gate",
-            subtitle: "今日の方向を見る",
-            description: "Vision screen meditation",
-            guidance: "集中して進みたいとき",
-            openingTitle: "今日の方向を見つめます",
-            openingBreath: "視線をやさしく内側へ戻してください"
+            subtitle: "ビジョンスクリーン瞑想",
+            description: "今日の一日を、心の中で静かに描く3分。",
+            guidance: "今日の方向を静かに選びたいとき",
+            openingTitle: "今日の一日を心に描きます",
+            openingBreath: "呼吸をゆっくり整えてください"
           }
         ]
       },
@@ -519,11 +519,11 @@ const basicHomeCopy = {
             key: "vision",
             emoji: "🌄",
             title: "Vision Gate",
-            subtitle: "오늘의 방향 보기",
-            description: "Vision screen meditation",
-            guidance: "집중해서 나아가고 싶을 때",
-            openingTitle: "오늘의 방향을 바라봅니다",
-            openingBreath: "시선을 부드럽게 안으로 돌려보세요"
+            subtitle: "비전 스크린 명상",
+            description: "오늘 하루의 방향을 마음속에 조용히 그리는 3분.",
+            guidance: "오늘의 방향을 조용히 그리고 싶을 때",
+            openingTitle: "오늘의 하루를 마음에 그립니다",
+            openingBreath: "호흡을 천천히 고르게 해보세요"
           }
         ]
       },
@@ -834,11 +834,11 @@ const basicHomeCopy = {
             key: "vision",
             emoji: "🌄",
             title: "Vision Gate",
-            subtitle: "See today’s direction",
-            description: "Vision screen meditation",
-            guidance: "When you want a clearer direction today",
-            openingTitle: "You are meeting today’s direction",
-            openingBreath: "Soften your gaze inward"
+            subtitle: "Vision Screen Meditation",
+            description: "A quiet 3-minute meditation to visualize the direction of your day.",
+            guidance: "When you want to choose the direction of the day quietly",
+            openingTitle: "You are visualizing the shape of today",
+            openingBreath: "Let your breath become soft and steady"
           }
         ]
       },

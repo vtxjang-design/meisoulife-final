@@ -110,6 +110,128 @@ const energyGateCopy = {
   }
 } as const;
 
+const visionGateCopy = {
+  jp: {
+    title: "ビジョンスクリーン瞑想",
+    subtitle: "今日の一日を、心の中で静かに描く3分。",
+    duration: "3:00",
+    audioLabel: "朝のビジョンリチュアル",
+    pause: "一度止める",
+    resume: "続ける",
+    inhale: "吸う",
+    exhale: "吐く",
+    completionTitle: "心に描いた一日が始まります。",
+    completionMessage: "今日の小さな方向が、やさしく未来へつながっていきます。",
+    completionNote: "焦らなくても大丈夫です。静かに選んだ方向を胸に、一日を始めましょう。",
+    completionButton: "朝の扉へ戻る",
+    openingFade: "ビジョンスクリーン瞑想",
+    integration: "今日の一日を心に描く",
+    openingLines: [
+      { at: 15, key: "open-1", text: "目を軽く閉じてください。" },
+      { at: 23, key: "open-2", text: "呼吸をゆっくり吸って、ゆっくり吐きます。" },
+      { at: 32, key: "open-3", text: "今この瞬間、新しい一日が始まりました。" },
+      { at: 41, key: "open-4", text: "今日はどんな一日でありたいですか。" }
+    ],
+    visionLines: [
+      { at: 56, key: "vision-1", text: "急がなくて大丈夫です。" },
+      { at: 64, key: "vision-2", text: "答えを急いで探さなくても大丈夫です。" },
+      { at: 74, key: "vision-3", text: "心の中に、いちばん大切なひと場面を静かに思い浮かべてみましょう。" },
+      { at: 88, key: "vision-4", text: "健やかな自分の姿かもしれません。" },
+      { at: 96, key: "vision-5", text: "やわらかく笑っている自分の姿かもしれません。" },
+      { at: 106, key: "vision-6", text: "誰かの力になっている姿かもしれません。" },
+      { at: 114, key: "vision-7", text: "長く願ってきた生き方の景色かもしれません。" },
+      { at: 124, key: "vision-8", text: "その場面を、心のスクリーンにそっと映してみます。" },
+      { at: 134, key: "vision-9", text: "もう叶い始めているように、自然に感じてみましょう。" },
+      { at: 144, key: "vision-10", text: "その中のあなたは、どんな表情をしていますか。" },
+      { at: 152, key: "vision-11", text: "どんな心で生き、どんなエネルギーを分かち合っていますか。" }
+    ],
+    closingLines: [
+      { at: 170, key: "close-1", text: "未来は遠くではなく、今の小さな選択の中で育っていきます。" },
+      { at: 176, key: "close-2", text: "私は今日、私らしく生きます。" },
+      { at: 179, key: "close-3", text: "微笑みとともに、今日の道を始めましょう。" }
+    ]
+  },
+  kr: {
+    title: "비전 스크린 명상",
+    subtitle: "오늘 하루의 방향을 마음속에 조용히 그리는 3분.",
+    duration: "3:00",
+    audioLabel: "아침 비전 리추얼",
+    pause: "잠시 멈추기",
+    resume: "이어가기",
+    inhale: "들이쉬기",
+    exhale: "내쉬기",
+    completionTitle: "오늘 마음에 그린 한 장면이 시작됩니다.",
+    completionMessage: "오늘 마음에 그린 한 장면이, 미래의 현실이 됩니다.",
+    completionNote: "조용히 선택한 방향을 가슴에 담고, 오늘의 길을 시작해 보세요.",
+    completionButton: "아침의 문으로 돌아가기",
+    openingFade: "비전 스크린 명상",
+    integration: "오늘 하루를 마음에 그립니다",
+    openingLines: [
+      { at: 15, key: "open-1", text: "눈을 가볍게 감아봅니다." },
+      { at: 23, key: "open-2", text: "호흡을 천천히 들이마시고, 천천히 내쉽니다." },
+      { at: 32, key: "open-3", text: "지금 이 순간, 새로운 하루가 시작되었습니다." },
+      { at: 41, key: "open-4", text: "오늘은 어떤 하루가 되기를 바라나요?" }
+    ],
+    visionLines: [
+      { at: 56, key: "vision-1", text: "서두르지 않아도 됩니다." },
+      { at: 64, key: "vision-2", text: "정답을 찾으려 하지 않아도 됩니다." },
+      { at: 74, key: "vision-3", text: "그저 마음속에 가장 소중한 한 장면을 떠올려 보세요." },
+      { at: 88, key: "vision-4", text: "건강한 나의 모습일 수도 있고, 밝게 웃고 있는 모습일 수도 있습니다." },
+      { at: 102, key: "vision-5", text: "누군가에게 도움이 되는 모습일 수도 있고, 오랫동안 꿈꾸어 온 삶의 모습일 수도 있습니다." },
+      { at: 118, key: "vision-6", text: "그 장면을 마음의 스크린에 천천히 비춰봅니다." },
+      { at: 128, key: "vision-7", text: "이미 이루어진 것처럼, 자연스럽게 느껴봅니다." },
+      { at: 138, key: "vision-8", text: "그 모습 속의 나는 어떤 표정을 하고 있나요?" },
+      { at: 146, key: "vision-9", text: "어떤 마음으로 살아가고 있나요?" },
+      { at: 154, key: "vision-10", text: "어떤 에너지를 나누고 있나요?" }
+    ],
+    closingLines: [
+      { at: 170, key: "close-1", text: "미래는 멀리 있는 것이 아니라, 지금의 선택 속에서 만들어집니다." },
+      { at: 176, key: "close-2", text: "나는 오늘, 나의 가장 좋은 가능성을 선택합니다." },
+      { at: 179, key: "close-3", text: "그리고 미소와 함께, 오늘의 길을 시작합니다." }
+    ]
+  },
+  en: {
+    title: "Vision Screen Meditation",
+    subtitle: "A quiet 3-minute meditation to visualize the direction of your day.",
+    duration: "3:00",
+    audioLabel: "Morning Vision Ritual",
+    pause: "Pause",
+    resume: "Continue",
+    inhale: "Inhale",
+    exhale: "Exhale",
+    completionTitle: "The scene in your heart can begin today.",
+    completionMessage: "A quiet image held today can become tomorrow’s reality.",
+    completionNote: "Hold this gentle direction in your chest and begin the day softly.",
+    completionButton: "Return to Morning Gate",
+    openingFade: "Vision Screen Meditation",
+    integration: "Quietly envision your day",
+    openingLines: [
+      { at: 15, key: "open-1", text: "Gently close your eyes." },
+      { at: 23, key: "open-2", text: "Breathe in slowly, and breathe out slowly." },
+      { at: 32, key: "open-3", text: "A new day has begun in this moment." },
+      { at: 41, key: "open-4", text: "What kind of day do you hope this will be?" }
+    ],
+    visionLines: [
+      { at: 56, key: "vision-1", text: "There is no need to hurry." },
+      { at: 64, key: "vision-2", text: "There is no need to force an answer." },
+      { at: 74, key: "vision-3", text: "Simply let one meaningful scene arise in your heart." },
+      { at: 88, key: "vision-4", text: "It may be a healthier version of you." },
+      { at: 96, key: "vision-5", text: "It may be you smiling with quiet brightness." },
+      { at: 106, key: "vision-6", text: "It may be you helping someone with care." },
+      { at: 114, key: "vision-7", text: "It may be a life you have long hoped to live." },
+      { at: 124, key: "vision-8", text: "Let that scene appear slowly on the screen of your heart." },
+      { at: 136, key: "vision-9", text: "Feel it naturally, as if it is already beginning." },
+      { at: 146, key: "vision-10", text: "What expression is on your face there?" },
+      { at: 154, key: "vision-11", text: "What kind of energy are you sharing with the world?" }
+    ],
+    closingLines: [
+      { at: 170, key: "close-1", text: "The future is not far away. It is shaped by the choices of this moment." },
+      { at: 176, key: "close-2", text: "Today, I choose my truest possibility." },
+      { at: 179, key: "close-3", text: "With a small smile, begin your day." }
+    ]
+  }
+} as const;
+
 function normalizeDuration(value: string | null) {
   const parsed = Number(value);
 
@@ -193,6 +315,14 @@ function getMorningGateStage(door: MeditationDoor, elapsedSeconds: number) {
     return "closing";
   }
 
+  if (door === "vision") {
+    if (elapsedSeconds < 15) return "openingFade";
+    if (elapsedSeconds < 45) return "openingNarration";
+    if (elapsedSeconds < 160) return "vision";
+    if (elapsedSeconds < 170) return "integration";
+    return "closing";
+  }
+
   if (elapsedSeconds < 15) return "openingFade";
   if (elapsedSeconds < 35) return "openingNarration";
   if (elapsedSeconds < 80) return "breathing";
@@ -207,6 +337,7 @@ export default function MeditationPage() {
   const journeyCopy = useMemo(() => getRhythmJourneyContent(language), [language]);
   const affirmationCopy = affirmationGateCopy.jp;
   const energyCopy = energyGateCopy.jp;
+  const visionCopy = visionGateCopy[(language === "kr" || language === "en" || language === "jp") ? language : "jp"];
   const [totalSeconds, setTotalSeconds] = useState(60);
   const [secondsLeft, setSecondsLeft] = useState(60);
   const [meditationType, setMeditationType] = useState<MeditationType>("default");
@@ -232,8 +363,9 @@ export default function MeditationPage() {
   const isComplete = secondsLeft <= 0;
   const isAffirmationGate = meditationType === "morning" && meditationDoor === "affirmation";
   const isEnergyGate = meditationType === "morning" && meditationDoor === "energy";
-  const isStructuredMorningGate = isAffirmationGate || isEnergyGate;
-  const morningGateCopy = isEnergyGate ? energyCopy : affirmationCopy;
+  const isVisionGate = meditationType === "morning" && meditationDoor === "vision";
+  const isStructuredMorningGate = isAffirmationGate || isEnergyGate || isVisionGate;
+  const morningGateCopy = isVisionGate ? visionCopy : isEnergyGate ? energyCopy : affirmationCopy;
   const content = copy.variants[meditationType];
   const durationVariant = getDurationVariant(totalSeconds);
   const durationTextSet = copy.durationTexts?.[durationVariant];
@@ -281,10 +413,11 @@ export default function MeditationPage() {
       ? nextJourneyDay
       : Number(storedJourneyDay);
 
-    const resolvedDuration =
-      nextType === "morning" && (nextDoor === "affirmation" || nextDoor === "energy")
-        ? AFFIRMATION_TOTAL_SECONDS
-        : nextDuration;
+    const isThreeMinuteMorningDoor =
+      nextType === "morning" &&
+      (nextDoor === "affirmation" || nextDoor === "energy" || nextDoor === "vision");
+
+    const resolvedDuration = isThreeMinuteMorningDoor ? AFFIRMATION_TOTAL_SECONDS : nextDuration;
     setTotalSeconds(resolvedDuration);
     setSecondsLeft(resolvedDuration);
     setMeditationType(nextType);
@@ -503,6 +636,7 @@ export default function MeditationPage() {
       ...("awarenessLines" in morningGateCopy ? morningGateCopy.awarenessLines : []),
       ...("affirmationLines" in morningGateCopy ? morningGateCopy.affirmationLines : []),
       ...("energyLines" in morningGateCopy ? morningGateCopy.energyLines : []),
+      ...("visionLines" in morningGateCopy ? morningGateCopy.visionLines : []),
       ...morningGateCopy.closingLines
     ];
     const nextLine = allLines.find(
