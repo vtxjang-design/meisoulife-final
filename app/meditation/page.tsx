@@ -31,6 +31,42 @@ type MeditationDoor =
   | "sleep"
   | null;
 
+type StructuredMorningStage =
+  | "openingFade"
+  | "openingNarration"
+  | "breathing"
+  | "bodyAwareness"
+  | "affirmation"
+  | "energy"
+  | "vision"
+  | "integration"
+  | "closing";
+
+type StructuredMorningLine = { at: number; key: string; text: string };
+
+type StructuredMorningCopy = {
+  title: string;
+  subtitle: string;
+  duration: string;
+  audioLabel: string;
+  pause: string;
+  resume: string;
+  inhale: string;
+  exhale: string;
+  completionTitle: string;
+  completionMessage: string;
+  completionNote: string;
+  completionButton: string;
+  openingFade: string;
+  integration: string;
+  openingLines: readonly StructuredMorningLine[];
+  closingLines: readonly StructuredMorningLine[];
+  affirmationLines?: readonly StructuredMorningLine[];
+  awarenessLines?: readonly StructuredMorningLine[];
+  energyLines?: readonly StructuredMorningLine[];
+  visionLines?: readonly StructuredMorningLine[];
+};
+
 const affirmationGateCopy = {
   jp: {
     title: "今日の自分を選ぶ",
@@ -305,7 +341,7 @@ function getJourneyGuidanceStage(elapsedSeconds: number, totalSeconds: number) {
   return "breathing";
 }
 
-function getMorningGateStage(door: MeditationDoor, elapsedSeconds: number) {
+function getMorningGateStage(door: MeditationDoor, elapsedSeconds: number): StructuredMorningStage {
   if (door === "energy") {
     if (elapsedSeconds < 15) return "openingFade";
     if (elapsedSeconds < 45) return "openingNarration";
@@ -329,6 +365,62 @@ function getMorningGateStage(door: MeditationDoor, elapsedSeconds: number) {
   if (elapsedSeconds < 130) return "affirmation";
   if (elapsedSeconds < 160) return "integration";
   return "closing";
+}
+
+function getStructuredMorningSpeechSettings(language: "jp" | "kr" | "en") {
+  if (language === "kr") {
+    return {
+      lang: "ko-KR",
+      rate: 0.84,
+      pitch: 1.01,
+      volume: 0.94,
+      preferredNames: ["Yuna", "Sora", "Google 한국어", "Siri"]
+    };
+  }
+
+  if (language === "en") {
+    return {
+      lang: "en-US",
+      rate: 0.85,
+      pitch: 1,
+      volume: 0.94,
+      preferredNames: ["Samantha", "Ava", "Victoria", "Google US English", "Siri"]
+    };
+  }
+
+  return {
+    lang: "ja-JP",
+    rate: 0.84,
+    pitch: 0.98,
+    volume: 0.94,
+    preferredNames: ["Kyoko", "Otoya", "Google 日本語", "Siri"]
+  };
+}
+
+function pickStructuredMorningVoice(
+  voices: SpeechSynthesisVoice[],
+  lang: string,
+  preferredNames: string[]
+) {
+  const matchingVoices = voices.filter((voice) =>
+    voice.lang.toLowerCase().startsWith(lang.toLowerCase().slice(0, 2))
+  );
+
+  for (const preferredName of preferredNames) {
+    const matchedVoice = matchingVoices.find((voice) => voice.name.includes(preferredName));
+
+    if (matchedVoice) {
+      return matchedVoice;
+    }
+  }
+
+  const localVoice = matchingVoices.find((voice) => voice.localService);
+
+  if (localVoice) {
+    return localVoice;
+  }
+
+  return matchingVoices[0];
 }
 
 export default function MeditationPage() {
@@ -365,14 +457,14 @@ export default function MeditationPage() {
   const isEnergyGate = meditationType === "morning" && meditationDoor === "energy";
   const isVisionGate = meditationType === "morning" && meditationDoor === "vision";
   const isStructuredMorningGate = isAffirmationGate || isEnergyGate || isVisionGate;
-  const morningGateCopy = isVisionGate ? visionCopy : isEnergyGate ? energyCopy : affirmationCopy;
+  const morningGateCopy: StructuredMorningCopy = isVisionGate ? visionCopy : isEnergyGate ? energyCopy : affirmationCopy;
   const content = copy.variants[meditationType];
   const durationVariant = getDurationVariant(totalSeconds);
   const durationTextSet = copy.durationTexts?.[durationVariant];
   const journeyAudioSource = journeyDay ? journeyAudioMap[journeyDay] : undefined;
   const journeyGuidance = journeyDay ? getRhythmJourneyGuidance(language, journeyDay) : undefined;
   const ambientAudioSource = journeyMode && journeyAudioSource ? journeyAudioSource : undefined;
-  const ambientAudioVolume = journeyMode ? 0.65 : undefined;
+  const ambientAudioVolume = journeyMode ? 0.65 : isStructuredMorningGate ? 0.22 : undefined;
   const journeyGuidanceStage = getJourneyGuidanceStage(elapsedTotalSeconds, totalSeconds);
   const affirmationStage = isStructuredMorningGate ? getMorningGateStage(meditationDoor, elapsedTotalSeconds) : null;
   const topText = journeyMode
@@ -633,10 +725,10 @@ export default function MeditationPage() {
 
     const allLines = [
       ...morningGateCopy.openingLines,
-      ...("awarenessLines" in morningGateCopy ? morningGateCopy.awarenessLines : []),
-      ...("affirmationLines" in morningGateCopy ? morningGateCopy.affirmationLines : []),
-      ...("energyLines" in morningGateCopy ? morningGateCopy.energyLines : []),
-      ...("visionLines" in morningGateCopy ? morningGateCopy.visionLines : []),
+      ...(morningGateCopy.awarenessLines ?? []),
+      ...(morningGateCopy.affirmationLines ?? []),
+      ...(morningGateCopy.energyLines ?? []),
+      ...(morningGateCopy.visionLines ?? []),
       ...morningGateCopy.closingLines
     ];
     const nextLine = allLines.find(
@@ -653,17 +745,29 @@ export default function MeditationPage() {
     if ("speechSynthesis" in window) {
       try {
         window.speechSynthesis.cancel();
+        const settings = getStructuredMorningSpeechSettings(language);
         const utterance = new SpeechSynthesisUtterance(nextLine.text);
-        utterance.lang = "ja-JP";
-        utterance.rate = 0.9;
-        utterance.pitch = 0.92;
-        utterance.volume = 0.92;
+        utterance.lang = settings.lang;
+        utterance.rate = settings.rate;
+        utterance.pitch = settings.pitch;
+        utterance.volume = settings.volume;
+
+        const selectedVoice = pickStructuredMorningVoice(
+          window.speechSynthesis.getVoices(),
+          settings.lang,
+          settings.preferredNames
+        );
+
+        if (selectedVoice) {
+          utterance.voice = selectedVoice;
+        }
+
         window.speechSynthesis.speak(utterance);
       } catch (error) {
         console.warn("[affirmation-gate] speech synthesis unavailable", error);
       }
     }
-  }, [elapsedTotalSeconds, isComplete, isPaused, isStructuredMorningGate, morningGateCopy]);
+  }, [elapsedTotalSeconds, isComplete, isPaused, isStructuredMorningGate, language, morningGateCopy]);
 
   useEffect(() => {
     if (!isStructuredMorningGate || typeof window === "undefined") {
