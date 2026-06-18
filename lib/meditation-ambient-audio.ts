@@ -4,6 +4,7 @@ import type { MutableRefObject } from "react";
 
 const AMBIENT_AUDIO_SRC = "/audio/birds-nature-ambience.mp3";
 const SOUND_PREFERENCE_KEY = "meisoulife_nature_sound_enabled";
+export const STRUCTURED_AMBIENT_PENDING_KEY = "meisoulife_structured_ambient_pending";
 const TARGET_VOLUME = 0.32;
 const FADE_DURATION_MS = 2000;
 

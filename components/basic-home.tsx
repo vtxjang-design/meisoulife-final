@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getChallengeRhythmProgress } from "@/lib/challenge-rhythm";
 import { getLocaleCopy, useLanguage } from "@/lib/i18n";
+import { getNatureSoundPreference, STRUCTURED_AMBIENT_PENDING_KEY } from "@/lib/meditation-ambient-audio";
 import { getTodayRhythmCheckIn } from "@/lib/today-rhythm-checkin";
 import { getReturnRhythmSnapshot } from "@/lib/return-rhythm";
 import { RHYTHM_JOURNEY_STORAGE_KEY } from "@/lib/rhythm-journey";
@@ -1477,6 +1478,14 @@ export function BasicHome({
     setTransitionDoor({ phase, door });
 
     window.setTimeout(() => {
+      if (phase === "morning" && door.key === "affirmation") {
+        if (getNatureSoundPreference()) {
+          window.sessionStorage.setItem(STRUCTURED_AMBIENT_PENDING_KEY, "1");
+        } else {
+          window.sessionStorage.removeItem(STRUCTURED_AMBIENT_PENDING_KEY);
+        }
+      }
+
       window.location.href = buildRhythmMeditationHref(phase, door.key);
     }, 950);
   }

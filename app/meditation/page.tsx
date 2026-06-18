@@ -9,6 +9,7 @@ import {
   resumeAmbientNatureAudio,
   setNatureSoundPreference,
   startAmbientNatureAudio,
+  STRUCTURED_AMBIENT_PENDING_KEY,
   stopAmbientNatureAudio
 } from "@/lib/meditation-ambient-audio";
 import { handleMeditationComplete as triggerMeditationCompletion, supportsMeditationVibration } from "@/lib/meditation-completion";
@@ -596,6 +597,7 @@ export default function MeditationPage() {
   const [ambientVideoFailed, setAmbientVideoFailed] = useState(false);
   const [showAmbientRetry, setShowAmbientRetry] = useState(false);
   const [needsUserStart, setNeedsUserStart] = useState(false);
+  const [pendingStructuredAmbientStart, setPendingStructuredAmbientStart] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [affirmationMessage, setAffirmationMessage] = useState<string | null>(null);
   const [journeyMode, setJourneyMode] = useState(false);
@@ -659,6 +661,8 @@ export default function MeditationPage() {
     const nextReturnTo = searchParams.get("returnTo");
     const pendingJourneyAudio =
       typeof window === "undefined" ? null : window.sessionStorage.getItem(JOURNEY_AUDIO_PENDING_KEY);
+    const pendingStructuredAmbientAudio =
+      typeof window === "undefined" ? null : window.sessionStorage.getItem(STRUCTURED_AMBIENT_PENDING_KEY);
     const storedJourneyDay =
       typeof window === "undefined" ? null : window.sessionStorage.getItem(JOURNEY_AUDIO_DAY_KEY);
     const resolvedJourneyDay = Number.isInteger(nextJourneyDay) && nextJourneyDay >= 1 && nextJourneyDay <= 7
@@ -668,14 +672,21 @@ export default function MeditationPage() {
     const isThreeMinuteMorningDoor =
       nextType === "morning" &&
       (nextDoor === "affirmation" || nextDoor === "energy" || nextDoor === "vision");
+    const shouldResumeStructuredAmbient = nextType === "morning" && nextDoor === "affirmation" && pendingStructuredAmbientAudio === "1";
 
     const resolvedDuration = isThreeMinuteMorningDoor ? AFFIRMATION_TOTAL_SECONDS : nextDuration;
     setTotalSeconds(resolvedDuration);
     setSecondsLeft(resolvedDuration);
     setMeditationType(nextType);
     setMeditationDoor(nextDoor);
-    const nextSoundEnabled = nextJourneyMode && pendingJourneyAudio ? true : getNatureSoundPreference();
+    const nextSoundEnabled =
+      nextJourneyMode && pendingJourneyAudio
+        ? true
+        : shouldResumeStructuredAmbient
+          ? true
+          : getNatureSoundPreference();
     setSoundEnabled(nextSoundEnabled);
+    setPendingStructuredAmbientStart(shouldResumeStructuredAmbient);
     setJourneyMode(nextJourneyMode);
     setJourneyDay(Number.isInteger(resolvedJourneyDay) && resolvedJourneyDay >= 1 && resolvedJourneyDay <= 7 ? resolvedJourneyDay : null);
     setReturnToHref(nextReturnTo || "/rhythm-journey");
@@ -720,10 +731,12 @@ export default function MeditationPage() {
       setNeedsUserStart(false);
       setSoundEnabled(true);
       setNatureSoundPreference(true);
+      setPendingStructuredAmbientStart(false);
 
       if (typeof window !== "undefined") {
         window.sessionStorage.removeItem(JOURNEY_AUDIO_PENDING_KEY);
         window.sessionStorage.removeItem(JOURNEY_AUDIO_DAY_KEY);
+        window.sessionStorage.removeItem(STRUCTURED_AMBIENT_PENDING_KEY);
       }
 
       return;
@@ -740,6 +753,14 @@ export default function MeditationPage() {
 
       if (typeof window !== "undefined") {
         console.warn("[Journey Audio] exact pending state kept for manual retry");
+      }
+    } else if (isStructuredMorningGate) {
+      setSoundEnabled(false);
+      setNeedsUserStart(true);
+      setShowAmbientRetry(false);
+      setPendingStructuredAmbientStart(false);
+      if (result.error) {
+        console.error("[Morning Gate Audio] autoplay failed:", result.error);
       }
     } else {
       setShowAmbientRetry(true);
@@ -883,6 +904,16 @@ export default function MeditationPage() {
   }, [ambientAudioSource, ambientAudioVolume, hasUserGesture, isComplete, journeyMode, soundEnabled]);
 
   useEffect(() => {
+    if (!pendingStructuredAmbientStart || !isAffirmationGate || !ambientAudioSource || isComplete) {
+      return;
+    }
+
+    startAmbientNatureAudio(ambientAudioRef, true, ambientAudioSource, ambientAudioVolume).then((result) => {
+      void handleAmbientStartResult(result);
+    });
+  }, [ambientAudioSource, ambientAudioVolume, isAffirmationGate, isComplete, pendingStructuredAmbientStart]);
+
+  useEffect(() => {
     if (!journeyMode || !ambientAudioSource || !soundEnabled || isComplete) {
       return;
     }
@@ -1017,6 +1048,12 @@ export default function MeditationPage() {
     await handleAmbientStartResult(result, true);
   }
 
+  async function handleStructuredAmbientStart() {
+    setHasUserGesture(true);
+    const result = await startAmbientNatureAudio(ambientAudioRef, true, ambientAudioSource, ambientAudioVolume);
+    await handleAmbientStartResult(result, true);
+  }
+
   function handlePauseToggle() {
     setHasUserGesture(true);
     setIsPaused((current) => {
@@ -1117,15 +1154,15 @@ export default function MeditationPage() {
             )}
 
             <div className="mt-12 flex min-h-[320px] w-full flex-col items-center justify-center">
-              {journeyMode && needsUserStart ? (
+              {(journeyMode || isStructuredMorningGate) && needsUserStart ? (
                 <div className="mb-6 w-full max-w-md rounded-[24px] border border-[rgba(212,178,106,0.18)] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-5 text-center shadow-[0_18px_50px_rgba(4,12,24,0.18)]">
-                  <p className="text-sm leading-7 text-white/76">{journeyCopy.audioPrompt}</p>
+                  <p className="text-sm leading-7 text-white/76">{journeyMode ? journeyCopy.audioPrompt : copy.audioPrompt}</p>
                   <button
                     type="button"
-                    onClick={handleJourneyAudioStart}
+                    onClick={journeyMode ? handleJourneyAudioStart : handleStructuredAmbientStart}
                     className="button-nowrap mt-4 inline-flex min-h-[44px] items-center justify-center rounded-full border border-gold/20 bg-gold/10 px-4 py-2 text-sm font-semibold text-gold transition hover:bg-gold/15 hover:text-[#f5e4b5]"
                   >
-                    {journeyCopy.audioStart}
+                    {journeyMode ? journeyCopy.audioStart : copy.audioStart}
                   </button>
                 </div>
               ) : null}
