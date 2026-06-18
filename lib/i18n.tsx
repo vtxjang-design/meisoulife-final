@@ -896,18 +896,18 @@ export const siteCopy = {
         },
         morning: {
           topText: "朝の3分で、今日の輪郭を静かに整えましょう",
-          intro: "起きたばかりの心と身体をやさしく目覚めさせながら、今日の始まりを落ち着いて迎えます。",
-          completionTitle: "朝のリズムが整いました。今日を静かに始めましょう。"
+          intro: "起きたばかりの心と身体をやさしく目覚めさせながら、今日の始まりを落ち着いて迎えていきましょう。",
+          completionTitle: "朝のリズムが整いました。このまま、今日をやさしく始めていきましょう。"
         },
         day: {
-          topText: "今ここで、\n1分だけ中心へ戻りましょう。",
-          intro: "忙しさの流れから少し離れ、\n呼吸とともに整える時間です。",
-          completionTitle: "60秒、今ここに戻りました。"
+          topText: "今ここで、\n1分だけ自分の中心へ戻ってみましょう。",
+          intro: "忙しさの流れから少し離れて、\n呼吸と一緒に自分を整える時間です。",
+          completionTitle: "60秒、自分の中心へ静かに戻ってきました。"
         },
         night: {
-          topText: "夜の3分で、今日を静かに手放しましょう",
-          intro: "一日の緊張を少しずつ緩めながら、眠りの前に心と身体をやわらかく閉じていきます。",
-          completionTitle: "夜のリズムが整いました。今日を静かに手放しましょう。"
+          topText: "夜の3分で、今日をやさしく手放していきましょう",
+          intro: "一日の緊張を少しずつゆるめながら、眠りの前に心と身体をやさしく休ませていきます。",
+          completionTitle: "夜のリズムが整いました。どうぞ、そのままやわらかく休んでください。"
         }
       },
       phases: {
@@ -920,8 +920,8 @@ export const siteCopy = {
         hold: "止めて… 2秒",
         exhale: "吐いて… 4秒"
       },
-      completionMessage: "おつかれさま。\n今の静けさを、\n少しだけ感じてください。",
-      completionReturnText: "また戻ってきてください。",
+      completionMessage: "おつかれさまでした。\n今の静けさを、\nもう少しだけ感じてみましょう。",
+      completionReturnText: "また、いつでも戻ってきてください。",
       completionBody: "この静かなリズムを、7日間だけ続けてみませんか？",
       completionPrimary: "7日リズムを始める",
       completionSecondary: "今日はここまで",
@@ -1781,18 +1781,18 @@ export const siteCopy = {
         },
         morning: {
           topText: "아침 3분으로, 오늘의 결을 조용히 정돈해봅시다",
-          intro: "막 깨어난 몸과 마음을 부드럽게 깨우며 오늘의 시작을 차분하게 맞이합니다.",
-          completionTitle: "아침의 리듬이 정돈되었습니다. 오늘을 조용히 시작해봅시다."
+          intro: "막 깨어난 몸과 마음을 부드럽게 깨우며, 오늘의 시작을 차분하게 맞이해 봅시다.",
+          completionTitle: "아침의 리듬이 정돈되었습니다. 이 고요함으로 오늘을 시작해 봅시다."
         },
         day: {
-          topText: "지금 여기에서,\n1분만 중심으로 돌아가 봅시다.",
-          intro: "바쁨의 흐름에서 잠시 벗어나,\n호흡과 함께 정돈하는 시간입니다.",
-          completionTitle: "60초 동안, 지금 여기로 돌아왔습니다."
+          topText: "지금 여기에서,\n1분만 내 중심으로 돌아가 봅시다.",
+          intro: "바쁨의 흐름에서 잠시 벗어나,\n호흡과 함께 나를 정돈하는 시간입니다.",
+          completionTitle: "60초 동안, 내 중심으로 조용히 돌아왔습니다."
         },
         night: {
-          topText: "밤의 3분으로, 오늘을 조용히 놓아줍시다",
-          intro: "하루의 긴장을 조금씩 풀며 잠들기 전 마음과 몸을 부드럽게 닫아갑니다.",
-          completionTitle: "밤의 리듬이 정돈되었습니다. 오늘을 조용히 놓아줍시다."
+          topText: "밤의 3분으로, 오늘을 부드럽게 놓아줍시다",
+          intro: "하루의 긴장을 조금씩 풀며, 잠들기 전 마음과 몸을 부드럽게 쉬게 해줍니다.",
+          completionTitle: "밤의 리듬이 정돈되었습니다. 이제 편안하게 쉬어가세요."
         }
       },
       phases: {
@@ -1805,8 +1805,8 @@ export const siteCopy = {
         hold: "멈추기… 2초",
         exhale: "내쉬기… 4초"
       },
-      completionMessage: "수고했어요.\n지금의 고요함을,\n잠시만 느껴보세요.",
-      completionReturnText: "또 돌아와 주세요.",
+      completionMessage: "수고했어요.\n지금의 고요함을,\n조금만 더 느껴보세요.",
+      completionReturnText: "또, 언제든 돌아와 주세요.",
       completionBody: "이 조용한 리듬을 7일만 더 이어가 보시겠어요?",
       completionPrimary: "7일 리듬 시작하기",
       completionSecondary: "오늘은 여기까지",
@@ -2666,18 +2666,18 @@ export const siteCopy = {
         },
         morning: {
           topText: "Use these 3 minutes to settle into the morning",
-          intro: "Gently wake the body and mind, and let the day begin from a quieter place.",
-          completionTitle: "The morning rhythm is settled. Begin the day quietly."
+          intro: "Gently wake the body and mind, and let the day begin from a quieter, steadier place.",
+          completionTitle: "The morning rhythm has settled. Let the day begin softly from here."
         },
         day: {
-          topText: "Right here,\nreturn to your center for one minute.",
-          intro: "Step out of the rush for a moment,\nand settle with your breath.",
-          completionTitle: "For 60 seconds, you returned to the present."
+          topText: "Right here,\ntake one minute to return to your center.",
+          intro: "Step out of the rush for a moment,\nand let your breath settle you again.",
+          completionTitle: "For 60 seconds, you quietly returned to your center."
         },
         night: {
-          topText: "Use these 3 minutes to release the day",
-          intro: "Let the tension of the day soften so mind and body can close gently before sleep.",
-          completionTitle: "The night rhythm is settled. Let the day go quietly."
+          topText: "Use these 3 minutes to gently release the day",
+          intro: "Let the tension of the day soften so mind and body can rest more gently before sleep.",
+          completionTitle: "The night rhythm has settled. You can rest softly from here."
         }
       },
       phases: {
@@ -2690,8 +2690,8 @@ export const siteCopy = {
         hold: "Hold... 2s",
         exhale: "Exhale... 4s"
       },
-      completionMessage: "Well done.\nStay with this stillness\nfor just a moment.",
-      completionReturnText: "Please come back again.",
+      completionMessage: "You did well.\nStay with this stillness\nfor one more gentle moment.",
+      completionReturnText: "Come back whenever you need to.",
       completionBody: "Would you like to continue this quiet rhythm for just seven days?",
       completionPrimary: "Start the 7-day rhythm",
       completionSecondary: "That’s enough for today",
