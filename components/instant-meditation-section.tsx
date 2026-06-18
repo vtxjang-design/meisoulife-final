@@ -219,10 +219,15 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     if (secondsLeft === 0) {
       clearTimer();
       setRunning(false);
-      videoRef.current?.pause();
-      videoRef.current && (videoRef.current.currentTime = Math.min(videoRef.current.currentTime, videoRef.current.duration || videoRef.current.currentTime));
-      videoRef.current && (videoRef.current.muted = true);
-      videoRef.current && (videoRef.current.volume = 0);
+      const currentVideo = videoRef.current;
+
+      if (currentVideo) {
+        currentVideo.currentTime = Math.min(currentVideo.currentTime, currentVideo.duration || currentVideo.currentTime);
+        void fadeOutVideoAudio(currentVideo).finally(() => {
+          currentVideo.muted = true;
+          currentVideo.volume = 0;
+        });
+      }
       markDailyRhythmCompleted();
     }
   }, [secondsLeft]);
@@ -284,6 +289,27 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const startSupportText = getStartSupportText(copy.start);
   const sanctuaryVisual = sanctuaryVisuals[selectedGate];
   const activeVideoSource = hasSelectedGate ? sanctuaryVisual.source : null;
+
+  async function fadeOutVideoAudio(video: HTMLVideoElement) {
+    if (video.muted || video.volume <= 0) {
+      video.pause();
+      return;
+    }
+
+    const startVolume = video.volume;
+    const steps = 12;
+    const stepDuration = 100;
+
+    for (let step = 1; step <= steps; step += 1) {
+      await new Promise<void>((resolve) => {
+        window.setTimeout(resolve, stepDuration);
+      });
+
+      video.volume = startVolume * (1 - step / steps);
+    }
+
+    video.pause();
+  }
 
   function clearTimer() {
     if (timerRef.current) {
@@ -459,7 +485,8 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
       hasUserGesture,
       soundEnabled,
       vibrationEnabled: true,
-      audioContextRef
+      audioContextRef,
+      playSoundOnComplete: false
     });
   }
 

@@ -311,7 +311,8 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
       hasUserGesture,
       soundEnabled,
       vibrationEnabled,
-      audioContextRef
+      audioContextRef,
+      playSoundOnComplete: false
     });
   }
 

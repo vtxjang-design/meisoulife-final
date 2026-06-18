@@ -12,6 +12,7 @@ type MeditationCompletionOptions = {
   soundEnabled: boolean;
   vibrationEnabled: boolean;
   audioContextRef: MutableRefObject<AudioContext | null>;
+  playSoundOnComplete?: boolean;
 };
 
 function getAudioContext(audioContextRef: MutableRefObject<AudioContext | null>) {
@@ -113,7 +114,8 @@ export async function handleMeditationComplete({
   hasUserGesture,
   soundEnabled,
   vibrationEnabled,
-  audioContextRef
+  audioContextRef,
+  playSoundOnComplete = true
 }: MeditationCompletionOptions) {
   if (!hasUserGesture) {
     return;
@@ -121,7 +123,9 @@ export async function handleMeditationComplete({
 
   triggerCompletionVibration(vibrationEnabled, hasUserGesture);
 
-  if (soundEnabled) {
-    await playCompletionChime(audioContextRef);
+  if (!soundEnabled || !playSoundOnComplete) {
+    return;
   }
+
+  await playCompletionChime(audioContextRef);
 }
