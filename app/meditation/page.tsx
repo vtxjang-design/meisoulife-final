@@ -179,7 +179,7 @@ const energyGateCopy = {
     resume: "続ける",
     inhale: "吸う",
     exhale: "吐く",
-    completionTitle: "身体が目覚めました。",
+    completionTitle: "脳と体が目覚めました。",
     completionMessage: "今日のエネルギーとともに進みましょう。",
     completionNote: "少しずつ身体を開きながら、一日を始めていけば大丈夫です。",
     completionButton: "朝の扉へ戻る",
@@ -206,7 +206,7 @@ const energyGateCopy = {
     ],
     closingLines: [
       { at: 170, key: "close-1", text: "ありがとうございます。" },
-      { at: 175, key: "close-2", text: "身体が少し目覚めました。" },
+      { at: 175, key: "close-2", text: "脳と体が目覚めました。" },
       { at: 179, key: "close-3", text: "今日のエネルギーとともに、歩き始めましょう。" }
     ]
   },
