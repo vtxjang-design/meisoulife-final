@@ -119,3 +119,36 @@ export async function stopAmbientNatureAudio(audioRef: MutableRefObject<HTMLAudi
   audio.pause();
   audio.currentTime = 0;
 }
+
+export function pauseAmbientNatureAudio(audioRef: MutableRefObject<HTMLAudioElement | null>) {
+  const audio = audioRef.current;
+
+  if (!audio) {
+    return;
+  }
+
+  audio.pause();
+}
+
+export async function resumeAmbientNatureAudio(
+  audioRef: MutableRefObject<HTMLAudioElement | null>,
+  enabled = true,
+  targetVolume = TARGET_VOLUME
+): Promise<AmbientAudioResult> {
+  const audio = audioRef.current;
+
+  if (!enabled || !audio || typeof window === "undefined") {
+    return { started: false };
+  }
+
+  try {
+    audio.muted = false;
+    audio.volume = targetVolume;
+    await audio.play();
+    return { started: true };
+  } catch (error) {
+    console.error("Audio resume failed:", error);
+    console.warn("Ambience audio resume failed", error);
+    return { started: false, error };
+  }
+}

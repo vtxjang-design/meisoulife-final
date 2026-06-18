@@ -3,7 +3,14 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLanguage, useSiteCopy } from "@/lib/i18n";
-import { getNatureSoundPreference, setNatureSoundPreference, startAmbientNatureAudio, stopAmbientNatureAudio } from "@/lib/meditation-ambient-audio";
+import {
+  getNatureSoundPreference,
+  pauseAmbientNatureAudio,
+  resumeAmbientNatureAudio,
+  setNatureSoundPreference,
+  startAmbientNatureAudio,
+  stopAmbientNatureAudio
+} from "@/lib/meditation-ambient-audio";
 import { handleMeditationComplete as triggerMeditationCompletion, supportsMeditationVibration } from "@/lib/meditation-completion";
 import { getRhythmJourneyContent, getRhythmJourneyGuidance, journeyAudioMap } from "@/lib/rhythm-journey";
 
@@ -16,6 +23,7 @@ const AI_COACH_URL =
 const JOURNEY_AUDIO_PENDING_KEY = "meisoulife_journey_audio_pending";
 const JOURNEY_AUDIO_DAY_KEY = "meisoulife_journey_day";
 const AFFIRMATION_TOTAL_SECONDS = 180;
+const AFFIRMATION_AMBIENT_AUDIO_SRC = "/audio/morning/affirmation.mp3";
 
 type BreathPhase = "inhale" | "hold" | "exhale";
 type MeditationType = "default" | "morning" | "day" | "night";
@@ -610,8 +618,13 @@ export default function MeditationPage() {
   const durationTextSet = copy.durationTexts?.[durationVariant];
   const journeyAudioSource = journeyDay ? journeyAudioMap[journeyDay] : undefined;
   const journeyGuidance = journeyDay ? getRhythmJourneyGuidance(language, journeyDay) : undefined;
-  const ambientAudioSource = journeyMode && journeyAudioSource ? journeyAudioSource : undefined;
-  const ambientAudioVolume = journeyMode ? 0.65 : isStructuredMorningGate ? 0.22 : undefined;
+  const ambientAudioSource =
+    journeyMode && journeyAudioSource
+      ? journeyAudioSource
+      : isAffirmationGate
+        ? AFFIRMATION_AMBIENT_AUDIO_SRC
+        : undefined;
+  const ambientAudioVolume = journeyMode ? 0.65 : isAffirmationGate ? 0.2 : isStructuredMorningGate ? 0.22 : undefined;
   const journeyGuidanceStage = getJourneyGuidanceStage(elapsedTotalSeconds, totalSeconds);
   const affirmationStage = isStructuredMorningGate ? getMorningGateStage(meditationDoor, elapsedTotalSeconds) : null;
   const topText = journeyMode
@@ -824,6 +837,29 @@ export default function MeditationPage() {
       window.clearTimeout(timer);
     };
   }, [isPaused, secondsLeft]);
+
+  useEffect(() => {
+    if (!isStructuredMorningGate || !soundEnabled) {
+      return;
+    }
+
+    if (isPaused) {
+      pauseAmbientNatureAudio(ambientAudioRef);
+      return;
+    }
+
+    if (!hasUserGesture || isComplete) {
+      return;
+    }
+
+    resumeAmbientNatureAudio(ambientAudioRef, true, ambientAudioVolume).then((result) => {
+      if (!result.started && ambientAudioSource) {
+        startAmbientNatureAudio(ambientAudioRef, true, ambientAudioSource, ambientAudioVolume).then((startResult) => {
+          void handleAmbientStartResult(startResult, true);
+        });
+      }
+    });
+  }, [ambientAudioSource, ambientAudioVolume, hasUserGesture, isComplete, isPaused, isStructuredMorningGate, soundEnabled]);
 
   useEffect(() => {
     if (isComplete || !soundEnabled) {
