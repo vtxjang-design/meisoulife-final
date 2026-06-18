@@ -85,7 +85,7 @@ const affirmationGateCopy = {
     integration: "今日の自分を選ぶ",
     openingLines: [
       { at: 15, key: "open-1", text: "目を閉じてください。" },
-      { at: 21, key: "open-2", text: "新しい一日が始まりました。" },
+      { at: 21, key: "open-2", text: "新しい今日が始まりました。" },
       { at: 28, key: "open-3", text: "ゆっくり息を吸います。" }
     ],
     affirmationLines: [
@@ -97,7 +97,7 @@ const affirmationGateCopy = {
     ],
     closingLines: [
       { at: 160, key: "close-1", text: "いいですね。" },
-      { at: 168, key: "close-2", text: "今日の一日が始まります。" },
+      { at: 168, key: "close-2", text: "今日が静かに始まります。" },
       { at: 176, key: "close-3", text: "今日の自分を選びましょう。" }
     ]
   },
@@ -207,7 +207,7 @@ const energyGateCopy = {
     closingLines: [
       { at: 170, key: "close-1", text: "ありがとうございます。" },
       { at: 175, key: "close-2", text: "身体が少し目覚めました。" },
-      { at: 179, key: "close-3", text: "今日のエネルギーとともに、一日を始めましょう。" }
+      { at: 179, key: "close-3", text: "今日のエネルギーとともに、歩き始めましょう。" }
     ]
   },
   kr: {
@@ -311,8 +311,8 @@ const visionGateCopy = {
     openingLines: [
       { at: 15, key: "open-1", text: "目を軽く閉じてください。" },
       { at: 23, key: "open-2", text: "呼吸をゆっくり吸って、ゆっくり吐きます。" },
-      { at: 32, key: "open-3", text: "今この瞬間、新しい一日が始まりました。" },
-      { at: 41, key: "open-4", text: "今日はどんな一日でありたいですか。" }
+      { at: 32, key: "open-3", text: "今この瞬間、新しい今日が始まりました。" },
+      { at: 41, key: "open-4", text: "今日はどんな日にしたいですか。" }
     ],
     visionLines: [
       { at: 56, key: "vision-1", text: "急がなくて大丈夫です。" },
