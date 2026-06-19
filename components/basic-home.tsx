@@ -1644,16 +1644,16 @@ export function BasicHome({
       </section>
 
       {activeDoorCard && activeDoorPhase ? (
-        <div className="fixed inset-0 z-[70] flex items-end justify-center bg-[rgba(3,8,18,0.56)] px-4 pb-4 pt-20 backdrop-blur-[10px] sm:items-center sm:px-6">
+        <div className="fixed inset-0 z-[70] flex items-start justify-center overflow-y-auto overscroll-contain bg-[rgba(3,8,18,0.56)] px-4 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-[calc(env(safe-area-inset-top)+5rem)] backdrop-blur-[10px] sm:items-center sm:px-6 sm:pb-6 sm:pt-6">
           <div className="absolute inset-0" onClick={closeDoorLayer} aria-hidden="true" />
           <section
             aria-modal="true"
             role="dialog"
-            className={`relative z-[71] w-full max-w-3xl overflow-hidden rounded-[34px] border border-[rgba(115,231,210,0.18)] px-5 py-6 shadow-[0_32px_120px_rgba(4,12,24,0.42)] backdrop-blur-[24px] sm:px-7 sm:py-7 ${getGateSurfaceClasses(activeDoorPhase)}`}
+            className={`relative z-[71] my-auto w-full max-w-3xl overflow-x-hidden overflow-y-auto rounded-[34px] border border-[rgba(115,231,210,0.18)] px-5 py-6 shadow-[0_32px_120px_rgba(4,12,24,0.42)] backdrop-blur-[24px] max-sm:max-h-[calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-6.5rem)] sm:px-7 sm:py-7 sm:max-h-[min(90vh,56rem)] ${getGateSurfaceClasses(activeDoorPhase)}`}
           >
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent_24%,rgba(4,8,18,0.34)_100%)]" />
+            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent_24%,rgba(4,8,18,0.34)_100%)]" />
             <div className="relative">
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                   <p className="text-xs uppercase tracking-[0.24em] text-gold/76">{copy.doorLayer.eyebrow}</p>
                   <p className="mt-4 keep-phrase text-base font-semibold tracking-[0.04em] text-gold/90">
@@ -1669,7 +1669,7 @@ export function BasicHome({
                 <button
                   type="button"
                   onClick={closeDoorLayer}
-                  className="button-nowrap inline-flex min-h-[40px] items-center justify-center rounded-full border border-white/12 bg-white/[0.05] px-4 py-2 text-sm font-medium text-white/74 transition hover:bg-white/[0.08] hover:text-white"
+                  className="button-nowrap inline-flex min-h-[44px] w-full items-center justify-center rounded-full border border-white/12 bg-white/[0.05] px-4 py-2 text-sm font-medium text-white/74 transition hover:bg-white/[0.08] hover:text-white sm:min-h-[40px] sm:w-auto"
                 >
                   {copy.doorLayer.close}
                 </button>
@@ -1681,7 +1681,7 @@ export function BasicHome({
                     key={smallDoor.key}
                     type="button"
                     onClick={() => handleEnterSmallDoor(activeDoorPhase, smallDoor)}
-                    className="group w-full rounded-[24px] border border-white/10 bg-white/[0.05] px-4 py-4 text-left transition hover:bg-white/[0.08]"
+                    className="group relative z-[1] w-full rounded-[24px] border border-white/10 bg-white/[0.05] px-4 py-4 text-left transition hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(212,178,106,0.34)]"
                   >
                     <div className="flex items-start gap-4">
                       <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] text-[18px] text-white/84">
