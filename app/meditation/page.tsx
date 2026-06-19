@@ -95,7 +95,7 @@ const affirmationGateCopy = {
     openingLines: [
       { at: 15, key: "open-1", text: "それでは、そっと目を閉じてみましょう。" },
       { at: 21, key: "open-2", text: "新しい今日が、静かに始まっています。" },
-      { at: 28, key: "open-3", text: "まずは、ゆっくり息を吸ってみましょう。" }
+      { at: 28, key: "open-3", text: "まずは、ゆっくり息を吸って、やさしくほどいていきましょう。" }
     ],
     affirmationLines: [
       { at: 80, key: "affirm-1", text: "今日は、目覚めた心で過ごしてみましょう。" },
@@ -128,7 +128,7 @@ const affirmationGateCopy = {
     openingLines: [
       { at: 15, key: "open-1", text: "이제, 눈을 부드럽게 감아볼까요." },
       { at: 21, key: "open-2", text: "새로운 하루가 조용히 시작되고 있습니다." },
-      { at: 28, key: "open-3", text: "먼저 천천히 숨을 들이마셔 봅시다." }
+      { at: 28, key: "open-3", text: "먼저 천천히 숨을 들이마시고, 편안하게 내쉬어 봅시다." }
     ],
     affirmationLines: [
       { at: 80, key: "affirm-1", text: "오늘은 깨어 있는 마음으로 살아가 봅시다." },
@@ -161,7 +161,7 @@ const affirmationGateCopy = {
     openingLines: [
       { at: 15, key: "open-1", text: "Let's gently close our eyes." },
       { at: 21, key: "open-2", text: "A new day is quietly beginning." },
-      { at: 28, key: "open-3", text: "First, take a slow breath in." }
+      { at: 28, key: "open-3", text: "First, take a slow breath in, and gently let it go." }
     ],
     affirmationLines: [
       { at: 80, key: "affirm-1", text: "Today, let me move through this day with an awake heart." },
@@ -196,7 +196,7 @@ const energyGateCopy = {
     integration: "脳と身体を目覚めさせる",
     openingLines: [
       { at: 15, key: "open-1", text: "それでは、目をやさしく閉じてみましょう。" },
-      { at: 23, key: "open-2", text: "まずは、ゆっくり息を吸ってみましょう。" },
+      { at: 23, key: "open-2", text: "まずは、ゆっくり息を吸って、やわらかく吐いてみましょう。" },
       { at: 32, key: "open-3", text: "今の身体の感覚に、そっと意識を向けてみましょう。" },
       { at: 40, key: "open-4", text: "あなたの身体は今、少しずつ目を覚まし始めています。" }
     ],
@@ -236,7 +236,7 @@ const energyGateCopy = {
     integration: "뇌와 몸을 깨우기",
     openingLines: [
       { at: 15, key: "open-1", text: "이제 눈을 부드럽게 감아볼까요." },
-      { at: 23, key: "open-2", text: "먼저 천천히 숨을 들이마셔 봅시다." },
+      { at: 23, key: "open-2", text: "먼저 천천히 숨을 들이마시고, 편안하게 내쉬어 봅시다." },
       { at: 32, key: "open-3", text: "지금 몸에서 느껴지는 감각을 가만히 만나봅시다." },
       { at: 40, key: "open-4", text: "당신의 몸은 지금, 조금씩 깨어나기 시작하고 있습니다." }
     ],
@@ -276,7 +276,7 @@ const energyGateCopy = {
     integration: "Wake Brain and Body",
     openingLines: [
       { at: 15, key: "open-1", text: "Let's gently close our eyes." },
-      { at: 23, key: "open-2", text: "Now take a slow breath in." },
+      { at: 23, key: "open-2", text: "Now take a slow breath in, and gently let it go." },
       { at: 32, key: "open-3", text: "Notice what your body is feeling right now." },
       { at: 40, key: "open-4", text: "Little by little, your body is beginning to wake." }
     ],

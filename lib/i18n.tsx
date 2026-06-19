@@ -1210,7 +1210,7 @@ export const siteCopy = {
       natureLabel: "자연의 리듬과 함께 호흡합니다",
       natureMicrocopy: "지쳤다면,\n여기로 돌아오세요.",
       phaseLabels: {
-        inhale: "숨을 들이쉬고",
+        inhale: "숨을 들이쉬고, 천천히 내쉽니다",
         hold: "그대로 머물고",
         exhale: "숨을 내쉽니다"
       },
