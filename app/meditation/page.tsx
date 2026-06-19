@@ -95,7 +95,7 @@ const affirmationGateCopy = {
     openingLines: [
       { at: 15, key: "open-1", text: "それでは、そっと目を閉じてみましょう。" },
       { at: 21, key: "open-2", text: "新しい今日が、静かに始まっています。" },
-      { at: 28, key: "open-3", text: "まずは、ゆっくり息を吸って、やさしくほどいていきましょう。" }
+      { at: 28, key: "open-3", text: "ゆっくり息を吸って、やさしく吐いてみましょう。" }
     ],
     affirmationLines: [
       { at: 80, key: "affirm-1", text: "今日は、目覚めた心で過ごしてみましょう。" },
@@ -828,7 +828,7 @@ export default function MeditationPage() {
     const markGesture = () => {
       setHasUserGesture(true);
 
-      if (!isComplete && soundEnabled && !journeyMode) {
+      if (!isComplete && soundEnabled && !journeyMode && !isStructuredMorningGate) {
         startAmbientNatureAudio(ambientAudioRef, soundEnabled, ambientAudioSource, ambientAudioVolume).then((result) => {
           void handleAmbientStartResult(result);
         });
@@ -843,7 +843,7 @@ export default function MeditationPage() {
       window.removeEventListener("keydown", markGesture);
       stopAmbientNatureAudio(ambientAudioRef);
     };
-  }, [ambientAudioSource, ambientAudioVolume, isComplete, soundEnabled]);
+  }, [ambientAudioSource, ambientAudioVolume, isComplete, isStructuredMorningGate, journeyMode, soundEnabled]);
 
   useEffect(() => {
     if (secondsLeft <= 0 || isPaused) {
@@ -888,7 +888,7 @@ export default function MeditationPage() {
       return;
     }
 
-    if (!hasUserGesture || journeyMode) {
+    if (!hasUserGesture || journeyMode || isStructuredMorningGate) {
       return;
     }
 
@@ -901,7 +901,7 @@ export default function MeditationPage() {
         stopAmbientNatureAudio(ambientAudioRef);
       }
     };
-  }, [ambientAudioSource, ambientAudioVolume, hasUserGesture, isComplete, journeyMode, soundEnabled]);
+  }, [ambientAudioSource, ambientAudioVolume, hasUserGesture, isComplete, isStructuredMorningGate, journeyMode, soundEnabled]);
 
   useEffect(() => {
     if (!pendingStructuredAmbientStart || !isAffirmationGate || !ambientAudioSource || isComplete) {
