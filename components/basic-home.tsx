@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getChallengeRhythmProgress } from "@/lib/challenge-rhythm";
 import { getLocaleCopy, useLanguage } from "@/lib/i18n";
@@ -123,7 +123,7 @@ const basicHomeCopy = {
       "今の呼吸だけで、\n十分に整い始めています。"
     ],
     markerStone: {
-      title: "Today's Marker Stone",
+      title: "今日の道しるべ",
       subtitle: "今、どんなリズムの上にいますか。",
       support: "小さな立ち止まりが、一日の向きを変えてくれます。",
       bodyTitle: "立ち止まる庭",
@@ -229,9 +229,9 @@ const basicHomeCopy = {
           {
             key: "focus",
             emoji: "🎯",
-            title: "Focus Gate",
+            title: "集中の扉",
             subtitle: "集中を取り戻す",
-            description: "Focus reset",
+            description: "集中を静かに取り戻す1分。",
             guidance: "気持ちが散っているとき",
             openingTitle: "集中を静かに呼び戻します",
             openingBreath: "ひと呼吸して中心へ戻りましょう"
@@ -239,9 +239,9 @@ const basicHomeCopy = {
           {
             key: "relax",
             emoji: "🌿",
-            title: "Relax Gate",
+            title: "休息の扉",
             subtitle: "脳を休ませる",
-            description: "Brain relaxation",
+            description: "考えの熱をやわらかくほどく1分。",
             guidance: "頭を少し休ませたいとき",
             openingTitle: "考えをやわらかくほどきます",
             openingBreath: "肩の力をそっと抜いてください"
@@ -249,9 +249,9 @@ const basicHomeCopy = {
           {
             key: "vitality",
             emoji: "⚡",
-            title: "Vitality Gate",
+            title: "活力の扉",
             subtitle: "気力を充電する",
-            description: "Energy recharge",
+            description: "気力をやさしく満たし直す1分。",
             guidance: "もう少し力を満たしたいとき",
             openingTitle: "静かに気力を満たします",
             openingBreath: "胸の奥まで息を届けてください"
@@ -274,9 +274,9 @@ const basicHomeCopy = {
           {
             key: "release",
             emoji: "🍂",
-            title: "Release Gate",
+            title: "手放しの扉",
             subtitle: "手放しの時間",
-            description: "Letting go",
+            description: "一日の重さを静かにほどく3分。",
             guidance: "今日の重さを下ろしたいとき",
             openingTitle: "一日の重さをほどきます",
             openingBreath: "吐く息を少し長くしてみてください"
@@ -284,9 +284,9 @@ const basicHomeCopy = {
           {
             key: "gratitude",
             emoji: "🙏",
-            title: "Gratitude Gate",
+            title: "感謝の扉",
             subtitle: "感謝の時間",
-            description: "Gratitude meditation",
+            description: "小さな感謝にそっと触れる3分。",
             guidance: "心をやさしく整えたいとき",
             openingTitle: "小さな感謝に触れていきます",
             openingBreath: "静かに胸へ意識を向けてください"
@@ -294,9 +294,9 @@ const basicHomeCopy = {
           {
             key: "sleep",
             emoji: "🌙",
-            title: "Sleep Gate",
+            title: "眠りの扉",
             subtitle: "深い眠りへの準備",
-            description: "Sleep preparation",
+            description: "深い休息のために整える3分。",
             guidance: "深く休む準備をしたいとき",
             openingTitle: "眠りのための静けさを整えます",
             openingBreath: "まぶたの奥をゆるめてください"
@@ -442,7 +442,7 @@ const basicHomeCopy = {
       "지금의 호흡만으로도\n이미 충분히 시작되고 있습니다."
     ],
     markerStone: {
-      title: "오늘의 Marker Stone",
+      title: "오늘의 표지석",
       subtitle: "지금 당신은 어떤 리듬 위에 있습니까?",
       support: "작은 멈춤이 하루의 방향을 바꿉니다.",
       bodyTitle: "멈춤의 정원",
@@ -548,9 +548,9 @@ const basicHomeCopy = {
           {
             key: "focus",
             emoji: "🎯",
-            title: "Focus Gate",
+            title: "집중의 문",
             subtitle: "집중을 되찾기",
-            description: "Focus reset",
+            description: "흩어진 집중을 조용히 모으는 1분.",
             guidance: "마음이 흩어져 있을 때",
             openingTitle: "집중을 조용히 되찾습니다",
             openingBreath: "한 번 숨을 고르고 중심으로 돌아오세요"
@@ -558,9 +558,9 @@ const basicHomeCopy = {
           {
             key: "relax",
             emoji: "🌿",
-            title: "Relax Gate",
+            title: "휴식의 문",
             subtitle: "뇌를 쉬게 하기",
-            description: "Brain relaxation",
+            description: "생각의 열을 부드럽게 낮추는 1분.",
             guidance: "머리를 잠시 쉬게 하고 싶을 때",
             openingTitle: "생각의 결을 부드럽게 풉니다",
             openingBreath: "어깨 힘을 살짝 놓아보세요"
@@ -568,9 +568,9 @@ const basicHomeCopy = {
           {
             key: "vitality",
             emoji: "⚡",
-            title: "Vitality Gate",
+            title: "활력의 문",
             subtitle: "기운 충전하기",
-            description: "Energy recharge",
+            description: "기운을 조용히 다시 채우는 1분.",
             guidance: "조금 더 힘을 채우고 싶을 때",
             openingTitle: "조용히 기운을 채웁니다",
             openingBreath: "가슴 깊이 숨을 보내보세요"
@@ -593,9 +593,9 @@ const basicHomeCopy = {
           {
             key: "release",
             emoji: "🍂",
-            title: "Release Gate",
+            title: "내려놓는 문",
             subtitle: "내려놓는 시간",
-            description: "Letting go",
+            description: "하루의 무게를 조용히 푸는 3분.",
             guidance: "오늘의 무게를 내려놓고 싶을 때",
             openingTitle: "하루의 무게를 풀어냅니다",
             openingBreath: "내쉬는 숨을 조금 길게 해보세요"
@@ -603,9 +603,9 @@ const basicHomeCopy = {
           {
             key: "gratitude",
             emoji: "🙏",
-            title: "Gratitude Gate",
+            title: "감사의 문",
             subtitle: "감사의 시간",
-            description: "Gratitude meditation",
+            description: "작은 감사에 천천히 닿는 3분.",
             guidance: "마음을 부드럽게 정돈하고 싶을 때",
             openingTitle: "작은 감사와 만납니다",
             openingBreath: "가슴 쪽으로 조용히 주의를 모아보세요"
@@ -613,9 +613,9 @@ const basicHomeCopy = {
           {
             key: "sleep",
             emoji: "🌙",
-            title: "Sleep Gate",
+            title: "잠의 문",
             subtitle: "깊은 잠을 준비하기",
-            description: "Sleep preparation",
+            description: "깊은 휴식을 위해 정돈하는 3분.",
             guidance: "깊게 쉬기 위한 준비가 필요할 때",
             openingTitle: "잠을 위한 고요를 정돈합니다",
             openingBreath: "눈가의 힘을 천천히 풀어주세요"
@@ -1362,6 +1362,7 @@ export function BasicHome({
     phase: RhythmPhase;
     door: SmallDoor;
   } | null>(null);
+  const transitionTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     try {
@@ -1426,6 +1427,14 @@ export function BasicHome({
     };
   }, [activeDoorLayer]);
 
+  useEffect(() => {
+    return () => {
+      if (transitionTimeoutRef.current) {
+        window.clearTimeout(transitionTimeoutRef.current);
+      }
+    };
+  }, []);
+
   function persistMarkerState(next: Partial<Pick<MarkerStoneState, "sleep" | "stress" | "lastGate">>) {
     const payload: MarkerStoneState = {
       date: getTodayKey(),
@@ -1453,6 +1462,10 @@ export function BasicHome({
   }
 
   function closeDoorLayer() {
+    if (transitionTimeoutRef.current) {
+      window.clearTimeout(transitionTimeoutRef.current);
+      transitionTimeoutRef.current = null;
+    }
     setActiveDoorLayer(null);
   }
 
@@ -1475,9 +1488,13 @@ export function BasicHome({
   }
 
   function handleEnterSmallDoor(phase: RhythmPhase, door: SmallDoor) {
+    if (transitionTimeoutRef.current) {
+      window.clearTimeout(transitionTimeoutRef.current);
+    }
+
     setTransitionDoor({ phase, door });
 
-    window.setTimeout(() => {
+    transitionTimeoutRef.current = window.setTimeout(() => {
       if (phase === "morning" && door.key === "affirmation") {
         if (getNatureSoundPreference()) {
           window.sessionStorage.setItem(STRUCTURED_AMBIENT_PENDING_KEY, "1");
@@ -1487,6 +1504,7 @@ export function BasicHome({
       }
 
       window.location.href = buildRhythmMeditationHref(phase, door.key);
+      transitionTimeoutRef.current = null;
     }, 950);
   }
 

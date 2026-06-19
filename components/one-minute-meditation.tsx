@@ -388,12 +388,6 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
           <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_28%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.14),transparent_34%),linear-gradient(180deg,rgba(4,10,19,0.76)_0%,rgba(8,18,32,0.88)_100%)]" />
         )}
         <div className="absolute inset-0 z-10 bg-black/38" />
-        {ambientVideoFailed ? (
-          <div className="absolute left-4 right-4 top-4 z-10 rounded-2xl border border-white/10 bg-[#08121d]/65 px-4 py-3 text-xs leading-6 text-white/60 backdrop-blur">
-            Ambient video fallback active. Place the video file at /public/videos/one-minute-nature-loop.mp4.
-          </div>
-        ) : null}
-
         <div className="relative z-20">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">

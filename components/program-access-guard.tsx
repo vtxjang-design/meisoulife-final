@@ -3,18 +3,44 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthState } from "@/components/auth-provider";
-import { useSiteCopy } from "@/lib/i18n";
+import { getLocaleCopy, useLanguage, useSiteCopy } from "@/lib/i18n";
 import { getSupabaseClient } from "@/lib/supabase/client";
 
 type ProgramAccessGuardProps = {
   children: React.ReactNode;
 };
 
+const programAccessGuardCopy = {
+  jp: {
+    badge: "Membership Check",
+    title: "会員状態を確認できませんでした。",
+    body: "お支払い状態の確認中に問題が発生しました。少し時間を置いてから再読み込みするか、料金ページから状態を確認してください。",
+    retry: "もう一度確認する",
+    pricing: "料金ページを開く"
+  },
+  kr: {
+    badge: "Membership Check",
+    title: "회원 상태를 확인하지 못했습니다.",
+    body: "결제 상태를 확인하는 중 문제가 발생했습니다. 잠시 후 새로고침하거나 요금 페이지에서 상태를 확인해 주세요.",
+    retry: "다시 확인하기",
+    pricing: "요금 페이지 열기"
+  },
+  en: {
+    badge: "Membership Check",
+    title: "We could not confirm your membership.",
+    body: "There was a problem while checking your billing status. Please refresh in a moment or review your status on the pricing page.",
+    retry: "Check again",
+    pricing: "Open pricing"
+  }
+} as const;
+
 export function ProgramAccessGuard({ children }: ProgramAccessGuardProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const { language } = useLanguage();
   const { authResolved, isLoggedIn, planResolved, memberState, planError, plan, session } = useAuthState();
   const copy = useSiteCopy();
+  const guardCopy = getLocaleCopy(programAccessGuardCopy, language);
   const [status, setStatus] = useState<"checking" | "ready" | "unavailable" | "membership-error">("checking");
 
   useEffect(() => {
@@ -131,10 +157,10 @@ export function ProgramAccessGuard({ children }: ProgramAccessGuardProps) {
       <div className="section-shell py-16 sm:py-24">
         <div className="mx-auto max-w-3xl">
           <div className="premium-card rounded-[28px] p-8 text-center sm:p-12">
-            <p className="text-sm uppercase tracking-[0.28em] text-gold/80">Membership Check</p>
-            <h2 className="mt-4 text-2xl font-semibold text-white sm:text-3xl">会員状態を確認できませんでした。</h2>
+            <p className="text-sm uppercase tracking-[0.28em] text-gold/80">{guardCopy.badge}</p>
+            <h2 className="mt-4 text-2xl font-semibold text-white sm:text-3xl">{guardCopy.title}</h2>
             <p className="mt-4 text-base leading-8 text-white/72">
-              お支払い状態の確認中に問題が発生しました。少し時間を置いてから再読み込みするか、料金ページから状態を確認してください。
+              {guardCopy.body}
             </p>
             {planError ? <p className="mt-4 text-sm text-white/56">{planError}</p> : null}
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -143,14 +169,14 @@ export function ProgramAccessGuard({ children }: ProgramAccessGuardProps) {
                 onClick={() => window.location.reload()}
                 className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92]"
               >
-                もう一度確認する
+                {guardCopy.retry}
               </button>
               <button
                 type="button"
                 onClick={() => router.push("/pricing")}
                 className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white/82 transition hover:bg-white/[0.06]"
               >
-                料金ページを開く
+                {guardCopy.pricing}
               </button>
             </div>
           </div>
