@@ -95,7 +95,7 @@ const affirmationGateCopy = {
     openingLines: [
       { at: 15, key: "open-1", text: "それでは、そっと目を閉じてみましょう。" },
       { at: 21, key: "open-2", text: "新しい今日が、静かに始まっています。" },
-      { at: 28, key: "open-3", text: "ゆっくり息を吸って、やさしく吐いてみましょう。" }
+      { at: 28, key: "open-3", text: "ゆっくり呼吸をしてみましょう。まずは吸って、やさしく吐いていきます。" }
     ],
     affirmationLines: [
       { at: 80, key: "affirm-1", text: "今日は、目覚めた心で過ごしてみましょう。" },
@@ -547,7 +547,7 @@ function getStructuredMorningSpeechSettings(language: "jp" | "kr" | "en") {
     lang: "ja-JP",
     rate: 0.84,
     pitch: 0.98,
-    volume: 0.94,
+    volume: 0.9,
     preferredNames: ["Kyoko", "Otoya", "Google 日本語", "Siri"]
   };
 }
@@ -607,6 +607,7 @@ export default function MeditationPage() {
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
   const completionHandledRef = useRef(false);
   const spokenAffirmationKeysRef = useRef<Set<string>>(new Set());
+  const structuredSpeechTimeoutRef = useRef<number | null>(null);
   const elapsedTotalSeconds = totalSeconds - secondsLeft;
   const phase = useMemo(() => getBreathPhase(elapsedTotalSeconds), [elapsedTotalSeconds]);
   const isComplete = secondsLeft <= 0;
@@ -958,25 +959,45 @@ export default function MeditationPage() {
 
     if ("speechSynthesis" in window) {
       try {
-        window.speechSynthesis.cancel();
         const settings = getStructuredMorningSpeechSettings(language);
-        const utterance = new SpeechSynthesisUtterance(nextLine.text);
-        utterance.lang = settings.lang;
-        utterance.rate = settings.rate;
-        utterance.pitch = settings.pitch;
-        utterance.volume = settings.volume;
+        const synth = window.speechSynthesis;
 
-        const selectedVoice = pickStructuredMorningVoice(
-          window.speechSynthesis.getVoices(),
-          settings.lang,
-          settings.preferredNames
-        );
-
-        if (selectedVoice) {
-          utterance.voice = selectedVoice;
+        if (structuredSpeechTimeoutRef.current) {
+          window.clearTimeout(structuredSpeechTimeoutRef.current);
+          structuredSpeechTimeoutRef.current = null;
         }
 
-        window.speechSynthesis.speak(utterance);
+        if (synth.speaking || synth.pending) {
+          synth.cancel();
+        }
+
+        structuredSpeechTimeoutRef.current = window.setTimeout(() => {
+          const utterance = new SpeechSynthesisUtterance(nextLine.text);
+          utterance.lang = settings.lang;
+          utterance.rate = settings.rate;
+          utterance.pitch = settings.pitch;
+          utterance.volume = settings.volume;
+
+          const selectedVoice = pickStructuredMorningVoice(
+            synth.getVoices(),
+            settings.lang,
+            settings.preferredNames
+          );
+
+          if (selectedVoice) {
+            utterance.voice = selectedVoice;
+          }
+
+          utterance.onstart = () => {
+            console.log("[affirmation-gate][jp-tts] started", nextLine.key);
+          };
+          utterance.onerror = (event) => {
+            console.error("[affirmation-gate][jp-tts] failed", nextLine.key, event.error);
+          };
+
+          synth.speak(utterance);
+          structuredSpeechTimeoutRef.current = null;
+        }, 120);
       } catch (error) {
         console.warn("[affirmation-gate] speech synthesis unavailable", error);
       }
@@ -1005,6 +1026,10 @@ export default function MeditationPage() {
 
   useEffect(() => {
     return () => {
+      if (structuredSpeechTimeoutRef.current) {
+        window.clearTimeout(structuredSpeechTimeoutRef.current);
+        structuredSpeechTimeoutRef.current = null;
+      }
       if (typeof window !== "undefined" && "speechSynthesis" in window) {
         window.speechSynthesis.cancel();
       }
@@ -1060,6 +1085,10 @@ export default function MeditationPage() {
       const next = !current;
 
       if (next && typeof window !== "undefined" && "speechSynthesis" in window) {
+        if (structuredSpeechTimeoutRef.current) {
+          window.clearTimeout(structuredSpeechTimeoutRef.current);
+          structuredSpeechTimeoutRef.current = null;
+        }
         window.speechSynthesis.cancel();
       }
 
