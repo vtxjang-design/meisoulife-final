@@ -95,7 +95,7 @@ const affirmationGateCopy = {
     openingLines: [
       { at: 15, key: "open-1", text: "それでは、そっと目を閉じてみましょう。" },
       { at: 21, key: "open-2", text: "新しい今日が、静かに始まっています。" },
-      { at: 28, key: "open-3", text: "ゆっくり呼吸をしてみましょう。まずは吸って、やさしく吐いていきます。" }
+      { at: 28, key: "open-3", text: "ゆっくり呼吸をしてみましょう。まずは深く息を入れてみましょう。ゆっくり吐いていきます。" }
     ],
     affirmationLines: [
       { at: 80, key: "affirm-1", text: "今日は、目覚めた心で過ごしてみましょう。" },
@@ -971,6 +971,9 @@ export default function MeditationPage() {
           synth.cancel();
         }
 
+        const isFirstStructuredLine = spokenAffirmationKeysRef.current.size === 1;
+        const speechDelayMs = isFirstStructuredLine ? 260 : 120;
+
         structuredSpeechTimeoutRef.current = window.setTimeout(() => {
           const utterance = new SpeechSynthesisUtterance(nextLine.text);
           utterance.lang = settings.lang;
@@ -997,7 +1000,7 @@ export default function MeditationPage() {
 
           synth.speak(utterance);
           structuredSpeechTimeoutRef.current = null;
-        }, 120);
+        }, speechDelayMs);
       } catch (error) {
         console.warn("[affirmation-gate] speech synthesis unavailable", error);
       }
