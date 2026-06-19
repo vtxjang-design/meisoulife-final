@@ -545,7 +545,7 @@ function getStructuredMorningSpeechSettings(language: "jp" | "kr" | "en") {
 
   return {
     lang: "ja-JP",
-    rate: 0.84,
+    rate: 0.78,
     pitch: 0.98,
     volume: 0.9,
     preferredNames: ["Kyoko", "Otoya", "Google 日本語", "Siri"]
@@ -608,6 +608,9 @@ export default function MeditationPage() {
   const completionHandledRef = useRef(false);
   const spokenAffirmationKeysRef = useRef<Set<string>>(new Set());
   const structuredSpeechTimeoutRef = useRef<number | null>(null);
+  const structuredSpeechSequenceRef = useRef(0);
+  const isPausedRef = useRef(false);
+  const isCompleteRef = useRef(false);
   const elapsedTotalSeconds = totalSeconds - secondsLeft;
   const phase = useMemo(() => getBreathPhase(elapsedTotalSeconds), [elapsedTotalSeconds]);
   const isComplete = secondsLeft <= 0;
@@ -651,6 +654,14 @@ export default function MeditationPage() {
           : null
       : null;
   const affirmationProgress = isStructuredMorningGate ? Math.min(100, (elapsedTotalSeconds / AFFIRMATION_TOTAL_SECONDS) * 100) : 0;
+
+  useEffect(() => {
+    isPausedRef.current = isPaused;
+  }, [isPaused]);
+
+  useEffect(() => {
+    isCompleteRef.current = isComplete;
+  }, [isComplete]);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -775,52 +786,8 @@ export default function MeditationPage() {
 
     setHasUserGesture(true);
 
-    try {
-      if (!ambientAudioRef.current) {
-        const audio = new Audio(ambientAudioSource);
-        audio.loop = true;
-        audio.preload = "auto";
-        audio.volume = ambientAudioVolume ?? 0.65;
-        audio.muted = false;
-        audio.dataset.meisoSrc = ambientAudioSource;
-        ambientAudioRef.current = audio;
-      } else if (ambientAudioRef.current.dataset.meisoSrc !== ambientAudioSource) {
-        ambientAudioRef.current.pause();
-        ambientAudioRef.current.currentTime = 0;
-        ambientAudioRef.current.src = ambientAudioSource;
-        ambientAudioRef.current.dataset.meisoSrc = ambientAudioSource;
-      }
-
-      const audio = ambientAudioRef.current;
-      audio.volume = ambientAudioVolume ?? 0.65;
-      audio.muted = false;
-      audio.loop = true;
-      audio.load();
-      console.log("[Journey Audio] journeyMode:", journeyMode);
-      console.log("[Journey Audio] journeyDay:", journeyDay);
-      console.log("[Journey Audio] src:", ambientAudioSource);
-      console.log(
-        "[Journey Audio] pending:",
-        typeof window === "undefined" ? null : window.sessionStorage.getItem(JOURNEY_AUDIO_PENDING_KEY)
-      );
-      console.log("[Journey Audio] audio element:", ambientAudioRef.current);
-      await audio.play();
-      console.log("[Journey Audio] play started");
-      setNeedsUserStart(false);
-      setSoundEnabled(true);
-      setNatureSoundPreference(true);
-      setShowAmbientRetry(false);
-      if (typeof window !== "undefined") {
-        window.sessionStorage.removeItem(JOURNEY_AUDIO_PENDING_KEY);
-        window.sessionStorage.removeItem(JOURNEY_AUDIO_DAY_KEY);
-      }
-    } catch (error) {
-      setSoundEnabled(false);
-      setNatureSoundPreference(false);
-      setNeedsUserStart(true);
-      console.error("Audio playback failed:", error);
-      console.warn("[Journey Audio] manual start failed", error);
-    }
+    const result = await startAmbientNatureAudio(ambientAudioRef, true, ambientAudioSource, ambientAudioVolume);
+    await handleAmbientStartResult(result, true);
   }
 
   useEffect(() => {
@@ -961,20 +928,35 @@ export default function MeditationPage() {
       try {
         const settings = getStructuredMorningSpeechSettings(language);
         const synth = window.speechSynthesis;
+        structuredSpeechSequenceRef.current += 1;
+        const speechSequence = structuredSpeechSequenceRef.current;
 
         if (structuredSpeechTimeoutRef.current) {
           window.clearTimeout(structuredSpeechTimeoutRef.current);
           structuredSpeechTimeoutRef.current = null;
         }
 
-        if (synth.speaking || synth.pending) {
-          synth.cancel();
-        }
-
         const isFirstStructuredLine = spokenAffirmationKeysRef.current.size === 1;
-        const speechDelayMs = isFirstStructuredLine ? 260 : 120;
+        const speechDelayMs = isFirstStructuredLine ? 360 : 220;
 
-        structuredSpeechTimeoutRef.current = window.setTimeout(() => {
+        const queueSpeak = (attempt: number) => {
+          if (
+            structuredSpeechSequenceRef.current !== speechSequence ||
+            isPausedRef.current ||
+            isCompleteRef.current
+          ) {
+            return;
+          }
+
+          if (synth.speaking || synth.pending) {
+            if (attempt >= 12) {
+              synth.cancel();
+            } else {
+              structuredSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(attempt + 1), 140);
+              return;
+            }
+          }
+
           const utterance = new SpeechSynthesisUtterance(nextLine.text);
           utterance.lang = settings.lang;
           utterance.rate = settings.rate;
@@ -992,15 +974,20 @@ export default function MeditationPage() {
           }
 
           utterance.onstart = () => {
-            console.log("[affirmation-gate][jp-tts] started", nextLine.key);
+            console.log("[structured-meditation][tts] started", language, nextLine.key);
           };
           utterance.onerror = (event) => {
-            console.error("[affirmation-gate][jp-tts] failed", nextLine.key, event.error);
+            console.error("[structured-meditation][tts] failed", language, nextLine.key, event.error);
+            structuredSpeechTimeoutRef.current = null;
+          };
+          utterance.onend = () => {
+            structuredSpeechTimeoutRef.current = null;
           };
 
           synth.speak(utterance);
-          structuredSpeechTimeoutRef.current = null;
-        }, speechDelayMs);
+        };
+
+        structuredSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(0), speechDelayMs);
       } catch (error) {
         console.warn("[affirmation-gate] speech synthesis unavailable", error);
       }
@@ -1034,6 +1021,7 @@ export default function MeditationPage() {
         structuredSpeechTimeoutRef.current = null;
       }
       if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        structuredSpeechSequenceRef.current += 1;
         window.speechSynthesis.cancel();
       }
     };
@@ -1092,6 +1080,7 @@ export default function MeditationPage() {
           window.clearTimeout(structuredSpeechTimeoutRef.current);
           structuredSpeechTimeoutRef.current = null;
         }
+        structuredSpeechSequenceRef.current += 1;
         window.speechSynthesis.cancel();
       }
 
