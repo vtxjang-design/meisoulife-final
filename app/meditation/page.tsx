@@ -14,6 +14,7 @@ import {
 } from "@/lib/meditation-ambient-audio";
 import { handleMeditationComplete as triggerMeditationCompletion, supportsMeditationVibration } from "@/lib/meditation-completion";
 import { getRhythmJourneyContent, getRhythmJourneyGuidance, journeyAudioMap } from "@/lib/rhythm-journey";
+import { getBasicPracticeByRouteType, getBasicPracticeBySession } from "@/lib/basic-rhythm";
 
 const CYCLE_SECONDS = 10;
 const INHALE_SECONDS = 4;
@@ -33,6 +34,8 @@ type MeditationDoor =
   | "energy"
   | "vision"
   | "focus"
+  | "rest"
+  | "recharge"
   | "relax"
   | "vitality"
   | "release"
@@ -447,6 +450,8 @@ function normalizeDoor(value: string | null): MeditationDoor {
     value === "energy" ||
     value === "vision" ||
     value === "focus" ||
+    value === "rest" ||
+    value === "recharge" ||
     value === "relax" ||
     value === "vitality" ||
     value === "release" ||
@@ -616,6 +621,7 @@ export default function MeditationPage() {
   const [journeyMode, setJourneyMode] = useState(false);
   const [journeyDay, setJourneyDay] = useState<number | null>(null);
   const [returnToHref, setReturnToHref] = useState("/rhythm-journey");
+  const [requestedRouteType, setRequestedRouteType] = useState<string | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
   const completionHandledRef = useRef(false);
@@ -632,6 +638,10 @@ export default function MeditationPage() {
   const isVisionGate = meditationType === "morning" && meditationDoor === "vision";
   const isStructuredMorningGate = isAffirmationGate || isEnergyGate || isVisionGate;
   const morningGateCopy: StructuredMorningCopy = isVisionGate ? visionCopy : isEnergyGate ? energyCopy : affirmationCopy;
+  const mappedDoor = meditationDoor === "relax" ? "rest" : meditationDoor === "vitality" ? "recharge" : meditationDoor;
+  const basicPracticeCopy =
+    getBasicPracticeByRouteType(requestedRouteType, localizedLanguage) ??
+    getBasicPracticeBySession(meditationType, mappedDoor, localizedLanguage);
   const content = copy.variants[meditationType];
   const hideSoundToggle = meditationType === "morning";
   const durationVariant = getDurationVariant(totalSeconds);
@@ -649,12 +659,16 @@ export default function MeditationPage() {
   const affirmationStage = isStructuredMorningGate ? getMorningGateStage(meditationDoor, elapsedTotalSeconds) : null;
   const topText = journeyMode
     ? journeyCopy.timerTopText
+    : basicPracticeCopy
+      ? basicPracticeCopy.sessionTitle
     : meditationType === "morning" || meditationType === "night"
       ? content.topText
       : durationTextSet?.topText || content.topText;
-  const introText = journeyMode ? journeyCopy.timerSubText : content.intro;
+  const introText = journeyMode ? journeyCopy.timerSubText : basicPracticeCopy?.sessionGuidance ?? content.intro;
   const completionTitle =
-    meditationType === "morning" || meditationType === "night"
+    basicPracticeCopy
+      ? basicPracticeCopy.completionTitle
+      : meditationType === "morning" || meditationType === "night"
       ? content.completionTitle
       : durationTextSet?.completionTitle || content.completionTitle;
   const circleScaleClass =
@@ -679,9 +693,11 @@ export default function MeditationPage() {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
+    const routeType = searchParams.get("type");
+    const routePractice = getBasicPracticeByRouteType(routeType, localizedLanguage);
     const nextDuration = normalizeDuration(searchParams.get("duration"));
-    const nextType = normalizeMeditationType(searchParams.get("type"));
-    const nextDoor = normalizeDoor(searchParams.get("door"));
+    const nextType = routePractice?.meditationType ?? normalizeMeditationType(routeType);
+    const nextDoor = routePractice?.meditationDoor ?? normalizeDoor(searchParams.get("door"));
     const nextJourneyMode = searchParams.get("journey") === "1";
     const nextJourneyDay = Number(searchParams.get("day"));
     const nextReturnTo = searchParams.get("returnTo");
@@ -702,11 +718,12 @@ export default function MeditationPage() {
     const mobileNeedsGesture = requiresMobileAudioGesture();
     const isProgramMode = nextJourneyMode || nextType !== "default";
 
-    const resolvedDuration = isThreeMinuteMorningDoor ? AFFIRMATION_TOTAL_SECONDS : nextDuration;
+    const resolvedDuration = routePractice?.durationSeconds ?? (isThreeMinuteMorningDoor ? AFFIRMATION_TOTAL_SECONDS : nextDuration);
     setTotalSeconds(resolvedDuration);
     setSecondsLeft(resolvedDuration);
     setMeditationType(nextType);
     setMeditationDoor(nextDoor);
+    setRequestedRouteType(routeType);
     const nextSoundEnabled =
       nextJourneyMode && pendingJourneyAudio
         ? true
@@ -738,7 +755,7 @@ export default function MeditationPage() {
     );
     console.log("[Journey Audio] pending:", pendingJourneyAudio);
     console.log("[Journey Audio] audio element:", ambientAudioRef.current);
-  }, []);
+  }, [localizedLanguage]);
 
   async function handleAmbientStartResult(result: { started: boolean; error?: unknown }, manual = false) {
     if (journeyMode && journeyDay) {
@@ -1244,6 +1261,16 @@ export default function MeditationPage() {
               </div>
             ) : (
               <div className="space-y-4">
+                {basicPracticeCopy ? (
+                  <div className="mx-auto max-w-xl space-y-3 rounded-[24px] border border-white/10 bg-white/[0.04] px-4 py-4 backdrop-blur">
+                    <p className="text-xs uppercase tracking-[0.24em] text-gold/74">
+                      {basicPracticeCopy.title} · {Math.floor(totalSeconds / 60)} min
+                    </p>
+                    <h1 className="font-serif text-3xl text-white sm:text-4xl">{basicPracticeCopy.sessionTitle}</h1>
+                    <p className="text-sm leading-7 text-white/70">{basicPracticeCopy.sessionSubtitle}</p>
+                    <p className="text-sm leading-7 text-white/56">“{basicPracticeCopy.state}”</p>
+                  </div>
+                ) : null}
                 <p className="keep-phrase text-sm uppercase tracking-[0.32em] text-gold/80">{topText}</p>
                 <p className="body-measure keep-phrase mx-auto text-sm leading-7 text-white/60 sm:text-base">{introText}</p>
               </div>
@@ -1258,7 +1285,7 @@ export default function MeditationPage() {
                     onClick={journeyMode ? handleJourneyAudioStart : handleProgramAudioStart}
                     className="button-nowrap mt-4 inline-flex min-h-[44px] items-center justify-center rounded-full border border-gold/20 bg-gold/10 px-4 py-2 text-sm font-semibold text-gold transition hover:bg-gold/15 hover:text-[#f5e4b5]"
                   >
-                    {journeyMode ? journeyCopy.audioStart : copy.audioStart}
+                    {journeyMode ? journeyCopy.audioStart : basicPracticeCopy?.entryLabel ?? copy.audioStart}
                   </button>
                 </div>
               ) : null}
