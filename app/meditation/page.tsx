@@ -652,6 +652,7 @@ export default function MeditationPage() {
   const spokenAffirmationKeysRef = useRef<Set<string>>(new Set());
   const structuredSpeechTimeoutRef = useRef<number | null>(null);
   const structuredSpeechSequenceRef = useRef(0);
+  const structuredSpeechUnlockedRef = useRef(false);
   const isPausedRef = useRef(false);
   const isCompleteRef = useRef(false);
   const elapsedTotalSeconds = totalSeconds - secondsLeft;
@@ -767,7 +768,7 @@ export default function MeditationPage() {
         : shouldResumeStructuredAmbient
           ? true
           : getNatureSoundPreference();
-    const shouldPromptForAudioStart = mobileNeedsGesture && (isProgramMode || nextSoundEnabled);
+    const shouldPromptForAudioStart = isThreeMinuteMorningDoor || (mobileNeedsGesture && (isProgramMode || nextSoundEnabled));
     setSoundEnabled(nextSoundEnabled);
     setPendingStructuredAmbientStart(shouldResumeStructuredAmbient);
     setJourneyMode(nextJourneyMode);
@@ -842,7 +843,6 @@ export default function MeditationPage() {
         console.warn("[Journey Audio] exact pending state kept for manual retry");
       }
     } else if (isStructuredMorningGate) {
-      setSoundEnabled(false);
       setNeedsUserStart(true);
       setIsPaused(true);
       setShowAmbientRetry(false);
@@ -887,6 +887,33 @@ export default function MeditationPage() {
       ambientFadeInOptions
     );
     await handleAmbientStartResult(result, true);
+  }
+
+  function unlockStructuredMorningSpeech() {
+    if (!isStructuredMorningGate || typeof window === "undefined" || !("speechSynthesis" in window)) {
+      return;
+    }
+
+    try {
+      const synth = window.speechSynthesis;
+      const settings = getStructuredMorningSpeechSettings(language);
+      synth.getVoices();
+
+      if (structuredSpeechUnlockedRef.current) {
+        return;
+      }
+
+      const unlockUtterance = new SpeechSynthesisUtterance("\u00A0");
+      unlockUtterance.lang = settings.lang;
+      unlockUtterance.volume = 0;
+      unlockUtterance.rate = settings.rate;
+      unlockUtterance.pitch = settings.pitch;
+      structuredSpeechUnlockedRef.current = true;
+      synth.cancel();
+      synth.speak(unlockUtterance);
+    } catch (error) {
+      console.warn("[morning-gate] failed to unlock speech synthesis", error);
+    }
   }
 
   useEffect(() => {
@@ -1233,6 +1260,7 @@ export default function MeditationPage() {
   async function handleProgramAudioStart() {
     setHasUserGesture(true);
     setRequiresExplicitAudioStart(false);
+    unlockStructuredMorningSpeech();
 
     if (audioContextRef.current?.state === "suspended") {
       try {
@@ -1250,10 +1278,14 @@ export default function MeditationPage() {
       }
     }
 
-    if (!soundEnabled) {
+    if (!soundEnabled && !isStructuredMorningGate) {
       setNeedsUserStart(false);
       setIsPaused(false);
       return;
+    }
+
+    if (isStructuredMorningGate && !soundEnabled) {
+      setSoundEnabled(true);
     }
 
     const result = await startAmbientNatureAudio(
@@ -1400,7 +1432,11 @@ export default function MeditationPage() {
                     onClick={journeyMode ? handleJourneyAudioStart : handleProgramAudioStart}
                     className="button-nowrap mt-4 inline-flex min-h-[44px] items-center justify-center rounded-full border border-gold/20 bg-gold/10 px-4 py-2 text-sm font-semibold text-gold transition hover:bg-gold/15 hover:text-[#f5e4b5]"
                   >
-                    {journeyMode ? journeyCopy.audioStart : basicPracticeCopy?.entryLabel ?? copy.audioStart}
+                    {journeyMode
+                      ? journeyCopy.audioStart
+                      : isStructuredMorningGate
+                        ? "音声を開始"
+                        : basicPracticeCopy?.entryLabel ?? copy.audioStart}
                   </button>
                 </div>
               ) : null}
@@ -1445,11 +1481,11 @@ export default function MeditationPage() {
                   </button>
                 ) : null}
               </div>
-              <p className="text-2xl font-medium text-white/72 transition-all duration-300 ease-out sm:text-3xl">
-                {isStructuredMorningGate && (affirmationStage === "breathing" || affirmationStage === "bodyAwareness")
-                  ? affirmationMessage
-                  : copy.phases[phase]}
-              </p>
+              {!isStructuredMorningGate ? (
+                <p className="text-2xl font-medium text-white/72 transition-all duration-300 ease-out sm:text-3xl">
+                  {copy.phases[phase]}
+                </p>
+              ) : null}
 
               <div className="relative mt-10 flex h-56 w-56 items-center justify-center sm:h-72 sm:w-72">
                 <div className="absolute inset-0 rounded-full bg-gold/10 blur-3xl" />
@@ -1473,17 +1509,13 @@ export default function MeditationPage() {
               ) : null}
             </div>
 
-            <div className="mt-8">
-              <p className="text-sm font-medium tracking-[0.18em] text-white/68 transition-opacity duration-300 sm:text-base">
-                {isStructuredMorningGate
-                  ? affirmationStage === "breathing" || affirmationStage === "bodyAwareness"
-                    ? phase === "inhale"
-                      ? morningGateCopy.inhale
-                      : morningGateCopy.exhale
-                    : morningGateCopy.title
-                  : copy.bottomText[phase]}
-              </p>
-            </div>
+            {!isStructuredMorningGate ? (
+              <div className="mt-8">
+                <p className="text-sm font-medium tracking-[0.18em] text-white/68 transition-opacity duration-300 sm:text-base">
+                  {copy.bottomText[phase]}
+                </p>
+              </div>
+            ) : null}
           </>
         ) : (
           <div className="animate-fade-in space-y-8">
