@@ -6,11 +6,17 @@ const AMBIENT_AUDIO_SRC = "/audio/birds-nature-ambience.mp3";
 const SOUND_PREFERENCE_KEY = "meisoulife_nature_sound_enabled";
 export const STRUCTURED_AMBIENT_PENDING_KEY = "meisoulife_structured_ambient_pending";
 const TARGET_VOLUME = 0.32;
-const FADE_DURATION_MS = 2400;
+const DEFAULT_FADE_IN_MS = 2400;
+const DEFAULT_FADE_OUT_MS = 2400;
 
 type AmbientAudioResult = {
   started: boolean;
   error?: unknown;
+};
+
+type AmbientAudioOptions = {
+  fadeInMs?: number;
+  fadeOutMs?: number;
 };
 
 type FadeState = {
@@ -81,11 +87,14 @@ export async function startAmbientNatureAudio(
   audioRef: MutableRefObject<HTMLAudioElement | null>,
   enabled = true,
   source = AMBIENT_AUDIO_SRC,
-  targetVolume = TARGET_VOLUME
+  targetVolume = TARGET_VOLUME,
+  options: AmbientAudioOptions = {}
 ): Promise<AmbientAudioResult> {
   if (!enabled || typeof window === "undefined" || typeof Audio === "undefined") {
     return { started: false };
   }
+
+  const fadeInMs = options.fadeInMs ?? DEFAULT_FADE_IN_MS;
 
   const existingSource = audioRef.current?.dataset.meisoSrc;
 
@@ -125,7 +134,7 @@ export async function startAmbientNatureAudio(
     audio.muted = false;
     await audio.play();
     console.log("Ambience audio playing");
-    await fadeVolume(audio, 0, targetVolume, FADE_DURATION_MS);
+    await fadeVolume(audio, 0, targetVolume, fadeInMs);
     return { started: true };
   } catch (error) {
     console.error("Audio playback failed:", error);
@@ -134,14 +143,17 @@ export async function startAmbientNatureAudio(
   }
 }
 
-export async function stopAmbientNatureAudio(audioRef: MutableRefObject<HTMLAudioElement | null>) {
+export async function stopAmbientNatureAudio(
+  audioRef: MutableRefObject<HTMLAudioElement | null>,
+  fadeOutMs = DEFAULT_FADE_OUT_MS
+) {
   const audio = audioRef.current;
 
   if (!audio) {
     return;
   }
 
-  await fadeVolume(audio, audio.volume, 0, FADE_DURATION_MS);
+  await fadeVolume(audio, audio.volume, 0, fadeOutMs);
   audio.pause();
   audio.currentTime = 0;
 }
@@ -163,7 +175,8 @@ export function pauseAmbientNatureAudio(audioRef: MutableRefObject<HTMLAudioElem
 export async function resumeAmbientNatureAudio(
   audioRef: MutableRefObject<HTMLAudioElement | null>,
   enabled = true,
-  targetVolume = TARGET_VOLUME
+  targetVolume = TARGET_VOLUME,
+  options: AmbientAudioOptions = {}
 ): Promise<AmbientAudioResult> {
   const audio = audioRef.current;
 
@@ -171,11 +184,13 @@ export async function resumeAmbientNatureAudio(
     return { started: false };
   }
 
+  const fadeInMs = options.fadeInMs ?? 900;
+
   try {
     audio.muted = false;
     await audio.play();
     if (Math.abs(audio.volume - targetVolume) > 0.01) {
-      await fadeVolume(audio, audio.volume, targetVolume, 900);
+      await fadeVolume(audio, audio.volume, targetVolume, fadeInMs);
     } else {
       audio.volume = targetVolume;
     }
@@ -185,4 +200,25 @@ export async function resumeAmbientNatureAudio(
     console.warn("Ambience audio resume failed", error);
     return { started: false, error };
   }
+}
+
+export async function setAmbientNatureAudioVolume(
+  audioRef: MutableRefObject<HTMLAudioElement | null>,
+  targetVolume: number,
+  durationMs = 350
+) {
+  const audio = audioRef.current;
+
+  if (!audio || typeof window === "undefined") {
+    return;
+  }
+
+  const safeTargetVolume = Math.max(0, Math.min(1, targetVolume));
+
+  if (Math.abs(audio.volume - safeTargetVolume) <= 0.01) {
+    audio.volume = safeTargetVolume;
+    return;
+  }
+
+  await fadeVolume(audio, audio.volume, safeTargetVolume, durationMs);
 }

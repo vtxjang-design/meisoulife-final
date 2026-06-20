@@ -7,6 +7,7 @@ import {
   getNatureSoundPreference,
   pauseAmbientNatureAudio,
   resumeAmbientNatureAudio,
+  setAmbientNatureAudioVolume,
   setNatureSoundPreference,
   startAmbientNatureAudio,
   STRUCTURED_AMBIENT_PENDING_KEY,
@@ -25,7 +26,23 @@ const AI_COACH_URL =
 const JOURNEY_AUDIO_PENDING_KEY = "meisoulife_journey_audio_pending";
 const JOURNEY_AUDIO_DAY_KEY = "meisoulife_journey_day";
 const AFFIRMATION_TOTAL_SECONDS = 180;
-const AFFIRMATION_AMBIENT_AUDIO_SRC = "/audio/morning/affirmation.mp3";
+const MORNING_GATE_FADE_IN_MS = 1500;
+const MORNING_GATE_FADE_OUT_MS = 2500;
+const MORNING_GATE_DUCK_RATIO = 0.8;
+const MORNING_GATE_AUDIO = {
+  affirmation: {
+    src: "/audio/morning/affirmation gate.mp3",
+    volume: 0.2
+  },
+  energy: {
+    src: "/audio/morning/energy gate.mp3",
+    volume: 0.26
+  },
+  vision: {
+    src: "/audio/morning/vision gate.mp3",
+    volume: 0.18
+  }
+} as const;
 
 type BreathPhase = "inhale" | "hold" | "exhale";
 type MeditationType = "default" | "morning" | "day" | "night";
@@ -644,6 +661,14 @@ export default function MeditationPage() {
   const isEnergyGate = meditationType === "morning" && meditationDoor === "energy";
   const isVisionGate = meditationType === "morning" && meditationDoor === "vision";
   const isStructuredMorningGate = isAffirmationGate || isEnergyGate || isVisionGate;
+  const structuredMorningAudio =
+    isAffirmationGate
+      ? MORNING_GATE_AUDIO.affirmation
+      : isEnergyGate
+        ? MORNING_GATE_AUDIO.energy
+        : isVisionGate
+          ? MORNING_GATE_AUDIO.vision
+          : null;
   const morningGateCopy: StructuredMorningCopy = isVisionGate ? visionCopy : isEnergyGate ? energyCopy : affirmationCopy;
   const mappedDoor = meditationDoor === "relax" ? "rest" : meditationDoor === "vitality" ? "recharge" : meditationDoor;
   const basicPracticeCopy =
@@ -658,10 +683,15 @@ export default function MeditationPage() {
   const ambientAudioSource =
     journeyMode && journeyAudioSource
       ? journeyAudioSource
-      : isAffirmationGate
-        ? AFFIRMATION_AMBIENT_AUDIO_SRC
+      : structuredMorningAudio
+        ? structuredMorningAudio.src
         : undefined;
-  const ambientAudioVolume = journeyMode ? 0.65 : isAffirmationGate ? 0.16 : isStructuredMorningGate ? 0.22 : undefined;
+  const ambientAudioVolume = journeyMode ? 0.65 : structuredMorningAudio?.volume;
+  const ambientNarrationDuckVolume =
+    structuredMorningAudio ? Math.max(0, structuredMorningAudio.volume * MORNING_GATE_DUCK_RATIO) : undefined;
+  const ambientFadeInOptions = isStructuredMorningGate ? { fadeInMs: MORNING_GATE_FADE_IN_MS } : undefined;
+  const ambientResumeOptions = isStructuredMorningGate ? { fadeInMs: MORNING_GATE_FADE_IN_MS } : undefined;
+  const ambientFadeOutMs = isStructuredMorningGate ? MORNING_GATE_FADE_OUT_MS : undefined;
   const journeyGuidanceStage = getJourneyGuidanceStage(elapsedTotalSeconds, totalSeconds);
   const affirmationStage = isStructuredMorningGate ? getMorningGateStage(meditationDoor, elapsedTotalSeconds) : null;
   const topText = journeyMode
@@ -849,7 +879,13 @@ export default function MeditationPage() {
       }
     }
 
-    const result = await startAmbientNatureAudio(ambientAudioRef, true, ambientAudioSource, ambientAudioVolume);
+    const result = await startAmbientNatureAudio(
+      ambientAudioRef,
+      true,
+      ambientAudioSource,
+      ambientAudioVolume,
+      ambientFadeInOptions
+    );
     await handleAmbientStartResult(result, true);
   }
 
@@ -864,7 +900,13 @@ export default function MeditationPage() {
       }
 
       if (!isComplete && soundEnabled && !journeyMode && !isStructuredMorningGate) {
-        startAmbientNatureAudio(ambientAudioRef, soundEnabled, ambientAudioSource, ambientAudioVolume).then((result) => {
+        startAmbientNatureAudio(
+          ambientAudioRef,
+          soundEnabled,
+          ambientAudioSource,
+          ambientAudioVolume,
+          ambientFadeInOptions
+        ).then((result) => {
           void handleAmbientStartResult(result);
         });
       }
@@ -876,7 +918,7 @@ export default function MeditationPage() {
     return () => {
       window.removeEventListener("pointerdown", markGesture);
       window.removeEventListener("keydown", markGesture);
-      stopAmbientNatureAudio(ambientAudioRef);
+      stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
     };
   }, [ambientAudioSource, ambientAudioVolume, isComplete, isStructuredMorningGate, journeyMode, requiresExplicitAudioStart, soundEnabled]);
 
@@ -908,9 +950,15 @@ export default function MeditationPage() {
       return;
     }
 
-    resumeAmbientNatureAudio(ambientAudioRef, true, ambientAudioVolume).then((result) => {
+    resumeAmbientNatureAudio(ambientAudioRef, true, ambientAudioVolume, ambientResumeOptions).then((result) => {
       if (!result.started && ambientAudioSource) {
-        startAmbientNatureAudio(ambientAudioRef, true, ambientAudioSource, ambientAudioVolume).then((startResult) => {
+        startAmbientNatureAudio(
+          ambientAudioRef,
+          true,
+          ambientAudioSource,
+          ambientAudioVolume,
+          ambientFadeInOptions
+        ).then((startResult) => {
           void handleAmbientStartResult(startResult, true);
         });
       }
@@ -919,7 +967,7 @@ export default function MeditationPage() {
 
   useEffect(() => {
     if (isComplete || !soundEnabled) {
-      stopAmbientNatureAudio(ambientAudioRef);
+      stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
       return;
     }
 
@@ -927,13 +975,19 @@ export default function MeditationPage() {
       return;
     }
 
-    startAmbientNatureAudio(ambientAudioRef, soundEnabled, ambientAudioSource, ambientAudioVolume).then((result) => {
+    startAmbientNatureAudio(
+      ambientAudioRef,
+      soundEnabled,
+      ambientAudioSource,
+      ambientAudioVolume,
+      ambientFadeInOptions
+    ).then((result) => {
       void handleAmbientStartResult(result);
     });
 
     return () => {
       if (isComplete) {
-        stopAmbientNatureAudio(ambientAudioRef);
+        stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
       }
     };
   }, [ambientAudioSource, ambientAudioVolume, hasUserGesture, isComplete, isStructuredMorningGate, journeyMode, soundEnabled]);
@@ -943,7 +997,13 @@ export default function MeditationPage() {
       return;
     }
 
-    startAmbientNatureAudio(ambientAudioRef, true, ambientAudioSource, ambientAudioVolume).then((result) => {
+    startAmbientNatureAudio(
+      ambientAudioRef,
+      true,
+      ambientAudioSource,
+      ambientAudioVolume,
+      ambientFadeInOptions
+    ).then((result) => {
       void handleAmbientStartResult(result);
     });
   }, [ambientAudioSource, ambientAudioVolume, isAffirmationGate, isComplete, pendingStructuredAmbientStart, requiresExplicitAudioStart]);
@@ -953,7 +1013,13 @@ export default function MeditationPage() {
       return;
     }
 
-    startAmbientNatureAudio(ambientAudioRef, true, ambientAudioSource, ambientAudioVolume).then((result) => {
+    startAmbientNatureAudio(
+      ambientAudioRef,
+      true,
+      ambientAudioSource,
+      ambientAudioVolume,
+      ambientFadeInOptions
+    ).then((result) => {
       void handleAmbientStartResult(result);
     });
   }, [ambientAudioSource, ambientAudioVolume, isComplete, journeyMode, requiresExplicitAudioStart, soundEnabled]);
@@ -1041,13 +1107,22 @@ export default function MeditationPage() {
           }
 
           utterance.onstart = () => {
+            if (ambientNarrationDuckVolume !== undefined) {
+              void setAmbientNatureAudioVolume(ambientAudioRef, ambientNarrationDuckVolume, 220);
+            }
             console.log("[structured-meditation][tts] started", language, nextLine.key);
           };
           utterance.onerror = (event) => {
+            if (ambientAudioVolume !== undefined) {
+              void setAmbientNatureAudioVolume(ambientAudioRef, ambientAudioVolume, 420);
+            }
             console.error("[structured-meditation][tts] failed", language, nextLine.key, event.error);
             structuredSpeechTimeoutRef.current = null;
           };
           utterance.onend = () => {
+            if (ambientAudioVolume !== undefined) {
+              void setAmbientNatureAudioVolume(ambientAudioRef, ambientAudioVolume, 420);
+            }
             structuredSpeechTimeoutRef.current = null;
           };
 
@@ -1059,7 +1134,16 @@ export default function MeditationPage() {
         console.warn("[affirmation-gate] speech synthesis unavailable", error);
       }
     }
-  }, [elapsedTotalSeconds, isComplete, isPaused, isStructuredMorningGate, language, morningGateCopy]);
+  }, [
+    ambientAudioVolume,
+    ambientNarrationDuckVolume,
+    elapsedTotalSeconds,
+    isComplete,
+    isPaused,
+    isStructuredMorningGate,
+    language,
+    morningGateCopy
+  ]);
 
   useEffect(() => {
     if (!isStructuredMorningGate || typeof window === "undefined") {
@@ -1091,11 +1175,14 @@ export default function MeditationPage() {
         structuredSpeechSequenceRef.current += 1;
         window.speechSynthesis.cancel();
       }
+      if (ambientAudioVolume !== undefined) {
+        void setAmbientNatureAudioVolume(ambientAudioRef, ambientAudioVolume, 220);
+      }
     };
-  }, []);
+  }, [ambientAudioVolume]);
 
   async function runMeditationComplete() {
-    await stopAmbientNatureAudio(ambientAudioRef);
+    await stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
     await triggerMeditationCompletion({
       hasUserGesture,
       soundEnabled,
@@ -1109,14 +1196,20 @@ export default function MeditationPage() {
     const next = !soundEnabled;
 
     if (next) {
-      const result = await startAmbientNatureAudio(ambientAudioRef, true, ambientAudioSource, ambientAudioVolume);
+      const result = await startAmbientNatureAudio(
+        ambientAudioRef,
+        true,
+        ambientAudioSource,
+        ambientAudioVolume,
+        ambientFadeInOptions
+      );
       await handleAmbientStartResult(result, true);
     } else {
       setSoundEnabled(false);
       setNatureSoundPreference(false);
       setShowAmbientRetry(false);
       setNeedsUserStart(false);
-      stopAmbientNatureAudio(ambientAudioRef);
+      stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
     }
   }
 
@@ -1127,7 +1220,13 @@ export default function MeditationPage() {
 
   async function handleAmbientRetry() {
     setHasUserGesture(true);
-    const result = await startAmbientNatureAudio(ambientAudioRef, soundEnabled, ambientAudioSource, ambientAudioVolume);
+    const result = await startAmbientNatureAudio(
+      ambientAudioRef,
+      soundEnabled,
+      ambientAudioSource,
+      ambientAudioVolume,
+      ambientFadeInOptions
+    );
     await handleAmbientStartResult(result, true);
   }
 
@@ -1157,7 +1256,13 @@ export default function MeditationPage() {
       return;
     }
 
-    const result = await startAmbientNatureAudio(ambientAudioRef, true, ambientAudioSource, ambientAudioVolume);
+    const result = await startAmbientNatureAudio(
+      ambientAudioRef,
+      true,
+      ambientAudioSource,
+      ambientAudioVolume,
+      ambientFadeInOptions
+    );
     await handleAmbientStartResult(result, true);
 
     if (result.started) {
@@ -1181,6 +1286,9 @@ export default function MeditationPage() {
         }
         structuredSpeechSequenceRef.current += 1;
         window.speechSynthesis.cancel();
+        if (ambientAudioVolume !== undefined) {
+          void setAmbientNatureAudioVolume(ambientAudioRef, ambientAudioVolume, 220);
+        }
       }
 
       return next;
