@@ -89,28 +89,35 @@ const affirmationGateCopy = {
     resume: "続ける",
     inhale: "吸う",
     exhale: "吐く",
-    completionTitle: "今日の自分を選びました。",
-    completionMessage: "今日の方向は決まりました。この静けさのまま、穏やかで明るい一日を始めていきましょう。",
-    completionNote: "完璧でなくても大丈夫です。大切なのは、今日の自分を選ぶことです。",
+    completionTitle: "今日の自分を、選びました。",
+    completionMessage: "今日の方向は、もう決まりました。",
+    completionNote: "この静けさのまま、一日が始まります。",
     completionButton: "朝の扉へ戻る",
     openingFade: "今日の自分を選ぶ",
-    integration: "今日の自分を選ぶ",
+    integration: "今日は、この自分で生きてみよう。",
     openingLines: [
-      { at: 15, key: "open-1", text: "ようこそ。少しだけ立ち止まりましょう。" },
-      { at: 25, key: "open-2", text: "昨日のことは、いったん横に置いておきます。まだ何かを頑張らなくて大丈夫です。" },
-      { at: 38, key: "open-3", text: "まずは呼吸を感じましょう。ゆっくり息を吸います。新しい朝を迎えます。" },
-      { at: 52, key: "open-4", text: "ゆっくり吐きます。昨日を手放します。もう一度。吸って。新しい可能性を迎えます。吐いて。余分な力を手放します。" }
+      { at: 15, key: "open-1", text: "ようこそ。" },
+      { at: 22, key: "open-2", text: "少しだけ、立ち止まりましょう。" },
+      { at: 35, key: "open-3", text: "吸って。新しい朝を迎えます。" },
+      { at: 46, key: "open-4", text: "吐いて。昨日を手放します。" },
+      { at: 60, key: "open-5", text: "吸って。今日へ戻ります。" },
+      { at: 71, key: "open-6", text: "吐いて。余分な力を手放します。" },
+      { at: 84, key: "open-7", text: "吸って。" },
+      { at: 90, key: "open-8", text: "吐いて。" }
     ],
     affirmationLines: [
-      { at: 80, key: "affirm-1", text: "今朝のあなたは、どんな自分でいたいですか。穏やかな自分でしょうか。自信のある自分でしょうか。" },
-      { at: 98, key: "affirm-2", text: "感謝できる自分でしょうか。軽やかな自分でしょうか。答えは一つでなくても大丈夫です。" },
-      { at: 114, key: "affirm-3", text: "今、心が自然に選ぶものを感じてみてください。その感覚を胸の中に置きます。" },
-      { at: 130, key: "affirm-4", text: "そして静かに心の中で繰り返します。今日は、この自分で生きてみよう。今日は、この自分を選ぼう。" }
+      { at: 100, key: "affirm-1", text: "今朝のあなたは、どんな自分でいたいですか。" },
+      { at: 112, key: "affirm-2", text: "穏やかな自分。" },
+      { at: 120, key: "affirm-3", text: "自信のある自分。" },
+      { at: 128, key: "affirm-4", text: "軽やかな自分。" },
+      { at: 136, key: "affirm-5", text: "感謝できる自分。" },
+      { at: 144, key: "affirm-6", text: "正解はありません。" },
+      { at: 151, key: "affirm-7", text: "今、心が自然に選ぶものを感じてください。" }
     ],
     closingLines: [
-      { at: 160, key: "close-1", text: "完璧でなくても大丈夫です。大切なのは、選ぶことです。" },
-      { at: 170, key: "close-2", text: "今日の方向は決まりました。あなたの一日が、穏やかで明るいものになりますように。" },
-      { at: 178, key: "close-3", text: "それでは、良い一日を。" }
+      { at: 166, key: "close-1", text: "今日は、この自分を選ぼう。" },
+      { at: 172, key: "close-2", text: "今日の方向は、もう決まりました。" },
+      { at: 178, key: "close-3", text: "それでは、行ってらっしゃい。" }
     ]
   },
   kr: {
@@ -520,10 +527,10 @@ function getMorningGateStage(door: MeditationDoor, elapsedSeconds: number): Stru
   }
 
   if (elapsedSeconds < 15) return "openingFade";
-  if (elapsedSeconds < 35) return "openingNarration";
-  if (elapsedSeconds < 80) return "breathing";
-  if (elapsedSeconds < 130) return "affirmation";
-  if (elapsedSeconds < 160) return "integration";
+  if (elapsedSeconds < 30) return "openingNarration";
+  if (elapsedSeconds < 98) return "breathing";
+  if (elapsedSeconds < 156) return "affirmation";
+  if (elapsedSeconds < 166) return "integration";
   return "closing";
 }
 
@@ -550,8 +557,8 @@ function getStructuredMorningSpeechSettings(language: "jp" | "kr" | "en") {
 
   return {
     lang: "ja-JP",
-    rate: 0.78,
-    pitch: 0.98,
+    rate: 0.74,
+    pitch: 0.96,
     volume: 0.9,
     preferredNames: ["Kyoko", "Otoya", "Google 日本語", "Siri"]
   };
@@ -654,7 +661,7 @@ export default function MeditationPage() {
       : isAffirmationGate
         ? AFFIRMATION_AMBIENT_AUDIO_SRC
         : undefined;
-  const ambientAudioVolume = journeyMode ? 0.65 : isAffirmationGate ? 0.2 : isStructuredMorningGate ? 0.22 : undefined;
+  const ambientAudioVolume = journeyMode ? 0.65 : isAffirmationGate ? 0.16 : isStructuredMorningGate ? 0.22 : undefined;
   const journeyGuidanceStage = getJourneyGuidanceStage(elapsedTotalSeconds, totalSeconds);
   const affirmationStage = isStructuredMorningGate ? getMorningGateStage(meditationDoor, elapsedTotalSeconds) : null;
   const topText = journeyMode
