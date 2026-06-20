@@ -184,12 +184,23 @@ export function BrainOwnershipJourney() {
       <div className="mt-8 grid gap-4 lg:grid-cols-5">
         {copy.steps.map((step, index) => {
           const unlocked = memberState === "paid" || index < 2;
+          const isBrainFlexibility = index === 1;
           const href = unlocked
             ? stepRoutes[index]
             : memberState === "guest"
               ? `/login?next=${encodeURIComponent(stepRoutes[index])}`
               : "/pricing";
-          const buttonLabel = unlocked ? copy.cta.open : memberState === "guest" ? copy.cta.member : copy.cta.upgrade;
+          const buttonLabel = isBrainFlexibility && memberState !== "paid"
+            ? language === "jp"
+              ? "メンバーとして始める"
+              : language === "kr"
+                ? "멤버로 시작하기"
+                : "Start as a Member"
+            : unlocked
+              ? copy.cta.open
+              : memberState === "guest"
+                ? copy.cta.member
+                : copy.cta.upgrade;
 
           return (
             <article

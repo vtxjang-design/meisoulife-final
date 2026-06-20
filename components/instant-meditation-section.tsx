@@ -181,6 +181,10 @@ function getStartSupportText(startLabel: string) {
   return "Settle your rhythm, quietly";
 }
 
+function getReturnLabel() {
+  return "戻る / Back to 1-Minute Resets";
+}
+
 export function InstantMeditationSection({ copy }: InstantMeditationSectionProps) {
   const [running, setRunning] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(TOTAL_SECONDS);
@@ -404,6 +408,37 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     setRunning(true);
   }
 
+  function resetMeditationExperience() {
+    pendingAutoStartRef.current = false;
+    clearTimer();
+    setRunning(false);
+    setSecondsLeft(TOTAL_SECONDS);
+    setHasSelectedGate(false);
+    setVideoLoading(false);
+    setVideoFailed(false);
+    setAudioBlocked(false);
+    setSelectedMood("");
+    completionHandledRef.current = false;
+
+    const video = videoRef.current;
+
+    if (video) {
+      video.pause();
+      video.currentTime = 0;
+      video.muted = true;
+      video.volume = 0;
+    }
+
+    if (typeof window !== "undefined") {
+      const gateSection = document.getElementById("zero-gate");
+
+      if (gateSection) {
+        const top = gateSection.getBoundingClientRect().top + window.scrollY - 88;
+        window.scrollTo({ top: Math.max(top, 0), behavior: "smooth" });
+      }
+    }
+  }
+
   async function enterGate(nextGate: MeditationExperienceKey) {
     clearTimer();
     setSelectedGate(nextGate);
@@ -458,16 +493,26 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
 
   async function handleEnterFullscreen() {
     const container = resetContainerRef.current;
+    const video = videoRef.current;
 
-    if (!container) {
+    if (!container && !video) {
       return;
     }
 
     try {
+      if (video && "webkitEnterFullscreen" in video) {
+        (
+          video as HTMLVideoElement & {
+            webkitEnterFullscreen?: () => void;
+          }
+        ).webkitEnterFullscreen?.();
+        return;
+      }
+
       if (document.fullscreenElement !== container) {
-        if (container.requestFullscreen) {
+        if (container?.requestFullscreen) {
           await container.requestFullscreen();
-        } else if ("webkitRequestFullscreen" in container) {
+        } else if (container && "webkitRequestFullscreen" in container) {
           await (
             container as HTMLDivElement & {
               webkitRequestFullscreen?: () => Promise<void> | void;
@@ -556,18 +601,8 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
             </span>
           ))}
         </div>
-        <div className="mt-3 flex flex-wrap justify-center gap-2">
-          {copy.stages.map((item) => (
-            <span key={item} className="rounded-full border border-white/10 bg-white/[0.02] px-3 py-1.5 text-xs tracking-[0.08em] text-white/46">
-              {item}
-            </span>
-          ))}
-        </div>
         <div className="mt-8 grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div className="order-2 space-y-4.5 lg:order-1">
-            <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
-              <p className="text-sm leading-[1.8] text-white/66">{copy.sensory}</p>
-            </div>
             {secondsLeft === 0 ? (
               <div className="rounded-[24px] border border-gold/18 bg-gold/[0.06] p-5">
                 <p className="text-sm leading-[1.8] text-white/82">{copy.completionMessage}</p>
@@ -606,6 +641,15 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
               >
                 {running ? copy.pause : copy.start}
               </button>
+              {hasSelectedGate ? (
+                <button
+                  type="button"
+                  onClick={resetMeditationExperience}
+                  className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-4 py-3 text-sm font-medium text-white/82 transition duration-300 hover:bg-white/[0.06]"
+                >
+                  {getReturnLabel()}
+                </button>
+              ) : null}
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"

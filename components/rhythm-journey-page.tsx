@@ -46,6 +46,10 @@ export function RhythmJourneyPage() {
   const selectedRhythmChoice = getRhythmJourneyChoice(language, day7RhythmSelection);
   const day7RhythmMessage = selectedRhythmChoice?.followUp ?? "";
   const rhythmButtonLabel = selectedRhythmChoice?.cta ?? journeyCopy.dailyRhythmCta;
+  const dayNavLabel =
+    language === "jp" ? "日を選ぶ" : language === "kr" ? "날짜 선택" : "Choose a day";
+  const resetToDayOneLabel =
+    language === "jp" ? "Day 1へ戻る" : language === "kr" ? "Day 1로 돌아가기" : "Return to Day 1";
 
   useEffect(() => {
     const stored = readRhythmJourneyProgress();
@@ -113,6 +117,19 @@ export function RhythmJourneyPage() {
     };
 
     updateProgress(next);
+  }
+
+  function handleSelectDay(day: number) {
+    const next = {
+      ...progress,
+      journeyStarted: true,
+      currentDay: clampRhythmJourneyDay(day)
+    };
+
+    updateProgress(next);
+    setShowIntro(false);
+    setShowNaturePause(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function handleNext() {
@@ -215,6 +232,43 @@ export function RhythmJourneyPage() {
               <div className="rounded-full border border-white/10 bg-white/[0.06] px-4 py-2 text-sm text-white/68">
                 {currentDay.day} / {RHYTHM_JOURNEY_DAY_COUNT}
               </div>
+            </div>
+
+            <div className="rounded-[24px] border border-white/10 bg-white/[0.04] px-4 py-4">
+              <p className="text-xs uppercase tracking-[0.24em] text-[#f0d79c]">{dayNavLabel}</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {Array.from({ length: RHYTHM_JOURNEY_DAY_COUNT }, (_, index) => {
+                  const day = index + 1;
+                  const selected = day === currentDay.day;
+                  const completed = progress.completedDays.includes(day);
+
+                  return (
+                    <button
+                      key={day}
+                      type="button"
+                      onClick={() => handleSelectDay(day)}
+                      className={`min-h-[40px] rounded-full px-3.5 py-2 text-sm transition duration-200 ${
+                        selected
+                          ? "border border-[#f0d79c]/30 bg-[#f3e0af]/16 text-[#fff8e6]"
+                          : completed
+                            ? "border border-white/10 bg-white/[0.06] text-white/82"
+                            : "border border-white/10 bg-white/[0.03] text-white/62 hover:bg-white/[0.06]"
+                      }`}
+                    >
+                      Day {day}
+                    </button>
+                  );
+                })}
+              </div>
+              {currentDay.day !== 1 ? (
+                <button
+                  type="button"
+                  onClick={() => handleSelectDay(1)}
+                  className="mt-3 inline-flex min-h-[42px] items-center justify-center rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-white/72 transition hover:bg-white/[0.06]"
+                >
+                  {resetToDayOneLabel}
+                </button>
+              ) : null}
             </div>
 
             <article className="overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(244,232,198,0.14),transparent_20%),linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.028))] p-5 shadow-[0_24px_80px_rgba(7,17,31,0.16)] sm:p-7">

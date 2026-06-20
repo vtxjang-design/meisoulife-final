@@ -30,7 +30,7 @@ export function AuthCard({ mode }: AuthCardProps) {
 
   function buildResetRedirectTarget() {
     const next = nextPath && nextPath.startsWith("/") ? nextPath : "/program/basic";
-    return `${window.location.origin}/auth/update-password?next=${encodeURIComponent(next)}`;
+    return `${window.location.origin}/auth/callback?next=${encodeURIComponent(`/auth/update-password?next=${next}`)}`;
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {

@@ -633,6 +633,7 @@ export default function MeditationPage() {
   const isStructuredMorningGate = isAffirmationGate || isEnergyGate || isVisionGate;
   const morningGateCopy: StructuredMorningCopy = isVisionGate ? visionCopy : isEnergyGate ? energyCopy : affirmationCopy;
   const content = copy.variants[meditationType];
+  const hideSoundToggle = meditationType === "morning";
   const durationVariant = getDurationVariant(totalSeconds);
   const durationTextSet = copy.durationTexts?.[durationVariant];
   const journeyAudioSource = journeyDay ? journeyAudioMap[journeyDay] : undefined;
@@ -1273,14 +1274,16 @@ export default function MeditationPage() {
                     {vibrationEnabled ? copy.vibrationOn : copy.vibrationOff}
                   </button>
                 ) : null}
-                <button
-                  type="button"
-                  onClick={handleSoundToggle}
-                  className="button-nowrap inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
-                  aria-pressed={soundEnabled}
-                >
-                  {soundEnabled ? `🔊 ${journeyMode ? journeyCopy.audioOn : copy.soundOn}` : `🔊 ${journeyMode ? journeyCopy.audioOff : copy.soundOff}`}
-                </button>
+                {!hideSoundToggle ? (
+                  <button
+                    type="button"
+                    onClick={handleSoundToggle}
+                    className="button-nowrap inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
+                    aria-pressed={soundEnabled}
+                  >
+                    {soundEnabled ? `🔊 ${journeyMode ? journeyCopy.audioOn : copy.soundOn}` : `🔊 ${journeyMode ? journeyCopy.audioOff : copy.soundOff}`}
+                  </button>
+                ) : null}
                 {journeyMode && !needsUserStart && showAmbientRetry ? (
                   <button
                     type="button"
