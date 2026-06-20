@@ -72,10 +72,10 @@ const rhythmCatalog = {
           title: "Affirmation Gate",
           purpose: "今日の自分を選ぶ",
           state: "今日は、もう少し明確に始めたい。",
-          description: "今日の輪郭を静かに整える3分。",
+          description: "朝の呼吸の中で、今日の自分を静かに選び直す3分。",
           sessionTitle: "今日の自分を選ぶ",
-          sessionSubtitle: "朝を明確に始めたいとき",
-          sessionGuidance: "今日どんな自分でいたいかを、呼吸の中で静かに選びます。",
+          sessionSubtitle: "朝は、一日を始める時間ではありません。今日の自分を選ぶ時間です。",
+          sessionGuidance: "昨日を少し横に置き、今日どんな自分でいたいかを呼吸の中で静かに選びます。",
           entryLabel: "Affirmation Gateに入る",
           completionTitle: "今日の自分を、静かに選びました。"
         },

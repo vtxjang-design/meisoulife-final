@@ -82,7 +82,7 @@ type StructuredMorningCopy = {
 const affirmationGateCopy = {
   jp: {
     title: "今日の自分を選ぶ",
-    subtitle: "朝を少し明るく始めたいとき",
+    subtitle: "朝は、一日を始める時間ではありません。今日の自分を選ぶ時間です。",
     duration: "3:00",
     audioLabel: "朝のリチュアル",
     pause: "一度止める",
@@ -90,27 +90,27 @@ const affirmationGateCopy = {
     inhale: "吸う",
     exhale: "吐く",
     completionTitle: "今日の自分を選びました。",
-    completionMessage: "この静けさのまま、今日をやさしく始めていきましょう。",
-    completionNote: "朝の光に背中をあずけるように、ゆっくりで大丈夫です。",
+    completionMessage: "今日の方向は決まりました。この静けさのまま、穏やかで明るい一日を始めていきましょう。",
+    completionNote: "完璧でなくても大丈夫です。大切なのは、今日の自分を選ぶことです。",
     completionButton: "朝の扉へ戻る",
     openingFade: "今日の自分を選ぶ",
     integration: "今日の自分を選ぶ",
     openingLines: [
-      { at: 15, key: "open-1", text: "それでは、そっと目を閉じてみましょう。" },
-      { at: 21, key: "open-2", text: "新しい今日が、静かに始まっています。" },
-      { at: 28, key: "open-3", text: "ゆっくり呼吸をしてみましょう。まずは深く息を入れてみましょう。ゆっくり吐いていきます。" }
+      { at: 15, key: "open-1", text: "ようこそ。少しだけ立ち止まりましょう。" },
+      { at: 25, key: "open-2", text: "昨日のことは、いったん横に置いておきます。まだ何かを頑張らなくて大丈夫です。" },
+      { at: 38, key: "open-3", text: "まずは呼吸を感じましょう。ゆっくり息を吸います。新しい朝を迎えます。" },
+      { at: 52, key: "open-4", text: "ゆっくり吐きます。昨日を手放します。もう一度。吸って。新しい可能性を迎えます。吐いて。余分な力を手放します。" }
     ],
     affirmationLines: [
-      { at: 80, key: "affirm-1", text: "今日は、目覚めた心で過ごしてみましょう。" },
-      { at: 90, key: "affirm-2", text: "今日は、やわらかく前を向いて進んでいきましょう。" },
-      { at: 100, key: "affirm-3", text: "今日は、自分の中心を大切にしていきましょう。" },
-      { at: 110, key: "affirm-4", text: "今日は、小さな成長を受け取っていきましょう。" },
-      { at: 120, key: "affirm-5", text: "今日は、自分を信じて歩いていきましょう。" }
+      { at: 80, key: "affirm-1", text: "今朝のあなたは、どんな自分でいたいですか。穏やかな自分でしょうか。自信のある自分でしょうか。" },
+      { at: 98, key: "affirm-2", text: "感謝できる自分でしょうか。軽やかな自分でしょうか。答えは一つでなくても大丈夫です。" },
+      { at: 114, key: "affirm-3", text: "今、心が自然に選ぶものを感じてみてください。その感覚を胸の中に置きます。" },
+      { at: 130, key: "affirm-4", text: "そして静かに心の中で繰り返します。今日は、この自分で生きてみよう。今日は、この自分を選ぼう。" }
     ],
     closingLines: [
-      { at: 160, key: "close-1", text: "いいですね。そのままで大丈夫です。" },
-      { at: 168, key: "close-2", text: "今日が、静かに動き始めています。" },
-      { at: 176, key: "close-3", text: "あなたらしい今日を、ここから始めていきましょう。" }
+      { at: 160, key: "close-1", text: "完璧でなくても大丈夫です。大切なのは、選ぶことです。" },
+      { at: 170, key: "close-2", text: "今日の方向は決まりました。あなたの一日が、穏やかで明るいものになりますように。" },
+      { at: 178, key: "close-3", text: "それでは、良い一日を。" }
     ]
   },
   kr: {
