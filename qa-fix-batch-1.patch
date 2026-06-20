@@ -1,0 +1,420 @@
+diff --git a/app/meditation/page.tsx b/app/meditation/page.tsx
+index 78e45c9..8111b0b 100644
+--- a/app/meditation/page.tsx
++++ b/app/meditation/page.tsx
+@@ -74,6 +74,24 @@ function getJourneyGuidanceStage(elapsedSeconds: number, totalSeconds: number) {
+   return "breathing";
+ }
+ 
++function getEntryButtonLabel(language: "jp" | "kr" | "en", meditationType: MeditationType) {
++  if (language === "jp") {
++    if (meditationType === "morning") return "Morning Gateに入る";
++    if (meditationType === "night") return "Night Gateに入る";
++    return "始める";
++  }
++
++  if (language === "kr") {
++    if (meditationType === "morning") return "Morning Gate 시작";
++    if (meditationType === "night") return "Night Gate 시작";
++    return "시작하기";
++  }
++
++  if (meditationType === "morning") return "Enter Morning Gate";
++  if (meditationType === "night") return "Enter Night Gate";
++  return "Begin";
++}
++
+ export default function MeditationPage() {
+   const { language } = useLanguage();
+   const copy = useSiteCopy().meditationPage;
+@@ -90,6 +108,8 @@ export default function MeditationPage() {
+   const [journeyMode, setJourneyMode] = useState(false);
+   const [journeyDay, setJourneyDay] = useState<number | null>(null);
+   const [returnToHref, setReturnToHref] = useState("/rhythm-journey");
++  const [hydrated, setHydrated] = useState(false);
++  const [hasStarted, setHasStarted] = useState(false);
+   const audioContextRef = useRef<AudioContext | null>(null);
+   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
+   const completionHandledRef = useRef(false);
+@@ -97,6 +117,9 @@ export default function MeditationPage() {
+   const phase = useMemo(() => getBreathPhase(elapsedTotalSeconds), [elapsedTotalSeconds]);
+   const isComplete = secondsLeft <= 0;
+   const content = copy.variants[meditationType];
++  const requiresManualStart = !journeyMode && totalSeconds >= 180;
++  const practiceActive = !requiresManualStart || hasStarted;
++  const hideSoundToggle = meditationType === "morning";
+   const durationVariant = getDurationVariant(totalSeconds);
+   const durationTextSet = copy.durationTexts?.[durationVariant];
+   const journeyAudioSource = journeyDay ? journeyAudioMap[journeyDay] : undefined;
+@@ -143,7 +166,7 @@ export default function MeditationPage() {
+     setTotalSeconds(nextDuration);
+     setSecondsLeft(nextDuration);
+     setMeditationType(nextType);
+-    const nextSoundEnabled = nextJourneyMode && pendingJourneyAudio ? true : getNatureSoundPreference();
++    const nextSoundEnabled = nextType === "morning" ? true : nextJourneyMode && pendingJourneyAudio ? true : getNatureSoundPreference();
+     setSoundEnabled(nextSoundEnabled);
+     setJourneyMode(nextJourneyMode);
+     setJourneyDay(Number.isInteger(resolvedJourneyDay) && resolvedJourneyDay >= 1 && resolvedJourneyDay <= 7 ? resolvedJourneyDay : null);
+@@ -151,7 +174,9 @@ export default function MeditationPage() {
+     setAmbientVideoFailed(false);
+     setShowAmbientRetry(false);
+     setHasUserGesture(Boolean(nextJourneyMode && pendingJourneyAudio));
++    setHasStarted(nextJourneyMode || nextDuration < 180);
+     completionHandledRef.current = false;
++    setHydrated(true);
+     console.log("[Journey Audio] journeyMode:", nextJourneyMode);
+     console.log("[Journey Audio] journeyDay:", resolvedJourneyDay);
+     console.log(
+@@ -265,7 +290,7 @@ export default function MeditationPage() {
+     const markGesture = () => {
+       setHasUserGesture(true);
+ 
+-      if (!isComplete && soundEnabled) {
++      if (!isComplete && soundEnabled && practiceActive) {
+         startAmbientNatureAudio(ambientAudioRef, soundEnabled, ambientAudioSource, ambientAudioVolume).then((result) => {
+           void handleAmbientStartResult(result);
+         });
+@@ -280,10 +305,10 @@ export default function MeditationPage() {
+       window.removeEventListener("keydown", markGesture);
+       stopAmbientNatureAudio(ambientAudioRef);
+     };
+-  }, [ambientAudioSource, ambientAudioVolume, isComplete, soundEnabled]);
++  }, [ambientAudioSource, ambientAudioVolume, isComplete, practiceActive, soundEnabled]);
+ 
+   useEffect(() => {
+-    if (secondsLeft <= 0) {
++    if (!hydrated || !practiceActive || secondsLeft <= 0) {
+       return;
+     }
+ 
+@@ -294,10 +319,10 @@ export default function MeditationPage() {
+     return () => {
+       window.clearTimeout(timer);
+     };
+-  }, [secondsLeft]);
++  }, [hydrated, practiceActive, secondsLeft]);
+ 
+   useEffect(() => {
+-    if (isComplete || !soundEnabled || (!hasUserGesture && !journeyMode)) {
++    if (!hydrated || !practiceActive || isComplete || !soundEnabled || (!hasUserGesture && !journeyMode)) {
+       stopAmbientNatureAudio(ambientAudioRef);
+       return;
+     }
+@@ -311,7 +336,7 @@ export default function MeditationPage() {
+         stopAmbientNatureAudio(ambientAudioRef);
+       }
+     };
+-  }, [ambientAudioSource, ambientAudioVolume, hasUserGesture, isComplete, journeyMode, soundEnabled]);
++  }, [ambientAudioSource, ambientAudioVolume, hasUserGesture, hydrated, isComplete, journeyMode, practiceActive, soundEnabled]);
+ 
+   useEffect(() => {
+     if (!isComplete || completionHandledRef.current) {
+@@ -358,6 +383,11 @@ export default function MeditationPage() {
+     await handleAmbientStartResult(result);
+   }
+ 
++  function handleStartPractice() {
++    setHasUserGesture(true);
++    setHasStarted(true);
++  }
++
+   return (
+     <main className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_20%),linear-gradient(180deg,#07111f_0%,#0d1b2d_45%,#10273a_100%)] px-6 py-10 text-white">
+       <div className="relative flex min-h-[480px] w-full max-w-3xl flex-col items-center overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.04] px-6 py-8 text-center shadow-[0_30px_80px_rgba(0,0,0,0.28)] sm:px-8 sm:py-10">
+@@ -383,6 +413,23 @@ export default function MeditationPage() {
+         <div className="relative z-20 flex w-full flex-col items-center text-center">
+         {!isComplete ? (
+           <>
++            {requiresManualStart && !practiceActive ? (
++              <div className="flex min-h-[420px] w-full flex-col items-center justify-center">
++                <div className="max-w-xl space-y-5 text-center">
++                  <p className="text-sm uppercase tracking-[0.32em] text-gold/80">{topText}</p>
++                  <p className="text-base leading-8 text-white/68 sm:text-lg">{introText}</p>
++                  <p className="text-5xl font-serif text-white/88 sm:text-6xl">{formatRemainingTime(totalSeconds)}</p>
++                  <button
++                    type="button"
++                    onClick={handleStartPractice}
++                    className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
++                  >
++                    {getEntryButtonLabel(language, meditationType)}
++                  </button>
++                </div>
++              </div>
++            ) : (
++              <>
+             {journeyMode ? (
+               <div className="flex min-h-[112px] w-full items-center justify-center">
+                 {journeyOverlayMessage ? (
+@@ -426,14 +473,16 @@ export default function MeditationPage() {
+                     {vibrationEnabled ? copy.vibrationOn : copy.vibrationOff}
+                   </button>
+                 ) : null}
+-                <button
+-                  type="button"
+-                  onClick={handleSoundToggle}
+-                  className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
+-                  aria-pressed={soundEnabled}
+-                >
+-                  {soundEnabled ? `🔊 ${journeyMode ? journeyCopy.audioOn : copy.soundOn}` : `🔊 ${journeyMode ? journeyCopy.audioOff : copy.soundOff}`}
+-                </button>
++                {!hideSoundToggle ? (
++                  <button
++                    type="button"
++                    onClick={handleSoundToggle}
++                    className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
++                    aria-pressed={soundEnabled}
++                  >
++                    {soundEnabled ? `🔊 ${journeyMode ? journeyCopy.audioOn : copy.soundOn}` : `🔊 ${journeyMode ? journeyCopy.audioOff : copy.soundOff}`}
++                  </button>
++                ) : null}
+                 {journeyMode && (!soundEnabled || showAmbientRetry) ? (
+                   <button
+                     type="button"
+@@ -476,6 +525,8 @@ export default function MeditationPage() {
+                 {copy.bottomText[phase]}
+               </p>
+             </div>
++              </>
++            )}
+           </>
+         ) : (
+           <div className="animate-fade-in space-y-8">
+diff --git a/components/auth-card.tsx b/components/auth-card.tsx
+index 7df369e..b7fa40d 100644
+--- a/components/auth-card.tsx
++++ b/components/auth-card.tsx
+@@ -30,7 +30,7 @@ export function AuthCard({ mode }: AuthCardProps) {
+ 
+   function buildResetRedirectTarget() {
+     const next = nextPath && nextPath.startsWith("/") ? nextPath : "/dashboard";
+-    return `${window.location.origin}/auth/update-password?next=${encodeURIComponent(next)}`;
++    return `${window.location.origin}/auth/callback?next=${encodeURIComponent(`/auth/update-password?next=${next}`)}`;
+   }
+ 
+   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+diff --git a/components/brain-ownership-journey.tsx b/components/brain-ownership-journey.tsx
+index 6fee89a..c3e77d1 100644
+--- a/components/brain-ownership-journey.tsx
++++ b/components/brain-ownership-journey.tsx
+@@ -190,12 +190,23 @@ export function BrainOwnershipJourney() {
+       <div className="mt-8 grid gap-4 lg:grid-cols-5">
+         {copy.steps.map((step, index) => {
+           const unlocked = memberState === "paid" || index < 2;
++          const isBrainFlexibility = index === 1;
+           const href = unlocked
+             ? stepRoutes[index]
+             : memberState === "guest"
+               ? `/login?next=${encodeURIComponent(stepRoutes[index])}`
+               : "/pricing";
+-          const buttonLabel = unlocked ? copy.cta.open : memberState === "guest" ? copy.cta.member : copy.cta.upgrade;
++          const buttonLabel = isBrainFlexibility && memberState !== "paid"
++            ? language === "jp"
++              ? "メンバーとして始める"
++              : language === "kr"
++                ? "멤버로 시작하기"
++                : "Start as a Member"
++            : unlocked
++              ? copy.cta.open
++              : memberState === "guest"
++                ? copy.cta.member
++                : copy.cta.upgrade;
+ 
+           return (
+             <article
+diff --git a/components/instant-meditation-section.tsx b/components/instant-meditation-section.tsx
+index df58cb5..e101680 100644
+--- a/components/instant-meditation-section.tsx
++++ b/components/instant-meditation-section.tsx
+@@ -181,6 +181,10 @@ function getStartSupportText(startLabel: string) {
+   return "Settle your rhythm, quietly";
+ }
+ 
++function getReturnLabel() {
++  return "戻る / Back to 1-Minute Resets";
++}
++
+ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps) {
+   const [running, setRunning] = useState(false);
+   const [secondsLeft, setSecondsLeft] = useState(TOTAL_SECONDS);
+@@ -378,6 +382,37 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
+     setRunning(true);
+   }
+ 
++  function resetMeditationExperience() {
++    pendingAutoStartRef.current = false;
++    clearTimer();
++    setRunning(false);
++    setSecondsLeft(TOTAL_SECONDS);
++    setHasSelectedGate(false);
++    setVideoLoading(false);
++    setVideoFailed(false);
++    setAudioBlocked(false);
++    setSelectedMood("");
++    completionHandledRef.current = false;
++
++    const video = videoRef.current;
++
++    if (video) {
++      video.pause();
++      video.currentTime = 0;
++      video.muted = true;
++      video.volume = 0;
++    }
++
++    if (typeof window !== "undefined") {
++      const gateSection = document.getElementById("zero-gate");
++
++      if (gateSection) {
++        const top = gateSection.getBoundingClientRect().top + window.scrollY - 88;
++        window.scrollTo({ top: Math.max(top, 0), behavior: "smooth" });
++      }
++    }
++  }
++
+   async function enterGate(nextGate: MeditationExperienceKey) {
+     clearTimer();
+     setSelectedGate(nextGate);
+@@ -432,16 +467,26 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
+ 
+   async function handleEnterFullscreen() {
+     const container = resetContainerRef.current;
++    const video = videoRef.current;
+ 
+-    if (!container) {
++    if (!container && !video) {
+       return;
+     }
+ 
+     try {
++      if (video && "webkitEnterFullscreen" in video) {
++        (
++          video as HTMLVideoElement & {
++            webkitEnterFullscreen?: () => void;
++          }
++        ).webkitEnterFullscreen?.();
++        return;
++      }
++
+       if (document.fullscreenElement !== container) {
+-        if (container.requestFullscreen) {
++        if (container?.requestFullscreen) {
+           await container.requestFullscreen();
+-        } else if ("webkitRequestFullscreen" in container) {
++        } else if (container && "webkitRequestFullscreen" in container) {
+           await (
+             container as HTMLDivElement & {
+               webkitRequestFullscreen?: () => Promise<void> | void;
+@@ -529,18 +574,8 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
+             </span>
+           ))}
+         </div>
+-        <div className="mt-3 flex flex-wrap justify-center gap-2">
+-          {copy.stages.map((item) => (
+-            <span key={item} className="rounded-full border border-white/10 bg-white/[0.02] px-3 py-1.5 text-xs tracking-[0.08em] text-white/46">
+-              {item}
+-            </span>
+-          ))}
+-        </div>
+         <div className="mt-8 grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+           <div className="order-2 space-y-4.5 lg:order-1">
+-            <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
+-              <p className="text-sm leading-[1.8] text-white/66">{copy.sensory}</p>
+-            </div>
+             {secondsLeft === 0 ? (
+               <div className="rounded-[24px] border border-gold/18 bg-gold/[0.06] p-5">
+                 <p className="text-sm leading-[1.8] text-white/82">{copy.completionMessage}</p>
+@@ -579,6 +614,15 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
+               >
+                 {running ? copy.pause : copy.start}
+               </button>
++              {hasSelectedGate ? (
++                <button
++                  type="button"
++                  onClick={resetMeditationExperience}
++                  className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-4 py-3 text-sm font-medium text-white/82 transition duration-300 hover:bg-white/[0.06]"
++                >
++                  {getReturnLabel()}
++                </button>
++              ) : null}
+               <div className="grid grid-cols-2 gap-3">
+                 <button
+                   type="button"
+diff --git a/components/rhythm-journey-page.tsx b/components/rhythm-journey-page.tsx
+index a08b9e4..9766c1b 100644
+--- a/components/rhythm-journey-page.tsx
++++ b/components/rhythm-journey-page.tsx
+@@ -46,6 +46,10 @@ export function RhythmJourneyPage() {
+   const selectedRhythmChoice = getRhythmJourneyChoice(language, day7RhythmSelection);
+   const day7RhythmMessage = selectedRhythmChoice?.followUp ?? "";
+   const rhythmButtonLabel = selectedRhythmChoice?.cta ?? journeyCopy.dailyRhythmCta;
++  const dayNavLabel =
++    language === "jp" ? "日を選ぶ" : language === "kr" ? "날짜 선택" : "Choose a day";
++  const resetToDayOneLabel =
++    language === "jp" ? "Day 1へ戻る" : language === "kr" ? "Day 1로 돌아가기" : "Return to Day 1";
+ 
+   useEffect(() => {
+     const stored = readRhythmJourneyProgress();
+@@ -115,6 +119,19 @@ export function RhythmJourneyPage() {
+     updateProgress(next);
+   }
+ 
++  function handleSelectDay(day: number) {
++    const next = {
++      ...progress,
++      journeyStarted: true,
++      currentDay: clampRhythmJourneyDay(day)
++    };
++
++    updateProgress(next);
++    setShowIntro(false);
++    setShowNaturePause(false);
++    window.scrollTo({ top: 0, behavior: "smooth" });
++  }
++
+   function handleNext() {
+     if (currentDay.day >= RHYTHM_JOURNEY_DAY_COUNT) {
+       router.push(DAILY_RHYTHM_ROUTE);
+@@ -211,6 +228,43 @@ export function RhythmJourneyPage() {
+               </div>
+             </div>
+ 
++            <div className="rounded-[24px] border border-white/10 bg-white/[0.04] px-4 py-4">
++              <p className="text-xs uppercase tracking-[0.24em] text-[#f0d79c]">{dayNavLabel}</p>
++              <div className="mt-3 flex flex-wrap gap-2">
++                {Array.from({ length: RHYTHM_JOURNEY_DAY_COUNT }, (_, index) => {
++                  const day = index + 1;
++                  const selected = day === currentDay.day;
++                  const completed = progress.completedDays.includes(day);
++
++                  return (
++                    <button
++                      key={day}
++                      type="button"
++                      onClick={() => handleSelectDay(day)}
++                      className={`min-h-[40px] rounded-full px-3.5 py-2 text-sm transition duration-200 ${
++                        selected
++                          ? "border border-[#f0d79c]/30 bg-[#f3e0af]/16 text-[#fff8e6]"
++                          : completed
++                            ? "border border-white/10 bg-white/[0.06] text-white/82"
++                            : "border border-white/10 bg-white/[0.03] text-white/62 hover:bg-white/[0.06]"
++                      }`}
++                    >
++                      Day {day}
++                    </button>
++                  );
++                })}
++              </div>
++              {currentDay.day !== 1 ? (
++                <button
++                  type="button"
++                  onClick={() => handleSelectDay(1)}
++                  className="mt-3 inline-flex min-h-[42px] items-center justify-center rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-white/72 transition hover:bg-white/[0.06]"
++                >
++                  {resetToDayOneLabel}
++                </button>
++              ) : null}
++            </div>
++
+             <article className="overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(244,232,198,0.14),transparent_20%),linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.028))] p-5 shadow-[0_24px_80px_rgba(7,17,31,0.16)] sm:p-7">
+               {!isCompleted ? (
+                 <div className="space-y-6">
