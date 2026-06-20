@@ -59,6 +59,18 @@ function getDurationVariant(totalSeconds: number) {
   return totalSeconds >= 180 ? "threeMinutes" : "sixty";
 }
 
+function requiresMobileAudioGesture() {
+  if (typeof window === "undefined" || typeof navigator === "undefined") {
+    return false;
+  }
+
+  const userAgent = navigator.userAgent || "";
+  const isMobileUserAgent = /iPhone|iPad|iPod|Android|Mobile|CriOS|FxiOS|EdgiOS/i.test(userAgent);
+  const isTouchViewport = navigator.maxTouchPoints > 0 && window.matchMedia("(max-width: 768px)").matches;
+
+  return isMobileUserAgent || isTouchViewport;
+}
+
 export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditationProps) {
   const copy = useSiteCopy();
   const modalCopy = copy.modal;
@@ -70,6 +82,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   const [hasUserGesture, setHasUserGesture] = useState(false);
   const [ambientVideoFailed, setAmbientVideoFailed] = useState(false);
   const [showAmbientRetry, setShowAmbientRetry] = useState(false);
+  const [needsAudioStart, setNeedsAudioStart] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
   const completionHandledRef = useRef(false);
@@ -94,12 +107,14 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
       previousPhaseRef.current = "inhale";
       setAmbientVideoFailed(false);
       setShowAmbientRetry(false);
+      setNeedsAudioStart(false);
       stopAmbientNatureAudio(ambientAudioRef);
       return;
     }
 
+    const shouldPromptForAudioStart = requiresMobileAudioGesture() && getNatureSoundPreference();
     setSecondsLeft(TOTAL_SECONDS);
-    setHasUserGesture(true);
+    setHasUserGesture(!shouldPromptForAudioStart);
     setSoundEnabled(getNatureSoundPreference());
     setVibrationEnabled(true);
     setCompletionIndex(Math.floor(Math.random() * completionMoments.length));
@@ -107,6 +122,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
     previousPhaseRef.current = "inhale";
     setAmbientVideoFailed(false);
     setShowAmbientRetry(false);
+    setNeedsAudioStart(shouldPromptForAudioStart);
   }, [completionMoments.length, open]);
 
   useEffect(() => {
@@ -135,7 +151,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
   }, [isComplete, open, secondsLeft]);
 
   useEffect(() => {
-    if (!open || isComplete || !soundEnabled || !hasUserGesture) {
+    if (!open || isComplete || !soundEnabled || !hasUserGesture || needsAudioStart) {
       stopAmbientNatureAudio(ambientAudioRef);
       return;
     }
@@ -149,7 +165,7 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
         stopAmbientNatureAudio(ambientAudioRef);
       }
     };
-  }, [hasUserGesture, isComplete, open, soundEnabled]);
+  }, [hasUserGesture, isComplete, needsAudioStart, open, soundEnabled]);
 
   useEffect(() => {
     if (!open) {
@@ -303,6 +319,30 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
     setShowAmbientRetry(!result.started);
   }
 
+  async function handleAudioStart() {
+    setHasUserGesture(true);
+    setNeedsAudioStart(false);
+
+    if (audioContextRef.current?.state === "suspended") {
+      try {
+        await audioContextRef.current.resume();
+      } catch (error) {
+        console.warn("[one-minute-reset] failed to resume audio context", error);
+      }
+    }
+
+    if (!soundEnabled) {
+      return;
+    }
+
+    const result = await startAmbientNatureAudio(ambientAudioRef, true);
+    setShowAmbientRetry(!result.started);
+
+    if (!result.started) {
+      setNeedsAudioStart(true);
+    }
+  }
+
   async function runMeditationComplete() {
     markDailyRhythmCompleted();
     await stopAmbientNatureAudio(ambientAudioRef);
@@ -433,7 +473,15 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
               >
                 {soundEnabled ? `🔊 ${modalCopy.soundOn}` : `🔊 ${modalCopy.soundOff}`}
               </button>
-              {showAmbientRetry && soundEnabled ? (
+              {needsAudioStart ? (
+                <button
+                  type="button"
+                  onClick={handleAudioStart}
+                  className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-gold/20 bg-gold/10 px-3 py-1.5 text-xs font-medium text-gold transition hover:bg-gold/15 hover:text-[#f5e4b5]"
+                >
+                  {modalCopy.natureLabel}
+                </button>
+              ) : showAmbientRetry && soundEnabled ? (
                 <button
                   type="button"
                   onClick={handleAmbientRetry}

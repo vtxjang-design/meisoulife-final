@@ -578,6 +578,18 @@ function pickStructuredMorningVoice(
   return matchingVoices[0];
 }
 
+function requiresMobileAudioGesture() {
+  if (typeof window === "undefined" || typeof navigator === "undefined") {
+    return false;
+  }
+
+  const userAgent = navigator.userAgent || "";
+  const isMobileUserAgent = /iPhone|iPad|iPod|Android|Mobile|CriOS|FxiOS|EdgiOS/i.test(userAgent);
+  const isTouchViewport = navigator.maxTouchPoints > 0 && window.matchMedia("(max-width: 768px)").matches;
+
+  return isMobileUserAgent || isTouchViewport;
+}
+
 export default function MeditationPage() {
   const { language } = useLanguage();
   const copy = useSiteCopy().meditationPage;
@@ -599,6 +611,7 @@ export default function MeditationPage() {
   const [needsUserStart, setNeedsUserStart] = useState(false);
   const [pendingStructuredAmbientStart, setPendingStructuredAmbientStart] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [requiresExplicitAudioStart, setRequiresExplicitAudioStart] = useState(false);
   const [affirmationMessage, setAffirmationMessage] = useState<string | null>(null);
   const [journeyMode, setJourneyMode] = useState(false);
   const [journeyDay, setJourneyDay] = useState<number | null>(null);
@@ -685,6 +698,8 @@ export default function MeditationPage() {
       nextType === "morning" &&
       (nextDoor === "affirmation" || nextDoor === "energy" || nextDoor === "vision");
     const shouldResumeStructuredAmbient = nextType === "morning" && nextDoor === "affirmation" && pendingStructuredAmbientAudio === "1";
+    const mobileNeedsGesture = requiresMobileAudioGesture();
+    const isProgramMode = nextJourneyMode || nextType !== "default";
 
     const resolvedDuration = isThreeMinuteMorningDoor ? AFFIRMATION_TOTAL_SECONDS : nextDuration;
     setTotalSeconds(resolvedDuration);
@@ -697,6 +712,7 @@ export default function MeditationPage() {
         : shouldResumeStructuredAmbient
           ? true
           : getNatureSoundPreference();
+    const shouldPromptForAudioStart = mobileNeedsGesture && (isProgramMode || nextSoundEnabled);
     setSoundEnabled(nextSoundEnabled);
     setPendingStructuredAmbientStart(shouldResumeStructuredAmbient);
     setJourneyMode(nextJourneyMode);
@@ -704,9 +720,10 @@ export default function MeditationPage() {
     setReturnToHref(nextReturnTo || "/rhythm-journey");
     setAmbientVideoFailed(false);
     setShowAmbientRetry(false);
-    setNeedsUserStart(false);
-    setHasUserGesture(false);
-    setIsPaused(false);
+    setNeedsUserStart(shouldPromptForAudioStart);
+    setRequiresExplicitAudioStart(shouldPromptForAudioStart);
+    setHasUserGesture(!shouldPromptForAudioStart);
+    setIsPaused(mobileNeedsGesture && isProgramMode);
     setAffirmationMessage(null);
     spokenAffirmationKeysRef.current = new Set();
     completionHandledRef.current = false;
@@ -741,6 +758,8 @@ export default function MeditationPage() {
 
       setShowAmbientRetry(false);
       setNeedsUserStart(false);
+      setRequiresExplicitAudioStart(false);
+      setIsPaused(false);
       setSoundEnabled(true);
       setNatureSoundPreference(true);
       setPendingStructuredAmbientStart(false);
@@ -758,6 +777,7 @@ export default function MeditationPage() {
       setSoundEnabled(false);
       setNatureSoundPreference(false);
       setNeedsUserStart(true);
+      setIsPaused(true);
       console.warn("[Journey Audio] play failed");
       if (result.error) {
         console.error(`[Journey Audio] ${manual ? "manual start" : "autoplay"} failed:`, result.error);
@@ -769,6 +789,7 @@ export default function MeditationPage() {
     } else if (isStructuredMorningGate) {
       setSoundEnabled(false);
       setNeedsUserStart(true);
+      setIsPaused(true);
       setShowAmbientRetry(false);
       setPendingStructuredAmbientStart(false);
       if (result.error) {
@@ -785,6 +806,23 @@ export default function MeditationPage() {
     }
 
     setHasUserGesture(true);
+    setRequiresExplicitAudioStart(false);
+
+    if (audioContextRef.current?.state === "suspended") {
+      try {
+        await audioContextRef.current.resume();
+      } catch (error) {
+        console.warn("[journey-audio] failed to resume audio context", error);
+      }
+    }
+
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      try {
+        window.speechSynthesis.getVoices();
+      } catch (error) {
+        console.warn("[journey-audio] speech synthesis unavailable during unlock", error);
+      }
+    }
 
     const result = await startAmbientNatureAudio(ambientAudioRef, true, ambientAudioSource, ambientAudioVolume);
     await handleAmbientStartResult(result, true);
@@ -795,6 +833,10 @@ export default function MeditationPage() {
 
     const markGesture = () => {
       setHasUserGesture(true);
+
+      if (requiresExplicitAudioStart) {
+        return;
+      }
 
       if (!isComplete && soundEnabled && !journeyMode && !isStructuredMorningGate) {
         startAmbientNatureAudio(ambientAudioRef, soundEnabled, ambientAudioSource, ambientAudioVolume).then((result) => {
@@ -811,10 +853,10 @@ export default function MeditationPage() {
       window.removeEventListener("keydown", markGesture);
       stopAmbientNatureAudio(ambientAudioRef);
     };
-  }, [ambientAudioSource, ambientAudioVolume, isComplete, isStructuredMorningGate, journeyMode, soundEnabled]);
+  }, [ambientAudioSource, ambientAudioVolume, isComplete, isStructuredMorningGate, journeyMode, requiresExplicitAudioStart, soundEnabled]);
 
   useEffect(() => {
-    if (secondsLeft <= 0 || isPaused) {
+    if (secondsLeft <= 0 || isPaused || needsUserStart) {
       return;
     }
 
@@ -825,7 +867,7 @@ export default function MeditationPage() {
     return () => {
       window.clearTimeout(timer);
     };
-  }, [isPaused, secondsLeft]);
+  }, [isPaused, needsUserStart, secondsLeft]);
 
   useEffect(() => {
     if (!isStructuredMorningGate || !soundEnabled) {
@@ -872,24 +914,24 @@ export default function MeditationPage() {
   }, [ambientAudioSource, ambientAudioVolume, hasUserGesture, isComplete, isStructuredMorningGate, journeyMode, soundEnabled]);
 
   useEffect(() => {
-    if (!pendingStructuredAmbientStart || !isAffirmationGate || !ambientAudioSource || isComplete) {
+    if (!pendingStructuredAmbientStart || !isAffirmationGate || !ambientAudioSource || isComplete || requiresExplicitAudioStart) {
       return;
     }
 
     startAmbientNatureAudio(ambientAudioRef, true, ambientAudioSource, ambientAudioVolume).then((result) => {
       void handleAmbientStartResult(result);
     });
-  }, [ambientAudioSource, ambientAudioVolume, isAffirmationGate, isComplete, pendingStructuredAmbientStart]);
+  }, [ambientAudioSource, ambientAudioVolume, isAffirmationGate, isComplete, pendingStructuredAmbientStart, requiresExplicitAudioStart]);
 
   useEffect(() => {
-    if (!journeyMode || !ambientAudioSource || !soundEnabled || isComplete) {
+    if (!journeyMode || !ambientAudioSource || !soundEnabled || isComplete || requiresExplicitAudioStart) {
       return;
     }
 
     startAmbientNatureAudio(ambientAudioRef, true, ambientAudioSource, ambientAudioVolume).then((result) => {
       void handleAmbientStartResult(result);
     });
-  }, [ambientAudioSource, ambientAudioVolume, isComplete, journeyMode, soundEnabled]);
+  }, [ambientAudioSource, ambientAudioVolume, isComplete, journeyMode, requiresExplicitAudioStart, soundEnabled]);
 
   useEffect(() => {
     if (!isComplete || completionHandledRef.current) {
@@ -1064,10 +1106,42 @@ export default function MeditationPage() {
     await handleAmbientStartResult(result, true);
   }
 
-  async function handleStructuredAmbientStart() {
+  async function handleProgramAudioStart() {
     setHasUserGesture(true);
+    setRequiresExplicitAudioStart(false);
+
+    if (audioContextRef.current?.state === "suspended") {
+      try {
+        await audioContextRef.current.resume();
+      } catch (error) {
+        console.warn("[meditation] failed to resume audio context", error);
+      }
+    }
+
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      try {
+        window.speechSynthesis.getVoices();
+      } catch (error) {
+        console.warn("[meditation] speech synthesis unavailable during unlock", error);
+      }
+    }
+
+    if (!soundEnabled) {
+      setNeedsUserStart(false);
+      setIsPaused(false);
+      return;
+    }
+
     const result = await startAmbientNatureAudio(ambientAudioRef, true, ambientAudioSource, ambientAudioVolume);
     await handleAmbientStartResult(result, true);
+
+    if (result.started) {
+      setNeedsUserStart(false);
+      setIsPaused(false);
+      return;
+    }
+
+    setNeedsUserStart(true);
   }
 
   function handlePauseToggle() {
@@ -1175,12 +1249,12 @@ export default function MeditationPage() {
             )}
 
             <div className="mt-12 flex min-h-[320px] w-full flex-col items-center justify-center">
-              {(journeyMode || isStructuredMorningGate) && needsUserStart ? (
+              {(journeyMode || meditationType !== "default") && needsUserStart ? (
                 <div className="mb-6 w-full max-w-md rounded-[24px] border border-[rgba(212,178,106,0.18)] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-5 text-center shadow-[0_18px_50px_rgba(4,12,24,0.18)]">
                   <p className="text-sm leading-7 text-white/76">{journeyMode ? journeyCopy.audioPrompt : copy.audioPrompt}</p>
                   <button
                     type="button"
-                    onClick={journeyMode ? handleJourneyAudioStart : handleStructuredAmbientStart}
+                    onClick={journeyMode ? handleJourneyAudioStart : handleProgramAudioStart}
                     className="button-nowrap mt-4 inline-flex min-h-[44px] items-center justify-center rounded-full border border-gold/20 bg-gold/10 px-4 py-2 text-sm font-semibold text-gold transition hover:bg-gold/15 hover:text-[#f5e4b5]"
                   >
                     {journeyMode ? journeyCopy.audioStart : copy.audioStart}
