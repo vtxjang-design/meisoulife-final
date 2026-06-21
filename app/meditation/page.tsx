@@ -31,15 +31,15 @@ const MORNING_GATE_FADE_OUT_MS = 3000;
 const MORNING_GATE_DUCK_RATIO = 0.65;
 const MORNING_GATE_AUDIO = {
   affirmation: {
-    src: "/audio/morning/affirmation gate.mp3",
+    src: "/audio/morning/affirmation%20gate.mp3",
     volume: 0.18
   },
   energy: {
-    src: "/audio/morning/energy gate.mp3",
+    src: "/audio/morning/energy%20gate.mp3",
     volume: 0.17
   },
   vision: {
-    src: "/audio/morning/vision gate.mp3",
+    src: "/audio/morning/vision%20gate.mp3",
     volume: 0.16
   }
 } as const;
@@ -855,7 +855,7 @@ export default function MeditationPage() {
     } else if (isStructuredMorningGate) {
       setNeedsUserStart(true);
       setIsPaused(true);
-      setShowAmbientRetry(false);
+      setShowAmbientRetry(true);
       setPendingStructuredAmbientStart(false);
       if (result.error) {
         console.error("[Morning Gate Audio] autoplay failed:", result.error);
@@ -1288,9 +1288,15 @@ export default function MeditationPage() {
 
   async function handleAmbientRetry() {
     setHasUserGesture(true);
+    setRequiresExplicitAudioStart(false);
+
+    if (isEnergyGate) {
+      await playEnergyGateVideo();
+    }
+
     const result = await startAmbientNatureAudio(
       ambientAudioRef,
-      soundEnabled,
+      true,
       ambientAudioSource,
       ambientAudioVolume,
       ambientFadeInOptions
@@ -1537,13 +1543,13 @@ export default function MeditationPage() {
                     {journeyCopy.audioStart}
                   </button>
                 ) : null}
-                {showAmbientRetry && soundEnabled ? (
+                {showAmbientRetry && (soundEnabled || isStructuredMorningGate) ? (
                   <button
                     type="button"
                     onClick={handleAmbientRetry}
                     className="button-nowrap inline-flex min-h-[36px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
                   >
-                    {copy.natureLabel}
+                    {isEnergyGate ? "音楽を開始" : copy.natureLabel}
                   </button>
                 ) : null}
               </div>
