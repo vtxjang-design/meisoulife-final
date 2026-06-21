@@ -122,9 +122,11 @@ function BasicProgramContent() {
 
   return (
     <div className="section-shell relative min-h-screen overflow-hidden pb-20 pt-6 sm:pb-28 sm:pt-8">
-      <div className="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(circle_at_20%_20%,rgba(115,231,210,0.14),transparent_44%),radial-gradient(circle_at_80%_24%,rgba(89,193,255,0.14),transparent_48%),radial-gradient(circle_at_50%_82%,rgba(83,150,99,0.10),transparent_58%),linear-gradient(180deg,#041221_0%,#082038_44%,#0a2433_76%,#102d39_100%)]" />
-      <div className="pointer-events-none absolute left-[6%] top-[8%] -z-10 h-[460px] w-[460px] rounded-full bg-[radial-gradient(circle,rgba(127,204,180,0.18),transparent_72%)] blur-[130px]" />
-      <div className="pointer-events-none absolute right-[-12%] top-[12%] -z-10 h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle,rgba(89,193,255,0.16),transparent_72%)] blur-[140px]" />
+      <div className="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(circle_at_18%_10%,rgba(216,192,138,0.10),transparent_22%),radial-gradient(circle_at_72%_16%,rgba(127,255,212,0.14),transparent_28%),radial-gradient(circle_at_52%_46%,rgba(8,40,69,0.18),transparent_34%),radial-gradient(circle_at_50%_82%,rgba(30,58,95,0.18),transparent_46%),linear-gradient(180deg,#061B33_0%,#082845_38%,#07233D_68%,#051A30_100%)]" />
+      <div className="pointer-events-none absolute left-[4%] top-[4%] -z-10 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,rgba(216,192,138,0.14),transparent_72%)] blur-[130px]" />
+      <div className="pointer-events-none absolute right-[-8%] top-[12%] -z-10 h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle,rgba(127,255,212,0.14),transparent_72%)] blur-[150px]" />
+      <div className="pointer-events-none absolute left-[18%] top-[38%] -z-10 h-[560px] w-[560px] rounded-full bg-[radial-gradient(circle,rgba(16,82,117,0.14),transparent_74%)] blur-[160px]" />
+      <div className="pointer-events-none absolute right-[10%] bottom-[-6%] -z-10 h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle,rgba(30,58,95,0.18),transparent_74%)] blur-[150px]" />
       <div className="mx-auto max-w-6xl">
         {planError || !planResolved ? (
           <div className="mb-5 rounded-[20px] border border-gold/18 bg-[linear-gradient(135deg,rgba(212,175,55,0.10),rgba(115,231,210,0.07))] px-5 py-4 text-sm leading-7 text-white/78 shadow-[0_18px_52px_rgba(4,10,20,0.18)]">

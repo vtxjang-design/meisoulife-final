@@ -88,17 +88,31 @@ function mapDefaultRhythm(defaultRhythm?: "morning" | "day" | "night"): BasicGat
 }
 
 function getGateClasses(gate: BasicGateKey, active: boolean) {
-  const activeRing = active ? "ring-1 ring-gold/34 border-gold/22" : "border-white/10";
+  const activeRing = active
+    ? "ring-1 ring-[rgba(127,255,212,0.22)] border-[rgba(127,255,212,0.22)]"
+    : "border-white/10";
 
   if (gate === "morning") {
-    return `${activeRing} bg-[radial-gradient(circle_at_top,rgba(238,199,113,0.20),transparent_34%),linear-gradient(180deg,rgba(43,53,84,0.86),rgba(16,22,38,0.94))]`;
+    return `${activeRing} bg-[radial-gradient(circle_at_top,rgba(216,192,138,0.18),transparent_36%),radial-gradient(circle_at_22%_18%,rgba(127,255,212,0.12),transparent_42%),linear-gradient(180deg,rgba(16,49,77,0.78),rgba(8,40,69,0.88)_54%,rgba(6,27,51,0.94))]`;
   }
 
   if (gate === "daytime") {
-    return `${activeRing} bg-[radial-gradient(circle_at_top,rgba(121,178,141,0.18),transparent_36%),linear-gradient(180deg,rgba(18,47,50,0.90),rgba(9,24,28,0.96))]`;
+    return `${activeRing} bg-[radial-gradient(circle_at_top,rgba(77,182,172,0.18),transparent_38%),radial-gradient(circle_at_80%_24%,rgba(127,255,212,0.10),transparent_42%),linear-gradient(180deg,rgba(11,42,68,0.82),rgba(8,40,69,0.90)_52%,rgba(6,27,51,0.95))]`;
   }
 
-  return `${activeRing} bg-[radial-gradient(circle_at_top,rgba(110,140,212,0.18),transparent_34%),linear-gradient(180deg,rgba(18,31,54,0.92),rgba(8,16,30,0.98))]`;
+  return `${activeRing} bg-[radial-gradient(circle_at_top,rgba(30,58,95,0.25),transparent_38%),radial-gradient(circle_at_76%_20%,rgba(127,255,212,0.08),transparent_42%),linear-gradient(180deg,rgba(9,34,59,0.86),rgba(7,27,50,0.94)_52%,rgba(5,18,34,0.98))]`;
+}
+
+function getDoorClasses(gate: BasicGateKey) {
+  if (gate === "morning") {
+    return "border-[rgba(255,255,255,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.04))] shadow-[0_18px_48px_rgba(0,0,0,0.16),0_0_0_1px_rgba(216,192,138,0.05)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.10),rgba(255,255,255,0.05))]";
+  }
+
+  if (gate === "daytime") {
+    return "border-[rgba(255,255,255,0.10)] bg-[linear-gradient(180deg,rgba(255,255,255,0.07),rgba(255,255,255,0.035))] shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_0_1px_rgba(77,182,172,0.06)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.09),rgba(255,255,255,0.045))]";
+  }
+
+  return "border-[rgba(255,255,255,0.10)] bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.03))] shadow-[0_24px_56px_rgba(0,0,0,0.22),0_0_0_1px_rgba(30,58,95,0.10)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.085),rgba(255,255,255,0.04))]";
 }
 
 export function BasicHome({
@@ -124,23 +138,25 @@ export function BasicHome({
   const currentGate = gates.find((gate) => gate.key === currentGateKey) ?? gates[0];
 
   return (
-    <section className="space-y-8">
-      <div className="overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,204,180,0.16),transparent_28%),radial-gradient(circle_at_bottom,rgba(99,145,219,0.14),transparent_34%),linear-gradient(180deg,rgba(10,26,40,0.86),rgba(7,18,31,0.96))] px-5 py-6 shadow-[0_28px_90px_rgba(0,0,0,0.22)] sm:px-7 sm:py-8">
-        <p className="text-xs uppercase tracking-[0.30em] text-gold/78">{copy.badge}</p>
+    <section className="space-y-10">
+      <div className="overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_20%_0%,rgba(216,192,138,0.16),transparent_24%),radial-gradient(circle_at_75%_18%,rgba(127,255,212,0.14),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(8,40,69,0.22),transparent_38%),linear-gradient(180deg,rgba(8,40,69,0.82),rgba(6,27,51,0.92)_58%,rgba(5,18,34,0.98))] px-5 py-6 shadow-[0_28px_100px_rgba(0,0,0,0.24)] sm:px-7 sm:py-8">
+        <p className="text-xs uppercase tracking-[0.30em] text-[rgba(127,255,212,0.72)]">{copy.badge}</p>
         <div className="mt-4 grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
           <div>
-            <h1 className="whitespace-pre-line font-serif text-3xl leading-[1.25] text-white sm:text-4xl">
+            <h1 className="whitespace-pre-line font-serif text-3xl leading-[1.3] text-[rgba(244,250,255,0.96)] sm:text-4xl">
               {copy.title}
             </h1>
-            <p className="mt-4 whitespace-pre-line text-sm leading-7 text-white/72 sm:text-base">{copy.body}</p>
+            <p className="mt-4 max-w-2xl whitespace-pre-line text-sm leading-7 text-[rgba(233,242,248,0.74)] sm:text-base">
+              {copy.body}
+            </p>
           </div>
-          <div className="rounded-[24px] border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
-            <p className="text-xs uppercase tracking-[0.24em] text-gold/70">{copy.current}</p>
-            <p className="mt-3 text-2xl font-semibold text-white">{currentGate.title}</p>
-            <p className="mt-2 text-sm leading-7 text-white/68">{currentGate.question}</p>
+          <div className="rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.07),rgba(255,255,255,0.03))] p-4 backdrop-blur-xl">
+            <p className="text-xs uppercase tracking-[0.24em] text-[rgba(127,255,212,0.68)]">{copy.current}</p>
+            <p className="mt-3 text-2xl font-semibold text-[rgba(244,250,255,0.95)]">{currentGate.title}</p>
+            <p className="mt-2 text-sm leading-7 text-[rgba(233,242,248,0.7)]">{currentGate.question}</p>
             <Link
               href={`#gate-${currentGate.key}`}
-              className="mt-5 inline-flex min-h-[48px] items-center justify-center rounded-full border border-gold/20 bg-gold/12 px-5 py-3 text-sm font-semibold text-gold transition hover:bg-gold/18 hover:text-[#f6e3b5]"
+              className="mt-5 inline-flex min-h-[48px] items-center justify-center rounded-full border border-[rgba(127,255,212,0.22)] bg-[rgba(127,255,212,0.10)] px-5 py-3 text-sm font-semibold text-[rgba(225,255,247,0.92)] transition hover:bg-[rgba(127,255,212,0.16)] hover:text-white"
             >
               {copy.enter}
             </Link>
@@ -148,13 +164,13 @@ export function BasicHome({
         </div>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-5">
         <div className="space-y-2">
-          <p className="text-xs uppercase tracking-[0.28em] text-gold/70">{copy.gatesTitle}</p>
-          <p className="text-sm leading-7 text-white/66">{copy.gatesBody}</p>
+          <p className="text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.68)]">{copy.gatesTitle}</p>
+          <p className="text-sm leading-7 text-[rgba(233,242,248,0.64)]">{copy.gatesBody}</p>
         </div>
 
-        <div className="grid gap-4">
+        <div className="grid gap-5">
           {gates.map((gate) => {
             const active = gate.key === currentGateKey;
 
@@ -162,31 +178,31 @@ export function BasicHome({
               <section
                 key={gate.key}
                 id={`gate-${gate.key}`}
-                className={`rounded-[28px] border p-4 shadow-[0_24px_70px_rgba(0,0,0,0.18)] sm:p-5 ${getGateClasses(gate.key, active)}`}
+                className={`rounded-[30px] border p-5 shadow-[0_30px_88px_rgba(0,0,0,0.20)] sm:p-6 ${getGateClasses(gate.key, active)}`}
               >
-                <div className="mb-5">
-                  <p className="text-xs uppercase tracking-[0.28em] text-gold/74">{gate.eyebrow}</p>
-                  <h2 className="mt-3 text-2xl font-semibold text-white">{gate.title}</h2>
-                  <p className="mt-2 text-base leading-7 text-white/86">{gate.question}</p>
-                  <p className="mt-2 text-sm leading-7 text-white/62">{gate.atmosphere}</p>
+                <div className="mb-6">
+                  <p className="text-xs uppercase tracking-[0.30em] text-[rgba(127,255,212,0.66)]">{gate.eyebrow}</p>
+                  <h2 className="mt-3 text-2xl font-semibold text-[rgba(244,250,255,0.96)]">{gate.title}</h2>
+                  <p className="mt-2 text-base leading-7 text-[rgba(242,248,252,0.88)]">{gate.question}</p>
+                  <p className="mt-2 text-sm leading-7 text-[rgba(233,242,248,0.62)]">{gate.atmosphere}</p>
                 </div>
 
-                <div className="grid gap-3 md:grid-cols-3">
+                <div className="grid gap-4 md:grid-cols-3">
                   {gate.doors.map((door) => (
                     <Link
                       key={door.key}
                       href={door.href}
-                      className="group rounded-[24px] border border-white/10 bg-white/[0.04] p-4 transition hover:-translate-y-0.5 hover:bg-white/[0.07]"
+                      className={`group rounded-[24px] border p-5 backdrop-blur-xl transition hover:-translate-y-0.5 ${getDoorClasses(gate.key)}`}
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="text-2xl">{door.emoji}</div>
-                        <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[11px] uppercase tracking-[0.18em] text-white/56">
+                        <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[11px] uppercase tracking-[0.18em] text-[rgba(233,242,248,0.58)]">
                           {Math.floor(door.durationSeconds / 60)} min
                         </span>
                       </div>
-                      <h3 className="mt-4 text-lg font-semibold text-white">{door.title}</h3>
-                      <p className="mt-3 text-sm leading-7 text-white/72">“{door.state}”</p>
-                      <span className="mt-5 inline-flex text-sm font-semibold text-white/84 transition group-hover:text-white">
+                      <h3 className="mt-5 text-lg font-semibold text-[rgba(244,250,255,0.95)]">{door.title}</h3>
+                      <p className="mt-3 text-sm leading-7 text-[rgba(233,242,248,0.72)]">“{door.state}”</p>
+                      <span className="mt-6 inline-flex text-sm font-semibold text-[rgba(225,255,247,0.86)] transition group-hover:text-white">
                         {copy.enter}
                       </span>
                     </Link>
@@ -198,37 +214,37 @@ export function BasicHome({
         </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-        <section className="rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(16,28,44,0.82),rgba(10,18,30,0.94))] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.18)]">
-          <p className="text-xs uppercase tracking-[0.28em] text-gold/72">{copy.journeyTitle}</p>
-          <p className="mt-3 text-sm leading-7 text-white/68">{copy.journeyBody}</p>
+      <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+        <section className="rounded-[30px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.08),transparent_34%),linear-gradient(180deg,rgba(9,34,59,0.80),rgba(7,27,50,0.90)_52%,rgba(5,18,34,0.96))] p-5 shadow-[0_28px_78px_rgba(0,0,0,0.20)]">
+          <p className="text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.64)]">{copy.journeyTitle}</p>
+          <p className="mt-3 whitespace-pre-line text-sm leading-7 text-[rgba(233,242,248,0.68)]">{copy.journeyBody}</p>
           <div className="mt-6 space-y-4">
-            <div className="rounded-[20px] border border-white/10 bg-white/[0.03] p-4">
-              <p className="text-sm leading-7 text-white/82">{copy.daily}</p>
+            <div className="rounded-[22px] border border-white/10 bg-white/[0.03] p-4">
+              <p className="text-sm leading-7 text-[rgba(242,248,252,0.84)]">{copy.daily}</p>
             </div>
-            <div className="rounded-[20px] border border-white/10 bg-white/[0.03] p-4">
-              <p className="text-sm leading-7 text-white/82">{copy.weekly}</p>
+            <div className="rounded-[22px] border border-white/10 bg-white/[0.03] p-4">
+              <p className="text-sm leading-7 text-[rgba(242,248,252,0.84)]">{copy.weekly}</p>
             </div>
-            <div className="rounded-[20px] border border-white/10 bg-white/[0.03] p-4">
-              <p className="text-sm leading-7 text-white/82">{copy.monthly}</p>
+            <div className="rounded-[22px] border border-white/10 bg-white/[0.03] p-4">
+              <p className="text-sm leading-7 text-[rgba(242,248,252,0.84)]">{copy.monthly}</p>
             </div>
           </div>
         </section>
 
-        <section className="rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(13,26,38,0.84),rgba(7,16,28,0.96))] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.18)]">
+        <section className="rounded-[30px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(30,58,95,0.20),transparent_38%),linear-gradient(180deg,rgba(8,29,50,0.82),rgba(6,22,42,0.92)_54%,rgba(4,16,30,0.98))] p-5 shadow-[0_28px_78px_rgba(0,0,0,0.20)]">
           <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-[20px] border border-white/10 bg-white/[0.03] p-4">
-              <p className="text-xs uppercase tracking-[0.22em] text-white/42">{copy.journeyDay}</p>
-              <p className="mt-3 text-3xl font-semibold text-white">Day {Math.min(Math.max(currentDay, 1), 30)}</p>
+            <div className="rounded-[22px] border border-white/10 bg-white/[0.03] p-4">
+              <p className="text-xs uppercase tracking-[0.22em] text-[rgba(233,242,248,0.44)]">{copy.journeyDay}</p>
+              <p className="mt-3 text-3xl font-semibold text-[rgba(244,250,255,0.94)]">Day {Math.min(Math.max(currentDay, 1), 30)}</p>
             </div>
-            <div className="rounded-[20px] border border-white/10 bg-white/[0.03] p-4">
-              <p className="text-xs uppercase tracking-[0.22em] text-white/42">{copy.streak}</p>
-              <p className="mt-3 text-3xl font-semibold text-white">{Math.max(streakCount, 0)}</p>
+            <div className="rounded-[22px] border border-white/10 bg-white/[0.03] p-4">
+              <p className="text-xs uppercase tracking-[0.22em] text-[rgba(233,242,248,0.44)]">{copy.streak}</p>
+              <p className="mt-3 text-3xl font-semibold text-[rgba(244,250,255,0.94)]">{Math.max(streakCount, 0)}</p>
             </div>
           </div>
-          <div className="mt-5 rounded-[22px] border border-gold/14 bg-gold/8 p-4">
-            <p className="text-sm font-semibold text-white">{copy.returnTitle}</p>
-            <p className="mt-3 text-sm leading-7 text-white/68">{copy.returnBody}</p>
+          <div className="mt-5 rounded-[24px] border border-[rgba(127,255,212,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] p-4">
+            <p className="text-sm font-semibold text-[rgba(244,250,255,0.94)]">{copy.returnTitle}</p>
+            <p className="mt-3 text-sm leading-7 text-[rgba(233,242,248,0.66)]">{copy.returnBody}</p>
           </div>
         </section>
       </div>
