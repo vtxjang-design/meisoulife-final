@@ -375,7 +375,7 @@ const visionGateCopy = {
       { at: 44, key: "open-4", text: "ただ\n方向を思い出します" }
     ],
     visionLines: [
-      { at: 64, key: "vision-1", text: "吸って" },
+      { at: 64, key: "vision-1", text: "ゆっくり吸います" },
       { at: 74, key: "vision-2", text: "吐いて" },
       { at: 86, key: "vision-3", text: "今いる場所を感じます" },
       { at: 98, key: "vision-4", text: "もう歩いている道を\n思い出します" },
