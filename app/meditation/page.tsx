@@ -353,7 +353,7 @@ const energyGateCopy = {
 const visionGateCopy = {
   jp: {
     title: "方向を思い出す",
-    subtitle: "今日向かう方向を\n静かに思い出す時間です",
+    subtitle: "今日の方向を\n静かに思い出す時間です",
     duration: "3:00",
     audioLabel: "朝のビジョンリチュアル",
     startAudio: "音声を開始",
@@ -362,34 +362,36 @@ const visionGateCopy = {
     inhale: "吸う",
     exhale: "吐く",
     completionTitle: "今日の方向を思い出しました",
-    completionMessage: "向かう先が\n静かに戻っています",
-    completionNote: "この感覚を胸に\n今日を始めます",
+    completionMessage: "遠くを見なくても\n大丈夫です",
+    completionNote: "今日は\n一歩で十分です",
     completionButton: "朝の扉へ戻る",
     openingFade: "方向を思い出す",
-    integration: "今日の方向を\n静かに抱きます",
+    integration: "今\nまた思い出しています",
     openingLines: [
-      { at: 15, key: "open-1", text: "目を軽く閉じます" },
-      { at: 24, key: "open-2", text: "吸って\nゆっくり朝を迎えます" },
-      { at: 36, key: "open-3", text: "吐いて\n静かに整えていきます" },
-      { at: 50, key: "open-4", text: "今日は\nどこへ向かいたいですか" }
+      { at: 15, key: "open-1", text: "ようこそ" },
+      { at: 24, key: "open-2", text: "少しだけ\n呼吸に落ち着きます" },
+      { at: 38, key: "open-3", text: "今日は\n遠くを見なくて大丈夫です" },
+      { at: 52, key: "open-4", text: "ただ\n方向を思い出します" }
     ],
     visionLines: [
-      { at: 64, key: "vision-1", text: "急がなくて大丈夫です" },
-      { at: 76, key: "vision-2", text: "ひとつの場面で十分です" },
-      { at: 90, key: "vision-3", text: "今日のあなたらしい姿を\n心に浮かべます" },
-      { at: 106, key: "vision-4", text: "穏やかな景色かもしれません" },
-      { at: 120, key: "vision-5", text: "まっすぐな表情かもしれません" },
-      { at: 136, key: "vision-6", text: "心が軽くなる方向かもしれません" },
-      { at: 152, key: "vision-7", text: "その場面を\nしばらく感じます" }
+      { at: 64, key: "vision-1", text: "吸って" },
+      { at: 74, key: "vision-2", text: "吐いて" },
+      { at: 86, key: "vision-3", text: "今いる場所を感じます" },
+      { at: 98, key: "vision-4", text: "もう歩いている道を\n思い出します" },
+      { at: 112, key: "vision-5", text: "急がなくて大丈夫です" },
+      { at: 124, key: "vision-6", text: "何かを押し進めなくて\n大丈夫です" },
+      { at: 138, key: "vision-7", text: "一歩ずつ\n進んでいます" },
+      { at: 150, key: "vision-8", text: "あなたの中には\n静かな光があります" },
+      { at: 162, key: "vision-9", text: "今日は\nそれを思い出します" }
     ],
     closingLines: [
-      { at: 172, key: "close-1", text: "もう\n方向は見えています" },
-      { at: 178, key: "close-2", text: "その方向へ\n今日を始めます" }
+      { at: 172, key: "close-1", text: "ひとつの一歩で\n十分です" },
+      { at: 178, key: "close-2", text: "ありがとうございます" }
     ]
   },
   kr: {
     title: "방향을 기억하기",
-    subtitle: "어디로 가는지 다시 떠올리고 싶을 때",
+    subtitle: "오늘의 방향을\n조용히 떠올리는 시간",
     duration: "3:00",
     audioLabel: "아침 비전 리추얼",
     startAudio: "음성 시작하기",
@@ -398,33 +400,36 @@ const visionGateCopy = {
     inhale: "들이쉬기",
     exhale: "내쉬기",
     completionTitle: "오늘의 방향을 떠올렸습니다",
-    completionMessage: "가야 할 방향이\n조용히 돌아왔습니다",
-    completionNote: "이 감각을 품고\n오늘을 시작합니다",
+    completionMessage: "멀리 보지 않아도\n괜찮습니다",
+    completionNote: "오늘은\n한 걸음이면 충분합니다",
     completionButton: "아침의 문으로 돌아가기",
     openingFade: "방향을 기억하기",
-    integration: "오늘의 방향을\n가볍게 품습니다",
+    integration: "이제\n다시 기억합니다",
     openingLines: [
-      { at: 15, key: "open-1", text: "눈을 가볍게 감습니다" },
-      { at: 24, key: "open-2", text: "숨을 천천히 들이쉬고\n천천히 내쉽니다" },
-      { at: 36, key: "open-3", text: "오늘은\n어디를 향하고 싶은가요" }
+      { at: 15, key: "open-1", text: "환영합니다" },
+      { at: 24, key: "open-2", text: "잠시\n호흡에 머뭅니다" },
+      { at: 38, key: "open-3", text: "오늘은\n멀리 보지 않아도 괜찮습니다" },
+      { at: 52, key: "open-4", text: "그저\n방향을 떠올립니다" }
     ],
     visionLines: [
-      { at: 64, key: "vision-1", text: "서두르지 않아도 됩니다" },
-      { at: 76, key: "vision-2", text: "한 장면이면 충분합니다" },
-      { at: 90, key: "vision-3", text: "오늘의 나다운 모습을\n떠올려 봅니다" },
-      { at: 106, key: "vision-4", text: "평온한 장면일 수도 있습니다" },
-      { at: 120, key: "vision-5", text: "분명한 표정일 수도 있습니다" },
-      { at: 136, key: "vision-6", text: "마음이 가벼워지는 방향일 수도 있습니다" },
-      { at: 152, key: "vision-7", text: "그 장면을\n잠시 그대로 둡니다" }
+      { at: 64, key: "vision-1", text: "들이쉬고" },
+      { at: 74, key: "vision-2", text: "내쉽니다" },
+      { at: 86, key: "vision-3", text: "지금 있는 자리를 느껴봅니다" },
+      { at: 98, key: "vision-4", text: "이미 걷고 있는 길을\n떠올립니다" },
+      { at: 112, key: "vision-5", text: "서두르지 않아도 됩니다" },
+      { at: 124, key: "vision-6", text: "무언가를 밀어붙이지 않아도\n괜찮습니다" },
+      { at: 138, key: "vision-7", text: "한 걸음씩\n가고 있습니다" },
+      { at: 150, key: "vision-8", text: "당신 안에는\n조용한 빛이 있습니다" },
+      { at: 162, key: "vision-9", text: "오늘은\n그것을 떠올립니다" }
     ],
     closingLines: [
-      { at: 172, key: "close-1", text: "이제\n방향이 보입니다" },
-      { at: 178, key: "close-2", text: "그 방향으로\n오늘을 시작합니다" }
+      { at: 172, key: "close-1", text: "오늘은\n한 걸음이면 충분합니다" },
+      { at: 178, key: "close-2", text: "고맙습니다" }
     ]
   },
   en: {
     title: "Remember Your Direction",
-    subtitle: "When you want to remember where you are going",
+    subtitle: "A quiet space\nto remember your direction",
     duration: "3:00",
     audioLabel: "Morning Vision Ritual",
     startAudio: "Start Audio",
@@ -433,28 +438,31 @@ const visionGateCopy = {
     inhale: "Inhale",
     exhale: "Exhale",
     completionTitle: "Your direction has returned",
-    completionMessage: "What matters today\nis quietly in view again",
-    completionNote: "That is enough\nto begin the day",
+    completionMessage: "You do not need\nto look far ahead",
+    completionNote: "One step is enough\nfor today",
     completionButton: "Return to Morning Gate",
     openingFade: "Remember Your Direction",
-    integration: "I hold today's direction\nlightly",
+    integration: "Now\nyou remember again",
     openingLines: [
-      { at: 15, key: "open-1", text: "Let the eyes rest" },
-      { at: 24, key: "open-2", text: "Take a slow breath in\nand a slow breath out" },
-      { at: 36, key: "open-3", text: "Where do you want to move today" }
+      { at: 15, key: "open-1", text: "Welcome" },
+      { at: 24, key: "open-2", text: "Take a moment\nand settle into your breath" },
+      { at: 38, key: "open-3", text: "Today\nyou do not need to look far ahead" },
+      { at: 52, key: "open-4", text: "Simply remember\nyour direction" }
     ],
     visionLines: [
-      { at: 64, key: "vision-1", text: "There is no need to hurry" },
-      { at: 76, key: "vision-2", text: "One scene is enough" },
-      { at: 90, key: "vision-3", text: "Let an image of your truest self appear" },
-      { at: 106, key: "vision-4", text: "It may feel calm" },
-      { at: 120, key: "vision-5", text: "It may feel clear" },
-      { at: 136, key: "vision-6", text: "It may feel light" },
-      { at: 152, key: "vision-7", text: "Let that scene stay with you\nfor a moment" }
+      { at: 64, key: "vision-1", text: "Breathe in" },
+      { at: 74, key: "vision-2", text: "Breathe out" },
+      { at: 86, key: "vision-3", text: "Feel where you are" },
+      { at: 98, key: "vision-4", text: "Notice the path\nyou are already walking" },
+      { at: 112, key: "vision-5", text: "There is no need to hurry" },
+      { at: 124, key: "vision-6", text: "There is no need\nto force anything" },
+      { at: 138, key: "vision-7", text: "You are already moving\none step at a time" },
+      { at: 150, key: "vision-8", text: "Within you\nthere is already a quiet light" },
+      { at: 162, key: "vision-9", text: "Today\nsimply remember it" }
     ],
     closingLines: [
-      { at: 172, key: "close-1", text: "Now the direction is visible" },
-      { at: 178, key: "close-2", text: "Begin the day there" }
+      { at: 172, key: "close-1", text: "One step is enough\nfor today" },
+      { at: 178, key: "close-2", text: "Thank you" }
     ]
   }
 } as const;
@@ -546,9 +554,9 @@ function getMorningGateStage(door: MeditationDoor, elapsedSeconds: number): Stru
 
   if (door === "vision") {
     if (elapsedSeconds < 15) return "openingFade";
-    if (elapsedSeconds < 48) return "openingNarration";
-    if (elapsedSeconds < 160) return "vision";
-    if (elapsedSeconds < 170) return "integration";
+    if (elapsedSeconds < 58) return "openingNarration";
+    if (elapsedSeconds < 162) return "vision";
+    if (elapsedSeconds < 172) return "integration";
     return "closing";
   }
 
