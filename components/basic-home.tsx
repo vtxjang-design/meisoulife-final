@@ -22,18 +22,17 @@ const pageCopy = {
     body: "ここはライブラリではありません。\n朝・昼・夜のリズムへ静かに戻るための場所です。",
     current: "今日の入口",
     gatesTitle: "3つのリズムゲート",
-    gatesBody: "いまの状態に合う小さな扉を、ひとつだけ選んでください。",
-    doorPrompt: "今の状態",
+    gatesBody: "いまの自分に合う扉を、ひとつ選びましょう。",
     enter: "この扉に入る",
     journeyTitle: "Rhythm Journey",
-    journeyBody: "毎日少しずつ戻ることで、回復は繰り返せるものになっていきます。",
-    daily: "明日のためではなく、今日の自分へ戻る。",
-    weekly: "1週間続くと、リズムは信頼に変わります。",
-    monthly: "30日後には、戻れる人ではなく、リズムで生きる人になり始めます。",
+    journeyBody: "一日一回。\n小さく戻る。",
+    daily: "Day 1",
+    weekly: "また明日、戻りましょう。",
+    monthly: "リズムは、一日では育ちません。",
     journeyDay: "旅の日",
     streak: "戻ってきた日々",
-    returnTitle: "また明日戻りたくなる理由",
-    returnBody: "明日のあなたも、何をすればいいか迷わなくていいように。BASICは毎日、朝・昼・夜の小さな入口だけを静かに用意して待っています。"
+    returnTitle: "また戻るために",
+    returnBody: "迷わなくて大丈夫です。明日も、ひとつの扉から始めれば十分です。"
   },
   kr: {
     badge: "BASIC Rhythm Space",
@@ -41,18 +40,17 @@ const pageCopy = {
     body: "이곳은 라이브러리가 아닙니다.\n아침 · 낮 · 저녁의 리듬으로 조용히 돌아오는 공간입니다.",
     current: "오늘의 입구",
     gatesTitle: "3개의 리듬 게이트",
-    gatesBody: "지금의 상태에 맞는 작은 문을 하나만 고르세요.",
-    doorPrompt: "지금의 상태",
+    gatesBody: "지금의 나에게 맞는 문을 하나 고르세요.",
     enter: "이 문으로 들어가기",
     journeyTitle: "Rhythm Journey",
-    journeyBody: "매일 조금씩 돌아오면, 회복은 반복 가능한 것이 됩니다.",
-    daily: "내일을 위해서가 아니라, 오늘의 나에게 돌아옵니다.",
-    weekly: "일주일이 지나면, 리듬은 신뢰로 바뀌기 시작합니다.",
-    monthly: "30일 후에는 돌아올 수 있는 사람이 아니라, 리듬으로 사는 사람이 되기 시작합니다.",
+    journeyBody: "하루 한 번.\n작게 돌아오기.",
+    daily: "Day 1",
+    weekly: "내일도 돌아오세요.",
+    monthly: "리듬은 하루에 만들어지지 않습니다.",
     journeyDay: "여정의 날",
     streak: "돌아온 날들",
-    returnTitle: "내일도 다시 오게 되는 이유",
-    returnBody: "내일의 당신도 무엇을 해야 할지 헤매지 않도록. BASIC은 매일 아침, 낮, 저녁의 작은 입구만 조용히 준비해 두고 기다립니다."
+    returnTitle: "다시 돌아오기",
+    returnBody: "많이 읽지 않아도 됩니다. 내일도, 하나의 문이면 충분합니다."
   },
   en: {
     badge: "BASIC Rhythm Space",
@@ -60,18 +58,17 @@ const pageCopy = {
     body: "This is not a library.\nIt is a quiet place to return to morning, daytime, and evening rhythm.",
     current: "Today’s entrance",
     gatesTitle: "Three Rhythm Gates",
-    gatesBody: "Choose one small door that matches your state right now.",
-    doorPrompt: "Current state",
+    gatesBody: "Choose one door that fits you now.",
     enter: "Enter this door",
     journeyTitle: "Rhythm Journey",
-    journeyBody: "By returning a little each day, recovery becomes repeatable.",
-    daily: "Not for tomorrow first, but to return to yourself today.",
-    weekly: "After a week, rhythm starts to become trust.",
-    monthly: "After 30 days, you begin to become someone who lives with rhythm.",
+    journeyBody: "Once a day.\nReturn in a small way.",
+    daily: "Day 1",
+    weekly: "Come back tomorrow.",
+    monthly: "Rhythm is not made in one day.",
     journeyDay: "Journey day",
     streak: "Days returned",
-    returnTitle: "Why you return tomorrow",
-    returnBody: "So tomorrow-you does not have to wonder what to do. BASIC quietly prepares only a small morning, daytime, and evening entrance, every day."
+    returnTitle: "Return again",
+    returnBody: "You do not need to read much. Tomorrow, one door is enough."
   }
 } as const;
 
@@ -188,10 +185,7 @@ export function BasicHome({
                         </span>
                       </div>
                       <h3 className="mt-4 text-lg font-semibold text-white">{door.title}</h3>
-                      <p className="mt-2 text-sm leading-6 text-gold/78">{door.purpose}</p>
-                      <p className="mt-4 text-[11px] uppercase tracking-[0.18em] text-white/42">{copy.doorPrompt}</p>
-                      <p className="mt-2 text-sm leading-7 text-white/72">“{door.state}”</p>
-                      <p className="mt-4 text-sm leading-7 text-white/58">{door.description}</p>
+                      <p className="mt-3 text-sm leading-7 text-white/72">“{door.state}”</p>
                       <span className="mt-5 inline-flex text-sm font-semibold text-white/84 transition group-hover:text-white">
                         {copy.enter}
                       </span>
