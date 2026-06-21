@@ -29,6 +29,7 @@ const AFFIRMATION_TOTAL_SECONDS = 180;
 const MORNING_GATE_FADE_IN_MS = 2000;
 const MORNING_GATE_FADE_OUT_MS = 3000;
 const MORNING_GATE_DUCK_RATIO = 0.65;
+const VISION_GATE_DUCK_RATIO = 0.55;
 const VISION_GATE_SPEECH_RATE_RATIO = 0.94;
 const MORNING_GATE_AUDIO = {
   affirmation: {
@@ -41,7 +42,7 @@ const MORNING_GATE_AUDIO = {
   },
   vision: {
     src: "/audio/morning/vision%20gate.mp3",
-    volume: 0.16
+    volume: 0.14
   }
 } as const;
 const ENERGY_GATE_VIDEO_SRC = "/basic/morning%20gate/energy%20gate8.mp4";
@@ -708,7 +709,12 @@ export default function MeditationPage() {
         : undefined;
   const ambientAudioVolume = journeyMode ? 0.65 : structuredMorningAudio?.volume;
   const ambientNarrationDuckVolume =
-    structuredMorningAudio ? Math.max(0, structuredMorningAudio.volume * MORNING_GATE_DUCK_RATIO) : undefined;
+    structuredMorningAudio
+      ? Math.max(
+          0,
+          structuredMorningAudio.volume * (isVisionGate ? VISION_GATE_DUCK_RATIO : MORNING_GATE_DUCK_RATIO)
+        )
+      : undefined;
   const ambientFadeInOptions = isStructuredMorningGate ? { fadeInMs: MORNING_GATE_FADE_IN_MS } : undefined;
   const ambientResumeOptions = isStructuredMorningGate ? { fadeInMs: MORNING_GATE_FADE_IN_MS } : undefined;
   const ambientFadeOutMs = isStructuredMorningGate ? MORNING_GATE_FADE_OUT_MS : undefined;
