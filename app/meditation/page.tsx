@@ -282,28 +282,26 @@ const energyGateCopy = {
     completionNote: "이 리듬 그대로\n오늘을 시작합니다",
     completionButton: "아침의 문으로 돌아가기",
     openingFade: "뇌와 몸을 깨우기",
-    integration: "단전을 느낍니다\n지금을 느낍니다",
+    integration: "단전을 느껴봅니다\n지금을 느껴봅니다",
     openingLines: [
       { at: 5, key: "open-1", text: "어서 오세요" },
       { at: 10, key: "open-2", text: "오늘은" },
-      { at: 16, key: "open-3", text: "몸의 중심에서 깨어납니다" },
+      { at: 16, key: "open-3", text: "몸과 뇌를 깨워봅니다" },
       { at: 24, key: "open-4", text: "배꼽 아래" },
-      { at: 30, key: "open-5", text: "단전에 의식을 둡니다" }
+      { at: 30, key: "open-5", text: "단전에 의식을 향해봅니다" }
     ],
     awarenessLines: [
-      { at: 40, key: "body-1", text: "단전" },
-      { at: 48, key: "body-2", text: "단전" },
-      { at: 58, key: "body-3", text: "호흡은 자연스럽게" },
-      { at: 68, key: "body-4", text: "단전을 느낍니다" }
+      { at: 40, key: "body-1", text: "가볍게 두드립니다" },
+      { at: 50, key: "body-2", text: "호흡은 자연스럽게" },
+      { at: 62, key: "body-3", text: "단전을 느껴봅니다" }
     ],
     energyLines: [
-      { at: 84, key: "energy-1", text: "몸이 깨어납니다" },
-      { at: 94, key: "energy-2", text: "뇌가 깨어납니다" },
-      { at: 106, key: "energy-3", text: "단전" },
-      { at: 114, key: "energy-4", text: "단전" },
-      { at: 126, key: "energy-5", text: "따뜻함을 느낍니다" },
-      { at: 138, key: "energy-6", text: "생명력을 느낍니다" },
-      { at: 150, key: "energy-7", text: "오늘을 움직이는 힘은\n이미 내 안에 있습니다" }
+      { at: 78, key: "energy-1", text: "몸이 깨어납니다" },
+      { at: 90, key: "energy-2", text: "뇌가 깨어납니다" },
+      { at: 104, key: "energy-3", text: "따뜻함을 느낍니다" },
+      { at: 118, key: "energy-4", text: "생명력을 느낍니다" },
+      { at: 134, key: "energy-5", text: "에너지가 돌아옵니다" },
+      { at: 150, key: "energy-6", text: "오늘을 움직이는 힘은\n이미 내 안에 있습니다" }
     ],
     closingLines: [
       { at: 170, key: "close-1", text: "준비되었습니다" }
@@ -1196,6 +1194,17 @@ export default function MeditationPage() {
           }
 
           utterance.onstart = () => {
+            if (ambientAudioRef.current?.paused && ambientAudioSource && ambientAudioVolume !== undefined) {
+              startAmbientNatureAudio(
+                ambientAudioRef,
+                true,
+                ambientAudioSource,
+                ambientAudioVolume,
+                ambientFadeInOptions
+              ).then((result) => {
+                void handleAmbientStartResult(result, true);
+              });
+            }
             if (ambientNarrationDuckVolume !== undefined) {
               void setAmbientNatureAudioVolume(
                 ambientAudioRef,
@@ -1236,9 +1245,12 @@ export default function MeditationPage() {
       }
     }
   }, [
+    ambientAudioSource,
+    ambientFadeInOptions,
     ambientAudioVolume,
     ambientNarrationDuckVolume,
     elapsedTotalSeconds,
+    handleAmbientStartResult,
     isComplete,
     isPaused,
     isStructuredMorningGate,
