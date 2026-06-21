@@ -26,21 +26,21 @@ const AI_COACH_URL =
 const JOURNEY_AUDIO_PENDING_KEY = "meisoulife_journey_audio_pending";
 const JOURNEY_AUDIO_DAY_KEY = "meisoulife_journey_day";
 const AFFIRMATION_TOTAL_SECONDS = 180;
-const MORNING_GATE_FADE_IN_MS = 1500;
-const MORNING_GATE_FADE_OUT_MS = 2500;
-const MORNING_GATE_DUCK_RATIO = 0.8;
+const MORNING_GATE_FADE_IN_MS = 1800;
+const MORNING_GATE_FADE_OUT_MS = 3000;
+const MORNING_GATE_DUCK_RATIO = 0.65;
 const MORNING_GATE_AUDIO = {
   affirmation: {
     src: "/audio/morning/affirmation gate.mp3",
-    volume: 0.2
+    volume: 0.18
   },
   energy: {
     src: "/audio/morning/energy gate.mp3",
-    volume: 0.26
+    volume: 0.2
   },
   vision: {
     src: "/audio/morning/vision gate.mp3",
-    volume: 0.18
+    volume: 0.16
   }
 } as const;
 
@@ -78,6 +78,7 @@ type StructuredMorningCopy = {
   subtitle: string;
   duration: string;
   audioLabel: string;
+  startAudio: string;
   pause: string;
   resume: string;
   inhale: string;
@@ -102,6 +103,7 @@ const affirmationGateCopy = {
     subtitle: "朝は、一日を始める時間ではありません。今日の自分を選ぶ時間です。",
     duration: "3:00",
     audioLabel: "朝のリチュアル",
+    startAudio: "音声を開始",
     pause: "一度止める",
     resume: "続ける",
     inhale: "吸う",
@@ -116,65 +118,72 @@ const affirmationGateCopy = {
       { at: 15, key: "open-1", text: "ようこそ。" },
       { at: 22, key: "open-2", text: "少しだけ、立ち止まりましょう。" },
       { at: 35, key: "open-3", text: "吸って。新しい朝を迎えます。" },
-      { at: 46, key: "open-4", text: "吐いて。昨日を手放します。" },
-      { at: 60, key: "open-5", text: "吸って。今日へ戻ります。" },
-      { at: 71, key: "open-6", text: "吐いて。余分な力を手放します。" },
-      { at: 84, key: "open-7", text: "吸って。" },
-      { at: 90, key: "open-8", text: "吐いて。" }
+      { at: 47, key: "open-4", text: "吐いて。昨日を手放します。" },
+      { at: 61, key: "open-5", text: "吸って。今日へ戻ります。" },
+      { at: 73, key: "open-6", text: "吐いて。余分な力を手放します。" },
+      { at: 87, key: "open-7", text: "吸って。" },
+      { at: 93, key: "open-8", text: "吐いて。" }
     ],
     affirmationLines: [
-      { at: 100, key: "affirm-1", text: "今朝のあなたは、どんな自分でいたいですか。" },
-      { at: 112, key: "affirm-2", text: "穏やかな自分。" },
-      { at: 120, key: "affirm-3", text: "自信のある自分。" },
-      { at: 128, key: "affirm-4", text: "軽やかな自分。" },
-      { at: 136, key: "affirm-5", text: "感謝できる自分。" },
-      { at: 144, key: "affirm-6", text: "正解はありません。" },
-      { at: 151, key: "affirm-7", text: "今、心が自然に選ぶものを感じてください。" }
+      { at: 104, key: "affirm-1", text: "今朝のあなたは、どんな自分でいたいですか。" },
+      { at: 118, key: "affirm-2", text: "穏やかな自分。" },
+      { at: 126, key: "affirm-3", text: "自信のある自分。" },
+      { at: 134, key: "affirm-4", text: "軽やかな自分。" },
+      { at: 142, key: "affirm-5", text: "感謝できる自分。" },
+      { at: 150, key: "affirm-6", text: "正解はありません。" },
+      { at: 158, key: "affirm-7", text: "今、心が自然に選ぶものを感じてください。" }
     ],
     closingLines: [
-      { at: 166, key: "close-1", text: "今日は、この自分を選ぼう。" },
-      { at: 172, key: "close-2", text: "今日の方向は、もう決まりました。" },
-      { at: 178, key: "close-3", text: "それでは、行ってらっしゃい。" }
+      { at: 172, key: "close-1", text: "今日は、この自分を選ぼう。" },
+      { at: 178, key: "close-2", text: "それでは、行ってらっしゃい。" }
     ]
   },
   kr: {
     title: "오늘의 나를 선택하기",
-    subtitle: "아침을 조금 더 밝게 시작하고 싶을 때",
+    subtitle: "아침은 하루를 시작하는 시간이 아니라, 오늘의 나를 선택하는 시간입니다.",
     duration: "3:00",
     audioLabel: "아침 리추얼",
+    startAudio: "음성 시작하기",
     pause: "잠시 멈추기",
     resume: "이어가기",
     inhale: "들이쉬기",
     exhale: "내쉬기",
     completionTitle: "오늘의 나를 선택했습니다.",
-    completionMessage: "이 고요함 그대로, 오늘을 부드럽게 시작해 봅시다.",
-    completionNote: "아침 빛을 따라가듯 천천히 시작하면 충분합니다.",
+    completionMessage: "오늘의 방향은 이미 정해졌습니다.",
+    completionNote: "이 고요함 그대로 하루를 시작하면 충분합니다.",
     completionButton: "아침의 문으로 돌아가기",
     openingFade: "오늘의 나를 선택하기",
-    integration: "오늘의 나를 선택하기",
+    integration: "오늘은,\n이 나로 살아갑니다.",
     openingLines: [
-      { at: 15, key: "open-1", text: "이제, 눈을 부드럽게 감아볼까요." },
-      { at: 21, key: "open-2", text: "새로운 하루가 조용히 시작되고 있습니다." },
-      { at: 28, key: "open-3", text: "먼저 천천히 숨을 들이마시고, 편안하게 내쉬어 봅시다." }
+      { at: 15, key: "open-1", text: "환영합니다." },
+      { at: 22, key: "open-2", text: "잠시, 멈춰 섭니다." },
+      { at: 35, key: "open-3", text: "들이쉬며, 아침을 맞이합니다." },
+      { at: 47, key: "open-4", text: "내쉬며, 어제를 내려놓습니다." },
+      { at: 61, key: "open-5", text: "들이쉬며, 오늘로 돌아옵니다." },
+      { at: 73, key: "open-6", text: "내쉬며, 남은 힘을 풉니다." },
+      { at: 87, key: "open-7", text: "들이쉬고." },
+      { at: 93, key: "open-8", text: "내쉽니다." }
     ],
     affirmationLines: [
-      { at: 80, key: "affirm-1", text: "오늘은 깨어 있는 마음으로 살아가 봅시다." },
-      { at: 90, key: "affirm-2", text: "오늘은 조금 더 밝은 방향으로 나아가 봅시다." },
-      { at: 100, key: "affirm-3", text: "오늘은 내 중심을 다정하게 지켜봅시다." },
-      { at: 110, key: "affirm-4", text: "오늘은 작은 성장도 기쁘게 받아들여 봅시다." },
-      { at: 120, key: "affirm-5", text: "오늘은 나 자신을 믿으며 걸어가 봅시다." }
+      { at: 104, key: "affirm-1", text: "오늘 아침의 나는, 어떤 모습으로 있고 싶나요." },
+      { at: 118, key: "affirm-2", text: "차분한 나." },
+      { at: 126, key: "affirm-3", text: "분명한 나." },
+      { at: 134, key: "affirm-4", text: "가벼운 나." },
+      { at: 142, key: "affirm-5", text: "감사하는 나." },
+      { at: 150, key: "affirm-6", text: "정답은 없습니다." },
+      { at: 158, key: "affirm-7", text: "지금, 마음이 고르는 쪽을 느껴봅니다." }
     ],
     closingLines: [
-      { at: 160, key: "close-1", text: "좋아요. 지금 이대로도 충분합니다." },
-      { at: 168, key: "close-2", text: "오늘이 조용히 열리고 있습니다." },
-      { at: 176, key: "close-3", text: "오늘의 나를, 이 자리에서 함께 선택해 봅시다." }
+      { at: 172, key: "close-1", text: "오늘은, 이 나를 선택합니다." },
+      { at: 178, key: "close-2", text: "이제, 하루를 시작합니다." }
     ]
   },
   en: {
     title: "Choose Today’s Self",
-    subtitle: "When you want to begin the morning a little brighter",
+    subtitle: "Morning is not where you begin the day. It is where you choose who you are today.",
     duration: "3:00",
     audioLabel: "Morning Ritual",
+    startAudio: "Start Audio",
     pause: "Pause",
     resume: "Continue",
     inhale: "Inhale",
@@ -184,23 +193,29 @@ const affirmationGateCopy = {
     completionNote: "There is no need to rush. You can begin as slowly as morning light.",
     completionButton: "Return to Morning Gate",
     openingFade: "Choose Today’s Self",
-    integration: "Choose Today’s Self",
+    integration: "Today,\nI live as this self.",
     openingLines: [
-      { at: 15, key: "open-1", text: "Let's gently close our eyes." },
-      { at: 21, key: "open-2", text: "A new day is quietly beginning." },
-      { at: 28, key: "open-3", text: "First, take a slow breath in, and gently let it go." }
+      { at: 15, key: "open-1", text: "Welcome." },
+      { at: 22, key: "open-2", text: "Let's pause for a moment." },
+      { at: 35, key: "open-3", text: "Inhale. Welcome the new morning." },
+      { at: 47, key: "open-4", text: "Exhale. Set yesterday down." },
+      { at: 61, key: "open-5", text: "Inhale. Return to today." },
+      { at: 73, key: "open-6", text: "Exhale. Soften the extra effort." },
+      { at: 87, key: "open-7", text: "Inhale." },
+      { at: 93, key: "open-8", text: "Exhale." }
     ],
     affirmationLines: [
-      { at: 80, key: "affirm-1", text: "Today, let me move through this day with an awake heart." },
-      { at: 90, key: "affirm-2", text: "Today, let me keep facing forward with quiet warmth." },
-      { at: 100, key: "affirm-3", text: "Today, let me stay close to my own center." },
-      { at: 110, key: "affirm-4", text: "Today, let me welcome even a small moment of growth." },
-      { at: 120, key: "affirm-5", text: "Today, let me trust myself a little more." }
+      { at: 104, key: "affirm-1", text: "Who do you want to be this morning?" },
+      { at: 118, key: "affirm-2", text: "Calm." },
+      { at: 126, key: "affirm-3", text: "Clear." },
+      { at: 134, key: "affirm-4", text: "Light." },
+      { at: 142, key: "affirm-5", text: "Grateful." },
+      { at: 150, key: "affirm-6", text: "There is no right answer." },
+      { at: 158, key: "affirm-7", text: "Simply notice what your heart is choosing." }
     ],
     closingLines: [
-      { at: 160, key: "close-1", text: "That's enough. You are already here." },
-      { at: 168, key: "close-2", text: "Your day is beginning quietly now." },
-      { at: 176, key: "close-3", text: "Let's begin the day just as you are." }
+      { at: 172, key: "close-1", text: "Today, I choose this self." },
+      { at: 178, key: "close-2", text: "Let's begin the day." }
     ]
   }
 } as const;
@@ -211,39 +226,37 @@ const energyGateCopy = {
     subtitle: "まだ身体が完全に起きていないとき",
     duration: "3:00",
     audioLabel: "朝のエネルギーリチュアル",
+    startAudio: "音声を開始",
     pause: "一度止める",
     resume: "続ける",
     inhale: "吸う",
     exhale: "吐く",
     completionTitle: "脳と体が目覚めました。",
-    completionMessage: "目覚めたエネルギーと一緒に、今日をやさしく始めていきましょう。",
-    completionNote: "身体を少しずつひらきながら、無理なく動き出していけば大丈夫です。",
+    completionMessage: "エネルギーが、静かに戻ってきました。",
+    completionNote: "この流れのまま、今日を始めれば十分です。",
     completionButton: "朝の扉へ戻る",
     openingFade: "脳と身体を目覚めさせる",
-    integration: "脳と身体を目覚めさせる",
+    integration: "このエネルギーで、\n今日を始めます。",
     openingLines: [
-      { at: 15, key: "open-1", text: "それでは、目をやさしく閉じてみましょう。" },
-      { at: 23, key: "open-2", text: "まずは、ゆっくり息を吸って、やわらかく吐いてみましょう。" },
-      { at: 32, key: "open-3", text: "今の身体の感覚に、そっと意識を向けてみましょう。" },
-      { at: 40, key: "open-4", text: "あなたの身体は今、少しずつ目を覚まし始めています。" }
+      { at: 15, key: "open-1", text: "目を軽く閉じます。" },
+      { at: 24, key: "open-2", text: "吸って。朝の空気を迎えます。" },
+      { at: 36, key: "open-3", text: "吐いて。身体の重さをほどきます。" },
+      { at: 50, key: "open-4", text: "今の身体の感覚を、静かに感じます。" }
     ],
     awarenessLines: [
-      { at: 52, key: "body-1", text: "肩の力を、やさしくほどいていきましょう。" },
-      { at: 64, key: "body-2", text: "胸も、ほんの少しひらいてみましょう。" },
-      { at: 76, key: "body-3", text: "おへその下あたりに、静かな中心を感じてみましょう。" },
-      { at: 88, key: "body-4", text: "そのまま、手の先や足の先まで意識を広げてみましょう。" }
+      { at: 64, key: "body-1", text: "肩を少し、ゆるめます。" },
+      { at: 78, key: "body-2", text: "胸の前も、やわらかく開きます。" },
+      { at: 92, key: "body-3", text: "感覚を、手の先と足の先まで広げます。" }
     ],
     energyLines: [
-      { at: 102, key: "energy-1", text: "息を吸うたびに、新しいエネルギーが静かに入ってきます。" },
-      { at: 116, key: "energy-2", text: "そして吐くたびに、身体がふわりと目覚めていきます。" },
-      { at: 132, key: "energy-3", text: "今日は、この生命力と一緒に動いていきましょう。" },
-      { at: 140, key: "energy-4", text: "今日は、元気をやさしく育てながら過ごしていきましょう。" },
-      { at: 148, key: "energy-5", text: "今日は、身体と心をそろえて目覚めていきましょう。" }
+      { at: 108, key: "energy-1", text: "吸うたびに、エネルギーが戻ります。" },
+      { at: 122, key: "energy-2", text: "吐くたびに、身体が少しずつ目覚めます。" },
+      { at: 138, key: "energy-3", text: "今日は、この生気とともに動きます。" },
+      { at: 152, key: "energy-4", text: "無理をせず、ゆっくり目覚めます。" }
     ],
     closingLines: [
-      { at: 170, key: "close-1", text: "ありがとうございます。いい流れですね。" },
-      { at: 175, key: "close-2", text: "脳と体が、やさしく目覚めてきました。" },
-      { at: 179, key: "close-3", text: "今日のエネルギーとともに、ゆっくり歩き始めましょう。" }
+      { at: 172, key: "close-1", text: "脳と身体が、目覚めました。" },
+      { at: 178, key: "close-2", text: "それでは、今日を始めましょう。" }
     ]
   },
   kr: {
@@ -251,39 +264,37 @@ const energyGateCopy = {
     subtitle: "아직 몸이 완전히 깨어나지 않았을 때",
     duration: "3:00",
     audioLabel: "아침 에너지 리추얼",
+    startAudio: "음성 시작하기",
     pause: "잠시 멈추기",
     resume: "이어가기",
     inhale: "들이쉬기",
     exhale: "내쉬기",
     completionTitle: "뇌와 몸이 깨어났습니다.",
-    completionMessage: "깨어난 에너지와 함께, 오늘을 부드럽게 시작해 봅시다.",
-    completionNote: "몸을 조금씩 열어가며, 무리하지 않고 하루를 열면 충분합니다.",
+    completionMessage: "에너지가 조용히 돌아오고 있습니다.",
+    completionNote: "이 리듬 그대로 오늘을 시작하면 충분합니다.",
     completionButton: "아침의 문으로 돌아가기",
     openingFade: "뇌와 몸을 깨우기",
-    integration: "뇌와 몸을 깨우기",
+    integration: "이 에너지로,\n오늘을 시작합니다.",
     openingLines: [
-      { at: 15, key: "open-1", text: "이제 눈을 부드럽게 감아볼까요." },
-      { at: 23, key: "open-2", text: "먼저 천천히 숨을 들이마시고, 편안하게 내쉬어 봅시다." },
-      { at: 32, key: "open-3", text: "지금 몸에서 느껴지는 감각을 가만히 만나봅시다." },
-      { at: 40, key: "open-4", text: "당신의 몸은 지금, 조금씩 깨어나기 시작하고 있습니다." }
+      { at: 15, key: "open-1", text: "눈을 가볍게 감습니다." },
+      { at: 24, key: "open-2", text: "들이쉬며, 아침 공기를 맞이합니다." },
+      { at: 36, key: "open-3", text: "내쉬며, 몸의 무거움을 풉니다." },
+      { at: 50, key: "open-4", text: "지금 몸의 감각을 가만히 느껴봅니다." }
     ],
     awarenessLines: [
-      { at: 52, key: "body-1", text: "어깨에 남아 있던 힘을 부드럽게 풀어볼게요." },
-      { at: 64, key: "body-2", text: "가슴도 조금만 가볍게 열어봅시다." },
-      { at: 76, key: "body-3", text: "배 아래쪽에 있는 조용한 중심을 느껴봅시다." },
-      { at: 88, key: "body-4", text: "그 느낌을 손끝과 발끝까지 천천히 넓혀봅시다." }
+      { at: 64, key: "body-1", text: "어깨를 조금 풀어봅니다." },
+      { at: 78, key: "body-2", text: "가슴 앞도 부드럽게 엽니다." },
+      { at: 92, key: "body-3", text: "손끝과 발끝까지 감각을 넓혀봅니다." }
     ],
     energyLines: [
-      { at: 102, key: "energy-1", text: "숨을 들이쉴 때마다 새로운 에너지가 조용히 들어옵니다." },
-      { at: 116, key: "energy-2", text: "그리고 숨을 내쉴 때마다 몸이 한결 가볍게 깨어납니다." },
-      { at: 132, key: "energy-3", text: "오늘은 이 생명력과 함께 움직여 봅시다." },
-      { at: 140, key: "energy-4", text: "오늘은 내 안의 생기를 천천히 깨워봅시다." },
-      { at: 148, key: "energy-5", text: "오늘은 몸과 마음을 함께 깨우며 시작해 봅시다." }
+      { at: 108, key: "energy-1", text: "들이쉴 때마다, 에너지가 돌아옵니다." },
+      { at: 122, key: "energy-2", text: "내쉴 때마다, 몸이 조금 더 깨어납니다." },
+      { at: 138, key: "energy-3", text: "오늘은, 이 생기로 움직입니다." },
+      { at: 152, key: "energy-4", text: "무리하지 않고, 천천히 깨어납니다." }
     ],
     closingLines: [
-      { at: 170, key: "close-1", text: "좋아요. 아주 잘하고 계십니다." },
-      { at: 175, key: "close-2", text: "뇌와 몸이 부드럽게 깨어났습니다." },
-      { at: 179, key: "close-3", text: "이 에너지와 함께, 오늘을 천천히 시작해 봅시다." }
+      { at: 172, key: "close-1", text: "몸과 뇌가 깨어났습니다." },
+      { at: 178, key: "close-2", text: "이제, 오늘을 시작합니다." }
     ]
   },
   en: {
@@ -291,161 +302,146 @@ const energyGateCopy = {
     subtitle: "When your body has not fully awakened yet",
     duration: "3:00",
     audioLabel: "Morning Energy Ritual",
+    startAudio: "Start Audio",
     pause: "Pause",
     resume: "Continue",
     inhale: "Inhale",
     exhale: "Exhale",
     completionTitle: "Your mind and body are waking up.",
-    completionMessage: "Let this gentle energy carry you into the day.",
-    completionNote: "You only need to open a little. From here, the day can begin naturally.",
+    completionMessage: "Your energy is returning quietly.",
+    completionNote: "This is enough to begin the day.",
     completionButton: "Return to Morning Gate",
     openingFade: "Wake Brain and Body",
-    integration: "Wake Brain and Body",
+    integration: "With this energy,\nI begin the day.",
     openingLines: [
-      { at: 15, key: "open-1", text: "Let's gently close our eyes." },
-      { at: 23, key: "open-2", text: "Now take a slow breath in, and gently let it go." },
-      { at: 32, key: "open-3", text: "Notice what your body is feeling right now." },
-      { at: 40, key: "open-4", text: "Little by little, your body is beginning to wake." }
+      { at: 15, key: "open-1", text: "Let the eyes rest." },
+      { at: 24, key: "open-2", text: "Inhale. Welcome the morning air." },
+      { at: 36, key: "open-3", text: "Exhale. Release the heaviness in the body." },
+      { at: 50, key: "open-4", text: "Notice what the body feels like right now." }
     ],
     awarenessLines: [
-      { at: 52, key: "body-1", text: "Let the tension in your shoulders soften a little." },
-      { at: 64, key: "body-2", text: "If it feels right, gently open through the chest." },
-      { at: 76, key: "body-3", text: "Notice the quiet center below your navel." },
-      { at: 88, key: "body-4", text: "And from there, let your awareness reach your fingertips and toes." }
+      { at: 64, key: "body-1", text: "Let the shoulders soften a little." },
+      { at: 78, key: "body-2", text: "Gently open through the chest." },
+      { at: 92, key: "body-3", text: "Let awareness reach the fingertips and toes." }
     ],
     energyLines: [
-      { at: 102, key: "energy-1", text: "With each inhale, fresh energy can quietly enter." },
-      { at: 116, key: "energy-2", text: "And with each exhale, your body can wake a little more lightly." },
-      { at: 132, key: "energy-3", text: "Today, let me move with living energy." },
-      { at: 140, key: "energy-4", text: "Today, let me welcome a little more warmth and vitality." },
-      { at: 148, key: "energy-5", text: "Today, let me wake gently in both body and mind." }
+      { at: 108, key: "energy-1", text: "With each inhale, energy returns." },
+      { at: 122, key: "energy-2", text: "With each exhale, the body wakes a little more." },
+      { at: 138, key: "energy-3", text: "Today, I move with this energy." },
+      { at: 152, key: "energy-4", text: "There is no need to force the morning open." }
     ],
     closingLines: [
-      { at: 170, key: "close-1", text: "Thank you. That is enough for now." },
-      { at: 175, key: "close-2", text: "Your mind and body are waking a little more." },
-      { at: 179, key: "close-3", text: "Let's begin the day with this energy beside us." }
+      { at: 172, key: "close-1", text: "Body and mind are waking." },
+      { at: 178, key: "close-2", text: "Let's begin the day." }
     ]
   }
 } as const;
 
 const visionGateCopy = {
   jp: {
-    title: "ビジョンスクリーン瞑想",
-    subtitle: "今日の一日を、心の中で静かに描く3分。",
+    title: "方向を思い出す",
+    subtitle: "今日向かう方向を、静かに思い出す3分。",
     duration: "3:00",
     audioLabel: "朝のビジョンリチュアル",
+    startAudio: "音声を開始",
     pause: "一度止める",
     resume: "続ける",
     inhale: "吸う",
     exhale: "吐く",
-    completionTitle: "心に描いた一日が始まります。",
-    completionMessage: "心に描いた小さな方向が、やさしく未来へつながっていきます。",
-    completionNote: "焦らなくて大丈夫です。胸に浮かんだ景色を大切に、今日を始めていきましょう。",
+    completionTitle: "今日の方向を思い出しました。",
+    completionMessage: "向かう先が、静かに戻ってきました。",
+    completionNote: "この感覚を胸に、今日を始めれば十分です。",
     completionButton: "朝の扉へ戻る",
-    openingFade: "ビジョンスクリーン瞑想",
-    integration: "今日の一日を心に描く",
+    openingFade: "方向を思い出す",
+    integration: "今日の方向を、\n静かに抱きます。",
     openingLines: [
-      { at: 15, key: "open-1", text: "それでは、目を軽く閉じてみましょう。" },
-      { at: 23, key: "open-2", text: "呼吸をゆっくり吸って、ゆっくりほどいていきましょう。" },
-      { at: 32, key: "open-3", text: "今この瞬間、新しい今日が静かに始まっています。" },
-      { at: 41, key: "open-4", text: "今日は、どんなふうに過ごしていきたいですか。" }
+      { at: 15, key: "open-1", text: "目を軽く閉じます。" },
+      { at: 24, key: "open-2", text: "吸って。ゆっくり朝を迎えます。" },
+      { at: 36, key: "open-3", text: "吐いて。静かに整えていきます。" },
+      { at: 50, key: "open-4", text: "今日は、どこへ向かいたいですか。" }
     ],
     visionLines: [
-      { at: 56, key: "vision-1", text: "急がなくて大丈夫です。" },
-      { at: 64, key: "vision-2", text: "今すぐ答えを見つけようとしなくても大丈夫です。" },
-      { at: 74, key: "vision-3", text: "心の中に、いちばん大切なひと場面を、そっと浮かべてみましょう。" },
-      { at: 88, key: "vision-4", text: "健やかな自分の姿かもしれません。" },
-      { at: 96, key: "vision-5", text: "やわらかく笑っている自分の姿かもしれません。" },
-      { at: 106, key: "vision-6", text: "誰かの力になっている姿かもしれません。" },
-      { at: 114, key: "vision-7", text: "長く願ってきた生き方の景色かもしれません。" },
-      { at: 124, key: "vision-8", text: "その場面を、心のスクリーンにやさしく映してみましょう。" },
-      { at: 134, key: "vision-9", text: "もう少しずつ始まっているように、自然に感じてみましょう。" },
-      { at: 144, key: "vision-10", text: "その中のあなたは、どんな表情をしていますか。" },
-      { at: 152, key: "vision-11", text: "どんな心で生きていて、どんなエネルギーを分かち合っていますか。" }
+      { at: 64, key: "vision-1", text: "急がなくて大丈夫です。" },
+      { at: 76, key: "vision-2", text: "ひとつの場面で十分です。" },
+      { at: 90, key: "vision-3", text: "今日のあなたらしい姿を、心に浮かべます。" },
+      { at: 106, key: "vision-4", text: "穏やかな景色かもしれません。" },
+      { at: 120, key: "vision-5", text: "まっすぐな表情かもしれません。" },
+      { at: 136, key: "vision-6", text: "心が軽くなる方向かもしれません。" },
+      { at: 152, key: "vision-7", text: "その場面を、しばらくそのまま感じます。" }
     ],
     closingLines: [
-      { at: 170, key: "close-1", text: "未来は遠くではなく、今の小さな選択の中で育っていきます。" },
-      { at: 176, key: "close-2", text: "今日は、私らしく歩いていきましょう。" },
-      { at: 179, key: "close-3", text: "小さな微笑みとともに、今日の道を始めていきましょう。" }
+      { at: 172, key: "close-1", text: "もう、方向は見えています。" },
+      { at: 178, key: "close-2", text: "その方向へ、今日を始めましょう。" }
     ]
   },
   kr: {
-    title: "비전 스크린 명상",
-    subtitle: "오늘 하루의 방향을 마음속에 조용히 그리는 3분.",
+    title: "방향을 기억하기",
+    subtitle: "어디로 가는지 다시 떠올리고 싶을 때",
     duration: "3:00",
     audioLabel: "아침 비전 리추얼",
+    startAudio: "음성 시작하기",
     pause: "잠시 멈추기",
     resume: "이어가기",
     inhale: "들이쉬기",
     exhale: "내쉬기",
-    completionTitle: "오늘 마음에 그린 한 장면이 시작됩니다.",
-    completionMessage: "오늘 마음에 그린 한 장면이, 조용히 미래로 이어집니다.",
-    completionNote: "가슴에 떠오른 방향을 품고, 오늘의 길을 천천히 시작해 봅시다.",
+    completionTitle: "오늘의 방향을 떠올렸습니다.",
+    completionMessage: "가야 할 방향이 조용히 돌아왔습니다.",
+    completionNote: "이 감각을 품고 오늘을 시작하면 충분합니다.",
     completionButton: "아침의 문으로 돌아가기",
-    openingFade: "비전 스크린 명상",
-    integration: "오늘 하루를 마음에 그립니다",
+    openingFade: "방향을 기억하기",
+    integration: "오늘의 방향을,\n가볍게 품습니다.",
     openingLines: [
-      { at: 15, key: "open-1", text: "이제 눈을 가볍게 감아볼까요." },
-      { at: 23, key: "open-2", text: "숨을 천천히 들이마시고, 부드럽게 내쉬어 봅시다." },
-      { at: 32, key: "open-3", text: "지금 이 순간, 새로운 하루가 조용히 시작되고 있습니다." },
-      { at: 41, key: "open-4", text: "오늘은 어떤 하루를 살아가고 싶나요?" }
+      { at: 15, key: "open-1", text: "눈을 가볍게 감습니다." },
+      { at: 24, key: "open-2", text: "숨을 천천히 들이쉬고, 천천히 내쉽니다." },
+      { at: 36, key: "open-3", text: "오늘은, 어디를 향하고 싶은가요." }
     ],
     visionLines: [
-      { at: 56, key: "vision-1", text: "서두르지 않아도 됩니다." },
-      { at: 64, key: "vision-2", text: "지금 바로 정답을 찾으려 하지 않아도 됩니다." },
-      { at: 74, key: "vision-3", text: "마음속에 가장 소중한 한 장면을 천천히 떠올려 봅시다." },
-      { at: 88, key: "vision-4", text: "건강한 나의 모습일 수도 있고, 밝게 웃고 있는 모습일 수도 있습니다." },
-      { at: 102, key: "vision-5", text: "누군가에게 도움이 되는 모습일 수도 있고, 오랫동안 꿈꾸어 온 삶의 모습일 수도 있습니다." },
-      { at: 118, key: "vision-6", text: "그 장면을 마음의 스크린에 천천히 비춰봅시다." },
-      { at: 128, key: "vision-7", text: "이미 조금씩 이루어지고 있는 것처럼 자연스럽게 느껴봅시다." },
-      { at: 138, key: "vision-8", text: "그 모습 속의 나는 어떤 표정을 하고 있나요?" },
-      { at: 146, key: "vision-9", text: "어떤 마음으로 살아가고 있나요?" },
-      { at: 154, key: "vision-10", text: "어떤 에너지를 나누고 있나요?" }
+      { at: 64, key: "vision-1", text: "서두르지 않아도 됩니다." },
+      { at: 76, key: "vision-2", text: "한 장면이면 충분합니다." },
+      { at: 90, key: "vision-3", text: "오늘의 나다운 모습을 떠올려 봅니다." },
+      { at: 106, key: "vision-4", text: "평온한 장면일 수도 있습니다." },
+      { at: 120, key: "vision-5", text: "분명한 표정일 수도 있습니다." },
+      { at: 136, key: "vision-6", text: "마음이 가벼워지는 방향일 수도 있습니다." },
+      { at: 152, key: "vision-7", text: "그 장면을, 잠시 그대로 둡니다." }
     ],
     closingLines: [
-      { at: 170, key: "close-1", text: "미래는 멀리 있는 것이 아니라, 지금의 작은 선택 속에서 만들어집니다." },
-      { at: 176, key: "close-2", text: "오늘은 나다운 가능성을 조용히 선택해 봅시다." },
-      { at: 179, key: "close-3", text: "가벼운 미소와 함께, 오늘의 길을 시작해 봅시다." }
+      { at: 172, key: "close-1", text: "이제, 방향이 보입니다." },
+      { at: 178, key: "close-2", text: "그 방향으로 오늘을 시작합니다." }
     ]
   },
   en: {
-    title: "Vision Screen Meditation",
-    subtitle: "A quiet 3-minute meditation to visualize the direction of your day.",
+    title: "Remember Your Direction",
+    subtitle: "When you want to remember where you are going",
     duration: "3:00",
     audioLabel: "Morning Vision Ritual",
+    startAudio: "Start Audio",
     pause: "Pause",
     resume: "Continue",
     inhale: "Inhale",
     exhale: "Exhale",
-    completionTitle: "The scene in your heart can begin today.",
-    completionMessage: "The quiet scene you held today can gently grow into tomorrow.",
-    completionNote: "Hold this gentle direction close, and let the day begin softly from here.",
+    completionTitle: "Your direction has returned.",
+    completionMessage: "What matters today is quietly in view again.",
+    completionNote: "That is enough to begin the day.",
     completionButton: "Return to Morning Gate",
-    openingFade: "Vision Screen Meditation",
-    integration: "Quietly envision your day",
+    openingFade: "Remember Your Direction",
+    integration: "I hold today's direction\nlightly.",
     openingLines: [
-      { at: 15, key: "open-1", text: "Let's gently close our eyes." },
-      { at: 23, key: "open-2", text: "Take a slow breath in, and slowly let it go." },
-      { at: 32, key: "open-3", text: "In this moment, a new day is quietly beginning." },
-      { at: 41, key: "open-4", text: "What kind of day would you like to create today?" }
+      { at: 15, key: "open-1", text: "Let the eyes rest." },
+      { at: 24, key: "open-2", text: "Take a slow breath in, and a slow breath out." },
+      { at: 36, key: "open-3", text: "Where do you want to move today?" }
     ],
     visionLines: [
-      { at: 56, key: "vision-1", text: "There is no need to hurry." },
-      { at: 64, key: "vision-2", text: "There is no need to force an answer right away." },
-      { at: 74, key: "vision-3", text: "Simply let one meaningful scene rise gently in your heart." },
-      { at: 88, key: "vision-4", text: "It may be a healthier version of you." },
-      { at: 96, key: "vision-5", text: "It may be you smiling with quiet brightness." },
-      { at: 106, key: "vision-6", text: "It may be you helping someone with care." },
-      { at: 114, key: "vision-7", text: "It may be a life you have long hoped to live." },
-      { at: 124, key: "vision-8", text: "Let that scene appear slowly on the screen of your heart." },
-      { at: 136, key: "vision-9", text: "See if you can feel it naturally, as though it has already begun." },
-      { at: 146, key: "vision-10", text: "What expression is on your face there?" },
-      { at: 154, key: "vision-11", text: "What kind of energy are you sharing with the world?" }
+      { at: 64, key: "vision-1", text: "There is no need to hurry." },
+      { at: 76, key: "vision-2", text: "One scene is enough." },
+      { at: 90, key: "vision-3", text: "Let an image of your truest self appear." },
+      { at: 106, key: "vision-4", text: "It may feel calm." },
+      { at: 120, key: "vision-5", text: "It may feel clear." },
+      { at: 136, key: "vision-6", text: "It may feel light." },
+      { at: 152, key: "vision-7", text: "Let that scene stay with you for a moment." }
     ],
     closingLines: [
-      { at: 170, key: "close-1", text: "The future is not far away. It is shaped inside the small choices of this moment." },
-      { at: 176, key: "close-2", text: "Today, let me choose what feels most true." },
-      { at: 179, key: "close-3", text: "With a small smile, let's begin the day." }
+      { at: 172, key: "close-1", text: "Now the direction is visible." },
+      { at: 178, key: "close-2", text: "Let's begin the day there." }
     ]
   }
 } as const;
@@ -528,16 +524,16 @@ function getJourneyGuidanceStage(elapsedSeconds: number, totalSeconds: number) {
 function getMorningGateStage(door: MeditationDoor, elapsedSeconds: number): StructuredMorningStage {
   if (door === "energy") {
     if (elapsedSeconds < 15) return "openingFade";
-    if (elapsedSeconds < 45) return "openingNarration";
-    if (elapsedSeconds < 100) return "bodyAwareness";
-    if (elapsedSeconds < 150) return "energy";
+    if (elapsedSeconds < 56) return "openingNarration";
+    if (elapsedSeconds < 104) return "bodyAwareness";
+    if (elapsedSeconds < 158) return "energy";
     if (elapsedSeconds < 170) return "integration";
     return "closing";
   }
 
   if (door === "vision") {
     if (elapsedSeconds < 15) return "openingFade";
-    if (elapsedSeconds < 45) return "openingNarration";
+    if (elapsedSeconds < 48) return "openingNarration";
     if (elapsedSeconds < 160) return "vision";
     if (elapsedSeconds < 170) return "integration";
     return "closing";
@@ -555,9 +551,9 @@ function getStructuredMorningSpeechSettings(language: "jp" | "kr" | "en") {
   if (language === "kr") {
     return {
       lang: "ko-KR",
-      rate: 0.84,
-      pitch: 1.01,
-      volume: 0.94,
+      rate: 0.75,
+      pitch: 1,
+      volume: 0.92,
       preferredNames: ["Yuna", "Sora", "Google 한국어", "Siri"]
     };
   }
@@ -565,18 +561,18 @@ function getStructuredMorningSpeechSettings(language: "jp" | "kr" | "en") {
   if (language === "en") {
     return {
       lang: "en-US",
-      rate: 0.85,
+      rate: 0.76,
       pitch: 1,
-      volume: 0.94,
+      volume: 0.92,
       preferredNames: ["Samantha", "Ava", "Victoria", "Google US English", "Siri"]
     };
   }
 
   return {
     lang: "ja-JP",
-    rate: 0.74,
-    pitch: 0.96,
-    volume: 0.9,
+    rate: 0.69,
+    pitch: 0.95,
+    volume: 0.88,
     preferredNames: ["Kyoko", "Otoya", "Google 日本語", "Siri"]
   };
 }
@@ -1097,7 +1093,7 @@ export default function MeditationPage() {
         }
 
         const isFirstStructuredLine = spokenAffirmationKeysRef.current.size === 1;
-        const speechDelayMs = isFirstStructuredLine ? 360 : 220;
+        const speechDelayMs = isFirstStructuredLine ? 520 : 320;
 
         const queueSpeak = (attempt: number) => {
           if (
@@ -1135,20 +1131,20 @@ export default function MeditationPage() {
 
           utterance.onstart = () => {
             if (ambientNarrationDuckVolume !== undefined) {
-              void setAmbientNatureAudioVolume(ambientAudioRef, ambientNarrationDuckVolume, 220);
+              void setAmbientNatureAudioVolume(ambientAudioRef, ambientNarrationDuckVolume, 320);
             }
             console.log("[structured-meditation][tts] started", language, nextLine.key);
           };
           utterance.onerror = (event) => {
             if (ambientAudioVolume !== undefined) {
-              void setAmbientNatureAudioVolume(ambientAudioRef, ambientAudioVolume, 420);
+              void setAmbientNatureAudioVolume(ambientAudioRef, ambientAudioVolume, 780);
             }
             console.error("[structured-meditation][tts] failed", language, nextLine.key, event.error);
             structuredSpeechTimeoutRef.current = null;
           };
           utterance.onend = () => {
             if (ambientAudioVolume !== undefined) {
-              void setAmbientNatureAudioVolume(ambientAudioRef, ambientAudioVolume, 420);
+              void setAmbientNatureAudioVolume(ambientAudioRef, ambientAudioVolume, 780);
             }
             structuredSpeechTimeoutRef.current = null;
           };
@@ -1435,7 +1431,7 @@ export default function MeditationPage() {
                     {journeyMode
                       ? journeyCopy.audioStart
                       : isStructuredMorningGate
-                        ? "音声を開始"
+                        ? morningGateCopy.startAudio
                         : basicPracticeCopy?.entryLabel ?? copy.audioStart}
                   </button>
                 </div>
