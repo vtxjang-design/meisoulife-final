@@ -29,6 +29,7 @@ const AFFIRMATION_TOTAL_SECONDS = 180;
 const MORNING_GATE_FADE_IN_MS = 2000;
 const MORNING_GATE_FADE_OUT_MS = 3000;
 const MORNING_GATE_DUCK_RATIO = 0.65;
+const VISION_GATE_SPEECH_RATE_RATIO = 0.94;
 const MORNING_GATE_AUDIO = {
   affirmation: {
     src: "/audio/morning/affirmation%20gate.mp3",
@@ -368,10 +369,10 @@ const visionGateCopy = {
     openingFade: "方向を思い出す",
     integration: "今\nまた思い出しています",
     openingLines: [
-      { at: 15, key: "open-1", text: "ようこそ" },
-      { at: 24, key: "open-2", text: "少しだけ\n呼吸に落ち着きます" },
-      { at: 38, key: "open-3", text: "今日は\n遠くを見なくて大丈夫です" },
-      { at: 52, key: "open-4", text: "ただ\n方向を思い出します" }
+      { at: 6, key: "open-1", text: "ようこそ" },
+      { at: 16, key: "open-2", text: "少しだけ\n呼吸に落ち着きます" },
+      { at: 30, key: "open-3", text: "今日は\n遠くを見なくて大丈夫です" },
+      { at: 44, key: "open-4", text: "ただ\n方向を思い出します" }
     ],
     visionLines: [
       { at: 64, key: "vision-1", text: "吸って" },
@@ -406,10 +407,10 @@ const visionGateCopy = {
     openingFade: "방향을 기억하기",
     integration: "이제\n다시 기억합니다",
     openingLines: [
-      { at: 15, key: "open-1", text: "환영합니다" },
-      { at: 24, key: "open-2", text: "잠시\n호흡에 머뭅니다" },
-      { at: 38, key: "open-3", text: "오늘은\n멀리 보지 않아도 괜찮습니다" },
-      { at: 52, key: "open-4", text: "그저\n방향을 떠올립니다" }
+      { at: 6, key: "open-1", text: "환영합니다" },
+      { at: 16, key: "open-2", text: "잠시\n호흡에 머뭅니다" },
+      { at: 30, key: "open-3", text: "오늘은\n멀리 보지 않아도 괜찮습니다" },
+      { at: 44, key: "open-4", text: "그저\n방향을 떠올립니다" }
     ],
     visionLines: [
       { at: 64, key: "vision-1", text: "들이쉬고" },
@@ -444,10 +445,10 @@ const visionGateCopy = {
     openingFade: "Remember Your Direction",
     integration: "Now\nyou remember again",
     openingLines: [
-      { at: 15, key: "open-1", text: "Welcome" },
-      { at: 24, key: "open-2", text: "Take a moment\nand settle into your breath" },
-      { at: 38, key: "open-3", text: "Today\nyou do not need to look far ahead" },
-      { at: 52, key: "open-4", text: "Simply remember\nyour direction" }
+      { at: 6, key: "open-1", text: "Welcome" },
+      { at: 16, key: "open-2", text: "Take a moment\nand settle into your breath" },
+      { at: 30, key: "open-3", text: "Today\nyou do not need to look far ahead" },
+      { at: 44, key: "open-4", text: "Simply remember\nyour direction" }
     ],
     visionLines: [
       { at: 64, key: "vision-1", text: "Breathe in" },
@@ -553,7 +554,7 @@ function getMorningGateStage(door: MeditationDoor, elapsedSeconds: number): Stru
   }
 
   if (door === "vision") {
-    if (elapsedSeconds < 15) return "openingFade";
+    if (elapsedSeconds < 5) return "openingFade";
     if (elapsedSeconds < 58) return "openingNarration";
     if (elapsedSeconds < 162) return "vision";
     if (elapsedSeconds < 172) return "integration";
@@ -1168,7 +1169,7 @@ export default function MeditationPage() {
 
           const utterance = new SpeechSynthesisUtterance(nextLine.text);
           utterance.lang = settings.lang;
-          utterance.rate = settings.rate;
+          utterance.rate = isVisionGate ? settings.rate * VISION_GATE_SPEECH_RATE_RATIO : settings.rate;
           utterance.pitch = settings.pitch;
           utterance.volume = settings.volume;
 
@@ -1184,20 +1185,32 @@ export default function MeditationPage() {
 
           utterance.onstart = () => {
             if (ambientNarrationDuckVolume !== undefined) {
-              void setAmbientNatureAudioVolume(ambientAudioRef, ambientNarrationDuckVolume, 320);
+              void setAmbientNatureAudioVolume(
+                ambientAudioRef,
+                ambientNarrationDuckVolume,
+                isVisionGate ? 520 : 320
+              );
             }
             console.log("[structured-meditation][tts] started", language, nextLine.key);
           };
           utterance.onerror = (event) => {
             if (ambientAudioVolume !== undefined) {
-              void setAmbientNatureAudioVolume(ambientAudioRef, ambientAudioVolume, 780);
+              void setAmbientNatureAudioVolume(
+                ambientAudioRef,
+                ambientAudioVolume,
+                isVisionGate ? 1100 : 780
+              );
             }
             console.error("[structured-meditation][tts] failed", language, nextLine.key, event.error);
             structuredSpeechTimeoutRef.current = null;
           };
           utterance.onend = () => {
             if (ambientAudioVolume !== undefined) {
-              void setAmbientNatureAudioVolume(ambientAudioRef, ambientAudioVolume, 780);
+              void setAmbientNatureAudioVolume(
+                ambientAudioRef,
+                ambientAudioVolume,
+                isVisionGate ? 1100 : 780
+              );
             }
             structuredSpeechTimeoutRef.current = null;
           };
@@ -1217,6 +1230,7 @@ export default function MeditationPage() {
     isComplete,
     isPaused,
     isStructuredMorningGate,
+    isVisionGate,
     language,
     morningGateCopy
   ]);
@@ -1307,7 +1321,10 @@ export default function MeditationPage() {
       true,
       ambientAudioSource,
       ambientAudioVolume,
-      ambientFadeInOptions
+      {
+        ...ambientFadeInOptions,
+        restartFromBeginning: isVisionGate
+      }
     );
     await handleAmbientStartResult(result, true);
   }
@@ -1352,7 +1369,10 @@ export default function MeditationPage() {
       true,
       ambientAudioSource,
       ambientAudioVolume,
-      ambientFadeInOptions
+      {
+        ...ambientFadeInOptions,
+        restartFromBeginning: isVisionGate
+      }
     );
     await handleAmbientStartResult(result, true);
 

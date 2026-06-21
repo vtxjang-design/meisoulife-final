@@ -17,6 +17,7 @@ type AmbientAudioResult = {
 type AmbientAudioOptions = {
   fadeInMs?: number;
   fadeOutMs?: number;
+  restartFromBeginning?: boolean;
 };
 
 type FadeState = {
@@ -95,6 +96,7 @@ export async function startAmbientNatureAudio(
   }
 
   const fadeInMs = options.fadeInMs ?? DEFAULT_FADE_IN_MS;
+  const restartFromBeginning = options.restartFromBeginning ?? false;
 
   const existingSource = audioRef.current?.dataset.meisoSrc;
 
@@ -113,12 +115,18 @@ export async function startAmbientNatureAudio(
     audio.muted = false;
     audio.volume = targetVolume;
     audio.dataset.meisoSrc = source;
+    audio.load();
     audioRef.current = audio;
   }
 
   const audio = audioRef.current;
 
   try {
+    if (restartFromBeginning) {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+
     if (!audio.paused && audio.currentSrc.includes(source)) {
       audio.muted = false;
       if (Math.abs(audio.volume - targetVolume) > 0.01) {
@@ -130,6 +138,9 @@ export async function startAmbientNatureAudio(
     }
 
     console.log("Starting ambience audio");
+    if (restartFromBeginning) {
+      audio.currentTime = 0;
+    }
     audio.volume = 0;
     audio.muted = false;
     await audio.play();
