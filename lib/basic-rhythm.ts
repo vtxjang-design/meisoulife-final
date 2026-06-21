@@ -61,8 +61,8 @@ const rhythmCatalog = {
     morning: {
       title: "Morning Gate",
       eyebrow: "朝",
-      question: "今朝のあなたは、どんな状態ですか？",
-      atmosphere: "朝は、今日の自分を選ぶ時間です。",
+      question: "今朝のあなたは\nどんな状態ですか",
+      atmosphere: "朝は\n今日の自分を選ぶ時間です",
       doors: {
         affirmation: {
           emoji: "✨",
@@ -71,13 +71,13 @@ const rhythmCatalog = {
           durationSeconds: 180,
           title: "Affirmation Gate",
           purpose: "今日の自分を選ぶ",
-          state: "今日は、もう少し明確に始めたい。",
-          description: "今日の自分を静かに選ぶ。",
+          state: "今日は\nもう少し明確に始めたい",
+          description: "今日の自分を静かに選ぶ",
           sessionTitle: "今日の自分を選ぶ",
-          sessionSubtitle: "朝は、一日を始める時間ではありません。今日の自分を選ぶ時間です。",
-          sessionGuidance: "昨日を少し横に置き、今日どんな自分でいたいかを呼吸の中で静かに選びます。",
+          sessionSubtitle: "朝は\n今日の自分を選ぶ時間です",
+          sessionGuidance: "昨日を少し横に置いて\n今日の自分を感じます",
           entryLabel: "Affirmation Gateに入る",
-          completionTitle: "今日の自分を、静かに選びました。"
+          completionTitle: "今日の自分を静かに選びました"
         },
         energy: {
           emoji: "☀️",
@@ -86,13 +86,13 @@ const rhythmCatalog = {
           durationSeconds: 180,
           title: "Energy Gate",
           purpose: "身体と脳を目覚めさせる",
-          state: "まだ身体が重たい。",
-          description: "身体と脳をやさしく起こす。",
+          state: "まだ身体が重たい",
+          description: "身体と脳をやさしく起こす",
           sessionTitle: "脳と身体を目覚めさせる",
-          sessionSubtitle: "まだ身体が重い朝に",
-          sessionGuidance: "呼吸と感覚をつなぎながら、身体の中に朝の光を入れていきます。",
+          sessionSubtitle: "中心から\n静かに目覚める朝に",
+          sessionGuidance: "丹田を感じながら\n静かに目覚めます",
           entryLabel: "Energy Gateに入る",
-          completionTitle: "身体と脳が、静かに目覚め始めました。"
+          completionTitle: "身体と脳が静かに目覚めました"
         },
         vision: {
           emoji: "🌄",
@@ -101,13 +101,13 @@ const rhythmCatalog = {
           durationSeconds: 180,
           title: "Vision Gate",
           purpose: "方向と未来を思い出す",
-          state: "今日はどこへ向かうのか、思い出したい。",
-          description: "今日の方向を思い出す。",
-          sessionTitle: "Vision Gate",
-          sessionSubtitle: "方向と未来を思い出したいとき",
-          sessionGuidance: "急がずに、今日向かいたい景色を心の中に映していきます。",
+          state: "今日はどこへ向かうのか\n思い出したい",
+          description: "今日の方向を思い出す",
+          sessionTitle: "方向を思い出す",
+          sessionSubtitle: "向かう先を\n静かに思い出したいとき",
+          sessionGuidance: "急がずに\n心の中の景色を見つめます",
           entryLabel: "Vision Gateに入る",
-          completionTitle: "今日向かう景色を、心に取り戻しました。"
+          completionTitle: "今日向かう景色が心に戻りました"
         },
         focus: {} as LocalizedDoor,
         rest: {} as LocalizedDoor,
@@ -240,8 +240,8 @@ const rhythmCatalog = {
     morning: {
       title: "Morning Gate",
       eyebrow: "아침",
-      question: "오늘 아침, 당신의 상태는 어떤가요?",
-      atmosphere: "아침은 오늘의 나를 조용히 선택하는 시간입니다.",
+      question: "오늘 아침\n당신의 상태는 어떤가요",
+      atmosphere: "아침은\n오늘의 나를 조용히 선택하는 시간입니다",
       doors: {
         affirmation: {
           emoji: "✨",
@@ -250,13 +250,13 @@ const rhythmCatalog = {
           durationSeconds: 180,
           title: "오늘의 나를 선택하기",
           purpose: "오늘의 나를 선택하기",
-          state: "오늘을 조금 더 분명하게 시작하고 싶다.",
-          description: "오늘의 나를 조용히 고른다.",
+          state: "오늘을\n조금 더 분명하게 시작하고 싶다",
+          description: "오늘의 나를 조용히 고른다",
           sessionTitle: "오늘의 나를 선택하기",
-          sessionSubtitle: "오늘을 분명하게 시작하고 싶을 때",
-          sessionGuidance: "오늘 어떤 나로 살아가고 싶은지, 호흡 안에서 조용히 선택합니다.",
+          sessionSubtitle: "오늘의 나를\n조용히 선택하고 싶을 때",
+          sessionGuidance: "호흡 안에서\n오늘의 나를 느껴봅니다",
           entryLabel: "Affirmation Gate 시작",
-          completionTitle: "오늘의 나를, 조용히 선택했습니다."
+          completionTitle: "오늘의 나를 조용히 선택했습니다"
         },
         energy: {
           emoji: "☀️",
@@ -265,13 +265,13 @@ const rhythmCatalog = {
           durationSeconds: 180,
           title: "몸과 뇌를 깨우기",
           purpose: "몸과 뇌를 깨우기",
-          state: "아직 몸이 무겁다.",
-          description: "몸과 뇌를 부드럽게 깨운다.",
+          state: "아직 몸이 무겁다",
+          description: "몸과 뇌를 부드럽게 깨운다",
           sessionTitle: "뇌와 몸을 깨우기",
-          sessionSubtitle: "아직 몸이 무거운 아침에",
-          sessionGuidance: "호흡과 감각을 연결하며 몸 안으로 아침의 빛을 천천히 들입니다.",
+          sessionSubtitle: "중심에서\n조용히 깨어나고 싶을 때",
+          sessionGuidance: "단전을 느끼며\n조용히 깨어납니다",
           entryLabel: "Energy Gate 시작",
-          completionTitle: "몸과 뇌가, 조용히 깨어나기 시작했습니다."
+          completionTitle: "몸과 뇌가 조용히 깨어났습니다"
         },
         vision: {
           emoji: "🌄",
@@ -280,13 +280,13 @@ const rhythmCatalog = {
           durationSeconds: 180,
           title: "방향을 기억하기",
           purpose: "방향을 기억하기",
-          state: "어디로 가는지 다시 떠올리고 싶다.",
-          description: "오늘의 방향을 다시 떠올린다.",
+          state: "어디로 가는지\n다시 떠올리고 싶다",
+          description: "오늘의 방향을 다시 떠올린다",
           sessionTitle: "방향을 기억하기",
-          sessionSubtitle: "방향과 미래를 떠올리고 싶을 때",
-          sessionGuidance: "서두르지 않고, 오늘 향하고 싶은 장면을 마음속에 그려봅니다.",
+          sessionSubtitle: "오늘의 방향을\n조용히 떠올리고 싶을 때",
+          sessionGuidance: "서두르지 않고\n마음속 장면을 바라봅니다",
           entryLabel: "Vision Gate 시작",
-          completionTitle: "오늘 향할 방향을 다시 떠올렸습니다."
+          completionTitle: "오늘의 방향이 다시 떠올랐습니다"
         },
         focus: {} as LocalizedDoor,
         rest: {} as LocalizedDoor,
@@ -419,8 +419,8 @@ const rhythmCatalog = {
     morning: {
       title: "Morning Gate",
       eyebrow: "Morning",
-      question: "What is your state this morning?",
-      atmosphere: "A quiet time to choose who you are today.",
+      question: "What is your state\nthis morning",
+      atmosphere: "A quiet time\nto choose who you are today",
       doors: {
         affirmation: {
           emoji: "✨",
@@ -429,13 +429,13 @@ const rhythmCatalog = {
           durationSeconds: 180,
           title: "Affirmation Gate",
           purpose: "Choose today’s self",
-          state: "I want to begin today with clarity.",
-          description: "Choose today’s self.",
+          state: "I want to begin today\nwith clarity",
+          description: "Choose today’s self",
           sessionTitle: "Choose Today’s Self",
-          sessionSubtitle: "When you want to begin the day with clarity",
-          sessionGuidance: "In this small pause, choose the version of yourself you want to live from today.",
+          sessionSubtitle: "When you want to\nchoose today’s self",
+          sessionGuidance: "In this pause\nnotice who you are today",
           entryLabel: "Enter Affirmation Gate",
-          completionTitle: "You quietly chose who you are today."
+          completionTitle: "You chose today’s self"
         },
         energy: {
           emoji: "☀️",
@@ -444,13 +444,13 @@ const rhythmCatalog = {
           durationSeconds: 180,
           title: "Energy Gate",
           purpose: "Wake the body and brain",
-          state: "My body still feels heavy.",
-          description: "Wake the body and brain.",
+          state: "My body still feels heavy",
+          description: "Wake the body and brain",
           sessionTitle: "Wake Body and Brain",
-          sessionSubtitle: "When your body still feels heavy",
-          sessionGuidance: "Let breath and body reconnect so the morning can enter you more fully.",
+          sessionSubtitle: "When you want to\nwake from your center",
+          sessionGuidance: "Feel your Danjeon\nand let the body wake",
           entryLabel: "Enter Energy Gate",
-          completionTitle: "Your body and brain have started to wake."
+          completionTitle: "Your body and brain are waking"
         },
         vision: {
           emoji: "🌄",
@@ -459,13 +459,13 @@ const rhythmCatalog = {
           durationSeconds: 180,
           title: "Vision Gate",
           purpose: "Reconnect with direction and future",
-          state: "I want to remember where I am going.",
-          description: "Remember your direction.",
-          sessionTitle: "Vision Gate",
-          sessionSubtitle: "When you want to remember where you are going",
-          sessionGuidance: "Without pushing, let the direction of today come back into view.",
+          state: "I want to remember\nwhere I am going",
+          description: "Remember your direction",
+          sessionTitle: "Remember Your Direction",
+          sessionSubtitle: "When you want to\nremember your direction",
+          sessionGuidance: "Without rushing\nlet the direction return",
           entryLabel: "Enter Vision Gate",
-          completionTitle: "The direction of today returned to view."
+          completionTitle: "Your direction has returned"
         },
         focus: {} as LocalizedDoor,
         rest: {} as LocalizedDoor,
