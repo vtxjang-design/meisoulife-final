@@ -26,7 +26,7 @@ const AI_COACH_URL =
 const JOURNEY_AUDIO_PENDING_KEY = "meisoulife_journey_audio_pending";
 const JOURNEY_AUDIO_DAY_KEY = "meisoulife_journey_day";
 const AFFIRMATION_TOTAL_SECONDS = 180;
-const MORNING_GATE_FADE_IN_MS = 1800;
+const MORNING_GATE_FADE_IN_MS = 2000;
 const MORNING_GATE_FADE_OUT_MS = 3000;
 const MORNING_GATE_DUCK_RATIO = 0.65;
 const MORNING_GATE_AUDIO = {
@@ -36,7 +36,7 @@ const MORNING_GATE_AUDIO = {
   },
   energy: {
     src: "/audio/morning/energy gate.mp3",
-    volume: 0.2
+    volume: 0.17
   },
   vision: {
     src: "/audio/morning/vision gate.mp3",
@@ -239,25 +239,25 @@ const energyGateCopy = {
     openingFade: "脳と身体を目覚めさせる",
     integration: "丹田を感じます。\n今を感じます。",
     openingLines: [
-      { at: 15, key: "open-1", text: "ようこそ" },
-      { at: 24, key: "open-2", text: "今日は" },
-      { at: 33, key: "open-3", text: "体の中心から目覚めます" },
-      { at: 46, key: "open-4", text: "おへその下" },
-      { at: 56, key: "open-5", text: "丹田に意識を向けます" }
+      { at: 5, key: "open-1", text: "ようこそ" },
+      { at: 12, key: "open-2", text: "今日は" },
+      { at: 20, key: "open-3", text: "体の中心から目覚めます" },
+      { at: 30, key: "open-4", text: "おへその下" },
+      { at: 40, key: "open-5", text: "丹田に意識を向けます" }
     ],
     awarenessLines: [
-      { at: 68, key: "body-1", text: "丹田" },
-      { at: 78, key: "body-2", text: "丹田" },
-      { at: 92, key: "body-3", text: "呼吸は自然に" },
-      { at: 104, key: "body-4", text: "丹田を感じます" }
+      { at: 52, key: "body-1", text: "丹田" },
+      { at: 62, key: "body-2", text: "丹田" },
+      { at: 76, key: "body-3", text: "呼吸は自然に" },
+      { at: 88, key: "body-4", text: "丹田を感じます" }
     ],
     energyLines: [
-      { at: 118, key: "energy-1", text: "体が目覚めます" },
-      { at: 130, key: "energy-2", text: "脳が目覚めます" },
-      { at: 142, key: "energy-3", text: "丹田" },
-      { at: 150, key: "energy-4", text: "丹田" },
-      { at: 158, key: "energy-5", text: "温かさを感じます" },
-      { at: 166, key: "energy-6", text: "生命力を感じます" },
+      { at: 104, key: "energy-1", text: "体が目覚めます" },
+      { at: 118, key: "energy-2", text: "脳が目覚めます" },
+      { at: 132, key: "energy-3", text: "丹田" },
+      { at: 142, key: "energy-4", text: "丹田" },
+      { at: 152, key: "energy-5", text: "温かさを感じます" },
+      { at: 164, key: "energy-6", text: "生命力を感じます" },
       { at: 174, key: "energy-7", text: "今日を支える力は すでにあなたの中にあります" }
     ],
     closingLines: [
@@ -281,25 +281,25 @@ const energyGateCopy = {
     openingFade: "뇌와 몸을 깨우기",
     integration: "단전을 느낍니다.\n지금을 느낍니다.",
     openingLines: [
-      { at: 15, key: "open-1", text: "어서 오세요" },
-      { at: 24, key: "open-2", text: "오늘은" },
-      { at: 33, key: "open-3", text: "몸의 중심에서 깨어납니다" },
-      { at: 46, key: "open-4", text: "배꼽 아래" },
-      { at: 56, key: "open-5", text: "단전에 의식을 둡니다" }
+      { at: 5, key: "open-1", text: "어서 오세요" },
+      { at: 12, key: "open-2", text: "오늘은" },
+      { at: 20, key: "open-3", text: "몸의 중심에서 깨어납니다" },
+      { at: 30, key: "open-4", text: "배꼽 아래" },
+      { at: 40, key: "open-5", text: "단전에 의식을 둡니다" }
     ],
     awarenessLines: [
-      { at: 68, key: "body-1", text: "단전" },
-      { at: 78, key: "body-2", text: "단전" },
-      { at: 92, key: "body-3", text: "호흡은 자연스럽게" },
-      { at: 104, key: "body-4", text: "단전을 느낍니다" }
+      { at: 52, key: "body-1", text: "단전" },
+      { at: 62, key: "body-2", text: "단전" },
+      { at: 76, key: "body-3", text: "호흡은 자연스럽게" },
+      { at: 88, key: "body-4", text: "단전을 느낍니다" }
     ],
     energyLines: [
-      { at: 118, key: "energy-1", text: "몸이 깨어납니다" },
-      { at: 130, key: "energy-2", text: "뇌가 깨어납니다" },
-      { at: 142, key: "energy-3", text: "단전" },
-      { at: 150, key: "energy-4", text: "단전" },
-      { at: 158, key: "energy-5", text: "따뜻함을 느낍니다" },
-      { at: 166, key: "energy-6", text: "생명력을 느낍니다" },
+      { at: 104, key: "energy-1", text: "몸이 깨어납니다" },
+      { at: 118, key: "energy-2", text: "뇌가 깨어납니다" },
+      { at: 132, key: "energy-3", text: "단전" },
+      { at: 142, key: "energy-4", text: "단전" },
+      { at: 152, key: "energy-5", text: "따뜻함을 느낍니다" },
+      { at: 164, key: "energy-6", text: "생명력을 느낍니다" },
       { at: 174, key: "energy-7", text: "오늘을 움직이는 힘은 이미 내 안에 있습니다" }
     ],
     closingLines: [
@@ -323,25 +323,25 @@ const energyGateCopy = {
     openingFade: "Wake Brain and Body",
     integration: "Feel your center.\nFeel this moment.",
     openingLines: [
-      { at: 15, key: "open-1", text: "Welcome" },
-      { at: 24, key: "open-2", text: "Today" },
-      { at: 33, key: "open-3", text: "we awaken from our center" },
-      { at: 46, key: "open-4", text: "Bring your awareness" },
-      { at: 56, key: "open-5", text: "to the lower Danjeon" }
+      { at: 5, key: "open-1", text: "Welcome" },
+      { at: 12, key: "open-2", text: "Today" },
+      { at: 20, key: "open-3", text: "we awaken from our center" },
+      { at: 30, key: "open-4", text: "Bring your awareness" },
+      { at: 40, key: "open-5", text: "to the lower Danjeon" }
     ],
     awarenessLines: [
-      { at: 68, key: "body-1", text: "Danjeon" },
-      { at: 78, key: "body-2", text: "Danjeon" },
-      { at: 92, key: "body-3", text: "Let the breath be natural" },
-      { at: 104, key: "body-4", text: "Feel your Danjeon" }
+      { at: 52, key: "body-1", text: "Danjeon" },
+      { at: 62, key: "body-2", text: "Danjeon" },
+      { at: 76, key: "body-3", text: "Let the breath be natural" },
+      { at: 88, key: "body-4", text: "Feel your Danjeon" }
     ],
     energyLines: [
-      { at: 118, key: "energy-1", text: "The body awakens" },
-      { at: 130, key: "energy-2", text: "The brain awakens" },
-      { at: 142, key: "energy-3", text: "Danjeon" },
-      { at: 150, key: "energy-4", text: "Danjeon" },
-      { at: 158, key: "energy-5", text: "Feel the warmth" },
-      { at: 166, key: "energy-6", text: "Feel the life energy" },
+      { at: 104, key: "energy-1", text: "The body awakens" },
+      { at: 118, key: "energy-2", text: "The brain awakens" },
+      { at: 132, key: "energy-3", text: "Danjeon" },
+      { at: 142, key: "energy-4", text: "Danjeon" },
+      { at: 152, key: "energy-5", text: "Feel the warmth" },
+      { at: 164, key: "energy-6", text: "Feel the life energy" },
       { at: 174, key: "energy-7", text: "The strength for today is already within you" }
     ],
     closingLines: [
@@ -657,6 +657,7 @@ export default function MeditationPage() {
   const [requestedRouteType, setRequestedRouteType] = useState<string | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
+  const energyVideoRef = useRef<HTMLVideoElement | null>(null);
   const completionHandledRef = useRef(false);
   const spokenAffirmationKeysRef = useRef<Set<string>>(new Set());
   const structuredSpeechTimeoutRef = useRef<number | null>(null);
@@ -898,6 +899,29 @@ export default function MeditationPage() {
     await handleAmbientStartResult(result, true);
   }
 
+  async function playEnergyGateVideo() {
+    if (!isEnergyGate || typeof window === "undefined") {
+      return;
+    }
+
+    const video = energyVideoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    try {
+      video.muted = true;
+      video.playsInline = true;
+      video.currentTime = 0;
+      await video.play();
+      setAmbientVideoFailed(false);
+    } catch (error) {
+      console.warn("[energy-gate] video playback failed", error);
+      setAmbientVideoFailed(true);
+    }
+  }
+
   function unlockStructuredMorningSpeech() {
     if (!isStructuredMorningGate || typeof window === "undefined" || !("speechSynthesis" in window)) {
       return;
@@ -1000,6 +1024,14 @@ export default function MeditationPage() {
       }
     });
   }, [ambientAudioSource, ambientAudioVolume, hasUserGesture, isComplete, isPaused, isStructuredMorningGate, soundEnabled]);
+
+  useEffect(() => {
+    if (!isEnergyGate || !hasUserGesture || isPaused || isComplete || needsUserStart) {
+      return;
+    }
+
+    void playEnergyGateVideo();
+  }, [hasUserGesture, isComplete, isEnergyGate, isPaused, needsUserStart]);
 
   useEffect(() => {
     if (isComplete || !soundEnabled) {
@@ -1271,6 +1303,10 @@ export default function MeditationPage() {
     setRequiresExplicitAudioStart(false);
     unlockStructuredMorningSpeech();
 
+    if (isEnergyGate) {
+      await playEnergyGateVideo();
+    }
+
     if (audioContextRef.current?.state === "suspended") {
       try {
         await audioContextRef.current.resume();
@@ -1355,16 +1391,18 @@ export default function MeditationPage() {
           </video>
         ) : !ambientVideoFailed && isEnergyGate ? (
           <video
+            key="energy-gate-video"
+            ref={energyVideoRef}
             className="absolute inset-0 z-0 h-full w-full object-cover opacity-[0.58]"
             autoPlay
             muted
             loop
             playsInline
-            preload="auto"
+            preload="metadata"
             onLoadedData={() => console.log("Energy Gate video loaded")}
             onError={() => setAmbientVideoFailed(true)}
           >
-            <source src={ENERGY_GATE_VIDEO_SRC} type="video/mp4" />
+            <source src="/basic/morning gate/energy gate8.mp4" type="video/mp4" />
           </video>
         ) : (
           <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_28%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.14),transparent_34%),linear-gradient(180deg,rgba(4,10,19,0.76)_0%,rgba(8,18,32,0.88)_100%)]" />
