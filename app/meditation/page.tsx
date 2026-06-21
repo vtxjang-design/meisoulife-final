@@ -239,28 +239,29 @@ const energyGateCopy = {
     openingFade: "脳と身体を目覚めさせる",
     integration: "丹田を感じます。\n今を感じます。",
     openingLines: [
-      { at: 15, key: "open-1", text: "ようこそ。" },
-      { at: 24, key: "open-2", text: "今日は、体の中心から目覚めます。" },
-      { at: 38, key: "open-3", text: "おへその下、丹田に意識を向けます。" },
-      { at: 52, key: "open-4", text: "軽く拳を握り、やさしく叩きます。" }
+      { at: 15, key: "open-1", text: "ようこそ" },
+      { at: 24, key: "open-2", text: "今日は" },
+      { at: 33, key: "open-3", text: "体の中心から目覚めます" },
+      { at: 46, key: "open-4", text: "おへその下" },
+      { at: 56, key: "open-5", text: "丹田に意識を向けます" }
     ],
     awarenessLines: [
-      { at: 62, key: "body-1", text: "トントン。" },
-      { at: 70, key: "body-2", text: "トントン。" },
-      { at: 84, key: "body-3", text: "呼吸は自然に。丹田を感じます。" },
-      { at: 98, key: "body-4", text: "トントン。" },
-      { at: 106, key: "body-5", text: "トントン。" }
+      { at: 68, key: "body-1", text: "丹田" },
+      { at: 78, key: "body-2", text: "丹田" },
+      { at: 92, key: "body-3", text: "呼吸は自然に" },
+      { at: 104, key: "body-4", text: "丹田を感じます" }
     ],
     energyLines: [
-      { at: 120, key: "energy-1", text: "体が目覚めます。脳が目覚めます。" },
-      { at: 134, key: "energy-2", text: "温かさを感じます。生命力を感じます。" },
-      { at: 146, key: "energy-3", text: "トントン。" },
-      { at: 154, key: "energy-4", text: "トントン。" },
-      { at: 162, key: "energy-5", text: "今日を支える力は、すでにあなたの中にあります。" },
-      { at: 174, key: "energy-6", text: "丹田を感じます。呼吸を感じます。今を感じます。" }
+      { at: 118, key: "energy-1", text: "体が目覚めます" },
+      { at: 130, key: "energy-2", text: "脳が目覚めます" },
+      { at: 142, key: "energy-3", text: "丹田" },
+      { at: 150, key: "energy-4", text: "丹田" },
+      { at: 158, key: "energy-5", text: "温かさを感じます" },
+      { at: 166, key: "energy-6", text: "生命力を感じます" },
+      { at: 174, key: "energy-7", text: "今日を支える力は すでにあなたの中にあります" }
     ],
     closingLines: [
-      { at: 178, key: "close-1", text: "準備ができました。" }
+      { at: 178, key: "close-1", text: "準備ができました" }
     ]
   },
   kr: {
@@ -280,28 +281,29 @@ const energyGateCopy = {
     openingFade: "뇌와 몸을 깨우기",
     integration: "단전을 느낍니다.\n지금을 느낍니다.",
     openingLines: [
-      { at: 15, key: "open-1", text: "어서 오세요." },
-      { at: 24, key: "open-2", text: "오늘은, 몸의 중심에서 깨어납니다." },
-      { at: 38, key: "open-3", text: "배꼽 아래, 단전에 의식을 둡니다." },
-      { at: 52, key: "open-4", text: "가볍게 주먹을 쥐고, 부드럽게 두드립니다." }
+      { at: 15, key: "open-1", text: "어서 오세요" },
+      { at: 24, key: "open-2", text: "오늘은" },
+      { at: 33, key: "open-3", text: "몸의 중심에서 깨어납니다" },
+      { at: 46, key: "open-4", text: "배꼽 아래" },
+      { at: 56, key: "open-5", text: "단전에 의식을 둡니다" }
     ],
     awarenessLines: [
-      { at: 62, key: "body-1", text: "톡톡." },
-      { at: 70, key: "body-2", text: "톡톡." },
-      { at: 84, key: "body-3", text: "호흡은 자연스럽게. 단전을 느낍니다." },
-      { at: 98, key: "body-4", text: "톡톡." },
-      { at: 106, key: "body-5", text: "톡톡." }
+      { at: 68, key: "body-1", text: "단전" },
+      { at: 78, key: "body-2", text: "단전" },
+      { at: 92, key: "body-3", text: "호흡은 자연스럽게" },
+      { at: 104, key: "body-4", text: "단전을 느낍니다" }
     ],
     energyLines: [
-      { at: 120, key: "energy-1", text: "몸이 깨어납니다. 뇌가 깨어납니다." },
-      { at: 134, key: "energy-2", text: "따뜻함을 느낍니다. 생명력을 느낍니다." },
-      { at: 146, key: "energy-3", text: "톡톡." },
-      { at: 154, key: "energy-4", text: "톡톡." },
-      { at: 162, key: "energy-5", text: "오늘을 움직이는 힘은, 이미 내 안에 있습니다." },
-      { at: 174, key: "energy-6", text: "단전을 느낍니다. 호흡을 느낍니다. 지금을 느낍니다." }
+      { at: 118, key: "energy-1", text: "몸이 깨어납니다" },
+      { at: 130, key: "energy-2", text: "뇌가 깨어납니다" },
+      { at: 142, key: "energy-3", text: "단전" },
+      { at: 150, key: "energy-4", text: "단전" },
+      { at: 158, key: "energy-5", text: "따뜻함을 느낍니다" },
+      { at: 166, key: "energy-6", text: "생명력을 느낍니다" },
+      { at: 174, key: "energy-7", text: "오늘을 움직이는 힘은 이미 내 안에 있습니다" }
     ],
     closingLines: [
-      { at: 178, key: "close-1", text: "준비되었습니다." }
+      { at: 178, key: "close-1", text: "준비되었습니다" }
     ]
   },
   en: {
@@ -321,28 +323,29 @@ const energyGateCopy = {
     openingFade: "Wake Brain and Body",
     integration: "Feel your center.\nFeel this moment.",
     openingLines: [
-      { at: 15, key: "open-1", text: "Welcome." },
-      { at: 24, key: "open-2", text: "Today, we awaken from our center." },
-      { at: 38, key: "open-3", text: "Bring your awareness to the lower dantian, just below the navel." },
-      { at: 56, key: "open-4", text: "Lightly make a fist, and gently tap." }
+      { at: 15, key: "open-1", text: "Welcome" },
+      { at: 24, key: "open-2", text: "Today" },
+      { at: 33, key: "open-3", text: "we awaken from our center" },
+      { at: 46, key: "open-4", text: "Bring your awareness" },
+      { at: 56, key: "open-5", text: "to the lower Danjeon" }
     ],
     awarenessLines: [
-      { at: 66, key: "body-1", text: "Tap." },
-      { at: 74, key: "body-2", text: "Tap." },
-      { at: 88, key: "body-3", text: "Let the breath be natural. Feel your center." },
-      { at: 104, key: "body-4", text: "Tap." },
-      { at: 112, key: "body-5", text: "Tap." }
+      { at: 68, key: "body-1", text: "Danjeon" },
+      { at: 78, key: "body-2", text: "Danjeon" },
+      { at: 92, key: "body-3", text: "Let the breath be natural" },
+      { at: 104, key: "body-4", text: "Feel your Danjeon" }
     ],
     energyLines: [
-      { at: 124, key: "energy-1", text: "The body awakens. The brain awakens." },
-      { at: 138, key: "energy-2", text: "Feel the warmth. Feel the life energy." },
-      { at: 150, key: "energy-3", text: "Tap." },
-      { at: 158, key: "energy-4", text: "Tap." },
-      { at: 166, key: "energy-5", text: "The strength for today is already within you." },
-      { at: 176, key: "energy-6", text: "Feel your center. Feel your breath. Feel this moment." }
+      { at: 118, key: "energy-1", text: "The body awakens" },
+      { at: 130, key: "energy-2", text: "The brain awakens" },
+      { at: 142, key: "energy-3", text: "Danjeon" },
+      { at: 150, key: "energy-4", text: "Danjeon" },
+      { at: 158, key: "energy-5", text: "Feel the warmth" },
+      { at: 166, key: "energy-6", text: "Feel the life energy" },
+      { at: 174, key: "energy-7", text: "The strength for today is already within you" }
     ],
     closingLines: [
-      { at: 178, key: "close-1", text: "You are ready." }
+      { at: 178, key: "close-1", text: "You are ready" }
     ]
   }
 } as const;
