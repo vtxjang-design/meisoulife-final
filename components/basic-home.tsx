@@ -43,7 +43,8 @@ const pageCopy = {
     membershipTitle: "Membership",
     currentPlan: "Current Plan",
     subscriptionStatus: "Subscription Status",
-    nextBillingDate: "Next Billing Date",
+    nextBillingDate: "次回決済日",
+    billingHelper: "詳しい請求情報はStripeで確認できます",
     manageMembership: "管理",
     openingPortal: "Opening...",
     noBillingDate: "--",
@@ -71,6 +72,7 @@ const pageCopy = {
     currentPlan: "현재 플랜",
     subscriptionStatus: "구독 상태",
     nextBillingDate: "다음 결제일",
+    billingHelper: "자세한 청구 정보는 Stripe에서 확인할 수 있습니다",
     manageMembership: "관리",
     openingPortal: "여는 중...",
     noBillingDate: "--",
@@ -97,7 +99,8 @@ const pageCopy = {
     membershipTitle: "Membership",
     currentPlan: "Current Plan",
     subscriptionStatus: "Subscription Status",
-    nextBillingDate: "Next Billing Date",
+    nextBillingDate: "Next Payment Date",
+    billingHelper: "Detailed billing information is available in Stripe",
     manageMembership: "Manage",
     openingPortal: "Opening...",
     noBillingDate: "--",
@@ -283,16 +286,19 @@ export function BasicHome({
 
       <section className="rounded-[20px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] px-3.5 py-2.5 shadow-[0_12px_32px_rgba(0,0,0,0.12)] sm:px-4 sm:py-2.5">
         <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-          <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[rgba(233,242,248,0.76)]">
-            <span className="text-[10px] uppercase tracking-[0.22em] text-[rgba(127,255,212,0.62)]">{copy.membershipTitle}</span>
-            <span className="hidden text-white/18 sm:inline">·</span>
-            <span className="text-[rgba(244,250,255,0.92)]">{visiblePlan}</span>
-            <span className="text-white/18">·</span>
-            <span className="text-[rgba(233,242,248,0.68)]">{visibleStatus || copy.unknownStatus}</span>
-            <span className="text-white/18">·</span>
-            <span className="text-[rgba(233,242,248,0.6)]">
-              {copy.nextBillingDate} {visibleBillingDate}
-            </span>
+          <div className="min-w-0">
+            <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[rgba(233,242,248,0.76)]">
+              <span className="text-[10px] uppercase tracking-[0.22em] text-[rgba(127,255,212,0.62)]">{copy.membershipTitle}</span>
+              <span className="hidden text-white/18 sm:inline">·</span>
+              <span className="text-[rgba(244,250,255,0.92)]">{visiblePlan}</span>
+              <span className="text-white/18">·</span>
+              <span className="text-[rgba(233,242,248,0.68)]">{visibleStatus || copy.unknownStatus}</span>
+              <span className="text-white/18">·</span>
+              <span className="text-[rgba(233,242,248,0.6)]">
+                {copy.nextBillingDate} {visibleBillingDate}
+              </span>
+            </div>
+            <p className="mt-1 text-[11px] leading-5 text-[rgba(233,242,248,0.46)]">{copy.billingHelper}</p>
           </div>
           <div className="self-start sm:self-auto">
             <button
