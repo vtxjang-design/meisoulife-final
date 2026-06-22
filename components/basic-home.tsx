@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useLanguage } from "@/lib/i18n";
 import { getBasicGateForCurrentTime, getBasicRhythmGates, type BasicDoorKey, type BasicGateKey } from "@/lib/basic-rhythm";
@@ -13,6 +13,12 @@ type BasicHomeProps = {
   planKey?: PlanKey;
   membershipResolved?: boolean;
   defaultRhythm?: "morning" | "day" | "night";
+  membershipSummary?: {
+    currentPlan: "free" | "basic" | "growth" | "inner_circle";
+    subscriptionStatus: string | null;
+    nextBillingDate: string | null;
+    canManageMembership: boolean;
+  };
 };
 
 const pageCopy = {
@@ -32,7 +38,15 @@ const pageCopy = {
     journeyDay: "旅の日",
     streak: "戻ってきた日々",
     returnTitle: "また戻るために",
-    returnBody: "迷わなくて大丈夫です。明日も、ひとつの扉から始めれば十分です。"
+    returnBody: "迷わなくて大丈夫です。明日も、ひとつの扉から始めれば十分です。",
+    membershipTitle: "Membership",
+    currentPlan: "Current Plan",
+    subscriptionStatus: "Subscription Status",
+    nextBillingDate: "Next Billing Date",
+    manageMembership: "Manage Membership",
+    openingPortal: "Opening...",
+    noBillingDate: "--",
+    unknownStatus: "Unknown"
   },
   kr: {
     badge: "BASIC Rhythm Space",
@@ -50,7 +64,15 @@ const pageCopy = {
     journeyDay: "여정의 날",
     streak: "돌아온 날들",
     returnTitle: "다시 돌아오기",
-    returnBody: "많이 읽지 않아도 됩니다.\n\n내일도,\n\n하나의 문이면 충분합니다."
+    returnBody: "많이 읽지 않아도 됩니다.\n\n내일도,\n\n하나의 문이면 충분합니다.",
+    membershipTitle: "멤버십 관리",
+    currentPlan: "현재 플랜",
+    subscriptionStatus: "구독 상태",
+    nextBillingDate: "다음 결제일",
+    manageMembership: "Manage Membership",
+    openingPortal: "여는 중...",
+    noBillingDate: "--",
+    unknownStatus: "Unknown"
   },
   en: {
     badge: "BASIC Rhythm Space",
@@ -68,7 +90,15 @@ const pageCopy = {
     journeyDay: "Journey day",
     streak: "Days returned",
     returnTitle: "Return again",
-    returnBody: "You do not need to read much. Tomorrow, one door is enough."
+    returnBody: "You do not need to read much. Tomorrow, one door is enough.",
+    membershipTitle: "Membership",
+    currentPlan: "Current Plan",
+    subscriptionStatus: "Subscription Status",
+    nextBillingDate: "Next Billing Date",
+    manageMembership: "Manage Membership",
+    openingPortal: "Opening...",
+    noBillingDate: "--",
+    unknownStatus: "Unknown"
   }
 } as const;
 
@@ -143,13 +173,15 @@ function getDoorAccentClasses(door: BasicDoorKey) {
 export function BasicHome({
   currentDay = 1,
   streakCount = 3,
-  defaultRhythm
+  defaultRhythm,
+  membershipSummary
 }: BasicHomeProps) {
   const { language } = useLanguage();
   const searchParams = useSearchParams();
   const localizedLanguage = resolveLanguage(language);
   const copy = pageCopy[localizedLanguage];
   const gates = useMemo(() => getBasicRhythmGates(localizedLanguage), [localizedLanguage]);
+  const [portalLoading, setPortalLoading] = useState(false);
   const highlighted = searchParams.get("rhythm") ?? searchParams.get("gate");
   const defaultGate = mapDefaultRhythm(defaultRhythm);
   const currentGateKey: BasicGateKey =
@@ -161,6 +193,42 @@ export function BasicHome({
           ? "evening"
           : defaultGate ?? getBasicGateForCurrentTime();
   const currentGate = gates.find((gate) => gate.key === currentGateKey) ?? gates[0];
+  const fallbackPlan =
+    membershipSummary?.currentPlan && membershipSummary.currentPlan !== "free" ? membershipSummary.currentPlan : "basic";
+  const visiblePlan =
+    fallbackPlan === "growth" ? "Growth" : fallbackPlan === "inner_circle" ? "Inner Circle" : "Basic";
+  const visibleStatus = membershipSummary?.subscriptionStatus || "Active";
+  const visibleBillingDate = membershipSummary?.nextBillingDate
+    ? new Intl.DateTimeFormat(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+      }).format(new Date(membershipSummary.nextBillingDate))
+    : copy.noBillingDate;
+
+  async function handleManageMembership() {
+    if (portalLoading) {
+      return;
+    }
+
+    setPortalLoading(true);
+
+    try {
+      const response = await fetch("/api/stripe/customer-portal", {
+        method: "POST"
+      });
+      const data = (await response.json()) as { url?: string };
+
+      if (data.url) {
+        window.location.href = data.url;
+        return;
+      }
+    } catch (error) {
+      console.error("Customer portal redirect failed", error);
+    }
+
+    setPortalLoading(false);
+  }
 
   return (
     <section className="space-y-10">
@@ -188,6 +256,37 @@ export function BasicHome({
           </div>
         </div>
       </div>
+
+      <section className="rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-5 shadow-[0_22px_70px_rgba(0,0,0,0.18)] sm:px-6">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.68)]">{copy.membershipTitle}</p>
+          </div>
+          <div className="grid gap-3 text-left sm:grid-cols-3">
+            <div className="rounded-[20px] border border-white/10 bg-[#0a141d] px-4 py-4">
+              <p className="text-xs uppercase tracking-[0.18em] text-[rgba(127,255,212,0.68)]">{copy.currentPlan}</p>
+              <p className="mt-2 text-sm font-medium text-[rgba(244,250,255,0.94)]">{visiblePlan}</p>
+            </div>
+            <div className="rounded-[20px] border border-white/10 bg-[#0a141d] px-4 py-4">
+              <p className="text-xs uppercase tracking-[0.18em] text-[rgba(127,255,212,0.68)]">{copy.subscriptionStatus}</p>
+              <p className="mt-2 text-sm font-medium text-[rgba(244,250,255,0.94)]">{visibleStatus || copy.unknownStatus}</p>
+            </div>
+            <div className="rounded-[20px] border border-white/10 bg-[#0a141d] px-4 py-4">
+              <p className="text-xs uppercase tracking-[0.18em] text-[rgba(127,255,212,0.68)]">{copy.nextBillingDate}</p>
+              <p className="mt-2 text-sm font-medium text-[rgba(244,250,255,0.94)]">{visibleBillingDate}</p>
+            </div>
+          </div>
+        </div>
+        <div className="mt-5">
+          <button
+            type="button"
+            onClick={handleManageMembership}
+            className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-[rgba(127,255,212,0.22)] bg-[rgba(127,255,212,0.10)] px-5 py-3 text-sm font-semibold text-[rgba(225,255,247,0.92)] transition hover:bg-[rgba(127,255,212,0.16)] hover:text-white"
+          >
+            {portalLoading ? copy.openingPortal : copy.manageMembership}
+          </button>
+        </div>
+      </section>
 
       <div className="space-y-5">
         <div className="space-y-2">

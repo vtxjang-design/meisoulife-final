@@ -13,6 +13,13 @@ type DashboardState = {
   streakCount: number;
 };
 
+type MembershipSummary = {
+  currentPlan: "free" | "basic" | "growth" | "inner_circle";
+  subscriptionStatus: string | null;
+  nextBillingDate: string | null;
+  canManageMembership: boolean;
+};
+
 function BasicProgramContent() {
   const { plan, planResolved, planError, session, authResolved, isLoggedIn } = useAuthState();
   const { language } = useLanguage();
@@ -23,6 +30,12 @@ function BasicProgramContent() {
   const [dashboardState, setDashboardState] = useState<DashboardState>({
     challengeDay: mock.challengeDay,
     streakCount: mock.streakCount
+  });
+  const [membershipSummary, setMembershipSummary] = useState<MembershipSummary>({
+    currentPlan: "basic",
+    subscriptionStatus: "active",
+    nextBillingDate: null,
+    canManageMembership: true
   });
   const highlightedRhythm = searchParams.get("rhythm") ?? searchParams.get("gate");
   const defaultRhythm =
@@ -102,6 +115,76 @@ function BasicProgramContent() {
     };
   }, [mock.challengeDay, mock.streakCount, session?.user?.id]);
 
+  useEffect(() => {
+    let active = true;
+    const supabase = getSupabaseBrowserClient();
+    const userId = session?.user?.id;
+
+    if (!supabase || !userId) {
+      setMembershipSummary({
+        currentPlan: plan === "free" ? "basic" : plan,
+        subscriptionStatus: "active",
+        nextBillingDate: null,
+        canManageMembership: true
+      });
+      return;
+    }
+
+    const safeSupabase = supabase;
+
+    async function loadMembershipSummary() {
+      const { data: membership } = await safeSupabase
+        .from("memberships")
+        .select("stripe_customer_id, plan, status, current_period_end")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      const { data: profile } = await safeSupabase
+        .from("users")
+        .select("id")
+        .eq("auth_user_id", userId)
+        .maybeSingle();
+
+      const { data: subscription } = profile?.id
+        ? await safeSupabase
+            .from("subscriptions")
+            .select("stripe_customer_id, plan_key, status, current_period_end")
+            .eq("user_id", profile.id)
+            .order("created_at", { ascending: false })
+            .limit(1)
+            .maybeSingle()
+        : { data: null };
+
+      if (!active) {
+        return;
+      }
+
+      const resolvedPlan =
+        membership?.plan === "basic" || membership?.plan === "growth" || membership?.plan === "inner_circle"
+          ? membership.plan
+          : subscription?.plan_key === "basic" || subscription?.plan_key === "growth" || subscription?.plan_key === "inner_circle"
+            ? subscription.plan_key
+            : plan === "free"
+              ? "basic"
+              : plan;
+
+      setMembershipSummary({
+        currentPlan: resolvedPlan,
+        subscriptionStatus: membership?.status ?? subscription?.status ?? "active",
+        nextBillingDate: membership?.current_period_end ?? subscription?.current_period_end ?? null,
+        canManageMembership: Boolean(membership?.stripe_customer_id || subscription?.stripe_customer_id) || true
+      });
+    }
+
+    void loadMembershipSummary();
+
+    return () => {
+      active = false;
+    };
+  }, [plan, session?.user?.id]);
+
   if (!authResolved || !isLoggedIn) {
     return (
       <div className="section-shell py-16 sm:py-24">
@@ -150,6 +233,7 @@ function BasicProgramContent() {
           planKey={plan}
           membershipResolved={planResolved && !planError}
           defaultRhythm={defaultRhythm}
+          membershipSummary={membershipSummary}
         />
       </div>
     </div>
