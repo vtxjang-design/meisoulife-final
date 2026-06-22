@@ -7,7 +7,6 @@ import {
   getNatureSoundPreference,
   pauseAmbientNatureAudio,
   resumeAmbientNatureAudio,
-  setAmbientNatureAudioVolume,
   setNatureSoundPreference,
   startAmbientNatureAudio,
   STRUCTURED_AMBIENT_PENDING_KEY,
@@ -1252,9 +1251,6 @@ export default function MeditationPage() {
         structuredSpeechSequenceRef.current += 1;
         window.speechSynthesis.cancel();
       }
-      if (ambientAudioVolume !== undefined) {
-        void setAmbientNatureAudioVolume(ambientAudioRef, ambientAudioVolume, 220);
-      }
     };
   }, [ambientAudioVolume]);
 
@@ -1384,9 +1380,6 @@ export default function MeditationPage() {
         }
         structuredSpeechSequenceRef.current += 1;
         window.speechSynthesis.cancel();
-        if (ambientAudioVolume !== undefined) {
-          void setAmbientNatureAudioVolume(ambientAudioRef, ambientAudioVolume, 220);
-        }
       }
 
       return next;
