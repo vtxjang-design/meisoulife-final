@@ -37,7 +37,7 @@ const MORNING_GATE_AUDIO = {
   },
   energy: {
     src: "/audio/morning/energy%20gate.mp3",
-    volume: 0.09
+    volume: 0.1
   },
   vision: {
     src: "/audio/morning/vision%20gate.mp3",
@@ -283,8 +283,7 @@ const energyGateCopy = {
     integration: "단전을 느껴봅니다\n지금을 느껴봅니다",
     openingLines: [
       { at: 5, key: "open-1", text: "어서 오세요" },
-      { at: 10, key: "open-2", text: "오늘은" },
-      { at: 16, key: "open-3", text: "몸과 뇌를 깨워봅니다" },
+      { at: 10, key: "open-2", text: "오늘은 몸과 뇌를 깨웁니다" },
       { at: 24, key: "open-4", text: "배꼽 아래" },
       { at: 30, key: "open-5", text: "단전에 의식을 향해봅니다" }
     ],
