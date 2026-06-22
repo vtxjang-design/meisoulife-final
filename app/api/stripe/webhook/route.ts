@@ -10,6 +10,8 @@ type MembershipSyncInput = {
   plan?: string | null;
   status?: string | null;
   amount_total?: number | null;
+  stripe_customer_id?: string | null;
+  stripe_subscription_id?: string | null;
 };
 
 const processedWebhookEventsFallback = new Set<string>();
@@ -135,6 +137,9 @@ async function upsertMembership(record: MembershipSyncInput) {
     .upsert(
       {
         user_id: resolvedUserId,
+        email: record.email || null,
+        stripe_customer_id: record.stripe_customer_id || null,
+        stripe_subscription_id: record.stripe_subscription_id || null,
         plan: resolvedPlan,
         status: resolvedStatus
       },
@@ -174,6 +179,9 @@ async function upsertMembership(record: MembershipSyncInput) {
     const { data: fallbackData, error: fallbackError } = await supabase
       .from("memberships")
       .update({
+        email: record.email || null,
+        stripe_customer_id: record.stripe_customer_id || null,
+        stripe_subscription_id: record.stripe_subscription_id || null,
         plan: resolvedPlan,
         status: resolvedStatus
       })
@@ -314,6 +322,8 @@ async function handleCheckoutCompleted(stripe: Stripe, session: Stripe.Checkout.
   await upsertMembership({
     user_id: userId,
     email: session.customer_details?.email || session.customer_email || null,
+    stripe_customer_id: stripeCustomerId,
+    stripe_subscription_id: stripeSubscriptionId,
     plan,
     status: "active",
     amount_total: session.amount_total ?? null,
@@ -387,6 +397,8 @@ async function handleInvoicePaid(stripe: Stripe, invoice: Stripe.Invoice) {
   await upsertMembership({
     user_id: subscription?.metadata?.user_id || null,
     email: invoice.customer_email || null,
+    stripe_customer_id: typeof invoice.customer === "string" ? invoice.customer : invoice.customer?.id || null,
+    stripe_subscription_id: subscription?.id || null,
     plan: subscription?.metadata?.plan || resolvePlanFromAmount(invoice.amount_paid || invoice.amount_due || null) || null,
     status: "active",
     amount_total: invoice.amount_paid || invoice.amount_due || null,
@@ -407,6 +419,8 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   await upsertMembership({
     user_id: subscription.metadata?.user_id || null,
     email: subscription.metadata?.email || null,
+    stripe_customer_id: typeof subscription.customer === "string" ? subscription.customer : subscription.customer?.id || null,
+    stripe_subscription_id: subscription.id,
     plan: subscription.metadata?.plan || null,
     status: subscription.status
   });
@@ -422,6 +436,8 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   await upsertMembership({
     user_id: subscription.metadata?.user_id || null,
     email: subscription.metadata?.email || null,
+    stripe_customer_id: typeof subscription.customer === "string" ? subscription.customer : subscription.customer?.id || null,
+    stripe_subscription_id: subscription.id,
     plan: subscription.metadata?.plan || null,
     status: "canceled"
   });
@@ -443,6 +459,8 @@ async function handleInvoiceFailed(stripe: Stripe, invoice: Stripe.Invoice) {
   await upsertMembership({
     user_id: subscription?.metadata?.user_id || null,
     email: invoice.customer_email || null,
+    stripe_customer_id: typeof invoice.customer === "string" ? invoice.customer : invoice.customer?.id || null,
+    stripe_subscription_id: subscription?.id || null,
     plan: subscription?.metadata?.plan || resolvePlanFromAmount(invoice.amount_due || null) || null,
     status: "past_due",
     amount_total: invoice.amount_due || null,

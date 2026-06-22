@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import Stripe from "stripe";
 import { getSiteUrl } from "@/lib/env";
 import { getStripeClient } from "@/lib/stripe";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
@@ -28,6 +29,98 @@ function resolveBearerToken(request: Request) {
   }
 
   return authorization.slice(7).trim();
+}
+
+function getSubscriptionPriority(subscription: Stripe.Subscription) {
+  if (subscription.status === "active") {
+    return 4;
+  }
+
+  if (subscription.status === "trialing") {
+    return 3;
+  }
+
+  if (subscription.status === "past_due") {
+    return 2;
+  }
+
+  if (subscription.status === "unpaid") {
+    return 1;
+  }
+
+  return 0;
+}
+
+async function resolveStripeCustomerIdByEmail(stripe: Stripe, email: string) {
+  const customerList = await stripe.customers.list({
+    email,
+    limit: 10
+  });
+
+  console.log("[stripe-customer-portal] stripe email lookup", {
+    email,
+    customerCount: customerList.data.length
+  });
+
+  if (customerList.data.length === 0) {
+    return {
+      stripeCustomerId: null,
+      source: "stripe_email_none"
+    };
+  }
+
+  if (customerList.data.length === 1) {
+    return {
+      stripeCustomerId: customerList.data[0]?.id || null,
+      source: "stripe_email_single"
+    };
+  }
+
+  let selectedCustomerId: string | null = null;
+  let selectedPriority = -1;
+
+  for (const customer of customerList.data) {
+    const subscriptions = await stripe.subscriptions.list({
+      customer: customer.id,
+      status: "all",
+      limit: 10
+    });
+
+    const bestSubscription = subscriptions.data.reduce<Stripe.Subscription | null>((currentBest, subscription) => {
+      if (!currentBest) {
+        return subscription;
+      }
+
+      return getSubscriptionPriority(subscription) > getSubscriptionPriority(currentBest) ? subscription : currentBest;
+    }, null);
+
+    const nextPriority = bestSubscription ? getSubscriptionPriority(bestSubscription) : 0;
+
+    console.log("[stripe-customer-portal] stripe customer candidate", {
+      email,
+      customerId: maskStripeCustomerId(customer.id),
+      subscriptionCount: subscriptions.data.length,
+      bestStatus: bestSubscription?.status || null,
+      priority: nextPriority
+    });
+
+    if (nextPriority > selectedPriority) {
+      selectedPriority = nextPriority;
+      selectedCustomerId = customer.id;
+    }
+  }
+
+  if (selectedCustomerId) {
+    return {
+      stripeCustomerId: selectedCustomerId,
+      source: selectedPriority > 0 ? "stripe_email_active_subscription" : "stripe_email_first_match"
+    };
+  }
+
+  return {
+    stripeCustomerId: customerList.data[0]?.id || null,
+    source: "stripe_email_first_match"
+  };
 }
 
 export async function POST(request: Request) {
@@ -238,6 +331,23 @@ export async function POST(request: Request) {
           stripeCustomerId = emailSubscription.stripe_customer_id;
           stripeCustomerSource = "subscriptions_by_email";
         }
+      }
+    }
+
+    if (!stripeCustomerId && user.email) {
+      const stripeEmailMatch = await resolveStripeCustomerIdByEmail(stripe, user.email);
+
+      console.log("[stripe-customer-portal] stripe email fallback result", {
+        userId: user.id,
+        userEmail: user.email,
+        stripeCustomerFound: Boolean(stripeEmailMatch.stripeCustomerId),
+        stripeCustomerSource: stripeEmailMatch.source,
+        stripeCustomerId: maskStripeCustomerId(stripeEmailMatch.stripeCustomerId)
+      });
+
+      if (stripeEmailMatch.stripeCustomerId) {
+        stripeCustomerId = stripeEmailMatch.stripeCustomerId;
+        stripeCustomerSource = stripeEmailMatch.source;
       }
     }
 
