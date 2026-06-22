@@ -1,25 +1,13 @@
 import { NextResponse } from "next/server";
-import Stripe from "stripe";
 import { getSiteUrl } from "@/lib/env";
 import { getStripeClient } from "@/lib/stripe";
+import { resolveStripeBillingDetails, maskStripeCustomerId } from "@/lib/stripe-billing";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 const FRIENDLY_PORTAL_ERROR = "メンバーシップ管理ページを開けませんでした。しばらくしてからもう一度お試しください";
 const LOGIN_REQUIRED_ERROR = "ログイン後にもう一度お試しください";
 const MEMBERSHIP_NOT_FOUND_ERROR = "メンバーシップ情報が見つかりません";
 const PORTAL_NOT_CONFIGURED_ERROR = "Stripe Customer Portal is not configured";
-
-function maskStripeCustomerId(value: string | null) {
-  if (!value) {
-    return null;
-  }
-
-  if (value.length <= 8) {
-    return value;
-  }
-
-  return `${value.slice(0, 6)}...${value.slice(-4)}`;
-}
 
 function resolveBearerToken(request: Request) {
   const authorization = request.headers.get("authorization") || "";
@@ -29,98 +17,6 @@ function resolveBearerToken(request: Request) {
   }
 
   return authorization.slice(7).trim();
-}
-
-function getSubscriptionPriority(subscription: Stripe.Subscription) {
-  if (subscription.status === "active") {
-    return 4;
-  }
-
-  if (subscription.status === "trialing") {
-    return 3;
-  }
-
-  if (subscription.status === "past_due") {
-    return 2;
-  }
-
-  if (subscription.status === "unpaid") {
-    return 1;
-  }
-
-  return 0;
-}
-
-async function resolveStripeCustomerIdByEmail(stripe: Stripe, email: string) {
-  const customerList = await stripe.customers.list({
-    email,
-    limit: 10
-  });
-
-  console.log("[stripe-customer-portal] stripe email lookup", {
-    email,
-    customerCount: customerList.data.length
-  });
-
-  if (customerList.data.length === 0) {
-    return {
-      stripeCustomerId: null,
-      source: "stripe_email_none"
-    };
-  }
-
-  if (customerList.data.length === 1) {
-    return {
-      stripeCustomerId: customerList.data[0]?.id || null,
-      source: "stripe_email_single"
-    };
-  }
-
-  let selectedCustomerId: string | null = null;
-  let selectedPriority = -1;
-
-  for (const customer of customerList.data) {
-    const subscriptions = await stripe.subscriptions.list({
-      customer: customer.id,
-      status: "all",
-      limit: 10
-    });
-
-    const bestSubscription = subscriptions.data.reduce<Stripe.Subscription | null>((currentBest, subscription) => {
-      if (!currentBest) {
-        return subscription;
-      }
-
-      return getSubscriptionPriority(subscription) > getSubscriptionPriority(currentBest) ? subscription : currentBest;
-    }, null);
-
-    const nextPriority = bestSubscription ? getSubscriptionPriority(bestSubscription) : 0;
-
-    console.log("[stripe-customer-portal] stripe customer candidate", {
-      email,
-      customerId: maskStripeCustomerId(customer.id),
-      subscriptionCount: subscriptions.data.length,
-      bestStatus: bestSubscription?.status || null,
-      priority: nextPriority
-    });
-
-    if (nextPriority > selectedPriority) {
-      selectedPriority = nextPriority;
-      selectedCustomerId = customer.id;
-    }
-  }
-
-  if (selectedCustomerId) {
-    return {
-      stripeCustomerId: selectedCustomerId,
-      source: selectedPriority > 0 ? "stripe_email_active_subscription" : "stripe_email_first_match"
-    };
-  }
-
-  return {
-    stripeCustomerId: customerList.data[0]?.id || null,
-    source: "stripe_email_first_match"
-  };
 }
 
 export async function POST(request: Request) {
@@ -228,6 +124,7 @@ export async function POST(request: Request) {
     let stripeCustomerSource = stripeCustomerId ? "memberships" : "none";
     let profileId: string | null = null;
     let profileEmail = user.email || null;
+    let subscriptionCustomerId: string | null = null;
 
     if (!stripeCustomerId) {
       let profileResult = await supabase
@@ -286,6 +183,7 @@ export async function POST(request: Request) {
 
       if (subscription?.stripe_customer_id) {
         stripeCustomerId = subscription.stripe_customer_id;
+        subscriptionCustomerId = subscription.stripe_customer_id;
         stripeCustomerSource = "subscriptions";
       }
     } else {
@@ -334,21 +232,43 @@ export async function POST(request: Request) {
       }
     }
 
-    if (!stripeCustomerId && user.email) {
-      const stripeEmailMatch = await resolveStripeCustomerIdByEmail(stripe, user.email);
+    const localCustomerIds = [
+      membership?.stripe_customer_id
+        ? {
+            customerId: membership.stripe_customer_id,
+            source: "memberships"
+          }
+        : null,
+      subscriptionCustomerId
+        ? {
+            customerId: subscriptionCustomerId,
+            source: "subscriptions"
+          }
+        : null
+    ].filter((entry): entry is { customerId: string; source: string } => Boolean(entry?.customerId));
 
-      console.log("[stripe-customer-portal] stripe email fallback result", {
-        userId: user.id,
-        userEmail: user.email,
-        stripeCustomerFound: Boolean(stripeEmailMatch.stripeCustomerId),
-        stripeCustomerSource: stripeEmailMatch.source,
-        stripeCustomerId: maskStripeCustomerId(stripeEmailMatch.stripeCustomerId)
-      });
+    const stripeBilling = await resolveStripeBillingDetails({
+      stripe,
+      email: user.email || null,
+      preferredPlan: "basic",
+      localCustomerIds
+    });
 
-      if (stripeEmailMatch.stripeCustomerId) {
-        stripeCustomerId = stripeEmailMatch.stripeCustomerId;
-        stripeCustomerSource = stripeEmailMatch.source;
-      }
+    console.log("[stripe-customer-portal] resolved stripe billing", {
+      userId: user.id,
+      userEmail: user.email || null,
+      customerId: maskStripeCustomerId(stripeBilling.customerId),
+      subscriptionId: stripeBilling.subscriptionId,
+      status: stripeBilling.status,
+      currentPeriodStart: stripeBilling.currentPeriodStart,
+      currentPeriodEnd: stripeBilling.currentPeriodEnd,
+      billingCycleAnchor: stripeBilling.billingCycleAnchor,
+      customerSource: stripeBilling.customerSource
+    });
+
+    if (stripeBilling.customerId) {
+      stripeCustomerId = stripeBilling.customerId;
+      stripeCustomerSource = stripeBilling.customerSource;
     }
 
     console.log("[stripe-customer-portal] stripe customer resolution", {

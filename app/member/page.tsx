@@ -1,5 +1,7 @@
 import { MemberEntryContent } from "@/components/member-entry-content";
 import { fetchLatestMembershipPlan } from "@/lib/membership";
+import { resolveStripeBillingDetails, maskStripeCustomerId } from "@/lib/stripe-billing";
+import { getStripeClient } from "@/lib/stripe";
 import { getSupabaseConfigStatus } from "@/lib/supabase-config";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -77,12 +79,57 @@ export default async function MemberPage({ searchParams }: MemberPageProps) {
       }
     }
 
-    membershipSummary = {
-      currentPlan: initialPlan,
-      subscriptionStatus: membership?.status ?? subscription?.status ?? membershipState.membershipStatus ?? null,
-      nextBillingDate: membership?.current_period_end ?? subscription?.current_period_end ?? null,
-      canManageMembership: Boolean(membership?.stripe_customer_id || subscription?.stripe_customer_id)
-    };
+    const stripe = getStripeClient();
+    const localCustomerIds = [
+      membership?.stripe_customer_id
+        ? {
+            customerId: membership.stripe_customer_id,
+            source: "memberships"
+          }
+        : null,
+      subscription?.stripe_customer_id
+        ? {
+            customerId: subscription.stripe_customer_id,
+            source: "subscriptions"
+          }
+        : null
+    ].filter((entry): entry is { customerId: string; source: string } => Boolean(entry?.customerId));
+
+    if (stripe) {
+      const stripeBilling = await resolveStripeBillingDetails({
+        stripe,
+        email: user.email || null,
+        preferredPlan: initialPlan,
+        localCustomerIds
+      });
+
+      console.log("[member] resolved stripe billing", {
+        userId: user.id,
+        userEmail: user.email || null,
+        customerId: maskStripeCustomerId(stripeBilling.customerId),
+        subscriptionId: stripeBilling.subscriptionId,
+        status: stripeBilling.status,
+        currentPeriodStart: stripeBilling.currentPeriodStart,
+        currentPeriodEnd: stripeBilling.currentPeriodEnd,
+        billingCycleAnchor: stripeBilling.billingCycleAnchor,
+        customerSource: stripeBilling.customerSource
+      });
+
+      membershipSummary = {
+        currentPlan: initialPlan,
+        subscriptionStatus: stripeBilling.status ?? membership?.status ?? subscription?.status ?? membershipState.membershipStatus ?? null,
+        nextBillingDate:
+          stripeBilling.currentPeriodEnd ?? membership?.current_period_end ?? subscription?.current_period_end ?? null,
+        canManageMembership: Boolean(stripeBilling.customerId || membership?.stripe_customer_id || subscription?.stripe_customer_id)
+      };
+    } else {
+      membershipSummary = {
+        currentPlan: initialPlan,
+        subscriptionStatus: membership?.status ?? subscription?.status ?? membershipState.membershipStatus ?? null,
+        nextBillingDate: membership?.current_period_end ?? subscription?.current_period_end ?? null,
+        canManageMembership: Boolean(membership?.stripe_customer_id || subscription?.stripe_customer_id)
+      };
+    }
   }
 
   return (
