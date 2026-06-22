@@ -269,37 +269,37 @@ export function BasicHome({
         </div>
       </div>
 
-      <section className="rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-5 shadow-[0_22px_70px_rgba(0,0,0,0.18)] sm:px-6">
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <p className="text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.68)]">{copy.membershipTitle}</p>
+      <section className="rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] px-4 py-3 shadow-[0_18px_48px_rgba(0,0,0,0.14)] sm:px-5 sm:py-3.5">
+        <div className="flex flex-col gap-3 lg:min-h-[128px] lg:flex-row lg:items-center lg:justify-between">
+          <div className="min-w-0 lg:w-[140px]">
+            <p className="text-[11px] uppercase tracking-[0.24em] text-[rgba(127,255,212,0.64)]">{copy.membershipTitle}</p>
           </div>
-          <div className="grid gap-3 text-left sm:grid-cols-3">
-            <div className="rounded-[20px] border border-white/10 bg-[#0a141d] px-4 py-4">
-              <p className="text-xs uppercase tracking-[0.18em] text-[rgba(127,255,212,0.68)]">{copy.currentPlan}</p>
-              <p className="mt-2 text-sm font-medium text-[rgba(244,250,255,0.94)]">{visiblePlan}</p>
+          <div className="grid flex-1 gap-2 text-left sm:grid-cols-3">
+            <div className="rounded-[16px] border border-white/10 bg-[#0a141d]/82 px-3 py-2.5">
+              <p className="text-[10px] uppercase tracking-[0.16em] text-[rgba(127,255,212,0.62)]">{copy.currentPlan}</p>
+              <p className="mt-1.5 text-sm font-medium text-[rgba(244,250,255,0.92)]">{visiblePlan}</p>
             </div>
-            <div className="rounded-[20px] border border-white/10 bg-[#0a141d] px-4 py-4">
-              <p className="text-xs uppercase tracking-[0.18em] text-[rgba(127,255,212,0.68)]">{copy.subscriptionStatus}</p>
-              <p className="mt-2 text-sm font-medium text-[rgba(244,250,255,0.94)]">{visibleStatus || copy.unknownStatus}</p>
+            <div className="rounded-[16px] border border-white/10 bg-[#0a141d]/82 px-3 py-2.5">
+              <p className="text-[10px] uppercase tracking-[0.16em] text-[rgba(127,255,212,0.62)]">{copy.subscriptionStatus}</p>
+              <p className="mt-1.5 text-sm font-medium text-[rgba(244,250,255,0.92)]">{visibleStatus || copy.unknownStatus}</p>
             </div>
-            <div className="rounded-[20px] border border-white/10 bg-[#0a141d] px-4 py-4">
-              <p className="text-xs uppercase tracking-[0.18em] text-[rgba(127,255,212,0.68)]">{copy.nextBillingDate}</p>
-              <p className="mt-2 text-sm font-medium text-[rgba(244,250,255,0.94)]">{visibleBillingDate}</p>
+            <div className="rounded-[16px] border border-white/10 bg-[#0a141d]/82 px-3 py-2.5">
+              <p className="text-[10px] uppercase tracking-[0.16em] text-[rgba(127,255,212,0.62)]">{copy.nextBillingDate}</p>
+              <p className="mt-1.5 text-sm font-medium text-[rgba(244,250,255,0.92)]">{visibleBillingDate}</p>
             </div>
+          </div>
+          <div className="lg:pl-2">
+            <button
+              type="button"
+              onClick={handleManageMembership}
+              disabled={portalLoading}
+              className="inline-flex min-h-[40px] items-center justify-center rounded-full border border-white/12 bg-white/[0.045] px-4 py-2 text-xs font-medium text-[rgba(233,242,248,0.76)] transition hover:bg-white/[0.08] hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              {portalLoading ? copy.openingPortal : copy.manageMembership}
+            </button>
           </div>
         </div>
-        <div className="mt-5">
-          <button
-            type="button"
-            onClick={handleManageMembership}
-            disabled={portalLoading}
-            className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-[rgba(127,255,212,0.22)] bg-[rgba(127,255,212,0.10)] px-5 py-3 text-sm font-semibold text-[rgba(225,255,247,0.92)] transition hover:bg-[rgba(127,255,212,0.16)] hover:text-white"
-          >
-            {portalLoading ? copy.openingPortal : copy.manageMembership}
-          </button>
-          {portalError ? <p className="mt-3 text-sm text-[#f3c7b8]">{portalError}</p> : null}
-        </div>
+        {portalError ? <p className="mt-2 text-sm text-[#f3c7b8]">{portalError}</p> : null}
       </section>
 
       <div className="space-y-5">
