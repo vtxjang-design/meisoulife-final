@@ -28,22 +28,25 @@ const JOURNEY_AUDIO_DAY_KEY = "meisoulife_journey_day";
 const AFFIRMATION_TOTAL_SECONDS = 180;
 const MORNING_GATE_FADE_IN_MS = 2000;
 const MORNING_GATE_FADE_OUT_MS = 3000;
-const MORNING_GATE_DUCK_RATIO = 0.65;
-const ENERGY_GATE_DUCK_RATIO = 0.47;
-const VISION_GATE_DUCK_RATIO = 0.55;
+const MORNING_GATE_DUCK_RATIO = 0.5;
+const ENERGY_GATE_DUCK_RATIO = 0.42;
+const VISION_GATE_DUCK_RATIO = 0.48;
+const MORNING_GATE_DUCK_DOWN_MS = 1800;
+const MORNING_GATE_DUCK_UP_MS = 2200;
+const MORNING_GATE_NARRATION_VOLUME = 0.9;
 const VISION_GATE_SPEECH_RATE_RATIO = 0.94;
 const MORNING_GATE_AUDIO = {
   affirmation: {
     src: "/audio/morning/affirmation%20gate.mp3",
-    volume: 0.18
+    volume: 0.15
   },
   energy: {
     src: "/audio/morning/energy%20gate.mp3",
-    volume: 0.11
+    volume: 0.1
   },
   vision: {
     src: "/audio/morning/vision%20gate.mp3",
-    volume: 0.14
+    volume: 0.12
   }
 } as const;
 const ENERGY_GATE_VIDEO_SRC = "/basic/morning%20gate/energy%20gate8.mp4";
@@ -575,7 +578,7 @@ function getStructuredMorningSpeechSettings(language: "jp" | "kr" | "en") {
       lang: "ko-KR",
       rate: 0.75,
       pitch: 1,
-      volume: 0.92,
+      volume: MORNING_GATE_NARRATION_VOLUME,
       preferredNames: ["Yuna", "Sora", "Google 한국어", "Siri"]
     };
   }
@@ -585,7 +588,7 @@ function getStructuredMorningSpeechSettings(language: "jp" | "kr" | "en") {
       lang: "en-US",
       rate: 0.76,
       pitch: 1,
-      volume: 0.92,
+      volume: MORNING_GATE_NARRATION_VOLUME,
       preferredNames: ["Samantha", "Ava", "Victoria", "Google US English", "Siri"]
     };
   }
@@ -594,7 +597,7 @@ function getStructuredMorningSpeechSettings(language: "jp" | "kr" | "en") {
     lang: "ja-JP",
     rate: 0.69,
     pitch: 0.95,
-    volume: 0.88,
+    volume: MORNING_GATE_NARRATION_VOLUME,
     preferredNames: ["Kyoko", "Otoya", "Google 日本語", "Siri"]
   };
 }
@@ -1209,7 +1212,7 @@ export default function MeditationPage() {
               void setAmbientNatureAudioVolume(
                 ambientAudioRef,
                 ambientNarrationDuckVolume,
-                isVisionGate ? 520 : 320
+                MORNING_GATE_DUCK_DOWN_MS
               );
             }
             console.log("[structured-meditation][tts] started", language, nextLine.key);
@@ -1219,7 +1222,7 @@ export default function MeditationPage() {
               void setAmbientNatureAudioVolume(
                 ambientAudioRef,
                 ambientAudioVolume,
-                isVisionGate ? 1100 : 780
+                MORNING_GATE_DUCK_UP_MS
               );
             }
             console.error("[structured-meditation][tts] failed", language, nextLine.key, event.error);
@@ -1230,7 +1233,7 @@ export default function MeditationPage() {
               void setAmbientNatureAudioVolume(
                 ambientAudioRef,
                 ambientAudioVolume,
-                isVisionGate ? 1100 : 780
+                MORNING_GATE_DUCK_UP_MS
               );
             }
             structuredSpeechTimeoutRef.current = null;
