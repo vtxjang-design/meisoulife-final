@@ -46,7 +46,8 @@ const pageCopy = {
     manageMembership: "Manage Membership",
     openingPortal: "Opening...",
     noBillingDate: "--",
-    unknownStatus: "Unknown"
+    unknownStatus: "Unknown",
+    membershipError: "メンバーシップ管理ページを開けませんでした"
   },
   kr: {
     badge: "BASIC Rhythm Space",
@@ -72,7 +73,8 @@ const pageCopy = {
     manageMembership: "Manage Membership",
     openingPortal: "여는 중...",
     noBillingDate: "--",
-    unknownStatus: "Unknown"
+    unknownStatus: "Unknown",
+    membershipError: "멤버십 관리 페이지를 열 수 없습니다"
   },
   en: {
     badge: "BASIC Rhythm Space",
@@ -98,7 +100,8 @@ const pageCopy = {
     manageMembership: "Manage Membership",
     openingPortal: "Opening...",
     noBillingDate: "--",
-    unknownStatus: "Unknown"
+    unknownStatus: "Unknown",
+    membershipError: "We could not open the membership management page"
   }
 } as const;
 
@@ -182,6 +185,7 @@ export function BasicHome({
   const copy = pageCopy[localizedLanguage];
   const gates = useMemo(() => getBasicRhythmGates(localizedLanguage), [localizedLanguage]);
   const [portalLoading, setPortalLoading] = useState(false);
+  const [portalError, setPortalError] = useState("");
   const highlighted = searchParams.get("rhythm") ?? searchParams.get("gate");
   const defaultGate = mapDefaultRhythm(defaultRhythm);
   const currentGateKey: BasicGateKey =
@@ -212,19 +216,27 @@ export function BasicHome({
     }
 
     setPortalLoading(true);
+    setPortalError("");
 
     try {
       const response = await fetch("/api/stripe/customer-portal", {
         method: "POST"
       });
-      const data = (await response.json()) as { url?: string };
+      const data = (await response.json()) as { url?: string; error?: string };
 
-      if (data.url) {
+      if (response.ok && data.url) {
         window.location.href = data.url;
         return;
       }
+
+      console.error("Customer portal request failed", {
+        status: response.status,
+        error: data.error || copy.membershipError
+      });
+      setPortalError(data.error || copy.membershipError);
     } catch (error) {
       console.error("Customer portal redirect failed", error);
+      setPortalError(copy.membershipError);
     }
 
     setPortalLoading(false);
@@ -281,10 +293,12 @@ export function BasicHome({
           <button
             type="button"
             onClick={handleManageMembership}
+            disabled={portalLoading}
             className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-[rgba(127,255,212,0.22)] bg-[rgba(127,255,212,0.10)] px-5 py-3 text-sm font-semibold text-[rgba(225,255,247,0.92)] transition hover:bg-[rgba(127,255,212,0.16)] hover:text-white"
           >
             {portalLoading ? copy.openingPortal : copy.manageMembership}
           </button>
+          {portalError ? <p className="mt-3 text-sm text-[#f3c7b8]">{portalError}</p> : null}
         </div>
       </section>
 

@@ -80,7 +80,7 @@ export async function POST() {
     if (!stripeCustomerId) {
       return NextResponse.json(
         {
-          error: "このアカウントではメンバーシップ管理情報がまだ見つかっていません"
+          error: "No Stripe customer ID found for this user"
         },
         {
           status: 404
@@ -99,9 +99,18 @@ export async function POST() {
     });
   } catch (error) {
     console.error("[stripe-customer-portal] failed", error);
+
+    const message = error instanceof Error ? error.message : "";
+    const portalConfigMissing =
+      message.includes("billing portal") ||
+      message.includes("No configuration provided") ||
+      message.includes("portal configuration");
+
     return NextResponse.json(
       {
-        error: FRIENDLY_PORTAL_ERROR
+        error: portalConfigMissing
+          ? "Stripe Customer Portal is not configured in Stripe Dashboard"
+          : FRIENDLY_PORTAL_ERROR
       },
       {
         status: 400
