@@ -67,7 +67,7 @@ export function ZeroGateSection({ onEnterGate }: ZeroGateSectionProps) {
 
   return (
     <section id="zero-gate" className="section-shell mt-12 scroll-mt-24 sm:mt-14">
-      <div className="relative overflow-hidden rounded-[32px] border border-white/8 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.11),transparent_24%),radial-gradient(circle_at_84%_22%,rgba(107,168,159,0.11),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.018))] px-5 py-8 shadow-[0_28px_88px_rgba(7,17,31,0.22)] sm:px-7 sm:py-9 lg:px-8 lg:py-10">
+      <div className="relative overflow-hidden rounded-[28px] border border-white/8 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.11),transparent_24%),radial-gradient(circle_at_84%_22%,rgba(107,168,159,0.11),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.018))] px-4 py-6 shadow-[0_24px_72px_rgba(7,17,31,0.2)] sm:rounded-[32px] sm:px-7 sm:py-9 sm:shadow-[0_28px_88px_rgba(7,17,31,0.22)] lg:px-8 lg:py-10">
         <div className="pointer-events-none absolute inset-0 sm:hidden">
           <div className="absolute right-[-4%] top-[7%] h-48 w-48 rounded-full bg-emerald-200/[0.09] blur-[92px] animate-meditation-ambient-breathe motion-reduce:animate-none" />
           <div className="absolute left-[-4%] top-[-2%] h-32 w-32 rounded-full bg-gold/[0.11] blur-[76px] animate-meditation-fog motion-reduce:animate-none" />
@@ -81,14 +81,14 @@ export function ZeroGateSection({ onEnterGate }: ZeroGateSectionProps) {
           <h2 className="hero-measure keep-phrase mt-4 whitespace-pre-line font-serif text-[clamp(1.55rem,6vw,2.6rem)] leading-[1.28] text-white sm:max-w-[13ch] sm:text-[clamp(2rem,4vw,2.75rem)] sm:leading-[1.24]">
             {copy.title}
           </h2>
-          <p className="body-measure keep-phrase mt-4 whitespace-pre-line text-[clamp(0.98rem,3.9vw,1.1rem)] leading-[1.82] text-white/68 sm:max-w-[20ch] sm:text-[1.08rem]">
+          <p className="body-measure keep-phrase mt-3 whitespace-pre-line text-[clamp(0.95rem,3.7vw,1.08rem)] leading-[1.72] text-white/66 sm:mt-4 sm:max-w-[20ch] sm:text-[1.08rem] sm:leading-[1.82]">
             {copy.description}
           </p>
         </div>
         {copy.encouragement ? (
-          <p className="relative mt-5 max-w-[16ch] text-sm leading-7 text-white/48 sm:max-w-none">{copy.encouragement}</p>
+          <p className="relative mt-3 max-w-[16ch] text-[13px] leading-6 text-white/44 sm:mt-5 sm:max-w-none sm:text-sm sm:leading-7">{copy.encouragement}</p>
         ) : null}
-        <div className="relative mt-6 grid grid-cols-2 gap-2.5 sm:mt-7 sm:gap-3 lg:gap-4 xl:grid-cols-3">
+        <div className="relative mt-5 grid grid-cols-2 gap-2 sm:mt-7 sm:gap-3 lg:gap-4 xl:grid-cols-3">
           {copy.gates.map((gate) => (
             <GateCard
               key={gate.key}
