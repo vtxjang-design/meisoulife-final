@@ -44,7 +44,7 @@ const pageCopy = {
     currentPlan: "Current Plan",
     subscriptionStatus: "Subscription Status",
     nextBillingDate: "Next Billing Date",
-    manageMembership: "Manage Membership",
+    manageMembership: "管理",
     openingPortal: "Opening...",
     noBillingDate: "--",
     unknownStatus: "Unknown",
@@ -71,7 +71,7 @@ const pageCopy = {
     currentPlan: "현재 플랜",
     subscriptionStatus: "구독 상태",
     nextBillingDate: "다음 결제일",
-    manageMembership: "Manage Membership",
+    manageMembership: "관리",
     openingPortal: "여는 중...",
     noBillingDate: "--",
     unknownStatus: "Unknown",
@@ -98,7 +98,7 @@ const pageCopy = {
     currentPlan: "Current Plan",
     subscriptionStatus: "Subscription Status",
     nextBillingDate: "Next Billing Date",
-    manageMembership: "Manage Membership",
+    manageMembership: "Manage",
     openingPortal: "Opening...",
     noBillingDate: "--",
     unknownStatus: "Unknown",
@@ -281,37 +281,31 @@ export function BasicHome({
         </div>
       </div>
 
-      <section className="rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] px-4 py-3 shadow-[0_18px_48px_rgba(0,0,0,0.14)] sm:px-5 sm:py-3.5">
-        <div className="flex flex-col gap-3 lg:min-h-[128px] lg:flex-row lg:items-center lg:justify-between">
-          <div className="min-w-0 lg:w-[140px]">
-            <p className="text-[11px] uppercase tracking-[0.24em] text-[rgba(127,255,212,0.64)]">{copy.membershipTitle}</p>
+      <section className="rounded-[20px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] px-3.5 py-2.5 shadow-[0_12px_32px_rgba(0,0,0,0.12)] sm:px-4 sm:py-2.5">
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+          <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[rgba(233,242,248,0.76)]">
+            <span className="text-[10px] uppercase tracking-[0.22em] text-[rgba(127,255,212,0.62)]">{copy.membershipTitle}</span>
+            <span className="hidden text-white/18 sm:inline">·</span>
+            <span className="text-[rgba(244,250,255,0.92)]">{visiblePlan}</span>
+            <span className="text-white/18">·</span>
+            <span className="text-[rgba(233,242,248,0.68)]">{visibleStatus || copy.unknownStatus}</span>
+            <span className="text-white/18">·</span>
+            <span className="text-[rgba(233,242,248,0.6)]">
+              {copy.nextBillingDate} {visibleBillingDate}
+            </span>
           </div>
-          <div className="grid flex-1 gap-2 text-left sm:grid-cols-3">
-            <div className="rounded-[16px] border border-white/10 bg-[#0a141d]/82 px-3 py-2.5">
-              <p className="text-[10px] uppercase tracking-[0.16em] text-[rgba(127,255,212,0.62)]">{copy.currentPlan}</p>
-              <p className="mt-1.5 text-sm font-medium text-[rgba(244,250,255,0.92)]">{visiblePlan}</p>
-            </div>
-            <div className="rounded-[16px] border border-white/10 bg-[#0a141d]/82 px-3 py-2.5">
-              <p className="text-[10px] uppercase tracking-[0.16em] text-[rgba(127,255,212,0.62)]">{copy.subscriptionStatus}</p>
-              <p className="mt-1.5 text-sm font-medium text-[rgba(244,250,255,0.92)]">{visibleStatus || copy.unknownStatus}</p>
-            </div>
-            <div className="rounded-[16px] border border-white/10 bg-[#0a141d]/82 px-3 py-2.5">
-              <p className="text-[10px] uppercase tracking-[0.16em] text-[rgba(127,255,212,0.62)]">{copy.nextBillingDate}</p>
-              <p className="mt-1.5 text-sm font-medium text-[rgba(244,250,255,0.92)]">{visibleBillingDate}</p>
-            </div>
-          </div>
-          <div className="lg:pl-2">
+          <div className="self-start sm:self-auto">
             <button
               type="button"
               onClick={handleManageMembership}
               disabled={portalLoading}
-              className="inline-flex min-h-[40px] items-center justify-center rounded-full border border-white/12 bg-white/[0.045] px-4 py-2 text-xs font-medium text-[rgba(233,242,248,0.76)] transition hover:bg-white/[0.08] hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
+              className="inline-flex min-h-[34px] items-center justify-center rounded-full border border-white/10 bg-white/[0.035] px-3.5 py-1.5 text-[11px] font-medium text-[rgba(233,242,248,0.72)] transition hover:bg-white/[0.06] hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
             >
               {portalLoading ? copy.openingPortal : copy.manageMembership}
             </button>
           </div>
         </div>
-        {portalError ? <p className="mt-2 text-sm text-[#f3c7b8]">{portalError}</p> : null}
+        {portalError ? <p className="mt-1.5 text-xs text-[#f3c7b8]">{portalError}</p> : null}
       </section>
 
       <div className="space-y-5">
