@@ -181,6 +181,30 @@ function getStartSupportText(startLabel: string) {
   return "Settle your rhythm, quietly";
 }
 
+function getCenterFocusText(startLabel: string) {
+  if (/[가-힣]/.test(startLabel)) {
+    return "자신에게 집중";
+  }
+
+  if (/[ぁ-んァ-ン一-龯]/.test(startLabel)) {
+    return "自分に集中";
+  }
+
+  return "Focus on yourself";
+}
+
+function getBottomBreathGuidance(startLabel: string) {
+  if (/[가-힣]/.test(startLabel)) {
+    return "호흡을 자신에게 맞게 자연스럽게 하세요";
+  }
+
+  if (/[ぁ-んァ-ン一-龯]/.test(startLabel)) {
+    return "呼吸を自分に合わせて自然にしてください";
+  }
+
+  return "Let your breath move naturally at your own pace";
+}
+
 function getReturnLabel() {
   return "戻る / Back to 1-Minute Resets";
 }
@@ -288,9 +312,9 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     };
   }, []);
 
-  const phaseLabel = copy[phase];
-  const phaseBottom = `${phaseLabel} · ${phaseSecondsLeft}s`;
   const startSupportText = getStartSupportText(copy.start);
+  const centerFocusText = getCenterFocusText(copy.start);
+  const bottomBreathGuidance = getBottomBreathGuidance(copy.start);
   const sanctuaryVisual = sanctuaryVisuals[selectedGate];
   const activeVideoSource = hasSelectedGate ? sanctuaryVisual.source : null;
 
@@ -758,13 +782,24 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                     </svg>
                     <div className="absolute inset-[22%] rounded-full border border-white/7 bg-[#07111b]/10 shadow-[0_10px_28px_rgba(0,0,0,0.1)] backdrop-blur-sm" />
                     <div className="relative z-10 flex max-w-[62%] flex-col items-center text-center">
-                      <p className="text-[11px] uppercase tracking-[0.3em] text-gold/84">{phaseLabel}</p>
+                      <p className="text-sm font-medium tracking-[0.08em] text-[rgba(244,248,252,0.88)] sm:text-base">
+                        {centerFocusText}
+                      </p>
                       <p className="mt-5 font-serif text-[4rem] leading-none text-white drop-shadow-[0_10px_24px_rgba(0,0,0,0.32)] sm:text-[4.7rem]">
                         {secondsLeft}
                       </p>
                     </div>
                   </div>
-                  <p className="mt-4 text-sm font-medium tracking-[0.02em] text-white/72">{phaseBottom}</p>
+                  <div className="mt-5 flex w-full max-w-[320px] flex-col items-center">
+                    <div className="flex w-full items-center gap-3 text-gold/76">
+                      <span className="h-px flex-1 bg-current/40" />
+                      <span className="text-lg leading-none">❦</span>
+                      <span className="h-px flex-1 bg-current/40" />
+                    </div>
+                    <p className="mt-3 text-center text-sm font-medium leading-6 tracking-[0.01em] text-gold/92 sm:text-[15px]">
+                      {bottomBreathGuidance}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
