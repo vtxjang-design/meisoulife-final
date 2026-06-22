@@ -32,15 +32,15 @@ const VISION_GATE_SPEECH_RATE_RATIO = 0.94;
 const MORNING_GATE_AUDIO = {
   affirmation: {
     src: "/audio/morning/affirmation%20gate.mp3",
-    volume: 0.13
+    volume: 0.12
   },
   energy: {
     src: "/audio/morning/energy%20gate.mp3",
-    volume: 0.1
+    volume: 0.09
   },
   vision: {
     src: "/audio/morning/vision%20gate.mp3",
-    volume: 0.1
+    volume: 0.09
   }
 } as const;
 const ENERGY_GATE_VIDEO_SRC = "/basic/morning%20gate/energy%20gate8.mp4";
@@ -1178,17 +1178,6 @@ export default function MeditationPage() {
           }
 
           utterance.onstart = () => {
-            if (ambientAudioRef.current?.paused && ambientAudioSource && ambientAudioVolume !== undefined) {
-              startAmbientNatureAudio(
-                ambientAudioRef,
-                true,
-                ambientAudioSource,
-                ambientAudioVolume,
-                ambientFadeInOptions
-              ).then((result) => {
-                void handleAmbientStartResult(result, true);
-              });
-            }
             console.log("[structured-meditation][tts] started", language, nextLine.key);
           };
           utterance.onerror = (event) => {
