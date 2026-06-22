@@ -2,12 +2,18 @@ import { MemberEntryContent } from "@/components/member-entry-content";
 import { fetchLatestMembershipPlan } from "@/lib/membership";
 import { getSupabaseConfigStatus } from "@/lib/supabase-config";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
 
 const LINE_URL =
   process.env.NEXT_PUBLIC_LINE_URL ||
   process.env.NEXT_PUBLIC_LINE_FREE_URL ||
   "https://line.me/R/ti/p/@meisoulife";
+
+type MembershipSummary = {
+  currentPlan: "free" | "basic" | "growth" | "inner_circle";
+  subscriptionStatus: string | null;
+  nextBillingDate: string | null;
+  canManageMembership: boolean;
+};
 
 type MemberPageProps = {
   searchParams?: Promise<{
@@ -21,6 +27,12 @@ export default async function MemberPage({ searchParams }: MemberPageProps) {
   const supabase = await getSupabaseServerClient();
   let initialPlan: "free" | "basic" | "growth" | "inner_circle" = "free";
   let initialEmail = "";
+  let membershipSummary: MembershipSummary = {
+    currentPlan: "free",
+    subscriptionStatus: null,
+    nextBillingDate: null,
+    canManageMembership: false
+  };
   const {
     data: { user }
   } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
@@ -39,12 +51,20 @@ export default async function MemberPage({ searchParams }: MemberPageProps) {
     const { data: subscription } = profile?.id
       ? await supabase
           .from("subscriptions")
-          .select("plan_key, status")
+          .select("stripe_customer_id, plan_key, status, current_period_end")
           .eq("user_id", profile.id)
           .order("created_at", { ascending: false })
           .limit(1)
           .maybeSingle()
       : { data: null };
+
+    const { data: membership } = await supabase
+      .from("memberships")
+      .select("stripe_customer_id, plan, status, current_period_end")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
 
     if (initialPlan === "free") {
       if (profile?.current_plan === "basic" || profile?.current_plan === "growth" || profile?.current_plan === "inner_circle") {
@@ -57,17 +77,12 @@ export default async function MemberPage({ searchParams }: MemberPageProps) {
       }
     }
 
-    if (initialPlan === "basic") {
-      redirect("/program/basic");
-    }
-
-    if (initialPlan === "growth") {
-      redirect("/program/growth");
-    }
-
-    if (initialPlan === "inner_circle") {
-      redirect("/program/inner");
-    }
+    membershipSummary = {
+      currentPlan: initialPlan,
+      subscriptionStatus: membership?.status ?? subscription?.status ?? membershipState.membershipStatus ?? null,
+      nextBillingDate: membership?.current_period_end ?? subscription?.current_period_end ?? null,
+      canManageMembership: Boolean(membership?.stripe_customer_id || subscription?.stripe_customer_id)
+    };
   }
 
   return (
@@ -79,6 +94,7 @@ export default async function MemberPage({ searchParams }: MemberPageProps) {
       isLoggedInInitially={Boolean(user)}
       initialPlan={initialPlan}
       initialEmail={initialEmail}
+      membershipSummary={membershipSummary}
     />
   );
 }

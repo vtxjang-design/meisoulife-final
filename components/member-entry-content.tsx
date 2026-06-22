@@ -12,6 +12,12 @@ type MemberEntryContentProps = {
   isLoggedInInitially: boolean;
   initialPlan: "free" | "basic" | "growth" | "inner_circle";
   initialEmail: string;
+  membershipSummary: {
+    currentPlan: "free" | "basic" | "growth" | "inner_circle";
+    subscriptionStatus: string | null;
+    nextBillingDate: string | null;
+    canManageMembership: boolean;
+  };
 };
 
 type AuthState = "idle" | "sending" | "sent" | "error" | "unavailable";
@@ -30,6 +36,12 @@ type AuthDebugResult = {
   supabaseUrlExists: boolean;
   supabaseKeyExists: boolean;
   siteUrl: string;
+};
+
+type CustomerPortalApiResult = {
+  ok?: boolean;
+  url?: string;
+  error?: string;
 };
 
 type RecoveryForestKey =
@@ -87,6 +99,19 @@ const memberEntryCopy = {
       basic: "Basic / Life Rhythm",
       growth: "Growth / Brain Owner",
       inner_circle: "Inner Circle / Coexistence Circle"
+    },
+    membershipPanel: {
+      eyebrow: "決済とメンバーシップ",
+      title: "現在のメンバーシップ",
+      currentPlan: "現在のプラン",
+      subscriptionStatus: "購読ステータス",
+      nextBillingDate: "次回決済日",
+      manage: "メンバーシップを管理する",
+      loading: "開いています...",
+      unavailable: "現在、セルフサービス管理を準備中です",
+      error: "Stripe Customer Portal を開けませんでした。しばらくしてからもう一度お試しください。",
+      noBillingDate: "未定",
+      noStatus: "未確認"
     },
     dashboard: {
       eyebrow: "Daily Life OS",
@@ -269,6 +294,19 @@ const memberEntryCopy = {
       growth: "Growth / Brain Owner",
       inner_circle: "Inner Circle / Coexistence Circle"
     },
+    membershipPanel: {
+      eyebrow: "결제 및 멤버십",
+      title: "현재 멤버십",
+      currentPlan: "현재 플랜",
+      subscriptionStatus: "구독 상태",
+      nextBillingDate: "다음 결제일",
+      manage: "멤버십 관리하기",
+      loading: "여는 중...",
+      unavailable: "현재 셀프서비스 멤버십 관리를 준비 중입니다",
+      error: "Stripe Customer Portal을 열지 못했습니다. 잠시 후 다시 시도해 주세요.",
+      noBillingDate: "미정",
+      noStatus: "확인 중"
+    },
     dashboard: {
       eyebrow: "Daily Life OS",
       title: "다시 오셨어요. 오늘도 여기서 조금 숨을 돌릴 수 있습니다.",
@@ -450,6 +488,19 @@ const memberEntryCopy = {
       growth: "Growth / Brain Owner",
       inner_circle: "Inner Circle / Coexistence Circle"
     },
+    membershipPanel: {
+      eyebrow: "Billing & Membership",
+      title: "Current membership",
+      currentPlan: "Current plan",
+      subscriptionStatus: "Subscription status",
+      nextBillingDate: "Next billing date",
+      manage: "Manage Membership",
+      loading: "Opening...",
+      unavailable: "Self-service membership management is being prepared",
+      error: "We could not open the Stripe Customer Portal. Please try again in a moment.",
+      noBillingDate: "Not scheduled",
+      noStatus: "Unknown"
+    },
     dashboard: {
       eyebrow: "Daily Life OS",
       title: "Welcome back. You can breathe here again today.",
@@ -598,7 +649,8 @@ export function MemberEntryContent({
   hasSupabaseAnonKey,
   isLoggedInInitially,
   initialPlan,
-  initialEmail
+  initialEmail,
+  membershipSummary
 }: MemberEntryContentProps) {
   const copy = useLocaleCopy(memberEntryCopy);
   const [authState, setAuthState] = useState<AuthState>("idle");
@@ -619,6 +671,8 @@ export function MemberEntryContent({
   const [apiResponse, setApiResponse] = useState<MagicLinkApiResult | null>(null);
   const [authDebugResponse, setAuthDebugResponse] = useState<AuthDebugResult | null>(null);
   const [currentOrigin, setCurrentOrigin] = useState("");
+  const [portalLoading, setPortalLoading] = useState(false);
+  const [portalError, setPortalError] = useState("");
   const debugEnabled = process.env.NODE_ENV !== "production" || debug;
   const recommendedProgramHref =
     initialPlan === "growth"
@@ -645,6 +699,38 @@ export function MemberEntryContent({
     : null;
   const completionMessage =
     copy.forest.completionMessages[new Date().getDay() % copy.forest.completionMessages.length];
+  const membershipNextBillingDate = membershipSummary.nextBillingDate
+    ? new Intl.DateTimeFormat(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+      }).format(new Date(membershipSummary.nextBillingDate))
+    : copy.membershipPanel.noBillingDate;
+  const membershipStatusLabel = membershipSummary.subscriptionStatus ?? copy.membershipPanel.noStatus;
+
+  async function handleManageMembership() {
+    setPortalLoading(true);
+    setPortalError("");
+
+    try {
+      const response = await fetch("/api/stripe/customer-portal", {
+        method: "POST"
+      });
+      const data = (await response.json()) as CustomerPortalApiResult;
+
+      if (!response.ok || !data.url) {
+        setPortalError(data.error || copy.membershipPanel.error);
+        setPortalLoading(false);
+        return;
+      }
+
+      window.location.href = data.url;
+    } catch (error) {
+      console.error("Customer portal launch failed", error);
+      setPortalError(copy.membershipPanel.error);
+      setPortalLoading(false);
+    }
+  }
 
   function toggleRhythmItem(index: number) {
     setCompletedRhythmItems((current) =>
@@ -845,6 +931,43 @@ export function MemberEntryContent({
               </div>
               <p className="mt-4 text-sm text-white/52">{copy.dashboard.communityPulse}</p>
             </div>
+
+            <section className="rounded-[28px] border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+              <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.24em] text-gold/80">{copy.membershipPanel.eyebrow}</p>
+                  <h3 className="mt-3 text-xl font-semibold text-white">{copy.membershipPanel.title}</h3>
+                </div>
+                <div className="grid gap-3 text-left sm:grid-cols-3">
+                  <div className="rounded-[20px] border border-white/10 bg-[#0a141d] px-4 py-4">
+                    <p className="text-xs uppercase tracking-[0.18em] text-gold/80">{copy.membershipPanel.currentPlan}</p>
+                    <p className="mt-2 text-sm font-medium text-white">{copy.planLabels[membershipSummary.currentPlan]}</p>
+                  </div>
+                  <div className="rounded-[20px] border border-white/10 bg-[#0a141d] px-4 py-4">
+                    <p className="text-xs uppercase tracking-[0.18em] text-gold/80">{copy.membershipPanel.subscriptionStatus}</p>
+                    <p className="mt-2 text-sm font-medium text-white">{membershipStatusLabel}</p>
+                  </div>
+                  <div className="rounded-[20px] border border-white/10 bg-[#0a141d] px-4 py-4">
+                    <p className="text-xs uppercase tracking-[0.18em] text-gold/80">{copy.membershipPanel.nextBillingDate}</p>
+                    <p className="mt-2 text-sm font-medium text-white">{membershipNextBillingDate}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <button
+                  type="button"
+                  onClick={handleManageMembership}
+                  disabled={!membershipSummary.canManageMembership || portalLoading}
+                  className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-gold/20 bg-gold/[0.08] px-5 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12] disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-white/[0.03] disabled:text-white/38"
+                >
+                  {portalLoading ? copy.membershipPanel.loading : copy.membershipPanel.manage}
+                </button>
+                {!membershipSummary.canManageMembership ? (
+                  <p className="text-sm text-white/56">{copy.membershipPanel.unavailable}</p>
+                ) : null}
+              </div>
+              {portalError ? <p className="mt-3 text-sm text-[#f3c7b8]">{portalError}</p> : null}
+            </section>
 
             <div className="rounded-[28px] border border-white/10 bg-white/[0.03] p-5 sm:p-6">
               <div className="flex items-center justify-between gap-3">
