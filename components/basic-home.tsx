@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useLanguage } from "@/lib/i18n";
 import { getBasicGateForCurrentTime, getBasicRhythmGates, type BasicDoorKey, type BasicGateKey } from "@/lib/basic-rhythm";
+import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 type PlanKey = "free" | "basic" | "growth" | "inner_circle";
 type BasicHomeProps = {
@@ -219,8 +220,19 @@ export function BasicHome({
     setPortalError("");
 
     try {
+      const supabase = getSupabaseBrowserClient();
+      const {
+        data: { session }
+      } = supabase ? await supabase.auth.getSession() : { data: { session: null } };
+      const accessToken = session?.access_token;
       const response = await fetch("/api/stripe/customer-portal", {
-        method: "POST"
+        method: "POST",
+        credentials: "include",
+        headers: accessToken
+          ? {
+              Authorization: `Bearer ${accessToken}`
+            }
+          : undefined
       });
       const data = (await response.json()) as { url?: string; error?: string };
 

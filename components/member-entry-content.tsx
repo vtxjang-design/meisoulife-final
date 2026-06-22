@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useLocaleCopy } from "@/lib/i18n";
+import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 type MemberEntryContentProps = {
   lineUrl: string;
@@ -713,8 +714,19 @@ export function MemberEntryContent({
     setPortalError("");
 
     try {
+      const supabase = getSupabaseBrowserClient();
+      const {
+        data: { session }
+      } = supabase ? await supabase.auth.getSession() : { data: { session: null } };
+      const accessToken = session?.access_token;
       const response = await fetch("/api/stripe/customer-portal", {
-        method: "POST"
+        method: "POST",
+        credentials: "include",
+        headers: accessToken
+          ? {
+              Authorization: `Bearer ${accessToken}`
+            }
+          : undefined
       });
       const data = (await response.json()) as CustomerPortalApiResult;
 
