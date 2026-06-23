@@ -75,9 +75,9 @@ const rhythmCatalog = {
           description: "今日の自分を静かに選ぶ",
           sessionTitle: "今日の自分を選ぶ",
           sessionSubtitle: "朝は\n今日の自分を選ぶ時間です",
-          sessionGuidance: "昨日を少し横に置いて\n今日の自分を感じます",
-          entryLabel: "Affirmation Gateに入る",
-          completionTitle: "今日の自分を静かに選びました"
+          sessionGuidance: "今の自分に合う方法で\n静かに戻ります",
+          entryLabel: "今の自分に合う方法で戻る",
+          completionTitle: "今日、また戻ることができました"
         },
         energy: {
           emoji: "☀️",
@@ -90,9 +90,9 @@ const rhythmCatalog = {
           description: "身体と脳をやさしく起こす",
           sessionTitle: "脳と身体を目覚めさせる",
           sessionSubtitle: "中心から\n静かに目覚める朝に",
-          sessionGuidance: "丹田を感じながら\n静かに目覚めます",
-          entryLabel: "Energy Gateに入る",
-          completionTitle: "身体と脳が静かに目覚めました"
+          sessionGuidance: "今の自分に合う方法で\n静かに戻ります",
+          entryLabel: "今の自分に合う方法で戻る",
+          completionTitle: "少しずつ、早く戻れるようになっています"
         },
         vision: {
           emoji: "🌄",
@@ -105,9 +105,9 @@ const rhythmCatalog = {
           description: "今日の方向を思い出す",
           sessionTitle: "方向を思い出す",
           sessionSubtitle: "向かう先を\n静かに思い出したいとき",
-          sessionGuidance: "急がずに\n心の中の景色を見つめます",
-          entryLabel: "Vision Gateに入る",
-          completionTitle: "今日向かう景色が心に戻りました"
+          sessionGuidance: "今の自分に合う方法で\n静かに戻ります",
+          entryLabel: "今の自分に合う方法で戻る",
+          completionTitle: "リズムを思い出す力が育っています"
         },
         focus: {} as LocalizedDoor,
         rest: {} as LocalizedDoor,
@@ -137,9 +137,9 @@ const rhythmCatalog = {
           description: "集中へ戻る。",
           sessionTitle: "Focus Gate",
           sessionSubtitle: "集中を取り戻したいとき",
-          sessionGuidance: "慌ただしさから一歩離れ、注意をいまここへ戻します。",
-          entryLabel: "Focus Gateに入る",
-          completionTitle: "集中が、静かに戻ってきました。"
+          sessionGuidance: "今の自分に合う方法で、注意をここへ戻します。",
+          entryLabel: "今の自分に合う方法で戻る",
+          completionTitle: "今日、また戻ることができました"
         },
         rest: {
           emoji: "🌿",
@@ -152,9 +152,9 @@ const rhythmCatalog = {
           description: "緊張をゆるめる。",
           sessionTitle: "Rest Gate",
           sessionSubtitle: "緊張を静かに手放したいとき",
-          sessionGuidance: "抱え込んでいた力を少しだけほどき、呼吸に居場所をつくります。",
-          entryLabel: "Rest Gateに入る",
-          completionTitle: "緊張が、少しほどけました。"
+          sessionGuidance: "今の自分に合う方法で、少しずつ戻ります。",
+          entryLabel: "今の自分に合う方法で戻る",
+          completionTitle: "少しずつ、早く戻れるようになっています"
         },
         recharge: {
           emoji: "⚡",
@@ -167,9 +167,9 @@ const rhythmCatalog = {
           description: "エネルギーを戻す。",
           sessionTitle: "Recharge Gate",
           sessionSubtitle: "エネルギーを戻したいとき",
-          sessionGuidance: "足りないものを責めずに、呼吸から小さく満たしていきます。",
-          entryLabel: "Recharge Gateに入る",
-          completionTitle: "エネルギーが、少し戻ってきました。"
+          sessionGuidance: "今の自分に合う方法で、呼吸から戻ります。",
+          entryLabel: "今の自分に合う方法で戻る",
+          completionTitle: "戻る方法を、体が思い出しています"
         },
         release: {} as LocalizedDoor,
         gratitude: {} as LocalizedDoor,
@@ -199,9 +199,9 @@ const rhythmCatalog = {
           description: "今日の重さを下ろす。",
           sessionTitle: "Release Gate",
           sessionSubtitle: "今日を下ろして休みたいとき",
-          sessionGuidance: "抱えていた力をひとつずつ下ろし、夜の静けさに戻っていきます。",
-          entryLabel: "Release Gateに入る",
-          completionTitle: "今日の重さを、静かに下ろしました。"
+          sessionGuidance: "今の自分に合う方法で、夜の静けさへ戻ります。",
+          entryLabel: "今の自分に合う方法で戻る",
+          completionTitle: "今日、また戻ることができました"
         },
         gratitude: {
           emoji: "🙏",
@@ -214,9 +214,9 @@ const rhythmCatalog = {
           description: "今日のよさを思い出す。",
           sessionTitle: "Gratitude Gate",
           sessionSubtitle: "今日のよさを思い出したいとき",
-          sessionGuidance: "うまくいかなかったことより、静かに残っている温かさに触れていきます。",
-          entryLabel: "Gratitude Gateに入る",
-          completionTitle: "今日の小さな恵みを思い出しました。"
+          sessionGuidance: "今の自分に合う方法で、静かな温かさへ戻ります。",
+          entryLabel: "今の自分に合う方法で戻る",
+          completionTitle: "リズムを思い出す力が育っています"
         },
         sleep: {
           emoji: "🌙",
@@ -229,9 +229,9 @@ const rhythmCatalog = {
           description: "眠りを準備する。",
           sessionTitle: "Sleep Gate",
           sessionSubtitle: "深く静かに眠りたいとき",
-          sessionGuidance: "身体の速度をゆっくり落としながら、眠りへ向かう静かな地面をつくります。",
-          entryLabel: "Sleep Gateに入る",
-          completionTitle: "眠りへ向かう静けさが整いました。"
+          sessionGuidance: "今の自分に合う方法で、眠りの静けさへ戻ります。",
+          entryLabel: "今の自分に合う方法で戻る",
+          completionTitle: "回復は少しずつ、馴染みのある道になっています"
         }
       }
     }
@@ -254,9 +254,9 @@ const rhythmCatalog = {
           description: "오늘의 나를 조용히 고른다",
           sessionTitle: "오늘의 나를 선택하기",
           sessionSubtitle: "오늘의 나를\n조용히 선택하고 싶을 때",
-          sessionGuidance: "호흡 안에서\n오늘의 나를 느껴봅니다",
-          entryLabel: "Affirmation Gate 시작",
-          completionTitle: "오늘의 나를 조용히 선택했습니다"
+          sessionGuidance: "지금의 나에게 맞는 방식으로\n조용히 돌아갑니다",
+          entryLabel: "지금의 나에게 맞는 방식으로 돌아가기",
+          completionTitle: "오늘, 다시 돌아올 수 있었습니다"
         },
         energy: {
           emoji: "☀️",
@@ -269,9 +269,9 @@ const rhythmCatalog = {
           description: "몸과 뇌를 부드럽게 깨운다",
           sessionTitle: "뇌와 몸을 깨우기",
           sessionSubtitle: "중심에서\n조용히 깨어나고 싶을 때",
-          sessionGuidance: "단전을 느끼며\n조용히 깨어납니다",
-          entryLabel: "Energy Gate 시작",
-          completionTitle: "몸과 뇌가 조용히 깨어났습니다"
+          sessionGuidance: "지금의 나에게 맞는 방식으로\n조용히 돌아갑니다",
+          entryLabel: "지금의 나에게 맞는 방식으로 돌아가기",
+          completionTitle: "조금 더 빨리 자신에게 돌아오고 있습니다"
         },
         vision: {
           emoji: "🌄",
@@ -284,9 +284,9 @@ const rhythmCatalog = {
           description: "오늘의 방향을 다시 떠올린다",
           sessionTitle: "방향을 기억하기",
           sessionSubtitle: "오늘의 방향을\n조용히 떠올리고 싶을 때",
-          sessionGuidance: "서두르지 않고\n마음속 장면을 바라봅니다",
-          entryLabel: "Vision Gate 시작",
-          completionTitle: "오늘의 방향이 다시 떠올랐습니다"
+          sessionGuidance: "지금의 나에게 맞는 방식으로\n조용히 돌아갑니다",
+          entryLabel: "지금의 나에게 맞는 방식으로 돌아가기",
+          completionTitle: "리듬을 기억하는 힘이 자라고 있습니다"
         },
         focus: {} as LocalizedDoor,
         rest: {} as LocalizedDoor,
@@ -316,9 +316,9 @@ const rhythmCatalog = {
           description: "집중으로 돌아간다.",
           sessionTitle: "집중으로 돌아가기",
           sessionSubtitle: "집중을 되찾고 싶을 때",
-          sessionGuidance: "분주함에서 한 걸음 물러나, 주의를 지금 여기로 데려옵니다.",
-          entryLabel: "Focus Gate 시작",
-          completionTitle: "집중이, 조용히 돌아왔습니다."
+          sessionGuidance: "지금의 나에게 맞는 방식으로, 주의를 여기로 데려옵니다.",
+          entryLabel: "지금의 나에게 맞는 방식으로 돌아가기",
+          completionTitle: "오늘, 다시 돌아올 수 있었습니다"
         },
         rest: {
           emoji: "🌿",
@@ -331,9 +331,9 @@ const rhythmCatalog = {
           description: "긴장을 내려놓는다.",
           sessionTitle: "긴장을 풀기",
           sessionSubtitle: "긴장을 내려놓고 싶을 때",
-          sessionGuidance: "붙잡고 있던 힘을 조금 풀고, 호흡이 머물 공간을 만듭니다.",
-          entryLabel: "Rest Gate 시작",
-          completionTitle: "긴장이, 조금 풀렸습니다."
+          sessionGuidance: "지금의 나에게 맞는 방식으로, 조금씩 돌아갑니다.",
+          entryLabel: "지금의 나에게 맞는 방식으로 돌아가기",
+          completionTitle: "조금 더 빨리 자신에게 돌아오고 있습니다"
         },
         recharge: {
           emoji: "⚡",
@@ -346,9 +346,9 @@ const rhythmCatalog = {
           description: "에너지를 다시 채운다.",
           sessionTitle: "에너지를 회복하기",
           sessionSubtitle: "에너지를 회복하고 싶을 때",
-          sessionGuidance: "부족함을 밀어붙이지 않고, 호흡으로 작은 충전을 시작합니다.",
-          entryLabel: "Recharge Gate 시작",
-          completionTitle: "에너지가, 조금 돌아왔습니다."
+          sessionGuidance: "지금의 나에게 맞는 방식으로, 호흡에서 다시 시작합니다.",
+          entryLabel: "지금의 나에게 맞는 방식으로 돌아가기",
+          completionTitle: "리듬을 기억하는 힘이 자라고 있습니다"
         },
         release: {} as LocalizedDoor,
         gratitude: {} as LocalizedDoor,
@@ -378,9 +378,9 @@ const rhythmCatalog = {
           description: "오늘의 무게를 내려놓는다.",
           sessionTitle: "오늘의 무게 내려놓기",
           sessionSubtitle: "오늘을 내려놓고 쉬고 싶을 때",
-          sessionGuidance: "붙잡고 있던 힘을 하나씩 내려놓으며 밤의 고요로 돌아갑니다.",
-          entryLabel: "Release Gate 시작",
-          completionTitle: "오늘의 무게를, 조용히 내려놓았습니다."
+          sessionGuidance: "지금의 나에게 맞는 방식으로, 밤의 고요로 돌아갑니다.",
+          entryLabel: "지금의 나에게 맞는 방식으로 돌아가기",
+          completionTitle: "오늘, 다시 돌아올 수 있었습니다"
         },
         gratitude: {
           emoji: "🙏",
@@ -393,9 +393,9 @@ const rhythmCatalog = {
           description: "좋았던 것을 떠올린다.",
           sessionTitle: "감사로 닫기",
           sessionSubtitle: "오늘의 좋은 것을 떠올리고 싶을 때",
-          sessionGuidance: "아쉬움보다 남아 있는 따뜻함을 천천히 다시 만납니다.",
-          entryLabel: "Gratitude Gate 시작",
-          completionTitle: "오늘의 작은 고마움을 다시 만났습니다."
+          sessionGuidance: "지금의 나에게 맞는 방식으로, 남아 있는 따뜻함으로 돌아갑니다.",
+          entryLabel: "지금의 나에게 맞는 방식으로 돌아가기",
+          completionTitle: "리듬을 기억하는 힘이 자라고 있습니다"
         },
         sleep: {
           emoji: "🌙",
@@ -408,9 +408,9 @@ const rhythmCatalog = {
           description: "잠을 준비한다.",
           sessionTitle: "잠을 준비하기",
           sessionSubtitle: "깊고 고요하게 잠들고 싶을 때",
-          sessionGuidance: "몸의 속도를 천천히 낮추며 잠으로 가는 조용한 바닥을 만듭니다.",
-          entryLabel: "Sleep Gate 시작",
-          completionTitle: "잠으로 향하는 고요가 정돈되었습니다."
+          sessionGuidance: "지금의 나에게 맞는 방식으로, 잠의 고요로 돌아갑니다.",
+          entryLabel: "지금의 나에게 맞는 방식으로 돌아가기",
+          completionTitle: "회복은 우연이 아니라 익숙한 길이 되고 있습니다"
         }
       }
     }
@@ -433,9 +433,9 @@ const rhythmCatalog = {
           description: "Choose today’s self",
           sessionTitle: "Choose Today’s Self",
           sessionSubtitle: "When you want to\nchoose today’s self",
-          sessionGuidance: "In this pause\nnotice who you are today",
-          entryLabel: "Enter Affirmation Gate",
-          completionTitle: "You chose today’s self"
+          sessionGuidance: "Return in the way\nthat fits you today",
+          entryLabel: "Return in the way that fits you today",
+          completionTitle: "Today, you returned again"
         },
         energy: {
           emoji: "☀️",
@@ -448,9 +448,9 @@ const rhythmCatalog = {
           description: "Wake the body and brain",
           sessionTitle: "Wake Body and Brain",
           sessionSubtitle: "When you want to\nwake from your center",
-          sessionGuidance: "Feel your Danjeon\nand let the body wake",
-          entryLabel: "Enter Energy Gate",
-          completionTitle: "Your body and brain are waking"
+          sessionGuidance: "Return in the way\nthat fits you today",
+          entryLabel: "Return in the way that fits you today",
+          completionTitle: "You are learning to return more easily"
         },
         vision: {
           emoji: "🌄",
@@ -463,9 +463,9 @@ const rhythmCatalog = {
           description: "Remember your direction",
           sessionTitle: "Remember Your Direction",
           sessionSubtitle: "When you want to\nremember your direction",
-          sessionGuidance: "Without rushing\nlet the direction return",
-          entryLabel: "Enter Vision Gate",
-          completionTitle: "Your direction has returned"
+          sessionGuidance: "Return in the way\nthat fits you today",
+          entryLabel: "Return in the way that fits you today",
+          completionTitle: "Your rhythm is remembering itself"
         },
         focus: {} as LocalizedDoor,
         rest: {} as LocalizedDoor,
@@ -495,9 +495,9 @@ const rhythmCatalog = {
           description: "Return to concentration.",
           sessionTitle: "Focus Gate",
           sessionSubtitle: "When your attention feels scattered",
-          sessionGuidance: "Step out of the rush and let your attention gather in one place again.",
-          entryLabel: "Enter Focus Gate",
-          completionTitle: "Your concentration quietly returned."
+          sessionGuidance: "Return in the way that fits you today and gather your attention again.",
+          entryLabel: "Return in the way that fits you today",
+          completionTitle: "Today, you returned again"
         },
         rest: {
           emoji: "🌿",
@@ -510,9 +510,9 @@ const rhythmCatalog = {
           description: "Release tension.",
           sessionTitle: "Rest Gate",
           sessionSubtitle: "When you feel tense or overloaded",
-          sessionGuidance: "Let the pressure drop a little so your breath has room again.",
-          entryLabel: "Enter Rest Gate",
-          completionTitle: "The tension softened a little."
+          sessionGuidance: "Return in the way that fits you today and let the pressure soften.",
+          entryLabel: "Return in the way that fits you today",
+          completionTitle: "You are learning to return more easily"
         },
         recharge: {
           emoji: "⚡",
@@ -525,9 +525,9 @@ const rhythmCatalog = {
           description: "Recover energy.",
           sessionTitle: "Recharge Gate",
           sessionSubtitle: "When your energy is low",
-          sessionGuidance: "Without forcing yourself, let one small rhythm refill your energy.",
-          entryLabel: "Enter Recharge Gate",
-          completionTitle: "A little energy returned."
+          sessionGuidance: "Return in the way that fits you today and let one small rhythm refill you.",
+          entryLabel: "Return in the way that fits you today",
+          completionTitle: "Your rhythm is remembering itself"
         },
         release: {} as LocalizedDoor,
         gratitude: {} as LocalizedDoor,
@@ -557,9 +557,9 @@ const rhythmCatalog = {
           description: "Let go of stress.",
           sessionTitle: "Release Gate",
           sessionSubtitle: "When you want to put today down",
-          sessionGuidance: "Let the day leave your body a little so the night can receive you.",
-          entryLabel: "Enter Release Gate",
-          completionTitle: "You quietly set today down."
+          sessionGuidance: "Return in the way that fits you today and let the night receive you.",
+          entryLabel: "Return in the way that fits you today",
+          completionTitle: "Today, you returned again"
         },
         gratitude: {
           emoji: "🙏",
@@ -572,9 +572,9 @@ const rhythmCatalog = {
           description: "End with appreciation.",
           sessionTitle: "Gratitude Gate",
           sessionSubtitle: "When you want to remember what was good",
-          sessionGuidance: "Let one good thing come closer so the day does not end only in fatigue.",
-          entryLabel: "Enter Gratitude Gate",
-          completionTitle: "You remembered what was still good."
+          sessionGuidance: "Return in the way that fits you today and let one warm thing come closer.",
+          entryLabel: "Return in the way that fits you today",
+          completionTitle: "Your rhythm is remembering itself"
         },
         sleep: {
           emoji: "🌙",
@@ -587,9 +587,9 @@ const rhythmCatalog = {
           description: "Prepare for deep sleep.",
           sessionTitle: "Sleep Gate",
           sessionSubtitle: "When you want to sleep peacefully",
-          sessionGuidance: "Let the pace of the body slow down until sleep feels safe to enter.",
-          entryLabel: "Enter Sleep Gate",
-          completionTitle: "The ground for restful sleep is ready."
+          sessionGuidance: "Return in the way that fits you today until sleep feels safe again.",
+          entryLabel: "Return in the way that fits you today",
+          completionTitle: "Recovery is becoming familiar"
         }
       }
     }

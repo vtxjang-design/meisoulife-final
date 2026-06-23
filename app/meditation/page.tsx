@@ -109,9 +109,9 @@ const affirmationGateCopy = {
     resume: "続ける",
     inhale: "吸う",
     exhale: "吐く",
-    completionTitle: "今日の自分を選びました",
-    completionMessage: "今日の方向は\nもう見えています",
-    completionNote: "この静けさのまま\n朝を始めます",
+    completionTitle: "今日、また戻ることができました",
+    completionMessage: "今日の自分を\n静かに選びました",
+    completionNote: "戻る力が\n少しずつ育っています",
     completionButton: "朝の扉へ戻る",
     openingFade: "今日の自分を選ぶ",
     integration: "今日は この自分で\nいきます",
@@ -149,9 +149,9 @@ const affirmationGateCopy = {
     resume: "이어가기",
     inhale: "들이쉬기",
     exhale: "내쉬기",
-    completionTitle: "오늘의 나를 선택했습니다",
-    completionMessage: "오늘의 방향은\n이미 보입니다",
-    completionNote: "이 고요함 그대로\n하루를 시작합니다",
+    completionTitle: "오늘, 다시 돌아올 수 있었습니다",
+    completionMessage: "오늘의 나를\n조용히 선택했습니다",
+    completionNote: "리듬을 기억하는 힘이\n자라고 있습니다",
     completionButton: "아침의 문으로 돌아가기",
     openingFade: "오늘의 나를 선택하기",
     integration: "오늘은 이 나로\n살아갑니다",
@@ -189,9 +189,9 @@ const affirmationGateCopy = {
     resume: "Continue",
     inhale: "Inhale",
     exhale: "Exhale",
-    completionTitle: "You have chosen who you are today",
-    completionMessage: "The direction for today\nis already here",
-    completionNote: "From this quiet place\nbegin the day",
+    completionTitle: "Today, you returned again",
+    completionMessage: "You quietly chose\nwho you are today",
+    completionNote: "Your ability to return\nis growing",
     completionButton: "Return to Morning Gate",
     openingFade: "Choose Today’s Self",
     integration: "Today I live\nas this self",
@@ -232,9 +232,9 @@ const energyGateCopy = {
     resume: "続ける",
     inhale: "吸う",
     exhale: "吐く",
-    completionTitle: "脳と体が目覚めました",
+    completionTitle: "今日、また戻ることができました",
     completionMessage: "エネルギーが\n静かに戻っています",
-    completionNote: "この流れのまま\n今日を始めます",
+    completionNote: "少しずつ、早く\n戻れるようになっています",
     completionButton: "朝の扉へ戻る",
     openingFade: "脳と身体を目覚めさせる",
     integration: "丹田を感じます\n今を感じます",
@@ -274,9 +274,9 @@ const energyGateCopy = {
     resume: "이어가기",
     inhale: "들이쉬기",
     exhale: "내쉬기",
-    completionTitle: "뇌와 몸이 깨어났습니다",
+    completionTitle: "오늘, 다시 돌아올 수 있었습니다",
     completionMessage: "에너지가\n조용히 돌아오고 있습니다",
-    completionNote: "이 리듬 그대로\n오늘을 시작합니다",
+    completionNote: "조금 더 빨리 자신에게\n돌아오고 있습니다",
     completionButton: "아침의 문으로 돌아가기",
     openingFade: "뇌와 몸을 깨우기",
     integration: "단전을 느껴봅니다\n지금을 느껴봅니다",
@@ -313,9 +313,9 @@ const energyGateCopy = {
     resume: "Continue",
     inhale: "Inhale",
     exhale: "Exhale",
-    completionTitle: "Your mind and body are waking",
+    completionTitle: "Today, you returned again",
     completionMessage: "Your energy is\nreturning quietly",
-    completionNote: "This is enough\nto begin the day",
+    completionNote: "You are learning to\nreturn more easily",
     completionButton: "Return to Morning Gate",
     openingFade: "Wake Brain and Body",
     integration: "Feel your center\nFeel this moment",
@@ -358,9 +358,9 @@ const visionGateCopy = {
     resume: "続ける",
     inhale: "吸う",
     exhale: "吐く",
-    completionTitle: "今日の方向を思い出しました",
-    completionMessage: "遠くを見なくても\n大丈夫です",
-    completionNote: "今日は\n一歩で十分です",
+    completionTitle: "今日、また戻ることができました",
+    completionMessage: "今日は\n一歩で十分です",
+    completionNote: "リズムを思い出す力が\n育っています",
     completionButton: "朝の扉へ戻る",
     openingFade: "方向を思い出す",
     integration: "今 また\n思い出しています",
@@ -396,9 +396,9 @@ const visionGateCopy = {
     resume: "이어가기",
     inhale: "들이쉬기",
     exhale: "내쉬기",
-    completionTitle: "오늘의 방향을 떠올렸습니다",
-    completionMessage: "멀리 보지 않아도\n괜찮습니다",
-    completionNote: "오늘은\n한 걸음이면 충분합니다",
+    completionTitle: "오늘, 다시 돌아올 수 있었습니다",
+    completionMessage: "오늘은\n한 걸음이면 충분합니다",
+    completionNote: "리듬을 기억하는 힘이\n자라고 있습니다",
     completionButton: "아침의 문으로 돌아가기",
     openingFade: "방향을 기억하기",
     integration: "이제 다시\n기억합니다",
@@ -434,9 +434,9 @@ const visionGateCopy = {
     resume: "Continue",
     inhale: "Inhale",
     exhale: "Exhale",
-    completionTitle: "Your direction has returned",
-    completionMessage: "You do not need\nto look far ahead",
-    completionNote: "One step is enough\nfor today",
+    completionTitle: "Today, you returned again",
+    completionMessage: "One step is enough\nfor today",
+    completionNote: "Your rhythm is\nremembering itself",
     completionButton: "Return to Morning Gate",
     openingFade: "Remember Your Direction",
     integration: "Now you\nremember again",
@@ -633,6 +633,42 @@ function requiresMobileAudioGesture() {
   return isMobileUserAgent || isTouchViewport;
 }
 
+function getBasicIdentityCompletionMessage(language: "jp" | "kr" | "en") {
+  if (language === "jp") {
+    return "今日、また戻ることができました";
+  }
+
+  if (language === "kr") {
+    return "오늘, 다시 돌아올 수 있었습니다";
+  }
+
+  return "Today, you returned again";
+}
+
+function getBasicIdentityCompletionNote(language: "jp" | "kr" | "en") {
+  if (language === "jp") {
+    return "戻る力が\n少しずつ育っています";
+  }
+
+  if (language === "kr") {
+    return "리듬을 기억하는 힘이\n자라고 있습니다";
+  }
+
+  return "Your rhythm is\nremembering itself";
+}
+
+function getBasicIdentityCompletionBody(language: "jp" | "kr" | "en") {
+  if (language === "jp") {
+    return "少しずつ、リズムで生きる人に近づいています";
+  }
+
+  if (language === "kr") {
+    return "조금씩, 리듬으로 살아가는 사람에 가까워지고 있습니다";
+  }
+
+  return "You are becoming someone who lives with rhythm";
+}
+
 export default function MeditationPage() {
   const { language } = useLanguage();
   const copy = useSiteCopy().meditationPage;
@@ -722,6 +758,22 @@ export default function MeditationPage() {
       : meditationType === "morning" || meditationType === "night"
       ? content.completionTitle
       : durationTextSet?.completionTitle || content.completionTitle;
+  const completionMessageText = isStructuredMorningGate
+    ? morningGateCopy.completionMessage
+    : basicPracticeCopy
+      ? getBasicIdentityCompletionMessage(localizedLanguage)
+      : copy.completionMessage;
+  const completionNoteText = isStructuredMorningGate
+    ? morningGateCopy.completionNote
+    : basicPracticeCopy
+      ? getBasicIdentityCompletionNote(localizedLanguage)
+      : copy.completionReturnText;
+  const completionBodyText =
+    !journeyMode && !isStructuredMorningGate
+      ? basicPracticeCopy
+        ? getBasicIdentityCompletionBody(localizedLanguage)
+        : copy.completionBody
+      : null;
   const circleScaleClass =
     phase === "inhale" ? "scale-110" : phase === "hold" ? "scale-110" : "scale-90";
   const journeyOverlayMessage =
@@ -1592,12 +1644,10 @@ export default function MeditationPage() {
               {isStructuredMorningGate ? morningGateCopy.completionTitle : completionTitle}
             </h1>
             <p className="mx-auto max-w-xl whitespace-pre-line text-base leading-8 text-white/72">
-              {isStructuredMorningGate ? morningGateCopy.completionMessage : copy.completionMessage}
+              {completionMessageText}
             </p>
-            <p className="text-sm leading-7 text-white/54">
-              {isStructuredMorningGate ? morningGateCopy.completionNote : copy.completionReturnText}
-            </p>
-            {!journeyMode && !isStructuredMorningGate ? <p className="mx-auto max-w-2xl text-base leading-8 text-white/68">{copy.completionBody}</p> : null}
+            <p className="whitespace-pre-line text-sm leading-7 text-white/54">{completionNoteText}</p>
+            {completionBodyText ? <p className="mx-auto max-w-2xl text-base leading-8 text-white/68">{completionBodyText}</p> : null}
             <div className="flex flex-col items-center gap-3">
               <Link
                 href={returnToHref}
