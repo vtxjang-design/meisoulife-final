@@ -31,15 +31,15 @@ const MORNING_GATE_NARRATION_VOLUME = 0.9;
 const MORNING_GATE_AUDIO = {
   affirmation: {
     src: "/audio/morning/affirmation%20gate.mp3",
-    volume: 0.2
+    volume: 0.14
   },
   energy: {
     src: "/audio/morning/energy%20gate.mp3",
-    volume: 0.2
+    volume: 0.14
   },
   vision: {
     src: "/audio/morning/vision%20gate.mp3",
-    volume: 0.2
+    volume: 0.14
   }
 } as const;
 const ENERGY_GATE_VIDEO_SRC = "/basic/morning%20gate/energy%20gate8.mp4";
