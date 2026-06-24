@@ -30,15 +30,15 @@ const VISION_GATE_SPEECH_RATE_RATIO = 0.94;
 const MORNING_GATE_AUDIO = {
   affirmation: {
     src: "/audio/morning/affirmation%20gate.mp3",
-    volume: 0.22
+    volume: 0.18
   },
   energy: {
     src: "/audio/morning/energy%20gate.mp3",
-    volume: 0.24
+    volume: 0.18
   },
   vision: {
     src: "/audio/morning/vision%20gate.mp3",
-    volume: 0.22
+    volume: 0.18
   }
 } as const;
 const ENERGY_GATE_VIDEO_SRC = "/basic/morning%20gate/energy%20gate8.mp4";
@@ -665,6 +665,10 @@ function getOrCreateAudioContext(audioContextRef: MutableRefObject<AudioContext 
   return audioContextRef.current;
 }
 
+function isStructuredMorningMobileAudioPath() {
+  return requiresMobileAudioGesture();
+}
+
 function getBasicIdentityCompletionMessage(language: "jp" | "kr" | "en") {
   if (language === "jp") {
     return "今日、また戻ることができました";
@@ -829,6 +833,31 @@ export default function MeditationPage() {
       : null;
   const affirmationProgress = isStructuredMorningGate ? Math.min(100, (elapsedTotalSeconds / AFFIRMATION_TOTAL_SECONDS) * 100) : 0;
 
+  function logStructuredMorningAmbientState(stage: string) {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const audio = ambientAudioRef.current;
+    const context = audioContextRef.current;
+
+    console.log("[Morning Gate Audio]", stage, {
+      gate: meditationDoor,
+      src: structuredMorningAudio?.src ?? null,
+      mobilePath: isStructuredMorningMobileAudioPath(),
+      audioElementCreated: Boolean(audio),
+      audioPaused: audio?.paused ?? null,
+      audioMuted: audio?.muted ?? null,
+      audioVolume: audio?.volume ?? null,
+      audioCurrentTime: audio?.currentTime ?? null,
+      audioReadyState: audio?.readyState ?? null,
+      audioNetworkState: audio?.networkState ?? null,
+      contextState: context?.state ?? null,
+      gainValue: morningAmbientMixRef.current.gainNode?.gain.value ?? null,
+      hasSourceNode: Boolean(morningAmbientMixRef.current.sourceNode)
+    });
+  }
+
   async function fadeMorningAmbientGain(targetVolume: number, durationMs: number) {
     const mix = morningAmbientMixRef.current;
     const gainNode = mix.gainNode;
@@ -924,6 +953,46 @@ export default function MeditationPage() {
       return { started: false };
     }
 
+    if (isStructuredMorningMobileAudioPath()) {
+      logStructuredMorningAmbientState("mobile-start-before");
+
+      const startResult = await startAmbientNatureAudio(
+        ambientAudioRef,
+        true,
+        structuredMorningAudio.src,
+        structuredMorningAudio.volume,
+        {
+          fadeInMs: options?.fadeInMs ?? MORNING_GATE_FADE_IN_MS,
+          restartFromBeginning: options?.restartFromBeginning ?? false
+        }
+      );
+
+      if (startResult.started) {
+        logStructuredMorningAmbientState("mobile-start-success");
+        return startResult;
+      }
+
+      console.warn("[Morning Gate Audio] mobile start failed, retrying once", startResult.error);
+
+      await new Promise<void>((resolve) => {
+        window.setTimeout(resolve, 300);
+      });
+
+      const retryResult = await startAmbientNatureAudio(
+        ambientAudioRef,
+        true,
+        structuredMorningAudio.src,
+        structuredMorningAudio.volume,
+        {
+          fadeInMs: 800,
+          restartFromBeginning: false
+        }
+      );
+
+      logStructuredMorningAmbientState(retryResult.started ? "mobile-retry-success" : "mobile-retry-failed");
+      return retryResult;
+    }
+
     const context = getOrCreateAudioContext(audioContextRef);
 
     if (!context) {
@@ -943,6 +1012,12 @@ export default function MeditationPage() {
     if (context.state === "suspended") {
       await context.resume();
     }
+
+    console.log("[Morning Gate Audio] desktop-web-audio-start", {
+      gate: meditationDoor,
+      src: structuredMorningAudio.src,
+      contextState: context.state
+    });
 
     const restartFromBeginning = options?.restartFromBeginning ?? false;
     const fadeInMs = options?.fadeInMs ?? MORNING_GATE_FADE_IN_MS;
@@ -977,11 +1052,28 @@ export default function MeditationPage() {
     mix.gainNode.gain.cancelScheduledValues(context.currentTime);
     mix.gainNode.gain.setValueAtTime(mix.gainNode.gain.value, context.currentTime);
     await fadeMorningAmbientGain(structuredMorningAudio.volume, fadeInMs);
+    logStructuredMorningAmbientState("desktop-start-success");
 
     return { started: true };
   }
 
   async function pauseStructuredMorningAmbient() {
+    if (isStructuredMorningMobileAudioPath()) {
+      const audio = ambientAudioRef.current;
+
+      if (!audio) {
+        return;
+      }
+
+      console.log("[Morning Gate Audio] mobile-pause", {
+        gate: meditationDoor,
+        src: audio.currentSrc || audio.src,
+        currentTime: audio.currentTime
+      });
+      audio.pause();
+      return;
+    }
+
     const mix = morningAmbientMixRef.current;
     const context = mix.context;
     const buffer = mix.audioBuffer;
@@ -995,10 +1087,32 @@ export default function MeditationPage() {
   }
 
   async function resumeStructuredMorningAmbient() {
+    if (isStructuredMorningMobileAudioPath()) {
+      logStructuredMorningAmbientState("mobile-resume-before");
+
+      const result = await startAmbientNatureAudio(
+        ambientAudioRef,
+        true,
+        structuredMorningAudio?.src,
+        structuredMorningAudio?.volume,
+        { fadeInMs: 800, restartFromBeginning: false }
+      );
+
+      logStructuredMorningAmbientState(result.started ? "mobile-resume-success" : "mobile-resume-failed");
+      return result;
+    }
+
     return await startStructuredMorningAmbient({ fadeInMs: MORNING_GATE_FADE_IN_MS });
   }
 
   async function stopStructuredMorningAmbient() {
+    if (isStructuredMorningMobileAudioPath()) {
+      logStructuredMorningAmbientState("mobile-stop-before");
+      await stopAmbientNatureAudio(ambientAudioRef, MORNING_GATE_FADE_OUT_MS);
+      logStructuredMorningAmbientState("mobile-stop-after");
+      return;
+    }
+
     const mix = morningAmbientMixRef.current;
 
     if (!mix.gainNode) {
@@ -1073,6 +1187,21 @@ export default function MeditationPage() {
     setAffirmationMessage(null);
     spokenAffirmationKeysRef.current = new Set();
     completionHandledRef.current = false;
+    console.log("[Morning Gate Audio] init", {
+      gate: nextDoor,
+      mobileNeedsGesture,
+      nextSoundEnabled,
+      shouldPromptForAudioStart,
+      pendingStructuredAmbientAudio,
+      structuredAudioSource:
+        nextType === "morning" && nextDoor === "affirmation"
+          ? MORNING_GATE_AUDIO.affirmation.src
+          : nextType === "morning" && nextDoor === "energy"
+            ? MORNING_GATE_AUDIO.energy.src
+            : nextType === "morning" && nextDoor === "vision"
+              ? MORNING_GATE_AUDIO.vision.src
+              : null
+    });
     console.log("[Journey Audio] journeyMode:", nextJourneyMode);
     console.log("[Journey Audio] journeyDay:", resolvedJourneyDay);
     console.log(
@@ -1568,6 +1697,7 @@ export default function MeditationPage() {
   async function handleAmbientRetry() {
     setHasUserGesture(true);
     setRequiresExplicitAudioStart(false);
+    logStructuredMorningAmbientState("ambient-retry-tap");
 
     if (isEnergyGate) {
       await playEnergyGateVideo();
@@ -1595,6 +1725,7 @@ export default function MeditationPage() {
     setHasUserGesture(true);
     setRequiresExplicitAudioStart(false);
     unlockStructuredMorningSpeech();
+    logStructuredMorningAmbientState("program-start-tap");
 
     if (isEnergyGate) {
       await playEnergyGateVideo();
