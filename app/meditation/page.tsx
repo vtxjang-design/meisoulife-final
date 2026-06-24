@@ -28,7 +28,6 @@ const AFFIRMATION_TOTAL_SECONDS = 180;
 const MORNING_GATE_FADE_IN_MS = 2000;
 const MORNING_GATE_FADE_OUT_MS = 3000;
 const MORNING_GATE_NARRATION_VOLUME = 0.9;
-const VISION_GATE_SPEECH_RATE_RATIO = 0.94;
 const MORNING_GATE_AUDIO = {
   affirmation: {
     src: "/audio/morning/affirmation%20gate.mp3",
@@ -1028,6 +1027,13 @@ export default function MeditationPage() {
     logStructuredMorningAmbientState("structured-stop-after");
   }
 
+  function getStructuredMorningStartOptions() {
+    return {
+      restartFromBeginning: false,
+      fadeInMs: MORNING_GATE_FADE_IN_MS
+    };
+  }
+
   useEffect(() => {
     isPausedRef.current = isPaused;
   }, [isPaused]);
@@ -1284,7 +1290,7 @@ export default function MeditationPage() {
 
       const utterance = new SpeechSynthesisUtterance(firstLine.text);
       utterance.lang = settings.lang;
-      utterance.rate = isVisionGate ? settings.rate * VISION_GATE_SPEECH_RATE_RATIO : settings.rate;
+      utterance.rate = settings.rate;
       utterance.pitch = settings.pitch;
       utterance.volume = 1;
 
@@ -1528,7 +1534,7 @@ export default function MeditationPage() {
 
           const utterance = new SpeechSynthesisUtterance(nextLine.text);
           utterance.lang = settings.lang;
-          utterance.rate = isVisionGate ? settings.rate * VISION_GATE_SPEECH_RATE_RATIO : settings.rate;
+          utterance.rate = settings.rate;
           utterance.pitch = settings.pitch;
           utterance.volume = settings.volume;
 
@@ -1581,7 +1587,6 @@ export default function MeditationPage() {
     isComplete,
     isPaused,
     isStructuredMorningGate,
-    isVisionGate,
     language,
     morningGateCopy
   ]);
@@ -1639,10 +1644,7 @@ export default function MeditationPage() {
 
     if (next) {
       const result = isStructuredMorningGate
-        ? await startStructuredMorningAmbient({
-            restartFromBeginning: isVisionGate,
-            fadeInMs: MORNING_GATE_FADE_IN_MS
-          })
+        ? await startStructuredMorningAmbient(getStructuredMorningStartOptions())
         : await startAmbientNatureAudio(
             ambientAudioRef,
             true,
@@ -1680,10 +1682,7 @@ export default function MeditationPage() {
     }
 
     const result = isStructuredMorningGate
-      ? await startStructuredMorningAmbient({
-          restartFromBeginning: isVisionGate,
-          fadeInMs: MORNING_GATE_FADE_IN_MS
-        })
+      ? await startStructuredMorningAmbient(getStructuredMorningStartOptions())
       : await startAmbientNatureAudio(
           ambientAudioRef,
           true,
@@ -1691,7 +1690,7 @@ export default function MeditationPage() {
           ambientAudioVolume,
           {
             ...ambientFadeInOptions,
-            restartFromBeginning: isVisionGate
+            restartFromBeginning: false
           }
         );
     await handleAmbientStartResult(result, true);
@@ -1735,10 +1734,7 @@ export default function MeditationPage() {
     }
 
     const result = isStructuredMorningGate
-      ? await startStructuredMorningAmbient({
-          restartFromBeginning: isVisionGate,
-          fadeInMs: MORNING_GATE_FADE_IN_MS
-        })
+      ? await startStructuredMorningAmbient(getStructuredMorningStartOptions())
       : await startAmbientNatureAudio(
           ambientAudioRef,
           true,
@@ -1746,7 +1742,7 @@ export default function MeditationPage() {
           ambientAudioVolume,
           {
             ...ambientFadeInOptions,
-            restartFromBeginning: isVisionGate
+            restartFromBeginning: false
           }
         );
     await handleAmbientStartResult(result, true);
