@@ -32,15 +32,15 @@ const VISION_GATE_SPEECH_RATE_RATIO = 0.94;
 const MORNING_GATE_AUDIO = {
   affirmation: {
     src: "/audio/morning/affirmation%20gate.mp3",
-    volume: 0.18
+    volume: 0.2
   },
   energy: {
     src: "/audio/morning/energy%20gate.mp3",
-    volume: 0.18
+    volume: 0.2
   },
   vision: {
     src: "/audio/morning/vision%20gate.mp3",
-    volume: 0.18
+    volume: 0.2
   }
 } as const;
 const ENERGY_GATE_VIDEO_SRC = "/basic/morning%20gate/energy%20gate8.mp4";
@@ -1259,6 +1259,69 @@ export default function MeditationPage() {
     }
   }
 
+  function primeStructuredMorningNarration() {
+    if (!isStructuredMorningGate || typeof window === "undefined" || !("speechSynthesis" in window)) {
+      return;
+    }
+
+    try {
+      const synth = window.speechSynthesis;
+      const settings = getStructuredMorningSpeechSettings(language);
+      const firstLine = morningGateCopy.openingLines[0];
+
+      if (!firstLine || spokenAffirmationKeysRef.current.has(firstLine.key)) {
+        return;
+      }
+
+      structuredSpeechSequenceRef.current += 1;
+      if (structuredSpeechTimeoutRef.current) {
+        window.clearTimeout(structuredSpeechTimeoutRef.current);
+        structuredSpeechTimeoutRef.current = null;
+      }
+
+      spokenAffirmationKeysRef.current.add(firstLine.key);
+      setAffirmationMessage(firstLine.text);
+
+      const utterance = new SpeechSynthesisUtterance(firstLine.text);
+      utterance.lang = settings.lang;
+      utterance.rate = isVisionGate ? settings.rate * VISION_GATE_SPEECH_RATE_RATIO : settings.rate;
+      utterance.pitch = settings.pitch;
+      utterance.volume = 1;
+
+      const selectedVoice = pickStructuredMorningVoice(
+        synth.getVoices(),
+        settings.lang,
+        settings.preferredNames
+      );
+
+      if (selectedVoice) {
+        utterance.voice = selectedVoice;
+      }
+
+      utterance.onstart = () => {
+        console.log("[Morning Gate Narration] primed", {
+          gate: meditationDoor,
+          language,
+          key: firstLine.key,
+          text: firstLine.text
+        });
+      };
+      utterance.onerror = (event) => {
+        console.error("[Morning Gate Narration] prime failed", {
+          gate: meditationDoor,
+          language,
+          key: firstLine.key,
+          error: event.error
+        });
+      };
+
+      synth.cancel();
+      synth.speak(utterance);
+    } catch (error) {
+      console.warn("[Morning Gate Narration] prime unavailable", error);
+    }
+  }
+
   useEffect(() => {
     setVibrationSupported(supportsMeditationVibration());
 
@@ -1610,6 +1673,7 @@ export default function MeditationPage() {
     setHasUserGesture(true);
     setRequiresExplicitAudioStart(false);
     logStructuredMorningAmbientState("ambient-retry-tap");
+    primeStructuredMorningNarration();
 
     if (isEnergyGate) {
       await playEnergyGateVideo();
@@ -1638,6 +1702,7 @@ export default function MeditationPage() {
     setRequiresExplicitAudioStart(false);
     unlockStructuredMorningSpeech();
     logStructuredMorningAmbientState("program-start-tap");
+    primeStructuredMorningNarration();
 
     if (isEnergyGate) {
       await playEnergyGateVideo();
