@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { useLocaleCopy } from "@/lib/i18n";
+import { useLanguage, useLocaleCopy } from "@/lib/i18n";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 type MemberEntryContentProps = {
@@ -643,6 +643,230 @@ const memberEntryCopy = {
   }
 } as const;
 
+type RecoveryHomeLanguage = "jp" | "kr" | "en";
+type RecoveryHomePlan = MemberEntryContentProps["initialPlan"];
+
+function resolveRecoveryHomeLanguage(language: string): RecoveryHomeLanguage {
+  if (language === "kr" || language === "en") {
+    return language;
+  }
+
+  return "jp";
+}
+
+function getRecoveryHomeContent(language: RecoveryHomeLanguage) {
+  if (language === "kr") {
+    return {
+      heroEyebrow: "RECOVERY HOME",
+      heroGreeting: "다시 오신 것을 환영합니다",
+      heroTitle: "여기서는\n다시 숨을 쉴 수 있습니다",
+      heroBody: "오늘 모든 것을 할 필요는 없습니다\n하나의 문으로 천천히 시작하면 충분합니다",
+      primaryCta: "Morning Gate로 시작하기",
+      primaryHint: "서두를 필요는 없습니다",
+      rhythmEyebrow: "TODAY'S RHYTHM",
+      rhythmTitle: "오늘의 리듬",
+      rhythmBody: "아침과 낮과 저녁의 문이 조용히 기다리고 있습니다",
+      doors: [
+        {
+          key: "morning",
+          icon: "🌅",
+          title: "Morning Gate",
+          body: "하루를 조금 더 부드럽게 시작하고 싶을 때",
+          href: "/program/basic?rhythm=morning",
+          cta: "이 문으로 들어가기"
+        },
+        {
+          key: "daytime",
+          icon: "🌊",
+          title: "Daytime Gate",
+          body: "흩어진 집중과 긴장을 잠시 되돌리고 싶을 때",
+          href: "/program/basic?rhythm=daytime",
+          cta: "이 문으로 들어가기"
+        },
+        {
+          key: "evening",
+          icon: "🌙",
+          title: "Evening Gate",
+          body: "오늘을 내려놓고 조용히 닫고 싶을 때",
+          href: "/program/basic?rhythm=evening",
+          cta: "이 문으로 들어가기"
+        }
+      ],
+      gardenEyebrow: "RECOVERY GARDEN",
+      gardenTitle: "당신의 회복은 계속되고 있습니다",
+      gardenBody: "경쟁 없이도 리듬은 자랍니다",
+      reflectionEyebrow: "GENTLE REFLECTION",
+      reflectionTitle: "오늘은 무엇이 당신을 조금 가볍게 했나요",
+      reflections: [
+        "오늘 몸은 어떤가요",
+        "무엇이 숨을 조금 편하게 했나요",
+        "내일은 어떤 리듬이 필요할까요"
+      ],
+      hopeEyebrow: "QUIET HOPE",
+      hopeTitle: "다시 돌아올 수 있다는 것이 이미 시작입니다",
+      hopeBody: "오늘도 하나의 문이면 충분합니다",
+      supportTitle: "조용한 도움이 필요할 때",
+      supportBody: "LINE과 멤버십 관리가 이 아래에서 조용히 기다리고 있습니다"
+    };
+  }
+
+  if (language === "en") {
+    return {
+      heroEyebrow: "RECOVERY HOME",
+      heroGreeting: "Welcome back",
+      heroTitle: "You can\nbreathe again here",
+      heroBody: "You do not need to do everything today\nOne gentle door is enough",
+      primaryCta: "Begin with Morning Gate",
+      primaryHint: "There is no rush",
+      rhythmEyebrow: "TODAY'S RHYTHM",
+      rhythmTitle: "Today’s rhythm",
+      rhythmBody: "Morning, daytime, and evening doors are quietly waiting",
+      doors: [
+        {
+          key: "morning",
+          icon: "🌅",
+          title: "Morning Gate",
+          body: "When you want to begin the day with more gentleness",
+          href: "/program/basic?rhythm=morning",
+          cta: "Enter this door"
+        },
+        {
+          key: "daytime",
+          icon: "🌊",
+          title: "Daytime Gate",
+          body: "When you want to return from scattered attention or tension",
+          href: "/program/basic?rhythm=daytime",
+          cta: "Enter this door"
+        },
+        {
+          key: "evening",
+          icon: "🌙",
+          title: "Evening Gate",
+          body: "When you want to set the day down and close gently",
+          href: "/program/basic?rhythm=evening",
+          cta: "Enter this door"
+        }
+      ],
+      gardenEyebrow: "RECOVERY GARDEN",
+      gardenTitle: "Your recovery is continuing",
+      gardenBody: "Rhythm grows without pressure",
+      reflectionEyebrow: "GENTLE REFLECTION",
+      reflectionTitle: "What helped you feel a little lighter today",
+      reflections: [
+        "How does your body feel today",
+        "What helped you breathe a little more easily",
+        "What rhythm would support you tomorrow"
+      ],
+      hopeEyebrow: "QUIET HOPE",
+      hopeTitle: "The fact that you returned is already a beginning",
+      hopeBody: "Tomorrow, one door will still be enough",
+      supportTitle: "When you need quiet support",
+      supportBody: "LINE support and membership management are waiting just below"
+    };
+  }
+
+  return {
+    heroEyebrow: "RECOVERY HOME",
+    heroGreeting: "おかえりなさい",
+    heroTitle: "ここでは\nまた呼吸できます",
+    heroBody: "今日はすべてをやらなくて大丈夫です\nひとつの門から静かに始めれば十分です",
+    primaryCta: "Morning Gateから始める",
+    primaryHint: "急ぐ必要はありません",
+    rhythmEyebrow: "TODAY'S RHYTHM",
+    rhythmTitle: "今日のリズム",
+    rhythmBody: "朝 昼 夜の扉が静かに待っています",
+    doors: [
+      {
+        key: "morning",
+        icon: "🌅",
+        title: "Morning Gate",
+        body: "一日をもう少しやわらかく始めたいとき",
+        href: "/program/basic?rhythm=morning",
+        cta: "この扉へ入る"
+      },
+      {
+        key: "daytime",
+        icon: "🌊",
+        title: "Daytime Gate",
+        body: "散った集中や緊張を少し戻したいとき",
+        href: "/program/basic?rhythm=daytime",
+        cta: "この扉へ入る"
+      },
+      {
+        key: "evening",
+        icon: "🌙",
+        title: "Evening Gate",
+        body: "今日を下ろして静かに閉じたいとき",
+        href: "/program/basic?rhythm=evening",
+        cta: "この扉へ入る"
+      }
+    ],
+    gardenEyebrow: "RECOVERY GARDEN",
+    gardenTitle: "あなたの回復は続いています",
+    gardenBody: "競争がなくても リズムは育ちます",
+    reflectionEyebrow: "GENTLE REFLECTION",
+    reflectionTitle: "今日は何が 少し呼吸を楽にしましたか",
+    reflections: [
+      "今日は体がどんな感じですか",
+      "何が少し軽くしてくれましたか",
+      "明日はどんなリズムが必要でしょうか"
+    ],
+    hopeEyebrow: "QUIET HOPE",
+    hopeTitle: "また戻ってこられたことが もう始まりです",
+    hopeBody: "明日も ひとつの扉で十分です",
+    supportTitle: "静かなサポートが必要なとき",
+    supportBody: "LINEとメンバーシップ管理がこの下で静かに待っています"
+  };
+}
+
+function getRecoveryGardenStage(language: RecoveryHomeLanguage, plan: RecoveryHomePlan) {
+  if (language === "kr") {
+    if (plan === "inner_circle") {
+      return { icon: "🌲", label: "Forest", message: "당신의 숲이 더 깊어지고 있습니다" };
+    }
+
+    if (plan === "growth") {
+      return { icon: "🌳", label: "Tree", message: "당신의 나무가 조용히 자라고 있습니다" };
+    }
+
+    if (plan === "basic") {
+      return { icon: "🌿", label: "Sprout", message: "당신의 정원이 오늘 조금 더 자랐습니다" };
+    }
+
+    return { icon: "🌱", label: "Seed", message: "작은 씨앗 하나가 이미 심어졌습니다" };
+  }
+
+  if (language === "en") {
+    if (plan === "inner_circle") {
+      return { icon: "🌲", label: "Forest", message: "Your forest is growing deeper" };
+    }
+
+    if (plan === "growth") {
+      return { icon: "🌳", label: "Tree", message: "Your tree is quietly growing" };
+    }
+
+    if (plan === "basic") {
+      return { icon: "🌿", label: "Sprout", message: "Your garden has grown a little today" };
+    }
+
+    return { icon: "🌱", label: "Seed", message: "A small seed has already been planted" };
+  }
+
+  if (plan === "inner_circle") {
+    return { icon: "🌲", label: "Forest", message: "あなたの森は さらに深く育っています" };
+  }
+
+  if (plan === "growth") {
+    return { icon: "🌳", label: "Tree", message: "あなたの木は 静かに育っています" };
+  }
+
+  if (plan === "basic") {
+    return { icon: "🌿", label: "Sprout", message: "あなたの庭は 今日 少し育ちました" };
+  }
+
+  return { icon: "🌱", label: "Seed", message: "小さな種は もう植えられています" };
+}
+
 export function MemberEntryContent({
   lineUrl,
   debug = false,
@@ -653,15 +877,12 @@ export function MemberEntryContent({
   initialEmail,
   membershipSummary
 }: MemberEntryContentProps) {
+  const { language } = useLanguage();
   const copy = useLocaleCopy(memberEntryCopy);
   const [authState, setAuthState] = useState<AuthState>("idle");
   const [email, setEmail] = useState("");
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn] = useState(isLoggedInInitially);
-  const [selectedStateKey, setSelectedStateKey] = useState("overwhelmed");
-  const [reflectionText, setReflectionText] = useState("");
-  const [coexistenceChecked, setCoexistenceChecked] = useState(false);
-  const [completedRhythmItems, setCompletedRhythmItems] = useState<number[]>([0, 2]);
   const [activeForestKey, setActiveForestKey] = useState<RecoveryForestKey | null>(null);
   const [forestSecondsLeft, setForestSecondsLeft] = useState(60);
   const [forestRunning, setForestRunning] = useState(false);
@@ -675,26 +896,15 @@ export function MemberEntryContent({
   const [portalLoading, setPortalLoading] = useState(false);
   const [portalError, setPortalError] = useState("");
   const debugEnabled = process.env.NODE_ENV !== "production" || debug;
-  const recommendedProgramHref =
-    initialPlan === "growth"
-      ? "/program/growth"
-      : initialPlan === "inner_circle"
-        ? "/program/inner"
-        : "/program/basic";
-  const stateForestMap: Record<string, RecoveryForestKey> = {
-    overwhelmed: "breathing",
-    exhausted: "strength",
-    unstable: "meditation",
-    stressed: "temperature",
-    okay: "meditation",
-    energized: "smile"
-  };
+  const recoveryHome = useMemo(
+    () => getRecoveryHomeContent(resolveRecoveryHomeLanguage(language)),
+    [language]
+  );
+  const gardenStage = useMemo(
+    () => getRecoveryGardenStage(resolveRecoveryHomeLanguage(language), initialPlan),
+    [initialPlan, language]
+  );
   const founderWisdom = copy.dashboard.founderWisdoms[new Date().getDay() % copy.dashboard.founderWisdoms.length];
-  const selectedState =
-    copy.dashboard.states.find((state) => state.key === selectedStateKey) ?? copy.dashboard.states[0];
-  const rhythmScore = Math.round((completedRhythmItems.length / copy.dashboard.rhythmItems.length) * 100);
-  const recommendedRecovery = copy.dashboard.recoveryOptions[selectedState.key as keyof typeof copy.dashboard.recoveryOptions];
-  const todaysPlanFocus = copy.dashboard.planFocus[initialPlan];
   const activeForestCard = activeForestKey
     ? copy.forest.cards.find((card) => card.key === activeForestKey) ?? null
     : null;
@@ -742,12 +952,6 @@ export function MemberEntryContent({
       setPortalError(copy.membershipPanel.error);
       setPortalLoading(false);
     }
-  }
-
-  function toggleRhythmItem(index: number) {
-    setCompletedRhythmItems((current) =>
-      current.includes(index) ? current.filter((item) => item !== index) : [...current, index]
-    );
   }
 
   function openForestExperience(key: RecoveryForestKey) {
@@ -917,321 +1121,208 @@ export function MemberEntryContent({
   return (
     <div className="section-shell py-12 sm:py-16">
       <div className="mx-auto max-w-5xl overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.14),transparent_22%),linear-gradient(180deg,#0a1716_0%,#0d1824_54%,#08131d_100%)] px-5 py-8 shadow-[0_28px_90px_rgba(7,17,31,0.28)] sm:px-8 sm:py-10">
-        <div className="mx-auto max-w-3xl text-center">
-          <div className="inline-flex rounded-full border border-gold/20 bg-gold/[0.08] px-4 py-2 text-sm font-medium text-gold">
-            {copy.badge}
+        {!isLoggedIn ? (
+          <div className="mx-auto max-w-3xl text-center">
+            <div className="inline-flex rounded-full border border-gold/20 bg-gold/[0.08] px-4 py-2 text-sm font-medium text-gold">
+              {copy.badge}
+            </div>
+            <h1 className="mt-5 font-serif text-3xl leading-tight text-white sm:text-4xl">{copy.title}</h1>
+            <p className="mt-4 text-sm leading-8 text-white/74 sm:text-base">{copy.description}</p>
           </div>
-          <h1 className="mt-5 font-serif text-3xl leading-tight text-white sm:text-4xl">{copy.title}</h1>
-          <p className="mt-4 text-sm leading-8 text-white/74 sm:text-base">{copy.description}</p>
-        </div>
+        ) : null}
 
         {isLoggedIn ? (
-          <div className="mx-auto mt-8 max-w-5xl space-y-5">
-            <div className="rounded-[28px] border border-white/10 bg-white/[0.04] p-5 sm:p-6">
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.28em] text-gold/80">{copy.dashboard.eyebrow}</p>
-                  <h2 className="mt-3 text-2xl font-semibold text-white sm:text-3xl">{copy.dashboard.title}</h2>
-                  <p className="mt-3 max-w-3xl text-sm leading-7 text-white/70">{copy.dashboard.description}</p>
-                  <p className="mt-4 text-sm font-medium text-gold/90">{todaysPlanFocus}</p>
-                </div>
-                <div className="rounded-[24px] border border-gold/20 bg-gold/[0.08] px-4 py-4 text-left">
-                  <p className="text-xs uppercase tracking-[0.24em] text-gold/80">{copy.planLabel}</p>
-                  <p className="mt-2 text-lg font-semibold text-white">{copy.planLabels[initialPlan]}</p>
-                  <p className="mt-2 text-sm text-white/62">{initialEmail || copy.loggedInBox}</p>
-                </div>
+          <div className="mx-auto mt-2 max-w-5xl space-y-6">
+            <section className="overflow-hidden rounded-[30px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(145,194,167,0.18),transparent_24%),radial-gradient(circle_at_82%_18%,rgba(212,186,117,0.12),transparent_26%),linear-gradient(180deg,rgba(10,24,27,0.92),rgba(8,19,29,0.94)_58%,rgba(7,16,24,0.98))] px-5 py-7 shadow-[0_24px_80px_rgba(7,17,31,0.22)] sm:px-7 sm:py-8">
+              <div className="max-w-3xl">
+                <p className="text-xs uppercase tracking-[0.28em] text-gold/78">{recoveryHome.heroEyebrow}</p>
+                <p className="mt-4 text-base text-[#f2e4bf]">{recoveryHome.heroGreeting}</p>
+                <h1 className="hero-measure word-balance keep-phrase mt-3 max-w-[11ch] whitespace-pre-line font-serif text-3xl leading-[1.2] text-white sm:max-w-[12ch] sm:text-5xl">
+                  {recoveryHome.heroTitle}
+                </h1>
+                <p className="hero-measure word-balance keep-phrase mt-4 max-w-[22ch] whitespace-pre-line text-sm leading-7 text-white/72 sm:text-base sm:leading-8">
+                  {recoveryHome.heroBody}
+                </p>
               </div>
-              <p className="mt-4 text-sm text-white/52">{copy.dashboard.communityPulse}</p>
-            </div>
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <Link
+                  href="/program/basic?rhythm=morning"
+                  className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-gold px-6 py-3 text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
+                >
+                  {recoveryHome.primaryCta}
+                </Link>
+                <p className="text-sm text-white/56">{recoveryHome.primaryHint}</p>
+              </div>
+            </section>
 
-            <section className="rounded-[28px] border border-white/10 bg-white/[0.03] p-5 sm:p-6">
-              <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.24em] text-gold/80">{copy.membershipPanel.eyebrow}</p>
-                  <h3 className="mt-3 text-xl font-semibold text-white">{copy.membershipPanel.title}</h3>
+            <section className="rounded-[24px] border border-white/10 bg-white/[0.03] px-4 py-4 sm:px-5 sm:py-4">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div className="flex flex-col gap-3 text-sm text-white/72 sm:flex-row sm:flex-wrap sm:items-center sm:gap-5">
+                  <span className="text-xs uppercase tracking-[0.24em] text-gold/78">{copy.membershipPanel.title}</span>
+                  <span>{copy.membershipPanel.currentPlan} · {copy.planLabels[membershipSummary.currentPlan]}</span>
+                  <span>{copy.membershipPanel.subscriptionStatus} · {membershipStatusLabel}</span>
+                  <span>{copy.membershipPanel.nextBillingDate} · {membershipNextBillingDate}</span>
                 </div>
-                <div className="grid gap-3 text-left sm:grid-cols-3">
-                  <div className="rounded-[20px] border border-white/10 bg-[#0a141d] px-4 py-4">
-                    <p className="text-xs uppercase tracking-[0.18em] text-gold/80">{copy.membershipPanel.currentPlan}</p>
-                    <p className="mt-2 text-sm font-medium text-white">{copy.planLabels[membershipSummary.currentPlan]}</p>
-                  </div>
-                  <div className="rounded-[20px] border border-white/10 bg-[#0a141d] px-4 py-4">
-                    <p className="text-xs uppercase tracking-[0.18em] text-gold/80">{copy.membershipPanel.subscriptionStatus}</p>
-                    <p className="mt-2 text-sm font-medium text-white">{membershipStatusLabel}</p>
-                  </div>
-                  <div className="rounded-[20px] border border-white/10 bg-[#0a141d] px-4 py-4">
-                    <p className="text-xs uppercase tracking-[0.18em] text-gold/80">{copy.membershipPanel.nextBillingDate}</p>
-                    <p className="mt-2 text-sm font-medium text-white">{membershipNextBillingDate}</p>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <button
                   type="button"
                   onClick={handleManageMembership}
                   disabled={!membershipSummary.canManageMembership || portalLoading}
-                  className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-gold/20 bg-gold/[0.08] px-5 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12] disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-white/[0.03] disabled:text-white/38"
+                  className="inline-flex min-h-[42px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-4 py-2 text-sm font-medium text-white transition duration-300 hover:bg-white/[0.08] disabled:cursor-not-allowed disabled:text-white/36"
                 >
                   {portalLoading ? copy.membershipPanel.loading : copy.membershipPanel.manage}
                 </button>
-                {!membershipSummary.canManageMembership ? (
-                  <p className="text-sm text-white/56">{copy.membershipPanel.unavailable}</p>
-                ) : null}
               </div>
               {portalError ? <p className="mt-3 text-sm text-[#f3c7b8]">{portalError}</p> : null}
             </section>
 
-            <div className="rounded-[28px] border border-white/10 bg-white/[0.03] p-5 sm:p-6">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.24em] text-gold/80">{copy.dashboard.journeyTitle}</p>
-                </div>
-                <span className="text-xs text-white/48">Life OS</span>
+            <section className="rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] px-5 py-6 sm:px-6 sm:py-7">
+              <div className="max-w-2xl">
+                <p className="text-xs uppercase tracking-[0.24em] text-gold/78">{recoveryHome.rhythmEyebrow}</p>
+                <h2 className="mt-3 text-2xl font-semibold text-white">{recoveryHome.rhythmTitle}</h2>
+                <p className="mt-3 text-sm leading-7 text-white/68">{recoveryHome.rhythmBody}</p>
               </div>
-              <div className="mt-4 grid gap-3 sm:grid-cols-5">
-                {copy.dashboard.journeySteps.map((step, index) => (
-                  <div
-                    key={step}
-                    className="rounded-[20px] border border-white/10 bg-[#0b1520] px-4 py-3 text-sm text-white/74"
+              <div className="mt-6 grid gap-4 lg:grid-cols-3">
+                {recoveryHome.doors.map((door, index) => (
+                  <Link
+                    key={door.key}
+                    href={door.href}
+                    className={`group rounded-[26px] border px-5 py-5 text-left transition duration-300 hover:-translate-y-0.5 hover:bg-white/[0.06] ${
+                      index === 0
+                        ? "border-gold/24 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.14),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))]"
+                        : "border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.025))]"
+                    }`}
                   >
-                    <span className="mr-2 text-gold/80">0{index + 1}</span>
-                    {step}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <section className="rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(110,168,120,0.16),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] p-5 sm:p-6">
-              <p className="text-xs uppercase tracking-[0.24em] text-gold/80">{copy.forest.eyebrow}</p>
-              <h3 className="mt-3 text-2xl font-semibold text-white">{copy.forest.title}</h3>
-              <p className="mt-3 max-w-3xl text-sm leading-7 text-white/68">{copy.forest.description}</p>
-              <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                {copy.forest.cards.map((card) => (
-                  <button
-                    key={card.key}
-                    type="button"
-                    onClick={() => openForestExperience(card.key as RecoveryForestKey)}
-                    className="rounded-[24px] border border-white/10 bg-[#0c1720] px-4 py-4 text-left transition duration-300 hover:border-gold/25 hover:bg-white/[0.05]"
-                  >
-                    <p className="text-lg text-white">{card.emoji}</p>
-                    <p className="mt-3 text-base font-semibold text-white">{card.title}</p>
-                    <p className="mt-2 text-sm leading-6 text-white/60">{card.description}</p>
-                  </button>
+                    <p className="text-2xl">{door.icon}</p>
+                    <h3 className="mt-4 text-xl font-semibold text-white">{door.title}</h3>
+                    <p className="mt-3 text-sm leading-7 text-white/64">{door.body}</p>
+                    <p className="mt-5 text-sm font-medium text-[#f2e4bf]">{door.cta}</p>
+                  </Link>
                 ))}
               </div>
             </section>
 
-            <div className="grid gap-5 lg:grid-cols-[1.2fr_0.8fr]">
-              <section className="rounded-[28px] border border-white/10 bg-white/[0.03] p-5 sm:p-6">
-                <h3 className="text-xl font-semibold text-white">{copy.dashboard.stateTitle}</h3>
-                <p className="mt-3 text-sm leading-7 text-white/68">{copy.dashboard.stateDescription}</p>
-                <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                  {copy.dashboard.states.map((state) => {
-                    const active = selectedState.key === state.key;
-
-                    return (
-                      <button
-                        key={state.key}
-                        type="button"
-                        onClick={() => {
-                          setSelectedStateKey(state.key);
-                          openForestExperience(stateForestMap[state.key]);
-                        }}
-                        className={`rounded-[22px] border px-4 py-4 text-left text-sm transition duration-300 ${
-                          active
-                            ? "border-gold/40 bg-gold/[0.10] text-white shadow-[0_14px_30px_rgba(212,186,117,0.08)]"
-                            : "border-white/10 bg-[#09131d] text-white/74 hover:bg-white/[0.05]"
-                        }`}
-                      >
-                        <p className="font-medium">{state.label}</p>
-                        <p className="mt-2 leading-6 text-white/58">{state.support}</p>
-                        <p className="mt-3 text-xs uppercase tracking-[0.18em] text-gold/80">
-                          {copy.dashboard.stateTapHint}
-                        </p>
-                      </button>
-                    );
-                  })}
-                </div>
-              </section>
-
-              <section className="rounded-[28px] border border-gold/20 bg-[linear-gradient(180deg,rgba(212,186,117,0.12),rgba(255,255,255,0.02))] p-5 sm:p-6">
-                <p className="text-xs uppercase tracking-[0.24em] text-gold/80">{copy.dashboard.recoveryTitle}</p>
-                <h3 className="mt-3 text-xl font-semibold text-white">{recommendedRecovery}</h3>
-                <p className="mt-3 text-sm leading-7 text-white/70">{copy.dashboard.recoveryDescription}</p>
-                <p className="mt-4 rounded-[22px] border border-white/10 bg-black/20 px-4 py-4 text-sm leading-7 text-white/78">
-                  {selectedState.support}
-                </p>
-                <div className="mt-5 flex flex-col gap-3">
-                  <Link
-                    href="/#one-minute-meditation"
-                    className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
-                  >
-                    {copy.dashboard.recoveryCta}
-                  </Link>
-                  <Link
-                    href={recommendedProgramHref}
-                    className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
-                  >
-                    {copy.actions.myProgram}
-                  </Link>
-                </div>
-              </section>
-            </div>
-
-            <div className="grid gap-5 lg:grid-cols-2">
-              <section className="rounded-[28px] border border-white/10 bg-white/[0.03] p-5 sm:p-6">
-                <div className="flex items-end justify-between gap-4">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.24em] text-gold/80">{copy.dashboard.rhythmTitle}</p>
-                    <p className="mt-3 text-sm leading-7 text-white/68">{copy.dashboard.rhythmDescription}</p>
+            <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
+              <section className="rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(118,164,124,0.16),transparent_26%),linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] p-5 sm:p-6">
+                <p className="text-xs uppercase tracking-[0.24em] text-gold/78">{recoveryHome.gardenEyebrow}</p>
+                <h3 className="mt-3 text-xl font-semibold text-white">{recoveryHome.gardenTitle}</h3>
+                <p className="mt-3 text-sm leading-7 text-white/68">{recoveryHome.gardenBody}</p>
+                <div className="mt-6 rounded-[24px] border border-white/10 bg-black/15 px-5 py-6">
+                  <div className="flex items-center gap-4">
+                    <span className="text-4xl">{gardenStage.icon}</span>
+                    <div>
+                      <p className="text-sm uppercase tracking-[0.18em] text-[#f2e4bf]">{gardenStage.label}</p>
+                      <p className="mt-2 text-base text-white/84">{gardenStage.message}</p>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-xs text-white/48">{copy.dashboard.rhythmScoreLabel}</p>
-                    <p className="mt-1 text-3xl font-semibold text-white">{rhythmScore}</p>
+                  <div className="mt-6 flex items-center gap-3 text-2xl text-white/72">
+                    <span>🌱</span>
+                    <span className="text-white/30">→</span>
+                    <span>🌿</span>
+                    <span className="text-white/30">→</span>
+                    <span>🌳</span>
+                    <span className="text-white/30">→</span>
+                    <span>🌲</span>
                   </div>
                 </div>
-                <div className="mt-5 grid gap-3">
-                  {copy.dashboard.rhythmItems.map((item, index) => (
-                    <button
-                      key={item}
-                      type="button"
-                      onClick={() => toggleRhythmItem(index)}
-                      className={`rounded-[18px] border px-4 py-3 text-left text-sm transition duration-300 ${
-                        completedRhythmItems.includes(index)
-                          ? "border-gold/30 bg-gold/[0.10] text-white"
-                          : "border-white/10 bg-[#0a141d] text-white/74 hover:bg-white/[0.05]"
-                      }`}
-                    >
-                      {item}
-                    </button>
-                  ))}
-                </div>
               </section>
 
               <section className="rounded-[28px] border border-white/10 bg-white/[0.03] p-5 sm:p-6">
-                <p className="text-xs uppercase tracking-[0.24em] text-gold/80">{copy.dashboard.bosTitle}</p>
-                <p className="mt-3 text-sm leading-7 text-white/68">{copy.dashboard.bosDescription}</p>
+                <p className="text-xs uppercase tracking-[0.24em] text-gold/78">{recoveryHome.reflectionEyebrow}</p>
+                <h3 className="mt-3 text-xl font-semibold text-white">{recoveryHome.reflectionTitle}</h3>
                 <div className="mt-5 space-y-3">
-                  {copy.dashboard.bosQuestions.map((question) => (
-                    <div key={question} className="rounded-[18px] border border-white/10 bg-[#0a141d] px-4 py-4 text-sm leading-7 text-white/78">
-                      {question}
+                  {recoveryHome.reflections.map((reflection) => (
+                    <div
+                      key={reflection}
+                      className="rounded-[20px] border border-white/10 bg-[#09131d] px-4 py-4 text-sm leading-7 text-white/78"
+                    >
+                      {reflection}
                     </div>
                   ))}
                 </div>
-                <textarea
-                  value={reflectionText}
-                  onChange={(event) => setReflectionText(event.target.value)}
-                  placeholder={copy.dashboard.bosPlaceholder}
-                  className="mt-4 min-h-[116px] w-full rounded-[22px] border border-white/10 bg-[#09131d] px-4 py-4 text-sm leading-7 text-white outline-none transition duration-300 placeholder:text-white/28 focus:border-gold/40"
-                />
               </section>
             </div>
 
-            <div className="grid gap-5 lg:grid-cols-2">
-              <section className="rounded-[28px] border border-white/10 bg-white/[0.03] p-5 sm:p-6">
-                <p className="text-xs uppercase tracking-[0.24em] text-gold/80">{copy.dashboard.coexistenceTitle}</p>
-                <p className="mt-3 text-sm leading-7 text-white/68">{copy.dashboard.coexistenceDescription}</p>
-                <div className="mt-5 rounded-[22px] border border-gold/20 bg-gold/[0.08] px-4 py-4 text-sm leading-7 text-white/86">
-                  {copy.dashboard.coexistenceAction}
-                </div>
-                {coexistenceChecked ? (
-                  <p className="mt-3 text-sm text-gold/90">{copy.dashboard.coexistenceDone}</p>
-                ) : null}
-                <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                  <button
-                    type="button"
-                    onClick={() => setCoexistenceChecked(true)}
-                    className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-gold/20 bg-gold/[0.08] px-5 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12]"
-                  >
-                    {copy.dashboard.coexistenceAction}
-                  </button>
-                  <Link
-                    href="/community"
-                    className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
-                  >
-                    {copy.actions.community}
-                  </Link>
-                </div>
-              </section>
-
-              <section className="rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.14),transparent_26%),linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] p-5 sm:p-6">
-                <p className="text-xs uppercase tracking-[0.24em] text-gold/80">{copy.dashboard.founderTitle}</p>
-                <p className="mt-3 text-sm leading-7 text-white/68">{copy.dashboard.founderDescription}</p>
-                <blockquote className="mt-5 rounded-[22px] border border-white/10 bg-black/15 px-4 py-4 text-base leading-8 text-white/86">
-                  {founderWisdom}
-                </blockquote>
-                <Link
-                  href="/brain-education"
-                  className="mt-5 inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
-                >
-                  {copy.dashboard.readDeeper}
-                </Link>
-              </section>
-            </div>
+            <section className="rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.14),transparent_26%),linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] p-5 sm:p-6">
+              <p className="text-xs uppercase tracking-[0.24em] text-gold/78">{recoveryHome.hopeEyebrow}</p>
+              <h3 className="mt-3 text-2xl font-semibold text-white">{recoveryHome.hopeTitle}</h3>
+              <p className="mt-3 text-sm leading-7 text-white/68">{recoveryHome.hopeBody}</p>
+              <blockquote className="mt-5 rounded-[22px] border border-white/10 bg-black/15 px-4 py-4 text-base leading-8 text-white/84">
+                {founderWisdom}
+              </blockquote>
+            </section>
           </div>
         ) : null}
 
-        <div className="mx-auto mt-8 grid max-w-4xl gap-3 sm:grid-cols-2">
-          <Link
-            href="/#one-minute-meditation"
-            className="relative z-20 inline-flex min-h-[60px] items-center justify-center rounded-[24px] bg-gold px-5 py-4 text-center text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
-          >
-            {copy.actions.minute}
-          </Link>
-          <Link
-            href="/#rhythm-challenge"
-            className="relative z-20 inline-flex min-h-[60px] items-center justify-center rounded-[24px] border border-white/12 bg-white/[0.04] px-5 py-4 text-center text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
-          >
-            {copy.actions.rhythm}
-          </Link>
-          <a
-            href={lineUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="relative z-20 inline-flex min-h-[60px] items-center justify-center rounded-[24px] border border-gold/20 bg-gold/[0.08] px-5 py-4 text-center text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12]"
-          >
-            {copy.actions.line}
-          </a>
-          {isLoggedIn ? (
-            <Link
-              href={recommendedProgramHref}
-              className="relative z-20 inline-flex min-h-[60px] items-center justify-center rounded-[24px] border border-white/12 bg-white/[0.04] px-5 py-4 text-center text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
-            >
-              {copy.actions.dashboard}
-            </Link>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setShowLogin((current) => !current)}
-              className="relative z-20 inline-flex min-h-[60px] cursor-pointer items-center justify-center rounded-[24px] border border-white/12 bg-white/[0.04] px-5 py-4 text-center text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
-            >
-              {copy.actions.login}
-            </button>
-          )}
-        </div>
-
-        <div className="mx-auto mt-4 max-w-4xl rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
-          <p className="text-sm leading-7 text-white/78">{statusMessage}</p>
-          <p className="mt-2 text-sm leading-7 text-white/60">{copy.lineNote}</p>
-          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <a
-              href={lineUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-gold/20 bg-gold/[0.08] px-5 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12]"
-            >
-              {copy.supportCta}
-            </a>
-            {isLoggedIn ? (
-              <Link
-                href={recommendedProgramHref}
-                className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
+        {isLoggedIn ? (
+          <div className="mx-auto mt-6 max-w-4xl rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
+            <p className="text-xs uppercase tracking-[0.24em] text-gold/78">{recoveryHome.supportTitle}</p>
+            <p className="mt-3 text-sm leading-7 text-white/68">{recoveryHome.supportBody}</p>
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <a
+                href={lineUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-gold/20 bg-gold/[0.08] px-5 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12]"
               >
-                {copy.actions.dashboard}
-              </Link>
-            ) : null}
+                {copy.actions.line}
+              </a>
+              <button
+                type="button"
+                onClick={() => openForestExperience("breathing")}
+                className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
+              >
+                {copy.actions.minute}
+              </button>
+            </div>
           </div>
-        </div>
+        ) : (
+          <>
+            <div className="mx-auto mt-8 grid max-w-4xl gap-3 sm:grid-cols-2">
+              <Link
+                href="/#one-minute-meditation"
+                className="relative z-20 inline-flex min-h-[60px] items-center justify-center rounded-[24px] bg-gold px-5 py-4 text-center text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
+              >
+                {copy.actions.minute}
+              </Link>
+              <Link
+                href="/#rhythm-challenge"
+                className="relative z-20 inline-flex min-h-[60px] items-center justify-center rounded-[24px] border border-white/12 bg-white/[0.04] px-5 py-4 text-center text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
+              >
+                {copy.actions.rhythm}
+              </Link>
+              <a
+                href={lineUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative z-20 inline-flex min-h-[60px] items-center justify-center rounded-[24px] border border-gold/20 bg-gold/[0.08] px-5 py-4 text-center text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12]"
+              >
+                {copy.actions.line}
+              </a>
+              <button
+                type="button"
+                onClick={() => setShowLogin((current) => !current)}
+                className="relative z-20 inline-flex min-h-[60px] cursor-pointer items-center justify-center rounded-[24px] border border-white/12 bg-white/[0.04] px-5 py-4 text-center text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
+              >
+                {copy.actions.login}
+              </button>
+            </div>
+
+            <div className="mx-auto mt-4 max-w-4xl rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
+              <p className="text-sm leading-7 text-white/78">{statusMessage}</p>
+              <p className="mt-2 text-sm leading-7 text-white/60">{copy.lineNote}</p>
+              <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <a
+                  href={lineUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-gold/20 bg-gold/[0.08] px-5 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12]"
+                >
+                  {copy.supportCta}
+                </a>
+              </div>
+            </div>
+          </>
+        )}
 
         {!isLoggedIn && showLogin ? (
           <div className="mx-auto mt-5 max-w-4xl rounded-[24px] border border-white/10 bg-white/[0.04] p-5 sm:p-6">
