@@ -25,22 +25,25 @@ type BasicHomeProps = {
 const pageCopy = {
   jp: {
     badge: "BASIC Rhythm Space",
-    title: "今日は、\nひとつの門から始めれば十分です。",
-    body: "ここはライブラリではありません。\n朝・昼・夜のリズムへ静かに戻るための場所です。",
-    identityLine: "今日もひとつの扉へ戻ります",
-    current: "今日の入口",
-    gatesTitle: "3つのリズムゲート",
-    gatesBody: "今の自分に合う方法で戻ります",
+    title: "おかえりなさい\n今日は ひとつのリズムから始めます",
+    body: "すべてをやる必要はありません\n今の自分に合う扉を ひとつ選べば十分です",
+    identityLine: "今日も また戻ることができます",
+    current: "今日のはじまり",
+    currentBody: "まずは 朝の扉から静かに始めます",
+    gatesTitle: "TODAY'S RHYTHM",
+    gatesBody: "朝 昼 夜の扉が 静かに待っています",
     enter: "この扉へ戻る",
-    journeyTitle: "Rhythm Journey",
-    journeyBody: "一日一回。\n小さく戻る。",
-    daily: "今日も戻ることができました",
-    weekly: "今週も静かに戻っています",
-    monthly: "あなたは戻る方法を思い出しています",
-    journeyDay: "今日の歩み",
-    streak: "今週の戻り",
-    returnTitle: "また戻るために",
-    returnBody: "リズムは静かに積み重なっています。\n明日も、ひとつの扉で十分です。",
+    primaryCta: "Morning Gateから始める",
+    primaryHint: "急ぐ必要はありません",
+    journeyTitle: "RECOVERY GARDEN",
+    journeyBody: "あなたのリズムは\n静かに根を下ろしています",
+    daily: "今日の小さな戻りも 庭の一部になります",
+    weekly: "競争がなくても 回復は育ちます",
+    monthly: "また戻るたびに 自分のリズムを思い出していきます",
+    whisperTitle: "DAILY WHISPER",
+    whisperBody: "今日は何が 少し呼吸を楽にしてくれますか",
+    returnTitle: "QUIET HOPE",
+    returnBody: "急がなくて大丈夫です\nあなたのリズムは 今日もまた始められます",
     membershipTitle: "Membership",
     currentPlan: "Current Plan",
     subscriptionStatus: "Subscription Status",
@@ -54,22 +57,25 @@ const pageCopy = {
   },
   kr: {
     badge: "BASIC Rhythm Space",
-    title: "오늘은,\n하나의 문으로 시작하면 충분합니다.",
-    body: "이곳은 라이브러리가 아닙니다.\n아침 · 낮 · 저녁의 리듬으로 조용히 돌아오는 공간입니다.",
-    identityLine: "오늘도 하나의 문으로 돌아갑니다",
-    current: "오늘의 입구",
-    gatesTitle: "3개의 리듬 게이트",
-    gatesBody: "지금의 나에게 맞는 방식으로 돌아갑니다",
+    title: "다시 오신 것을 환영합니다\n오늘은 하나의 리듬으로 시작합니다",
+    body: "모든 것을 할 필요는 없습니다\n지금의 나에게 맞는 문 하나면 충분합니다",
+    identityLine: "오늘도 다시 돌아올 수 있습니다",
+    current: "오늘의 시작",
+    currentBody: "먼저 아침의 문으로 조용히 시작합니다",
+    gatesTitle: "TODAY'S RHYTHM",
+    gatesBody: "아침 낮 저녁의 문이 조용히 기다리고 있습니다",
     enter: "이 문으로 돌아가기",
-    journeyTitle: "Rhythm Journey",
-    journeyBody: "하루 한 번.\n작게 돌아오기.",
-    daily: "오늘도 다시 돌아왔습니다",
-    weekly: "이번 주에도 조용히 돌아오고 있습니다",
-    monthly: "당신은 다시 돌아오는 법을 기억하고 있습니다",
-    journeyDay: "오늘의 걸음",
-    streak: "이번 주의 돌아옴",
-    returnTitle: "다시 돌아오기",
-    returnBody: "리듬은 조용히 쌓이고 있습니다.\n\n내일도,\n\n하나의 문이면 충분합니다.",
+    primaryCta: "Morning Gate로 시작하기",
+    primaryHint: "서두를 필요는 없습니다",
+    journeyTitle: "RECOVERY GARDEN",
+    journeyBody: "당신의 리듬은\n조용히 뿌리를 내리고 있습니다",
+    daily: "오늘의 작은 돌아옴도 정원의 일부가 됩니다",
+    weekly: "경쟁이 없어도 회복은 자랍니다",
+    monthly: "다시 돌아올 때마다 자기 리듬을 기억하게 됩니다",
+    whisperTitle: "DAILY WHISPER",
+    whisperBody: "오늘은 무엇이 당신의 숨을 조금 더 편하게 해줄까요",
+    returnTitle: "QUIET HOPE",
+    returnBody: "서두르지 않아도 됩니다\n당신의 리듬은 오늘도 다시 시작될 수 있습니다",
     membershipTitle: "멤버십 관리",
     currentPlan: "현재 플랜",
     subscriptionStatus: "구독 상태",
@@ -83,22 +89,25 @@ const pageCopy = {
   },
   en: {
     badge: "BASIC Rhythm Space",
-    title: "Today,\none gate is enough.",
-    body: "This is not a library.\nIt is a quiet place to return to morning, daytime, and evening rhythm.",
-    identityLine: "Today, return through one door",
-    current: "Today’s entrance",
-    gatesTitle: "Three Rhythm Gates",
-    gatesBody: "Return in the way that fits you today",
+    title: "Welcome back\nBegin today with one gentle rhythm",
+    body: "You do not need to do everything\nOne door that fits today is enough",
+    identityLine: "You can return again today",
+    current: "Today’s beginning",
+    currentBody: "Begin quietly with the morning door",
+    gatesTitle: "TODAY'S RHYTHM",
+    gatesBody: "Morning daytime and evening doors are quietly waiting",
     enter: "Return through this door",
-    journeyTitle: "Rhythm Journey",
-    journeyBody: "Once a day.\nReturn in a small way.",
-    daily: "Today, you returned again",
-    weekly: "You are quietly returning this week",
-    monthly: "You are remembering how to return",
-    journeyDay: "Today’s step",
-    streak: "Returns this week",
-    returnTitle: "Return again",
-    returnBody: "Rhythm is quietly accumulating. Tomorrow, one door is enough.",
+    primaryCta: "Start Morning Gate",
+    primaryHint: "There is no rush",
+    journeyTitle: "RECOVERY GARDEN",
+    journeyBody: "Your rhythm is\nquietly taking root",
+    daily: "Today’s small return becomes part of the garden",
+    weekly: "Recovery grows without competition",
+    monthly: "Each return helps you remember your rhythm",
+    whisperTitle: "DAILY WHISPER",
+    whisperBody: "What might help your breath feel a little easier today",
+    returnTitle: "QUIET HOPE",
+    returnBody: "There is no rush\nYour rhythm can begin again today",
     membershipTitle: "Membership",
     currentPlan: "Current Plan",
     subscriptionStatus: "Subscription Status",
@@ -127,20 +136,6 @@ function mapDefaultRhythm(defaultRhythm?: "morning" | "day" | "night"): BasicGat
   return undefined;
 }
 
-function getWeeklyReturnMessage(language: "jp" | "kr" | "en", streakCount: number) {
-  const safeCount = Math.max(streakCount, 0);
-
-  if (language === "jp") {
-    return `今週、${safeCount}回戻りました`;
-  }
-
-  if (language === "kr") {
-    return `이번 주, ${safeCount}번 돌아왔습니다`;
-  }
-
-  return `You returned ${safeCount} times this week`;
-}
-
 function getIdentityReflection(language: "jp" | "kr" | "en") {
   if (language === "jp") {
     return "少しずつ、リズムで生きる人に近づいています";
@@ -151,6 +146,61 @@ function getIdentityReflection(language: "jp" | "kr" | "en") {
   }
 
   return "You are becoming someone who lives with rhythm";
+}
+
+function getGardenStage(language: "jp" | "kr" | "en", currentDay: number) {
+  if (currentDay >= 100) {
+    return language === "kr"
+      ? { icon: "🌲", label: "Forest", body: "당신의 회복은 이제 하나의 숲이 되어가고 있습니다" }
+      : language === "en"
+        ? { icon: "🌲", label: "Forest", body: "Your recovery is becoming a forest" }
+        : { icon: "🌲", label: "Forest", body: "あなたの回復は ひとつの森になりつつあります" };
+  }
+
+  if (currentDay >= 30) {
+    return language === "kr"
+      ? { icon: "🌳", label: "Tree", body: "당신의 리듬은 작지만 분명한 나무가 되어가고 있습니다" }
+      : language === "en"
+        ? { icon: "🌳", label: "Tree", body: "Your rhythm is becoming a small steady tree" }
+        : { icon: "🌳", label: "Tree", body: "あなたのリズムは 小さく確かな木になりつつあります" };
+  }
+
+  if (currentDay >= 7) {
+    return language === "kr"
+      ? { icon: "🌿", label: "Sprout", body: "당신의 정원은 오늘도 조금 더 자랐습니다" }
+      : language === "en"
+        ? { icon: "🌿", label: "Sprout", body: "Your garden has grown a little more today" }
+        : { icon: "🌿", label: "Sprout", body: "あなたの庭は 今日も少し育ちました" };
+  }
+
+  return language === "kr"
+    ? { icon: "🌱", label: "Seed", body: "작은 씨앗 하나가 이미 심어졌습니다" }
+    : language === "en"
+      ? { icon: "🌱", label: "Seed", body: "A small seed has already been planted" }
+      : { icon: "🌱", label: "Seed", body: "小さな種は もう植えられています" };
+}
+
+function getDailyWhisper(language: "jp" | "kr" | "en", currentDay: number) {
+  const questions =
+    language === "kr"
+      ? [
+          "오늘 몸은 무엇을 필요로 하나요",
+          "오늘 어디에서 조금 더 부드러워질 수 있을까요",
+          "오늘 밤에는 어떤 리듬이 필요할까요"
+        ]
+      : language === "en"
+        ? [
+            "What does your body need today",
+            "Where can you soften today",
+            "What rhythm would support you tonight"
+          ]
+        : [
+            "今日は 体が何を必要としていますか",
+            "今日は どこを少しゆるめられそうですか",
+            "今夜は どんなリズムが必要でしょうか"
+          ];
+
+  return questions[Math.max(currentDay - 1, 0) % questions.length];
 }
 
 function getGateClasses(gate: BasicGateKey, active: boolean) {
@@ -208,7 +258,6 @@ function getDoorAccentClasses(door: BasicDoorKey) {
 
 export function BasicHome({
   currentDay = 1,
-  streakCount = 3,
   defaultRhythm,
   membershipSummary
 }: BasicHomeProps) {
@@ -242,7 +291,8 @@ export function BasicHome({
         day: "numeric"
       }).format(new Date(membershipSummary.nextBillingDate))
     : copy.noBillingDate;
-  const weeklyReturnMessage = getWeeklyReturnMessage(localizedLanguage, streakCount);
+  const gardenStage = getGardenStage(localizedLanguage, currentDay);
+  const dailyWhisper = getDailyWhisper(localizedLanguage, currentDay);
   const identityReflection = getIdentityReflection(localizedLanguage);
 
   async function handleManageMembership() {
@@ -305,13 +355,14 @@ export function BasicHome({
           <div className="rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.07),rgba(255,255,255,0.03))] p-4 backdrop-blur-xl">
             <p className="text-xs uppercase tracking-[0.24em] text-[rgba(127,255,212,0.68)]">{copy.current}</p>
             <p className="mt-3 text-2xl font-semibold text-[rgba(244,250,255,0.95)]">{currentGate.title}</p>
-            <p className="mt-2 text-sm leading-7 text-[rgba(233,242,248,0.7)]">{currentGate.question}</p>
+            <p className="mt-2 text-sm leading-7 text-[rgba(233,242,248,0.7)]">{copy.currentBody}</p>
             <Link
-              href={`#gate-${currentGate.key}`}
+              href={`/meditation?duration=180&type=morning-affirmation`}
               className="mt-5 inline-flex min-h-[48px] items-center justify-center rounded-full border border-[rgba(127,255,212,0.22)] bg-[rgba(127,255,212,0.10)] px-5 py-3 text-sm font-semibold text-[rgba(225,255,247,0.92)] transition hover:bg-[rgba(127,255,212,0.16)] hover:text-white"
             >
-              {copy.enter}
+              {copy.primaryCta}
             </Link>
+            <p className="mt-3 text-xs leading-6 text-[rgba(233,242,248,0.52)]">{copy.primaryHint}</p>
           </div>
         </div>
       </div>
@@ -407,7 +458,16 @@ export function BasicHome({
         <section className="rounded-[30px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.07),transparent_34%),linear-gradient(180deg,rgba(9,34,59,0.76),rgba(7,27,50,0.88)_52%,rgba(5,18,34,0.96))] p-5 shadow-[0_28px_78px_rgba(0,0,0,0.20)]">
           <p className="text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.64)]">{copy.journeyTitle}</p>
           <p className="mt-3 whitespace-pre-line text-sm leading-7 text-[rgba(233,242,248,0.68)]">{copy.journeyBody}</p>
-          <div className="mt-6 space-y-4">
+          <div className="mt-6 rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
+            <div className="flex items-center gap-4">
+              <span className="text-4xl">{gardenStage.icon}</span>
+              <div>
+                <p className="text-sm uppercase tracking-[0.18em] text-[rgba(127,255,212,0.68)]">{gardenStage.label}</p>
+                <p className="mt-2 text-base text-[rgba(244,250,255,0.88)]">{gardenStage.body}</p>
+              </div>
+            </div>
+          </div>
+          <div className="mt-4 space-y-4">
             <div className="rounded-[22px] border border-white/10 bg-white/[0.03] p-4">
               <p className="text-sm leading-7 text-[rgba(242,248,252,0.84)]">{copy.daily}</p>
             </div>
@@ -421,17 +481,10 @@ export function BasicHome({
         </section>
 
         <section className="rounded-[30px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(30,58,95,0.20),transparent_38%),linear-gradient(180deg,rgba(8,29,50,0.82),rgba(6,22,42,0.92)_54%,rgba(4,16,30,0.98))] p-5 shadow-[0_28px_78px_rgba(0,0,0,0.20)]">
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-[22px] border border-white/10 bg-white/[0.03] p-4">
-              <p className="text-xs uppercase tracking-[0.22em] text-[rgba(233,242,248,0.44)]">{copy.journeyDay}</p>
-              <p className="mt-3 text-3xl font-semibold text-[rgba(244,250,255,0.94)]">Day {Math.min(Math.max(currentDay, 1), 30)}</p>
-              <p className="mt-3 text-sm leading-7 text-[rgba(233,242,248,0.62)]">{copy.monthly}</p>
-            </div>
-            <div className="rounded-[22px] border border-white/10 bg-white/[0.03] p-4">
-              <p className="text-xs uppercase tracking-[0.22em] text-[rgba(233,242,248,0.44)]">{copy.streak}</p>
-              <p className="mt-3 text-3xl font-semibold text-[rgba(244,250,255,0.94)]">{Math.max(streakCount, 0)}</p>
-              <p className="mt-3 text-sm leading-7 text-[rgba(233,242,248,0.62)]">{weeklyReturnMessage}</p>
-            </div>
+          <p className="text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.64)]">{copy.whisperTitle}</p>
+          <div className="mt-4 rounded-[24px] border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-sm leading-7 text-[rgba(233,242,248,0.62)]">{copy.whisperBody}</p>
+            <p className="mt-4 text-xl font-semibold text-[rgba(244,250,255,0.94)]">{dailyWhisper}</p>
           </div>
           <div className="mt-5 rounded-[24px] border border-[rgba(127,255,212,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] p-4">
             <p className="text-sm font-semibold text-[rgba(244,250,255,0.94)]">{copy.returnTitle}</p>
