@@ -44,7 +44,7 @@ const MORNING_GATE_AUDIO = {
   }
 } as const;
 const ENERGY_GATE_VIDEO_SRC = "/basic/morning%20gate/energy%20gate8.mp4";
-const VISION_GATE_VIDEO_SRC = "/basic/morning-gate/vision-gate-6.mp4";
+const VISION_GATE_VIDEO_SRC = "/basic/morning-gate/vision-gate-7.mp4";
 
 type BreathPhase = "inhale" | "hold" | "exhale";
 type MeditationType = "default" | "morning" | "day" | "night";
