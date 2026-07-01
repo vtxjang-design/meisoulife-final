@@ -37,14 +37,11 @@ const MORNING_GATE_AUDIO = {
   energy: {
     src: "/audio/morning/energy%20gate.mp3",
     volume: 0.14
-  },
-  vision: {
-    src: "/audio/morning/vision%20gate.mp3",
-    volume: 0.2
   }
 } as const;
 const ENERGY_GATE_VIDEO_SRC = "/basic/morning%20gate/energy%20gate8.mp4";
 const VISION_GATE_VIDEO_SRC = "/basic/morning-gate/vision-gate-7.mp4";
+const VISION_GATE_VIDEO_VOLUME = 0.3;
 
 type BreathPhase = "inhale" | "hold" | "exhale";
 type MeditationType = "default" | "morning" | "day" | "night";
@@ -767,9 +764,7 @@ export default function MeditationPage() {
       ? MORNING_GATE_AUDIO.affirmation
       : isEnergyGate
         ? MORNING_GATE_AUDIO.energy
-        : isVisionGate
-          ? MORNING_GATE_AUDIO.vision
-          : null;
+        : null;
   const morningGateCopy: StructuredMorningCopy = isVisionGate ? visionCopy : isEnergyGate ? energyCopy : affirmationCopy;
   const mappedDoor = meditationDoor === "relax" ? "rest" : meditationDoor === "vitality" ? "recharge" : meditationDoor;
   const basicPracticeCopy =
@@ -950,6 +945,11 @@ export default function MeditationPage() {
   }
 
   async function startStructuredMorningAmbient(options?: { restartFromBeginning?: boolean; fadeInMs?: number }) {
+    if (isVisionGate) {
+      await playVisionGateVideo(options);
+      return { started: true };
+    }
+
     if (!structuredMorningAudio) {
       return { started: false };
     }
@@ -994,11 +994,24 @@ export default function MeditationPage() {
   }
 
   async function pauseStructuredMorningAmbient() {
+    if (isVisionGate) {
+      const video = visionVideoRef.current;
+      if (video) {
+        video.pause();
+      }
+      return;
+    }
+
     console.log("[Morning Gate Audio] structured-pause");
     pauseAmbientNatureAudio(ambientAudioRef);
   }
 
   async function resumeStructuredMorningAmbient() {
+    if (isVisionGate) {
+      await playVisionGateVideo({ restartFromBeginning: false });
+      return { started: true };
+    }
+
     if (!structuredMorningAudio) {
       return { started: false };
     }
@@ -1021,6 +1034,16 @@ export default function MeditationPage() {
   }
 
   async function stopStructuredMorningAmbient() {
+    if (isVisionGate) {
+      const video = visionVideoRef.current;
+      if (video) {
+        video.pause();
+        video.currentTime = 0;
+      }
+      logStructuredMorningAmbientState("structured-stop-after");
+      return;
+    }
+
     logStructuredMorningAmbientState("structured-stop-before");
     await stopAmbientNatureAudio(ambientAudioRef, MORNING_GATE_FADE_OUT_MS);
     stopMorningAmbientSource(true);
@@ -1101,7 +1124,7 @@ export default function MeditationPage() {
           : nextType === "morning" && nextDoor === "energy"
             ? MORNING_GATE_AUDIO.energy.src
             : nextType === "morning" && nextDoor === "vision"
-              ? MORNING_GATE_AUDIO.vision.src
+              ? VISION_GATE_VIDEO_SRC
               : null
     });
     console.log("[Journey Audio] journeyMode:", nextJourneyMode);
@@ -1239,7 +1262,7 @@ export default function MeditationPage() {
     }
   }
 
-  async function playVisionGateVideo() {
+  async function playVisionGateVideo(options?: { restartFromBeginning?: boolean }) {
     if (!isVisionGate || typeof window === "undefined") {
       return;
     }
@@ -1251,9 +1274,13 @@ export default function MeditationPage() {
     }
 
     try {
-      video.muted = true;
+      video.defaultMuted = false;
+      video.muted = false;
+      video.volume = VISION_GATE_VIDEO_VOLUME;
       video.playsInline = true;
-      video.currentTime = 0;
+      if (options?.restartFromBeginning ?? false) {
+        video.currentTime = 0;
+      }
       await video.play();
       setAmbientVideoFailed(false);
     } catch (error) {
@@ -1653,7 +1680,7 @@ export default function MeditationPage() {
     if (isEnergyGate) {
       await playEnergyGateVideo();
     } else if (isVisionGate) {
-      await playVisionGateVideo();
+      await playVisionGateVideo({ restartFromBeginning: true });
     }
 
     const result = isStructuredMorningGate
@@ -1685,7 +1712,7 @@ export default function MeditationPage() {
     if (isEnergyGate) {
       await playEnergyGateVideo();
     } else if (isVisionGate) {
-      await playVisionGateVideo();
+      await playVisionGateVideo({ restartFromBeginning: true });
     }
 
     if (audioContextRef.current?.state === "suspended") {
@@ -1794,7 +1821,6 @@ export default function MeditationPage() {
             ref={visionVideoRef}
             className="absolute inset-0 z-0 h-full w-full object-cover opacity-[0.84] brightness-[1.04] contrast-[1.02] saturate-[1.04]"
             autoPlay
-            muted
             loop
             playsInline
             preload="metadata"
