@@ -28,7 +28,7 @@ const AFFIRMATION_TOTAL_SECONDS = 180;
 const MORNING_GATE_FADE_IN_MS = 2000;
 const MORNING_GATE_FADE_OUT_MS = 3000;
 const MORNING_GATE_NARRATION_VOLUME = 0.9;
-const VISION_GATE_SPEECH_RATE_RATIO = 0.94;
+const VISION_GATE_SPEECH_RATE_RATIO = 0.9;
 const MORNING_GATE_AUDIO = {
   affirmation: {
     src: "/audio/morning/affirmation%20gate.mp3",
@@ -44,6 +44,7 @@ const MORNING_GATE_AUDIO = {
   }
 } as const;
 const ENERGY_GATE_VIDEO_SRC = "/basic/morning%20gate/energy%20gate8.mp4";
+const VISION_GATE_VIDEO_SRC = "/basic/morning%20gate/vision%20gate6.mp4";
 
 type BreathPhase = "inhale" | "hold" | "exhale";
 type MeditationType = "default" | "morning" | "day" | "night";
@@ -376,27 +377,26 @@ const visionGateCopy = {
     completionNote: "リズムを思い出す力が\n育っています",
     completionButton: "朝の扉へ戻る",
     openingFade: "方向を思い出す",
-    integration: "今 また\n思い出しています",
+    integration: "静かに 今日を\n始めます",
     openingLines: [
       { at: 6, key: "open-1", text: "ようこそ" },
-      { at: 12, key: "open-2", text: "少しだけ 呼吸に落ち着きます" },
-      { at: 24, key: "open-3", text: "今日は 遠くを見なくて大丈夫です" },
-      { at: 36, key: "open-4", text: "ただ 方向を思い出します" }
+      { at: 18, key: "open-2", text: "ゆっくり 息を吸います" },
+      { at: 30, key: "open-3", text: "そして 静かに吐きます" },
+      { at: 46, key: "open-4", text: "新しい一日が あなたの前に 静かに開いています" }
     ],
     visionLines: [
-      { at: 52, key: "vision-1", text: "ゆっくり吸います" },
-      { at: 60, key: "vision-2", text: "吐いて" },
-      { at: 70, key: "vision-3", text: "今いる場所を感じます" },
-      { at: 82, key: "vision-4", text: "もう歩いている道を 思い出します" },
-      { at: 96, key: "vision-5", text: "急がなくて大丈夫です" },
-      { at: 108, key: "vision-6", text: "何かを押し進めなくても 大丈夫です" },
-      { at: 122, key: "vision-7", text: "一歩ずつ 進んでいます" },
-      { at: 136, key: "vision-8", text: "あなたの中には 静かな光があります" },
-      { at: 150, key: "vision-9", text: "今日は それを思い出します" }
+      { at: 58, key: "vision-1", text: "今日は また始められる 新しい一日です" },
+      { at: 72, key: "vision-2", text: "昨日は もう過ぎました" },
+      { at: 84, key: "vision-3", text: "明日は まだ来ていません" },
+      { at: 96, key: "vision-4", text: "今 ここにあるのは この瞬間です" },
+      { at: 112, key: "vision-5", text: "朝の光を 心の中に そっと浮かべます" },
+      { at: 126, key: "vision-6", text: "やわらかな光が 顔を照らし 胸まで静かに届きます" },
+      { at: 142, key: "vision-7", text: "息を吸うたびに 新しい力が 入ってきます" },
+      { at: 156, key: "vision-8", text: "息を吐くたびに 心配は 少しずつ遠ざかります" }
     ],
     closingLines: [
-      { at: 166, key: "close-1", text: "ひとつの一歩で 十分です" },
-      { at: 178, key: "close-2", text: "ありがとうございます" }
+      { at: 168, key: "close-1", text: "今日は どんな自分で いたいですか" },
+      { at: 178, key: "close-2", text: "静かに微笑んで 今日を始めます" }
     ]
   },
   kr: {
@@ -414,27 +414,26 @@ const visionGateCopy = {
     completionNote: "리듬을 기억하는 힘이\n자라고 있습니다",
     completionButton: "아침의 문으로 돌아가기",
     openingFade: "방향을 기억하기",
-    integration: "이제 다시\n기억합니다",
+    integration: "조용히 오늘을\n시작합니다",
     openingLines: [
-      { at: 6, key: "open-1", text: "환영합니다" },
-      { at: 12, key: "open-2", text: "잠시 호흡에 머뭅니다" },
-      { at: 24, key: "open-3", text: "오늘은 멀리 보지 않아도 괜찮습니다" },
-      { at: 36, key: "open-4", text: "그저 방향을 떠올립니다" }
+      { at: 6, key: "open-1", text: "좋은 아침입니다" },
+      { at: 18, key: "open-2", text: "천천히 숨을 들이마십니다" },
+      { at: 30, key: "open-3", text: "그리고 조용히 내쉽니다" },
+      { at: 46, key: "open-4", text: "새로운 하루가 당신 앞에 조용히 펼쳐지고 있습니다" }
     ],
     visionLines: [
-      { at: 52, key: "vision-1", text: "들이쉬고" },
-      { at: 60, key: "vision-2", text: "내쉽니다" },
-      { at: 70, key: "vision-3", text: "지금 있는 자리를 느껴봅니다" },
-      { at: 82, key: "vision-4", text: "이미 걷고 있는 길을 떠올립니다" },
-      { at: 96, key: "vision-5", text: "서두르지 않아도 됩니다" },
-      { at: 108, key: "vision-6", text: "무언가를 밀어붙이지 않아도 괜찮습니다" },
-      { at: 122, key: "vision-7", text: "한 걸음씩 가고 있습니다" },
-      { at: 136, key: "vision-8", text: "당신 안에는 조용한 빛이 있습니다" },
-      { at: 150, key: "vision-9", text: "오늘은 그것을 떠올립니다" }
+      { at: 58, key: "vision-1", text: "오늘은 다시 시작할 수 있는 새로운 하루입니다" },
+      { at: 72, key: "vision-2", text: "어제는 지나갔습니다" },
+      { at: 84, key: "vision-3", text: "내일은 아직 오지 않았습니다" },
+      { at: 96, key: "vision-4", text: "우리에게 있는 것은 지금 이 순간입니다" },
+      { at: 112, key: "vision-5", text: "천천히 아침 햇살을 마음속에 떠올려 봅니다" },
+      { at: 126, key: "vision-6", text: "따뜻한 빛이 얼굴을 비추고 가슴까지 조용히 스며듭니다" },
+      { at: 142, key: "vision-7", text: "숨을 들이마실 때마다 새로운 힘이 들어옵니다" },
+      { at: 156, key: "vision-8", text: "숨을 내쉴 때마다 걱정은 조금씩 멀어집니다" }
     ],
     closingLines: [
-      { at: 166, key: "close-1", text: "오늘은 한 걸음이면 충분합니다" },
-      { at: 178, key: "close-2", text: "고맙습니다" }
+      { at: 168, key: "close-1", text: "오늘 어떤 사람이 되고 싶습니까" },
+      { at: 178, key: "close-2", text: "조용히 미소를 지으며 오늘을 시작합니다" }
     ]
   },
   en: {
@@ -452,27 +451,26 @@ const visionGateCopy = {
     completionNote: "Your rhythm is\nremembering itself",
     completionButton: "Return to Morning Gate",
     openingFade: "Remember Your Direction",
-    integration: "Now you\nremember again",
+    integration: "Begin this day\nquietly",
     openingLines: [
       { at: 6, key: "open-1", text: "Welcome" },
-      { at: 12, key: "open-2", text: "Take a moment and settle into your breath" },
-      { at: 24, key: "open-3", text: "Today you do not need to look far ahead" },
-      { at: 36, key: "open-4", text: "Simply remember your direction" }
+      { at: 18, key: "open-2", text: "Slowly breathe in" },
+      { at: 30, key: "open-3", text: "And gently breathe out" },
+      { at: 46, key: "open-4", text: "A new day is quietly opening in front of you" }
     ],
     visionLines: [
-      { at: 52, key: "vision-1", text: "Breathe in" },
-      { at: 60, key: "vision-2", text: "Breathe out" },
-      { at: 70, key: "vision-3", text: "Feel where you are" },
-      { at: 82, key: "vision-4", text: "Notice the path you are already walking" },
-      { at: 96, key: "vision-5", text: "There is no need to hurry" },
-      { at: 108, key: "vision-6", text: "There is no need to force anything" },
-      { at: 122, key: "vision-7", text: "You are already moving one step at a time" },
-      { at: 136, key: "vision-8", text: "Within you there is already a quiet light" },
-      { at: 150, key: "vision-9", text: "Today simply remember it" }
+      { at: 58, key: "vision-1", text: "Today is a new day and you can begin again" },
+      { at: 72, key: "vision-2", text: "Yesterday has already passed" },
+      { at: 84, key: "vision-3", text: "Tomorrow has not yet arrived" },
+      { at: 96, key: "vision-4", text: "What we have is this moment" },
+      { at: 112, key: "vision-5", text: "Let the morning light rise softly in your mind" },
+      { at: 126, key: "vision-6", text: "A gentle warmth touches your face and settles into your chest" },
+      { at: 142, key: "vision-7", text: "Each inhale brings a little new strength" },
+      { at: 156, key: "vision-8", text: "Each exhale lets worry move a little farther away" }
     ],
     closingLines: [
-      { at: 166, key: "close-1", text: "One step is enough for today" },
-      { at: 178, key: "close-2", text: "Thank you" }
+      { at: 168, key: "close-1", text: "Who do you want to be today" },
+      { at: 178, key: "close-2", text: "With a quiet smile begin your day" }
     ]
   }
 } as const;
@@ -1746,6 +1744,20 @@ export default function MeditationPage() {
             onError={() => setAmbientVideoFailed(true)}
           >
             <source src="/basic/morning gate/energy gate8.mp4" type="video/mp4" />
+          </video>
+        ) : !ambientVideoFailed && isVisionGate ? (
+          <video
+            key="vision-gate-video"
+            className="absolute inset-0 z-0 h-full w-full object-cover opacity-[0.62]"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            onLoadedData={() => console.log("Vision Gate video loaded")}
+            onError={() => setAmbientVideoFailed(true)}
+          >
+            <source src={VISION_GATE_VIDEO_SRC} type="video/mp4" />
           </video>
         ) : (
           <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_28%),radial-gradient(circle_at_bottom,rgba(79,122,101,0.14),transparent_34%),linear-gradient(180deg,rgba(4,10,19,0.76)_0%,rgba(8,18,32,0.88)_100%)]" />
