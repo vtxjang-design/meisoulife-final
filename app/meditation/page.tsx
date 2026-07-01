@@ -379,10 +379,10 @@ const visionGateCopy = {
       { at: 6, key: "open-1", text: "ようこそ" },
       { at: 18, key: "open-2", text: "ゆっくり 息を吸います" },
       { at: 30, key: "open-3", text: "そして 静かに吐きます" },
-      { at: 46, key: "open-4", text: "新しい一日が あなたの前に 静かに開いています" }
+      { at: 46, key: "open-4", text: "新しい いちにちが あなたの前に 静かに開いています" }
     ],
     visionLines: [
-      { at: 58, key: "vision-1", text: "今日は また始められる 新しい一日です" },
+      { at: 58, key: "vision-1", text: "今日は また始められる 新しい いちにちです" },
       { at: 72, key: "vision-2", text: "昨日は もう過ぎました" },
       { at: 84, key: "vision-3", text: "明日は まだ来ていません" },
       { at: 96, key: "vision-4", text: "今 ここにあるのは この瞬間です" },
