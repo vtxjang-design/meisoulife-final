@@ -40,7 +40,7 @@ const MORNING_GATE_AUDIO = {
   },
   vision: {
     src: "/audio/morning/vision%20gate.mp3",
-    volume: 0.14
+    volume: 0.2
   }
 } as const;
 const ENERGY_GATE_VIDEO_SRC = "/basic/morning%20gate/energy%20gate8.mp4";
@@ -735,6 +735,7 @@ export default function MeditationPage() {
   const audioContextRef = useRef<AudioContext | null>(null);
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
   const energyVideoRef = useRef<HTMLVideoElement | null>(null);
+  const visionVideoRef = useRef<HTMLVideoElement | null>(null);
   const morningAmbientMixRef = useRef<MorningAmbientMixState>({
     context: null,
     gainNode: null,
@@ -1163,10 +1164,16 @@ export default function MeditationPage() {
         console.warn("[Journey Audio] exact pending state kept for manual retry");
       }
     } else if (isStructuredMorningGate) {
-      setNeedsUserStart(true);
-      setIsPaused(true);
       setShowAmbientRetry(true);
       setPendingStructuredAmbientStart(false);
+      if (manual) {
+        setNeedsUserStart(false);
+        setIsPaused(false);
+        setRequiresExplicitAudioStart(false);
+      } else {
+        setNeedsUserStart(true);
+        setIsPaused(true);
+      }
       if (result.error) {
         console.error("[Morning Gate Audio] autoplay failed:", result.error);
       }
@@ -1228,6 +1235,29 @@ export default function MeditationPage() {
       setAmbientVideoFailed(false);
     } catch (error) {
       console.warn("[energy-gate] video playback failed", error);
+      setAmbientVideoFailed(true);
+    }
+  }
+
+  async function playVisionGateVideo() {
+    if (!isVisionGate || typeof window === "undefined") {
+      return;
+    }
+
+    const video = visionVideoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    try {
+      video.muted = true;
+      video.playsInline = true;
+      video.currentTime = 0;
+      await video.play();
+      setAmbientVideoFailed(false);
+    } catch (error) {
+      console.warn("[vision-gate] video playback failed", error);
       setAmbientVideoFailed(true);
     }
   }
@@ -1330,12 +1360,19 @@ export default function MeditationPage() {
   }, [hasUserGesture, isComplete, isPaused, isStructuredMorningGate, soundEnabled]);
 
   useEffect(() => {
-    if (!isEnergyGate || !hasUserGesture || isPaused || isComplete || needsUserStart) {
+    if ((!isEnergyGate && !isVisionGate) || !hasUserGesture || isPaused || isComplete || needsUserStart) {
       return;
     }
 
-    void playEnergyGateVideo();
-  }, [hasUserGesture, isComplete, isEnergyGate, isPaused, needsUserStart]);
+    if (isEnergyGate) {
+      void playEnergyGateVideo();
+      return;
+    }
+
+    if (isVisionGate) {
+      void playVisionGateVideo();
+    }
+  }, [hasUserGesture, isComplete, isEnergyGate, isPaused, isVisionGate, needsUserStart]);
 
   useEffect(() => {
     if (isComplete || !soundEnabled) {
@@ -1609,10 +1646,14 @@ export default function MeditationPage() {
   async function handleAmbientRetry() {
     setHasUserGesture(true);
     setRequiresExplicitAudioStart(false);
+    setNeedsUserStart(false);
+    setIsPaused(false);
     logStructuredMorningAmbientState("ambient-retry-tap");
 
     if (isEnergyGate) {
       await playEnergyGateVideo();
+    } else if (isVisionGate) {
+      await playVisionGateVideo();
     }
 
     const result = isStructuredMorningGate
@@ -1636,11 +1677,15 @@ export default function MeditationPage() {
   async function handleProgramAudioStart() {
     setHasUserGesture(true);
     setRequiresExplicitAudioStart(false);
+    setNeedsUserStart(false);
+    setIsPaused(false);
     unlockStructuredMorningSpeech();
     logStructuredMorningAmbientState("program-start-tap");
 
     if (isEnergyGate) {
       await playEnergyGateVideo();
+    } else if (isVisionGate) {
+      await playVisionGateVideo();
     }
 
     if (audioContextRef.current?.state === "suspended") {
@@ -1691,8 +1736,6 @@ export default function MeditationPage() {
       setIsPaused(false);
       return;
     }
-
-    setNeedsUserStart(true);
   }
 
   function handlePauseToggle() {
@@ -1748,7 +1791,8 @@ export default function MeditationPage() {
         ) : !ambientVideoFailed && isVisionGate ? (
           <video
             key="vision-gate-video"
-            className="absolute inset-0 z-0 h-full w-full object-cover opacity-[0.62]"
+            ref={visionVideoRef}
+            className="absolute inset-0 z-0 h-full w-full object-cover opacity-[0.84] brightness-[1.04] contrast-[1.02] saturate-[1.04]"
             autoPlay
             muted
             loop
@@ -1768,6 +1812,8 @@ export default function MeditationPage() {
               className={`absolute inset-0 z-0 ${
                 isEnergyGate
                   ? "bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_22%),radial-gradient(circle_at_bottom,rgba(127,255,212,0.10),transparent_34%),linear-gradient(180deg,rgba(10,26,38,0.52)_0%,rgba(8,20,31,0.64)_48%,rgba(7,16,25,0.82)_100%)]"
+                  : isVisionGate
+                    ? "bg-[radial-gradient(circle_at_top,rgba(244,220,160,0.10),transparent_26%),radial-gradient(circle_at_bottom,rgba(125,162,108,0.08),transparent_34%),linear-gradient(180deg,rgba(20,28,44,0.44)_0%,rgba(15,24,39,0.52)_48%,rgba(10,19,31,0.68)_100%)]"
                   : "bg-[radial-gradient(circle_at_top,rgba(244,220,160,0.16),transparent_24%),radial-gradient(circle_at_bottom,rgba(125,162,108,0.12),transparent_34%),linear-gradient(180deg,rgba(34,42,72,0.92)_0%,rgba(18,29,48,0.92)_48%,rgba(12,22,37,0.96)_100%)]"
               }`}
             />
