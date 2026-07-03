@@ -1653,7 +1653,7 @@ export default function MeditationPage() {
     }
 
     if (isAffirmationGate && (affirmationStage === "breathing" || affirmationStage === "bodyAwareness")) {
-      setAffirmationMessage(phase === "inhale" ? morningGateCopy.inhale : morningGateCopy.exhale);
+      setAffirmationMessage(null);
       return;
     }
 
