@@ -123,7 +123,7 @@ const affirmationGateCopy = {
     completionNote: "あなた本来のリズムが\n戻り始めています",
     completionButton: "朝の扉へ戻る",
     openingFade: "目覚めの扉",
-    integration: "今日という いちにちを\n静かに始めます",
+    integration: "",
     openingLines: [
       { at: 6, key: "open-1", text: "おはようございます" },
       { at: 18, key: "open-2", text: "今日も\n新しい朝が訪れました" },
@@ -142,8 +142,9 @@ const affirmationGateCopy = {
       { at: 162, key: "affirm-6", text: "息を吐くたびに\n心も身体も\nやさしくゆるんでいきます" }
     ],
     closingLines: [
-      { at: 172, key: "close-1", text: "あなたの中には\nいつも変わらない静かな場所があります" },
-      { at: 178, key: "close-2", text: "その静けさを 感じてみましょう\n深く息を吸って\nゆっくり吐いて\n今日という いちにちは 今この瞬間から始まります\nあなた本来のリズムで\nあなた本来の笑顔で\nあなた本来の命で\n今日という いちにちを\n心を込めて歩んでいきましょう\nいってらっしゃい" }
+      { at: 164, key: "close-1", text: "今日という いちにちは\n今ここから始まります" },
+      { at: 174, key: "close-2", text: "あなた本来のリズムで" },
+      { at: 178, key: "close-3", text: "いってらっしゃい" }
     ]
   },
   kr: {
