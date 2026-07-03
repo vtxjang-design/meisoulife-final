@@ -30,17 +30,15 @@ const MORNING_GATE_FADE_OUT_MS = 3000;
 const MORNING_GATE_NARRATION_VOLUME = 0.9;
 const VISION_GATE_SPEECH_RATE_RATIO = 0.9;
 const MORNING_GATE_AUDIO = {
-  affirmation: {
-    src: "/audio/morning/affirmation%20gate.mp3",
-    volume: 0.14
-  },
   energy: {
     src: "/audio/morning/energy%20gate.mp3",
     volume: 0.14
   }
 } as const;
+const AWAKENING_GATE_VIDEO_SRC = "/video/morning-gate/awakening-gate-1.mp4";
 const ENERGY_GATE_VIDEO_SRC = "/basic/morning%20gate/energy%20gate8.mp4";
 const VISION_GATE_VIDEO_SRC = "/basic/morning-gate/vision-gate-7.mp4";
+const AWAKENING_GATE_VIDEO_VOLUME = 0.13;
 const VISION_GATE_VIDEO_VOLUME = 0.3;
 
 type BreathPhase = "inhale" | "hold" | "exhale";
@@ -111,43 +109,41 @@ type MorningAmbientMixState = {
 
 const affirmationGateCopy = {
   jp: {
-    title: "今日の自分を選ぶ",
-    subtitle: "朝は\n今日の自分を選ぶ時間です",
+    title: "目覚めの扉",
+    subtitle: "美しい朝の始まりを\n静かに迎える時間です",
     duration: "3:00",
-    audioLabel: "朝のリチュアル",
+    audioLabel: "Awakening Gate",
     startAudio: "音声を開始",
     pause: "一度止める",
     resume: "続ける",
     inhale: "吸う",
     exhale: "吐く",
     completionTitle: "今日、また戻ることができました",
-    completionMessage: "今日の自分を\n静かに選びました",
-    completionNote: "戻る力が\n少しずつ育っています",
+    completionMessage: "朝の始まりを\n静かに迎えました",
+    completionNote: "あなた本来のリズムが\n戻り始めています",
     completionButton: "朝の扉へ戻る",
-    openingFade: "今日の自分を選ぶ",
-    integration: "今日は この自分で\nいきます",
+    openingFade: "目覚めの扉",
+    integration: "今日という いちにちを\n静かに始めます",
     openingLines: [
-      { at: 15, key: "open-1", text: "ようこそ" },
-      { at: 22, key: "open-2", text: "少しだけ 立ち止まります" },
-      { at: 35, key: "open-3", text: "吸って 新しい朝を迎えます" },
-      { at: 47, key: "open-4", text: "吐いて 昨日を手放します" },
-      { at: 61, key: "open-5", text: "吸って 今日へ戻ります" },
-      { at: 73, key: "open-6", text: "吐いて 余分な力を手放します" },
-      { at: 87, key: "open-7", text: "吸って" },
-      { at: 93, key: "open-8", text: "吐いて" }
+      { at: 6, key: "open-1", text: "おはようございます" },
+      { at: 18, key: "open-2", text: "今日も\n新しい朝が訪れました" },
+      { at: 32, key: "open-3", text: "少しだけ\n立ち止まってみましょう" },
+      { at: 46, key: "open-4", text: "ゆっくり\n息を吸います" },
+      { at: 58, key: "open-5", text: "そして\n静かに吐きます" },
+      { at: 70, key: "open-6", text: "もう一度\nゆっくり息を吸います" },
+      { at: 82, key: "open-7", text: "ゆっくり吐きます" }
     ],
     affirmationLines: [
-      { at: 104, key: "affirm-1", text: "今朝のあなたは どんな自分でいたいですか" },
-      { at: 118, key: "affirm-2", text: "穏やかな自分" },
-      { at: 126, key: "affirm-3", text: "自信のある自分" },
-      { at: 134, key: "affirm-4", text: "軽やかな自分" },
-      { at: 142, key: "affirm-5", text: "感謝できる自分" },
-      { at: 150, key: "affirm-6", text: "正解はありません" },
-      { at: 158, key: "affirm-7", text: "今 心が選ぶものを感じます" }
+      { at: 96, key: "affirm-1", text: "呼吸とともに\n身体が少しずつ目覚めていきます" },
+      { at: 110, key: "affirm-2", text: "何かを変えようとしなくても大丈夫です" },
+      { at: 122, key: "affirm-3", text: "何かを頑張ろうとしなくても大丈夫です" },
+      { at: 136, key: "affirm-4", text: "今はただ\nここにいる自分を感じてみましょう" },
+      { at: 150, key: "affirm-5", text: "息を吸うたびに\n新しい生命のエネルギーが身体に満ちていきます" },
+      { at: 162, key: "affirm-6", text: "息を吐くたびに\n心も身体も\nやさしくゆるんでいきます" }
     ],
     closingLines: [
-      { at: 172, key: "close-1", text: "今日は この自分を選びます" },
-      { at: 178, key: "close-2", text: "それでは 行ってらっしゃい" }
+      { at: 172, key: "close-1", text: "あなたの中には\nいつも変わらない静かな場所があります" },
+      { at: 178, key: "close-2", text: "その静けさを 感じてみましょう\n深く息を吸って\nゆっくり吐いて\n今日という いちにちは 今この瞬間から始まります\nあなた本来のリズムで\nあなた本来の笑顔で\nあなた本来の命で\n今日という いちにちを\n心を込めて歩んでいきましょう\nいってらっしゃい" }
     ]
   },
   kr: {
@@ -731,6 +727,7 @@ export default function MeditationPage() {
   const [requestedRouteType, setRequestedRouteType] = useState<string | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
+  const affirmationVideoRef = useRef<HTMLVideoElement | null>(null);
   const energyVideoRef = useRef<HTMLVideoElement | null>(null);
   const visionVideoRef = useRef<HTMLVideoElement | null>(null);
   const morningAmbientMixRef = useRef<MorningAmbientMixState>({
@@ -760,11 +757,9 @@ export default function MeditationPage() {
   const isVisionGate = meditationType === "morning" && meditationDoor === "vision";
   const isStructuredMorningGate = isAffirmationGate || isEnergyGate || isVisionGate;
   const structuredMorningAudio =
-    isAffirmationGate
-      ? MORNING_GATE_AUDIO.affirmation
-      : isEnergyGate
-        ? MORNING_GATE_AUDIO.energy
-        : null;
+    isEnergyGate
+      ? MORNING_GATE_AUDIO.energy
+      : null;
   const morningGateCopy: StructuredMorningCopy = isVisionGate ? visionCopy : isEnergyGate ? energyCopy : affirmationCopy;
   const mappedDoor = meditationDoor === "relax" ? "rest" : meditationDoor === "vitality" ? "recharge" : meditationDoor;
   const basicPracticeCopy =
@@ -945,6 +940,11 @@ export default function MeditationPage() {
   }
 
   async function startStructuredMorningAmbient(options?: { restartFromBeginning?: boolean; fadeInMs?: number }) {
+    if (isAffirmationGate) {
+      await playAffirmationGateVideo(options);
+      return { started: true };
+    }
+
     if (isVisionGate) {
       await playVisionGateVideo(options);
       return { started: true };
@@ -994,6 +994,14 @@ export default function MeditationPage() {
   }
 
   async function pauseStructuredMorningAmbient() {
+    if (isAffirmationGate) {
+      const video = affirmationVideoRef.current;
+      if (video) {
+        video.pause();
+      }
+      return;
+    }
+
     if (isVisionGate) {
       const video = visionVideoRef.current;
       if (video) {
@@ -1007,6 +1015,11 @@ export default function MeditationPage() {
   }
 
   async function resumeStructuredMorningAmbient() {
+    if (isAffirmationGate) {
+      await playAffirmationGateVideo({ restartFromBeginning: false });
+      return { started: true };
+    }
+
     if (isVisionGate) {
       await playVisionGateVideo({ restartFromBeginning: false });
       return { started: true };
@@ -1034,6 +1047,16 @@ export default function MeditationPage() {
   }
 
   async function stopStructuredMorningAmbient() {
+    if (isAffirmationGate) {
+      const video = affirmationVideoRef.current;
+      if (video) {
+        video.pause();
+        video.currentTime = 0;
+      }
+      logStructuredMorningAmbientState("structured-stop-after");
+      return;
+    }
+
     if (isVisionGate) {
       const video = visionVideoRef.current;
       if (video) {
@@ -1120,7 +1143,7 @@ export default function MeditationPage() {
       pendingStructuredAmbientAudio,
       structuredAudioSource:
         nextType === "morning" && nextDoor === "affirmation"
-          ? MORNING_GATE_AUDIO.affirmation.src
+          ? AWAKENING_GATE_VIDEO_SRC
           : nextType === "morning" && nextDoor === "energy"
             ? MORNING_GATE_AUDIO.energy.src
             : nextType === "morning" && nextDoor === "vision"
@@ -1237,6 +1260,33 @@ export default function MeditationPage() {
       ambientFadeInOptions
     );
     await handleAmbientStartResult(result, true);
+  }
+
+  async function playAffirmationGateVideo(options?: { restartFromBeginning?: boolean }) {
+    if (!isAffirmationGate || typeof window === "undefined") {
+      return;
+    }
+
+    const video = affirmationVideoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    try {
+      video.defaultMuted = false;
+      video.muted = false;
+      video.volume = AWAKENING_GATE_VIDEO_VOLUME;
+      video.playsInline = true;
+      if (options?.restartFromBeginning ?? false) {
+        video.currentTime = 0;
+      }
+      await video.play();
+      setAmbientVideoFailed(false);
+    } catch (error) {
+      console.warn("[awakening-gate] video playback failed", error);
+      setAmbientVideoFailed(true);
+    }
   }
 
   async function playEnergyGateVideo() {
@@ -1387,7 +1437,12 @@ export default function MeditationPage() {
   }, [hasUserGesture, isComplete, isPaused, isStructuredMorningGate, soundEnabled]);
 
   useEffect(() => {
-    if ((!isEnergyGate && !isVisionGate) || !hasUserGesture || isPaused || isComplete || needsUserStart) {
+    if ((!isAffirmationGate && !isEnergyGate && !isVisionGate) || !hasUserGesture || isPaused || isComplete || needsUserStart) {
+      return;
+    }
+
+    if (isAffirmationGate) {
+      void playAffirmationGateVideo();
       return;
     }
 
@@ -1433,7 +1488,7 @@ export default function MeditationPage() {
   }, [ambientAudioSource, ambientAudioVolume, hasUserGesture, isComplete, isStructuredMorningGate, journeyMode, soundEnabled]);
 
   useEffect(() => {
-    if (!pendingStructuredAmbientStart || !isAffirmationGate || !ambientAudioSource || isComplete || requiresExplicitAudioStart) {
+    if (!pendingStructuredAmbientStart || !isAffirmationGate || isComplete || requiresExplicitAudioStart) {
       return;
     }
 
@@ -1443,7 +1498,7 @@ export default function MeditationPage() {
     }).then((result) => {
       void handleAmbientStartResult(result);
     });
-  }, [ambientAudioSource, isAffirmationGate, isComplete, pendingStructuredAmbientStart, requiresExplicitAudioStart]);
+  }, [isAffirmationGate, isComplete, pendingStructuredAmbientStart, requiresExplicitAudioStart]);
 
   useEffect(() => {
     if (!journeyMode || !ambientAudioSource || !soundEnabled || isComplete || requiresExplicitAudioStart) {
@@ -1641,7 +1696,7 @@ export default function MeditationPage() {
     if (next) {
       const result = isStructuredMorningGate
         ? await startStructuredMorningAmbient({
-            restartFromBeginning: isVisionGate,
+            restartFromBeginning: isAffirmationGate || isVisionGate,
             fadeInMs: MORNING_GATE_FADE_IN_MS
           })
         : await startAmbientNatureAudio(
@@ -1677,7 +1732,9 @@ export default function MeditationPage() {
     setIsPaused(false);
     logStructuredMorningAmbientState("ambient-retry-tap");
 
-    if (isEnergyGate) {
+    if (isAffirmationGate) {
+      await playAffirmationGateVideo({ restartFromBeginning: true });
+    } else if (isEnergyGate) {
       await playEnergyGateVideo();
     } else if (isVisionGate) {
       await playVisionGateVideo({ restartFromBeginning: true });
@@ -1685,7 +1742,7 @@ export default function MeditationPage() {
 
     const result = isStructuredMorningGate
       ? await startStructuredMorningAmbient({
-          restartFromBeginning: isVisionGate,
+          restartFromBeginning: isAffirmationGate || isVisionGate,
           fadeInMs: MORNING_GATE_FADE_IN_MS
         })
       : await startAmbientNatureAudio(
@@ -1709,7 +1766,9 @@ export default function MeditationPage() {
     unlockStructuredMorningSpeech();
     logStructuredMorningAmbientState("program-start-tap");
 
-    if (isEnergyGate) {
+    if (isAffirmationGate) {
+      await playAffirmationGateVideo({ restartFromBeginning: true });
+    } else if (isEnergyGate) {
       await playEnergyGateVideo();
     } else if (isVisionGate) {
       await playVisionGateVideo({ restartFromBeginning: true });
@@ -1743,7 +1802,7 @@ export default function MeditationPage() {
 
     const result = isStructuredMorningGate
       ? await startStructuredMorningAmbient({
-          restartFromBeginning: isVisionGate,
+          restartFromBeginning: isAffirmationGate || isVisionGate,
           fadeInMs: MORNING_GATE_FADE_IN_MS
         })
       : await startAmbientNatureAudio(
@@ -1800,6 +1859,20 @@ export default function MeditationPage() {
           >
             <source src="/videos/one-minute-nature-loop.mp4" type="video/mp4" />
           </video>
+        ) : !ambientVideoFailed && isAffirmationGate ? (
+          <video
+            key="awakening-gate-video"
+            ref={affirmationVideoRef}
+            className="absolute inset-0 z-0 h-full w-full object-cover opacity-[0.9] brightness-[1.03] contrast-[1.02] saturate-[1.04]"
+            autoPlay
+            loop
+            playsInline
+            preload="metadata"
+            onLoadedData={() => console.log("Awakening Gate video loaded")}
+            onError={() => setAmbientVideoFailed(true)}
+          >
+            <source src={AWAKENING_GATE_VIDEO_SRC} type="video/mp4" />
+          </video>
         ) : !ambientVideoFailed && isEnergyGate ? (
           <video
             key="energy-gate-video"
@@ -1840,7 +1913,7 @@ export default function MeditationPage() {
                   ? "bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_22%),radial-gradient(circle_at_bottom,rgba(127,255,212,0.10),transparent_34%),linear-gradient(180deg,rgba(10,26,38,0.52)_0%,rgba(8,20,31,0.64)_48%,rgba(7,16,25,0.82)_100%)]"
                   : isVisionGate
                     ? "bg-[radial-gradient(circle_at_top,rgba(244,220,160,0.10),transparent_26%),radial-gradient(circle_at_bottom,rgba(125,162,108,0.08),transparent_34%),linear-gradient(180deg,rgba(20,28,44,0.44)_0%,rgba(15,24,39,0.52)_48%,rgba(10,19,31,0.68)_100%)]"
-                  : "bg-[radial-gradient(circle_at_top,rgba(244,220,160,0.16),transparent_24%),radial-gradient(circle_at_bottom,rgba(125,162,108,0.12),transparent_34%),linear-gradient(180deg,rgba(34,42,72,0.92)_0%,rgba(18,29,48,0.92)_48%,rgba(12,22,37,0.96)_100%)]"
+                  : "bg-[radial-gradient(circle_at_top,rgba(244,220,160,0.10),transparent_24%),radial-gradient(circle_at_bottom,rgba(125,162,108,0.10),transparent_34%),linear-gradient(180deg,rgba(24,38,56,0.28)_0%,rgba(16,28,42,0.36)_48%,rgba(10,18,30,0.48)_100%)]"
               }`}
             />
             <div className="absolute left-[8%] top-[10%] z-0 h-48 w-48 rounded-full bg-gold/10 blur-[80px]" />
