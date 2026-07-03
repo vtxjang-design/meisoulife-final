@@ -126,24 +126,21 @@ const affirmationGateCopy = {
     integration: "",
     openingLines: [
       { at: 6, key: "open-1", text: "おはようございます" },
-      { at: 18, key: "open-2", text: "今日も\n新しい朝が訪れました" },
-      { at: 32, key: "open-3", text: "少しだけ\n立ち止まってみましょう" },
-      { at: 46, key: "open-4", text: "ゆっくり\n息を吸います" },
-      { at: 58, key: "open-5", text: "そして\n静かに吐きます" },
-      { at: 70, key: "open-6", text: "もう一度\nゆっくり息を吸います" },
-      { at: 82, key: "open-7", text: "ゆっくり吐きます" }
+      { at: 20, key: "open-2", text: "今日も\n新しい朝が訪れました" },
+      { at: 36, key: "open-3", text: "少しだけ\n立ち止まってみましょう" },
+      { at: 52, key: "open-4", text: "ゆっくり\n息を吸います" },
+      { at: 66, key: "open-5", text: "そして\n静かに吐きます" },
+      { at: 82, key: "open-6", text: "もう一度\nゆっくり息を吸います" },
+      { at: 96, key: "open-7", text: "ゆっくり吐きます" }
     ],
     affirmationLines: [
-      { at: 96, key: "affirm-1", text: "呼吸とともに\n身体が少しずつ目覚めていきます" },
-      { at: 110, key: "affirm-2", text: "何かを変えようとしなくても大丈夫です" },
-      { at: 122, key: "affirm-3", text: "何かを頑張ろうとしなくても大丈夫です" },
-      { at: 136, key: "affirm-4", text: "今はただ\nここにいる自分を感じてみましょう" },
-      { at: 150, key: "affirm-5", text: "息を吸うたびに\n新しい生命のエネルギーが身体に満ちていきます" },
-      { at: 162, key: "affirm-6", text: "息を吐くたびに\n心も身体も\nやさしくゆるんでいきます" }
+      { at: 112, key: "affirm-1", text: "呼吸とともに\n身体が少しずつ目覚めていきます" },
+      { at: 128, key: "affirm-2", text: "今は\n何も変えなくても大丈夫です" },
+      { at: 144, key: "affirm-3", text: "ただ\nここにいる自分を感じてみましょう" }
     ],
     closingLines: [
-      { at: 164, key: "close-1", text: "今日という いちにちは\n今ここから始まります" },
-      { at: 174, key: "close-2", text: "あなた本来のリズムで" },
+      { at: 158, key: "close-1", text: "今日という いちにちは\n今ここから始まります" },
+      { at: 170, key: "close-2", text: "あなた本来のリズムで" },
       { at: 178, key: "close-3", text: "いってらっしゃい" }
     ]
   },
@@ -151,80 +148,72 @@ const affirmationGateCopy = {
     title: "Awakening Gate",
     subtitle: "깨어남의 문",
     duration: "3:00",
-    audioLabel: "아침 리추얼",
+    audioLabel: "Awakening Gate",
     startAudio: "음성 시작하기",
     pause: "잠시 멈추기",
     resume: "이어가기",
     inhale: "들이쉬기",
     exhale: "내쉬기",
     completionTitle: "오늘, 다시 돌아올 수 있었습니다",
-    completionMessage: "오늘의 나를\n조용히 선택했습니다",
-    completionNote: "리듬을 기억하는 힘이\n자라고 있습니다",
+    completionMessage: "아침을\n조용히 맞이했습니다",
+    completionNote: "당신 본래의 리듬이\n돌아오기 시작합니다",
     completionButton: "아침의 문으로 돌아가기",
     openingFade: "Awakening Gate",
-    integration: "오늘은 이 나로\n살아갑니다",
+    integration: "",
     openingLines: [
-      { at: 15, key: "open-1", text: "환영합니다" },
-      { at: 22, key: "open-2", text: "잠시 멈춰 섭니다" },
-      { at: 35, key: "open-3", text: "들이쉬며 아침을 맞이합니다" },
-      { at: 47, key: "open-4", text: "내쉬며 어제를 내려놓습니다" },
-      { at: 61, key: "open-5", text: "들이쉬며 오늘로 돌아옵니다" },
-      { at: 73, key: "open-6", text: "내쉬며 남은 힘을 풉니다" },
-      { at: 87, key: "open-7", text: "들이쉬고" },
-      { at: 93, key: "open-8", text: "내쉽니다" }
+      { at: 6, key: "open-1", text: "좋은 아침입니다" },
+      { at: 20, key: "open-2", text: "오늘도\n새로운 아침이 찾아왔습니다" },
+      { at: 36, key: "open-3", text: "잠시만\n멈춰 서 봅니다" },
+      { at: 52, key: "open-4", text: "천천히\n숨을 들이쉽니다" },
+      { at: 66, key: "open-5", text: "그리고\n조용히 내쉽니다" },
+      { at: 82, key: "open-6", text: "한 번 더\n천천히 숨을 들이쉽니다" },
+      { at: 96, key: "open-7", text: "길게 내쉽니다" }
     ],
     affirmationLines: [
-      { at: 104, key: "affirm-1", text: "오늘 아침의 나는 어떤 모습으로 있고 싶은가요" },
-      { at: 118, key: "affirm-2", text: "차분한 나" },
-      { at: 126, key: "affirm-3", text: "분명한 나" },
-      { at: 134, key: "affirm-4", text: "가벼운 나" },
-      { at: 142, key: "affirm-5", text: "감사하는 나" },
-      { at: 150, key: "affirm-6", text: "정답은 없습니다" },
-      { at: 158, key: "affirm-7", text: "지금 마음이 고르는 쪽을 느껴봅니다" }
+      { at: 112, key: "affirm-1", text: "숨결을 따라\n몸이 조금씩 깨어납니다" },
+      { at: 128, key: "affirm-2", text: "지금은\n아무것도 바꾸지 않아도 괜찮습니다" },
+      { at: 144, key: "affirm-3", text: "그저\n여기 있는 나를 가만히 느껴봅니다" }
     ],
     closingLines: [
-      { at: 172, key: "close-1", text: "오늘은 이 나를 선택합니다" },
-      { at: 178, key: "close-2", text: "이제 하루를 시작합니다" }
+      { at: 158, key: "close-1", text: "오늘이라는 하루는\n지금 여기에서 시작됩니다" },
+      { at: 170, key: "close-2", text: "당신 본래의 리듬으로" },
+      { at: 178, key: "close-3", text: "다녀오세요" }
     ]
   },
   en: {
     title: "Awakening Gate",
     subtitle: "A quiet gate\ninto the beginning of your day",
     duration: "3:00",
-    audioLabel: "Morning Ritual",
+    audioLabel: "Awakening Gate",
     startAudio: "Start Audio",
     pause: "Pause",
     resume: "Continue",
     inhale: "Inhale",
     exhale: "Exhale",
     completionTitle: "Today, you returned again",
-    completionMessage: "You quietly chose\nwho you are today",
-    completionNote: "Your ability to return\nis growing",
+    completionMessage: "You quietly welcomed\nthe morning",
+    completionNote: "Your natural rhythm\nis beginning to return",
     completionButton: "Return to Morning Gate",
     openingFade: "Awakening Gate",
-    integration: "Today I live\nas this self",
+    integration: "",
     openingLines: [
-      { at: 15, key: "open-1", text: "Welcome" },
-      { at: 22, key: "open-2", text: "Pause here" },
-      { at: 35, key: "open-3", text: "Inhale welcome the new morning" },
-      { at: 47, key: "open-4", text: "Exhale set yesterday down" },
-      { at: 61, key: "open-5", text: "Inhale return to today" },
-      { at: 73, key: "open-6", text: "Exhale soften the extra effort" },
-      { at: 87, key: "open-7", text: "Inhale" },
-      { at: 93, key: "open-8", text: "Exhale" }
+      { at: 6, key: "open-1", text: "Good morning" },
+      { at: 20, key: "open-2", text: "A new morning\nhas found you again" },
+      { at: 36, key: "open-3", text: "Pause here\nfor a moment" },
+      { at: 52, key: "open-4", text: "Slowly breathe in" },
+      { at: 66, key: "open-5", text: "And gently breathe out" },
+      { at: 82, key: "open-6", text: "Once more now\nA slow breath in" },
+      { at: 96, key: "open-7", text: "And an easy breath out" }
     ],
     affirmationLines: [
-      { at: 104, key: "affirm-1", text: "Who do you want to be this morning" },
-      { at: 118, key: "affirm-2", text: "Calm" },
-      { at: 126, key: "affirm-3", text: "Clear" },
-      { at: 134, key: "affirm-4", text: "Light" },
-      { at: 142, key: "affirm-5", text: "Grateful" },
-      { at: 150, key: "affirm-6", text: "There is no right answer" },
-      { at: 158, key: "affirm-7", text: "Notice what your heart is choosing" }
+      { at: 112, key: "affirm-1", text: "With the breath\nyour body begins to wake" },
+      { at: 128, key: "affirm-2", text: "Nothing needs to change\nright now" },
+      { at: 144, key: "affirm-3", text: "Just feel yourself here" }
     ],
     closingLines: [
-      { at: 172, key: "close-1", text: "Today I choose this self" },
-      { at: 178, key: "close-2", text: "Begin the day" }
+      { at: 158, key: "close-1", text: "This day begins\nhere" },
+      { at: 170, key: "close-2", text: "In your own natural rhythm" },
+      { at: 178, key: "close-3", text: "Go gently" }
     ]
   }
 } as const;
