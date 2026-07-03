@@ -68,7 +68,7 @@ type StructuredMorningStage =
   | "integration"
   | "closing";
 
-type StructuredMorningLine = { at: number; key: string; text: string };
+type StructuredMorningLine = { at: number; key: string; text: string; speechText?: string };
 
 type StructuredMorningCopy = {
   title: string;
@@ -139,7 +139,12 @@ const affirmationGateCopy = {
       { at: 144, key: "affirm-3", text: "ただ\nここにいる自分を感じてみましょう" }
     ],
     closingLines: [
-      { at: 158, key: "close-1", text: "今日という いちにちは\n今ここから始まります" },
+      {
+        at: 158,
+        key: "close-1",
+        text: "今日という 一日\n今ここから始まります",
+        speechText: "今日という いちにちは\n今ここから始まります"
+      },
       { at: 170, key: "close-2", text: "あなた本来のリズムで" },
       { at: 178, key: "close-3", text: "いってらっしゃい" }
     ]
@@ -1572,7 +1577,7 @@ export default function MeditationPage() {
             }
           }
 
-          const utterance = new SpeechSynthesisUtterance(nextLine.text);
+          const utterance = new SpeechSynthesisUtterance(nextLine.speechText ?? nextLine.text);
           utterance.lang = settings.lang;
           utterance.rate = isVisionGate ? settings.rate * VISION_GATE_SPEECH_RATE_RATIO : settings.rate;
           utterance.pitch = settings.pitch;
@@ -1593,7 +1598,7 @@ export default function MeditationPage() {
               gate: meditationDoor,
               language,
               key: nextLine.key,
-              text: nextLine.text
+              text: nextLine.speechText ?? nextLine.text
             });
           };
           utterance.onerror = (event) => {
