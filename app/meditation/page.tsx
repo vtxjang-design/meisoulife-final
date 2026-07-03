@@ -109,8 +109,8 @@ type MorningAmbientMixState = {
 
 const affirmationGateCopy = {
   jp: {
-    title: "目覚めの扉",
-    subtitle: "美しい朝の始まりを\n静かに迎える時間です",
+    title: "Awakening Gate",
+    subtitle: "目覚めの扉",
     duration: "3:00",
     audioLabel: "Awakening Gate",
     startAudio: "音声を開始",
@@ -122,7 +122,7 @@ const affirmationGateCopy = {
     completionMessage: "朝の始まりを\n静かに迎えました",
     completionNote: "あなた本来のリズムが\n戻り始めています",
     completionButton: "朝の扉へ戻る",
-    openingFade: "目覚めの扉",
+    openingFade: "Awakening Gate",
     integration: "",
     openingLines: [
       { at: 6, key: "open-1", text: "おはようございます" },
@@ -148,8 +148,8 @@ const affirmationGateCopy = {
     ]
   },
   kr: {
-    title: "오늘의 나를 선택하기",
-    subtitle: "아침은\n오늘의 나를 선택하는 시간입니다",
+    title: "Awakening Gate",
+    subtitle: "깨어남의 문",
     duration: "3:00",
     audioLabel: "아침 리추얼",
     startAudio: "음성 시작하기",
@@ -161,7 +161,7 @@ const affirmationGateCopy = {
     completionMessage: "오늘의 나를\n조용히 선택했습니다",
     completionNote: "리듬을 기억하는 힘이\n자라고 있습니다",
     completionButton: "아침의 문으로 돌아가기",
-    openingFade: "오늘의 나를 선택하기",
+    openingFade: "Awakening Gate",
     integration: "오늘은 이 나로\n살아갑니다",
     openingLines: [
       { at: 15, key: "open-1", text: "환영합니다" },
@@ -188,8 +188,8 @@ const affirmationGateCopy = {
     ]
   },
   en: {
-    title: "Choose Today’s Self",
-    subtitle: "Morning is\nwhere you choose who you are today",
+    title: "Awakening Gate",
+    subtitle: "A quiet gate\ninto the beginning of your day",
     duration: "3:00",
     audioLabel: "Morning Ritual",
     startAudio: "Start Audio",
@@ -201,7 +201,7 @@ const affirmationGateCopy = {
     completionMessage: "You quietly chose\nwho you are today",
     completionNote: "Your ability to return\nis growing",
     completionButton: "Return to Morning Gate",
-    openingFade: "Choose Today’s Self",
+    openingFade: "Awakening Gate",
     integration: "Today I live\nas this self",
     openingLines: [
       { at: 15, key: "open-1", text: "Welcome" },
