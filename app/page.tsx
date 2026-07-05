@@ -49,8 +49,8 @@ const heroCopy = {
     scrollHint: "この先に、小さな回復へ続く静かな道があります",
     proof: ["情報過多に", "疲れた心に", "考えすぎに"],
     visualCopy: "情報に引かれるのではなく、\n自分へ戻るための静かな入口。",
-    visualLabel: "Quiet Forest Entry",
-    visualAlt: "Dawn lake with mist and calm water"
+    visualLabel: "今日の自然",
+    visualAlt: "今日の自然へ静かにつながる窓"
   },
   kr: {
     eyebrow: "AI 시대 인간 회복",
@@ -74,8 +74,8 @@ const heroCopy = {
     scrollHint: "이 아래에 작은 회복으로 이어지는 조용한 길이 있습니다",
     proof: ["과부하일 때", "지쳤을 때", "생각이 많을 때"],
     visualCopy: "정보의 흐름보다,\n나 자신에게 돌아오는 숨의 입구.",
-    visualLabel: "Quiet Forest Entry",
-    visualAlt: "Dawn lake with mist and calm water"
+    visualLabel: "오늘의 자연",
+    visualAlt: "오늘의 자연으로 조용히 이어지는 창"
   },
   en: {
     eyebrow: "Human Recovery\nfor the AI Era",
@@ -99,10 +99,22 @@ const heroCopy = {
     scrollHint: "A quiet path into small recovery begins just below",
     proof: ["for stress", "for overload", "for overthinking"],
     visualCopy: "A quiet forest entrance for returning\nto breath instead of noise.",
-    visualLabel: "Quiet Forest Entry",
-    visualAlt: "Dawn lake with mist and calm water"
+    visualLabel: "Today's Nature",
+    visualAlt: "A quiet window into today's nature"
   }
 } as const;
+
+const heroNatureVisuals = [
+  "/videos/one-minute-reset-sea8.mp4",
+  "/videos/one-minute-reset-forest8.mp4",
+  "/videos/one-minute-reset-sky8.mp4",
+  "/videos/one-minute-reset-path8.mp4",
+  "/videos/one-minute-reset-sea.mp4",
+  "/videos2/morning-one-minute-rhythm.mp4",
+  "/videos/one-minute-reset-moon8.mp4"
+] as const;
+
+const defaultHeroNatureVisual = heroNatureVisuals[0];
 
 const returnLoopCopy = {
   jp: {
@@ -797,10 +809,20 @@ export default function HomePage() {
   const [giftDelivered, setGiftDelivered] = useState(false);
   const [giftToast, setGiftToast] = useState("");
   const [lastMoodLabel, setLastMoodLabel] = useState("");
+  const [heroNatureSrc, setHeroNatureSrc] = useState<string>(defaultHeroNatureVisual);
+  const [heroNatureVideoFailed, setHeroNatureVideoFailed] = useState(false);
+
+  const heroNatureAlt = useMemo(() => hero.visualAlt, [hero.visualAlt]);
 
   useEffect(() => {
     setChallengeProgress(getChallengeRhythmProgress());
     setReturnRhythm(updateReturnRhythmVisit());
+  }, []);
+
+  useEffect(() => {
+    const weekdayIndex = new Date().getDay();
+    setHeroNatureSrc(heroNatureVisuals[weekdayIndex] ?? defaultHeroNatureVisual);
+    setHeroNatureVideoFailed(false);
   }, []);
 
   useEffect(() => {
@@ -953,12 +975,26 @@ export default function HomePage() {
           <div className="absolute left-[1%] top-8 h-28 w-28 rounded-full bg-gold/[0.11] blur-[72px] animate-meditation-ambient-breathe motion-reduce:animate-none" />
           <div className="absolute right-[4%] top-20 h-32 w-32 rounded-full bg-emerald-200/[0.09] blur-[72px] animate-meditation-fog motion-reduce:animate-none" />
           <div className="absolute right-[7%] top-[15%] h-[146px] w-[24%] overflow-hidden opacity-[0.13] mix-blend-screen">
-            <img
-              src="https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=900&q=80"
-              alt=""
-              aria-hidden="true"
-              className="h-full w-full scale-[1.01] object-cover object-center opacity-[0.94] animate-meditation-video-breathe motion-reduce:animate-none [mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)] [-webkit-mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)]"
-            />
+            {heroNatureVideoFailed ? (
+              <img
+                src="https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=900&q=80"
+                alt=""
+                aria-hidden="true"
+                className="h-full w-full scale-[1.01] object-cover object-center opacity-[0.72] brightness-[0.76] animate-meditation-video-breathe motion-reduce:animate-none [mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)] [-webkit-mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)]"
+              />
+            ) : (
+              <video
+                key={heroNatureSrc}
+                src={heroNatureSrc}
+                autoPlay
+                muted
+                loop
+                playsInline
+                aria-hidden="true"
+                onError={() => setHeroNatureVideoFailed(true)}
+                className="h-full w-full scale-[1.01] object-cover object-center opacity-[0.72] brightness-[0.76] animate-meditation-video-breathe motion-reduce:animate-none [mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)] [-webkit-mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)]"
+              />
+            )}
           </div>
           <div className="absolute right-[12%] top-16 h-24 w-20 rounded-full bg-white/[0.02] blur-[54px] animate-meditation-float motion-reduce:animate-none" />
           <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_34%),linear-gradient(180deg,rgba(7,16,28,0.04),rgba(7,16,28,0.02)_28%,rgba(7,16,28,0))]" />
@@ -1061,11 +1097,28 @@ export default function HomePage() {
           </div>
 
           <div className="relative hidden overflow-hidden pl-8 lg:block xl:pl-10">
-            <img
-              src="https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=1400&q=80"
-              alt={hero.visualAlt}
-              className="relative z-0 h-[420px] w-full rounded-[32px] object-cover object-center opacity-[0.98] contrast-[1.08] saturate-[0.94] brightness-[0.98] lg:h-[500px]"
-            />
+            <div className="absolute right-14 top-6 z-10 rounded-full border border-white/10 bg-[rgba(7,17,31,0.28)] px-3 py-1.5 text-[10px] uppercase tracking-[0.24em] text-white/56 backdrop-blur-sm">
+              {hero.visualLabel}
+            </div>
+            {heroNatureVideoFailed ? (
+              <img
+                src="https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=1400&q=80"
+                alt={heroNatureAlt}
+                className="relative z-0 h-[420px] w-full rounded-[32px] object-cover object-center opacity-[0.82] contrast-[1.02] saturate-[0.88] brightness-[0.74] lg:h-[500px]"
+              />
+            ) : (
+              <video
+                key={heroNatureSrc}
+                src={heroNatureSrc}
+                autoPlay
+                muted
+                loop
+                playsInline
+                onError={() => setHeroNatureVideoFailed(true)}
+                className="relative z-0 h-[420px] w-full rounded-[32px] object-cover object-center opacity-[0.82] contrast-[1.02] saturate-[0.88] brightness-[0.74] lg:h-[500px]"
+              />
+            )}
+            <div className="pointer-events-none absolute inset-0 rounded-[32px] bg-[linear-gradient(180deg,rgba(5,18,24,0.12),rgba(5,18,24,0.22)_46%,rgba(5,18,24,0.34)_100%),radial-gradient(circle_at_18%_20%,rgba(255,243,214,0.12),transparent_26%),radial-gradient(circle_at_72%_22%,rgba(125,208,195,0.08),transparent_28%)]" />
           </div>
         </div>
       </section>
