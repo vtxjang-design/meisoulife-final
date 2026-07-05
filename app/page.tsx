@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { AIRhythmCoach } from "@/components/ai-rhythm-coach";
 import { useAuthState } from "@/components/auth-provider";
 import { BrainOwnershipJourney } from "@/components/brain-ownership-journey";
@@ -104,17 +104,18 @@ const heroCopy = {
   }
 } as const;
 
-const heroNatureVisuals = [
-  "/videos/one-minute-reset-sea8.mp4",
-  "/videos/one-minute-reset-forest8.mp4",
-  "/videos/one-minute-reset-sky8.mp4",
-  "/videos/one-minute-reset-path8.mp4",
-  "/videos/one-minute-reset-sea.mp4",
-  "/videos2/morning-one-minute-rhythm.mp4",
-  "/videos/one-minute-reset-moon8.mp4"
-] as const;
+const fallbackHeroNatureVisual =
+  "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=1400&q=80";
 
-const defaultHeroNatureVisual = heroNatureVisuals[0];
+const heroNatureVisualByWeekday: Record<number, string> = {
+  0: "/images/todays-nature/sunday.jpg",
+  1: "/images/todays-nature/monday.jpg",
+  2: "/images/todays-nature/tuesday.jpg",
+  3: "/images/todays-nature/wednesday.jpg",
+  4: "/images/todays-nature/thursday.jpg",
+  5: "/images/todays-nature/friday.jpg",
+  6: "/images/todays-nature/saturday.jpg"
+} as const;
 
 const returnLoopCopy = {
   jp: {
@@ -809,10 +810,8 @@ export default function HomePage() {
   const [giftDelivered, setGiftDelivered] = useState(false);
   const [giftToast, setGiftToast] = useState("");
   const [lastMoodLabel, setLastMoodLabel] = useState("");
-  const [heroNatureSrc, setHeroNatureSrc] = useState<string>(defaultHeroNatureVisual);
-  const [heroNatureVideoFailed, setHeroNatureVideoFailed] = useState(false);
-
-  const heroNatureAlt = useMemo(() => hero.visualAlt, [hero.visualAlt]);
+  const [heroNatureSrc, setHeroNatureSrc] = useState<string>(fallbackHeroNatureVisual);
+  const [heroNatureImageFailed, setHeroNatureImageFailed] = useState(false);
 
   useEffect(() => {
     setChallengeProgress(getChallengeRhythmProgress());
@@ -821,8 +820,8 @@ export default function HomePage() {
 
   useEffect(() => {
     const weekdayIndex = new Date().getDay();
-    setHeroNatureSrc(heroNatureVisuals[weekdayIndex] ?? defaultHeroNatureVisual);
-    setHeroNatureVideoFailed(false);
+    setHeroNatureSrc(heroNatureVisualByWeekday[weekdayIndex] ?? fallbackHeroNatureVisual);
+    setHeroNatureImageFailed(false);
   }, []);
 
   useEffect(() => {
@@ -975,26 +974,13 @@ export default function HomePage() {
           <div className="absolute left-[1%] top-8 h-28 w-28 rounded-full bg-gold/[0.11] blur-[72px] animate-meditation-ambient-breathe motion-reduce:animate-none" />
           <div className="absolute right-[4%] top-20 h-32 w-32 rounded-full bg-emerald-200/[0.09] blur-[72px] animate-meditation-fog motion-reduce:animate-none" />
           <div className="absolute right-[7%] top-[15%] h-[146px] w-[24%] overflow-hidden opacity-[0.13] mix-blend-screen">
-            {heroNatureVideoFailed ? (
-              <img
-                src="https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=900&q=80"
-                alt=""
-                aria-hidden="true"
-                className="h-full w-full scale-[1.01] object-cover object-center opacity-[0.72] brightness-[0.76] animate-meditation-video-breathe motion-reduce:animate-none [mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)] [-webkit-mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)]"
-              />
-            ) : (
-              <video
-                key={heroNatureSrc}
-                src={heroNatureSrc}
-                autoPlay
-                muted
-                loop
-                playsInline
-                aria-hidden="true"
-                onError={() => setHeroNatureVideoFailed(true)}
-                className="h-full w-full scale-[1.01] object-cover object-center opacity-[0.72] brightness-[0.76] animate-meditation-video-breathe motion-reduce:animate-none [mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)] [-webkit-mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)]"
-              />
-            )}
+            <img
+              src={heroNatureImageFailed ? fallbackHeroNatureVisual : heroNatureSrc}
+              alt=""
+              aria-hidden="true"
+              onError={() => setHeroNatureImageFailed(true)}
+              className="h-full w-full scale-[1.01] object-cover object-center opacity-[0.72] brightness-[0.76] [mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)] [-webkit-mask-image:radial-gradient(ellipse_at_30%_46%,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.42)_62%,transparent_88%)]"
+            />
           </div>
           <div className="absolute right-[12%] top-16 h-24 w-20 rounded-full bg-white/[0.02] blur-[54px] animate-meditation-float motion-reduce:animate-none" />
           <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_34%),linear-gradient(180deg,rgba(7,16,28,0.04),rgba(7,16,28,0.02)_28%,rgba(7,16,28,0))]" />
@@ -1100,24 +1086,12 @@ export default function HomePage() {
             <div className="absolute right-14 top-6 z-10 rounded-full border border-white/10 bg-[rgba(7,17,31,0.28)] px-3 py-1.5 text-[10px] uppercase tracking-[0.24em] text-white/56 backdrop-blur-sm">
               {hero.visualLabel}
             </div>
-            {heroNatureVideoFailed ? (
-              <img
-                src="https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=1400&q=80"
-                alt={heroNatureAlt}
-                className="relative z-0 h-[420px] w-full rounded-[32px] object-cover object-center opacity-[0.82] contrast-[1.02] saturate-[0.88] brightness-[0.74] lg:h-[500px]"
-              />
-            ) : (
-              <video
-                key={heroNatureSrc}
-                src={heroNatureSrc}
-                autoPlay
-                muted
-                loop
-                playsInline
-                onError={() => setHeroNatureVideoFailed(true)}
-                className="relative z-0 h-[420px] w-full rounded-[32px] object-cover object-center opacity-[0.82] contrast-[1.02] saturate-[0.88] brightness-[0.74] lg:h-[500px]"
-              />
-            )}
+            <img
+              src={heroNatureImageFailed ? fallbackHeroNatureVisual : heroNatureSrc}
+              alt={hero.visualAlt}
+              onError={() => setHeroNatureImageFailed(true)}
+              className="relative z-0 h-[420px] w-full rounded-[32px] object-cover object-center opacity-[0.82] contrast-[1.02] saturate-[0.88] brightness-[0.74] lg:h-[500px]"
+            />
             <div className="pointer-events-none absolute inset-0 rounded-[32px] bg-[linear-gradient(180deg,rgba(5,18,24,0.12),rgba(5,18,24,0.22)_46%,rgba(5,18,24,0.34)_100%),radial-gradient(circle_at_18%_20%,rgba(255,243,214,0.12),transparent_26%),radial-gradient(circle_at_72%_22%,rgba(125,208,195,0.08),transparent_28%)]" />
           </div>
         </div>
