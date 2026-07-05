@@ -40,6 +40,7 @@ const ENERGY_GATE_VIDEO_SRC = "/basic/morning%20gate/energy%20gate8.mp4";
 const VISION_GATE_VIDEO_SRC = "/basic/morning-gate/vision-gate-7.mp4";
 const AWAKENING_GATE_VIDEO_VOLUME = 0.13;
 const VISION_GATE_VIDEO_VOLUME = 0.3;
+const AWAKENING_RITUAL_STORAGE_KEY = "meisoulife_awakening_gate_ritual";
 
 type BreathPhase = "inhale" | "hold" | "exhale";
 type MeditationType = "default" | "morning" | "day" | "night";
@@ -69,6 +70,11 @@ type StructuredMorningStage =
   | "closing";
 
 type StructuredMorningLine = { at: number; key: string; text: string; speechText?: string };
+
+type AwakeningRitualState = {
+  streakCount: number;
+  completedOn: string;
+};
 
 type StructuredMorningCopy = {
   title: string;
@@ -106,6 +112,54 @@ type MorningAmbientMixState = {
   targetVolume: number;
   fadeToken: number;
 };
+
+const awakeningRitualCopy = {
+  jp: {
+    completionMessage: "今日も、\nあなたのリズムが始まりました。",
+    rhythmLabel: "今日の小さなリズム",
+    continuity: (day: number) => `${day}日目。\nあなたの朝のリズムが続いています。`,
+    prompts: [
+      "少しだけ、\n空を見上げてみましょう。",
+      "今日は一度、\nゆっくり歩いてみましょう。",
+      "誰かに、\nやさしい言葉をひとつ届けましょう。",
+      "深呼吸をひとつしてから、\n次の行動を始めましょう。",
+      "朝の光を、\n少しだけ感じてみましょう。"
+    ],
+    continueCta: "Energy Gateへ進む",
+    returnCta: "Morning Gateへ戻る",
+    finishCta: "今日はここまで"
+  },
+  kr: {
+    completionMessage: "오늘도,\n당신의 리듬이 시작되었습니다.",
+    rhythmLabel: "오늘의 작은 리듬",
+    continuity: (day: number) => `${day}일째.\n당신의 아침 리듬이 이어지고 있습니다.`,
+    prompts: [
+      "잠시,\n하늘을 올려다보세요.",
+      "오늘 한 번,\n천천히 걸어보세요.",
+      "누군가에게\n따뜻한 말 한마디를 건네보세요.",
+      "다음 행동을 시작하기 전에,\n한 번 깊게 숨 쉬어보세요.",
+      "아침 빛을\n잠시 느껴보세요."
+    ],
+    continueCta: "Energy Gate로 이어가기",
+    returnCta: "Morning Gate로 돌아가기",
+    finishCta: "오늘은 여기까지"
+  },
+  en: {
+    completionMessage: "Your rhythm has begun again today.",
+    rhythmLabel: "Today’s small rhythm",
+    continuity: (day: number) => `Day ${day}.\nYour morning rhythm continues.`,
+    prompts: [
+      "Take a quiet moment\nto look up at the sky.",
+      "Walk a little more slowly today.",
+      "Offer one kind word to someone.",
+      "Take one deep breath\nbefore your next action.",
+      "Notice the morning light\nfor a moment."
+    ],
+    continueCta: "Continue to Energy Gate",
+    returnCta: "Return to Morning Gate",
+    finishCta: "Finish for today"
+  }
+} as const;
 
 const affirmationGateCopy = {
   jp: {
@@ -693,6 +747,24 @@ function getBasicIdentityCompletionBody(language: "jp" | "kr" | "en") {
   return "You are becoming someone who lives with rhythm";
 }
 
+function getLocalDayStamp(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function getPreviousDayStamp(dayStamp: string) {
+  const date = new Date(`${dayStamp}T00:00:00`);
+  date.setDate(date.getDate() - 1);
+  return getLocalDayStamp(date);
+}
+
+function getAwakeningPromptIndex(dayStamp: string, promptCount: number) {
+  const numeric = Number(dayStamp.replaceAll("-", ""));
+  return Number.isFinite(numeric) && promptCount > 0 ? numeric % promptCount : 0;
+}
+
 export default function MeditationPage() {
   const { language } = useLanguage();
   const copy = useSiteCopy().meditationPage;
@@ -720,6 +792,7 @@ export default function MeditationPage() {
   const [journeyDay, setJourneyDay] = useState<number | null>(null);
   const [returnToHref, setReturnToHref] = useState("/rhythm-journey");
   const [requestedRouteType, setRequestedRouteType] = useState<string | null>(null);
+  const [awakeningRitualState, setAwakeningRitualState] = useState<AwakeningRitualState | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
   const affirmationVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -742,15 +815,18 @@ export default function MeditationPage() {
   const structuredSpeechTimeoutRef = useRef<number | null>(null);
   const structuredSpeechSequenceRef = useRef(0);
   const structuredSpeechUnlockedRef = useRef(false);
+  const awakeningRitualHandledRef = useRef(false);
   const isPausedRef = useRef(false);
   const isCompleteRef = useRef(false);
   const elapsedTotalSeconds = totalSeconds - secondsLeft;
   const phase = useMemo(() => getBreathPhase(elapsedTotalSeconds), [elapsedTotalSeconds]);
   const isComplete = secondsLeft <= 0;
   const isAffirmationGate = meditationType === "morning" && meditationDoor === "affirmation";
+  const isAwakeningGate = isAffirmationGate;
   const isEnergyGate = meditationType === "morning" && meditationDoor === "energy";
   const isVisionGate = meditationType === "morning" && meditationDoor === "vision";
   const isStructuredMorningGate = isAffirmationGate || isEnergyGate || isVisionGate;
+  const ritualCopy = awakeningRitualCopy[localizedLanguage];
   const structuredMorningAudio =
     isEnergyGate
       ? MORNING_GATE_AUDIO.energy
@@ -818,6 +894,13 @@ export default function MeditationPage() {
           : null
       : null;
   const affirmationProgress = isStructuredMorningGate ? Math.min(100, (elapsedTotalSeconds / AFFIRMATION_TOTAL_SECONDS) * 100) : 0;
+  const awakeningCompletedOn = awakeningRitualState?.completedOn ?? getLocalDayStamp();
+  const awakeningPrompt = ritualCopy.prompts[getAwakeningPromptIndex(awakeningCompletedOn, ritualCopy.prompts.length)];
+  const awakeningContinuity = ritualCopy.continuity(awakeningRitualState?.streakCount ?? 1);
+  const morningGateReturnHref =
+    returnToHref === "/rhythm-journey" ? "/program/basic?rhythm=morning" : returnToHref;
+  const finishForTodayHref = morningGateReturnHref.split("?")[0] || "/program/basic";
+  const continueToEnergyHref = `/meditation?duration=180&type=morning-energy&returnTo=${encodeURIComponent(morningGateReturnHref)}`;
 
   function logStructuredMorningAmbientState(stage: string) {
     if (typeof window === "undefined") {
@@ -1521,6 +1604,47 @@ export default function MeditationPage() {
   }, [isComplete, hasUserGesture, soundEnabled, vibrationEnabled]);
 
   useEffect(() => {
+    if (!isAwakeningGate || !isComplete || typeof window === "undefined") {
+      if (!isComplete) {
+        awakeningRitualHandledRef.current = false;
+        setAwakeningRitualState(null);
+      }
+      return;
+    }
+
+    if (awakeningRitualHandledRef.current) {
+      return;
+    }
+
+    awakeningRitualHandledRef.current = true;
+
+    const today = getLocalDayStamp();
+    const yesterday = getPreviousDayStamp(today);
+    let streakCount = 1;
+
+    try {
+      const storedValue = window.localStorage.getItem(AWAKENING_RITUAL_STORAGE_KEY);
+
+      if (storedValue) {
+        const parsed = JSON.parse(storedValue) as AwakeningRitualState;
+
+        if (parsed.completedOn === today) {
+          streakCount = parsed.streakCount > 0 ? parsed.streakCount : 1;
+        } else if (parsed.completedOn === yesterday) {
+          streakCount = (parsed.streakCount > 0 ? parsed.streakCount : 0) + 1;
+        }
+      }
+
+      const nextState = { streakCount, completedOn: today };
+      window.localStorage.setItem(AWAKENING_RITUAL_STORAGE_KEY, JSON.stringify(nextState));
+      setAwakeningRitualState(nextState);
+    } catch (error) {
+      console.warn("[awakening-gate] failed to persist ritual continuity", error);
+      setAwakeningRitualState({ streakCount, completedOn: today });
+    }
+  }, [isAwakeningGate, isComplete]);
+
+  useEffect(() => {
     if (!isStructuredMorningGate || isComplete || isPaused || typeof window === "undefined") {
       return;
     }
@@ -2078,6 +2202,45 @@ export default function MeditationPage() {
               </div>
             ) : null}
           </>
+        ) : isAwakeningGate ? (
+          <div className="animate-fade-in space-y-8">
+            <div className="space-y-4">
+              <p className="text-xs uppercase tracking-[0.28em] text-gold/72">{morningGateCopy.audioLabel}</p>
+              <h1 className="mx-auto max-w-2xl whitespace-pre-line font-serif text-4xl leading-[1.5] text-white sm:text-5xl">
+                {ritualCopy.completionMessage}
+              </h1>
+            </div>
+
+            <div className="mx-auto max-w-xl rounded-[28px] border border-white/10 bg-white/[0.04] px-6 py-6 backdrop-blur-xl">
+              <p className="text-xs uppercase tracking-[0.26em] text-gold/68">{ritualCopy.rhythmLabel}</p>
+              <p className="mt-4 whitespace-pre-line font-serif text-2xl leading-[1.9] text-white/88 sm:text-[32px]">
+                {awakeningPrompt}
+              </p>
+            </div>
+
+            <p className="whitespace-pre-line text-sm leading-7 text-white/56">{awakeningContinuity}</p>
+
+            <div className="flex flex-col items-center gap-3">
+              <Link
+                href={continueToEnergyHref}
+                className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
+              >
+                {ritualCopy.continueCta}
+              </Link>
+              <Link
+                href={morningGateReturnHref}
+                className="inline-flex min-h-[52px] min-w-[240px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
+              >
+                {ritualCopy.returnCta}
+              </Link>
+              <Link
+                href={finishForTodayHref}
+                className="inline-flex min-h-[48px] min-w-[220px] items-center justify-center rounded-full px-4 py-2 text-sm font-medium text-white/58 transition duration-300 hover:text-white/82"
+              >
+                {ritualCopy.finishCta}
+              </Link>
+            </div>
+          </div>
         ) : (
           <div className="animate-fade-in space-y-8">
             <h1 className="font-serif text-4xl text-white sm:text-5xl">
