@@ -39,7 +39,7 @@ const AWAKENING_GATE_VIDEO_SRC = "/video/morning-gate/awakening-gate-1.mp4";
 const ENERGY_GATE_VIDEO_SRC = "/basic/morning%20gate/energy%20gate8.mp4";
 const VISION_GATE_VIDEO_SRC = "/basic/morning-gate/vision-gate-7.mp4";
 const AWAKENING_GATE_VIDEO_VOLUME = 0.13;
-const VISION_GATE_VIDEO_VOLUME = 0.3;
+const VISION_GATE_VIDEO_VOLUME = 0.14;
 const AWAKENING_RITUAL_STORAGE_KEY = "meisoulife_awakening_gate_ritual";
 
 type BreathPhase = "inhale" | "hold" | "exhale";
@@ -69,7 +69,7 @@ type StructuredMorningStage =
   | "integration"
   | "closing";
 
-type StructuredMorningLine = { at: number; key: string; text: string; speechText?: string };
+type StructuredMorningLine = { at: number; key: string; text: string; speechText?: string; speechDelayMs?: number };
 
 type AwakeningRitualState = {
   streakCount: number;
@@ -179,28 +179,59 @@ const affirmationGateCopy = {
     openingFade: "Awakening Gate",
     integration: "",
     openingLines: [
-      { at: 6, key: "open-1", text: "おはようございます" },
-      { at: 20, key: "open-2", text: "今日も\n新しい朝が訪れました" },
-      { at: 36, key: "open-3", text: "少しだけ\n立ち止まってみましょう" },
-      { at: 52, key: "open-4", text: "ゆっくり\n息を吸います" },
-      { at: 66, key: "open-5", text: "そして\n静かに吐きます" },
-      { at: 82, key: "open-6", text: "もう一度\nゆっくり息を吸います" },
-      { at: 96, key: "open-7", text: "ゆっくり吐きます" }
+      { at: 6, key: "open-1", text: "おはようございます", speechDelayMs: 680 },
+      {
+        at: 20,
+        key: "open-2",
+        text: "今日も\n新しい朝が\n訪れました",
+        speechText: "今日も、\n新しい朝が、\n訪れました",
+        speechDelayMs: 460
+      },
+      {
+        at: 38,
+        key: "open-3",
+        text: "少しだけ\n立ち止まってみましょう",
+        speechText: "少しだけ、\n立ち止まってみましょう",
+        speechDelayMs: 480
+      },
+      { at: 54, key: "open-4", text: "ゆっくり\n息を吸います", speechText: "ゆっくり、\n息を吸います", speechDelayMs: 520 },
+      { at: 70, key: "open-5", text: "そして\n静かに吐きます", speechText: "そして、\n静かに吐きます", speechDelayMs: 520 },
+      { at: 88, key: "open-6", text: "もう一度\nゆっくり息を吸います", speechText: "もう一度、\nゆっくり息を吸います", speechDelayMs: 540 },
+      { at: 104, key: "open-7", text: "ゆっくり吐きます", speechText: "ゆっくり、\n吐きます", speechDelayMs: 560 }
     ],
     affirmationLines: [
-      { at: 112, key: "affirm-1", text: "呼吸とともに\n身体が少しずつ目覚めていきます" },
-      { at: 128, key: "affirm-2", text: "今は\n何も変えなくても大丈夫です" },
-      { at: 144, key: "affirm-3", text: "ただ\nここにいる自分を感じてみましょう" }
+      {
+        at: 120,
+        key: "affirm-1",
+        text: "呼吸とともに\n身体が少しずつ\n目覚めていきます",
+        speechText: "呼吸とともに、\n身体が少しずつ、\n目覚めていきます",
+        speechDelayMs: 460
+      },
+      {
+        at: 138,
+        key: "affirm-2",
+        text: "今は\n何も変えなくても\n大丈夫です",
+        speechText: "今は、\n何も変えなくても、\n大丈夫です",
+        speechDelayMs: 520
+      },
+      {
+        at: 154,
+        key: "affirm-3",
+        text: "ただ\nここにいる自分を\n感じてみましょう",
+        speechText: "ただ、\nここにいる自分を、\n感じてみましょう",
+        speechDelayMs: 520
+      }
     ],
     closingLines: [
       {
-        at: 158,
+        at: 166,
         key: "close-1",
         text: "今日という 一日\n今ここから始まります",
-        speechText: "今日という いちにちは\n今ここから始まります"
+        speechText: "今日という いちにちは\n今ここから始まります",
+        speechDelayMs: 700
       },
-      { at: 170, key: "close-2", text: "あなた本来のリズムで" },
-      { at: 178, key: "close-3", text: "いってらっしゃい" }
+      { at: 176, key: "close-2", text: "あなた本来のリズムで", speechText: "あなた本来のリズムで", speechDelayMs: 760 },
+      { at: 179, key: "close-3", text: "いってらっしゃい", speechDelayMs: 820 }
     ]
   },
   kr: {
@@ -220,23 +251,23 @@ const affirmationGateCopy = {
     openingFade: "Awakening Gate",
     integration: "",
     openingLines: [
-      { at: 6, key: "open-1", text: "좋은 아침입니다" },
-      { at: 20, key: "open-2", text: "오늘도\n새로운 아침이 찾아왔습니다" },
-      { at: 36, key: "open-3", text: "잠시만\n멈춰 서 봅니다" },
-      { at: 52, key: "open-4", text: "천천히\n숨을 들이쉽니다" },
-      { at: 66, key: "open-5", text: "그리고\n조용히 내쉽니다" },
-      { at: 82, key: "open-6", text: "한 번 더\n천천히 숨을 들이쉽니다" },
-      { at: 96, key: "open-7", text: "길게 내쉽니다" }
+      { at: 6, key: "open-1", text: "좋은 아침입니다", speechDelayMs: 680 },
+      { at: 20, key: "open-2", text: "오늘도\n새로운 아침이\n찾아왔습니다", speechDelayMs: 460 },
+      { at: 38, key: "open-3", text: "잠시만\n멈춰 서 봅니다", speechDelayMs: 480 },
+      { at: 54, key: "open-4", text: "천천히\n숨을 들이쉽니다", speechDelayMs: 520 },
+      { at: 70, key: "open-5", text: "그리고\n조용히 내쉽니다", speechDelayMs: 520 },
+      { at: 88, key: "open-6", text: "한 번 더\n천천히 숨을 들이쉽니다", speechDelayMs: 540 },
+      { at: 104, key: "open-7", text: "길게 내쉽니다", speechDelayMs: 560 }
     ],
     affirmationLines: [
-      { at: 112, key: "affirm-1", text: "숨결을 따라\n몸이 조금씩 깨어납니다" },
-      { at: 128, key: "affirm-2", text: "지금은\n아무것도 바꾸지 않아도 괜찮습니다" },
-      { at: 144, key: "affirm-3", text: "그저\n여기 있는 나를 가만히 느껴봅니다" }
+      { at: 120, key: "affirm-1", text: "숨결을 따라\n몸이 조금씩\n깨어납니다", speechDelayMs: 460 },
+      { at: 138, key: "affirm-2", text: "지금은\n아무것도 바꾸지 않아도\n괜찮습니다", speechDelayMs: 520 },
+      { at: 154, key: "affirm-3", text: "그저\n여기 있는 나를\n가만히 느껴봅니다", speechDelayMs: 520 }
     ],
     closingLines: [
-      { at: 158, key: "close-1", text: "오늘이라는 하루는\n지금 여기에서 시작됩니다" },
-      { at: 170, key: "close-2", text: "당신 본래의 리듬으로" },
-      { at: 178, key: "close-3", text: "다녀오세요" }
+      { at: 166, key: "close-1", text: "오늘이라는 하루는\n지금 여기에서 시작됩니다", speechDelayMs: 700 },
+      { at: 176, key: "close-2", text: "당신 본래의 리듬으로", speechDelayMs: 760 },
+      { at: 179, key: "close-3", text: "다녀오세요", speechDelayMs: 820 }
     ]
   },
   en: {
@@ -256,23 +287,23 @@ const affirmationGateCopy = {
     openingFade: "Awakening Gate",
     integration: "",
     openingLines: [
-      { at: 6, key: "open-1", text: "Good morning" },
-      { at: 20, key: "open-2", text: "A new morning\nhas found you again" },
-      { at: 36, key: "open-3", text: "Pause here\nfor a moment" },
-      { at: 52, key: "open-4", text: "Slowly breathe in" },
-      { at: 66, key: "open-5", text: "And gently breathe out" },
-      { at: 82, key: "open-6", text: "Once more now\nA slow breath in" },
-      { at: 96, key: "open-7", text: "And an easy breath out" }
+      { at: 6, key: "open-1", text: "Good morning", speechDelayMs: 680 },
+      { at: 20, key: "open-2", text: "A new morning\nhas found you again", speechDelayMs: 460 },
+      { at: 38, key: "open-3", text: "Pause here\nfor a moment", speechDelayMs: 480 },
+      { at: 54, key: "open-4", text: "Slowly breathe in", speechDelayMs: 520 },
+      { at: 70, key: "open-5", text: "And gently breathe out", speechDelayMs: 520 },
+      { at: 88, key: "open-6", text: "Once more now\nA slower breath in", speechDelayMs: 540 },
+      { at: 104, key: "open-7", text: "And an easy breath out", speechDelayMs: 560 }
     ],
     affirmationLines: [
-      { at: 112, key: "affirm-1", text: "With the breath\nyour body begins to wake" },
-      { at: 128, key: "affirm-2", text: "Nothing needs to change\nright now" },
-      { at: 144, key: "affirm-3", text: "Just feel yourself here" }
+      { at: 120, key: "affirm-1", text: "With the breath\nyour body begins to wake", speechDelayMs: 460 },
+      { at: 138, key: "affirm-2", text: "Nothing needs to change\nright now", speechDelayMs: 520 },
+      { at: 154, key: "affirm-3", text: "Just feel yourself here", speechDelayMs: 520 }
     ],
     closingLines: [
-      { at: 158, key: "close-1", text: "This day begins\nhere" },
-      { at: 170, key: "close-2", text: "In your own natural rhythm" },
-      { at: 178, key: "close-3", text: "Go gently" }
+      { at: 166, key: "close-1", text: "This day begins\nhere", speechDelayMs: 700 },
+      { at: 176, key: "close-2", text: "In your own natural rhythm", speechDelayMs: 760 },
+      { at: 179, key: "close-3", text: "Go gently", speechDelayMs: 820 }
     ]
   }
 } as const;
@@ -295,29 +326,28 @@ const energyGateCopy = {
     openingFade: "脳と身体を目覚めさせる",
     integration: "丹田を感じます\n今を感じます",
     openingLines: [
-      { at: 5, key: "open-1", text: "ようこそ" },
-      { at: 10, key: "open-2", text: "今日は" },
-      { at: 16, key: "open-3", text: "体の中心から目覚めます" },
-      { at: 24, key: "open-4", text: "おへその下" },
-      { at: 30, key: "open-5", text: "丹田に意識を向けます" }
+      { at: 5, key: "open-1", text: "ようこそ", speechDelayMs: 620 },
+      { at: 10, key: "open-2", text: "今日は\n体の中心から目覚めます", speechText: "今日は、\n体の中心から目覚めます", speechDelayMs: 420 },
+      { at: 26, key: "open-4", text: "おへその下", speechDelayMs: 480 },
+      { at: 34, key: "open-5", text: "丹田に意識を向けます", speechText: "丹田に、\n意識を向けます", speechDelayMs: 500 }
     ],
     awarenessLines: [
-      { at: 40, key: "body-1", text: "丹田" },
-      { at: 48, key: "body-2", text: "丹田" },
-      { at: 58, key: "body-3", text: "呼吸は自然に" },
-      { at: 68, key: "body-4", text: "丹田を感じます" }
+      { at: 46, key: "body-1", text: "丹田", speechDelayMs: 520 },
+      { at: 56, key: "body-2", text: "丹田", speechDelayMs: 560 },
+      { at: 68, key: "body-3", text: "呼吸は自然に", speechText: "呼吸は、\n自然に", speechDelayMs: 520 },
+      { at: 80, key: "body-4", text: "丹田を感じます", speechText: "丹田を、\n感じます", speechDelayMs: 560 }
     ],
     energyLines: [
-      { at: 84, key: "energy-1", text: "体が目覚めます" },
-      { at: 94, key: "energy-2", text: "脳が目覚めます" },
-      { at: 106, key: "energy-3", text: "丹田" },
-      { at: 114, key: "energy-4", text: "丹田" },
-      { at: 126, key: "energy-5", text: "温かさを感じます" },
-      { at: 138, key: "energy-6", text: "生命力を感じます" },
-      { at: 150, key: "energy-7", text: "今日を支える力は\nすでにあなたの中にあります" }
+      { at: 94, key: "energy-1", text: "体が目覚めます", speechDelayMs: 520 },
+      { at: 106, key: "energy-2", text: "脳が目覚めます", speechDelayMs: 560 },
+      { at: 118, key: "energy-3", text: "丹田", speechDelayMs: 560 },
+      { at: 128, key: "energy-4", text: "丹田", speechDelayMs: 580 },
+      { at: 140, key: "energy-5", text: "温かさを感じます", speechDelayMs: 560 },
+      { at: 152, key: "energy-6", text: "生命力を感じます", speechDelayMs: 580 },
+      { at: 164, key: "energy-7", text: "今日を支える力は\nすでにあなたの中にあります", speechText: "今日を支える力は、\nすでにあなたの中にあります", speechDelayMs: 640 }
     ],
     closingLines: [
-      { at: 170, key: "close-1", text: "準備ができました" }
+      { at: 178, key: "close-1", text: "準備ができました", speechDelayMs: 760 }
     ]
   },
   kr: {
@@ -337,26 +367,26 @@ const energyGateCopy = {
     openingFade: "뇌와 몸을 깨우기",
     integration: "단전을 느껴봅니다\n지금을 느껴봅니다",
     openingLines: [
-      { at: 5, key: "open-1", text: "어서 오세요" },
-      { at: 10, key: "open-2", text: "오늘은 몸과 뇌를 깨웁니다" },
-      { at: 24, key: "open-4", text: "배꼽 아래" },
-      { at: 30, key: "open-5", text: "단전에 의식을 향해봅니다" }
+      { at: 5, key: "open-1", text: "어서 오세요", speechDelayMs: 620 },
+      { at: 10, key: "open-2", text: "오늘은 몸과 뇌를 깨웁니다", speechDelayMs: 420 },
+      { at: 26, key: "open-4", text: "배꼽 아래", speechDelayMs: 480 },
+      { at: 34, key: "open-5", text: "단전에 의식을 향해봅니다", speechDelayMs: 500 }
     ],
     awarenessLines: [
-      { at: 40, key: "body-1", text: "가볍게 두드립니다" },
-      { at: 50, key: "body-2", text: "호흡은 자연스럽게" },
-      { at: 62, key: "body-3", text: "단전을 느껴봅니다" }
+      { at: 46, key: "body-1", text: "가볍게 두드립니다", speechDelayMs: 520 },
+      { at: 58, key: "body-2", text: "호흡은 자연스럽게", speechDelayMs: 520 },
+      { at: 72, key: "body-3", text: "단전을 느껴봅니다", speechDelayMs: 560 }
     ],
     energyLines: [
-      { at: 78, key: "energy-1", text: "몸이 깨어납니다" },
-      { at: 90, key: "energy-2", text: "뇌가 깨어납니다" },
-      { at: 104, key: "energy-3", text: "따뜻함을 느낍니다" },
-      { at: 118, key: "energy-4", text: "생명력을 느낍니다" },
-      { at: 134, key: "energy-5", text: "에너지가 돌아옵니다" },
-      { at: 150, key: "energy-6", text: "오늘을 움직이는 힘은\n이미 내 안에 있습니다" }
+      { at: 90, key: "energy-1", text: "몸이 깨어납니다", speechDelayMs: 520 },
+      { at: 104, key: "energy-2", text: "뇌가 깨어납니다", speechDelayMs: 560 },
+      { at: 120, key: "energy-3", text: "따뜻함을 느낍니다", speechDelayMs: 560 },
+      { at: 136, key: "energy-4", text: "생명력을 느낍니다", speechDelayMs: 580 },
+      { at: 152, key: "energy-5", text: "에너지가 돌아옵니다", speechDelayMs: 580 },
+      { at: 166, key: "energy-6", text: "오늘을 움직이는 힘은\n이미 내 안에 있습니다", speechDelayMs: 640 }
     ],
     closingLines: [
-      { at: 170, key: "close-1", text: "준비되었습니다" }
+      { at: 178, key: "close-1", text: "준비되었습니다", speechDelayMs: 760 }
     ]
   },
   en: {
@@ -376,29 +406,28 @@ const energyGateCopy = {
     openingFade: "Wake Brain and Body",
     integration: "Feel your center\nFeel this moment",
     openingLines: [
-      { at: 5, key: "open-1", text: "Welcome" },
-      { at: 10, key: "open-2", text: "Today" },
-      { at: 16, key: "open-3", text: "we awaken from our center" },
-      { at: 24, key: "open-4", text: "Below the navel" },
-      { at: 30, key: "open-5", text: "feel your Danjeon" }
+      { at: 5, key: "open-1", text: "Welcome", speechDelayMs: 620 },
+      { at: 10, key: "open-2", text: "Today\nwe awaken from our center", speechDelayMs: 420 },
+      { at: 26, key: "open-4", text: "Below the navel", speechDelayMs: 480 },
+      { at: 34, key: "open-5", text: "feel your Danjeon", speechDelayMs: 500 }
     ],
     awarenessLines: [
-      { at: 40, key: "body-1", text: "Danjeon" },
-      { at: 48, key: "body-2", text: "Danjeon" },
-      { at: 58, key: "body-3", text: "Let the breath be natural" },
-      { at: 68, key: "body-4", text: "Feel your Danjeon" }
+      { at: 46, key: "body-1", text: "Danjeon", speechDelayMs: 520 },
+      { at: 56, key: "body-2", text: "Danjeon", speechDelayMs: 560 },
+      { at: 68, key: "body-3", text: "Let the breath be natural", speechDelayMs: 520 },
+      { at: 80, key: "body-4", text: "Feel your Danjeon", speechDelayMs: 560 }
     ],
     energyLines: [
-      { at: 84, key: "energy-1", text: "The body awakens" },
-      { at: 94, key: "energy-2", text: "The brain awakens" },
-      { at: 106, key: "energy-3", text: "Danjeon" },
-      { at: 114, key: "energy-4", text: "Danjeon" },
-      { at: 126, key: "energy-5", text: "Feel the warmth" },
-      { at: 138, key: "energy-6", text: "Feel the life energy" },
-      { at: 150, key: "energy-7", text: "The strength for today\nis already within you" }
+      { at: 94, key: "energy-1", text: "The body awakens", speechDelayMs: 520 },
+      { at: 106, key: "energy-2", text: "The brain awakens", speechDelayMs: 560 },
+      { at: 118, key: "energy-3", text: "Danjeon", speechDelayMs: 560 },
+      { at: 128, key: "energy-4", text: "Danjeon", speechDelayMs: 580 },
+      { at: 140, key: "energy-5", text: "Feel the warmth", speechDelayMs: 560 },
+      { at: 152, key: "energy-6", text: "Feel the life energy", speechDelayMs: 580 },
+      { at: 164, key: "energy-7", text: "The strength for today\nis already within you", speechDelayMs: 640 }
     ],
     closingLines: [
-      { at: 170, key: "close-1", text: "You are ready" }
+      { at: 178, key: "close-1", text: "You are ready", speechDelayMs: 760 }
     ]
   }
 } as const;
@@ -421,24 +450,22 @@ const visionGateCopy = {
     openingFade: "方向を思い出す",
     integration: "静かに 今日を\n始めます",
     openingLines: [
-      { at: 6, key: "open-1", text: "ようこそ" },
-      { at: 18, key: "open-2", text: "ゆっくり 息を吸います" },
-      { at: 30, key: "open-3", text: "そして 静かに吐きます" },
-      { at: 46, key: "open-4", text: "新しい いちにちが あなたの前に 静かに開いています" }
+      { at: 6, key: "open-1", text: "ようこそ", speechDelayMs: 640 },
+      { at: 20, key: "open-2", text: "少しだけ\n呼吸に戻ります", speechText: "少しだけ、\n呼吸に戻ります", speechDelayMs: 480 },
+      { at: 34, key: "open-3", text: "ゆっくり\n息を吸います", speechText: "ゆっくり、\n息を吸います", speechDelayMs: 540 },
+      { at: 48, key: "open-4", text: "静かに\n吐きます", speechText: "静かに、\n吐きます", speechDelayMs: 560 }
     ],
     visionLines: [
-      { at: 58, key: "vision-1", text: "今日は また始められる 新しい いちにちです" },
-      { at: 72, key: "vision-2", text: "昨日は もう過ぎました" },
-      { at: 84, key: "vision-3", text: "明日は まだ来ていません" },
-      { at: 96, key: "vision-4", text: "今 ここにあるのは この瞬間です" },
-      { at: 112, key: "vision-5", text: "朝の光を 心の中に そっと浮かべます" },
-      { at: 126, key: "vision-6", text: "やわらかな光が 顔を照らし 胸まで静かに届きます" },
-      { at: 142, key: "vision-7", text: "息を吸うたびに 新しい力が 入ってきます" },
-      { at: 156, key: "vision-8", text: "息を吐くたびに 心配は 少しずつ遠ざかります" }
+      { at: 62, key: "vision-1", text: "今日は\n遠くを見るのではなく", speechText: "今日は、\n遠くを見るのではなく", speechDelayMs: 520 },
+      { at: 78, key: "vision-2", text: "静かに\n方向を思い出します", speechText: "静かに、\n方向を思い出します", speechDelayMs: 560 },
+      { at: 96, key: "vision-3", text: "昨日は\nもう過ぎました", speechText: "昨日は、\nもう過ぎました", speechDelayMs: 540 },
+      { at: 112, key: "vision-4", text: "明日は\nまだ来ていません", speechText: "明日は、\nまだ来ていません", speechDelayMs: 540 },
+      { at: 128, key: "vision-5", text: "今\nここにあるのは\nこの瞬間です", speechText: "今、\nここにあるのは、\nこの瞬間です", speechDelayMs: 560 },
+      { at: 146, key: "vision-6", text: "朝の光を\n心の中に\nそっと浮かべます", speechText: "朝の光を、\n心の中に、\nそっと浮かべます", speechDelayMs: 580 },
+      { at: 164, key: "vision-7", text: "道は\n消えていません", speechText: "道は、\n消えていません", speechDelayMs: 620 }
     ],
     closingLines: [
-      { at: 168, key: "close-1", text: "今日は どんな自分で いたいですか" },
-      { at: 178, key: "close-2", text: "静かに微笑んで 今日を始めます" }
+      { at: 174, key: "close-1", text: "今日は\n一歩で十分です", speechText: "今日は、\n一歩で十分です", speechDelayMs: 760 }
     ]
   },
   kr: {
@@ -458,24 +485,22 @@ const visionGateCopy = {
     openingFade: "방향을 기억하기",
     integration: "조용히 오늘을\n시작합니다",
     openingLines: [
-      { at: 6, key: "open-1", text: "좋은 아침입니다" },
-      { at: 18, key: "open-2", text: "천천히 숨을 들이마십니다" },
-      { at: 30, key: "open-3", text: "그리고 조용히 내쉽니다" },
-      { at: 46, key: "open-4", text: "새로운 하루가 당신 앞에 조용히 펼쳐지고 있습니다" }
+      { at: 6, key: "open-1", text: "좋은 아침입니다", speechDelayMs: 640 },
+      { at: 20, key: "open-2", text: "잠시\n호흡으로 돌아옵니다", speechDelayMs: 480 },
+      { at: 34, key: "open-3", text: "천천히\n숨을 들이마십니다", speechDelayMs: 540 },
+      { at: 48, key: "open-4", text: "조용히\n내쉽니다", speechDelayMs: 560 }
     ],
     visionLines: [
-      { at: 58, key: "vision-1", text: "오늘은 다시 시작할 수 있는 새로운 하루입니다" },
-      { at: 72, key: "vision-2", text: "어제는 지나갔습니다" },
-      { at: 84, key: "vision-3", text: "내일은 아직 오지 않았습니다" },
-      { at: 96, key: "vision-4", text: "우리에게 있는 것은 지금 이 순간입니다" },
-      { at: 112, key: "vision-5", text: "천천히 아침 햇살을 마음속에 떠올려 봅니다" },
-      { at: 126, key: "vision-6", text: "따뜻한 빛이 얼굴을 비추고 가슴까지 조용히 스며듭니다" },
-      { at: 142, key: "vision-7", text: "숨을 들이마실 때마다 새로운 힘이 들어옵니다" },
-      { at: 156, key: "vision-8", text: "숨을 내쉴 때마다 걱정은 조금씩 멀어집니다" }
+      { at: 62, key: "vision-1", text: "오늘은\n멀리 내다보기보다", speechDelayMs: 520 },
+      { at: 78, key: "vision-2", text: "조용히\n방향을 떠올립니다", speechDelayMs: 560 },
+      { at: 96, key: "vision-3", text: "어제는\n이미 지나갔습니다", speechDelayMs: 540 },
+      { at: 112, key: "vision-4", text: "내일은\n아직 오지 않았습니다", speechDelayMs: 540 },
+      { at: 128, key: "vision-5", text: "지금\n여기에 있는 것은\n이 순간입니다", speechDelayMs: 560 },
+      { at: 146, key: "vision-6", text: "아침의 빛을\n마음속에\n가만히 떠올려 봅니다", speechDelayMs: 580 },
+      { at: 164, key: "vision-7", text: "당신의 길은\n사라지지 않았습니다", speechDelayMs: 620 }
     ],
     closingLines: [
-      { at: 168, key: "close-1", text: "오늘 어떤 사람이 되고 싶습니까" },
-      { at: 178, key: "close-2", text: "조용히 미소를 지으며 오늘을 시작합니다" }
+      { at: 174, key: "close-1", text: "오늘은\n한 걸음이면 충분합니다", speechDelayMs: 760 }
     ]
   },
   en: {
@@ -495,24 +520,22 @@ const visionGateCopy = {
     openingFade: "Remember Your Direction",
     integration: "Begin this day\nquietly",
     openingLines: [
-      { at: 6, key: "open-1", text: "Welcome" },
-      { at: 18, key: "open-2", text: "Slowly breathe in" },
-      { at: 30, key: "open-3", text: "And gently breathe out" },
-      { at: 46, key: "open-4", text: "A new day is quietly opening in front of you" }
+      { at: 6, key: "open-1", text: "Welcome", speechDelayMs: 640 },
+      { at: 20, key: "open-2", text: "Return\nfor a moment\nto your breath", speechDelayMs: 480 },
+      { at: 34, key: "open-3", text: "Slowly breathe in", speechDelayMs: 540 },
+      { at: 48, key: "open-4", text: "And softly breathe out", speechDelayMs: 560 }
     ],
     visionLines: [
-      { at: 58, key: "vision-1", text: "Today is a new day and you can begin again" },
-      { at: 72, key: "vision-2", text: "Yesterday has already passed" },
-      { at: 84, key: "vision-3", text: "Tomorrow has not yet arrived" },
-      { at: 96, key: "vision-4", text: "What we have is this moment" },
-      { at: 112, key: "vision-5", text: "Let the morning light rise softly in your mind" },
-      { at: 126, key: "vision-6", text: "A gentle warmth touches your face and settles into your chest" },
-      { at: 142, key: "vision-7", text: "Each inhale brings a little new strength" },
-      { at: 156, key: "vision-8", text: "Each exhale lets worry move a little farther away" }
+      { at: 62, key: "vision-1", text: "Today\nyou do not need\nto look too far ahead", speechDelayMs: 520 },
+      { at: 78, key: "vision-2", text: "Just remember\nyour direction", speechDelayMs: 560 },
+      { at: 96, key: "vision-3", text: "Yesterday\nhas already passed", speechDelayMs: 540 },
+      { at: 112, key: "vision-4", text: "Tomorrow\nhas not yet arrived", speechDelayMs: 540 },
+      { at: 128, key: "vision-5", text: "What is here now\nis this moment", speechDelayMs: 560 },
+      { at: 146, key: "vision-6", text: "Let the morning light\nrise softly\nin your mind", speechDelayMs: 580 },
+      { at: 164, key: "vision-7", text: "Your path\nhas not disappeared", speechDelayMs: 620 }
     ],
     closingLines: [
-      { at: 168, key: "close-1", text: "Who do you want to be today" },
-      { at: 178, key: "close-2", text: "With a quiet smile begin your day" }
+      { at: 174, key: "close-1", text: "One step is enough\nfor today", speechDelayMs: 760 }
     ]
   }
 } as const;
@@ -1681,7 +1704,7 @@ export default function MeditationPage() {
         }
 
         const isFirstStructuredLine = spokenAffirmationKeysRef.current.size === 1;
-        const speechDelayMs = isFirstStructuredLine ? 520 : 320;
+        const speechDelayMs = nextLine.speechDelayMs ?? (isFirstStructuredLine ? 620 : 420);
 
         const queueSpeak = (attempt: number) => {
           if (
@@ -2048,7 +2071,7 @@ export default function MeditationPage() {
               <div className="w-full max-w-xl space-y-4">
                 <p className="text-xs uppercase tracking-[0.28em] text-gold/74">{morningGateCopy.audioLabel}</p>
                 <h1 className="font-serif text-3xl text-white sm:text-4xl">{morningGateCopy.title}</h1>
-                <p className="text-sm leading-7 text-white/68">{morningGateCopy.subtitle}</p>
+                <p className="text-[13px] leading-6 text-white/64 sm:text-[13.5px] sm:leading-6">{morningGateCopy.subtitle}</p>
                 <div className="mx-auto mt-4 h-[6px] w-full max-w-md overflow-hidden rounded-full bg-white/10">
                   <div
                     className="h-full rounded-full bg-gold/80 transition-[width] duration-700"
@@ -2187,7 +2210,10 @@ export default function MeditationPage() {
 
               {isStructuredMorningGate ? (
                 <div className="mt-8 min-h-[92px] max-w-xl space-y-3">
-                  <p className="mx-auto whitespace-pre-line font-serif text-2xl leading-[1.8] text-white/90 sm:text-[32px] sm:leading-[1.9]">
+                  <p
+                    key={affirmationMessage ?? "structured-morning-empty"}
+                    className="mx-auto animate-fade-in whitespace-pre-line font-serif text-[1.3rem] leading-[1.82] text-white/88 sm:text-[1.65rem] sm:leading-[1.92]"
+                  >
                     {affirmationMessage}
                   </p>
                 </div>
