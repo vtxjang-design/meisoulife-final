@@ -1086,7 +1086,7 @@ export const siteCopy = {
     },
     community: {
       eyebrow: "COMMUNITY",
-      headline: "여기는 버티는 곳이 아닙니다. 매일 함께 깨어나는 곳입니다.",
+      headline: "여기는 매일 함께 깨어나는 곳입니다.",
       subcopy:
         "1분의 고요를 혼자 끝내지 않고, 7일간의 작은 회복과 커뮤니티 리듬으로 부드럽게 이어갑니다.",
       lineCommunityTitle: "7일, 함께 시작하는 입구",
@@ -1245,7 +1245,7 @@ export const siteCopy = {
       heroEyebrow: "Coexistence Meditation Ecosystem",
       heroTitle: "지금, 함께 깨어나는 리듬을 시작해볼까요?",
       heroDescription:
-        "명상life는 혼자 애써 버티는 곳이 아닙니다. 매일의 작은 실천을 통해 마음, 몸, 관계, 삶을 정돈하고 함께 깨어 살아가기 위한 공생 리듬 플랫폼입니다.",
+        "우리는 사람들이 자신의 참가치를 발견하고 실현하며, 하루를 설계하고, 인간 본래의 리듬으로 살아가도록 돕습니다.",
       heroPrimary: "60초 리듬 시작하기",
       heroSecondary: "멤버 되기",
       imageAlt: "고요한 아침 명상 풍경",
@@ -1386,19 +1386,19 @@ export const siteCopy = {
         eyebrow: "Platform Concept",
         title: "공생 리듬 플랫폼이란",
         description:
-          "이곳은 콘텐츠를 소비하는 플랫폼이 아닙니다. 먼저 매일 돌아오는 리듬이 있고, 그 위에 AI, 결제, 커뮤니티가 조용히 겹쳐지는 구조입니다.",
+          "우리는 사람들이 자신의 참가치를 발견하고 실현하며, 하루를 설계하고, 인간 본래의 리듬으로 살아가도록 돕습니다.",
         items: [
           "중심에는 매일 돌아오기 위한 리듬 설계가 있습니다.",
           "AI는 답을 주기보다 리듬을 지지하는 보조 역할을 합니다.",
-          "결제는 상품 구매가 아니라 지속을 가능하게 하는 환경을 지탱합니다.",
-          "커뮤니티는 사람을 모으기 위한 장치가 아니라, 리듬 위에서 자연스럽게 생겨나는 연결입니다."
+          "결제는 지속적인 회복과 성장을 가능하게 하는 기반을 지탱합니다.",
+          "커뮤니티는 리듬 위에서 자연스럽게 생겨나는 연결과 공생의 흐름을 키웁니다."
         ]
       },
       platformFlow: {
         eyebrow: "Platform Flow",
         title: "공생 리듬 플랫폼의 흐름",
         description:
-          "명상life는 명상을 파는 곳이 아닙니다. 매일 함께 깨어나는 생활 리듬을 키우고, 개인의 회복에서 공생 문화와 지구경영으로 나아가는 자리입니다.",
+          "HROS는 AI 시대에 사람들이 회복하고, 본래의 삶의 리듬을 되찾으며, 자연지능을 확장하고, 자기 삶의 주인이 되어 공생으로 성장하도록 돕는 Human Recovery Operating System입니다.",
         items: [
           { step: "01", title: "오늘의 1분 명상", description: "먼저 1분, 자신에게 돌아오는 고요함을 체험합니다." },
           { step: "02", title: "7일간의 작은 회복", description: "아침 1분, 밤 3분을 쌓아가며 부드러운 생활 리듬을 되찾아갑니다." },
@@ -1558,7 +1558,7 @@ export const siteCopy = {
       eyebrow: "Membership",
       title: "1분 회복에서 일상 리듬, 뇌의 주인, 공생으로",
       description:
-        "명상life의 회원은 명상 콘텐츠를 사는 사람이 아닙니다. 1분 회복에서 시작해 일상의 리듬, 뇌의 주인으로 살아가는 힘, 공생 문화로 나아가는 사람들입니다.",
+        "명상life의 회원은 1분 회복에서 시작해 일상의 리듬을 되찾고, 자연지능을 확장하며, 자기 삶의 주인으로 살아가고, 공생으로 성장해가는 사람들입니다.",
       checkoutNote: "결제 후 이 화면으로 돌아오면 다음 단계로 이어집니다",
       badges: ["Apple처럼 조용하고 명확하게", "일본 웰니스다운 여백", "지금 바로 시작할 수 있는 흐름"],
       supportText:
@@ -1669,7 +1669,7 @@ export const siteCopy = {
           { day: 7, title: "통합", goal: "7일간의 변화를 앞으로의 일상 안으로 조용히 가져옵니다.", practice: "통합 명상 3분", button: "Day 7 시작하기" }
         ],
         bottomTitle: "이 리듬을 계속하기 위해",
-        bottomDescription: "Basic 프로그램은 완벽하게 해내기 위한 것이 아닙니다. 다시 돌아올 자리를 만드는 작은 입구입니다.",
+        bottomDescription: "Basic 프로그램은 다시 돌아올 자리를 만들고, 하루를 본래의 리듬으로 살아가도록 돕는 작은 입구입니다.",
         bottomPrimary: "오늘의 1분으로 돌아가기",
         bottomSecondary: "7일간의 작은 회복 보기",
         bottomTertiary: "홈으로 돌아가기"
@@ -1721,7 +1721,7 @@ export const siteCopy = {
           { title: "공생 문화 프로젝트", description: "자신만이 아니라 주변과 사회로 퍼지는 실천을 길러갑니다." }
         ],
         actionTitle: "오늘부터, 조용히 장을 기르기",
-        actionDescription: "Inner Circle은 특별한 사람이 되기 위한 곳이 아닙니다. 자신에게 돌아오고, 그 고요함으로 주변을 비추기 위한 자리입니다.",
+        actionDescription: "Inner Circle은 자신에게 돌아오고, 그 고요함으로 주변을 밝히며 공생의 문화를 넓혀가는 자리입니다.",
         meditationButton: "오늘의 3분 시작하기",
         coachButton: "AI 리듬 코치 열기",
         lineButton: "LINE 커뮤니티로",

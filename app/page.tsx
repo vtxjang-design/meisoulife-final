@@ -191,7 +191,7 @@ const nationalParkCopy = {
       { key: "campfire", title: "Quiet Campfire", description: "조용히 함께 정돈되는 공간" },
       { key: "ranger", title: "AI Ranger", description: "자신에게 돌아오게 돕는 부드러운 안내자" }
     ],
-    note: "중독을 만드는 곳이 아니라, 회복을 위해 들르는 장소입니다."
+    note: "회복을 위해 조용히 돌아와 머물 수 있는 장소입니다."
   },
   en: {
     eyebrow: "DIGITAL NATIONAL PARK",
