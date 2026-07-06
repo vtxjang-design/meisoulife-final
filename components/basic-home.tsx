@@ -225,10 +225,23 @@ function getDoorClasses(gate: BasicGateKey) {
   }
 
   if (gate === "daytime") {
-    return "border-[rgba(255,255,255,0.10)] bg-[linear-gradient(180deg,rgba(255,255,255,0.07),rgba(255,255,255,0.035))] shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_0_1px_rgba(77,182,172,0.06)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.09),rgba(255,255,255,0.045))]";
+    return "border-[rgba(255,255,255,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.04))] shadow-[0_24px_56px_rgba(0,0,0,0.20),0_0_0_1px_rgba(77,182,172,0.08)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.10),rgba(255,255,255,0.05))]";
   }
 
   return "border-[rgba(255,255,255,0.10)] bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.03))] shadow-[0_24px_56px_rgba(0,0,0,0.22),0_0_0_1px_rgba(30,58,95,0.10)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.085),rgba(255,255,255,0.04))]";
+}
+
+function getDoorButtonClasses(door: BasicDoorKey) {
+  switch (door) {
+    case "focus":
+      return "border-[rgba(123,219,255,0.24)] bg-[rgba(96,190,255,0.12)] text-[rgba(225,246,255,0.94)] hover:bg-[rgba(96,190,255,0.18)]";
+    case "rest":
+      return "border-[rgba(134,224,180,0.24)] bg-[rgba(106,194,148,0.12)] text-[rgba(232,255,244,0.94)] hover:bg-[rgba(106,194,148,0.18)]";
+    case "recharge":
+      return "border-[rgba(236,198,113,0.26)] bg-[rgba(236,198,113,0.12)] text-[rgba(255,247,223,0.94)] hover:bg-[rgba(236,198,113,0.18)]";
+    default:
+      return "border-[rgba(127,255,212,0.22)] bg-[rgba(127,255,212,0.10)] text-[rgba(225,255,247,0.92)] hover:bg-[rgba(127,255,212,0.16)]";
+  }
 }
 
 function getDoorAccentClasses(door: BasicDoorKey) {
@@ -423,7 +436,9 @@ export function BasicHome({
                   <p className="text-xs uppercase tracking-[0.30em] text-[rgba(127,255,212,0.66)]">{gate.eyebrow}</p>
                   <h2 className="mt-3 text-2xl font-semibold text-[rgba(244,250,255,0.96)]">{gate.title}</h2>
                   <p className="mt-2 text-base leading-7 text-[rgba(242,248,252,0.88)]">{gate.question}</p>
-                  <p className="mt-2 text-sm leading-7 text-[rgba(233,242,248,0.62)]">{gate.atmosphere}</p>
+                  {gate.atmosphere ? (
+                    <p className="mt-2 text-sm leading-7 text-[rgba(233,242,248,0.62)]">{gate.atmosphere}</p>
+                  ) : null}
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-3">
@@ -431,7 +446,9 @@ export function BasicHome({
                     <Link
                       key={door.key}
                       href={door.href}
-                      className={`group relative overflow-hidden rounded-[24px] border p-5 backdrop-blur-xl transition hover:-translate-y-0.5 ${getDoorClasses(gate.key)} ${getDoorAccentClasses(door.key)}`}
+                      className={`group relative overflow-hidden rounded-[24px] border backdrop-blur-xl transition hover:-translate-y-0.5 ${
+                        gate.key === "daytime" ? "p-6 md:min-h-[320px]" : "p-5"
+                      } ${getDoorClasses(gate.key)} ${getDoorAccentClasses(door.key)}`}
                     >
                       <div className="pointer-events-none absolute inset-0 opacity-100 before:absolute before:inset-0 before:content-['']" />
                       <div className="flex items-start justify-between gap-3">
@@ -441,10 +458,34 @@ export function BasicHome({
                         </span>
                       </div>
                       <h3 className="relative z-10 mt-5 text-lg font-semibold text-[rgba(244,250,255,0.95)]">{door.title}</h3>
-                      <p className="relative z-10 mt-3 text-sm leading-7 text-[rgba(233,242,248,0.72)]">“{door.state}”</p>
-                      <span className="relative z-10 mt-6 inline-flex text-sm font-semibold text-[rgba(225,255,247,0.86)] transition group-hover:text-white">
-                        {copy.enter}
-                      </span>
+                      {gate.key === "daytime" ? (
+                        <>
+                          <p className="relative z-10 mt-3 text-xl font-semibold leading-[1.45] text-[rgba(244,250,255,0.92)]">
+                            {door.headline}
+                          </p>
+                          <p className="relative z-10 mt-4 text-sm leading-7 text-[rgba(233,242,248,0.74)]">“{door.state}”</p>
+                          <p className="relative z-10 mt-3 text-sm leading-7 text-[rgba(233,242,248,0.62)]">{door.description}</p>
+                          <div className="relative z-10 mt-6">
+                            <span className="inline-flex rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[11px] uppercase tracking-[0.16em] text-[rgba(233,242,248,0.56)]">
+                              {door.purpose}
+                            </span>
+                          </div>
+                          <span
+                            className={`relative z-10 mt-7 inline-flex min-h-[44px] items-center justify-center rounded-full border px-4 py-2 text-sm font-semibold transition ${getDoorButtonClasses(
+                              door.key
+                            )}`}
+                          >
+                            {door.entryLabel}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <p className="relative z-10 mt-3 text-sm leading-7 text-[rgba(233,242,248,0.72)]">“{door.state}”</p>
+                          <span className="relative z-10 mt-6 inline-flex text-sm font-semibold text-[rgba(225,255,247,0.86)] transition group-hover:text-white">
+                            {copy.enter}
+                          </span>
+                        </>
+                      )}
                     </Link>
                   ))}
                 </div>

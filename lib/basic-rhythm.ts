@@ -21,6 +21,7 @@ export type BasicPracticeDefinition = {
   durationSeconds: number;
   emoji: string;
   title: string;
+  headline?: string;
   purpose: string;
   state: string;
   description: string;
@@ -38,6 +39,7 @@ type LocalizedDoor = {
   meditationType: Exclude<SessionTypeKey, "default">;
   durationSeconds: number;
   title: string;
+  headline?: string;
   purpose: string;
   state: string;
   description: string;
@@ -118,10 +120,10 @@ const rhythmCatalog = {
       }
     },
     daytime: {
-      title: "Daytime Gate",
+      title: "🌞 Daytime Gate",
       eyebrow: "昼",
-      question: "今のあなたに必要なのは何ですか？",
-      atmosphere: "崩れる前に、小さく戻る時間です。",
+      question: "今のあなたに必要なリズムを選んでください。",
+      atmosphere: "",
       doors: {
         affirmation: {} as LocalizedDoor,
         energy: {} as LocalizedDoor,
@@ -132,29 +134,31 @@ const rhythmCatalog = {
           meditationType: "day",
           durationSeconds: 60,
           title: "Focus Gate",
-          purpose: "集中を取り戻す",
-          state: "注意が散っている。",
-          description: "集中へ戻る。",
+          headline: "散漫から 明晰へ",
+          purpose: "Brain Rhythm を取り戻す",
+          state: "思考が散っている",
+          description: "散った思考を ひとつの点へ戻します",
           sessionTitle: "Focus Gate",
-          sessionSubtitle: "集中を取り戻したいとき",
-          sessionGuidance: "今の自分に合う方法で、注意をここへ戻します。",
-          entryLabel: "今の自分に合う方法で戻る",
-          completionTitle: "今日、また戻ることができました"
+          sessionSubtitle: "散った思考を\nひとつへ戻す1分",
+          sessionGuidance: "いま必要なのは 明確さです\n注意をひとつの点へ戻します",
+          entryLabel: "Refocus",
+          completionTitle: "🧠 Brain Rhythm Restored"
         },
         rest: {
           emoji: "🌿",
           routeType: "daytime-rest",
           meditationType: "day",
           durationSeconds: 60,
-          title: "Rest Gate",
-          purpose: "緊張をほどく",
-          state: "張りつめている、抱えすぎている。",
-          description: "緊張をゆるめる。",
-          sessionTitle: "Rest Gate",
-          sessionSubtitle: "緊張を静かに手放したいとき",
-          sessionGuidance: "今の自分に合う方法で、少しずつ戻ります。",
-          entryLabel: "今の自分に合う方法で戻る",
-          completionTitle: "少しずつ、早く戻れるようになっています"
+          title: "Calm Gate",
+          headline: "緊張から 平穏へ",
+          purpose: "Heart Rhythm を取り戻す",
+          state: "張りつめている\n抱えすぎている",
+          description: "身体と心の緊張を やさしくほどきます",
+          sessionTitle: "Calm Gate",
+          sessionSubtitle: "緊張をゆるめて\n安らぎへ戻る1分",
+          sessionGuidance: "いま必要なのは やわらかさです\n長い吐息で 圧を手放します",
+          entryLabel: "Relax",
+          completionTitle: "❤️ Heart Rhythm Restored"
         },
         recharge: {
           emoji: "⚡",
@@ -162,14 +166,15 @@ const rhythmCatalog = {
           meditationType: "day",
           durationSeconds: 60,
           title: "Recharge Gate",
-          purpose: "エネルギーを回復する",
-          state: "エネルギーが下がっている。",
-          description: "エネルギーを戻す。",
+          headline: "疲れから 活力へ",
+          purpose: "Body Rhythm を取り戻す",
+          state: "エネルギーが下がっている",
+          description: "身体を充電し 本来の活力を呼び戻します",
           sessionTitle: "Recharge Gate",
-          sessionSubtitle: "エネルギーを戻したいとき",
-          sessionGuidance: "今の自分に合う方法で、呼吸から戻ります。",
-          entryLabel: "今の自分に合う方法で戻る",
-          completionTitle: "戻る方法を、体が思い出しています"
+          sessionSubtitle: "身体を満たして\n活力を戻す1分",
+          sessionGuidance: "いま必要なのは 活力です\n深い吸気で 体の目覚めを促します",
+          entryLabel: "Recharge",
+          completionTitle: "⚡ Body Rhythm Restored"
         },
         release: {} as LocalizedDoor,
         gratitude: {} as LocalizedDoor,
@@ -297,10 +302,10 @@ const rhythmCatalog = {
       }
     },
     daytime: {
-      title: "Daytime Gate",
+      title: "🌞 Daytime Gate",
       eyebrow: "낮",
-      question: "지금 당신에게 필요한 것은 무엇인가요?",
-      atmosphere: "낮은 무너지기 전에 작게 돌아오는 시간입니다.",
+      question: "지금 나에게 필요한 리듬을 선택하세요.",
+      atmosphere: "",
       doors: {
         affirmation: {} as LocalizedDoor,
         energy: {} as LocalizedDoor,
@@ -310,45 +315,48 @@ const rhythmCatalog = {
           routeType: "daytime-focus",
           meditationType: "day",
           durationSeconds: 60,
-          title: "집중으로 돌아가기",
-          purpose: "집중으로 돌아가기",
-          state: "주의가 흩어져 있다.",
-          description: "집중으로 돌아간다.",
-          sessionTitle: "집중으로 돌아가기",
-          sessionSubtitle: "집중을 되찾고 싶을 때",
-          sessionGuidance: "지금의 나에게 맞는 방식으로, 주의를 여기로 데려옵니다.",
-          entryLabel: "지금의 나에게 맞는 방식으로 돌아가기",
-          completionTitle: "오늘, 다시 돌아올 수 있었습니다"
+          title: "Focus Gate",
+          headline: "산만함에서 선명함으로",
+          purpose: "Brain Rhythm 회복",
+          state: "주의가 흩어져 있다",
+          description: "흩어진 생각을 하나의 점으로 다시 모읍니다",
+          sessionTitle: "Focus Gate",
+          sessionSubtitle: "흩어진 주의를\n하나로 되돌리는 1분",
+          sessionGuidance: "지금 필요한 것은 선명함입니다\n흩어진 주의를 한곳으로 모읍니다",
+          entryLabel: "Refocus",
+          completionTitle: "🧠 Brain Rhythm Restored"
         },
         rest: {
           emoji: "🌿",
           routeType: "daytime-rest",
           meditationType: "day",
           durationSeconds: 60,
-          title: "긴장을 풀기",
-          purpose: "긴장을 풀기",
-          state: "긴장되거나 과부하 상태다.",
-          description: "긴장을 내려놓는다.",
-          sessionTitle: "긴장을 풀기",
-          sessionSubtitle: "긴장을 내려놓고 싶을 때",
-          sessionGuidance: "지금의 나에게 맞는 방식으로, 조금씩 돌아갑니다.",
-          entryLabel: "지금의 나에게 맞는 방식으로 돌아가기",
-          completionTitle: "조금 더 빨리 자신에게 돌아오고 있습니다"
+          title: "Calm Gate",
+          headline: "긴장에서 평온함으로",
+          purpose: "Heart Rhythm 회복",
+          state: "긴장되거나 과부하 상태다",
+          description: "몸과 마음의 긴장을 부드럽게 내려놓습니다",
+          sessionTitle: "Calm Gate",
+          sessionSubtitle: "긴장을 풀고\n평온함으로 돌아가는 1분",
+          sessionGuidance: "지금 필요한 것은 이완입니다\n긴 호흡으로 압력을 내려놓습니다",
+          entryLabel: "Relax",
+          completionTitle: "❤️ Heart Rhythm Restored"
         },
         recharge: {
           emoji: "⚡",
           routeType: "daytime-recharge",
           meditationType: "day",
           durationSeconds: 60,
-          title: "에너지를 회복하기",
-          purpose: "에너지를 회복하기",
-          state: "에너지가 낮다.",
-          description: "에너지를 다시 채운다.",
-          sessionTitle: "에너지를 회복하기",
-          sessionSubtitle: "에너지를 회복하고 싶을 때",
-          sessionGuidance: "지금의 나에게 맞는 방식으로, 호흡에서 다시 시작합니다.",
-          entryLabel: "지금의 나에게 맞는 방식으로 돌아가기",
-          completionTitle: "리듬을 기억하는 힘이 자라고 있습니다"
+          title: "Recharge Gate",
+          headline: "무기력에서 활력으로",
+          purpose: "Body Rhythm 회복",
+          state: "에너지가 낮다",
+          description: "몸을 다시 채우고 본래의 활력을 깨웁니다",
+          sessionTitle: "Recharge Gate",
+          sessionSubtitle: "몸을 충전하고\n활력을 되찾는 1분",
+          sessionGuidance: "지금 필요한 것은 활력입니다\n깊은 들숨으로 몸의 리듬을 깨웁니다",
+          entryLabel: "Recharge",
+          completionTitle: "⚡ Body Rhythm Restored"
         },
         release: {} as LocalizedDoor,
         gratitude: {} as LocalizedDoor,
@@ -476,10 +484,10 @@ const rhythmCatalog = {
       }
     },
     daytime: {
-      title: "Daytime Gate",
+      title: "🌞 Daytime Gate",
       eyebrow: "Daytime",
-      question: "What do you need right now?",
-      atmosphere: "Return before you collapse.",
+      question: "Choose the gate you need right now.",
+      atmosphere: "",
       doors: {
         affirmation: {} as LocalizedDoor,
         energy: {} as LocalizedDoor,
@@ -490,29 +498,31 @@ const rhythmCatalog = {
           meditationType: "day",
           durationSeconds: 60,
           title: "Focus Gate",
-          purpose: "Return to concentration",
-          state: "My attention is scattered.",
-          description: "Return to concentration.",
+          headline: "From Distraction to Clarity",
+          purpose: "Restore Brain Rhythm",
+          state: "My attention is scattered",
+          description: "Bring scattered thoughts back into one point",
           sessionTitle: "Focus Gate",
-          sessionSubtitle: "When your attention feels scattered",
-          sessionGuidance: "Return in the way that fits you today and gather your attention again.",
-          entryLabel: "Return in the way that fits you today",
-          completionTitle: "Today, you returned again"
+          sessionSubtitle: "A one-minute return\nfrom distraction to clarity",
+          sessionGuidance: "Return to one clear point\nand let attention gather again",
+          entryLabel: "Refocus",
+          completionTitle: "🧠 Brain Rhythm Restored"
         },
         rest: {
           emoji: "🌿",
           routeType: "daytime-rest",
           meditationType: "day",
           durationSeconds: 60,
-          title: "Rest Gate",
-          purpose: "Release tension",
-          state: "I feel tense or overloaded.",
-          description: "Release tension.",
-          sessionTitle: "Rest Gate",
-          sessionSubtitle: "When you feel tense or overloaded",
-          sessionGuidance: "Return in the way that fits you today and let the pressure soften.",
-          entryLabel: "Return in the way that fits you today",
-          completionTitle: "You are learning to return more easily"
+          title: "Calm Gate",
+          headline: "From Tension to Ease",
+          purpose: "Restore Heart Rhythm",
+          state: "I feel tense or overloaded",
+          description: "Release physical and mental tension",
+          sessionTitle: "Calm Gate",
+          sessionSubtitle: "A one-minute return\nfrom tension to ease",
+          sessionGuidance: "Let the exhale grow longer\nand allow the pressure to soften",
+          entryLabel: "Relax",
+          completionTitle: "❤️ Heart Rhythm Restored"
         },
         recharge: {
           emoji: "⚡",
@@ -520,14 +530,15 @@ const rhythmCatalog = {
           meditationType: "day",
           durationSeconds: 60,
           title: "Recharge Gate",
-          purpose: "Recover energy",
-          state: "My energy is low.",
-          description: "Recover energy.",
+          headline: "From Fatigue to Vitality",
+          purpose: "Restore Body Rhythm",
+          state: "My energy is low",
+          description: "Recharge your body and awaken your natural vitality",
           sessionTitle: "Recharge Gate",
-          sessionSubtitle: "When your energy is low",
-          sessionGuidance: "Return in the way that fits you today and let one small rhythm refill you.",
-          entryLabel: "Return in the way that fits you today",
-          completionTitle: "Your rhythm is remembering itself"
+          sessionSubtitle: "A one-minute return\nfrom fatigue to vitality",
+          sessionGuidance: "Take a deeper inhale\nand let your body wake back up",
+          entryLabel: "Recharge",
+          completionTitle: "⚡ Body Rhythm Restored"
         },
         release: {} as LocalizedDoor,
         gratitude: {} as LocalizedDoor,
@@ -632,6 +643,7 @@ export function getBasicRhythmGates(language: string) {
         durationSeconds: door.durationSeconds,
         emoji: door.emoji,
         title: door.title,
+        headline: "headline" in door ? door.headline : door.title,
         purpose: door.purpose,
         state: door.state,
         description: door.description,
