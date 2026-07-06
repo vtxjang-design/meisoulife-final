@@ -2686,7 +2686,7 @@ export default function MeditationPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_20%),linear-gradient(180deg,#07111f_0%,#0d1b2d_45%,#10273a_100%)] px-6 py-10 text-white">
-      <div className={`relative flex min-h-[480px] w-full ${isRechargeGate ? "max-w-[1200px] overflow-visible" : "max-w-3xl overflow-hidden"} flex-col items-center rounded-[32px] border border-white/10 bg-white/[0.04] px-6 py-8 text-center shadow-[0_30px_80px_rgba(0,0,0,0.28)] sm:px-8 sm:py-10`}>
+      <div className={`relative flex min-h-[480px] w-full max-w-3xl ${isRechargeGate ? "overflow-visible" : "overflow-hidden"} flex-col items-center rounded-[32px] border border-white/10 bg-white/[0.04] px-6 py-8 text-center shadow-[0_30px_80px_rgba(0,0,0,0.28)] sm:px-8 sm:py-10`}>
         {!ambientVideoFailed && isFocusGate ? (
           <video
             key="focus-gate-video"
@@ -2876,7 +2876,7 @@ export default function MeditationPage() {
 
             <div className="mt-12 flex min-h-[320px] w-full flex-col items-center justify-center">
               {(journeyMode || meditationType !== "default") && needsUserStart ? (
-                <div className={`mb-6 w-full ${isRechargeGate ? "max-w-[1080px]" : "max-w-md"} rounded-[24px] border border-[rgba(212,178,106,0.18)] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-[clamp(16px,4vw,40px)] py-5 text-center shadow-[0_18px_50px_rgba(4,12,24,0.18)] ${isRechargeGate ? "overflow-visible" : ""}`}>
+                <div className={`mb-6 w-full ${isRechargeGate ? "max-w-3xl" : "max-w-md"} rounded-[24px] border border-[rgba(212,178,106,0.18)] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-[clamp(16px,4vw,40px)] py-5 text-center shadow-[0_18px_50px_rgba(4,12,24,0.18)] ${isRechargeGate ? "overflow-visible" : ""}`}>
                   {isRechargeGate ? (
                     <div className="space-y-5">
                       <div className="mx-auto max-w-2xl space-y-3">
@@ -2885,11 +2885,11 @@ export default function MeditationPage() {
                         <p className="text-sm leading-7 text-white/56">{rechargeIntro.state}</p>
                         <p className="whitespace-pre-line text-sm leading-7 text-white/76 sm:text-base">{rechargeIntro.body}</p>
                       </div>
-                      <div className="flex w-full justify-center overflow-visible rounded-[24px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.08),transparent_34%),rgba(7,17,31,0.82)] shadow-[0_24px_60px_rgba(4,12,24,0.34)]">
+                      <div className="mx-auto flex w-full max-w-[1080px] justify-center overflow-visible rounded-[24px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.08),transparent_34%),rgba(7,17,31,0.82)] shadow-[0_24px_60px_rgba(4,12,24,0.34)]">
                         <img
                           src={rechargeGuideImage}
                           alt={basicPracticeCopy?.sessionTitle ?? "Recharge Gate"}
-                          className="block h-auto w-full max-w-[960px] object-contain object-center"
+                          className="mx-auto block h-auto w-full max-w-[760px] object-contain object-center"
                         />
                       </div>
                       <button
