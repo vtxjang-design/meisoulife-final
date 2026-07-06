@@ -2686,7 +2686,7 @@ export default function MeditationPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_20%),linear-gradient(180deg,#07111f_0%,#0d1b2d_45%,#10273a_100%)] px-6 py-10 text-white">
-      <div className="relative flex min-h-[480px] w-full max-w-3xl flex-col items-center overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.04] px-6 py-8 text-center shadow-[0_30px_80px_rgba(0,0,0,0.28)] sm:px-8 sm:py-10">
+      <div className={`relative flex min-h-[480px] w-full ${isRechargeGate ? "max-w-[1200px] overflow-visible" : "max-w-3xl overflow-hidden"} flex-col items-center rounded-[32px] border border-white/10 bg-white/[0.04] px-6 py-8 text-center shadow-[0_30px_80px_rgba(0,0,0,0.28)] sm:px-8 sm:py-10`}>
         {!ambientVideoFailed && isFocusGate ? (
           <video
             key="focus-gate-video"
@@ -2889,7 +2889,7 @@ export default function MeditationPage() {
                         <img
                           src={rechargeGuideImage}
                           alt={basicPracticeCopy?.sessionTitle ?? "Recharge Gate"}
-                          className="block h-auto w-full max-w-[1000px] object-contain object-center"
+                          className="block h-auto w-full max-w-[960px] object-contain object-center"
                         />
                       </div>
                       <button
