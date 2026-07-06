@@ -72,6 +72,27 @@ const rechargeCompletionCopy = {
   }
 } as const;
 
+const rechargeIntroCopy = {
+  kr: {
+    title: "Recharge Gate",
+    subtitle: "몸을 충전하고 활력을 되찾는 1분",
+    state: "\"에너지가 낮다\"",
+    body: "지금 필요한 것은 활력입니다.\n깊은 호흡으로 몸의 리듬을 깨워보세요."
+  },
+  jp: {
+    title: "Recharge Gate",
+    subtitle: "疲れから活力へ",
+    state: "「エネルギーが下がっている」",
+    body: "深い呼吸と小さな動きで\n身体本来のリズムを取り戻しましょう。"
+  },
+  en: {
+    title: "Recharge Gate",
+    subtitle: "From Fatigue to Vitality",
+    state: "\"My energy feels low.\"",
+    body: "Take one minute to awaken your body rhythm."
+  }
+} as const;
+
 type BreathPhase = "inhale" | "hold" | "exhale";
 type MeditationType = "default" | "morning" | "day" | "night";
 type MeditationDoor =
@@ -1082,6 +1103,7 @@ export default function MeditationPage() {
       : copy.completionMessage;
   const rechargeGuideImage = RECHARGE_GUIDE_IMAGES[localizedLanguage];
   const rechargeCompletion = rechargeCompletionCopy[localizedLanguage];
+  const rechargeIntro = rechargeIntroCopy[localizedLanguage];
   const rechargeStartLabel =
     localizedLanguage === "kr"
       ? "Recharge 시작하기"
@@ -1666,6 +1688,23 @@ export default function MeditationPage() {
         video.currentTime = 0;
       }
       await video.play();
+      if (options?.restartFromBeginning ?? false) {
+        const fullscreenTarget = video as HTMLVideoElement & {
+          webkitEnterFullscreen?: () => void;
+          webkitRequestFullscreen?: () => Promise<void> | void;
+        };
+        try {
+          if (document.fullscreenEnabled && video.requestFullscreen) {
+            await video.requestFullscreen();
+          } else if (fullscreenTarget.webkitRequestFullscreen) {
+            await fullscreenTarget.webkitRequestFullscreen();
+          } else if (fullscreenTarget.webkitEnterFullscreen) {
+            fullscreenTarget.webkitEnterFullscreen();
+          }
+        } catch (error) {
+          console.warn("[recharge-gate] fullscreen unavailable", error);
+        }
+      }
       setAmbientVideoFailed(false);
     } catch (error) {
       console.warn("[recharge-gate] video playback failed", error);
@@ -2668,8 +2707,9 @@ export default function MeditationPage() {
             ref={rechargeVideoRef}
             className="absolute inset-0 z-0 h-full w-full object-cover opacity-[0.92] brightness-[0.98] contrast-[1.02] saturate-[1.02] transition-opacity duration-700"
             autoPlay={!needsUserStart}
+            controls={false}
             playsInline
-            preload="metadata"
+            preload="auto"
             onLoadedData={() => console.log("Recharge Gate video loaded")}
             onEnded={() => setSecondsLeft(0)}
             onError={() => setAmbientVideoFailed(true)}
@@ -2817,7 +2857,7 @@ export default function MeditationPage() {
                   </div>
                 )}
               </div>
-            ) : (
+            ) : isRechargeGate && !needsUserStart ? null : (
               <div className="space-y-4">
                 {basicPracticeCopy ? (
                   <div className="mx-auto max-w-xl space-y-3 rounded-[24px] border border-white/10 bg-white/[0.04] px-4 py-4 backdrop-blur">
@@ -2839,6 +2879,12 @@ export default function MeditationPage() {
                 <div className={`mb-6 w-full ${isRechargeGate ? "max-w-4xl" : "max-w-md"} rounded-[24px] border border-[rgba(212,178,106,0.18)] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-5 text-center shadow-[0_18px_50px_rgba(4,12,24,0.18)]`}>
                   {isRechargeGate ? (
                     <div className="space-y-5">
+                      <div className="mx-auto max-w-2xl space-y-3">
+                        <p className="text-xs uppercase tracking-[0.28em] text-gold/72">{rechargeIntro.title}</p>
+                        <h1 className="font-serif text-3xl text-white sm:text-4xl">{rechargeIntro.subtitle}</h1>
+                        <p className="text-sm leading-7 text-white/56">{rechargeIntro.state}</p>
+                        <p className="whitespace-pre-line text-sm leading-7 text-white/76 sm:text-base">{rechargeIntro.body}</p>
+                      </div>
                       <div className="overflow-hidden rounded-[24px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.08),transparent_34%),rgba(7,17,31,0.82)] shadow-[0_24px_60px_rgba(4,12,24,0.34)]">
                         <img
                           src={rechargeGuideImage}
@@ -2873,6 +2919,7 @@ export default function MeditationPage() {
                 </div>
               ) : null}
 
+              {!isRechargeGate ? (
               <div className="mb-6 flex items-center gap-2">
                 {vibrationSupported ? (
                   <button
@@ -2913,6 +2960,7 @@ export default function MeditationPage() {
                   </button>
                 ) : null}
               </div>
+              ) : null}
               {!isStructuredMorningGate && !isFocusGate && !isCalmGate && !isRechargeGate ? (
                 <p className="text-2xl font-medium text-white/72 transition-all duration-300 ease-out sm:text-3xl">
                   {copy.phases[phase]}
