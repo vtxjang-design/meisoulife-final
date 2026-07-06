@@ -2631,6 +2631,8 @@ export default function MeditationPage() {
 
     if (isRechargeGate) {
       setSoundEnabled(true);
+      setTotalSeconds(FOCUS_GATE_TOTAL_SECONDS);
+      setSecondsLeft(FOCUS_GATE_TOTAL_SECONDS);
       await playRechargeGateVideo({ restartFromBeginning: true });
       return;
     }
