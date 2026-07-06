@@ -48,6 +48,7 @@ const CALM_GATE_VIDEO_VOLUME = 0.35;
 const RECHARGE_GATE_VIDEO_VOLUME = 1;
 const AWAKENING_RITUAL_STORAGE_KEY = "meisoulife_awakening_gate_ritual";
 const FOCUS_GATE_TOTAL_SECONDS = 60;
+const RECHARGE_GUIDE_IMAGE_SRC = "/basic/daytime-gate/recharge%20gate.png";
 const RECHARGE_GUIDE_IMAGES = {
   heelRaise: "/basic/daytime-gate/heel-raise.png",
   squat: "/basic/daytime-gate/squat.png",
@@ -2928,32 +2929,12 @@ export default function MeditationPage() {
                         <p className="text-sm leading-7 text-white/56">{rechargeIntro.state}</p>
                         <p className="whitespace-pre-line text-sm leading-7 text-white/76 sm:text-base">{rechargeIntro.body}</p>
                       </div>
-                      <div className="mx-auto w-full max-w-3xl space-y-4">
-                        <div className="space-y-2 text-center">
-                          <p className="text-xs uppercase tracking-[0.24em] text-gold/68">{rechargeGuide.sectionTitle}</p>
-                        </div>
-                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                          {rechargeGuide.items.map((item, index) => (
-                            <div
-                              key={item.movement}
-                              className={`rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.03))] p-4 text-left shadow-[0_16px_40px_rgba(4,12,24,0.18)] backdrop-blur-xl ${index === rechargeGuide.items.length - 1 ? "md:col-span-2" : ""}`}
-                            >
-                              <div className="flex items-center gap-3">
-                                <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold/20 bg-gold/10 text-sm font-semibold tracking-[0.12em] text-gold">
-                                  {String(index + 1).padStart(2, "0")}
-                                </span>
-                                <h3 className="text-lg font-semibold text-white sm:text-[1.15rem]">{item.title}</h3>
-                              </div>
-                              <div className="mt-4 flex min-h-[220px] items-center justify-center rounded-[22px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.08),transparent_38%),linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01))] px-4 py-5">
-                                <img
-                                  src={RECHARGE_GUIDE_IMAGES[item.movement]}
-                                  alt={item.title}
-                                  className="block h-auto max-h-[240px] w-full object-contain object-center"
-                                />
-                              </div>
-                            </div>
-                          ))}
-                        </div>
+                      <div className="mx-auto flex w-full max-w-3xl justify-center overflow-visible rounded-[24px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.08),transparent_34%),rgba(7,17,31,0.82)] p-4 shadow-[0_24px_60px_rgba(4,12,24,0.34)] sm:p-5">
+                        <img
+                          src={RECHARGE_GUIDE_IMAGE_SRC}
+                          alt="Recharge Gate movement guide"
+                          className="mx-auto block h-auto w-full max-w-[900px] rounded-[24px] object-contain shadow-[0_20px_50px_rgba(4,12,24,0.24)]"
+                        />
                       </div>
                       <button
                         type="button"
