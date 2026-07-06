@@ -2846,9 +2846,17 @@ export default function MeditationPage() {
         ) : null}
         <div className={`absolute inset-0 z-10 ${isStructuredMorningGate ? "bg-[linear-gradient(180deg,rgba(4,10,19,0.18),rgba(4,10,19,0.36))]" : "bg-black/25"}`} />
         {isRechargeGate && !needsUserStart && !isComplete ? (
-          <div className="pointer-events-none absolute left-1/2 top-4 z-30 -translate-x-1/2 sm:left-auto sm:right-5 sm:top-5 sm:translate-x-0">
-            <div className="rounded-full border border-[rgba(212,178,106,0.36)] bg-[rgba(7,17,31,0.78)] px-5 py-2.5 text-2xl font-semibold tracking-[0.12em] text-white shadow-[0_18px_44px_rgba(4,12,24,0.38)] backdrop-blur-md sm:px-6 sm:py-3 sm:text-[28px]">
-              {formatRemainingTime(secondsLeft)}
+          <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center">
+            <div className="relative flex h-52 w-52 items-center justify-center sm:h-72 sm:w-72">
+              <div className="absolute inset-0 rounded-full bg-[rgba(7,17,31,0.24)] blur-3xl" />
+              <div className="absolute inset-0 rounded-full border border-[rgba(212,178,106,0.32)] bg-[rgba(7,17,31,0.46)] shadow-[0_22px_60px_rgba(4,12,24,0.42)] backdrop-blur-xl" />
+              <div className="absolute inset-3 rounded-full border border-white/14" />
+              <div className="absolute inset-0 rounded-full border-t border-[rgba(212,178,106,0.72)] border-r border-[rgba(212,178,106,0.22)] border-b border-[rgba(212,178,106,0.16)] border-l border-[rgba(212,178,106,0.42)] opacity-90" />
+              <div className="relative z-10 text-center">
+                <p className="text-[44px] font-semibold tracking-[0.08em] text-white sm:text-[64px]">
+                  {formatRemainingTime(secondsLeft)}
+                </p>
+              </div>
             </div>
           </div>
         ) : null}
