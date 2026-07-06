@@ -1707,13 +1707,13 @@ export default function MeditationPage() {
 
   async function playRechargeGateVideo(options?: { restartFromBeginning?: boolean }) {
     if (!isRechargeGate || typeof window === "undefined") {
-      return;
+      return false;
     }
 
     const video = rechargeVideoRef.current;
 
     if (!video) {
-      return;
+      return false;
     }
 
     try {
@@ -1743,9 +1743,11 @@ export default function MeditationPage() {
         }
       }
       setAmbientVideoFailed(false);
+      return true;
     } catch (error) {
       console.warn("[recharge-gate] video playback failed", error);
       setAmbientVideoFailed(true);
+      return false;
     }
   }
 
@@ -2011,14 +2013,6 @@ export default function MeditationPage() {
 
     void playCalmGateVideo();
   }, [hasUserGesture, isCalmGate, isComplete, isPaused, needsUserStart]);
-
-  useEffect(() => {
-    if (!isRechargeGate || !hasUserGesture || isPaused || isComplete || needsUserStart) {
-      return;
-    }
-
-    void playRechargeGateVideo();
-  }, [hasUserGesture, isComplete, isPaused, isRechargeGate, needsUserStart]);
 
   useEffect(() => {
     if (isComplete || !soundEnabled) {
@@ -2608,6 +2602,24 @@ export default function MeditationPage() {
   }
 
   async function handleProgramAudioStart() {
+    if (isRechargeGate) {
+      setHasUserGesture(true);
+      setSoundEnabled(true);
+      setTotalSeconds(FOCUS_GATE_TOTAL_SECONDS);
+      setSecondsLeft(FOCUS_GATE_TOTAL_SECONDS);
+
+      const playbackStarted = await playRechargeGateVideo({ restartFromBeginning: true });
+
+      if (!playbackStarted) {
+        return;
+      }
+
+      setRequiresExplicitAudioStart(false);
+      setNeedsUserStart(false);
+      setIsPaused(false);
+      return;
+    }
+
     setHasUserGesture(true);
     setRequiresExplicitAudioStart(false);
     setNeedsUserStart(false);
@@ -2626,14 +2638,6 @@ export default function MeditationPage() {
     if (isCalmGate) {
       setSoundEnabled(true);
       await playCalmGateVideo({ restartFromBeginning: true });
-      return;
-    }
-
-    if (isRechargeGate) {
-      setSoundEnabled(true);
-      setTotalSeconds(FOCUS_GATE_TOTAL_SECONDS);
-      setSecondsLeft(FOCUS_GATE_TOTAL_SECONDS);
-      await playRechargeGateVideo({ restartFromBeginning: true });
       return;
     }
 
