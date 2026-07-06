@@ -38,9 +38,11 @@ const MORNING_GATE_AUDIO = {
 const AWAKENING_GATE_VIDEO_SRC = "/video/morning-gate/awakening-gate-1.mp4";
 const ENERGY_GATE_VIDEO_SRC = "/basic/morning%20gate/energy%20gate8.mp4";
 const VISION_GATE_VIDEO_SRC = "/basic/morning-gate/vision-gate-7.mp4";
+const FOCUS_GATE_VIDEO_SRC = "/videos/basic/daytime/focus-gate.mp4";
 const AWAKENING_GATE_VIDEO_VOLUME = 0.13;
 const VISION_GATE_VIDEO_VOLUME = 0.14;
 const AWAKENING_RITUAL_STORAGE_KEY = "meisoulife_awakening_gate_ritual";
+const FOCUS_GATE_TOTAL_SECONDS = 60;
 
 type BreathPhase = "inhale" | "hold" | "exhale";
 type MeditationType = "default" | "morning" | "day" | "night";
@@ -70,6 +72,7 @@ type StructuredMorningStage =
   | "closing";
 
 type StructuredMorningLine = { at: number; key: string; text: string; speechText?: string; speechDelayMs?: number };
+type GuidedFocusLine = { at: number; key: string; text: string; speechText?: string; speechDelayMs?: number };
 
 type AwakeningRitualState = {
   streakCount: number;
@@ -160,6 +163,51 @@ const awakeningRitualCopy = {
     finishCta: "Finish for today"
   }
 } as const;
+
+const focusGateNarration: Record<"jp" | "kr" | "en", GuidedFocusLine[]> = {
+  jp: [
+    { at: 0, key: "focus-1", text: "背筋を\nやさしく伸ばします", speechDelayMs: 420 },
+    { at: 5, key: "focus-2", text: "肩の力を\n静かに下ろします", speechDelayMs: 420 },
+    { at: 10, key: "focus-3", text: "ゆっくり\n息を吸います", speechText: "ゆっくり、\n息を吸います", speechDelayMs: 460 },
+    { at: 15, key: "focus-4", text: "吐きます", speechDelayMs: 460 },
+    { at: 20, key: "focus-5", text: "もう一度\n深く吸って\n吐きます", speechText: "もう一度、\n深く吸って、\n吐きます", speechDelayMs: 480 },
+    { at: 27, key: "focus-6", text: "今この瞬間へ\n戻ります", speechText: "今この瞬間へ、\n戻ります", speechDelayMs: 420 },
+    { at: 32, key: "focus-7", text: "散っていた思考が\nひとつの点へ\n集まります", speechText: "散っていた思考が、\nひとつの点へ、\n集まります", speechDelayMs: 420 },
+    { at: 38, key: "focus-8", text: "今日いちばん大切な\nひとつを\n思い出します", speechText: "今日いちばん大切な、\nひとつを、\n思い出します", speechDelayMs: 440 },
+    { at: 45, key: "focus-9", text: "そのひとつに\n心を置きます", speechText: "そのひとつに、\n心を置きます", speechDelayMs: 440 },
+    { at: 50, key: "focus-10", text: "集中する力は\nもうあなたの中にあります", speechText: "集中する力は、\nもうあなたの中にあります", speechDelayMs: 460 },
+    { at: 55, key: "focus-11", text: "準備できました", speechDelayMs: 520 },
+    { at: 58, key: "focus-12", text: "いちばん大切な\nひとつを始めましょう", speechText: "いちばん大切な、\nひとつを始めましょう", speechDelayMs: 520 }
+  ],
+  kr: [
+    { at: 0, key: "focus-1", text: "척추를 편안하게 세웁니다", speechDelayMs: 420 },
+    { at: 5, key: "focus-2", text: "어깨의 힘을 내려놓습니다", speechDelayMs: 420 },
+    { at: 10, key: "focus-3", text: "천천히 숨을 들이마십니다", speechDelayMs: 460 },
+    { at: 15, key: "focus-4", text: "내쉽니다", speechDelayMs: 460 },
+    { at: 20, key: "focus-5", text: "다시 깊게 숨을 들이마시고\n내쉽니다", speechDelayMs: 480 },
+    { at: 27, key: "focus-6", text: "지금 이 순간으로 돌아옵니다", speechDelayMs: 420 },
+    { at: 32, key: "focus-7", text: "흩어진 생각들이\n하나의 점으로 모입니다", speechDelayMs: 420 },
+    { at: 38, key: "focus-8", text: "오늘 가장 중요한 한 가지를\n떠올려 봅니다", speechDelayMs: 440 },
+    { at: 45, key: "focus-9", text: "그 하나에\n마음을 둡니다", speechDelayMs: 440 },
+    { at: 50, key: "focus-10", text: "당신의 집중은\n이미 당신 안에 있습니다", speechDelayMs: 460 },
+    { at: 55, key: "focus-11", text: "준비되었습니다", speechDelayMs: 520 },
+    { at: 58, key: "focus-12", text: "이제 가장 중요한 한 가지를\n시작하세요", speechDelayMs: 520 }
+  ],
+  en: [
+    { at: 0, key: "focus-1", text: "Lengthen the spine\ngently", speechDelayMs: 420 },
+    { at: 5, key: "focus-2", text: "Let the shoulders\nsoften", speechDelayMs: 420 },
+    { at: 10, key: "focus-3", text: "Slowly breathe in", speechDelayMs: 460 },
+    { at: 15, key: "focus-4", text: "And breathe out", speechDelayMs: 460 },
+    { at: 20, key: "focus-5", text: "Once more\nA deeper breath in\nand out", speechDelayMs: 480 },
+    { at: 27, key: "focus-6", text: "Return to\nthis moment", speechDelayMs: 420 },
+    { at: 32, key: "focus-7", text: "Scattered thoughts\nbegin to gather\ninto one point", speechDelayMs: 420 },
+    { at: 38, key: "focus-8", text: "Bring to mind\nthe one thing\nthat matters most today", speechDelayMs: 440 },
+    { at: 45, key: "focus-9", text: "Place your attention\nthere", speechDelayMs: 440 },
+    { at: 50, key: "focus-10", text: "Your focus\nis already within you", speechDelayMs: 460 },
+    { at: 55, key: "focus-11", text: "You are ready", speechDelayMs: 520 },
+    { at: 58, key: "focus-12", text: "Begin the one thing\nthat matters most", speechDelayMs: 520 }
+  ]
+};
 
 const affirmationGateCopy = {
   jp: {
@@ -671,6 +719,36 @@ function getStructuredMorningSpeechSettings(language: "jp" | "kr" | "en") {
   };
 }
 
+function getFocusGateSpeechSettings(language: "jp" | "kr" | "en") {
+  if (language === "kr") {
+    return {
+      lang: "ko-KR",
+      rate: 0.84,
+      pitch: 0.98,
+      volume: 1,
+      preferredNames: ["Yuna", "Sora", "Google 한국어", "Siri"]
+    };
+  }
+
+  if (language === "en") {
+    return {
+      lang: "en-US",
+      rate: 0.82,
+      pitch: 1,
+      volume: 1,
+      preferredNames: ["Samantha", "Ava", "Victoria", "Google US English", "Siri"]
+    };
+  }
+
+  return {
+    lang: "ja-JP",
+    rate: 0.78,
+    pitch: 0.96,
+    volume: 1,
+    preferredNames: ["Kyoko", "Otoya", "Google 日本語", "Siri"]
+  };
+}
+
 function pickStructuredMorningVoice(
   voices: SpeechSynthesisVoice[],
   lang: string,
@@ -793,6 +871,7 @@ export default function MeditationPage() {
   const copy = useSiteCopy().meditationPage;
   const journeyCopy = useMemo(() => getRhythmJourneyContent(language), [language]);
   const localizedLanguage = language === "kr" || language === "en" || language === "jp" ? language : "jp";
+  const focusGateLines = focusGateNarration[localizedLanguage];
   const affirmationCopy = affirmationGateCopy[localizedLanguage];
   const energyCopy = energyGateCopy[localizedLanguage];
   const visionCopy = visionGateCopy[localizedLanguage];
@@ -811,6 +890,7 @@ export default function MeditationPage() {
   const [isPaused, setIsPaused] = useState(false);
   const [requiresExplicitAudioStart, setRequiresExplicitAudioStart] = useState(false);
   const [affirmationMessage, setAffirmationMessage] = useState<string | null>(null);
+  const [focusGateMessage, setFocusGateMessage] = useState<string | null>(null);
   const [journeyMode, setJourneyMode] = useState(false);
   const [journeyDay, setJourneyDay] = useState<number | null>(null);
   const [returnToHref, setReturnToHref] = useState("/rhythm-journey");
@@ -818,6 +898,7 @@ export default function MeditationPage() {
   const [awakeningRitualState, setAwakeningRitualState] = useState<AwakeningRitualState | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
+  const focusVideoRef = useRef<HTMLVideoElement | null>(null);
   const affirmationVideoRef = useRef<HTMLVideoElement | null>(null);
   const energyVideoRef = useRef<HTMLVideoElement | null>(null);
   const visionVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -835,19 +916,25 @@ export default function MeditationPage() {
   });
   const completionHandledRef = useRef(false);
   const spokenAffirmationKeysRef = useRef<Set<string>>(new Set());
+  const spokenFocusKeysRef = useRef<Set<string>>(new Set());
   const structuredSpeechTimeoutRef = useRef<number | null>(null);
+  const focusSpeechTimeoutRef = useRef<number | null>(null);
   const structuredSpeechSequenceRef = useRef(0);
+  const focusSpeechSequenceRef = useRef(0);
   const structuredSpeechUnlockedRef = useRef(false);
+  const focusSpeechUnlockedRef = useRef(false);
   const awakeningRitualHandledRef = useRef(false);
   const isPausedRef = useRef(false);
   const isCompleteRef = useRef(false);
   const elapsedTotalSeconds = totalSeconds - secondsLeft;
   const phase = useMemo(() => getBreathPhase(elapsedTotalSeconds), [elapsedTotalSeconds]);
   const isComplete = secondsLeft <= 0;
+  const mappedDoor = meditationDoor === "relax" ? "rest" : meditationDoor === "vitality" ? "recharge" : meditationDoor;
   const isAffirmationGate = meditationType === "morning" && meditationDoor === "affirmation";
   const isAwakeningGate = isAffirmationGate;
   const isEnergyGate = meditationType === "morning" && meditationDoor === "energy";
   const isVisionGate = meditationType === "morning" && meditationDoor === "vision";
+  const isFocusGate = meditationType === "day" && mappedDoor === "focus";
   const isStructuredMorningGate = isAffirmationGate || isEnergyGate || isVisionGate;
   const ritualCopy = awakeningRitualCopy[localizedLanguage];
   const structuredMorningAudio =
@@ -855,12 +942,11 @@ export default function MeditationPage() {
       ? MORNING_GATE_AUDIO.energy
       : null;
   const morningGateCopy: StructuredMorningCopy = isVisionGate ? visionCopy : isEnergyGate ? energyCopy : affirmationCopy;
-  const mappedDoor = meditationDoor === "relax" ? "rest" : meditationDoor === "vitality" ? "recharge" : meditationDoor;
   const basicPracticeCopy =
     getBasicPracticeByRouteType(requestedRouteType, localizedLanguage) ??
     getBasicPracticeBySession(meditationType, mappedDoor, localizedLanguage);
   const content = copy.variants[meditationType];
-  const hideSoundToggle = meditationType === "morning";
+  const hideSoundToggle = meditationType === "morning" || isFocusGate;
   const durationVariant = getDurationVariant(totalSeconds);
   const durationTextSet = copy.durationTexts?.[durationVariant];
   const journeyAudioSource = journeyDay ? journeyAudioMap[journeyDay] : undefined;
@@ -1205,11 +1291,12 @@ export default function MeditationPage() {
     const isThreeMinuteMorningDoor =
       nextType === "morning" &&
       (nextDoor === "affirmation" || nextDoor === "energy" || nextDoor === "vision");
+    const isFocusGateProgram = nextType === "day" && nextDoor === "focus";
     const shouldResumeStructuredAmbient = nextType === "morning" && nextDoor === "affirmation" && pendingStructuredAmbientAudio === "1";
     const mobileNeedsGesture = requiresMobileAudioGesture();
     const isProgramMode = nextJourneyMode || nextType !== "default";
 
-    const resolvedDuration = routePractice?.durationSeconds ?? (isThreeMinuteMorningDoor ? AFFIRMATION_TOTAL_SECONDS : nextDuration);
+    const resolvedDuration = routePractice?.durationSeconds ?? (isThreeMinuteMorningDoor ? AFFIRMATION_TOTAL_SECONDS : isFocusGateProgram ? FOCUS_GATE_TOTAL_SECONDS : nextDuration);
     setTotalSeconds(resolvedDuration);
     setSecondsLeft(resolvedDuration);
     setMeditationType(nextType);
@@ -1221,8 +1308,8 @@ export default function MeditationPage() {
         : shouldResumeStructuredAmbient
           ? true
           : getNatureSoundPreference();
-    const shouldPromptForAudioStart = isThreeMinuteMorningDoor || (mobileNeedsGesture && (isProgramMode || nextSoundEnabled));
-    setSoundEnabled(nextSoundEnabled);
+    const shouldPromptForAudioStart = isThreeMinuteMorningDoor || isFocusGateProgram || (mobileNeedsGesture && (isProgramMode || nextSoundEnabled));
+    setSoundEnabled(isFocusGateProgram ? true : nextSoundEnabled);
     setPendingStructuredAmbientStart(shouldResumeStructuredAmbient);
     setJourneyMode(nextJourneyMode);
     setJourneyDay(Number.isInteger(resolvedJourneyDay) && resolvedJourneyDay >= 1 && resolvedJourneyDay <= 7 ? resolvedJourneyDay : null);
@@ -1234,6 +1321,8 @@ export default function MeditationPage() {
     setHasUserGesture(!shouldPromptForAudioStart);
     setIsPaused(mobileNeedsGesture && isProgramMode);
     setAffirmationMessage(null);
+    setFocusGateMessage(null);
+    spokenFocusKeysRef.current = new Set();
     spokenAffirmationKeysRef.current = new Set();
     completionHandledRef.current = false;
     console.log("[Morning Gate Audio] init", {
@@ -1390,6 +1479,33 @@ export default function MeditationPage() {
     }
   }
 
+  async function playFocusGateVideo(options?: { restartFromBeginning?: boolean }) {
+    if (!isFocusGate || typeof window === "undefined") {
+      return;
+    }
+
+    const video = focusVideoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    try {
+      video.defaultMuted = true;
+      video.muted = true;
+      video.volume = 0;
+      video.playsInline = true;
+      if (options?.restartFromBeginning ?? false) {
+        video.currentTime = 0;
+      }
+      await video.play();
+      setAmbientVideoFailed(false);
+    } catch (error) {
+      console.warn("[focus-gate] video playback failed", error);
+      setAmbientVideoFailed(true);
+    }
+  }
+
   async function playEnergyGateVideo() {
     if (!isEnergyGate || typeof window === "undefined") {
       return;
@@ -1467,6 +1583,33 @@ export default function MeditationPage() {
     }
   }
 
+  function unlockFocusGateSpeech() {
+    if (!isFocusGate || typeof window === "undefined" || !("speechSynthesis" in window)) {
+      return;
+    }
+
+    try {
+      const synth = window.speechSynthesis;
+      const settings = getFocusGateSpeechSettings(localizedLanguage);
+      synth.getVoices();
+
+      if (focusSpeechUnlockedRef.current) {
+        return;
+      }
+
+      const unlockUtterance = new SpeechSynthesisUtterance("\u00A0");
+      unlockUtterance.lang = settings.lang;
+      unlockUtterance.volume = 0;
+      unlockUtterance.rate = settings.rate;
+      unlockUtterance.pitch = settings.pitch;
+      focusSpeechUnlockedRef.current = true;
+      synth.cancel();
+      synth.speak(unlockUtterance);
+    } catch (error) {
+      console.warn("[focus-gate] failed to unlock speech synthesis", error);
+    }
+  }
+
   useEffect(() => {
     setVibrationSupported(supportsMeditationVibration());
 
@@ -1477,7 +1620,7 @@ export default function MeditationPage() {
         return;
       }
 
-      if (!isComplete && soundEnabled && !journeyMode && !isStructuredMorningGate) {
+      if (!isComplete && soundEnabled && !journeyMode && !isStructuredMorningGate && !isFocusGate) {
         startAmbientNatureAudio(
           ambientAudioRef,
           soundEnabled,
@@ -1498,11 +1641,21 @@ export default function MeditationPage() {
       window.removeEventListener("keydown", markGesture);
       if (isStructuredMorningGate) {
         void stopStructuredMorningAmbient();
+      } else if (isFocusGate) {
+        const video = focusVideoRef.current;
+        if (video) {
+          video.pause();
+          video.currentTime = 0;
+        }
+        if (typeof window !== "undefined" && "speechSynthesis" in window) {
+          focusSpeechSequenceRef.current += 1;
+          window.speechSynthesis.cancel();
+        }
       } else {
         void stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
       }
     };
-  }, [ambientAudioSource, ambientAudioVolume, isComplete, isStructuredMorningGate, journeyMode, requiresExplicitAudioStart, soundEnabled]);
+  }, [ambientAudioSource, ambientAudioVolume, isComplete, isFocusGate, isStructuredMorningGate, journeyMode, requiresExplicitAudioStart, soundEnabled]);
 
   useEffect(() => {
     if (secondsLeft <= 0 || isPaused || needsUserStart) {
@@ -1558,16 +1711,29 @@ export default function MeditationPage() {
   }, [hasUserGesture, isComplete, isEnergyGate, isPaused, isVisionGate, needsUserStart]);
 
   useEffect(() => {
+    if (!isFocusGate || !hasUserGesture || isPaused || isComplete || needsUserStart) {
+      return;
+    }
+
+    void playFocusGateVideo();
+  }, [hasUserGesture, isComplete, isFocusGate, isPaused, needsUserStart]);
+
+  useEffect(() => {
     if (isComplete || !soundEnabled) {
       if (isStructuredMorningGate) {
         void stopStructuredMorningAmbient();
+      } else if (isFocusGate) {
+        const video = focusVideoRef.current;
+        if (video) {
+          video.pause();
+        }
       } else {
         void stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
       }
       return;
     }
 
-    if (!hasUserGesture || journeyMode || isStructuredMorningGate) {
+    if (!hasUserGesture || journeyMode || isStructuredMorningGate || isFocusGate) {
       return;
     }
 
@@ -1586,7 +1752,7 @@ export default function MeditationPage() {
         void stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
       }
     };
-  }, [ambientAudioSource, ambientAudioVolume, hasUserGesture, isComplete, isStructuredMorningGate, journeyMode, soundEnabled]);
+  }, [ambientAudioSource, ambientAudioVolume, hasUserGesture, isComplete, isFocusGate, isStructuredMorningGate, journeyMode, soundEnabled]);
 
   useEffect(() => {
     if (!pendingStructuredAmbientStart || !isAffirmationGate || isComplete || requiresExplicitAudioStart) {
@@ -1785,6 +1951,96 @@ export default function MeditationPage() {
   ]);
 
   useEffect(() => {
+    if (!isFocusGate || isComplete || isPaused || needsUserStart || typeof window === "undefined") {
+      return;
+    }
+
+    const nextLine = focusGateLines.find(
+      (line) => elapsedTotalSeconds >= line.at && !spokenFocusKeysRef.current.has(line.key)
+    );
+
+    if (!nextLine) {
+      return;
+    }
+
+    spokenFocusKeysRef.current.add(nextLine.key);
+    setFocusGateMessage(nextLine.text);
+
+    if (!("speechSynthesis" in window)) {
+      return;
+    }
+
+    try {
+      const settings = getFocusGateSpeechSettings(localizedLanguage);
+      const synth = window.speechSynthesis;
+      focusSpeechSequenceRef.current += 1;
+      const speechSequence = focusSpeechSequenceRef.current;
+
+      if (focusSpeechTimeoutRef.current) {
+        window.clearTimeout(focusSpeechTimeoutRef.current);
+        focusSpeechTimeoutRef.current = null;
+      }
+
+      const speechDelayMs = nextLine.speechDelayMs ?? 420;
+
+      const queueSpeak = (attempt: number) => {
+        if (
+          focusSpeechSequenceRef.current !== speechSequence ||
+          isPausedRef.current ||
+          isCompleteRef.current
+        ) {
+          return;
+        }
+
+        if (synth.speaking || synth.pending) {
+          if (attempt >= 12) {
+            synth.cancel();
+          } else {
+            focusSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(attempt + 1), 140);
+            return;
+          }
+        }
+
+        const utterance = new SpeechSynthesisUtterance(nextLine.speechText ?? nextLine.text);
+        utterance.lang = settings.lang;
+        utterance.rate = settings.rate;
+        utterance.pitch = settings.pitch;
+        utterance.volume = settings.volume;
+
+        const selectedVoice = pickStructuredMorningVoice(
+          synth.getVoices(),
+          settings.lang,
+          settings.preferredNames
+        );
+
+        if (selectedVoice) {
+          utterance.voice = selectedVoice;
+        }
+
+        utterance.onend = () => {
+          focusSpeechTimeoutRef.current = null;
+        };
+
+        utterance.onerror = (event) => {
+          console.error("[focus-gate] narration failed", {
+            language: localizedLanguage,
+            key: nextLine.key,
+            error: event.error
+          });
+          focusSpeechTimeoutRef.current = null;
+        };
+
+        synth.cancel();
+        synth.speak(utterance);
+      };
+
+      focusSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(0), speechDelayMs);
+    } catch (error) {
+      console.warn("[focus-gate] speech synthesis unavailable", error);
+    }
+  }, [elapsedTotalSeconds, focusGateLines, isComplete, isFocusGate, isPaused, localizedLanguage, needsUserStart]);
+
+  useEffect(() => {
     if (!isStructuredMorningGate || typeof window === "undefined") {
       return;
     }
@@ -1810,8 +2066,13 @@ export default function MeditationPage() {
         window.clearTimeout(structuredSpeechTimeoutRef.current);
         structuredSpeechTimeoutRef.current = null;
       }
+      if (focusSpeechTimeoutRef.current) {
+        window.clearTimeout(focusSpeechTimeoutRef.current);
+        focusSpeechTimeoutRef.current = null;
+      }
       if (typeof window !== "undefined" && "speechSynthesis" in window) {
         structuredSpeechSequenceRef.current += 1;
+        focusSpeechSequenceRef.current += 1;
         window.speechSynthesis.cancel();
       }
     };
@@ -1820,6 +2081,15 @@ export default function MeditationPage() {
   async function runMeditationComplete() {
     if (isStructuredMorningGate) {
       await stopStructuredMorningAmbient();
+    } else if (isFocusGate) {
+      const video = focusVideoRef.current;
+      if (video) {
+        video.pause();
+      }
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        focusSpeechSequenceRef.current += 1;
+        window.speechSynthesis.cancel();
+      }
     } else {
       await stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
     }
@@ -1906,7 +2176,14 @@ export default function MeditationPage() {
     setNeedsUserStart(false);
     setIsPaused(false);
     unlockStructuredMorningSpeech();
+    unlockFocusGateSpeech();
     logStructuredMorningAmbientState("program-start-tap");
+
+    if (isFocusGate) {
+      setSoundEnabled(true);
+      await playFocusGateVideo({ restartFromBeginning: true });
+      return;
+    }
 
     if (isAffirmationGate) {
       await playAffirmationGateVideo({ restartFromBeginning: true });
@@ -1987,7 +2264,22 @@ export default function MeditationPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_20%),linear-gradient(180deg,#07111f_0%,#0d1b2d_45%,#10273a_100%)] px-6 py-10 text-white">
       <div className="relative flex min-h-[480px] w-full max-w-3xl flex-col items-center overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.04] px-6 py-8 text-center shadow-[0_30px_80px_rgba(0,0,0,0.28)] sm:px-8 sm:py-10">
-        {!ambientVideoFailed && !isStructuredMorningGate ? (
+        {!ambientVideoFailed && isFocusGate ? (
+          <video
+            key="focus-gate-video"
+            ref={focusVideoRef}
+            className="absolute inset-0 z-0 h-full w-full object-cover opacity-[0.82] brightness-[0.92] contrast-[1.04] saturate-[0.96]"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            onLoadedData={() => console.log("Focus Gate video loaded")}
+            onError={() => setAmbientVideoFailed(true)}
+          >
+            <source src={FOCUS_GATE_VIDEO_SRC} type="video/mp4" />
+          </video>
+        ) : !ambientVideoFailed && !isStructuredMorningGate ? (
           <video
             className="absolute inset-0 z-0 h-full w-full object-cover opacity-85"
             autoPlay
@@ -2189,7 +2481,7 @@ export default function MeditationPage() {
                   </button>
                 ) : null}
               </div>
-              {!isStructuredMorningGate ? (
+              {!isStructuredMorningGate && !isFocusGate ? (
                 <p className="text-2xl font-medium text-white/72 transition-all duration-300 ease-out sm:text-3xl">
                   {copy.phases[phase]}
                 </p>
@@ -2217,10 +2509,19 @@ export default function MeditationPage() {
                     {affirmationMessage}
                   </p>
                 </div>
+              ) : isFocusGate ? (
+                <div className="mt-8 min-h-[92px] max-w-xl space-y-3">
+                  <p
+                    key={focusGateMessage ?? "focus-gate-empty"}
+                    className="mx-auto animate-fade-in whitespace-pre-line font-serif text-[1.25rem] leading-[1.78] text-white/88 sm:text-[1.55rem] sm:leading-[1.86]"
+                  >
+                    {focusGateMessage}
+                  </p>
+                </div>
               ) : null}
             </div>
 
-            {!isStructuredMorningGate ? (
+            {!isStructuredMorningGate && !isFocusGate ? (
               <div className="mt-8">
                 <p className="text-sm font-medium tracking-[0.18em] text-white/68 transition-opacity duration-300 sm:text-base">
                   {copy.bottomText[phase]}
