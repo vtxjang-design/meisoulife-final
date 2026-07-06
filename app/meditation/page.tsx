@@ -710,7 +710,7 @@ function formatRemainingTime(seconds: number) {
   const minutes = Math.floor(seconds / 60);
   const remainder = seconds % 60;
 
-  return `${minutes}:${String(remainder).padStart(2, "0")}`;
+  return `${String(minutes).padStart(2, "0")}:${String(remainder).padStart(2, "0")}`;
 }
 
 function getBreathPhase(elapsedSeconds: number): BreathPhase {
@@ -2806,6 +2806,13 @@ export default function MeditationPage() {
           </>
         ) : null}
         <div className={`absolute inset-0 z-10 ${isStructuredMorningGate ? "bg-[linear-gradient(180deg,rgba(4,10,19,0.18),rgba(4,10,19,0.36))]" : "bg-black/25"}`} />
+        {isRechargeGate && !needsUserStart && !isComplete ? (
+          <div className="pointer-events-none absolute left-1/2 top-4 z-30 -translate-x-1/2 sm:left-auto sm:right-5 sm:top-5 sm:translate-x-0">
+            <div className="rounded-full border border-[rgba(212,178,106,0.24)] bg-[rgba(7,17,31,0.68)] px-4 py-2 text-sm font-semibold tracking-[0.18em] text-white shadow-[0_16px_40px_rgba(4,12,24,0.32)] backdrop-blur-md">
+              {formatRemainingTime(secondsLeft)}
+            </div>
+          </div>
+        ) : null}
 
         <div className="relative z-20 flex w-full flex-col items-center text-center">
         {!isComplete ? (
