@@ -2876,7 +2876,7 @@ export default function MeditationPage() {
 
             <div className="mt-12 flex min-h-[320px] w-full flex-col items-center justify-center">
               {(journeyMode || meditationType !== "default") && needsUserStart ? (
-                <div className={`mb-6 w-full ${isRechargeGate ? "max-w-4xl" : "max-w-md"} rounded-[24px] border border-[rgba(212,178,106,0.18)] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-5 text-center shadow-[0_18px_50px_rgba(4,12,24,0.18)]`}>
+                <div className={`mb-6 w-full ${isRechargeGate ? "max-w-[1080px]" : "max-w-md"} rounded-[24px] border border-[rgba(212,178,106,0.18)] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-[clamp(16px,4vw,40px)] py-5 text-center shadow-[0_18px_50px_rgba(4,12,24,0.18)] ${isRechargeGate ? "overflow-visible" : ""}`}>
                   {isRechargeGate ? (
                     <div className="space-y-5">
                       <div className="mx-auto max-w-2xl space-y-3">
@@ -2885,11 +2885,11 @@ export default function MeditationPage() {
                         <p className="text-sm leading-7 text-white/56">{rechargeIntro.state}</p>
                         <p className="whitespace-pre-line text-sm leading-7 text-white/76 sm:text-base">{rechargeIntro.body}</p>
                       </div>
-                      <div className="overflow-hidden rounded-[24px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.08),transparent_34%),rgba(7,17,31,0.82)] shadow-[0_24px_60px_rgba(4,12,24,0.34)]">
+                      <div className="flex w-full justify-center overflow-visible rounded-[24px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.08),transparent_34%),rgba(7,17,31,0.82)] shadow-[0_24px_60px_rgba(4,12,24,0.34)]">
                         <img
                           src={rechargeGuideImage}
                           alt={basicPracticeCopy?.sessionTitle ?? "Recharge Gate"}
-                          className="h-auto w-full max-w-[900px] object-contain"
+                          className="block h-auto w-full max-w-[1000px] object-contain object-center"
                         />
                       </div>
                       <button
