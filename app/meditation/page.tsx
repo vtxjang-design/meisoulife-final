@@ -2847,7 +2847,7 @@ export default function MeditationPage() {
         <div className={`absolute inset-0 z-10 ${isStructuredMorningGate ? "bg-[linear-gradient(180deg,rgba(4,10,19,0.18),rgba(4,10,19,0.36))]" : "bg-black/25"}`} />
         {isRechargeGate && !needsUserStart && !isComplete ? (
           <div className="pointer-events-none absolute left-1/2 top-4 z-30 -translate-x-1/2 sm:left-auto sm:right-5 sm:top-5 sm:translate-x-0">
-            <div className="rounded-full border border-[rgba(212,178,106,0.24)] bg-[rgba(7,17,31,0.68)] px-4 py-2 text-sm font-semibold tracking-[0.18em] text-white shadow-[0_16px_40px_rgba(4,12,24,0.32)] backdrop-blur-md">
+            <div className="rounded-full border border-[rgba(212,178,106,0.36)] bg-[rgba(7,17,31,0.78)] px-5 py-2.5 text-2xl font-semibold tracking-[0.12em] text-white shadow-[0_18px_44px_rgba(4,12,24,0.38)] backdrop-blur-md sm:px-6 sm:py-3 sm:text-[28px]">
               {formatRemainingTime(secondsLeft)}
             </div>
           </div>
@@ -2948,11 +2948,11 @@ export default function MeditationPage() {
                       <div className="mx-auto max-w-2xl space-y-2 text-center">
                         <p className="text-xs uppercase tracking-[0.28em] text-gold/72">{rechargeGuide.sectionTitle}</p>
                       </div>
-                      <div className="animate-meditation-fade-up mx-auto flex w-full max-w-3xl justify-center overflow-visible rounded-[24px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.08),transparent_34%),rgba(7,17,31,0.82)] p-4 shadow-[0_24px_60px_rgba(4,12,24,0.34)] sm:p-5">
+                      <div className="animate-meditation-fade-up mx-auto flex w-full max-w-xl justify-center overflow-visible">
                         <img
                           src={RECHARGE_GUIDE_IMAGE_SRC}
                           alt="Recharge Gate movement guide"
-                          className="mx-auto block h-auto w-full max-w-[900px] rounded-[24px] object-contain shadow-[0_20px_50px_rgba(4,12,24,0.24)]"
+                          className="mx-auto block h-auto w-full max-w-[560px] rounded-[24px] object-contain shadow-[0_20px_50px_rgba(4,12,24,0.24)]"
                           style={{ animation: "meditation-breathe 500ms ease-out both" }}
                         />
                       </div>
