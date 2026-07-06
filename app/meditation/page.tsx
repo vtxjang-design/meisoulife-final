@@ -2922,14 +2922,14 @@ export default function MeditationPage() {
               {(journeyMode || meditationType !== "default") && needsUserStart ? (
                 <div className={`mb-6 w-full ${isRechargeGate ? "max-w-3xl" : "max-w-md"} rounded-[24px] border border-[rgba(212,178,106,0.18)] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-[clamp(16px,4vw,40px)] py-5 text-center shadow-[0_18px_50px_rgba(4,12,24,0.18)] ${isRechargeGate ? "overflow-visible" : ""}`}>
                   {isRechargeGate ? (
-                    <div className="space-y-5">
+                    <div className="space-y-4 sm:space-y-5">
                       <div className="mx-auto max-w-2xl space-y-3">
                         <p className="text-xs uppercase tracking-[0.28em] text-gold/72">{rechargeIntro.title}</p>
                         <h1 className="font-serif text-3xl text-white sm:text-4xl">{rechargeIntro.subtitle}</h1>
                         <p className="text-sm leading-7 text-white/56">{rechargeIntro.state}</p>
                         <p className="whitespace-pre-line text-sm leading-7 text-white/76 sm:text-base">{rechargeIntro.body}</p>
                       </div>
-                      <div className="mx-auto my-6 w-full max-w-[360px] overflow-hidden rounded-[20px] border border-white/10 shadow-[0_20px_50px_rgba(4,12,24,0.24)]">
+                      <div className="animate-fade-in mx-auto my-2 w-full max-w-[360px] overflow-hidden rounded-[20px] border border-white/10 shadow-[0_20px_50px_rgba(4,12,24,0.24)] duration-[400ms]">
                         <video
                           key="recharge-preview-video"
                           className="block h-auto w-full object-cover"
@@ -2943,17 +2943,21 @@ export default function MeditationPage() {
                           <source src={RECHARGE_GATE_VIDEO_SRC} type="video/mp4" />
                         </video>
                       </div>
-                      <div className="mx-auto flex w-full max-w-3xl justify-center overflow-visible rounded-[24px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.08),transparent_34%),rgba(7,17,31,0.82)] p-4 shadow-[0_24px_60px_rgba(4,12,24,0.34)] sm:p-5">
+                      <div className="mx-auto max-w-2xl space-y-2 text-center">
+                        <p className="text-xs uppercase tracking-[0.28em] text-gold/72">{rechargeGuide.sectionTitle}</p>
+                      </div>
+                      <div className="animate-meditation-fade-up mx-auto flex w-full max-w-3xl justify-center overflow-visible rounded-[24px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.08),transparent_34%),rgba(7,17,31,0.82)] p-4 shadow-[0_24px_60px_rgba(4,12,24,0.34)] sm:p-5">
                         <img
                           src={RECHARGE_GUIDE_IMAGE_SRC}
                           alt="Recharge Gate movement guide"
                           className="mx-auto block h-auto w-full max-w-[900px] rounded-[24px] object-contain shadow-[0_20px_50px_rgba(4,12,24,0.24)]"
+                          style={{ animation: "meditation-breathe 500ms ease-out both" }}
                         />
                       </div>
                       <button
                         type="button"
                         onClick={journeyMode ? handleJourneyAudioStart : handleProgramAudioStart}
-                        className="button-nowrap inline-flex min-h-[46px] items-center justify-center rounded-full border border-gold/20 bg-gold/10 px-5 py-2.5 text-sm font-semibold text-gold transition hover:bg-gold/15 hover:text-[#f5e4b5]"
+                        className="button-nowrap animate-meditation-fade-up mt-2 inline-flex min-h-[54px] items-center justify-center rounded-full border border-gold/30 bg-gold/15 px-7 py-3 text-base font-semibold text-[#f5e4b5] shadow-[0_18px_42px_rgba(212,178,106,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-gold/20 hover:shadow-[0_22px_48px_rgba(212,178,106,0.24)]"
                       >
                         {rechargeStartLabel}
                       </button>
