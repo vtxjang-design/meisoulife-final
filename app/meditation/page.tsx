@@ -48,36 +48,43 @@ const CALM_GATE_VIDEO_VOLUME = 0.35;
 const RECHARGE_GATE_VIDEO_VOLUME = 1;
 const AWAKENING_RITUAL_STORAGE_KEY = "meisoulife_awakening_gate_ritual";
 const FOCUS_GATE_TOTAL_SECONDS = 60;
+const RECHARGE_GUIDE_IMAGES = {
+  heelRaise: "/basic/daytime-gate/heel-raise.png",
+  squat: "/basic/daytime-gate/squat.png",
+  rhythmWalking: "/basic/daytime-gate/rhythm-walking.png",
+  openChest: "/basic/daytime-gate/open-chest.png",
+  smileBreathe: "/basic/daytime-gate/smile-breathe.png"
+} as const;
 
 const rechargeGuideCopy = {
   kr: {
     sectionTitle: "오늘의 5가지 리차지 운동",
     items: [
-      { movement: "heelRaise", title: "발뒤꿈치 들어 올리기", purpose: "순환을 깨웁니다" },
-      { movement: "squat", title: "스쿼트", purpose: "하체의 힘을 깨웁니다" },
-      { movement: "rhythmWalking", title: "리듬 워킹", purpose: "몸과 뇌의 리듬을 연결합니다" },
-      { movement: "openChest", title: "가슴 열기", purpose: "호흡과 마음을 엽니다" },
-      { movement: "smileBreathe", title: "웃음과 호흡", purpose: "에너지를 다시 충전합니다" }
+      { movement: "heelRaise", title: "발뒤꿈치 들어 올리기" },
+      { movement: "squat", title: "스쿼트" },
+      { movement: "rhythmWalking", title: "리듬 워킹" },
+      { movement: "openChest", title: "가슴 열기" },
+      { movement: "smileBreathe", title: "웃음과 호흡" }
     ]
   },
   jp: {
     sectionTitle: "今日の5つのリチャージ運動",
     items: [
-      { movement: "heelRaise", title: "かかとを上げる", purpose: "めぐりを目覚めさせます" },
-      { movement: "squat", title: "スクワット", purpose: "下半身の力を目覚めさせます" },
-      { movement: "rhythmWalking", title: "リズムウォーキング", purpose: "身体と脳のリズムをつなげます" },
-      { movement: "openChest", title: "胸を開く", purpose: "呼吸と心を開きます" },
-      { movement: "smileBreathe", title: "笑顔と呼吸", purpose: "エネルギーをリチャージします" }
+      { movement: "heelRaise", title: "かかとを上げる" },
+      { movement: "squat", title: "スクワット" },
+      { movement: "rhythmWalking", title: "リズムウォーキング" },
+      { movement: "openChest", title: "胸を開く" },
+      { movement: "smileBreathe", title: "笑顔と呼吸" }
     ]
   },
   en: {
     sectionTitle: "Today’s 5 Recharge Movements",
     items: [
-      { movement: "heelRaise", title: "Heel Raise", purpose: "Awaken your circulation" },
-      { movement: "squat", title: "Squat", purpose: "Activate lower-body strength" },
-      { movement: "rhythmWalking", title: "Rhythm Walking", purpose: "Connect body and brain rhythm" },
-      { movement: "openChest", title: "Open Chest", purpose: "Open your breath and heart" },
-      { movement: "smileBreathe", title: "Smile & Breathe", purpose: "Recharge your energy" }
+      { movement: "heelRaise", title: "Heel Raise" },
+      { movement: "squat", title: "Squat" },
+      { movement: "rhythmWalking", title: "Rhythm Walking" },
+      { movement: "openChest", title: "Open Chest" },
+      { movement: "smileBreathe", title: "Smile & Breathe" }
     ]
   }
 } as const;
@@ -1003,95 +1010,6 @@ function getPreviousDayStamp(dayStamp: string) {
 function getAwakeningPromptIndex(dayStamp: string, promptCount: number) {
   const numeric = Number(dayStamp.replaceAll("-", ""));
   return Number.isFinite(numeric) && promptCount > 0 ? numeric % promptCount : 0;
-}
-
-function RechargeMovementIllustration({ movement }: { movement: RechargeGuideMovement }) {
-  const stroke = "#F4E4B3";
-  const aqua = "#8BE7D2";
-  const aquaFill = "rgba(139, 231, 210, 0.16)";
-  const goldFill = "rgba(242, 197, 124, 0.18)";
-  const commonClassName = "h-[150px] w-full max-w-[220px]";
-
-  if (movement === "heelRaise") {
-    return (
-      <svg viewBox="0 0 220 160" className={commonClassName} fill="none" aria-hidden="true">
-        <circle cx="110" cy="30" r="16" fill={goldFill} stroke={stroke} strokeWidth="2" />
-        <path d="M110 46V86" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-        <path d="M82 66L110 58L138 66" stroke={stroke} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M110 86L94 118" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-        <path d="M110 86L126 118" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-        <path d="M78 124H104" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-        <path d="M122 120L140 112" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-        <path d="M78 138C88 130 98 130 108 138" stroke={aqua} strokeWidth="3" strokeLinecap="round" />
-        <path d="M118 138C128 130 138 130 148 138" stroke={aqua} strokeWidth="3" strokeLinecap="round" />
-        <path d="M90 132V118" stroke={aqua} strokeWidth="3" strokeLinecap="round" />
-        <path d="M132 126V110" stroke={aqua} strokeWidth="3" strokeLinecap="round" />
-      </svg>
-    );
-  }
-
-  if (movement === "squat") {
-    return (
-      <svg viewBox="0 0 220 160" className={commonClassName} fill="none" aria-hidden="true">
-        <circle cx="110" cy="28" r="16" fill={goldFill} stroke={stroke} strokeWidth="2" />
-        <path d="M110 44V74" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-        <path d="M78 60L110 54L142 60" stroke={stroke} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M110 74L88 94" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-        <path d="M110 74L132 94" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-        <path d="M88 94L74 124" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-        <path d="M132 94L146 124" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-        <path d="M74 124H100" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-        <path d="M120 124H146" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-        <path d="M62 42C78 34 94 32 110 32" stroke={aqua} strokeWidth="3" strokeLinecap="round" />
-        <path d="M110 32C126 32 142 34 158 42" stroke={aqua} strokeWidth="3" strokeLinecap="round" />
-      </svg>
-    );
-  }
-
-  if (movement === "rhythmWalking") {
-    return (
-      <svg viewBox="0 0 220 160" className={commonClassName} fill="none" aria-hidden="true">
-        <circle cx="110" cy="28" r="16" fill={goldFill} stroke={stroke} strokeWidth="2" />
-        <path d="M110 44V76" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-        <path d="M86 62L110 58L128 74" stroke={stroke} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M110 76L92 96" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-        <path d="M110 76L130 106" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-        <path d="M92 96L78 126" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-        <path d="M130 106L150 94" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-        <path d="M118 84L136 64" stroke={aqua} strokeWidth="4" strokeLinecap="round" />
-        <path d="M136 64L148 84" stroke={aqua} strokeWidth="4" strokeLinecap="round" />
-        <path d="M52 118C70 102 88 102 106 118" stroke={aqua} strokeWidth="3" strokeLinecap="round" strokeDasharray="5 7" />
-        <path d="M112 126C130 110 148 110 166 126" stroke={aqua} strokeWidth="3" strokeLinecap="round" strokeDasharray="5 7" />
-      </svg>
-    );
-  }
-
-  if (movement === "openChest") {
-    return (
-      <svg viewBox="0 0 220 160" className={commonClassName} fill="none" aria-hidden="true">
-        <circle cx="110" cy="28" r="16" fill={goldFill} stroke={stroke} strokeWidth="2" />
-        <path d="M110 44V86" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-        <path d="M72 70C86 54 96 52 110 60" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-        <path d="M148 70C134 54 124 52 110 60" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-        <path d="M110 86L94 122" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-        <path d="M110 86L126 122" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-        <path d="M76 48C62 58 56 72 58 88" stroke={aqua} strokeWidth="3" strokeLinecap="round" />
-        <path d="M144 48C158 58 164 72 162 88" stroke={aqua} strokeWidth="3" strokeLinecap="round" />
-        <path d="M110 58C120 62 124 70 124 78C124 86 118 94 110 98C102 94 96 86 96 78C96 70 100 62 110 58Z" fill={aquaFill} stroke={aqua} strokeWidth="2" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg viewBox="0 0 220 160" className={commonClassName} fill="none" aria-hidden="true">
-      <circle cx="110" cy="62" r="34" fill={goldFill} stroke={stroke} strokeWidth="2" />
-      <path d="M96 56C100 52 104 50 110 50C116 50 120 52 124 56" stroke={stroke} strokeWidth="3" strokeLinecap="round" />
-      <path d="M98 72C102 78 106 80 110 80C114 80 118 78 122 72" stroke={stroke} strokeWidth="3" strokeLinecap="round" />
-      <path d="M72 104C84 92 96 88 110 88C124 88 136 92 148 104" stroke={aqua} strokeWidth="3" strokeLinecap="round" />
-      <path d="M62 124C78 110 94 108 110 108C126 108 142 110 158 124" stroke={aqua} strokeWidth="3" strokeLinecap="round" opacity="0.72" />
-      <path d="M96 128C102 122 106 120 110 120C114 120 118 122 124 128" stroke={stroke} strokeWidth="3" strokeLinecap="round" />
-    </svg>
-  );
 }
 
 export default function MeditationPage() {
@@ -3024,13 +2942,14 @@ export default function MeditationPage() {
                                 <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold/20 bg-gold/10 text-sm font-semibold tracking-[0.12em] text-gold">
                                   {String(index + 1).padStart(2, "0")}
                                 </span>
-                                <div className="space-y-1">
-                                  <h3 className="text-lg font-semibold text-white sm:text-[1.15rem]">{item.title}</h3>
-                                  <p className="text-sm leading-6 text-white/62">{item.purpose}</p>
-                                </div>
+                                <h3 className="text-lg font-semibold text-white sm:text-[1.15rem]">{item.title}</h3>
                               </div>
-                              <div className="mt-4 flex min-h-[180px] items-center justify-center rounded-[22px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.10),transparent_40%),linear-gradient(180deg,rgba(7,17,31,0.72),rgba(7,17,31,0.38))] px-4 py-5">
-                                <RechargeMovementIllustration movement={item.movement} />
+                              <div className="mt-4 flex min-h-[220px] items-center justify-center rounded-[22px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.08),transparent_38%),linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01))] px-4 py-5">
+                                <img
+                                  src={RECHARGE_GUIDE_IMAGES[item.movement]}
+                                  alt={item.title}
+                                  className="block h-auto max-h-[240px] w-full object-contain object-center"
+                                />
                               </div>
                             </div>
                           ))}
