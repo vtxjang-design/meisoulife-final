@@ -48,48 +48,6 @@ const CALM_GATE_VIDEO_VOLUME = 0.35;
 const RECHARGE_GATE_VIDEO_VOLUME = 1;
 const AWAKENING_RITUAL_STORAGE_KEY = "meisoulife_awakening_gate_ritual";
 const FOCUS_GATE_TOTAL_SECONDS = 60;
-const RECHARGE_GUIDE_IMAGE_SRC = "/basic/daytime-gate/recharge%20gate.png";
-const RECHARGE_GUIDE_IMAGES = {
-  heelRaise: "/basic/daytime-gate/heel-raise.png",
-  squat: "/basic/daytime-gate/squat.png",
-  rhythmWalking: "/basic/daytime-gate/rhythm-walking.png",
-  openChest: "/basic/daytime-gate/open-chest.png",
-  smileBreathe: "/basic/daytime-gate/smile-breathe.png"
-} as const;
-
-const rechargeGuideCopy = {
-  kr: {
-    sectionTitle: "오늘의 5가지 리차지 운동",
-    items: [
-      { movement: "heelRaise", title: "발뒤꿈치 들어 올리기" },
-      { movement: "squat", title: "스쿼트" },
-      { movement: "rhythmWalking", title: "리듬 워킹" },
-      { movement: "openChest", title: "가슴 열기" },
-      { movement: "smileBreathe", title: "웃음과 호흡" }
-    ]
-  },
-  jp: {
-    sectionTitle: "今日の5つのリチャージ運動",
-    items: [
-      { movement: "heelRaise", title: "かかとを上げる" },
-      { movement: "squat", title: "スクワット" },
-      { movement: "rhythmWalking", title: "リズムウォーキング" },
-      { movement: "openChest", title: "胸を開く" },
-      { movement: "smileBreathe", title: "笑顔と呼吸" }
-    ]
-  },
-  en: {
-    sectionTitle: "Today’s 5 Recharge Movements",
-    items: [
-      { movement: "heelRaise", title: "Heel Raise" },
-      { movement: "squat", title: "Squat" },
-      { movement: "rhythmWalking", title: "Rhythm Walking" },
-      { movement: "openChest", title: "Open Chest" },
-      { movement: "smileBreathe", title: "Smile & Breathe" }
-    ]
-  }
-} as const;
-
 const rechargeCompletionCopy = {
   kr: {
     title: "Recharge Complete",
@@ -159,8 +117,6 @@ type StructuredMorningStage =
 type StructuredMorningLine = { at: number; key: string; text: string; speechText?: string; speechDelayMs?: number };
 type GuidedFocusLine = { at: number; key: string; text: string; speechText?: string; speechDelayMs?: number };
 type GuidedCalmLine = { at: number; key: string; text: string; speechText?: string; speechDelayMs?: number };
-type RechargeGuideMovement = "heelRaise" | "squat" | "rhythmWalking" | "openChest" | "smileBreathe";
-
 type AwakeningRitualState = {
   streakCount: number;
   completedOn: string;
@@ -1140,7 +1096,6 @@ export default function MeditationPage() {
     : basicPracticeCopy
       ? getBasicIdentityCompletionMessage(localizedLanguage)
       : copy.completionMessage;
-  const rechargeGuide = rechargeGuideCopy[localizedLanguage];
   const rechargeCompletion = rechargeCompletionCopy[localizedLanguage];
   const rechargeIntro = rechargeIntroCopy[localizedLanguage];
   const rechargeStartErrorText =
@@ -2900,7 +2855,7 @@ export default function MeditationPage() {
               <div className="absolute inset-3 rounded-full border border-white/14" />
               <div className="absolute inset-0 rounded-full border-t border-[rgba(212,178,106,0.72)] border-r border-[rgba(212,178,106,0.22)] border-b border-[rgba(212,178,106,0.16)] border-l border-[rgba(212,178,106,0.42)] opacity-90" />
               <div className="relative z-10 text-center">
-                <p className="text-[44px] font-semibold tracking-[0.08em] text-white sm:text-[64px]">
+                <p className="text-[48px] font-semibold tracking-[0.08em] text-white sm:text-[80px]">
                   {formatRemainingTime(secondsLeft)}
                 </p>
               </div>
@@ -2986,7 +2941,7 @@ export default function MeditationPage() {
                         <p className="text-sm leading-7 text-white/56">{rechargeIntro.state}</p>
                         <p className="whitespace-pre-line text-sm leading-7 text-white/76 sm:text-base">{rechargeIntro.body}</p>
                       </div>
-                      <div className="animate-fade-in mx-auto my-2 w-full max-w-[360px] overflow-hidden rounded-[20px] border border-white/10 shadow-[0_20px_50px_rgba(4,12,24,0.24)] duration-[400ms]">
+                      <div className="animate-fade-in mx-auto my-2 w-full max-w-[380px] overflow-hidden rounded-[20px] border border-white/10 shadow-[0_20px_50px_rgba(4,12,24,0.24)] duration-[400ms]">
                         <video
                           key="recharge-preview-video"
                           className="block h-auto w-full object-cover"
@@ -3000,21 +2955,10 @@ export default function MeditationPage() {
                           <source src={RECHARGE_GATE_VIDEO_SRC} type="video/mp4" />
                         </video>
                       </div>
-                      <div className="mx-auto max-w-2xl space-y-2 text-center">
-                        <p className="text-xs uppercase tracking-[0.28em] text-gold/72">{rechargeGuide.sectionTitle}</p>
-                      </div>
-                      <div className="animate-meditation-fade-up mx-auto flex w-full max-w-xl justify-center overflow-visible">
-                        <img
-                          src={RECHARGE_GUIDE_IMAGE_SRC}
-                          alt="Recharge Gate movement guide"
-                          className="mx-auto block h-auto w-full max-w-[560px] rounded-[24px] object-contain shadow-[0_20px_50px_rgba(4,12,24,0.24)]"
-                          style={{ animation: "meditation-breathe 500ms ease-out both" }}
-                        />
-                      </div>
                       <button
                         type="button"
                         onClick={journeyMode ? handleJourneyAudioStart : handleProgramAudioStart}
-                        className="button-nowrap animate-meditation-fade-up mt-2 inline-flex min-h-[54px] items-center justify-center rounded-full border border-gold/30 bg-gold/15 px-7 py-3 text-base font-semibold text-[#f5e4b5] shadow-[0_18px_42px_rgba(212,178,106,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-gold/20 hover:shadow-[0_22px_48px_rgba(212,178,106,0.24)]"
+                        className="button-nowrap animate-meditation-fade-up mt-3 inline-flex min-h-[54px] items-center justify-center rounded-full border border-gold/30 bg-gold/15 px-7 py-3 text-base font-semibold text-[#f5e4b5] shadow-[0_18px_42px_rgba(212,178,106,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-gold/20 hover:shadow-[0_22px_48px_rgba(212,178,106,0.24)]"
                       >
                         {rechargeStartLabel}
                       </button>
