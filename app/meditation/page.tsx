@@ -2929,6 +2929,20 @@ export default function MeditationPage() {
                         <p className="text-sm leading-7 text-white/56">{rechargeIntro.state}</p>
                         <p className="whitespace-pre-line text-sm leading-7 text-white/76 sm:text-base">{rechargeIntro.body}</p>
                       </div>
+                      <div className="mx-auto my-6 w-full max-w-[360px] overflow-hidden rounded-[20px] border border-white/10 shadow-[0_20px_50px_rgba(4,12,24,0.24)]">
+                        <video
+                          key="recharge-preview-video"
+                          className="block h-auto w-full object-cover"
+                          autoPlay
+                          muted
+                          loop
+                          playsInline
+                          controls={false}
+                          preload="metadata"
+                        >
+                          <source src={RECHARGE_GATE_VIDEO_SRC} type="video/mp4" />
+                        </video>
+                      </div>
                       <div className="mx-auto flex w-full max-w-3xl justify-center overflow-visible rounded-[24px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.08),transparent_34%),rgba(7,17,31,0.82)] p-4 shadow-[0_24px_60px_rgba(4,12,24,0.34)] sm:p-5">
                         <img
                           src={RECHARGE_GUIDE_IMAGE_SRC}
