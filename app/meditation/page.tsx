@@ -46,6 +46,11 @@ const FOCUS_GATE_VIDEO_VOLUME = 0.34;
 const CALM_GATE_VIDEO_VOLUME = 0.35;
 const AWAKENING_RITUAL_STORAGE_KEY = "meisoulife_awakening_gate_ritual";
 const FOCUS_GATE_TOTAL_SECONDS = 60;
+const RECHARGE_GUIDE_IMAGES = {
+  kr: "/images/recharge/recharge-gate-ko.png",
+  jp: "/images/recharge/recharge-gate-ja.png",
+  en: "/images/recharge/recharge-gate-en.png"
+} as const;
 
 type BreathPhase = "inhale" | "hold" | "exhale";
 type MeditationType = "default" | "morning" | "day" | "night";
@@ -1007,6 +1012,7 @@ export default function MeditationPage() {
   const isVisionGate = meditationType === "morning" && meditationDoor === "vision";
   const isFocusGate = meditationType === "day" && mappedDoor === "focus";
   const isCalmGate = meditationType === "day" && mappedDoor === "rest";
+  const isRechargeGate = meditationType === "day" && mappedDoor === "recharge";
   const isStructuredMorningGate = isAffirmationGate || isEnergyGate || isVisionGate;
   const ritualCopy = awakeningRitualCopy[localizedLanguage];
   const structuredMorningAudio =
@@ -1053,6 +1059,13 @@ export default function MeditationPage() {
     : basicPracticeCopy
       ? getBasicIdentityCompletionMessage(localizedLanguage)
       : copy.completionMessage;
+  const rechargeGuideImage = RECHARGE_GUIDE_IMAGES[localizedLanguage];
+  const rechargeStartLabel =
+    localizedLanguage === "kr"
+      ? "Recharge 시작하기"
+      : localizedLanguage === "en"
+        ? "Start Recharge"
+        : "リチャージを始める";
   const completionNoteText = isStructuredMorningGate
     ? morningGateCopy.completionNote
     : basicPracticeCopy
@@ -1365,11 +1378,12 @@ export default function MeditationPage() {
       (nextDoor === "affirmation" || nextDoor === "energy" || nextDoor === "vision");
     const isFocusGateProgram = nextType === "day" && nextDoor === "focus";
     const isCalmGateProgram = nextType === "day" && nextDoor === "rest";
+    const isRechargeGateProgram = nextType === "day" && nextDoor === "recharge";
     const shouldResumeStructuredAmbient = nextType === "morning" && nextDoor === "affirmation" && pendingStructuredAmbientAudio === "1";
     const mobileNeedsGesture = requiresMobileAudioGesture();
     const isProgramMode = nextJourneyMode || nextType !== "default";
 
-    const resolvedDuration = routePractice?.durationSeconds ?? (isThreeMinuteMorningDoor ? AFFIRMATION_TOTAL_SECONDS : isFocusGateProgram || isCalmGateProgram ? FOCUS_GATE_TOTAL_SECONDS : nextDuration);
+    const resolvedDuration = routePractice?.durationSeconds ?? (isThreeMinuteMorningDoor ? AFFIRMATION_TOTAL_SECONDS : isFocusGateProgram || isCalmGateProgram || isRechargeGateProgram ? FOCUS_GATE_TOTAL_SECONDS : nextDuration);
     setTotalSeconds(resolvedDuration);
     setSecondsLeft(resolvedDuration);
     setMeditationType(nextType);
@@ -1381,8 +1395,8 @@ export default function MeditationPage() {
         : shouldResumeStructuredAmbient
           ? true
           : getNatureSoundPreference();
-    const shouldPromptForAudioStart = isThreeMinuteMorningDoor || isFocusGateProgram || isCalmGateProgram || (mobileNeedsGesture && (isProgramMode || nextSoundEnabled));
-    setSoundEnabled(isFocusGateProgram || isCalmGateProgram ? true : nextSoundEnabled);
+    const shouldPromptForAudioStart = isThreeMinuteMorningDoor || isFocusGateProgram || isCalmGateProgram || isRechargeGateProgram || (mobileNeedsGesture && (isProgramMode || nextSoundEnabled));
+    setSoundEnabled(isFocusGateProgram || isCalmGateProgram || isRechargeGateProgram ? true : nextSoundEnabled);
     setPendingStructuredAmbientStart(shouldResumeStructuredAmbient);
     setJourneyMode(nextJourneyMode);
     setJourneyDay(Number.isInteger(resolvedJourneyDay) && resolvedJourneyDay >= 1 && resolvedJourneyDay <= 7 ? resolvedJourneyDay : null);
@@ -2721,19 +2735,40 @@ export default function MeditationPage() {
 
             <div className="mt-12 flex min-h-[320px] w-full flex-col items-center justify-center">
               {(journeyMode || meditationType !== "default") && needsUserStart ? (
-                <div className="mb-6 w-full max-w-md rounded-[24px] border border-[rgba(212,178,106,0.18)] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-5 text-center shadow-[0_18px_50px_rgba(4,12,24,0.18)]">
-                  <p className="text-sm leading-7 text-white/76">{journeyMode ? journeyCopy.audioPrompt : copy.audioPrompt}</p>
-                  <button
-                    type="button"
-                    onClick={journeyMode ? handleJourneyAudioStart : handleProgramAudioStart}
-                    className="button-nowrap mt-4 inline-flex min-h-[44px] items-center justify-center rounded-full border border-gold/20 bg-gold/10 px-4 py-2 text-sm font-semibold text-gold transition hover:bg-gold/15 hover:text-[#f5e4b5]"
-                  >
-                    {journeyMode
-                      ? journeyCopy.audioStart
-                      : isStructuredMorningGate
-                        ? morningGateCopy.startAudio
-                        : basicPracticeCopy?.entryLabel ?? copy.audioStart}
-                  </button>
+                <div className={`mb-6 w-full ${isRechargeGate ? "max-w-4xl" : "max-w-md"} rounded-[24px] border border-[rgba(212,178,106,0.18)] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-5 text-center shadow-[0_18px_50px_rgba(4,12,24,0.18)]`}>
+                  {isRechargeGate ? (
+                    <div className="space-y-5">
+                      <div className="overflow-hidden rounded-[24px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.08),transparent_34%),rgba(7,17,31,0.82)] shadow-[0_24px_60px_rgba(4,12,24,0.34)]">
+                        <img
+                          src={rechargeGuideImage}
+                          alt={basicPracticeCopy?.sessionTitle ?? "Recharge Gate"}
+                          className="h-auto w-full max-w-[900px] object-contain"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={journeyMode ? handleJourneyAudioStart : handleProgramAudioStart}
+                        className="button-nowrap inline-flex min-h-[46px] items-center justify-center rounded-full border border-gold/20 bg-gold/10 px-5 py-2.5 text-sm font-semibold text-gold transition hover:bg-gold/15 hover:text-[#f5e4b5]"
+                      >
+                        {rechargeStartLabel}
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <p className="text-sm leading-7 text-white/76">{journeyMode ? journeyCopy.audioPrompt : copy.audioPrompt}</p>
+                      <button
+                        type="button"
+                        onClick={journeyMode ? handleJourneyAudioStart : handleProgramAudioStart}
+                        className="button-nowrap mt-4 inline-flex min-h-[44px] items-center justify-center rounded-full border border-gold/20 bg-gold/10 px-4 py-2 text-sm font-semibold text-gold transition hover:bg-gold/15 hover:text-[#f5e4b5]"
+                      >
+                        {journeyMode
+                          ? journeyCopy.audioStart
+                          : isStructuredMorningGate
+                            ? morningGateCopy.startAudio
+                            : basicPracticeCopy?.entryLabel ?? copy.audioStart}
+                      </button>
+                    </>
+                  )}
                 </div>
               ) : null}
 
