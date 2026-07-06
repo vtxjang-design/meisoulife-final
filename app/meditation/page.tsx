@@ -179,18 +179,17 @@ const focusGateNarration: Record<"jp" | "kr" | "en", GuidedFocusLine[]> = {
     { at: 58, key: "focus-12", text: "いちばん大切な\nひとつを始めましょう", speechText: "いちばん大切な、\nひとつを始めましょう", speechDelayMs: 520 }
   ],
   kr: [
-    { at: 0, key: "focus-1", text: "척추를 편안하게 세웁니다", speechDelayMs: 360 },
-    { at: 4, key: "focus-2", text: "어깨의 힘을 내려놓습니다", speechDelayMs: 360 },
-    { at: 9, key: "focus-3", text: "천천히 숨을 들이마십니다", speechDelayMs: 400 },
-    { at: 14, key: "focus-4", text: "길게 내쉽니다", speechDelayMs: 420 },
-    { at: 19, key: "focus-5", text: "다시 깊게 숨을 들이마시고\n내쉽니다", speechDelayMs: 420 },
-    { at: 25, key: "focus-6", text: "지금 이 순간으로 돌아옵니다", speechDelayMs: 360 },
-    { at: 30, key: "focus-7", text: "흩어진 생각이\n하나의 점으로 모입니다", speechDelayMs: 360 },
-    { at: 36, key: "focus-8", text: "오늘 가장 중요한 한 가지를\n떠올려 봅니다", speechDelayMs: 400 },
-    { at: 42, key: "focus-9", text: "그 하나에 마음을 둡니다", speechDelayMs: 400 },
-    { at: 47, key: "focus-10", text: "당신의 집중은\n이미 당신 안에 있습니다", speechDelayMs: 420 },
-    { at: 52, key: "focus-11", text: "준비되었습니다", speechDelayMs: 460 },
-    { at: 55, key: "focus-12", text: "이제 가장 중요한 한 가지를\n시작하세요", speechDelayMs: 480 }
+    { at: 0, key: "focus-1", text: "척추를 편안하게 세웁니다", speechDelayMs: 420 },
+    { at: 5, key: "focus-2", text: "어깨의 힘을 내려놓습니다", speechDelayMs: 420 },
+    { at: 10, key: "focus-3", text: "천천히 숨을 들이마십니다", speechDelayMs: 460 },
+    { at: 15, key: "focus-4", text: "길게 내쉽니다", speechDelayMs: 500 },
+    { at: 21, key: "focus-5", text: "지금 이 순간으로 돌아옵니다", speechDelayMs: 420 },
+    { at: 27, key: "focus-6", text: "흩어진 생각이\n하나의 점으로 모입니다", speechDelayMs: 420 },
+    { at: 34, key: "focus-7", text: "오늘 가장 중요한\n한 가지를 떠올려 봅니다", speechDelayMs: 460 },
+    { at: 41, key: "focus-8", text: "그 하나에 마음을 둡니다", speechDelayMs: 460 },
+    { at: 47, key: "focus-9", text: "당신의 집중은\n이미 당신 안에 있습니다", speechDelayMs: 480 },
+    { at: 53, key: "focus-10", text: "한 번에 한 가지", speechDelayMs: 520 },
+    { at: 56, key: "focus-11", text: "이제\n가장 중요한 한 가지를 시작하세요", speechDelayMs: 540 }
   ],
   en: [
     { at: 0, key: "focus-1", text: "Lengthen the spine\ngently", speechDelayMs: 420 },
@@ -722,7 +721,7 @@ function getFocusGateSpeechSettings(language: "jp" | "kr" | "en") {
   if (language === "kr") {
     return {
       lang: "ko-KR",
-      rate: 0.84,
+      rate: 0.74,
       pitch: 0.98,
       volume: 1,
       preferredNames: ["Yuna", "Sora", "Google 한국어", "Siri"]
