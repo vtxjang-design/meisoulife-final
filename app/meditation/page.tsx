@@ -41,6 +41,7 @@ const VISION_GATE_VIDEO_SRC = "/basic/morning-gate/vision-gate-7.mp4";
 const FOCUS_GATE_VIDEO_SRC = "/videos/basic/daytime/focus-gate.mp4";
 const AWAKENING_GATE_VIDEO_VOLUME = 0.13;
 const VISION_GATE_VIDEO_VOLUME = 0.14;
+const FOCUS_GATE_VIDEO_VOLUME = 0.34;
 const AWAKENING_RITUAL_STORAGE_KEY = "meisoulife_awakening_gate_ritual";
 const FOCUS_GATE_TOTAL_SECONDS = 60;
 
@@ -180,18 +181,18 @@ const focusGateNarration: Record<"jp" | "kr" | "en", GuidedFocusLine[]> = {
     { at: 58, key: "focus-12", text: "いちばん大切な\nひとつを始めましょう", speechText: "いちばん大切な、\nひとつを始めましょう", speechDelayMs: 520 }
   ],
   kr: [
-    { at: 0, key: "focus-1", text: "척추를 편안하게 세웁니다", speechDelayMs: 420 },
-    { at: 5, key: "focus-2", text: "어깨의 힘을 내려놓습니다", speechDelayMs: 420 },
-    { at: 10, key: "focus-3", text: "천천히 숨을 들이마십니다", speechDelayMs: 460 },
-    { at: 15, key: "focus-4", text: "내쉽니다", speechDelayMs: 460 },
-    { at: 20, key: "focus-5", text: "다시 깊게 숨을 들이마시고\n내쉽니다", speechDelayMs: 480 },
-    { at: 27, key: "focus-6", text: "지금 이 순간으로 돌아옵니다", speechDelayMs: 420 },
-    { at: 32, key: "focus-7", text: "흩어진 생각들이\n하나의 점으로 모입니다", speechDelayMs: 420 },
-    { at: 38, key: "focus-8", text: "오늘 가장 중요한 한 가지를\n떠올려 봅니다", speechDelayMs: 440 },
-    { at: 45, key: "focus-9", text: "그 하나에\n마음을 둡니다", speechDelayMs: 440 },
-    { at: 50, key: "focus-10", text: "당신의 집중은\n이미 당신 안에 있습니다", speechDelayMs: 460 },
-    { at: 55, key: "focus-11", text: "준비되었습니다", speechDelayMs: 520 },
-    { at: 58, key: "focus-12", text: "이제 가장 중요한 한 가지를\n시작하세요", speechDelayMs: 520 }
+    { at: 0, key: "focus-1", text: "척추를 편안하게 세웁니다", speechDelayMs: 360 },
+    { at: 4, key: "focus-2", text: "어깨의 힘을 내려놓습니다", speechDelayMs: 360 },
+    { at: 9, key: "focus-3", text: "천천히 숨을 들이마십니다", speechDelayMs: 400 },
+    { at: 14, key: "focus-4", text: "길게 내쉽니다", speechDelayMs: 420 },
+    { at: 19, key: "focus-5", text: "다시 깊게 숨을 들이마시고\n내쉽니다", speechDelayMs: 420 },
+    { at: 25, key: "focus-6", text: "지금 이 순간으로 돌아옵니다", speechDelayMs: 360 },
+    { at: 30, key: "focus-7", text: "흩어진 생각이\n하나의 점으로 모입니다", speechDelayMs: 360 },
+    { at: 36, key: "focus-8", text: "오늘 가장 중요한 한 가지를\n떠올려 봅니다", speechDelayMs: 400 },
+    { at: 42, key: "focus-9", text: "그 하나에 마음을 둡니다", speechDelayMs: 400 },
+    { at: 47, key: "focus-10", text: "당신의 집중은\n이미 당신 안에 있습니다", speechDelayMs: 420 },
+    { at: 52, key: "focus-11", text: "준비되었습니다", speechDelayMs: 460 },
+    { at: 55, key: "focus-12", text: "이제 가장 중요한 한 가지를\n시작하세요", speechDelayMs: 480 }
   ],
   en: [
     { at: 0, key: "focus-1", text: "Lengthen the spine\ngently", speechDelayMs: 420 },
@@ -1491,9 +1492,9 @@ export default function MeditationPage() {
     }
 
     try {
-      video.defaultMuted = true;
-      video.muted = true;
-      video.volume = 0;
+      video.defaultMuted = false;
+      video.muted = false;
+      video.volume = FOCUS_GATE_VIDEO_VOLUME;
       video.playsInline = true;
       if (options?.restartFromBeginning ?? false) {
         video.currentTime = 0;
@@ -2270,7 +2271,6 @@ export default function MeditationPage() {
             ref={focusVideoRef}
             className="absolute inset-0 z-0 h-full w-full object-cover opacity-[0.82] brightness-[0.92] contrast-[1.04] saturate-[0.96]"
             autoPlay
-            muted
             loop
             playsInline
             preload="metadata"
