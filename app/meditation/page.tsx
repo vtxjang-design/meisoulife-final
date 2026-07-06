@@ -1040,6 +1040,8 @@ export default function MeditationPage() {
   const [affirmationMessage, setAffirmationMessage] = useState<string | null>(null);
   const [focusGateMessage, setFocusGateMessage] = useState<string | null>(null);
   const [calmGateMessage, setCalmGateMessage] = useState<string | null>(null);
+  const [isRechargeVideoPlaying, setIsRechargeVideoPlaying] = useState(false);
+  const [rechargeStartError, setRechargeStartError] = useState<string | null>(null);
   const [journeyMode, setJourneyMode] = useState(false);
   const [journeyDay, setJourneyDay] = useState<number | null>(null);
   const [returnToHref, setReturnToHref] = useState("/rhythm-journey");
@@ -1141,6 +1143,12 @@ export default function MeditationPage() {
   const rechargeGuide = rechargeGuideCopy[localizedLanguage];
   const rechargeCompletion = rechargeCompletionCopy[localizedLanguage];
   const rechargeIntro = rechargeIntroCopy[localizedLanguage];
+  const rechargeStartErrorText =
+    localizedLanguage === "kr"
+      ? "다시 한 번 탭해서 시작해 주세요"
+      : localizedLanguage === "en"
+        ? "Please tap again to start Recharge"
+        : "もう一度タップして始めてください";
   const rechargeStartLabel =
     localizedLanguage === "kr"
       ? "Recharge 시작하기"
@@ -1493,6 +1501,8 @@ export default function MeditationPage() {
     setAffirmationMessage(null);
     setFocusGateMessage(null);
     setCalmGateMessage(null);
+    setIsRechargeVideoPlaying(false);
+    setRechargeStartError(null);
     spokenFocusKeysRef.current = new Set();
     spokenCalmKeysRef.current = new Set();
     spokenAffirmationKeysRef.current = new Set();
@@ -1939,6 +1949,7 @@ export default function MeditationPage() {
           video.pause();
           video.currentTime = 0;
         }
+        setIsRechargeVideoPlaying(false);
       } else {
         void stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
       }
@@ -1946,7 +1957,7 @@ export default function MeditationPage() {
   }, [ambientAudioSource, ambientAudioVolume, isCalmGate, isComplete, isFocusGate, isRechargeGate, isStructuredMorningGate, journeyMode, requiresExplicitAudioStart, soundEnabled]);
 
   useEffect(() => {
-    if (secondsLeft <= 0 || isPaused || needsUserStart) {
+    if (isRechargeGate || secondsLeft <= 0 || isPaused || needsUserStart) {
       return;
     }
 
@@ -1957,7 +1968,21 @@ export default function MeditationPage() {
     return () => {
       window.clearTimeout(timer);
     };
-  }, [isPaused, needsUserStart, secondsLeft]);
+  }, [isPaused, isRechargeGate, needsUserStart, secondsLeft]);
+
+  useEffect(() => {
+    if (!isRechargeGate || !isRechargeVideoPlaying || isPaused || needsUserStart || secondsLeft <= 0) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setSecondsLeft((current) => Math.max(current - 1, 0));
+    }, 1000);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [isPaused, isRechargeGate, isRechargeVideoPlaying, needsUserStart, secondsLeft]);
 
   useEffect(() => {
     if (!isStructuredMorningGate || !soundEnabled) {
@@ -2033,6 +2058,7 @@ export default function MeditationPage() {
         if (video) {
           video.pause();
         }
+        setIsRechargeVideoPlaying(false);
       } else {
         void stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
       }
@@ -2607,16 +2633,19 @@ export default function MeditationPage() {
       setSoundEnabled(true);
       setTotalSeconds(FOCUS_GATE_TOTAL_SECONDS);
       setSecondsLeft(FOCUS_GATE_TOTAL_SECONDS);
+      setRechargeStartError(null);
+      setIsRechargeVideoPlaying(false);
+      setIsPaused(true);
 
       const playbackStarted = await playRechargeGateVideo({ restartFromBeginning: true });
 
       if (!playbackStarted) {
+        setRechargeStartError(rechargeStartErrorText);
         return;
       }
 
       setRequiresExplicitAudioStart(false);
       setNeedsUserStart(false);
-      setIsPaused(false);
       return;
     }
 
@@ -2754,7 +2783,21 @@ export default function MeditationPage() {
             playsInline
             preload="auto"
             onLoadedData={() => console.log("Recharge Gate video loaded")}
-            onEnded={() => setSecondsLeft(0)}
+            onPlaying={() => {
+              setRechargeStartError(null);
+              setIsRechargeVideoPlaying(true);
+              setIsPaused(false);
+            }}
+            onPause={() => {
+              setIsRechargeVideoPlaying(false);
+              if (!isCompleteRef.current) {
+                setIsPaused(true);
+              }
+            }}
+            onEnded={() => {
+              setIsRechargeVideoPlaying(false);
+              setSecondsLeft(0);
+            }}
             onError={() => setAmbientVideoFailed(true)}
           >
             <source src={RECHARGE_GATE_VIDEO_SRC} type="video/mp4" />
@@ -2849,7 +2892,7 @@ export default function MeditationPage() {
           </>
         ) : null}
         <div className={`absolute inset-0 z-10 ${isStructuredMorningGate ? "bg-[linear-gradient(180deg,rgba(4,10,19,0.18),rgba(4,10,19,0.36))]" : "bg-black/25"}`} />
-        {isRechargeGate && !needsUserStart && !isComplete ? (
+        {isRechargeGate && isRechargeVideoPlaying && !isComplete ? (
           <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center">
             <div className="relative flex h-52 w-52 items-center justify-center sm:h-72 sm:w-72">
               <div className="absolute inset-0 rounded-full bg-[rgba(7,17,31,0.24)] blur-3xl" />
@@ -2975,6 +3018,9 @@ export default function MeditationPage() {
                       >
                         {rechargeStartLabel}
                       </button>
+                      {rechargeStartError ? (
+                        <p className="text-sm leading-6 text-white/64">{rechargeStartError}</p>
+                      ) : null}
                     </div>
                   ) : (
                     <>
