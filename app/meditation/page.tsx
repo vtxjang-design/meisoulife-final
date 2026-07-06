@@ -40,16 +40,36 @@ const ENERGY_GATE_VIDEO_SRC = "/basic/morning%20gate/energy%20gate8.mp4";
 const VISION_GATE_VIDEO_SRC = "/basic/morning-gate/vision-gate-7.mp4";
 const FOCUS_GATE_VIDEO_SRC = "/videos/basic/daytime/focus-gate.mp4";
 const CALM_GATE_VIDEO_SRC = "/videos/basic/daytime/calm-gate.mp4";
+const RECHARGE_GATE_VIDEO_SRC = "/videos/basic/daytime/recharge-gate.mp4";
 const AWAKENING_GATE_VIDEO_VOLUME = 0.13;
 const VISION_GATE_VIDEO_VOLUME = 0.14;
 const FOCUS_GATE_VIDEO_VOLUME = 0.34;
 const CALM_GATE_VIDEO_VOLUME = 0.35;
+const RECHARGE_GATE_VIDEO_VOLUME = 1;
 const AWAKENING_RITUAL_STORAGE_KEY = "meisoulife_awakening_gate_ritual";
 const FOCUS_GATE_TOTAL_SECONDS = 60;
 const RECHARGE_GUIDE_IMAGES = {
   kr: "/images/recharge/recharge-gate-ko.png",
   jp: "/images/recharge/recharge-gate-ja.png",
   en: "/images/recharge/recharge-gate-en.png"
+} as const;
+
+const rechargeCompletionCopy = {
+  kr: {
+    title: "Recharge Complete",
+    body: "몸과 뇌의 에너지가 다시 깨어났습니다.\n\n오늘도 리듬을 이어가세요.",
+    button: "Continue"
+  },
+  jp: {
+    title: "Recharge Complete",
+    body: "身体と脳のエネルギーが回復しました。\n\n今日もあなたらしいリズムで過ごしましょう。",
+    button: "Continue"
+  },
+  en: {
+    title: "Recharge Complete",
+    body: "Your body and brain have been recharged.\n\nCarry your natural rhythm into the rest of your day.",
+    button: "Continue"
+  }
 } as const;
 
 type BreathPhase = "inhale" | "hold" | "exhale";
@@ -971,6 +991,7 @@ export default function MeditationPage() {
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
   const focusVideoRef = useRef<HTMLVideoElement | null>(null);
   const calmVideoRef = useRef<HTMLVideoElement | null>(null);
+  const rechargeVideoRef = useRef<HTMLVideoElement | null>(null);
   const affirmationVideoRef = useRef<HTMLVideoElement | null>(null);
   const energyVideoRef = useRef<HTMLVideoElement | null>(null);
   const visionVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -1024,7 +1045,7 @@ export default function MeditationPage() {
     getBasicPracticeByRouteType(requestedRouteType, localizedLanguage) ??
     getBasicPracticeBySession(meditationType, mappedDoor, localizedLanguage);
   const content = copy.variants[meditationType];
-  const hideSoundToggle = meditationType === "morning" || isFocusGate || isCalmGate;
+  const hideSoundToggle = meditationType === "morning" || isFocusGate || isCalmGate || isRechargeGate;
   const durationVariant = getDurationVariant(totalSeconds);
   const durationTextSet = copy.durationTexts?.[durationVariant];
   const journeyAudioSource = journeyDay ? journeyAudioMap[journeyDay] : undefined;
@@ -1060,6 +1081,7 @@ export default function MeditationPage() {
       ? getBasicIdentityCompletionMessage(localizedLanguage)
       : copy.completionMessage;
   const rechargeGuideImage = RECHARGE_GUIDE_IMAGES[localizedLanguage];
+  const rechargeCompletion = rechargeCompletionCopy[localizedLanguage];
   const rechargeStartLabel =
     localizedLanguage === "kr"
       ? "Recharge 시작하기"
@@ -1095,6 +1117,8 @@ export default function MeditationPage() {
     returnToHref === "/rhythm-journey" ? "/program/basic?rhythm=morning" : returnToHref;
   const finishForTodayHref = morningGateReturnHref.split("?")[0] || "/program/basic";
   const continueToEnergyHref = `/meditation?duration=180&type=morning-energy&returnTo=${encodeURIComponent(morningGateReturnHref)}`;
+  const rechargeReturnHref =
+    returnToHref === "/rhythm-journey" ? "/program/basic?rhythm=daytime" : returnToHref;
 
   function logStructuredMorningAmbientState(stage: string) {
     if (typeof window === "undefined") {
@@ -1622,6 +1646,33 @@ export default function MeditationPage() {
     }
   }
 
+  async function playRechargeGateVideo(options?: { restartFromBeginning?: boolean }) {
+    if (!isRechargeGate || typeof window === "undefined") {
+      return;
+    }
+
+    const video = rechargeVideoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    try {
+      video.defaultMuted = false;
+      video.muted = false;
+      video.volume = RECHARGE_GATE_VIDEO_VOLUME;
+      video.playsInline = true;
+      if (options?.restartFromBeginning ?? false) {
+        video.currentTime = 0;
+      }
+      await video.play();
+      setAmbientVideoFailed(false);
+    } catch (error) {
+      console.warn("[recharge-gate] video playback failed", error);
+      setAmbientVideoFailed(true);
+    }
+  }
+
   async function playEnergyGateVideo() {
     if (!isEnergyGate || typeof window === "undefined") {
       return;
@@ -1763,7 +1814,7 @@ export default function MeditationPage() {
         return;
       }
 
-      if (!isComplete && soundEnabled && !journeyMode && !isStructuredMorningGate && !isFocusGate && !isCalmGate) {
+      if (!isComplete && soundEnabled && !journeyMode && !isStructuredMorningGate && !isFocusGate && !isCalmGate && !isRechargeGate) {
         startAmbientNatureAudio(
           ambientAudioRef,
           soundEnabled,
@@ -1804,11 +1855,17 @@ export default function MeditationPage() {
           calmSpeechSequenceRef.current += 1;
           window.speechSynthesis.cancel();
         }
+      } else if (isRechargeGate) {
+        const video = rechargeVideoRef.current;
+        if (video) {
+          video.pause();
+          video.currentTime = 0;
+        }
       } else {
         void stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
       }
     };
-  }, [ambientAudioSource, ambientAudioVolume, isCalmGate, isComplete, isFocusGate, isStructuredMorningGate, journeyMode, requiresExplicitAudioStart, soundEnabled]);
+  }, [ambientAudioSource, ambientAudioVolume, isCalmGate, isComplete, isFocusGate, isRechargeGate, isStructuredMorningGate, journeyMode, requiresExplicitAudioStart, soundEnabled]);
 
   useEffect(() => {
     if (secondsLeft <= 0 || isPaused || needsUserStart) {
@@ -1880,6 +1937,14 @@ export default function MeditationPage() {
   }, [hasUserGesture, isCalmGate, isComplete, isPaused, needsUserStart]);
 
   useEffect(() => {
+    if (!isRechargeGate || !hasUserGesture || isPaused || isComplete || needsUserStart) {
+      return;
+    }
+
+    void playRechargeGateVideo();
+  }, [hasUserGesture, isComplete, isPaused, isRechargeGate, needsUserStart]);
+
+  useEffect(() => {
     if (isComplete || !soundEnabled) {
       if (isStructuredMorningGate) {
         void stopStructuredMorningAmbient();
@@ -1893,13 +1958,18 @@ export default function MeditationPage() {
         if (video) {
           video.pause();
         }
+      } else if (isRechargeGate) {
+        const video = rechargeVideoRef.current;
+        if (video) {
+          video.pause();
+        }
       } else {
         void stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
       }
       return;
     }
 
-    if (!hasUserGesture || journeyMode || isStructuredMorningGate || isFocusGate || isCalmGate) {
+    if (!hasUserGesture || journeyMode || isStructuredMorningGate || isFocusGate || isCalmGate || isRechargeGate) {
       return;
     }
 
@@ -1918,7 +1988,7 @@ export default function MeditationPage() {
         void stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
       }
     };
-  }, [ambientAudioSource, ambientAudioVolume, hasUserGesture, isCalmGate, isComplete, isFocusGate, isStructuredMorningGate, journeyMode, soundEnabled]);
+  }, [ambientAudioSource, ambientAudioVolume, hasUserGesture, isCalmGate, isComplete, isFocusGate, isRechargeGate, isStructuredMorningGate, journeyMode, soundEnabled]);
 
   useEffect(() => {
     if (!pendingStructuredAmbientStart || !isAffirmationGate || isComplete || requiresExplicitAudioStart) {
@@ -2360,6 +2430,11 @@ export default function MeditationPage() {
         calmSpeechSequenceRef.current += 1;
         window.speechSynthesis.cancel();
       }
+    } else if (isRechargeGate) {
+      const video = rechargeVideoRef.current;
+      if (video) {
+        video.pause();
+      }
     } else {
       await stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
     }
@@ -2405,6 +2480,12 @@ export default function MeditationPage() {
         if (typeof window !== "undefined" && "speechSynthesis" in window) {
           calmSpeechSequenceRef.current += 1;
           window.speechSynthesis.cancel();
+        }
+      } else if (isRechargeGate) {
+        const video = rechargeVideoRef.current;
+        if (video) {
+          video.pause();
+          video.currentTime = 0;
         }
       } else {
         await stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
@@ -2469,6 +2550,12 @@ export default function MeditationPage() {
     if (isCalmGate) {
       setSoundEnabled(true);
       await playCalmGateVideo({ restartFromBeginning: true });
+      return;
+    }
+
+    if (isRechargeGate) {
+      setSoundEnabled(true);
+      await playRechargeGateVideo({ restartFromBeginning: true });
       return;
     }
 
@@ -2574,6 +2661,20 @@ export default function MeditationPage() {
             onError={() => setAmbientVideoFailed(true)}
           >
             <source src={FOCUS_GATE_VIDEO_SRC} type="video/mp4" />
+          </video>
+        ) : !ambientVideoFailed && isRechargeGate ? (
+          <video
+            key="recharge-gate-video"
+            ref={rechargeVideoRef}
+            className="absolute inset-0 z-0 h-full w-full object-cover opacity-[0.92] brightness-[0.98] contrast-[1.02] saturate-[1.02] transition-opacity duration-700"
+            autoPlay={!needsUserStart}
+            playsInline
+            preload="metadata"
+            onLoadedData={() => console.log("Recharge Gate video loaded")}
+            onEnded={() => setSecondsLeft(0)}
+            onError={() => setAmbientVideoFailed(true)}
+          >
+            <source src={RECHARGE_GATE_VIDEO_SRC} type="video/mp4" />
           </video>
         ) : !ambientVideoFailed && isCalmGate ? (
           <video
@@ -2812,24 +2913,28 @@ export default function MeditationPage() {
                   </button>
                 ) : null}
               </div>
-              {!isStructuredMorningGate && !isFocusGate && !isCalmGate ? (
+              {!isStructuredMorningGate && !isFocusGate && !isCalmGate && !isRechargeGate ? (
                 <p className="text-2xl font-medium text-white/72 transition-all duration-300 ease-out sm:text-3xl">
                   {copy.phases[phase]}
                 </p>
               ) : null}
 
-              <div className="relative mt-10 flex h-56 w-56 items-center justify-center sm:h-72 sm:w-72">
-                <div className="absolute inset-0 rounded-full bg-gold/10 blur-3xl" />
-                <div
-                  className={`absolute inset-6 rounded-full border border-gold/35 bg-gold/10 transition-transform duration-[4000] ease-in-out ${circleScaleClass}`}
-                />
-                <div
-                  className={`absolute inset-0 rounded-full border border-white/10 bg-white/[0.03] transition-transform duration-[4000] ease-in-out ${circleScaleClass}`}
-                />
-                <div className="relative z-10 text-center">
-                  <p className="text-5xl font-serif text-white/88 sm:text-6xl">{formatRemainingTime(secondsLeft)}</p>
+              {!isRechargeGate ? (
+                <div className="relative mt-10 flex h-56 w-56 items-center justify-center sm:h-72 sm:w-72">
+                  <div className="absolute inset-0 rounded-full bg-gold/10 blur-3xl" />
+                  <div
+                    className={`absolute inset-6 rounded-full border border-gold/35 bg-gold/10 transition-transform duration-[4000] ease-in-out ${circleScaleClass}`}
+                  />
+                  <div
+                    className={`absolute inset-0 rounded-full border border-white/10 bg-white/[0.03] transition-transform duration-[4000] ease-in-out ${circleScaleClass}`}
+                  />
+                  <div className="relative z-10 text-center">
+                    <p className="text-5xl font-serif text-white/88 sm:text-6xl">{formatRemainingTime(secondsLeft)}</p>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="mt-8 min-h-[260px] w-full" />
+              )}
 
               {isStructuredMorningGate ? (
                 <div className="mt-8 min-h-[92px] max-w-xl space-y-3">
@@ -2861,7 +2966,7 @@ export default function MeditationPage() {
               ) : null}
             </div>
 
-            {!isStructuredMorningGate && !isFocusGate && !isCalmGate ? (
+            {!isStructuredMorningGate && !isFocusGate && !isCalmGate && !isRechargeGate ? (
               <div className="mt-8">
                 <p className="text-sm font-medium tracking-[0.18em] text-white/68 transition-opacity duration-300 sm:text-base">
                   {copy.bottomText[phase]}
@@ -2905,6 +3010,26 @@ export default function MeditationPage() {
                 className="inline-flex min-h-[48px] min-w-[220px] items-center justify-center rounded-full px-4 py-2 text-sm font-medium text-white/58 transition duration-300 hover:text-white/82"
               >
                 {ritualCopy.finishCta}
+              </Link>
+            </div>
+          </div>
+        ) : isRechargeGate ? (
+          <div className="animate-fade-in space-y-8">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-[rgba(127,255,212,0.22)] bg-[rgba(127,255,212,0.08)] text-3xl text-[#9bf3dc] shadow-[0_18px_42px_rgba(8,24,32,0.28)]">
+              ✓
+            </div>
+            <h1 className="font-serif text-4xl text-white sm:text-5xl">
+              {rechargeCompletion.title}
+            </h1>
+            <p className="mx-auto max-w-xl whitespace-pre-line text-base leading-8 text-white/72">
+              {rechargeCompletion.body}
+            </p>
+            <div className="flex flex-col items-center gap-3">
+              <Link
+                href={rechargeReturnHref}
+                className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
+              >
+                {rechargeCompletion.button}
               </Link>
             </div>
           </div>
