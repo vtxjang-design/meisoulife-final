@@ -1148,6 +1148,7 @@ export default function MeditationPage() {
     rechargeExercises.items.find((item) => item.key === selectedRechargeExercise)?.label ??
     rechargeExercises.items[0]?.label ??
     "";
+  const rechargePlaybackLabel = `${rechargeExercises.selectedLabel}: ${selectedRechargeExerciseLabel}`;
   const rechargeStartErrorText =
     localizedLanguage === "kr"
       ? "다시 한 번 탭해서 시작해 주세요"
@@ -2661,9 +2662,6 @@ export default function MeditationPage() {
     if (isRechargeGate) {
       const video = rechargeVideoRef.current;
 
-      console.log("[recharge-gate] start clicked");
-      console.log("[recharge-gate] video ref", video);
-
       if (!video) {
         setRechargeStartError(rechargeStartErrorText);
         setNeedsUserStart(true);
@@ -2697,26 +2695,14 @@ export default function MeditationPage() {
         video.playsInline = true;
         video.load();
 
-        console.log("[recharge-gate] expected src", RECHARGE_GATE_VIDEO_SRC);
-        console.log("[recharge-gate] currentSrc", video.currentSrc);
-        console.log("[recharge-gate] readyState before play", video.readyState);
-        console.log("[recharge-gate] paused before play", video.paused);
-        console.log("[recharge-gate] currentTime before play", video.currentTime);
-        console.log("[recharge-gate] ended before play", video.ended);
-
         await video.play();
-        console.log("[recharge-gate] play resolved");
-        console.log("[recharge-gate] PLAY SUCCESS");
-        console.log("[recharge-gate] readyState after play", video.readyState);
-        console.log("[recharge-gate] paused after play", video.paused);
-        console.log("[recharge-gate] currentTime after play", video.currentTime);
         setIsRechargeVideoPlaying(true);
         setIsPaused(false);
         startRechargeCountdown();
         setIsRechargeStarting(false);
         return;
       } catch (error) {
-        console.error("[recharge-gate] PLAY FAILED", error);
+        console.warn("[recharge-gate] direct start failed", error);
         setNeedsUserStart(true);
         setRequiresExplicitAudioStart(true);
         setIsRechargeVideoPlaying(false);
@@ -2836,7 +2822,6 @@ export default function MeditationPage() {
   }
 
   function handleRechargeVideoPlaying() {
-    console.log("[recharge-gate] PLAYING EVENT");
     setRechargeStartError(null);
     setIsRechargeVideoPlaying(true);
     setIsPaused(false);
@@ -2850,7 +2835,6 @@ export default function MeditationPage() {
   }
 
   function handleRechargeVideoPause() {
-    console.log("[recharge-gate] PAUSE EVENT");
     setIsRechargeVideoPlaying(false);
     clearRechargeTimer();
     if (!isCompleteRef.current) {
@@ -2859,7 +2843,6 @@ export default function MeditationPage() {
   }
 
   function handleRechargeVideoEnded() {
-    console.log("[recharge-gate] ENDED EVENT");
     setIsRechargeVideoPlaying(false);
     clearRechargeTimer();
     setSecondsLeft(0);
@@ -2894,16 +2877,10 @@ export default function MeditationPage() {
             playsInline
             preload="auto"
             muted={false}
-            onLoadedData={() => console.log("[recharge-gate] LOADED DATA")}
-            onCanPlay={() => console.log("[recharge-gate] CAN PLAY")}
-            onPlay={() => console.log("[recharge-gate] PLAY EVENT")}
             onPlaying={handleRechargeVideoPlaying}
             onPause={handleRechargeVideoPause}
             onEnded={handleRechargeVideoEnded}
-            onError={(event) => {
-              console.error("[recharge-gate] VIDEO ERROR", event);
-              setAmbientVideoFailed(true);
-            }}
+            onError={() => setAmbientVideoFailed(true)}
           />
         ) : !ambientVideoFailed && isCalmGate ? (
           <video
@@ -3004,7 +2981,7 @@ export default function MeditationPage() {
               <div className="absolute inset-0 rounded-full border-t border-[rgba(212,178,106,0.72)] border-r border-[rgba(212,178,106,0.22)] border-b border-[rgba(212,178,106,0.16)] border-l border-[rgba(212,178,106,0.42)] opacity-90" />
               <div className="relative z-10 text-center">
                 <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.2em] text-white/72 sm:text-sm">
-                  {selectedRechargeExerciseLabel}
+                  {rechargePlaybackLabel}
                 </p>
                 <p className="text-[48px] font-semibold tracking-[0.08em] text-white sm:text-[80px]">
                   {formatRemainingTime(secondsLeft)}
