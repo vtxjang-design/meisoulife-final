@@ -3018,25 +3018,11 @@ export default function MeditationPage() {
                         <p className="text-sm leading-7 text-white/56">{rechargeIntro.state}</p>
                         <p className="whitespace-pre-line text-sm leading-7 text-white/76 sm:text-base">{rechargeIntro.body}</p>
                       </div>
-                      <div className="animate-fade-in mx-auto my-2 w-full max-w-[380px] overflow-hidden rounded-[20px] border border-white/10 shadow-[0_20px_50px_rgba(4,12,24,0.24)] duration-[400ms]">
-                        <video
-                          key="recharge-preview-video"
-                          className="block h-auto w-full object-cover"
-                          autoPlay
-                          muted
-                          loop
-                          playsInline
-                          controls={false}
-                          preload="metadata"
-                        >
-                          <source src={RECHARGE_GATE_VIDEO_SRC} type="video/mp4" />
-                        </video>
-                      </div>
-                      <div className="animate-fade-in mx-auto w-full max-w-[700px] overflow-hidden rounded-[20px] shadow-[0_18px_42px_rgba(4,12,24,0.22)] duration-[500ms]">
+                      <div className="animate-fade-in mx-auto w-full max-w-[700px] overflow-hidden rounded-[24px] shadow-[0_20px_48px_rgba(4,12,24,0.24)] duration-[500ms]">
                         <img
                           src={RECHARGE_GATE_GUIDE_IMAGE_SRC}
                           alt={rechargeExercises.sectionTitle}
-                          className="block h-auto w-full"
+                          className="block h-auto w-full object-contain"
                         />
                       </div>
                       <div className="animate-fade-in mx-auto w-full max-w-2xl space-y-3 duration-[500ms]">
