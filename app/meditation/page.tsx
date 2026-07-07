@@ -1081,6 +1081,7 @@ export default function MeditationPage() {
   const focusSpeechUnlockedRef = useRef(false);
   const calmSpeechUnlockedRef = useRef(false);
   const rechargeTimerIntervalRef = useRef<number | null>(null);
+  const rechargeStartTriggerLockRef = useRef(false);
   const awakeningRitualHandledRef = useRef(false);
   const isPausedRef = useRef(false);
   const isCompleteRef = useRef(false);
@@ -2673,46 +2674,42 @@ export default function MeditationPage() {
         return;
       }
 
+      video.pause();
+      if (video.getAttribute("src") !== RECHARGE_GATE_VIDEO_SRC) {
+        video.src = RECHARGE_GATE_VIDEO_SRC;
+      }
+      video.currentTime = 0;
+      video.defaultMuted = false;
+      video.muted = false;
+      video.volume = RECHARGE_GATE_VIDEO_VOLUME;
+      video.playsInline = true;
+
+      console.log("[recharge-gate] currentSrc", video.currentSrc);
+      console.log("[recharge-gate] readyState before play", video.readyState);
+      console.log("[recharge-gate] paused before play", video.paused);
+      console.log("[recharge-gate] currentTime before play", video.currentTime);
+      console.log("[recharge-gate] ended before play", video.ended);
+
       clearRechargeTimer();
       setHasUserGesture(true);
       setSoundEnabled(true);
-      setTotalSeconds(FOCUS_GATE_TOTAL_SECONDS);
-      setSecondsLeft(FOCUS_GATE_TOTAL_SECONDS);
       setRechargeStartError(null);
-      setIsRechargeVideoPlaying(false);
-      setIsPaused(true);
-      setIsRechargeStarting(true);
-      setRequiresExplicitAudioStart(false);
-      setAmbientVideoFailed(false);
 
       try {
-        video.pause();
-        if (video.getAttribute("src") !== RECHARGE_GATE_VIDEO_SRC) {
-          video.src = RECHARGE_GATE_VIDEO_SRC;
-        }
-        video.currentTime = 0;
-        video.defaultMuted = false;
-        video.muted = false;
-        video.volume = RECHARGE_GATE_VIDEO_VOLUME;
-        video.playsInline = true;
-        video.load();
-
-        console.log("[recharge-gate] currentSrc", video.currentSrc);
-        console.log("[recharge-gate] readyState before play", video.readyState);
-        console.log("[recharge-gate] paused before play", video.paused);
-        console.log("[recharge-gate] currentTime before play", video.currentTime);
-        console.log("[recharge-gate] ended before play", video.ended);
-
         const playPromise = video.play();
         console.log("[recharge-gate] playPromise =", playPromise);
         await playPromise;
         console.log("[recharge-gate] PLAY SUCCESS");
 
+        setTotalSeconds(FOCUS_GATE_TOTAL_SECONDS);
+        setSecondsLeft(FOCUS_GATE_TOTAL_SECONDS);
         setNeedsUserStart(false);
+        setRequiresExplicitAudioStart(false);
         setIsRechargeVideoPlaying(true);
         setIsPaused(false);
-        startRechargeCountdown();
         setIsRechargeStarting(false);
+        setAmbientVideoFailed(false);
+        startRechargeCountdown();
 
         let debugTicks = 0;
         const debugInterval = window.setInterval(() => {
@@ -2731,9 +2728,9 @@ export default function MeditationPage() {
         setRequiresExplicitAudioStart(true);
         setIsRechargeVideoPlaying(false);
         setIsPaused(true);
+        setIsRechargeStarting(false);
         setAmbientVideoFailed(true);
         setRechargeStartError(rechargeStartErrorText);
-        setIsRechargeStarting(false);
       }
       return;
     }
@@ -2842,6 +2839,19 @@ export default function MeditationPage() {
       }
 
       return next;
+    });
+  }
+
+  function handleRechargeStartTrigger() {
+    if (rechargeStartTriggerLockRef.current) {
+      return;
+    }
+
+    rechargeStartTriggerLockRef.current = true;
+    void handleProgramAudioStart().finally(() => {
+      window.setTimeout(() => {
+        rechargeStartTriggerLockRef.current = false;
+      }, 250);
     });
   }
 
@@ -3145,7 +3155,8 @@ export default function MeditationPage() {
                       </p>
                       <button
                         type="button"
-                        onClick={journeyMode ? handleJourneyAudioStart : handleProgramAudioStart}
+                        onPointerDown={journeyMode ? undefined : handleRechargeStartTrigger}
+                        onClick={journeyMode ? handleJourneyAudioStart : handleRechargeStartTrigger}
                         className="button-nowrap animate-meditation-fade-up mt-3 inline-flex min-h-[54px] items-center justify-center rounded-full border border-gold/30 bg-gold/15 px-7 py-3 text-base font-semibold text-[#f5e4b5] shadow-[0_18px_42px_rgba(212,178,106,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-gold/20 hover:shadow-[0_22px_48px_rgba(212,178,106,0.24)]"
                       >
                         {rechargeStartLabel}
