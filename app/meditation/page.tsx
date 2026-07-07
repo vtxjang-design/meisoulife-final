@@ -2633,6 +2633,15 @@ export default function MeditationPage() {
 
   async function handleProgramAudioStart() {
     if (isRechargeGate) {
+      const video = rechargeVideoRef.current;
+
+      if (!video) {
+        setRechargeStartError(rechargeStartErrorText);
+        setNeedsUserStart(true);
+        setIsRechargeVideoPlaying(false);
+        return;
+      }
+
       setHasUserGesture(true);
       setSoundEnabled(true);
       setTotalSeconds(FOCUS_GATE_TOTAL_SECONDS);
@@ -2641,17 +2650,20 @@ export default function MeditationPage() {
       setIsRechargeVideoPlaying(false);
       setIsPaused(true);
       setIsRechargeStarting(true);
+      setRequiresExplicitAudioStart(false);
+      setNeedsUserStart(false);
 
       const playbackStarted = await playRechargeGateVideo({ restartFromBeginning: true });
 
       if (!playbackStarted) {
         setIsRechargeStarting(false);
+        setNeedsUserStart(true);
+        setRequiresExplicitAudioStart(true);
+        setIsRechargeVideoPlaying(false);
         setRechargeStartError(rechargeStartErrorText);
         return;
       }
 
-      setRequiresExplicitAudioStart(false);
-      setNeedsUserStart(false);
       setIsRechargeStarting(false);
       return;
     }
@@ -2763,6 +2775,27 @@ export default function MeditationPage() {
     });
   }
 
+  function handleRechargeVideoPlaying() {
+    setRechargeStartError(null);
+    setIsRechargeVideoPlaying(true);
+    setIsPaused(false);
+    setNeedsUserStart(false);
+    setRequiresExplicitAudioStart(false);
+    setIsRechargeStarting(false);
+  }
+
+  function handleRechargeVideoPause() {
+    setIsRechargeVideoPlaying(false);
+    if (!isCompleteRef.current) {
+      setIsPaused(true);
+    }
+  }
+
+  function handleRechargeVideoEnded() {
+    setIsRechargeVideoPlaying(false);
+    setSecondsLeft(0);
+  }
+
   return (
     <main className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,rgba(216,191,131,0.12),transparent_20%),linear-gradient(180deg,#07111f_0%,#0d1b2d_45%,#10273a_100%)] px-6 py-10 text-white">
       <div className={`relative flex min-h-[480px] w-full max-w-3xl ${isRechargeGate ? "overflow-visible" : "overflow-hidden"} flex-col items-center rounded-[32px] border border-white/10 bg-white/[0.04] px-6 py-8 text-center shadow-[0_30px_80px_rgba(0,0,0,0.28)] sm:px-8 sm:py-10`}>
@@ -2784,33 +2817,20 @@ export default function MeditationPage() {
           <video
             key="recharge-gate-video"
             ref={rechargeVideoRef}
+            src={RECHARGE_GATE_VIDEO_SRC}
             className={`absolute inset-0 z-0 h-full w-full object-cover brightness-[0.98] contrast-[1.02] saturate-[1.02] transition-opacity duration-700 ${
               needsUserStart ? "pointer-events-none opacity-0" : "opacity-[0.92]"
             }`}
-            autoPlay={!needsUserStart}
             controls={false}
             playsInline
             preload="auto"
+            muted={false}
             onLoadedData={() => console.log("Recharge Gate video loaded")}
-            onPlaying={() => {
-              setRechargeStartError(null);
-              setIsRechargeVideoPlaying(true);
-              setIsPaused(false);
-            }}
-            onPause={() => {
-              setIsRechargeVideoPlaying(false);
-              if (!isCompleteRef.current) {
-                setIsPaused(true);
-              }
-            }}
-            onEnded={() => {
-              setIsRechargeVideoPlaying(false);
-              setSecondsLeft(0);
-            }}
+            onPlaying={handleRechargeVideoPlaying}
+            onPause={handleRechargeVideoPause}
+            onEnded={handleRechargeVideoEnded}
             onError={() => setAmbientVideoFailed(true)}
-          >
-            <source src={RECHARGE_GATE_VIDEO_SRC} type="video/mp4" />
-          </video>
+          />
         ) : !ambientVideoFailed && isCalmGate ? (
           <video
             key="calm-gate-video"
