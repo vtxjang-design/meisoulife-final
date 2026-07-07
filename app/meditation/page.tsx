@@ -40,7 +40,7 @@ const ENERGY_GATE_VIDEO_SRC = "/basic/morning%20gate/energy%20gate8.mp4";
 const VISION_GATE_VIDEO_SRC = "/basic/morning-gate/vision-gate-7.mp4";
 const FOCUS_GATE_VIDEO_SRC = "/videos/basic/daytime/focus-gate.mp4";
 const CALM_GATE_VIDEO_SRC = "/videos/basic/daytime/calm-gate.mp4";
-const RECHARGE_GATE_VIDEO_SRC = "/videos/basic/daytime/recharge-gate.mp4";
+const RECHARGE_GATE_VIDEO_SRC = "/basic/daytime-gate/recharge-gate8.mp4";
 const AWAKENING_GATE_VIDEO_VOLUME = 0.13;
 const VISION_GATE_VIDEO_VOLUME = 0.14;
 const FOCUS_GATE_VIDEO_VOLUME = 0.34;
@@ -71,19 +71,60 @@ const rechargeIntroCopy = {
     title: "Recharge Gate",
     subtitle: "몸을 충전하고 활력을 되찾는 1분",
     state: "\"에너지가 낮다\"",
-    body: "지금 필요한 것은 활력입니다.\n깊은 호흡으로 몸의 리듬을 깨워보세요."
+    body: "당신이 하고 싶은 1분 운동을 하나 선택하여 1분간 실시합니다."
   },
   jp: {
     title: "Recharge Gate",
     subtitle: "疲れから活力へ",
     state: "「エネルギーが下がっている」",
-    body: "深い呼吸と小さな動きで\n身体本来のリズムを取り戻しましょう。"
+    body: "あなたがやりたい1分運動を一つ選び、1分間行います。"
   },
   en: {
     title: "Recharge Gate",
     subtitle: "From Fatigue to Vitality",
     state: "\"My energy feels low.\"",
-    body: "Take one minute to awaken your body rhythm."
+    body: "Choose one one-minute exercise you want to do and practice it for one minute."
+  }
+} as const;
+
+type RechargeExerciseKey = "heelRaise" | "squat" | "rhythmWalking" | "openChest" | "smileBreathe";
+
+const rechargeExerciseOptions: Record<
+  "kr" | "jp" | "en",
+  { sectionTitle: string; selectedLabel: string; items: readonly { key: RechargeExerciseKey; label: string }[] }
+> = {
+  kr: {
+    sectionTitle: "오늘의 1분 운동",
+    selectedLabel: "오늘의 운동",
+    items: [
+      { key: "heelRaise", label: "발뒤꿈치 들어 올리기" },
+      { key: "squat", label: "스쿼트" },
+      { key: "rhythmWalking", label: "리듬 워킹" },
+      { key: "openChest", label: "가슴 열기" },
+      { key: "smileBreathe", label: "웃음과 호흡" }
+    ]
+  },
+  jp: {
+    sectionTitle: "今日の1分運動",
+    selectedLabel: "今日の運動",
+    items: [
+      { key: "heelRaise", label: "かかとを上げる" },
+      { key: "squat", label: "スクワット" },
+      { key: "rhythmWalking", label: "リズムウォーキング" },
+      { key: "openChest", label: "胸を開く" },
+      { key: "smileBreathe", label: "笑顔と呼吸" }
+    ]
+  },
+  en: {
+    sectionTitle: "Today’s 1-Minute Exercise",
+    selectedLabel: "Today’s Exercise",
+    items: [
+      { key: "heelRaise", label: "Heel Raise" },
+      { key: "squat", label: "Squat" },
+      { key: "rhythmWalking", label: "Rhythm Walking" },
+      { key: "openChest", label: "Open Chest" },
+      { key: "smileBreathe", label: "Smile & Breathe" }
+    ]
   }
 } as const;
 
@@ -998,6 +1039,7 @@ export default function MeditationPage() {
   const [calmGateMessage, setCalmGateMessage] = useState<string | null>(null);
   const [isRechargeVideoPlaying, setIsRechargeVideoPlaying] = useState(false);
   const [rechargeStartError, setRechargeStartError] = useState<string | null>(null);
+  const [selectedRechargeExercise, setSelectedRechargeExercise] = useState<RechargeExerciseKey>("heelRaise");
   const [journeyMode, setJourneyMode] = useState(false);
   const [journeyDay, setJourneyDay] = useState<number | null>(null);
   const [returnToHref, setReturnToHref] = useState("/rhythm-journey");
@@ -1098,12 +1140,17 @@ export default function MeditationPage() {
       : copy.completionMessage;
   const rechargeCompletion = rechargeCompletionCopy[localizedLanguage];
   const rechargeIntro = rechargeIntroCopy[localizedLanguage];
+  const rechargeExercises = rechargeExerciseOptions[localizedLanguage];
+  const selectedRechargeExerciseLabel =
+    rechargeExercises.items.find((item) => item.key === selectedRechargeExercise)?.label ??
+    rechargeExercises.items[0]?.label ??
+    "";
   const rechargeStartErrorText =
     localizedLanguage === "kr"
       ? "다시 한 번 탭해서 시작해 주세요"
       : localizedLanguage === "en"
-        ? "Please tap again to start Recharge"
-        : "もう一度タップして始めてください";
+        ? "Tap once more to start"
+        : "もう一度タップして開始してください";
   const rechargeStartLabel =
     localizedLanguage === "kr"
       ? "Recharge 시작하기"
@@ -2728,12 +2775,12 @@ export default function MeditationPage() {
           >
             <source src={FOCUS_GATE_VIDEO_SRC} type="video/mp4" />
           </video>
-        ) : !ambientVideoFailed && isRechargeGate ? (
+        ) : !ambientVideoFailed && isRechargeGate && !needsUserStart && !isComplete ? (
           <video
             key="recharge-gate-video"
             ref={rechargeVideoRef}
             className="absolute inset-0 z-0 h-full w-full object-cover opacity-[0.92] brightness-[0.98] contrast-[1.02] saturate-[1.02] transition-opacity duration-700"
-            autoPlay={!needsUserStart}
+            autoPlay
             controls={false}
             playsInline
             preload="auto"
@@ -2855,6 +2902,9 @@ export default function MeditationPage() {
               <div className="absolute inset-3 rounded-full border border-white/14" />
               <div className="absolute inset-0 rounded-full border-t border-[rgba(212,178,106,0.72)] border-r border-[rgba(212,178,106,0.22)] border-b border-[rgba(212,178,106,0.16)] border-l border-[rgba(212,178,106,0.42)] opacity-90" />
               <div className="relative z-10 text-center">
+                <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.2em] text-white/72 sm:text-sm">
+                  {selectedRechargeExerciseLabel}
+                </p>
                 <p className="text-[48px] font-semibold tracking-[0.08em] text-white sm:text-[80px]">
                   {formatRemainingTime(secondsLeft)}
                 </p>
@@ -2913,7 +2963,7 @@ export default function MeditationPage() {
                   </div>
                 )}
               </div>
-            ) : isRechargeGate && !needsUserStart ? null : (
+            ) : isRechargeGate ? null : (
               <div className="space-y-4">
                 {basicPracticeCopy ? (
                   <div className="mx-auto max-w-xl space-y-3 rounded-[24px] border border-white/10 bg-white/[0.04] px-4 py-4 backdrop-blur">
@@ -2955,6 +3005,40 @@ export default function MeditationPage() {
                           <source src={RECHARGE_GATE_VIDEO_SRC} type="video/mp4" />
                         </video>
                       </div>
+                      <div className="animate-fade-in mx-auto w-full max-w-2xl space-y-3 rounded-[24px] border border-white/10 bg-white/[0.04] px-4 py-4 text-left shadow-[0_18px_42px_rgba(4,12,24,0.18)] backdrop-blur duration-[500ms]">
+                        <p className="text-center text-xs uppercase tracking-[0.26em] text-gold/68">
+                          {rechargeExercises.sectionTitle}
+                        </p>
+                        <div className="grid gap-3 sm:grid-cols-2">
+                          {rechargeExercises.items.map((exercise, index) => {
+                            const isSelected = exercise.key === selectedRechargeExercise;
+
+                            return (
+                              <button
+                                key={exercise.key}
+                                type="button"
+                                onClick={() => setSelectedRechargeExercise(exercise.key)}
+                                className={`flex min-h-[68px] items-center gap-3 rounded-[20px] border px-4 py-3 text-left transition duration-300 ${
+                                  isSelected
+                                    ? "border-gold/40 bg-gold/14 text-white shadow-[0_12px_30px_rgba(212,178,106,0.14)]"
+                                    : "border-white/8 bg-white/[0.03] text-white/78 hover:border-white/16 hover:bg-white/[0.05]"
+                                } ${index === rechargeExercises.items.length - 1 ? "sm:col-span-2" : ""}`}
+                                aria-pressed={isSelected}
+                              >
+                                <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
+                                  isSelected ? "bg-gold text-ink" : "bg-white/10 text-white/72"
+                                }`}>
+                                  {index + 1}
+                                </span>
+                                <span className="text-sm leading-6 sm:text-[15px]">{exercise.label}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                      <p className="text-sm font-medium leading-7 text-white/70">
+                        {rechargeExercises.selectedLabel}: {selectedRechargeExerciseLabel}
+                      </p>
                       <button
                         type="button"
                         onClick={journeyMode ? handleJourneyAudioStart : handleProgramAudioStart}
