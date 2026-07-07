@@ -1080,6 +1080,7 @@ export default function MeditationPage() {
   const structuredSpeechUnlockedRef = useRef(false);
   const focusSpeechUnlockedRef = useRef(false);
   const calmSpeechUnlockedRef = useRef(false);
+  const rechargeTimerIntervalRef = useRef<number | null>(null);
   const awakeningRitualHandledRef = useRef(false);
   const isPausedRef = useRef(false);
   const isCompleteRef = useRef(false);
@@ -1953,6 +1954,7 @@ export default function MeditationPage() {
           video.pause();
           video.currentTime = 0;
         }
+        clearRechargeTimer();
         setIsRechargeVideoPlaying(false);
       } else {
         void stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
@@ -1973,20 +1975,6 @@ export default function MeditationPage() {
       window.clearTimeout(timer);
     };
   }, [isPaused, isRechargeGate, needsUserStart, secondsLeft]);
-
-  useEffect(() => {
-    if (!isRechargeGate || !isRechargeVideoPlaying || isPaused || needsUserStart || secondsLeft <= 0) {
-      return;
-    }
-
-    const timer = window.setTimeout(() => {
-      setSecondsLeft((current) => Math.max(current - 1, 0));
-    }, 1000);
-
-    return () => {
-      window.clearTimeout(timer);
-    };
-  }, [isPaused, isRechargeGate, isRechargeVideoPlaying, needsUserStart, secondsLeft]);
 
   useEffect(() => {
     if (!isStructuredMorningGate || !soundEnabled) {
@@ -2631,9 +2619,50 @@ export default function MeditationPage() {
     await handleAmbientStartResult(result, true);
   }
 
+  function clearRechargeTimer() {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    if (rechargeTimerIntervalRef.current !== null) {
+      window.clearInterval(rechargeTimerIntervalRef.current);
+      rechargeTimerIntervalRef.current = null;
+    }
+  }
+
+  function startRechargeCountdown() {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    if (rechargeTimerIntervalRef.current !== null) {
+      return;
+    }
+
+    rechargeTimerIntervalRef.current = window.setInterval(() => {
+      setSecondsLeft((current) => {
+        if (current <= 1) {
+          clearRechargeTimer();
+          const video = rechargeVideoRef.current;
+
+          if (video && !video.paused) {
+            video.pause();
+          }
+
+          return 0;
+        }
+
+        return current - 1;
+      });
+    }, 1000);
+  }
+
   async function handleProgramAudioStart() {
     if (isRechargeGate) {
       const video = rechargeVideoRef.current;
+
+      console.log("[recharge-gate] start clicked");
+      console.log("[recharge-gate] video ref", video);
 
       if (!video) {
         setRechargeStartError(rechargeStartErrorText);
@@ -2643,6 +2672,7 @@ export default function MeditationPage() {
         return;
       }
 
+      clearRechargeTimer();
       setHasUserGesture(true);
       setSoundEnabled(true);
       setTotalSeconds(FOCUS_GATE_TOTAL_SECONDS);
@@ -2657,19 +2687,36 @@ export default function MeditationPage() {
 
       try {
         video.pause();
+        if (video.getAttribute("src") !== RECHARGE_GATE_VIDEO_SRC) {
+          video.src = RECHARGE_GATE_VIDEO_SRC;
+        }
         video.currentTime = 0;
         video.defaultMuted = false;
         video.muted = false;
         video.volume = RECHARGE_GATE_VIDEO_VOLUME;
         video.playsInline = true;
+        video.load();
+
+        console.log("[recharge-gate] expected src", RECHARGE_GATE_VIDEO_SRC);
+        console.log("[recharge-gate] currentSrc", video.currentSrc);
+        console.log("[recharge-gate] readyState before play", video.readyState);
+        console.log("[recharge-gate] paused before play", video.paused);
+        console.log("[recharge-gate] currentTime before play", video.currentTime);
+        console.log("[recharge-gate] ended before play", video.ended);
 
         await video.play();
+        console.log("[recharge-gate] play resolved");
+        console.log("[recharge-gate] PLAY SUCCESS");
+        console.log("[recharge-gate] readyState after play", video.readyState);
+        console.log("[recharge-gate] paused after play", video.paused);
+        console.log("[recharge-gate] currentTime after play", video.currentTime);
         setIsRechargeVideoPlaying(true);
         setIsPaused(false);
+        startRechargeCountdown();
         setIsRechargeStarting(false);
         return;
       } catch (error) {
-        console.warn("[recharge-gate] direct start failed", error);
+        console.error("[recharge-gate] PLAY FAILED", error);
         setNeedsUserStart(true);
         setRequiresExplicitAudioStart(true);
         setIsRechargeVideoPlaying(false);
@@ -2789,23 +2836,32 @@ export default function MeditationPage() {
   }
 
   function handleRechargeVideoPlaying() {
+    console.log("[recharge-gate] PLAYING EVENT");
     setRechargeStartError(null);
     setIsRechargeVideoPlaying(true);
     setIsPaused(false);
     setNeedsUserStart(false);
     setRequiresExplicitAudioStart(false);
     setIsRechargeStarting(false);
+
+    if (rechargeTimerIntervalRef.current === null) {
+      startRechargeCountdown();
+    }
   }
 
   function handleRechargeVideoPause() {
+    console.log("[recharge-gate] PAUSE EVENT");
     setIsRechargeVideoPlaying(false);
+    clearRechargeTimer();
     if (!isCompleteRef.current) {
       setIsPaused(true);
     }
   }
 
   function handleRechargeVideoEnded() {
+    console.log("[recharge-gate] ENDED EVENT");
     setIsRechargeVideoPlaying(false);
+    clearRechargeTimer();
     setSecondsLeft(0);
   }
 
@@ -2838,11 +2894,16 @@ export default function MeditationPage() {
             playsInline
             preload="auto"
             muted={false}
-            onLoadedData={() => console.log("Recharge Gate video loaded")}
+            onLoadedData={() => console.log("[recharge-gate] LOADED DATA")}
+            onCanPlay={() => console.log("[recharge-gate] CAN PLAY")}
+            onPlay={() => console.log("[recharge-gate] PLAY EVENT")}
             onPlaying={handleRechargeVideoPlaying}
             onPause={handleRechargeVideoPause}
             onEnded={handleRechargeVideoEnded}
-            onError={() => setAmbientVideoFailed(true)}
+            onError={(event) => {
+              console.error("[recharge-gate] VIDEO ERROR", event);
+              setAmbientVideoFailed(true);
+            }}
           />
         ) : !ambientVideoFailed && isCalmGate ? (
           <video
@@ -2934,7 +2995,7 @@ export default function MeditationPage() {
           </>
         ) : null}
         <div className={`absolute inset-0 z-10 ${isStructuredMorningGate ? "bg-[linear-gradient(180deg,rgba(4,10,19,0.18),rgba(4,10,19,0.36))]" : "bg-black/25"}`} />
-        {isRechargeGate && isRechargeVideoPlaying && !isComplete ? (
+        {isRechargeGate && !needsUserStart && !isComplete ? (
           <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center">
             <div className="relative flex h-52 w-52 items-center justify-center sm:h-72 sm:w-72">
               <div className="absolute inset-0 rounded-full bg-[rgba(7,17,31,0.24)] blur-3xl" />
