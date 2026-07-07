@@ -41,6 +41,7 @@ const VISION_GATE_VIDEO_SRC = "/basic/morning-gate/vision-gate-7.mp4";
 const FOCUS_GATE_VIDEO_SRC = "/videos/basic/daytime/focus-gate.mp4";
 const CALM_GATE_VIDEO_SRC = "/videos/basic/daytime/calm-gate.mp4";
 const RECHARGE_GATE_VIDEO_SRC = "/basic/daytime-gate/recharge-gate8.mp4";
+const RECHARGE_GATE_GUIDE_IMAGE_SRC = "/basic/daytime-gate/recharge%20gate.png";
 const AWAKENING_GATE_VIDEO_VOLUME = 0.13;
 const VISION_GATE_VIDEO_VOLUME = 0.14;
 const FOCUS_GATE_VIDEO_VOLUME = 0.34;
@@ -1039,6 +1040,7 @@ export default function MeditationPage() {
   const [calmGateMessage, setCalmGateMessage] = useState<string | null>(null);
   const [isRechargeVideoPlaying, setIsRechargeVideoPlaying] = useState(false);
   const [rechargeStartError, setRechargeStartError] = useState<string | null>(null);
+  const [isRechargeStarting, setIsRechargeStarting] = useState(false);
   const [selectedRechargeExercise, setSelectedRechargeExercise] = useState<RechargeExerciseKey>("heelRaise");
   const [journeyMode, setJourneyMode] = useState(false);
   const [journeyDay, setJourneyDay] = useState<number | null>(null);
@@ -2638,16 +2640,19 @@ export default function MeditationPage() {
       setRechargeStartError(null);
       setIsRechargeVideoPlaying(false);
       setIsPaused(true);
+      setIsRechargeStarting(true);
 
       const playbackStarted = await playRechargeGateVideo({ restartFromBeginning: true });
 
       if (!playbackStarted) {
+        setIsRechargeStarting(false);
         setRechargeStartError(rechargeStartErrorText);
         return;
       }
 
       setRequiresExplicitAudioStart(false);
       setNeedsUserStart(false);
+      setIsRechargeStarting(false);
       return;
     }
 
@@ -2984,7 +2989,7 @@ export default function MeditationPage() {
               {(journeyMode || meditationType !== "default") && needsUserStart ? (
                 <div className={`mb-6 w-full ${isRechargeGate ? "max-w-3xl" : "max-w-md"} rounded-[24px] border border-[rgba(212,178,106,0.18)] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-[clamp(16px,4vw,40px)] py-5 text-center shadow-[0_18px_50px_rgba(4,12,24,0.18)] ${isRechargeGate ? "overflow-visible" : ""}`}>
                   {isRechargeGate ? (
-                    <div className="space-y-4 sm:space-y-5">
+                    <div className={`space-y-4 transition-all duration-300 sm:space-y-5 ${isRechargeStarting ? "scale-[0.98] opacity-0" : "scale-100 opacity-100"}`}>
                       <div className="mx-auto max-w-2xl space-y-3">
                         <p className="text-xs uppercase tracking-[0.28em] text-gold/72">{rechargeIntro.title}</p>
                         <h1 className="font-serif text-3xl text-white sm:text-4xl">{rechargeIntro.subtitle}</h1>
@@ -3005,7 +3010,14 @@ export default function MeditationPage() {
                           <source src={RECHARGE_GATE_VIDEO_SRC} type="video/mp4" />
                         </video>
                       </div>
-                      <div className="animate-fade-in mx-auto w-full max-w-2xl space-y-3 rounded-[24px] border border-white/10 bg-white/[0.04] px-4 py-4 text-left shadow-[0_18px_42px_rgba(4,12,24,0.18)] backdrop-blur duration-[500ms]">
+                      <div className="animate-fade-in mx-auto w-full max-w-[700px] overflow-hidden rounded-[20px] shadow-[0_18px_42px_rgba(4,12,24,0.22)] duration-[500ms]">
+                        <img
+                          src={RECHARGE_GATE_GUIDE_IMAGE_SRC}
+                          alt={rechargeExercises.sectionTitle}
+                          className="block h-auto w-full"
+                        />
+                      </div>
+                      <div className="animate-fade-in mx-auto w-full max-w-2xl space-y-3 duration-[500ms]">
                         <p className="text-center text-xs uppercase tracking-[0.26em] text-gold/68">
                           {rechargeExercises.sectionTitle}
                         </p>
