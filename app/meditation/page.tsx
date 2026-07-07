@@ -2780,12 +2780,14 @@ export default function MeditationPage() {
           >
             <source src={FOCUS_GATE_VIDEO_SRC} type="video/mp4" />
           </video>
-        ) : !ambientVideoFailed && isRechargeGate && !needsUserStart && !isComplete ? (
+        ) : !ambientVideoFailed && isRechargeGate && !isComplete ? (
           <video
             key="recharge-gate-video"
             ref={rechargeVideoRef}
-            className="absolute inset-0 z-0 h-full w-full object-cover opacity-[0.92] brightness-[0.98] contrast-[1.02] saturate-[1.02] transition-opacity duration-700"
-            autoPlay
+            className={`absolute inset-0 z-0 h-full w-full object-cover brightness-[0.98] contrast-[1.02] saturate-[1.02] transition-opacity duration-700 ${
+              needsUserStart ? "pointer-events-none opacity-0" : "opacity-[0.92]"
+            }`}
+            autoPlay={!needsUserStart}
             controls={false}
             playsInline
             preload="auto"
