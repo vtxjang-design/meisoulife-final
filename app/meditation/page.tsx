@@ -2638,6 +2638,7 @@ export default function MeditationPage() {
       if (!video) {
         setRechargeStartError(rechargeStartErrorText);
         setNeedsUserStart(true);
+        setRequiresExplicitAudioStart(true);
         setIsRechargeVideoPlaying(false);
         return;
       }
@@ -2652,19 +2653,31 @@ export default function MeditationPage() {
       setIsRechargeStarting(true);
       setRequiresExplicitAudioStart(false);
       setNeedsUserStart(false);
+      setAmbientVideoFailed(false);
 
-      const playbackStarted = await playRechargeGateVideo({ restartFromBeginning: true });
+      try {
+        video.pause();
+        video.currentTime = 0;
+        video.defaultMuted = false;
+        video.muted = false;
+        video.volume = RECHARGE_GATE_VIDEO_VOLUME;
+        video.playsInline = true;
 
-      if (!playbackStarted) {
+        await video.play();
+        setIsRechargeVideoPlaying(true);
+        setIsPaused(false);
         setIsRechargeStarting(false);
+        return;
+      } catch (error) {
+        console.warn("[recharge-gate] direct start failed", error);
         setNeedsUserStart(true);
         setRequiresExplicitAudioStart(true);
         setIsRechargeVideoPlaying(false);
+        setIsPaused(true);
+        setAmbientVideoFailed(true);
         setRechargeStartError(rechargeStartErrorText);
-        return;
+        setIsRechargeStarting(false);
       }
-
-      setIsRechargeStarting(false);
       return;
     }
 
