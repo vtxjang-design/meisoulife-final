@@ -42,11 +42,13 @@ const FOCUS_GATE_VIDEO_SRC = "/videos/basic/daytime/focus-gate.mp4";
 const CALM_GATE_VIDEO_SRC = "/videos/basic/daytime/calm-gate.mp4";
 const RECHARGE_GATE_VIDEO_SRC = "/basic/daytime-gate/recharge-gate8.mp4";
 const RECHARGE_GATE_GUIDE_IMAGE_SRC = "/basic/daytime-gate/recharge%20gate.png";
+const EVENING_RELEASE_VIDEO_SRC = "/evening-gate/evening%20gate1.mp4";
 const AWAKENING_GATE_VIDEO_VOLUME = 0.13;
 const VISION_GATE_VIDEO_VOLUME = 0.14;
 const FOCUS_GATE_VIDEO_VOLUME = 0.34;
 const CALM_GATE_VIDEO_VOLUME = 0.35;
 const RECHARGE_GATE_VIDEO_VOLUME = 1;
+const EVENING_RELEASE_VIDEO_VOLUME = 0.72;
 const AWAKENING_RITUAL_STORAGE_KEY = "meisoulife_awakening_gate_ritual";
 const FOCUS_GATE_TOTAL_SECONDS = 60;
 const rechargeCompletionCopy = {
@@ -321,6 +323,54 @@ const calmGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
     { at: 40, key: "calm-6", text: "Feel this moment\njust as it is", speechDelayMs: 700 },
     { at: 48, key: "calm-7", text: "You do not need\nto do anything", speechDelayMs: 760 },
     { at: 54, key: "calm-8", text: "Carry this ease\nback into your day", speechDelayMs: 760 }
+  ]
+};
+
+const releaseGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
+  jp: [
+    { at: 8, key: "release-1", text: "今日…\nここへ来てくださって\nありがとうございます", speechText: "今日…\nここへ来てくださって\nありがとうございます", speechDelayMs: 860 },
+    { at: 24, key: "release-2", text: "今日は\nここで終わりへ向かっています", speechText: "今日は\nここで終わりへ向かっています", speechDelayMs: 900 },
+    { at: 40, key: "release-3", text: "うれしい時間も\n静かな時間も\n楽ではなかった時間も", speechText: "うれしい時間も\n静かな時間も\n楽ではなかった時間も", speechDelayMs: 920 },
+    { at: 58, key: "release-4", text: "今は…\nそのすべてを\nそっと下ろしても大丈夫です", speechText: "今は…\nそのすべてを\nそっと下ろしても大丈夫です", speechDelayMs: 940 },
+    { at: 74, key: "release-5", text: "体の力を…\nほんの少し\nゆるめましょう", speechText: "体の力を…\nほんの少し\nゆるめましょう", speechDelayMs: 920 },
+    { at: 88, key: "release-6", text: "肩の力を\nゆるめて", speechDelayMs: 940 },
+    { at: 98, key: "release-7", text: "顔も\n休ませて", speechDelayMs: 960 },
+    { at: 108, key: "release-8", text: "心も\nそのまま\n休ませます", speechDelayMs: 980 },
+    { at: 122, key: "release-9", text: "今日\n終えられなかったことは…\n明日に預けて大丈夫です", speechText: "今日\n終えられなかったことは…\n明日に預けて大丈夫です", speechDelayMs: 980 },
+    { at: 136, key: "release-10", text: "今\nすべてを解決しなくて\n大丈夫です", speechText: "今\nすべてを解決しなくて\n大丈夫です", speechDelayMs: 980 },
+    { at: 146, key: "release-11", text: "何かを\n頑張らなくて\n大丈夫です\n何も変えなくて\n大丈夫です", speechText: "何かを\n頑張らなくて\n大丈夫です\n何も変えなくて\n大丈夫です", speechDelayMs: 1020 },
+    { at: 156, key: "release-12", text: "ただ…\n少しのあいだ\nここにいましょう", speechText: "ただ…\n少しのあいだ\nここにいましょう", speechDelayMs: 1080 },
+    { at: 168, key: "release-13", text: "今日は…\nこれで\nもう十分です\nあなたも…\nこれで\nもう十分です", speechText: "今日は…\nこれで\nもう十分です\nあなたも…\nこれで\nもう十分です\nそっと今日の重さを置いて\n今\n静かに感謝の扉へ向かいましょう", speechDelayMs: 1160 }
+  ],
+  kr: [
+    { at: 8, key: "release-1", text: "오늘…\n여기에 와주어서\n고맙습니다", speechDelayMs: 860 },
+    { at: 24, key: "release-2", text: "오늘은\n이제 끝으로 향하고 있습니다", speechDelayMs: 900 },
+    { at: 40, key: "release-3", text: "기쁜 순간도\n조용한 순간도\n쉽지 않았던 순간도", speechDelayMs: 920 },
+    { at: 58, key: "release-4", text: "지금은…\n그 모든 것을\n조용히 내려놓아도 괜찮습니다", speechDelayMs: 940 },
+    { at: 74, key: "release-5", text: "몸의 힘을…\n조금만\n풀어봅니다", speechDelayMs: 920 },
+    { at: 88, key: "release-6", text: "어깨를\n부드럽게 놓아주고", speechDelayMs: 940 },
+    { at: 98, key: "release-7", text: "얼굴도\n쉬게 합니다", speechDelayMs: 960 },
+    { at: 108, key: "release-8", text: "마음도\n그대로\n쉬어갑니다", speechDelayMs: 980 },
+    { at: 122, key: "release-9", text: "오늘\n마치지 못한 일은…\n내일에게 맡겨도 괜찮습니다", speechDelayMs: 980 },
+    { at: 136, key: "release-10", text: "지금\n모든 것을 해결하지 않아도\n괜찮습니다", speechDelayMs: 980 },
+    { at: 146, key: "release-11", text: "애쓰지 않아도\n괜찮습니다\n아무것도 바꾸지 않아도\n괜찮습니다", speechDelayMs: 1020 },
+    { at: 156, key: "release-12", text: "그저…\n잠시만\n여기에 머물러 봅니다", speechDelayMs: 1080 },
+    { at: 168, key: "release-13", text: "오늘은…\n이만으로\n충분했습니다\n당신도…\n이만으로\n충분했습니다", speechText: "오늘은…\n이만으로\n충분했습니다\n당신도…\n이만으로\n충분했습니다\n오늘의 무게를 조용히 내려놓고\n이제\n감사의 문으로 걸어갑니다", speechDelayMs: 1160 }
+  ],
+  en: [
+    { at: 8, key: "release-1", text: "Today…\nthank you for coming here", speechDelayMs: 860 },
+    { at: 24, key: "release-2", text: "Today has come\nto its end", speechDelayMs: 900 },
+    { at: 40, key: "release-3", text: "There may have been\njoyful moments\nquiet moments\nand moments that were not easy", speechDelayMs: 920 },
+    { at: 58, key: "release-4", text: "For now…\nyou may gently\nput all of it down", speechDelayMs: 940 },
+    { at: 74, key: "release-5", text: "Let the body soften…\njust a little", speechDelayMs: 920 },
+    { at: 88, key: "release-6", text: "Let the shoulders\nsoften", speechDelayMs: 940 },
+    { at: 98, key: "release-7", text: "Let the face\nrest", speechDelayMs: 960 },
+    { at: 108, key: "release-8", text: "And let the heart\nrest as well", speechDelayMs: 980 },
+    { at: 122, key: "release-9", text: "What could not be\nfinished today…\nmay be entrusted\nto tomorrow", speechDelayMs: 980 },
+    { at: 136, key: "release-10", text: "You do not need\nto solve everything now", speechDelayMs: 980 },
+    { at: 146, key: "release-11", text: "You do not need\nto try\nYou do not need\nto change anything", speechDelayMs: 1020 },
+    { at: 156, key: "release-12", text: "Simply remain here…\nfor a little while", speechDelayMs: 1080 },
+    { at: 168, key: "release-13", text: "Today…\nhas been enough\nYou have been enough", speechText: "Today…\nhas been enough\nYou have been enough\nGently place today's weight down\nNow…\nlet us quietly walk\ntoward the Gate of Gratitude", speechDelayMs: 1160 }
   ]
 };
 
@@ -894,6 +944,36 @@ function getCalmGateSpeechSettings(language: "jp" | "kr" | "en") {
   };
 }
 
+function getReleaseGateSpeechSettings(language: "jp" | "kr" | "en") {
+  if (language === "kr") {
+    return {
+      lang: "ko-KR",
+      rate: 0.59,
+      pitch: 0.92,
+      volume: 0.56,
+      preferredNames: ["Yuna", "Sora", "Google 한국어", "Siri"]
+    };
+  }
+
+  if (language === "en") {
+    return {
+      lang: "en-US",
+      rate: 0.6,
+      pitch: 0.94,
+      volume: 0.54,
+      preferredNames: ["Samantha", "Ava", "Victoria", "Google US English", "Siri"]
+    };
+  }
+
+  return {
+    lang: "ja-JP",
+    rate: 0.56,
+    pitch: 0.9,
+    volume: 0.54,
+    preferredNames: ["Kyoko", "Sakura", "Google 日本語", "Siri"]
+  };
+}
+
 function pickStructuredMorningVoice(
   voices: SpeechSynthesisVoice[],
   lang: string,
@@ -1018,6 +1098,7 @@ export default function MeditationPage() {
   const localizedLanguage = language === "kr" || language === "en" || language === "jp" ? language : "jp";
   const focusGateLines = focusGateNarration[localizedLanguage];
   const calmGateLines = calmGateNarration[localizedLanguage];
+  const releaseGateLines = releaseGateNarration[localizedLanguage];
   const affirmationCopy = affirmationGateCopy[localizedLanguage];
   const energyCopy = energyGateCopy[localizedLanguage];
   const visionCopy = visionGateCopy[localizedLanguage];
@@ -1038,6 +1119,7 @@ export default function MeditationPage() {
   const [affirmationMessage, setAffirmationMessage] = useState<string | null>(null);
   const [focusGateMessage, setFocusGateMessage] = useState<string | null>(null);
   const [calmGateMessage, setCalmGateMessage] = useState<string | null>(null);
+  const [releaseGateMessage, setReleaseGateMessage] = useState<string | null>(null);
   const [isRechargeVideoPlaying, setIsRechargeVideoPlaying] = useState(false);
   const [rechargeStartError, setRechargeStartError] = useState<string | null>(null);
   const [isRechargeStarting, setIsRechargeStarting] = useState(false);
@@ -1052,6 +1134,7 @@ export default function MeditationPage() {
   const focusVideoRef = useRef<HTMLVideoElement | null>(null);
   const calmVideoRef = useRef<HTMLVideoElement | null>(null);
   const rechargeVideoRef = useRef<HTMLVideoElement | null>(null);
+  const releaseVideoRef = useRef<HTMLVideoElement | null>(null);
   const affirmationVideoRef = useRef<HTMLVideoElement | null>(null);
   const energyVideoRef = useRef<HTMLVideoElement | null>(null);
   const visionVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -1071,15 +1154,19 @@ export default function MeditationPage() {
   const spokenAffirmationKeysRef = useRef<Set<string>>(new Set());
   const spokenFocusKeysRef = useRef<Set<string>>(new Set());
   const spokenCalmKeysRef = useRef<Set<string>>(new Set());
+  const spokenReleaseKeysRef = useRef<Set<string>>(new Set());
   const structuredSpeechTimeoutRef = useRef<number | null>(null);
   const focusSpeechTimeoutRef = useRef<number | null>(null);
   const calmSpeechTimeoutRef = useRef<number | null>(null);
+  const releaseSpeechTimeoutRef = useRef<number | null>(null);
   const structuredSpeechSequenceRef = useRef(0);
   const focusSpeechSequenceRef = useRef(0);
   const calmSpeechSequenceRef = useRef(0);
+  const releaseSpeechSequenceRef = useRef(0);
   const structuredSpeechUnlockedRef = useRef(false);
   const focusSpeechUnlockedRef = useRef(false);
   const calmSpeechUnlockedRef = useRef(false);
+  const releaseSpeechUnlockedRef = useRef(false);
   const rechargeTimerIntervalRef = useRef<number | null>(null);
   const rechargeStartTriggerLockRef = useRef(false);
   const awakeningRitualHandledRef = useRef(false);
@@ -1096,6 +1183,7 @@ export default function MeditationPage() {
   const isFocusGate = meditationType === "day" && mappedDoor === "focus";
   const isCalmGate = meditationType === "day" && mappedDoor === "rest";
   const isRechargeGate = meditationType === "day" && mappedDoor === "recharge";
+  const isReleaseGate = meditationType === "night" && mappedDoor === "release";
   const isStructuredMorningGate = isAffirmationGate || isEnergyGate || isVisionGate;
   const ritualCopy = awakeningRitualCopy[localizedLanguage];
   const structuredMorningAudio =
@@ -1107,7 +1195,7 @@ export default function MeditationPage() {
     getBasicPracticeByRouteType(requestedRouteType, localizedLanguage) ??
     getBasicPracticeBySession(meditationType, mappedDoor, localizedLanguage);
   const content = copy.variants[meditationType];
-  const hideSoundToggle = meditationType === "morning" || isFocusGate || isCalmGate || isRechargeGate;
+  const hideSoundToggle = meditationType === "morning" || isFocusGate || isCalmGate || isRechargeGate || isReleaseGate;
   const durationVariant = getDurationVariant(totalSeconds);
   const durationTextSet = copy.durationTexts?.[durationVariant];
   const journeyAudioSource = journeyDay ? journeyAudioMap[journeyDay] : undefined;
@@ -1477,6 +1565,7 @@ export default function MeditationPage() {
     const isFocusGateProgram = nextType === "day" && nextDoor === "focus";
     const isCalmGateProgram = nextType === "day" && nextDoor === "rest";
     const isRechargeGateProgram = nextType === "day" && nextDoor === "recharge";
+    const isReleaseGateProgram = nextType === "night" && nextDoor === "release";
     const shouldResumeStructuredAmbient = nextType === "morning" && nextDoor === "affirmation" && pendingStructuredAmbientAudio === "1";
     const mobileNeedsGesture = requiresMobileAudioGesture();
     const isProgramMode = nextJourneyMode || nextType !== "default";
@@ -1493,8 +1582,8 @@ export default function MeditationPage() {
         : shouldResumeStructuredAmbient
           ? true
           : getNatureSoundPreference();
-    const shouldPromptForAudioStart = isThreeMinuteMorningDoor || isFocusGateProgram || isCalmGateProgram || isRechargeGateProgram || (mobileNeedsGesture && (isProgramMode || nextSoundEnabled));
-    setSoundEnabled(isFocusGateProgram || isCalmGateProgram || isRechargeGateProgram ? true : nextSoundEnabled);
+    const shouldPromptForAudioStart = isThreeMinuteMorningDoor || isFocusGateProgram || isCalmGateProgram || isRechargeGateProgram || isReleaseGateProgram || (mobileNeedsGesture && (isProgramMode || nextSoundEnabled));
+    setSoundEnabled(isFocusGateProgram || isCalmGateProgram || isRechargeGateProgram || isReleaseGateProgram ? true : nextSoundEnabled);
     setPendingStructuredAmbientStart(shouldResumeStructuredAmbient);
     setJourneyMode(nextJourneyMode);
     setJourneyDay(Number.isInteger(resolvedJourneyDay) && resolvedJourneyDay >= 1 && resolvedJourneyDay <= 7 ? resolvedJourneyDay : null);
@@ -1508,10 +1597,12 @@ export default function MeditationPage() {
     setAffirmationMessage(null);
     setFocusGateMessage(null);
     setCalmGateMessage(null);
+    setReleaseGateMessage(null);
     setIsRechargeVideoPlaying(false);
     setRechargeStartError(null);
     spokenFocusKeysRef.current = new Set();
     spokenCalmKeysRef.current = new Set();
+    spokenReleaseKeysRef.current = new Set();
     spokenAffirmationKeysRef.current = new Set();
     completionHandledRef.current = false;
     console.log("[Morning Gate Audio] init", {
@@ -1768,6 +1859,33 @@ export default function MeditationPage() {
     }
   }
 
+  async function playReleaseGateVideo(options?: { restartFromBeginning?: boolean }) {
+    if (!isReleaseGate || typeof window === "undefined") {
+      return;
+    }
+
+    const video = releaseVideoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    try {
+      video.defaultMuted = false;
+      video.muted = false;
+      video.volume = EVENING_RELEASE_VIDEO_VOLUME;
+      video.playsInline = true;
+      if (options?.restartFromBeginning ?? false) {
+        video.currentTime = 0;
+      }
+      await video.play();
+      setAmbientVideoFailed(false);
+    } catch (error) {
+      console.warn("[release-gate] video playback failed", error);
+      setAmbientVideoFailed(true);
+    }
+  }
+
   async function playEnergyGateVideo() {
     if (!isEnergyGate || typeof window === "undefined") {
       return;
@@ -1899,6 +2017,33 @@ export default function MeditationPage() {
     }
   }
 
+  function unlockReleaseGateSpeech() {
+    if (!isReleaseGate || typeof window === "undefined" || !("speechSynthesis" in window)) {
+      return;
+    }
+
+    try {
+      const synth = window.speechSynthesis;
+      const settings = getReleaseGateSpeechSettings(localizedLanguage);
+      synth.getVoices();
+
+      if (releaseSpeechUnlockedRef.current) {
+        return;
+      }
+
+      const unlockUtterance = new SpeechSynthesisUtterance("\u00A0");
+      unlockUtterance.lang = settings.lang;
+      unlockUtterance.volume = 0;
+      unlockUtterance.rate = settings.rate;
+      unlockUtterance.pitch = settings.pitch;
+      releaseSpeechUnlockedRef.current = true;
+      synth.cancel();
+      synth.speak(unlockUtterance);
+    } catch (error) {
+      console.warn("[release-gate] failed to unlock speech synthesis", error);
+    }
+  }
+
   useEffect(() => {
     setVibrationSupported(supportsMeditationVibration());
 
@@ -1947,6 +2092,12 @@ export default function MeditationPage() {
         calmVideo.currentTime = 0;
       }
 
+      const releaseVideo = releaseVideoRef.current;
+      if (releaseVideo) {
+        releaseVideo.pause();
+        releaseVideo.currentTime = 0;
+      }
+
       const rechargeVideo = rechargeVideoRef.current;
       if (rechargeVideo) {
         rechargeVideo.pause();
@@ -1958,6 +2109,7 @@ export default function MeditationPage() {
       if (typeof window !== "undefined" && "speechSynthesis" in window) {
         focusSpeechSequenceRef.current += 1;
         calmSpeechSequenceRef.current += 1;
+        releaseSpeechSequenceRef.current += 1;
         window.speechSynthesis.cancel();
       }
 
@@ -2035,6 +2187,14 @@ export default function MeditationPage() {
   }, [hasUserGesture, isCalmGate, isComplete, isPaused, needsUserStart]);
 
   useEffect(() => {
+    if (!isReleaseGate || !hasUserGesture || isPaused || isComplete || needsUserStart) {
+      return;
+    }
+
+    void playReleaseGateVideo();
+  }, [hasUserGesture, isComplete, isPaused, isReleaseGate, needsUserStart]);
+
+  useEffect(() => {
     if (isComplete || !soundEnabled) {
       if (isStructuredMorningGate) {
         void stopStructuredMorningAmbient();
@@ -2045,6 +2205,11 @@ export default function MeditationPage() {
         }
       } else if (isCalmGate) {
         const video = calmVideoRef.current;
+        if (video) {
+          video.pause();
+        }
+      } else if (isReleaseGate) {
+        const video = releaseVideoRef.current;
         if (video) {
           video.pause();
         }
@@ -2060,7 +2225,7 @@ export default function MeditationPage() {
       return;
     }
 
-    if (!hasUserGesture || journeyMode || isStructuredMorningGate || isFocusGate || isCalmGate || isRechargeGate) {
+    if (!hasUserGesture || journeyMode || isStructuredMorningGate || isFocusGate || isCalmGate || isRechargeGate || isReleaseGate) {
       return;
     }
 
@@ -2079,7 +2244,7 @@ export default function MeditationPage() {
         void stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
       }
     };
-  }, [ambientAudioSource, ambientAudioVolume, hasUserGesture, isCalmGate, isComplete, isFocusGate, isRechargeGate, isStructuredMorningGate, journeyMode, soundEnabled]);
+  }, [ambientAudioSource, ambientAudioVolume, hasUserGesture, isCalmGate, isComplete, isFocusGate, isRechargeGate, isReleaseGate, isStructuredMorningGate, journeyMode, soundEnabled]);
 
   useEffect(() => {
     if (!pendingStructuredAmbientStart || !isAffirmationGate || isComplete || requiresExplicitAudioStart) {
@@ -2458,6 +2623,96 @@ export default function MeditationPage() {
   }, [calmGateLines, elapsedTotalSeconds, isCalmGate, isComplete, isPaused, localizedLanguage, needsUserStart]);
 
   useEffect(() => {
+    if (!isReleaseGate || isComplete || isPaused || needsUserStart || typeof window === "undefined") {
+      return;
+    }
+
+    const nextLine = releaseGateLines.find(
+      (line) => elapsedTotalSeconds >= line.at && !spokenReleaseKeysRef.current.has(line.key)
+    );
+
+    if (!nextLine) {
+      return;
+    }
+
+    spokenReleaseKeysRef.current.add(nextLine.key);
+    setReleaseGateMessage(nextLine.text);
+
+    if (!("speechSynthesis" in window)) {
+      return;
+    }
+
+    try {
+      const settings = getReleaseGateSpeechSettings(localizedLanguage);
+      const synth = window.speechSynthesis;
+      releaseSpeechSequenceRef.current += 1;
+      const speechSequence = releaseSpeechSequenceRef.current;
+
+      if (releaseSpeechTimeoutRef.current) {
+        window.clearTimeout(releaseSpeechTimeoutRef.current);
+        releaseSpeechTimeoutRef.current = null;
+      }
+
+      const speechDelayMs = nextLine.speechDelayMs ?? 920;
+
+      const queueSpeak = (attempt: number) => {
+        if (
+          releaseSpeechSequenceRef.current !== speechSequence ||
+          isPausedRef.current ||
+          isCompleteRef.current
+        ) {
+          return;
+        }
+
+        if (synth.speaking || synth.pending) {
+          if (attempt >= 16) {
+            synth.cancel();
+          } else {
+            releaseSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(attempt + 1), 180);
+            return;
+          }
+        }
+
+        const utterance = new SpeechSynthesisUtterance(nextLine.speechText ?? nextLine.text);
+        utterance.lang = settings.lang;
+        utterance.rate = settings.rate;
+        utterance.pitch = settings.pitch;
+        utterance.volume = settings.volume;
+
+        const selectedVoice = pickStructuredMorningVoice(
+          synth.getVoices(),
+          settings.lang,
+          settings.preferredNames
+        );
+
+        if (selectedVoice) {
+          utterance.voice = selectedVoice;
+        }
+
+        utterance.onend = () => {
+          releaseSpeechTimeoutRef.current = null;
+        };
+
+        utterance.onerror = (event) => {
+          console.error("[release-gate] narration failed", {
+            language: localizedLanguage,
+            key: nextLine.key,
+            error: event.error
+          });
+          releaseSpeechTimeoutRef.current = null;
+        };
+
+        synth.cancel();
+        synth.speak(utterance);
+      };
+
+      releaseSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(0), speechDelayMs);
+    } catch (error) {
+      console.warn("[release-gate] speech synthesis unavailable", error);
+    }
+  }, [elapsedTotalSeconds, isComplete, isPaused, isReleaseGate, localizedLanguage, needsUserStart, releaseGateLines]);
+
+  useEffect(() => {
     if (!isStructuredMorningGate || typeof window === "undefined") {
       return;
     }
@@ -2491,10 +2746,15 @@ export default function MeditationPage() {
         window.clearTimeout(calmSpeechTimeoutRef.current);
         calmSpeechTimeoutRef.current = null;
       }
+      if (releaseSpeechTimeoutRef.current) {
+        window.clearTimeout(releaseSpeechTimeoutRef.current);
+        releaseSpeechTimeoutRef.current = null;
+      }
       if (typeof window !== "undefined" && "speechSynthesis" in window) {
         structuredSpeechSequenceRef.current += 1;
         focusSpeechSequenceRef.current += 1;
         calmSpeechSequenceRef.current += 1;
+        releaseSpeechSequenceRef.current += 1;
         window.speechSynthesis.cancel();
       }
     };
@@ -2519,6 +2779,15 @@ export default function MeditationPage() {
       }
       if (typeof window !== "undefined" && "speechSynthesis" in window) {
         calmSpeechSequenceRef.current += 1;
+        window.speechSynthesis.cancel();
+      }
+    } else if (isReleaseGate) {
+      const video = releaseVideoRef.current;
+      if (video) {
+        video.pause();
+      }
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        releaseSpeechSequenceRef.current += 1;
         window.speechSynthesis.cancel();
       }
     } else if (isRechargeGate) {
@@ -2570,6 +2839,16 @@ export default function MeditationPage() {
         }
         if (typeof window !== "undefined" && "speechSynthesis" in window) {
           calmSpeechSequenceRef.current += 1;
+          window.speechSynthesis.cancel();
+        }
+      } else if (isReleaseGate) {
+        const video = releaseVideoRef.current;
+        if (video) {
+          video.pause();
+          video.currentTime = 0;
+        }
+        if (typeof window !== "undefined" && "speechSynthesis" in window) {
+          releaseSpeechSequenceRef.current += 1;
           window.speechSynthesis.cancel();
         }
       } else if (isRechargeGate) {
@@ -2743,6 +3022,7 @@ export default function MeditationPage() {
     unlockStructuredMorningSpeech();
     unlockFocusGateSpeech();
     unlockCalmGateSpeech();
+    unlockReleaseGateSpeech();
     logStructuredMorningAmbientState("program-start-tap");
 
     if (isFocusGate) {
@@ -2754,6 +3034,12 @@ export default function MeditationPage() {
     if (isCalmGate) {
       setSoundEnabled(true);
       await playCalmGateVideo({ restartFromBeginning: true });
+      return;
+    }
+
+    if (isReleaseGate) {
+      setSoundEnabled(true);
+      await playReleaseGateVideo({ restartFromBeginning: true });
       return;
     }
 
@@ -2833,9 +3119,14 @@ export default function MeditationPage() {
           window.clearTimeout(calmSpeechTimeoutRef.current);
           calmSpeechTimeoutRef.current = null;
         }
+        if (releaseSpeechTimeoutRef.current) {
+          window.clearTimeout(releaseSpeechTimeoutRef.current);
+          releaseSpeechTimeoutRef.current = null;
+        }
         structuredSpeechSequenceRef.current += 1;
         focusSpeechSequenceRef.current += 1;
         calmSpeechSequenceRef.current += 1;
+        releaseSpeechSequenceRef.current += 1;
         window.speechSynthesis.cancel();
       }
 
@@ -2925,6 +3216,34 @@ export default function MeditationPage() {
               console.error("[recharge-gate] EVENT error", event);
               setAmbientVideoFailed(true);
             }}
+          />
+        ) : !ambientVideoFailed && isReleaseGate && !isComplete ? (
+          <video
+            key="release-gate-video"
+            ref={releaseVideoRef}
+            src={EVENING_RELEASE_VIDEO_SRC}
+            className={`absolute inset-0 z-0 h-full w-full object-cover brightness-[0.82] contrast-[0.96] saturate-[0.9] transition-opacity duration-700 ${
+              needsUserStart ? "pointer-events-none opacity-0" : "opacity-[0.94]"
+            }`}
+            controls={false}
+            playsInline
+            preload="auto"
+            muted={false}
+            onPlaying={() => {
+              setNeedsUserStart(false);
+              setRequiresExplicitAudioStart(false);
+              setIsPaused(false);
+              setAmbientVideoFailed(false);
+            }}
+            onPause={() => {
+              if (!isCompleteRef.current) {
+                setIsPaused(true);
+              }
+            }}
+            onEnded={() => {
+              setSecondsLeft(0);
+            }}
+            onError={() => setAmbientVideoFailed(true)}
           />
         ) : !ambientVideoFailed && isCalmGate ? (
           <video
@@ -3238,13 +3557,13 @@ export default function MeditationPage() {
                 ) : null}
               </div>
               ) : null}
-              {!isStructuredMorningGate && !isFocusGate && !isCalmGate && !isRechargeGate ? (
+              {!isStructuredMorningGate && !isFocusGate && !isCalmGate && !isRechargeGate && !isReleaseGate ? (
                 <p className="text-2xl font-medium text-white/72 transition-all duration-300 ease-out sm:text-3xl">
                   {copy.phases[phase]}
                 </p>
               ) : null}
 
-              {!isRechargeGate ? (
+              {!isRechargeGate && !isReleaseGate ? (
                 <div className="relative mt-10 flex h-56 w-56 items-center justify-center sm:h-72 sm:w-72">
                   <div className="absolute inset-0 rounded-full bg-gold/10 blur-3xl" />
                   <div
@@ -3288,10 +3607,19 @@ export default function MeditationPage() {
                     {calmGateMessage}
                   </p>
                 </div>
+              ) : isReleaseGate ? (
+                <div className="mt-10 min-h-[120px] max-w-2xl space-y-3">
+                  <p
+                    key={releaseGateMessage ?? "release-gate-empty"}
+                    className="mx-auto animate-fade-in whitespace-pre-line font-serif text-[1.18rem] leading-[2.02] text-white/82 sm:text-[1.45rem] sm:leading-[2.08]"
+                  >
+                    {releaseGateMessage}
+                  </p>
+                </div>
               ) : null}
             </div>
 
-            {!isStructuredMorningGate && !isFocusGate && !isCalmGate && !isRechargeGate ? (
+            {!isStructuredMorningGate && !isFocusGate && !isCalmGate && !isRechargeGate && !isReleaseGate ? (
               <div className="mt-8">
                 <p className="text-sm font-medium tracking-[0.18em] text-white/68 transition-opacity duration-300 sm:text-base">
                   {copy.bottomText[phase]}
