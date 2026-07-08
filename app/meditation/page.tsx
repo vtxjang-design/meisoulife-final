@@ -329,7 +329,13 @@ const calmGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
 const releaseGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
   jp: [
     { at: 8, key: "release-1", text: "今日…\n来てくださって\nありがとうございます", speechDelayMs: 880 },
-    { at: 24, key: "release-2", text: "一日が\n静かに終わろうとしています", speechDelayMs: 920 },
+    {
+      at: 24,
+      key: "release-2",
+      text: "今日という 一日は\n静かに終わろうとしています",
+      speechText: "きょうという いちにちは\nしずかに おわろうとしています",
+      speechDelayMs: 920
+    },
     { at: 40, key: "release-3", text: "うれしかったことも\n静かな時間も\nしんどかったことも\nあったかもしれません", speechDelayMs: 940 },
     { at: 58, key: "release-4", text: "今は…\nそのまま\n下ろして大丈夫です", speechDelayMs: 960 },
     { at: 74, key: "release-5", text: "体の力を…\n少しだけ\nゆるめます", speechDelayMs: 940 },
@@ -966,7 +972,7 @@ function getReleaseGateSpeechSettings(language: "jp" | "kr" | "en") {
     lang: "ja-JP",
     rate: 0.54,
     pitch: 0.9,
-    volume: 0.62,
+    volume: 0.7,
     preferredNames: ["Kyoko", "Sakura", "Google 日本語", "Siri"]
   };
 }
