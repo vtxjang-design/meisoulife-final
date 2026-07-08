@@ -1149,7 +1149,6 @@ export default function MeditationPage() {
     rechargeExercises.items.find((item) => item.key === selectedRechargeExercise)?.label ??
     rechargeExercises.items[0]?.label ??
     "";
-  const rechargePlaybackLabel = `${rechargeExercises.selectedLabel}: ${selectedRechargeExerciseLabel}`;
   const rechargeStartErrorText =
     localizedLanguage === "kr"
       ? "다시 한 번 탭해서 시작해 주세요"
@@ -3023,10 +3022,15 @@ export default function MeditationPage() {
               <div className="absolute inset-0 rounded-full border border-[rgba(212,178,106,0.32)] bg-[rgba(7,17,31,0.46)] shadow-[0_22px_60px_rgba(4,12,24,0.42)] backdrop-blur-xl" />
               <div className="absolute inset-3 rounded-full border border-white/14" />
               <div className="absolute inset-0 rounded-full border-t border-[rgba(212,178,106,0.72)] border-r border-[rgba(212,178,106,0.22)] border-b border-[rgba(212,178,106,0.16)] border-l border-[rgba(212,178,106,0.42)] opacity-90" />
-              <div className="relative z-10 flex max-w-[80%] flex-col items-center justify-center gap-3 text-center sm:gap-4">
-                <p className="mx-auto max-w-[80%] text-xs font-medium leading-relaxed text-white/82 [overflow-wrap:anywhere] [word-break:keep-all] sm:text-sm">
-                  {rechargePlaybackLabel}
-                </p>
+              <div className="relative z-10 flex max-w-[80%] flex-col items-center justify-center gap-4 text-center sm:gap-5">
+                <div className="flex max-w-[80%] flex-col items-center gap-2">
+                  <p className="text-xs font-medium text-white/70 sm:text-sm">
+                    {rechargeExercises.selectedLabel}
+                  </p>
+                  <p className="mx-auto max-w-[80%] text-sm font-medium leading-relaxed text-white text-center [overflow-wrap:anywhere] [word-break:keep-all] sm:text-base">
+                    {selectedRechargeExerciseLabel}
+                  </p>
+                </div>
                 <p className="text-5xl font-semibold tracking-[0.08em] text-white sm:text-7xl">
                   {formatRemainingTime(secondsLeft)}
                 </p>
