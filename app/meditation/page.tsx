@@ -1928,41 +1928,42 @@ export default function MeditationPage() {
     return () => {
       window.removeEventListener("pointerdown", markGesture);
       window.removeEventListener("keydown", markGesture);
-      if (isStructuredMorningGate) {
-        void stopStructuredMorningAmbient();
-      } else if (isFocusGate) {
-        const video = focusVideoRef.current;
-        if (video) {
-          video.pause();
-          video.currentTime = 0;
-        }
-        if (typeof window !== "undefined" && "speechSynthesis" in window) {
-          focusSpeechSequenceRef.current += 1;
-          window.speechSynthesis.cancel();
-        }
-      } else if (isCalmGate) {
-        const video = calmVideoRef.current;
-        if (video) {
-          video.pause();
-          video.currentTime = 0;
-        }
-        if (typeof window !== "undefined" && "speechSynthesis" in window) {
-          calmSpeechSequenceRef.current += 1;
-          window.speechSynthesis.cancel();
-        }
-      } else if (isRechargeGate) {
-        const video = rechargeVideoRef.current;
-        if (video) {
-          video.pause();
-          video.currentTime = 0;
-        }
-        clearRechargeTimer();
-        setIsRechargeVideoPlaying(false);
-      } else {
-        void stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
-      }
     };
   }, [ambientAudioSource, ambientAudioVolume, isCalmGate, isComplete, isFocusGate, isRechargeGate, isStructuredMorningGate, journeyMode, requiresExplicitAudioStart, soundEnabled]);
+
+  useEffect(() => {
+    return () => {
+      void stopStructuredMorningAmbient();
+
+      const focusVideo = focusVideoRef.current;
+      if (focusVideo) {
+        focusVideo.pause();
+        focusVideo.currentTime = 0;
+      }
+
+      const calmVideo = calmVideoRef.current;
+      if (calmVideo) {
+        calmVideo.pause();
+        calmVideo.currentTime = 0;
+      }
+
+      const rechargeVideo = rechargeVideoRef.current;
+      if (rechargeVideo) {
+        rechargeVideo.pause();
+        rechargeVideo.currentTime = 0;
+      }
+
+      clearRechargeTimer();
+
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        focusSpeechSequenceRef.current += 1;
+        calmSpeechSequenceRef.current += 1;
+        window.speechSynthesis.cancel();
+      }
+
+      void stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
+    };
+  }, []);
 
   useEffect(() => {
     if (isRechargeGate || secondsLeft <= 0 || isPaused || needsUserStart) {
@@ -3017,16 +3018,16 @@ export default function MeditationPage() {
         <div className={`absolute inset-0 z-10 ${isStructuredMorningGate ? "bg-[linear-gradient(180deg,rgba(4,10,19,0.18),rgba(4,10,19,0.36))]" : "bg-black/25"}`} />
         {isRechargeGate && !needsUserStart && !isComplete ? (
           <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center">
-            <div className="relative flex h-52 w-52 items-center justify-center sm:h-72 sm:w-72">
+            <div className="relative flex h-56 w-56 items-center justify-center sm:h-80 sm:w-80">
               <div className="absolute inset-0 rounded-full bg-[rgba(7,17,31,0.24)] blur-3xl" />
               <div className="absolute inset-0 rounded-full border border-[rgba(212,178,106,0.32)] bg-[rgba(7,17,31,0.46)] shadow-[0_22px_60px_rgba(4,12,24,0.42)] backdrop-blur-xl" />
               <div className="absolute inset-3 rounded-full border border-white/14" />
               <div className="absolute inset-0 rounded-full border-t border-[rgba(212,178,106,0.72)] border-r border-[rgba(212,178,106,0.22)] border-b border-[rgba(212,178,106,0.16)] border-l border-[rgba(212,178,106,0.42)] opacity-90" />
-              <div className="relative z-10 text-center">
-                <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.2em] text-white/72 sm:text-sm">
+              <div className="relative z-10 flex max-w-[80%] flex-col items-center justify-center gap-3 text-center sm:gap-4">
+                <p className="mx-auto max-w-[80%] text-xs font-medium leading-relaxed text-white/82 [overflow-wrap:anywhere] [word-break:keep-all] sm:text-sm">
                   {rechargePlaybackLabel}
                 </p>
-                <p className="text-[48px] font-semibold tracking-[0.08em] text-white sm:text-[80px]">
+                <p className="text-5xl font-semibold tracking-[0.08em] text-white sm:text-7xl">
                   {formatRemainingTime(secondsLeft)}
                 </p>
               </div>
