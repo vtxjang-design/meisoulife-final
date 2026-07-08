@@ -349,7 +349,8 @@ const releaseGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
     { at: 122, key: "release-7", text: "今日終わらなかったことは、\n明日のあなたに\n任せても大丈夫です", speechText: "きょう おわらなかったことは、\nあしたの あなたに\nまかせても だいじょうぶです", speechDelayMs: 1020 },
     { at: 136, key: "release-8", text: "何も\n頑張らなくて\n大丈夫です", speechText: "なにも\nがんばらなくて\nだいじょうぶです", speechDelayMs: 1020 },
     { at: 148, key: "release-9", text: "ただ、\nここに\n静かにいてみましょう", speechText: "ただ、\nここに\nしずかに いてみましょう", speechDelayMs: 1080 },
-    { at: 168, key: "release-10", text: "今日も、\n十分でした\n今日の重さを、\nゆっくり下ろします", speechText: "きょうも、\nじゅうぶんでした\nきょうの おもさを、\nゆっくり おろします\nそれでは、\nかんしゃの とびらへ\nしずかに むかいましょう", speechDelayMs: 1120 }
+    { at: 155, key: "release-10", text: "今日も…\n十分でした", speechText: "きょうも…\nじゅうぶんでした", speechDelayMs: 1120 },
+    { at: 170, key: "release-11", text: "今日の重さを…\nゆっくり下ろします", speechText: "きょうの おもさを…\nゆっくり おろします", speechDelayMs: 1120 }
   ],
   kr: [
     { at: 10, key: "release-1", text: "오늘도…\n수고하셨습니다", speechDelayMs: 880 },
@@ -361,7 +362,8 @@ const releaseGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
     { at: 122, key: "release-7", text: "오늘 끝내지 못한 일은\n내일의 당신에게\n맡겨도 됩니다", speechDelayMs: 1020 },
     { at: 136, key: "release-8", text: "아무것도\n애쓰지 않아도 됩니다", speechDelayMs: 1020 },
     { at: 148, key: "release-9", text: "그저,\n여기에\n조용히 머물러 봅니다", speechDelayMs: 1080 },
-    { at: 168, key: "release-10", text: "오늘도\n충분했습니다\n오늘의 무게를\n천천히 내려놓습니다", speechText: "오늘도\n충분했습니다\n오늘의 무게를\n천천히 내려놓습니다\n이제,\n감사의 문으로\n천천히 걸어가 보겠습니다", speechDelayMs: 1120 }
+    { at: 155, key: "release-10", text: "오늘도...\n충분했습니다", speechDelayMs: 1120 },
+    { at: 170, key: "release-11", text: "오늘의 무게를...\n천천히 내려놓습니다", speechDelayMs: 1120 }
   ],
   en: [
     { at: 10, key: "release-1", text: "Today...\nThank you", speechDelayMs: 860 },
