@@ -26,6 +26,11 @@ type FadeState = {
 
 const fadeStateMap = new WeakMap<HTMLAudioElement, FadeState>();
 
+// Meisou Life Sound Constitution:
+// Ambient/background music may fade only when entering, pausing, resuming, or leaving
+// an experience. Once playback is running, narration must not trigger any automatic
+// gain changes, ducking, or speech-priority volume behavior.
+
 function fadeVolume(
   audio: HTMLAudioElement,
   from: number,
@@ -211,25 +216,4 @@ export async function resumeAmbientNatureAudio(
     console.warn("Ambience audio resume failed", error);
     return { started: false, error };
   }
-}
-
-export async function setAmbientNatureAudioVolume(
-  audioRef: MutableRefObject<HTMLAudioElement | null>,
-  targetVolume: number,
-  durationMs = 350
-) {
-  const audio = audioRef.current;
-
-  if (!audio || typeof window === "undefined") {
-    return;
-  }
-
-  const safeTargetVolume = Math.max(0, Math.min(1, targetVolume));
-
-  if (Math.abs(audio.volume - safeTargetVolume) <= 0.01) {
-    audio.volume = safeTargetVolume;
-    return;
-  }
-
-  await fadeVolume(audio, audio.volume, safeTargetVolume, durationMs);
 }

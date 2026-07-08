@@ -1310,34 +1310,6 @@ export default function MeditationPage() {
     });
   }
 
-  async function fadeMorningAmbientGain(targetVolume: number, durationMs: number) {
-    const mix = morningAmbientMixRef.current;
-    const gainNode = mix.gainNode;
-    const context = mix.context;
-
-    if (!gainNode || !context) {
-      return;
-    }
-
-    mix.fadeToken += 1;
-    const currentToken = mix.fadeToken;
-    const now = context.currentTime;
-    const safeTarget = Math.max(0, Math.min(1, targetVolume));
-    const currentValue = gainNode.gain.value;
-
-    gainNode.gain.cancelScheduledValues(now);
-    gainNode.gain.setValueAtTime(currentValue, now);
-    gainNode.gain.linearRampToValueAtTime(safeTarget, now + durationMs / 1000);
-
-    await new Promise<void>((resolve) => {
-      window.setTimeout(resolve, durationMs);
-    });
-
-    if (morningAmbientMixRef.current.fadeToken !== currentToken) {
-      return;
-    }
-  }
-
   async function loadMorningAmbientBuffer(source: string) {
     const mix = morningAmbientMixRef.current;
 
