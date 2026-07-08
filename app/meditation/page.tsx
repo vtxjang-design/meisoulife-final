@@ -328,49 +328,46 @@ const calmGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
 
 const releaseGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
   jp: [
-    { at: 8, key: "release-1", text: "今日…\nここへ来てくださって\nありがとうございます", speechText: "今日…\nここへ来てくださって\nありがとうございます", speechDelayMs: 860 },
-    { at: 24, key: "release-2", text: "今日は\nここで終わりへ向かっています", speechText: "今日は\nここで終わりへ向かっています", speechDelayMs: 900 },
-    { at: 40, key: "release-3", text: "うれしい時間も\n静かな時間も\n楽ではなかった時間も", speechText: "うれしい時間も\n静かな時間も\n楽ではなかった時間も", speechDelayMs: 920 },
-    { at: 58, key: "release-4", text: "今は…\nそのすべてを\nそっと下ろしても大丈夫です", speechText: "今は…\nそのすべてを\nそっと下ろしても大丈夫です", speechDelayMs: 940 },
-    { at: 74, key: "release-5", text: "体の力を…\nほんの少し\nゆるめましょう", speechText: "体の力を…\nほんの少し\nゆるめましょう", speechDelayMs: 920 },
-    { at: 88, key: "release-6", text: "肩の力を\nゆるめて", speechDelayMs: 940 },
-    { at: 98, key: "release-7", text: "顔も\n休ませて", speechDelayMs: 960 },
-    { at: 108, key: "release-8", text: "心も\nそのまま\n休ませます", speechDelayMs: 980 },
-    { at: 122, key: "release-9", text: "今日\n終えられなかったことは…\n明日に預けて大丈夫です", speechText: "今日\n終えられなかったことは…\n明日に預けて大丈夫です", speechDelayMs: 980 },
-    { at: 136, key: "release-10", text: "今\nすべてを解決しなくて\n大丈夫です", speechText: "今\nすべてを解決しなくて\n大丈夫です", speechDelayMs: 980 },
-    { at: 146, key: "release-11", text: "何かを\n頑張らなくて\n大丈夫です\n何も変えなくて\n大丈夫です", speechText: "何かを\n頑張らなくて\n大丈夫です\n何も変えなくて\n大丈夫です", speechDelayMs: 1020 },
-    { at: 156, key: "release-12", text: "ただ…\n少しのあいだ\nここにいましょう", speechText: "ただ…\n少しのあいだ\nここにいましょう", speechDelayMs: 1080 },
-    { at: 168, key: "release-13", text: "今日は…\nこれで\nもう十分です\nあなたも…\nこれで\nもう十分です", speechText: "今日は…\nこれで\nもう十分です\nあなたも…\nこれで\nもう十分です\nそっと今日の重さを置いて\n今\n静かに感謝の扉へ向かいましょう", speechDelayMs: 1160 }
+    { at: 8, key: "release-1", text: "今日…\n来てくださって\nありがとうございます", speechDelayMs: 880 },
+    { at: 24, key: "release-2", text: "一日が\n静かに終わろうとしています", speechDelayMs: 920 },
+    { at: 40, key: "release-3", text: "うれしかったことも\n静かな時間も\nしんどかったことも\nあったかもしれません", speechDelayMs: 940 },
+    { at: 58, key: "release-4", text: "今は…\nそのまま\n下ろして大丈夫です", speechDelayMs: 960 },
+    { at: 74, key: "release-5", text: "体の力を…\n少しだけ\nゆるめます", speechDelayMs: 940 },
+    { at: 88, key: "release-6", text: "肩を\nゆるめて", speechDelayMs: 980 },
+    { at: 98, key: "release-7", text: "顔も\n休ませます", speechDelayMs: 1000 },
+    { at: 108, key: "release-8", text: "心も\nそのまま\n休ませましょう", speechDelayMs: 1020 },
+    { at: 122, key: "release-9", text: "終わらなかったことは…\n明日に預けましょう", speechDelayMs: 1020 },
+    { at: 136, key: "release-10", text: "今は\n何も解決しなくて\n大丈夫です", speechDelayMs: 1020 },
+    { at: 148, key: "release-11", text: "ただ…\nここに\nいましょう", speechDelayMs: 1080 },
+    { at: 156, key: "release-12", text: "今日は\nもう十分でした\nあなたも\nそのままで十分です", speechText: "今日は\nもう十分でした\nあなたも\nそのままで十分です\nそれでは静かに\n感謝の扉へ向かいましょう", speechDelayMs: 1120 }
   ],
   kr: [
-    { at: 8, key: "release-1", text: "오늘…\n여기에 와주어서\n고맙습니다", speechDelayMs: 860 },
-    { at: 24, key: "release-2", text: "오늘은\n이제 끝으로 향하고 있습니다", speechDelayMs: 900 },
-    { at: 40, key: "release-3", text: "기쁜 순간도\n조용한 순간도\n쉽지 않았던 순간도", speechDelayMs: 920 },
-    { at: 58, key: "release-4", text: "지금은…\n그 모든 것을\n조용히 내려놓아도 괜찮습니다", speechDelayMs: 940 },
-    { at: 74, key: "release-5", text: "몸의 힘을…\n조금만\n풀어봅니다", speechDelayMs: 920 },
-    { at: 88, key: "release-6", text: "어깨를\n부드럽게 놓아주고", speechDelayMs: 940 },
-    { at: 98, key: "release-7", text: "얼굴도\n쉬게 합니다", speechDelayMs: 960 },
-    { at: 108, key: "release-8", text: "마음도\n그대로\n쉬어갑니다", speechDelayMs: 980 },
-    { at: 122, key: "release-9", text: "오늘\n마치지 못한 일은…\n내일에게 맡겨도 괜찮습니다", speechDelayMs: 980 },
-    { at: 136, key: "release-10", text: "지금\n모든 것을 해결하지 않아도\n괜찮습니다", speechDelayMs: 980 },
-    { at: 146, key: "release-11", text: "애쓰지 않아도\n괜찮습니다\n아무것도 바꾸지 않아도\n괜찮습니다", speechDelayMs: 1020 },
-    { at: 156, key: "release-12", text: "그저…\n잠시만\n여기에 머물러 봅니다", speechDelayMs: 1080 },
-    { at: 168, key: "release-13", text: "오늘은…\n이만으로\n충분했습니다\n당신도…\n이만으로\n충분했습니다", speechText: "오늘은…\n이만으로\n충분했습니다\n당신도…\n이만으로\n충분했습니다\n오늘의 무게를 조용히 내려놓고\n이제\n감사의 문으로 걸어갑니다", speechDelayMs: 1160 }
+    { at: 8, key: "release-1", text: "오늘…\n여기 와주어서\n고맙습니다", speechDelayMs: 880 },
+    { at: 24, key: "release-2", text: "하루가\n조용히 저물고 있습니다", speechDelayMs: 920 },
+    { at: 40, key: "release-3", text: "기뻤던 순간도\n조용한 순간도\n마음이 무거웠던 순간도\n있었을지 모릅니다", speechDelayMs: 940 },
+    { at: 58, key: "release-4", text: "지금은…\n그 모든 것을\n그대로 내려놓아도 괜찮습니다", speechDelayMs: 960 },
+    { at: 74, key: "release-5", text: "몸의 힘을…\n조금만\n풀어봅니다", speechDelayMs: 940 },
+    { at: 88, key: "release-6", text: "어깨를\n가볍게 놓아주고", speechDelayMs: 980 },
+    { at: 98, key: "release-7", text: "얼굴도\n편안히 쉬게 합니다", speechDelayMs: 1000 },
+    { at: 108, key: "release-8", text: "마음도\n그대로\n쉬어갑니다", speechDelayMs: 1020 },
+    { at: 122, key: "release-9", text: "오늘 다 하지 못한 일은…\n내일에게 맡겨둡니다", speechDelayMs: 1020 },
+    { at: 136, key: "release-10", text: "지금은\n무엇도 해결하지 않아도\n괜찮습니다", speechDelayMs: 1020 },
+    { at: 148, key: "release-11", text: "그저…\n잠시만\n여기에 머뭅니다", speechDelayMs: 1080 },
+    { at: 156, key: "release-12", text: "오늘은\n이만으로 충분했습니다\n당신도\n이만으로 충분합니다", speechText: "오늘은\n이만으로 충분했습니다\n당신도\n이만으로 충분합니다\n이제 조용히\n감사의 문으로 걸어갑니다", speechDelayMs: 1120 }
   ],
   en: [
     { at: 8, key: "release-1", text: "Today…\nthank you for coming here", speechDelayMs: 860 },
-    { at: 24, key: "release-2", text: "Today has come\nto its end", speechDelayMs: 900 },
-    { at: 40, key: "release-3", text: "There may have been\njoyful moments\nquiet moments\nand moments that were not easy", speechDelayMs: 920 },
-    { at: 58, key: "release-4", text: "For now…\nyou may gently\nput all of it down", speechDelayMs: 940 },
-    { at: 74, key: "release-5", text: "Let the body soften…\njust a little", speechDelayMs: 920 },
-    { at: 88, key: "release-6", text: "Let the shoulders\nsoften", speechDelayMs: 940 },
+    { at: 24, key: "release-2", text: "The day is\nquietly coming to a close", speechDelayMs: 900 },
+    { at: 40, key: "release-3", text: "There may have been\njoyful moments\nquiet moments\nand moments that felt heavy", speechDelayMs: 920 },
+    { at: 58, key: "release-4", text: "For now…\nyou may let\nall of it rest", speechDelayMs: 940 },
+    { at: 74, key: "release-5", text: "Let the body…\nsoften\njust a little", speechDelayMs: 920 },
+    { at: 88, key: "release-6", text: "Let the shoulders\nrelease", speechDelayMs: 940 },
     { at: 98, key: "release-7", text: "Let the face\nrest", speechDelayMs: 960 },
-    { at: 108, key: "release-8", text: "And let the heart\nrest as well", speechDelayMs: 980 },
-    { at: 122, key: "release-9", text: "What could not be\nfinished today…\nmay be entrusted\nto tomorrow", speechDelayMs: 980 },
-    { at: 136, key: "release-10", text: "You do not need\nto solve everything now", speechDelayMs: 980 },
-    { at: 146, key: "release-11", text: "You do not need\nto try\nYou do not need\nto change anything", speechDelayMs: 1020 },
-    { at: 156, key: "release-12", text: "Simply remain here…\nfor a little while", speechDelayMs: 1080 },
-    { at: 168, key: "release-13", text: "Today…\nhas been enough\nYou have been enough", speechText: "Today…\nhas been enough\nYou have been enough\nGently place today's weight down\nNow…\nlet us quietly walk\ntoward the Gate of Gratitude", speechDelayMs: 1160 }
+    { at: 108, key: "release-8", text: "Let the heart\nrest as well", speechDelayMs: 980 },
+    { at: 122, key: "release-9", text: "Whatever remains unfinished…\nmay rest with tomorrow", speechDelayMs: 980 },
+    { at: 136, key: "release-10", text: "You do not need\nto solve anything now", speechDelayMs: 980 },
+    { at: 148, key: "release-11", text: "Simply stay here…\nfor a little while", speechDelayMs: 1040 },
+    { at: 156, key: "release-12", text: "Today has been enough\nYou have been enough", speechText: "Today has been enough\nYou have been enough\nNow let us quietly walk\ntoward the Gate of Gratitude", speechDelayMs: 1100 }
   ]
 };
 
@@ -948,7 +945,7 @@ function getReleaseGateSpeechSettings(language: "jp" | "kr" | "en") {
   if (language === "kr") {
     return {
       lang: "ko-KR",
-      rate: 0.59,
+      rate: 0.57,
       pitch: 0.92,
       volume: 0.56,
       preferredNames: ["Yuna", "Sora", "Google 한국어", "Siri"]
@@ -967,9 +964,9 @@ function getReleaseGateSpeechSettings(language: "jp" | "kr" | "en") {
 
   return {
     lang: "ja-JP",
-    rate: 0.56,
+    rate: 0.54,
     pitch: 0.9,
-    volume: 0.54,
+    volume: 0.62,
     preferredNames: ["Kyoko", "Sakura", "Google 日本語", "Siri"]
   };
 }
