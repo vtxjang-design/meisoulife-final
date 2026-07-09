@@ -417,18 +417,25 @@ const gratitudeGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
     { at: 139, key: "gratitude-11", text: "友人", speechDelayMs: 1080 },
     { at: 146, key: "gratitude-12", text: "仲間", speechDelayMs: 1080 },
     {
-      at: 154,
+      at: 156,
       key: "gratitude-13",
+      text: "今日も\n頑張ってくれた\n自分自身",
+      speechText: "きょうも\nがんばってくれた\nじぶんじしん",
+      speechDelayMs: 1180
+    },
+    {
+      at: 170,
+      key: "gratitude-14",
       text: "今日も...\nたくさんの贈りものの中で\n生きていました",
       speechDelayMs: 1080
     },
     {
-      at: 168,
-      key: "gratitude-14",
+      at: 184,
+      key: "gratitude-15",
       text: "その温もりを\n静かに\n心にしまいます",
       speechDelayMs: 1120
     },
-    { at: 184, key: "gratitude-15", text: "今日も...\nありがとうございます", speechDelayMs: 1120 }
+    { at: 200, key: "gratitude-16", text: "今日も...\nありがとうございます", speechDelayMs: 1120 }
   ],
   kr: [
     { at: 12, key: "gratitude-1", text: "오늘도...\n고맙습니다", speechDelayMs: 980 },
@@ -464,18 +471,24 @@ const gratitudeGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
     { at: 139, key: "gratitude-11", text: "친구", speechDelayMs: 1080 },
     { at: 146, key: "gratitude-12", text: "동료", speechDelayMs: 1080 },
     {
-      at: 154,
+      at: 156,
       key: "gratitude-13",
+      text: "오늘도\n애써준\n자기 자신",
+      speechDelayMs: 1180
+    },
+    {
+      at: 170,
+      key: "gratitude-14",
       text: "오늘도...\n많은 선물 속에서\n살고 있었습니다",
       speechDelayMs: 1080
     },
     {
-      at: 168,
-      key: "gratitude-14",
+      at: 184,
+      key: "gratitude-15",
       text: "그 따뜻함을\n조용히\n마음에 담아봅니다",
       speechDelayMs: 1120
     },
-    { at: 184, key: "gratitude-15", text: "오늘도...\n감사합니다", speechDelayMs: 1120 }
+    { at: 200, key: "gratitude-16", text: "오늘도...\n감사합니다", speechDelayMs: 1120 }
   ],
   en: [
     { at: 12, key: "gratitude-1", text: "Thank you...\nfor today", speechDelayMs: 980 },
@@ -511,18 +524,24 @@ const gratitudeGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
     { at: 139, key: "gratitude-11", text: "Friends", speechDelayMs: 1080 },
     { at: 146, key: "gratitude-12", text: "Colleagues", speechDelayMs: 1080 },
     {
-      at: 154,
+      at: 156,
       key: "gratitude-13",
+      text: "And...\nyourself,\nwho did your best today",
+      speechDelayMs: 1180
+    },
+    {
+      at: 170,
+      key: "gratitude-14",
       text: "Today...\nyou lived\namong many gifts",
       speechDelayMs: 1080
     },
     {
-      at: 168,
-      key: "gratitude-14",
+      at: 184,
+      key: "gratitude-15",
       text: "Hold that warmth\ngently\nin your heart",
       speechDelayMs: 1120
     },
-    { at: 184, key: "gratitude-15", text: "Thank you...\nfor today", speechDelayMs: 1120 }
+    { at: 200, key: "gratitude-16", text: "Thank you...\nfor today", speechDelayMs: 1120 }
   ]
 };
 
