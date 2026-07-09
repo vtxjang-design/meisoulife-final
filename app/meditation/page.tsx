@@ -43,12 +43,14 @@ const CALM_GATE_VIDEO_SRC = "/videos/basic/daytime/calm-gate.mp4";
 const RECHARGE_GATE_VIDEO_SRC = "/basic/daytime-gate/recharge-gate8.mp4";
 const RECHARGE_GATE_GUIDE_IMAGE_SRC = "/basic/daytime-gate/recharge%20gate.png";
 const EVENING_RELEASE_VIDEO_SRC = "/evening-gate/evening%20gate1.mp4";
+const EVENING_GRATITUDE_VIDEO_SRC = "/basic/evening-gate/Gratitude%20Gate1.mp4";
 const AWAKENING_GATE_VIDEO_VOLUME = 0.13;
 const VISION_GATE_VIDEO_VOLUME = 0.14;
 const FOCUS_GATE_VIDEO_VOLUME = 0.34;
 const CALM_GATE_VIDEO_VOLUME = 0.35;
 const RECHARGE_GATE_VIDEO_VOLUME = 1;
 const EVENING_RELEASE_VIDEO_VOLUME = 0.65;
+const EVENING_GRATITUDE_VIDEO_VOLUME = 0.65;
 const AWAKENING_RITUAL_STORAGE_KEY = "meisoulife_awakening_gate_ritual";
 const FOCUS_GATE_TOTAL_SECONDS = 60;
 const rechargeCompletionCopy = {
@@ -376,6 +378,151 @@ const releaseGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
     { at: 136, key: "release-8", text: "You do not need\nto try anymore", speechDelayMs: 980 },
     { at: 148, key: "release-9", text: "Simply\nbe here\nfor a little while", speechDelayMs: 1040 },
     { at: 168, key: "release-10", text: "Today\nwas enough\nGently place\ntoday's weight down", speechText: "Today\nwas enough\nGently place\ntoday's weight down\nNow,\nlet us quietly walk\ntoward the Gate of Gratitude", speechDelayMs: 1100 }
+  ]
+};
+
+const gratitudeGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
+  jp: [
+    { at: 12, key: "gratitude-1", text: "今日も...\nありがとうございます", speechDelayMs: 980 },
+    {
+      at: 26,
+      key: "gratitude-2",
+      text: "今日は、\n少しだけ\n一日を\n思い返してみます",
+      speechText: "きょうは、\nすこしだけ\nいちにちを\nおもいかえしてみます",
+      speechDelayMs: 980
+    },
+    {
+      at: 44,
+      key: "gratitude-3",
+      text: "近すぎて、\n気づかなかった\nあたたかさが\nあったかもしれません",
+      speechDelayMs: 1020
+    },
+    { at: 60, key: "gratitude-4", text: "空気", speechDelayMs: 1060 },
+    { at: 68, key: "gratitude-5", text: "陽ざし", speechDelayMs: 1060 },
+    { at: 76, key: "gratitude-6", text: "風", speechDelayMs: 1060 },
+    { at: 84, key: "gratitude-7", text: "自然の香り", speechDelayMs: 1080 },
+    {
+      at: 100,
+      key: "gratitude-8",
+      text: "今日、\n当たり前すぎて\n見過ごしていたものは\nありませんでしたか",
+      speechDelayMs: 1040
+    },
+    {
+      at: 118,
+      key: "gratitude-9",
+      text: "いつも\nそばにいてくれた\n大切な人たち",
+      speechDelayMs: 1040
+    },
+    { at: 132, key: "gratitude-10", text: "家族", speechDelayMs: 1080 },
+    { at: 139, key: "gratitude-11", text: "友人", speechDelayMs: 1080 },
+    { at: 146, key: "gratitude-12", text: "仲間", speechDelayMs: 1080 },
+    {
+      at: 154,
+      key: "gratitude-13",
+      text: "今日も...\nたくさんの贈りものの中で\n生きていました",
+      speechDelayMs: 1080
+    },
+    {
+      at: 168,
+      key: "gratitude-14",
+      text: "その温もりを\n静かに\n心にしまいます",
+      speechDelayMs: 1120
+    },
+    { at: 184, key: "gratitude-15", text: "今日も...\nありがとうございます", speechDelayMs: 1120 }
+  ],
+  kr: [
+    { at: 12, key: "gratitude-1", text: "오늘도...\n고맙습니다", speechDelayMs: 980 },
+    {
+      at: 26,
+      key: "gratitude-2",
+      text: "오늘,\n잠시\n하루를\n떠올려 봅니다",
+      speechDelayMs: 980
+    },
+    {
+      at: 44,
+      key: "gratitude-3",
+      text: "너무 가까워서\n미처 보지 못했던\n따뜻함이\n있었을지도 모릅니다",
+      speechDelayMs: 1020
+    },
+    { at: 60, key: "gratitude-4", text: "공기", speechDelayMs: 1060 },
+    { at: 68, key: "gratitude-5", text: "햇살", speechDelayMs: 1060 },
+    { at: 76, key: "gratitude-6", text: "바람", speechDelayMs: 1060 },
+    { at: 84, key: "gratitude-7", text: "자연의 향기", speechDelayMs: 1080 },
+    {
+      at: 100,
+      key: "gratitude-8",
+      text: "오늘...\n당연해서\n지나쳤던 것이\n있었나요",
+      speechDelayMs: 1040
+    },
+    {
+      at: 118,
+      key: "gratitude-9",
+      text: "늘 함께해 준\n소중한 사람들",
+      speechDelayMs: 1040
+    },
+    { at: 132, key: "gratitude-10", text: "가족", speechDelayMs: 1080 },
+    { at: 139, key: "gratitude-11", text: "친구", speechDelayMs: 1080 },
+    { at: 146, key: "gratitude-12", text: "동료", speechDelayMs: 1080 },
+    {
+      at: 154,
+      key: "gratitude-13",
+      text: "오늘도...\n많은 선물 속에서\n살고 있었습니다",
+      speechDelayMs: 1080
+    },
+    {
+      at: 168,
+      key: "gratitude-14",
+      text: "그 따뜻함을\n조용히\n마음에 담아봅니다",
+      speechDelayMs: 1120
+    },
+    { at: 184, key: "gratitude-15", text: "오늘도...\n감사합니다", speechDelayMs: 1120 }
+  ],
+  en: [
+    { at: 12, key: "gratitude-1", text: "Thank you...\nfor today", speechDelayMs: 980 },
+    {
+      at: 26,
+      key: "gratitude-2",
+      text: "Take a quiet moment...\nto remember\nyour day",
+      speechDelayMs: 980
+    },
+    {
+      at: 44,
+      key: "gratitude-3",
+      text: "Perhaps\nthere was a warmth\nyou almost missed",
+      speechDelayMs: 1020
+    },
+    { at: 60, key: "gratitude-4", text: "The air", speechDelayMs: 1060 },
+    { at: 68, key: "gratitude-5", text: "The sunlight", speechDelayMs: 1060 },
+    { at: 76, key: "gratitude-6", text: "The breeze", speechDelayMs: 1060 },
+    { at: 84, key: "gratitude-7", text: "The scent of nature", speechDelayMs: 1080 },
+    {
+      at: 100,
+      key: "gratitude-8",
+      text: "Today...\nwas there something\nso familiar\nthat you almost forgot",
+      speechDelayMs: 1040
+    },
+    {
+      at: 118,
+      key: "gratitude-9",
+      text: "The people\nwho stayed beside you",
+      speechDelayMs: 1040
+    },
+    { at: 132, key: "gratitude-10", text: "Family", speechDelayMs: 1080 },
+    { at: 139, key: "gratitude-11", text: "Friends", speechDelayMs: 1080 },
+    { at: 146, key: "gratitude-12", text: "Colleagues", speechDelayMs: 1080 },
+    {
+      at: 154,
+      key: "gratitude-13",
+      text: "Today...\nyou lived\namong many gifts",
+      speechDelayMs: 1080
+    },
+    {
+      at: 168,
+      key: "gratitude-14",
+      text: "Hold that warmth\ngently\nin your heart",
+      speechDelayMs: 1120
+    },
+    { at: 184, key: "gratitude-15", text: "Thank you...\nfor today", speechDelayMs: 1120 }
   ]
 };
 
@@ -979,6 +1126,36 @@ function getReleaseGateSpeechSettings(language: "jp" | "kr" | "en") {
   };
 }
 
+function getGratitudeGateSpeechSettings(language: "jp" | "kr" | "en") {
+  if (language === "kr") {
+    return {
+      lang: "ko-KR",
+      rate: 0.56,
+      pitch: 0.93,
+      volume: 0.58,
+      preferredNames: ["Yuna", "Sora", "Google 한국어", "Siri"]
+    };
+  }
+
+  if (language === "en") {
+    return {
+      lang: "en-US",
+      rate: 0.58,
+      pitch: 0.95,
+      volume: 0.56,
+      preferredNames: ["Samantha", "Ava", "Victoria", "Google US English", "Siri"]
+    };
+  }
+
+  return {
+    lang: "ja-JP",
+    rate: 0.53,
+    pitch: 0.91,
+    volume: 0.72,
+    preferredNames: ["Kyoko", "Sakura", "Google 日本語", "Siri"]
+  };
+}
+
 function pickStructuredMorningVoice(
   voices: SpeechSynthesisVoice[],
   lang: string,
@@ -1104,6 +1281,7 @@ export default function MeditationPage() {
   const focusGateLines = focusGateNarration[localizedLanguage];
   const calmGateLines = calmGateNarration[localizedLanguage];
   const releaseGateLines = releaseGateNarration[localizedLanguage];
+  const gratitudeGateLines = gratitudeGateNarration[localizedLanguage];
   const affirmationCopy = affirmationGateCopy[localizedLanguage];
   const energyCopy = energyGateCopy[localizedLanguage];
   const visionCopy = visionGateCopy[localizedLanguage];
@@ -1125,6 +1303,7 @@ export default function MeditationPage() {
   const [focusGateMessage, setFocusGateMessage] = useState<string | null>(null);
   const [calmGateMessage, setCalmGateMessage] = useState<string | null>(null);
   const [releaseGateMessage, setReleaseGateMessage] = useState<string | null>(null);
+  const [gratitudeGateMessage, setGratitudeGateMessage] = useState<string | null>(null);
   const [isRechargeVideoPlaying, setIsRechargeVideoPlaying] = useState(false);
   const [rechargeStartError, setRechargeStartError] = useState<string | null>(null);
   const [isRechargeStarting, setIsRechargeStarting] = useState(false);
@@ -1140,6 +1319,7 @@ export default function MeditationPage() {
   const calmVideoRef = useRef<HTMLVideoElement | null>(null);
   const rechargeVideoRef = useRef<HTMLVideoElement | null>(null);
   const releaseVideoRef = useRef<HTMLVideoElement | null>(null);
+  const gratitudeVideoRef = useRef<HTMLVideoElement | null>(null);
   const affirmationVideoRef = useRef<HTMLVideoElement | null>(null);
   const energyVideoRef = useRef<HTMLVideoElement | null>(null);
   const visionVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -1160,18 +1340,22 @@ export default function MeditationPage() {
   const spokenFocusKeysRef = useRef<Set<string>>(new Set());
   const spokenCalmKeysRef = useRef<Set<string>>(new Set());
   const spokenReleaseKeysRef = useRef<Set<string>>(new Set());
+  const spokenGratitudeKeysRef = useRef<Set<string>>(new Set());
   const structuredSpeechTimeoutRef = useRef<number | null>(null);
   const focusSpeechTimeoutRef = useRef<number | null>(null);
   const calmSpeechTimeoutRef = useRef<number | null>(null);
   const releaseSpeechTimeoutRef = useRef<number | null>(null);
+  const gratitudeSpeechTimeoutRef = useRef<number | null>(null);
   const structuredSpeechSequenceRef = useRef(0);
   const focusSpeechSequenceRef = useRef(0);
   const calmSpeechSequenceRef = useRef(0);
   const releaseSpeechSequenceRef = useRef(0);
+  const gratitudeSpeechSequenceRef = useRef(0);
   const structuredSpeechUnlockedRef = useRef(false);
   const focusSpeechUnlockedRef = useRef(false);
   const calmSpeechUnlockedRef = useRef(false);
   const releaseSpeechUnlockedRef = useRef(false);
+  const gratitudeSpeechUnlockedRef = useRef(false);
   const rechargeTimerIntervalRef = useRef<number | null>(null);
   const rechargeStartTriggerLockRef = useRef(false);
   const awakeningRitualHandledRef = useRef(false);
@@ -1189,6 +1373,8 @@ export default function MeditationPage() {
   const isCalmGate = meditationType === "day" && mappedDoor === "rest";
   const isRechargeGate = meditationType === "day" && mappedDoor === "recharge";
   const isReleaseGate = meditationType === "night" && mappedDoor === "release";
+  const isGratitudeGate = meditationType === "night" && mappedDoor === "gratitude";
+  const isGuidedEveningGate = isReleaseGate || isGratitudeGate;
   const isStructuredMorningGate = isAffirmationGate || isEnergyGate || isVisionGate;
   const ritualCopy = awakeningRitualCopy[localizedLanguage];
   const structuredMorningAudio =
@@ -1200,7 +1386,7 @@ export default function MeditationPage() {
     getBasicPracticeByRouteType(requestedRouteType, localizedLanguage) ??
     getBasicPracticeBySession(meditationType, mappedDoor, localizedLanguage);
   const content = copy.variants[meditationType];
-  const hideSoundToggle = meditationType === "morning" || isFocusGate || isCalmGate || isRechargeGate || isReleaseGate;
+  const hideSoundToggle = meditationType === "morning" || isFocusGate || isCalmGate || isRechargeGate || isGuidedEveningGate;
   const durationVariant = getDurationVariant(totalSeconds);
   const durationTextSet = copy.durationTexts?.[durationVariant];
   const journeyAudioSource = journeyDay ? journeyAudioMap[journeyDay] : undefined;
@@ -1863,6 +2049,33 @@ export default function MeditationPage() {
     }
   }
 
+  async function playGratitudeGateVideo(options?: { restartFromBeginning?: boolean }) {
+    if (!isGratitudeGate || typeof window === "undefined") {
+      return;
+    }
+
+    const video = gratitudeVideoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    try {
+      video.defaultMuted = false;
+      video.muted = false;
+      video.volume = EVENING_GRATITUDE_VIDEO_VOLUME;
+      video.playsInline = true;
+      if (options?.restartFromBeginning ?? false) {
+        video.currentTime = 0;
+      }
+      await video.play();
+      setAmbientVideoFailed(false);
+    } catch (error) {
+      console.warn("[gratitude-gate] video playback failed", error);
+      setAmbientVideoFailed(true);
+    }
+  }
+
   async function playEnergyGateVideo() {
     if (!isEnergyGate || typeof window === "undefined") {
       return;
@@ -2018,6 +2231,33 @@ export default function MeditationPage() {
       synth.speak(unlockUtterance);
     } catch (error) {
       console.warn("[release-gate] failed to unlock speech synthesis", error);
+    }
+  }
+
+  function unlockGratitudeGateSpeech() {
+    if (!isGratitudeGate || typeof window === "undefined" || !("speechSynthesis" in window)) {
+      return;
+    }
+
+    try {
+      const synth = window.speechSynthesis;
+      const settings = getGratitudeGateSpeechSettings(localizedLanguage);
+      synth.getVoices();
+
+      if (gratitudeSpeechUnlockedRef.current) {
+        return;
+      }
+
+      const unlockUtterance = new SpeechSynthesisUtterance("\u00A0");
+      unlockUtterance.lang = settings.lang;
+      unlockUtterance.volume = 0;
+      unlockUtterance.rate = settings.rate;
+      unlockUtterance.pitch = settings.pitch;
+      gratitudeSpeechUnlockedRef.current = true;
+      synth.cancel();
+      synth.speak(unlockUtterance);
+    } catch (error) {
+      console.warn("[gratitude-gate] failed to unlock speech synthesis", error);
     }
   }
 
