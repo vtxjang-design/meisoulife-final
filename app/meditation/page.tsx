@@ -44,6 +44,7 @@ const RECHARGE_GATE_VIDEO_SRC = "/basic/daytime-gate/recharge-gate8.mp4";
 const RECHARGE_GATE_GUIDE_IMAGE_SRC = "/basic/daytime-gate/recharge%20gate.png";
 const EVENING_RELEASE_VIDEO_SRC = "/evening-gate/evening%20gate1.mp4";
 const EVENING_GRATITUDE_VIDEO_SRC = "/basic/evening-gate/Gratitude%20Gate1.mp4";
+const EVENING_SLEEP_VIDEO_SRC = "/basic/evening-gate/sleep%20gate1.mp4";
 const AWAKENING_GATE_VIDEO_VOLUME = 0.13;
 const VISION_GATE_VIDEO_VOLUME = 0.14;
 const FOCUS_GATE_VIDEO_VOLUME = 0.34;
@@ -51,6 +52,7 @@ const CALM_GATE_VIDEO_VOLUME = 0.35;
 const RECHARGE_GATE_VIDEO_VOLUME = 1;
 const EVENING_RELEASE_VIDEO_VOLUME = 0.65;
 const EVENING_GRATITUDE_VIDEO_VOLUME = 0.65;
+const EVENING_SLEEP_VIDEO_VOLUME = 0.65;
 const AWAKENING_RITUAL_STORAGE_KEY = "meisoulife_awakening_gate_ritual";
 const FOCUS_GATE_TOTAL_SECONDS = 60;
 const rechargeCompletionCopy = {
@@ -542,6 +544,144 @@ const gratitudeGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
       speechDelayMs: 1120
     },
     { at: 200, key: "gratitude-16", text: "Thank you...\nfor today", speechDelayMs: 1120 }
+  ]
+};
+
+const sleepGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
+  jp: [
+    { at: 15, key: "sleep-1", text: "今日も...\nお疲れさまでした", speechDelayMs: 1040 },
+    {
+      at: 32,
+      key: "sleep-2",
+      text: "もう...\n何もしなくて\n大丈夫です",
+      speechText: "もう...\nなにもしなくて\nだいじょうぶです",
+      speechDelayMs: 1080
+    },
+    {
+      at: 50,
+      key: "sleep-3",
+      text: "体の力を\n少しずつ\nほどいていきます",
+      speechText: "からだの ちからを\nすこしずつ\nほどいていきます",
+      speechDelayMs: 1080
+    },
+    {
+      at: 68,
+      key: "sleep-4",
+      text: "呼吸も\n無理に\n変えなくて大丈夫です",
+      speechText: "こきゅうも\nむりに\nかえなくて だいじょうぶです",
+      speechDelayMs: 1100
+    },
+    {
+      at: 88,
+      key: "sleep-5",
+      text: "ただ...\n静かに\nここにいてみましょう",
+      speechText: "ただ...\nしずかに\nここに いてみましょう",
+      speechDelayMs: 1120
+    },
+    {
+      at: 120,
+      key: "sleep-6",
+      text: "今日は\nもう\n十分でした",
+      speechText: "きょうは\nもう\nじゅうぶんでした",
+      speechDelayMs: 1120
+    },
+    {
+      at: 138,
+      key: "sleep-7",
+      text: "これ以上\n頑張らなくて\n大丈夫です",
+      speechText: "これいじょう\nがんばらなくて\nだいじょうぶです",
+      speechDelayMs: 1140
+    },
+    {
+      at: 156,
+      key: "sleep-8",
+      text: "体は...\nもう\n知っています",
+      speechText: "からだは...\nもう\nしっています",
+      speechDelayMs: 1160
+    },
+    { at: 174, key: "sleep-9", text: "休むことを", speechText: "やすむことを", speechDelayMs: 1180 },
+    {
+      at: 192,
+      key: "sleep-10",
+      text: "脳も...\nもう\n知っています",
+      speechText: "のうも...\nもう\nしっています",
+      speechDelayMs: 1160
+    },
+    { at: 210, key: "sleep-11", text: "回復することを", speechText: "かいふくすることを", speechDelayMs: 1180 },
+    {
+      at: 242,
+      key: "sleep-12",
+      text: "今日の疲れは\nゆっくり\nほどけていきます",
+      speechText: "きょうの つかれは\nゆっくり\nほどけていきます",
+      speechDelayMs: 1200
+    },
+    {
+      at: 260,
+      key: "sleep-13",
+      text: "あなたが\n休んでいるあいだ\n体と脳は\n静かに回復を始めます",
+      speechText: "あなたが\nやすんでいる あいだ\nからだと のうは\nしずかに かいふくを はじめます",
+      speechDelayMs: 1220
+    },
+    {
+      at: 286,
+      key: "sleep-14",
+      text: "もう\n何も\n抱えなくて大丈夫です",
+      speechText: "もう\nなにも\nかかえなくて だいじょうぶです",
+      speechDelayMs: 1220
+    },
+    {
+      at: 300,
+      key: "sleep-15",
+      text: "ただ...\n休んでください",
+      speechText: "ただ...\nやすんでください",
+      speechDelayMs: 1220
+    },
+    {
+      at: 340,
+      key: "sleep-16",
+      text: "今日も...\nよく生きてこられました",
+      speechText: "きょうも...\nよく いきてこられました",
+      speechDelayMs: 1240
+    },
+    { at: 350, key: "sleep-17", text: "穏やかな夜を", speechText: "おだやかな よるを", speechDelayMs: 1260 }
+  ],
+  kr: [
+    { at: 15, key: "sleep-1", text: "오늘도...\n수고하셨습니다", speechDelayMs: 1040 },
+    { at: 32, key: "sleep-2", text: "이제는...\n아무것도\n하지 않아도 됩니다", speechDelayMs: 1080 },
+    { at: 50, key: "sleep-3", text: "몸의 힘을\n조금씩\n놓아봅니다", speechDelayMs: 1080 },
+    { at: 68, key: "sleep-4", text: "호흡도\n억지로\n바꾸지 않습니다", speechDelayMs: 1100 },
+    { at: 88, key: "sleep-5", text: "그저...\n편안히\n머물러 봅니다", speechDelayMs: 1120 },
+    { at: 120, key: "sleep-6", text: "오늘은\n충분했습니다", speechDelayMs: 1120 },
+    { at: 138, key: "sleep-7", text: "더 애쓰지 않아도 됩니다", speechDelayMs: 1140 },
+    { at: 156, key: "sleep-8", text: "몸은...\n이미\n알고 있습니다", speechDelayMs: 1160 },
+    { at: 174, key: "sleep-9", text: "쉼을...", speechDelayMs: 1180 },
+    { at: 192, key: "sleep-10", text: "뇌도...\n알고 있습니다", speechDelayMs: 1160 },
+    { at: 210, key: "sleep-11", text: "회복을...", speechDelayMs: 1180 },
+    { at: 242, key: "sleep-12", text: "오늘의 피로는\n천천히\n사라집니다", speechDelayMs: 1200 },
+    { at: 260, key: "sleep-13", text: "당신이\n쉬는 동안,\n몸과 뇌는\n조용히\n회복을 시작합니다", speechDelayMs: 1220 },
+    { at: 286, key: "sleep-14", text: "지금은\n아무것도\n붙잡지 않아도 됩니다", speechDelayMs: 1220 },
+    { at: 300, key: "sleep-15", text: "그저...\n쉬면 됩니다", speechDelayMs: 1220 },
+    { at: 340, key: "sleep-16", text: "오늘도...\n잘 살아오셨습니다", speechDelayMs: 1240 },
+    { at: 350, key: "sleep-17", text: "편안한 밤 되세요", speechDelayMs: 1260 }
+  ],
+  en: [
+    { at: 15, key: "sleep-1", text: "You have done enough\ntoday", speechDelayMs: 1040 },
+    { at: 32, key: "sleep-2", text: "Now...\nyou do not need\nto do anything", speechDelayMs: 1080 },
+    { at: 50, key: "sleep-3", text: "Let the body\nsoften\nlittle by little", speechDelayMs: 1080 },
+    { at: 68, key: "sleep-4", text: "There is no need\nto change\nyour breathing", speechDelayMs: 1100 },
+    { at: 88, key: "sleep-5", text: "Simply...\nrest here\nfor a while", speechDelayMs: 1120 },
+    { at: 120, key: "sleep-6", text: "Today\nhas been enough", speechDelayMs: 1120 },
+    { at: 138, key: "sleep-7", text: "You do not need\nto try anymore", speechDelayMs: 1140 },
+    { at: 156, key: "sleep-8", text: "Your body...\nalready knows", speechDelayMs: 1160 },
+    { at: 174, key: "sleep-9", text: "how to rest", speechDelayMs: 1180 },
+    { at: 192, key: "sleep-10", text: "Your mind...\nalready knows", speechDelayMs: 1160 },
+    { at: 210, key: "sleep-11", text: "how to recover", speechDelayMs: 1180 },
+    { at: 242, key: "sleep-12", text: "The fatigue of today\nbegins to fade\nslowly away", speechDelayMs: 1200 },
+    { at: 260, key: "sleep-13", text: "While you rest,\nyour body and mind\nbegin their quiet recovery", speechDelayMs: 1220 },
+    { at: 286, key: "sleep-14", text: "You do not need\nto hold onto\nanything now", speechDelayMs: 1220 },
+    { at: 300, key: "sleep-15", text: "Simply...\nrest", speechDelayMs: 1220 },
+    { at: 340, key: "sleep-16", text: "You have come\nthrough today\nwell enough", speechDelayMs: 1240 },
+    { at: 350, key: "sleep-17", text: "May your night be gentle", speechDelayMs: 1260 }
   ]
 };
 
@@ -1175,6 +1315,36 @@ function getGratitudeGateSpeechSettings(language: "jp" | "kr" | "en") {
   };
 }
 
+function getSleepGateSpeechSettings(language: "jp" | "kr" | "en") {
+  if (language === "kr") {
+    return {
+      lang: "ko-KR",
+      rate: 0.52,
+      pitch: 0.82,
+      volume: 0.52,
+      preferredNames: ["InJoon", "MinJoon", "Google 한국어", "Siri"]
+    };
+  }
+
+  if (language === "en") {
+    return {
+      lang: "en-US",
+      rate: 0.54,
+      pitch: 0.82,
+      volume: 0.5,
+      preferredNames: ["Daniel", "Alex", "Google US English", "Siri"]
+    };
+  }
+
+  return {
+    lang: "ja-JP",
+    rate: 0.5,
+    pitch: 0.8,
+    volume: 0.56,
+    preferredNames: ["Otoya", "Google 日本語", "Siri"]
+  };
+}
+
 function pickStructuredMorningVoice(
   voices: SpeechSynthesisVoice[],
   lang: string,
@@ -1301,6 +1471,7 @@ export default function MeditationPage() {
   const calmGateLines = calmGateNarration[localizedLanguage];
   const releaseGateLines = releaseGateNarration[localizedLanguage];
   const gratitudeGateLines = gratitudeGateNarration[localizedLanguage];
+  const sleepGateLines = sleepGateNarration[localizedLanguage];
   const affirmationCopy = affirmationGateCopy[localizedLanguage];
   const energyCopy = energyGateCopy[localizedLanguage];
   const visionCopy = visionGateCopy[localizedLanguage];
@@ -1323,6 +1494,7 @@ export default function MeditationPage() {
   const [calmGateMessage, setCalmGateMessage] = useState<string | null>(null);
   const [releaseGateMessage, setReleaseGateMessage] = useState<string | null>(null);
   const [gratitudeGateMessage, setGratitudeGateMessage] = useState<string | null>(null);
+  const [sleepGateMessage, setSleepGateMessage] = useState<string | null>(null);
   const [isRechargeVideoPlaying, setIsRechargeVideoPlaying] = useState(false);
   const [rechargeStartError, setRechargeStartError] = useState<string | null>(null);
   const [isRechargeStarting, setIsRechargeStarting] = useState(false);
@@ -1339,6 +1511,7 @@ export default function MeditationPage() {
   const rechargeVideoRef = useRef<HTMLVideoElement | null>(null);
   const releaseVideoRef = useRef<HTMLVideoElement | null>(null);
   const gratitudeVideoRef = useRef<HTMLVideoElement | null>(null);
+  const sleepVideoRef = useRef<HTMLVideoElement | null>(null);
   const affirmationVideoRef = useRef<HTMLVideoElement | null>(null);
   const energyVideoRef = useRef<HTMLVideoElement | null>(null);
   const visionVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -1360,21 +1533,25 @@ export default function MeditationPage() {
   const spokenCalmKeysRef = useRef<Set<string>>(new Set());
   const spokenReleaseKeysRef = useRef<Set<string>>(new Set());
   const spokenGratitudeKeysRef = useRef<Set<string>>(new Set());
+  const spokenSleepKeysRef = useRef<Set<string>>(new Set());
   const structuredSpeechTimeoutRef = useRef<number | null>(null);
   const focusSpeechTimeoutRef = useRef<number | null>(null);
   const calmSpeechTimeoutRef = useRef<number | null>(null);
   const releaseSpeechTimeoutRef = useRef<number | null>(null);
   const gratitudeSpeechTimeoutRef = useRef<number | null>(null);
+  const sleepSpeechTimeoutRef = useRef<number | null>(null);
   const structuredSpeechSequenceRef = useRef(0);
   const focusSpeechSequenceRef = useRef(0);
   const calmSpeechSequenceRef = useRef(0);
   const releaseSpeechSequenceRef = useRef(0);
   const gratitudeSpeechSequenceRef = useRef(0);
+  const sleepSpeechSequenceRef = useRef(0);
   const structuredSpeechUnlockedRef = useRef(false);
   const focusSpeechUnlockedRef = useRef(false);
   const calmSpeechUnlockedRef = useRef(false);
   const releaseSpeechUnlockedRef = useRef(false);
   const gratitudeSpeechUnlockedRef = useRef(false);
+  const sleepSpeechUnlockedRef = useRef(false);
   const rechargeTimerIntervalRef = useRef<number | null>(null);
   const rechargeStartTriggerLockRef = useRef(false);
   const awakeningRitualHandledRef = useRef(false);
@@ -1393,7 +1570,8 @@ export default function MeditationPage() {
   const isRechargeGate = meditationType === "day" && mappedDoor === "recharge";
   const isReleaseGate = meditationType === "night" && mappedDoor === "release";
   const isGratitudeGate = meditationType === "night" && mappedDoor === "gratitude";
-  const isGuidedEveningGate = isReleaseGate || isGratitudeGate;
+  const isSleepGate = meditationType === "night" && mappedDoor === "sleep";
+  const isGuidedEveningGate = isReleaseGate || isGratitudeGate || isSleepGate;
   const isStructuredMorningGate = isAffirmationGate || isEnergyGate || isVisionGate;
   const ritualCopy = awakeningRitualCopy[localizedLanguage];
   const structuredMorningAudio =
@@ -1749,6 +1927,7 @@ export default function MeditationPage() {
     const isRechargeGateProgram = nextType === "day" && nextDoor === "recharge";
     const isReleaseGateProgram = nextType === "night" && nextDoor === "release";
     const isGratitudeGateProgram = nextType === "night" && nextDoor === "gratitude";
+    const isSleepGateProgram = nextType === "night" && nextDoor === "sleep";
     const shouldResumeStructuredAmbient = nextType === "morning" && nextDoor === "affirmation" && pendingStructuredAmbientAudio === "1";
     const mobileNeedsGesture = requiresMobileAudioGesture();
     const isProgramMode = nextJourneyMode || nextType !== "default";
@@ -1765,8 +1944,8 @@ export default function MeditationPage() {
         : shouldResumeStructuredAmbient
           ? true
           : getNatureSoundPreference();
-    const shouldPromptForAudioStart = isThreeMinuteMorningDoor || isFocusGateProgram || isCalmGateProgram || isRechargeGateProgram || isReleaseGateProgram || isGratitudeGateProgram || (mobileNeedsGesture && (isProgramMode || nextSoundEnabled));
-    setSoundEnabled(isFocusGateProgram || isCalmGateProgram || isRechargeGateProgram || isReleaseGateProgram || isGratitudeGateProgram ? true : nextSoundEnabled);
+    const shouldPromptForAudioStart = isThreeMinuteMorningDoor || isFocusGateProgram || isCalmGateProgram || isRechargeGateProgram || isReleaseGateProgram || isGratitudeGateProgram || isSleepGateProgram || (mobileNeedsGesture && (isProgramMode || nextSoundEnabled));
+    setSoundEnabled(isFocusGateProgram || isCalmGateProgram || isRechargeGateProgram || isReleaseGateProgram || isGratitudeGateProgram || isSleepGateProgram ? true : nextSoundEnabled);
     setPendingStructuredAmbientStart(shouldResumeStructuredAmbient);
     setJourneyMode(nextJourneyMode);
     setJourneyDay(Number.isInteger(resolvedJourneyDay) && resolvedJourneyDay >= 1 && resolvedJourneyDay <= 7 ? resolvedJourneyDay : null);
@@ -1782,12 +1961,14 @@ export default function MeditationPage() {
     setCalmGateMessage(null);
     setReleaseGateMessage(null);
     setGratitudeGateMessage(null);
+    setSleepGateMessage(null);
     setIsRechargeVideoPlaying(false);
     setRechargeStartError(null);
     spokenFocusKeysRef.current = new Set();
     spokenCalmKeysRef.current = new Set();
     spokenReleaseKeysRef.current = new Set();
     spokenGratitudeKeysRef.current = new Set();
+    spokenSleepKeysRef.current = new Set();
     spokenAffirmationKeysRef.current = new Set();
     completionHandledRef.current = false;
     console.log("[Morning Gate Audio] init", {
@@ -2098,6 +2279,33 @@ export default function MeditationPage() {
     }
   }
 
+  async function playSleepGateVideo(options?: { restartFromBeginning?: boolean }) {
+    if (!isSleepGate || typeof window === "undefined") {
+      return;
+    }
+
+    const video = sleepVideoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    try {
+      video.defaultMuted = false;
+      video.muted = false;
+      video.volume = EVENING_SLEEP_VIDEO_VOLUME;
+      video.playsInline = true;
+      if (options?.restartFromBeginning ?? false) {
+        video.currentTime = 0;
+      }
+      await video.play();
+      setAmbientVideoFailed(false);
+    } catch (error) {
+      console.warn("[sleep-gate] video playback failed", error);
+      setAmbientVideoFailed(true);
+    }
+  }
+
   async function playEnergyGateVideo() {
     if (!isEnergyGate || typeof window === "undefined") {
       return;
@@ -2283,6 +2491,33 @@ export default function MeditationPage() {
     }
   }
 
+  function unlockSleepGateSpeech() {
+    if (!isSleepGate || typeof window === "undefined" || !("speechSynthesis" in window)) {
+      return;
+    }
+
+    try {
+      const synth = window.speechSynthesis;
+      const settings = getSleepGateSpeechSettings(localizedLanguage);
+      synth.getVoices();
+
+      if (sleepSpeechUnlockedRef.current) {
+        return;
+      }
+
+      const unlockUtterance = new SpeechSynthesisUtterance("\u00A0");
+      unlockUtterance.lang = settings.lang;
+      unlockUtterance.volume = 0;
+      unlockUtterance.rate = settings.rate;
+      unlockUtterance.pitch = settings.pitch;
+      sleepSpeechUnlockedRef.current = true;
+      synth.cancel();
+      synth.speak(unlockUtterance);
+    } catch (error) {
+      console.warn("[sleep-gate] failed to unlock speech synthesis", error);
+    }
+  }
+
   useEffect(() => {
     setVibrationSupported(supportsMeditationVibration());
 
@@ -2293,7 +2528,7 @@ export default function MeditationPage() {
         return;
       }
 
-      if (!isComplete && soundEnabled && !journeyMode && !isStructuredMorningGate && !isFocusGate && !isCalmGate && !isRechargeGate) {
+      if (!isComplete && soundEnabled && !journeyMode && !isStructuredMorningGate && !isFocusGate && !isCalmGate && !isRechargeGate && !isGuidedEveningGate) {
         startAmbientNatureAudio(
           ambientAudioRef,
           soundEnabled,
@@ -2313,7 +2548,7 @@ export default function MeditationPage() {
       window.removeEventListener("pointerdown", markGesture);
       window.removeEventListener("keydown", markGesture);
     };
-  }, [ambientAudioSource, ambientAudioVolume, isCalmGate, isComplete, isFocusGate, isRechargeGate, isStructuredMorningGate, journeyMode, requiresExplicitAudioStart, soundEnabled]);
+  }, [ambientAudioSource, ambientAudioVolume, isCalmGate, isComplete, isFocusGate, isGuidedEveningGate, isRechargeGate, isStructuredMorningGate, journeyMode, requiresExplicitAudioStart, soundEnabled]);
 
   useEffect(() => {
     return () => {
@@ -2343,6 +2578,12 @@ export default function MeditationPage() {
         gratitudeVideo.currentTime = 0;
       }
 
+      const sleepVideo = sleepVideoRef.current;
+      if (sleepVideo) {
+        sleepVideo.pause();
+        sleepVideo.currentTime = 0;
+      }
+
       const rechargeVideo = rechargeVideoRef.current;
       if (rechargeVideo) {
         rechargeVideo.pause();
@@ -2356,12 +2597,21 @@ export default function MeditationPage() {
         calmSpeechSequenceRef.current += 1;
         releaseSpeechSequenceRef.current += 1;
         gratitudeSpeechSequenceRef.current += 1;
+        sleepSpeechSequenceRef.current += 1;
         window.speechSynthesis.cancel();
       }
 
       void stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
     };
   }, []);
+
+  useEffect(() => {
+    if (!isGuidedEveningGate) {
+      return;
+    }
+
+    void stopAmbientNatureAudio(ambientAudioRef, 0);
+  }, [isGuidedEveningGate]);
 
   useEffect(() => {
     if (isRechargeGate || secondsLeft <= 0 || isPaused || needsUserStart) {
@@ -2449,6 +2699,14 @@ export default function MeditationPage() {
   }, [hasUserGesture, isComplete, isGratitudeGate, isPaused, needsUserStart]);
 
   useEffect(() => {
+    if (!isSleepGate || !hasUserGesture || isPaused || isComplete || needsUserStart) {
+      return;
+    }
+
+    void playSleepGateVideo();
+  }, [hasUserGesture, isComplete, isPaused, isSleepGate, needsUserStart]);
+
+  useEffect(() => {
     if (isComplete || !soundEnabled) {
       if (isStructuredMorningGate) {
         void stopStructuredMorningAmbient();
@@ -2469,6 +2727,11 @@ export default function MeditationPage() {
         }
       } else if (isGratitudeGate) {
         const video = gratitudeVideoRef.current;
+        if (video) {
+          video.pause();
+        }
+      } else if (isSleepGate) {
+        const video = sleepVideoRef.current;
         if (video) {
           video.pause();
         }
@@ -3062,6 +3325,96 @@ export default function MeditationPage() {
   }, [elapsedTotalSeconds, gratitudeGateLines, isComplete, isGratitudeGate, isPaused, localizedLanguage, needsUserStart]);
 
   useEffect(() => {
+    if (!isSleepGate || isComplete || isPaused || needsUserStart || typeof window === "undefined") {
+      return;
+    }
+
+    const nextLine = sleepGateLines.find(
+      (line) => elapsedTotalSeconds >= line.at && !spokenSleepKeysRef.current.has(line.key)
+    );
+
+    if (!nextLine) {
+      return;
+    }
+
+    spokenSleepKeysRef.current.add(nextLine.key);
+    setSleepGateMessage(nextLine.text);
+
+    if (!("speechSynthesis" in window)) {
+      return;
+    }
+
+    try {
+      const settings = getSleepGateSpeechSettings(localizedLanguage);
+      const synth = window.speechSynthesis;
+      sleepSpeechSequenceRef.current += 1;
+      const speechSequence = sleepSpeechSequenceRef.current;
+
+      if (sleepSpeechTimeoutRef.current) {
+        window.clearTimeout(sleepSpeechTimeoutRef.current);
+        sleepSpeechTimeoutRef.current = null;
+      }
+
+      const speechDelayMs = nextLine.speechDelayMs ?? 1120;
+
+      const queueSpeak = (attempt: number) => {
+        if (
+          sleepSpeechSequenceRef.current !== speechSequence ||
+          isPausedRef.current ||
+          isCompleteRef.current
+        ) {
+          return;
+        }
+
+        if (synth.speaking || synth.pending) {
+          if (attempt >= 18) {
+            synth.cancel();
+          } else {
+            sleepSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(attempt + 1), 220);
+            return;
+          }
+        }
+
+        const utterance = new SpeechSynthesisUtterance(nextLine.speechText ?? nextLine.text);
+        utterance.lang = settings.lang;
+        utterance.rate = settings.rate;
+        utterance.pitch = settings.pitch;
+        utterance.volume = settings.volume;
+
+        const selectedVoice = pickStructuredMorningVoice(
+          synth.getVoices(),
+          settings.lang,
+          settings.preferredNames
+        );
+
+        if (selectedVoice) {
+          utterance.voice = selectedVoice;
+        }
+
+        utterance.onend = () => {
+          sleepSpeechTimeoutRef.current = null;
+        };
+
+        utterance.onerror = (event) => {
+          console.error("[sleep-gate] narration failed", {
+            language: localizedLanguage,
+            key: nextLine.key,
+            error: event.error
+          });
+          sleepSpeechTimeoutRef.current = null;
+        };
+
+        synth.cancel();
+        synth.speak(utterance);
+      };
+
+      sleepSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(0), speechDelayMs);
+    } catch (error) {
+      console.warn("[sleep-gate] speech synthesis unavailable", error);
+    }
+  }, [elapsedTotalSeconds, isComplete, isPaused, isSleepGate, localizedLanguage, needsUserStart, sleepGateLines]);
+
+  useEffect(() => {
     if (!isStructuredMorningGate || typeof window === "undefined") {
       return;
     }
@@ -3103,12 +3456,17 @@ export default function MeditationPage() {
         window.clearTimeout(gratitudeSpeechTimeoutRef.current);
         gratitudeSpeechTimeoutRef.current = null;
       }
+      if (sleepSpeechTimeoutRef.current) {
+        window.clearTimeout(sleepSpeechTimeoutRef.current);
+        sleepSpeechTimeoutRef.current = null;
+      }
       if (typeof window !== "undefined" && "speechSynthesis" in window) {
         structuredSpeechSequenceRef.current += 1;
         focusSpeechSequenceRef.current += 1;
         calmSpeechSequenceRef.current += 1;
         releaseSpeechSequenceRef.current += 1;
         gratitudeSpeechSequenceRef.current += 1;
+        sleepSpeechSequenceRef.current += 1;
         window.speechSynthesis.cancel();
       }
     };
@@ -3151,6 +3509,15 @@ export default function MeditationPage() {
       }
       if (typeof window !== "undefined" && "speechSynthesis" in window) {
         gratitudeSpeechSequenceRef.current += 1;
+        window.speechSynthesis.cancel();
+      }
+    } else if (isSleepGate) {
+      const video = sleepVideoRef.current;
+      if (video) {
+        video.pause();
+      }
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        sleepSpeechSequenceRef.current += 1;
         window.speechSynthesis.cancel();
       }
     } else if (isRechargeGate) {
@@ -3222,6 +3589,16 @@ export default function MeditationPage() {
         }
         if (typeof window !== "undefined" && "speechSynthesis" in window) {
           gratitudeSpeechSequenceRef.current += 1;
+          window.speechSynthesis.cancel();
+        }
+      } else if (isSleepGate) {
+        const video = sleepVideoRef.current;
+        if (video) {
+          video.pause();
+          video.currentTime = 0;
+        }
+        if (typeof window !== "undefined" && "speechSynthesis" in window) {
+          sleepSpeechSequenceRef.current += 1;
           window.speechSynthesis.cancel();
         }
       } else if (isRechargeGate) {
@@ -3397,6 +3774,7 @@ export default function MeditationPage() {
     unlockCalmGateSpeech();
     unlockReleaseGateSpeech();
     unlockGratitudeGateSpeech();
+    unlockSleepGateSpeech();
     logStructuredMorningAmbientState("program-start-tap");
 
     if (isFocusGate) {
@@ -3420,6 +3798,12 @@ export default function MeditationPage() {
     if (isGratitudeGate) {
       setSoundEnabled(true);
       await playGratitudeGateVideo({ restartFromBeginning: true });
+      return;
+    }
+
+    if (isSleepGate) {
+      setSoundEnabled(true);
+      await playSleepGateVideo({ restartFromBeginning: true });
       return;
     }
 
@@ -3631,6 +4015,34 @@ export default function MeditationPage() {
             ref={gratitudeVideoRef}
             src={EVENING_GRATITUDE_VIDEO_SRC}
             className={`absolute inset-0 z-0 h-full w-full object-cover brightness-[0.84] contrast-[0.97] saturate-[0.92] transition-opacity duration-700 ${
+              needsUserStart ? "pointer-events-none opacity-0" : "opacity-[0.95]"
+            }`}
+            controls={false}
+            playsInline
+            preload="auto"
+            muted={false}
+            onPlaying={() => {
+              setNeedsUserStart(false);
+              setRequiresExplicitAudioStart(false);
+              setIsPaused(false);
+              setAmbientVideoFailed(false);
+            }}
+            onPause={() => {
+              if (!isCompleteRef.current) {
+                setIsPaused(true);
+              }
+            }}
+            onEnded={() => {
+              setSecondsLeft(0);
+            }}
+            onError={() => setAmbientVideoFailed(true)}
+          />
+        ) : !ambientVideoFailed && isSleepGate && !isComplete ? (
+          <video
+            key="sleep-gate-video"
+            ref={sleepVideoRef}
+            src={EVENING_SLEEP_VIDEO_SRC}
+            className={`absolute inset-0 z-0 h-full w-full object-cover brightness-[0.8] contrast-[0.95] saturate-[0.88] transition-opacity duration-700 ${
               needsUserStart ? "pointer-events-none opacity-0" : "opacity-[0.95]"
             }`}
             controls={false}
@@ -4031,6 +4443,15 @@ export default function MeditationPage() {
                     className="mx-auto animate-fade-in whitespace-pre-line font-serif text-[1.18rem] leading-[2.02] text-white/82 sm:text-[1.45rem] sm:leading-[2.08]"
                   >
                     {gratitudeGateMessage}
+                  </p>
+                </div>
+              ) : isSleepGate ? (
+                <div className="mt-10 min-h-[120px] max-w-2xl space-y-3">
+                  <p
+                    key={sleepGateMessage ?? "sleep-gate-empty"}
+                    className="mx-auto animate-fade-in whitespace-pre-line font-serif text-[1.14rem] leading-[2.08] text-white/78 sm:text-[1.38rem] sm:leading-[2.14]"
+                  >
+                    {sleepGateMessage}
                   </p>
                 </div>
               ) : null}
