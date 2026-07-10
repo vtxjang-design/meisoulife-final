@@ -5,7 +5,8 @@ import { getPlanConfig, getPlanPriceId, getStripeClient, normalizeCheckoutPlan }
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 const checkoutSchema = z.object({
-  plan: z.enum(["basic", "leader", "premium", "growth", "inner_circle", "inner-circle"])
+  plan: z.enum(["basic", "leader", "premium", "growth", "inner_circle", "inner-circle"]),
+  next: z.string().trim().startsWith("/").max(2048).optional()
 });
 
 const FRIENDLY_CHECKOUT_ERROR = "決済設定を確認中です。しばらくして再度お試しください。";
@@ -76,16 +77,24 @@ export async function POST(request: Request) {
     const siteUrl = getSiteUrl();
     const membershipPlan = config.membershipPlan;
     const language = resolveCheckoutLanguage(request);
+    const nextDestination = payload.next || "";
     const metadata = {
       user_id: userId,
       userId: userId,
       email: userEmail,
       plan: membershipPlan,
       tier: membershipPlan,
+      next: nextDestination,
       language,
       source: "meisoulife",
       flow: "membership"
     };
+    const successUrl = new URL("/success", siteUrl);
+    successUrl.searchParams.set("session_id", "{CHECKOUT_SESSION_ID}");
+
+    if (nextDestination) {
+      successUrl.searchParams.set("next", nextDestination);
+    }
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
@@ -97,7 +106,7 @@ export async function POST(request: Request) {
           quantity: 1
         }
       ],
-      success_url: `${siteUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: successUrl.toString(),
       cancel_url: `${siteUrl}/pricing`,
       metadata,
       subscription_data: {

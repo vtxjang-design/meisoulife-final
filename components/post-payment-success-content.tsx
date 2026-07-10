@@ -8,6 +8,7 @@ type SuccessTier = "basic" | "growth" | "inner_circle" | null;
 type PostPaymentSuccessContentProps = {
   lineUrl: string;
   tier: SuccessTier;
+  nextDestination?: string | null;
 };
 
 const PROGRAM_ROUTES: Record<Exclude<SuccessTier, null>, string> = {
@@ -127,10 +128,11 @@ const successCopy = {
   }
 } as const;
 
-export function PostPaymentSuccessContent({ lineUrl, tier }: PostPaymentSuccessContentProps) {
+export function PostPaymentSuccessContent({ lineUrl, tier, nextDestination }: PostPaymentSuccessContentProps) {
   const { language } = useLanguage();
   const copy = successCopy[language];
   const activePlanLabel = tier ? copy.planLabels[tier] : null;
+  const continueHref = nextDestination || (tier ? PROGRAM_ROUTES[tier] : "/program/basic");
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -212,7 +214,7 @@ export function PostPaymentSuccessContent({ lineUrl, tier }: PostPaymentSuccessC
 
           <div className="mt-5 flex justify-center">
             <Link
-              href={tier ? PROGRAM_ROUTES[tier] : "/program/basic"}
+              href={continueHref}
               className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-6 py-4 text-center text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
             >
               {copy.memberButton}

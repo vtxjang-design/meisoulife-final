@@ -8,6 +8,7 @@ const LINE_URL = "https://line.me/R/ti/p/@meisoulife";
 type SuccessPageProps = {
   searchParams?: Promise<{
     session_id?: string;
+    next?: string;
   }>;
 };
 
@@ -46,6 +47,7 @@ async function getCheckoutSession(sessionId: string, stripe: Stripe | null) {
 export default async function SuccessPage({ searchParams }: SuccessPageProps) {
   const params = searchParams ? await searchParams : undefined;
   const sessionId = params?.session_id;
+  const nextDestination = params?.next || null;
   const stripe = getStripeClient();
   const session = sessionId ? await getCheckoutSession(sessionId, stripe) : null;
   const tier = normalizeTier(session?.metadata?.plan || session?.metadata?.tier || null);
@@ -53,7 +55,7 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
   return (
     <div className="section-shell py-16 sm:py-24">
       {sessionId && tier ? <SuccessMembershipSync sessionId={sessionId} tier={tier} /> : null}
-      <PostPaymentSuccessContent lineUrl={LINE_URL} tier={tier} />
+      <PostPaymentSuccessContent lineUrl={LINE_URL} tier={tier} nextDestination={nextDestination} />
     </div>
   );
 }
