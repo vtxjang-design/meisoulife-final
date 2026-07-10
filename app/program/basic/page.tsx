@@ -195,7 +195,7 @@ function BasicProgramContent() {
           currentDay={dashboardState.challengeDay}
           streakCount={dashboardState.streakCount}
           planKey={plan}
-          membershipResolved={planResolved && !planError}
+          membershipResolved={planResolved}
           defaultRhythm={defaultRhythm}
           membershipSummary={membershipSummary}
         />

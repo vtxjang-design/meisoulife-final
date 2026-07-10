@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuthState } from "@/components/auth-provider";
 import { getLocaleCopy, useLanguage, useSiteCopy } from "@/lib/i18n";
 import { hasProtectedMembershipAccess, type ProtectedMembershipPlan } from "@/lib/membership-access";
@@ -46,25 +46,19 @@ const membershipGuardCopy = {
   }
 } as const;
 
-function buildNextPath(pathname: string, searchParams: ReturnType<typeof useSearchParams>) {
-  const search = searchParams.toString();
-  const fallbackPath = search ? `${pathname}?${search}` : pathname;
-
-  if (typeof window === "undefined") {
-    return fallbackPath;
-  }
-
-  return `${window.location.pathname}${window.location.search}${window.location.hash}`;
-}
-
 export function useMembershipAccess(requiredPlan: ProtectedMembershipPlan | null): MembershipAccessResult {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const { authResolved, isLoggedIn, planResolved, planError, plan, membershipStatus, hasActiveSubscription, isMembershipLoading } =
     useAuthState();
   const [status, setStatus] = useState<MembershipAccessState>("checking");
-  const nextPath = useMemo(() => buildNextPath(pathname, searchParams), [pathname, searchParams]);
+  const nextPath = useMemo(() => {
+    if (typeof window === "undefined") {
+      return pathname;
+    }
+
+    return `${window.location.pathname}${window.location.search}${window.location.hash}`;
+  }, [pathname]);
 
   useEffect(() => {
     if (!requiredPlan) {
