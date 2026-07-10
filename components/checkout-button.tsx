@@ -2,7 +2,6 @@
 
 import type { ReactNode } from "react";
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { useLanguage } from "@/lib/i18n";
 
 type CheckoutButtonProps = {
@@ -15,10 +14,8 @@ type CheckoutButtonProps = {
 
 export function CheckoutButton({ plan, label, children, className, messageClassName }: CheckoutButtonProps) {
   const { language } = useLanguage();
-  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const nextDestination = searchParams.get("next");
 
   const friendlyCheckoutError =
     language === "kr"
@@ -34,6 +31,8 @@ export function CheckoutButton({ plan, label, children, className, messageClassN
     console.log("checkout clicked", plan);
     setLoading(true);
     setMessage("");
+    const nextDestination =
+      typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("next");
 
     try {
       const response = await fetch("/api/stripe/checkout", {

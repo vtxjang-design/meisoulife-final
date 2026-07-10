@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState, type MutableRefObject } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState, type MutableRefObject } from "react";
 import { useAuthState } from "@/components/auth-provider";
 import { MembershipAccessStateView, useMembershipAccess } from "@/components/membership-guard";
 import { useLanguage, useSiteCopy } from "@/lib/i18n";
@@ -1466,7 +1466,7 @@ function getAwakeningPromptIndex(dayStamp: string, promptCount: number) {
   return Number.isFinite(numeric) && promptCount > 0 ? numeric % promptCount : 0;
 }
 
-export default function MeditationPage() {
+function MeditationPageContent() {
   const searchParams = useSearchParams();
   const { authResolved } = useAuthState();
   const { language } = useLanguage();
@@ -4599,5 +4599,23 @@ export default function MeditationPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function MeditationPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="section-shell py-16 sm:py-24">
+          <div className="mx-auto max-w-3xl">
+            <div className="premium-card rounded-[28px] p-8 text-center sm:p-12">
+              <p className="text-lg text-white/72">Preparing your rhythm space...</p>
+            </div>
+          </div>
+        </div>
+      }
+    >
+      <MeditationPageContent />
+    </Suspense>
   );
 }
