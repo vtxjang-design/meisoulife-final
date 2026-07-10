@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
-import { fetchLatestMembershipPlan, type MembershipPlanKey } from "@/lib/membership";
+import { fetchLatestMembershipPlan, isActiveMembershipStatus, type MembershipPlanKey } from "@/lib/membership";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 export type AuthPlan = MembershipPlanKey;
@@ -13,8 +13,11 @@ type AuthContextValue = {
   isLoggedIn: boolean;
   authResolved: boolean;
   planResolved: boolean;
+  isMembershipLoading: boolean;
   memberState: AuthMemberState;
   plan: AuthPlan;
+  membershipStatus: string | null;
+  hasActiveSubscription: boolean;
   userEmail: string;
   planError: string | null;
 };
@@ -23,13 +26,14 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 async function resolvePlanForUser(
   userId: string
-): Promise<{ plan: AuthPlan; resolved: boolean; errorMessage: string | null; table: string }> {
+): Promise<{ plan: AuthPlan; resolved: boolean; membershipStatus: string | null; errorMessage: string | null; table: string }> {
   const supabase = getSupabaseBrowserClient();
 
   if (!supabase) {
     return {
       plan: "free",
       resolved: false,
+      membershipStatus: null,
       errorMessage: "Supabase browser client is unavailable",
       table: "memberships"
     };
@@ -40,6 +44,7 @@ async function resolvePlanForUser(
   return {
     plan: membership.plan,
     resolved: membership.resolved,
+    membershipStatus: membership.membershipStatus,
     errorMessage: membership.errorMessage,
     table: membership.table
   };
@@ -51,6 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [plan, setPlan] = useState<AuthPlan>("free");
   const [planResolved, setPlanResolved] = useState(false);
   const [planError, setPlanError] = useState<string | null>(null);
+  const [membershipStatus, setMembershipStatus] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -73,6 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setPlan("free");
         setPlanResolved(true);
         setPlanError(null);
+        setMembershipStatus(null);
         setAuthResolved(true);
         console.log("[auth-provider] final access decision", {
           memberState: "guest",
@@ -86,6 +93,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setAuthResolved(true);
       setPlanResolved(false);
       setPlanError(null);
+      setMembershipStatus(null);
       const membershipState = await resolvePlanForUser(nextSession.user.id);
 
       if (!active) {
@@ -96,16 +104,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         table: membershipState.table,
         plan: membershipState.plan,
         resolved: membershipState.resolved,
+        membershipStatus: membershipState.membershipStatus,
         error: membershipState.errorMessage
       });
 
       setPlan(membershipState.plan);
       setPlanResolved(true);
       setPlanError(membershipState.errorMessage);
+      setMembershipStatus(membershipState.membershipStatus);
       setAuthResolved(true);
       console.log("[auth-provider] final access decision", {
-        memberState: membershipState.plan === "free" ? "free" : "paid",
+        memberState:
+          membershipState.plan === "free" || !isActiveMembershipStatus(membershipState.membershipStatus) ? "free" : "paid",
         plan: membershipState.plan,
+        membershipStatus: membershipState.membershipStatus,
         planResolved: true,
         error: membershipState.errorMessage
       });
@@ -117,6 +129,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setPlan("free");
         setPlanResolved(true);
         setPlanError("Supabase browser client is unavailable");
+        setMembershipStatus(null);
         setAuthResolved(true);
         return;
       }
@@ -146,19 +159,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo<AuthContextValue>(() => {
     const isLoggedIn = Boolean(session?.user);
-    const memberState: AuthMemberState = !isLoggedIn ? "guest" : plan === "free" ? "free" : "paid";
+    const hasActiveSubscription = isLoggedIn && isActiveMembershipStatus(membershipStatus) && plan !== "free";
+    const memberState: AuthMemberState = !isLoggedIn ? "guest" : hasActiveSubscription ? "paid" : "free";
+    const isMembershipLoading = isLoggedIn && (!authResolved || !planResolved);
 
     return {
       session,
       isLoggedIn,
       authResolved,
       planResolved,
+      isMembershipLoading,
       memberState,
       plan,
+      membershipStatus,
+      hasActiveSubscription,
       userEmail: session?.user?.email || "",
       planError
     };
-  }, [session, authResolved, planResolved, plan, planError]);
+  }, [session, authResolved, membershipStatus, plan, planError, planResolved]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

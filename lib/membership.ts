@@ -18,7 +18,15 @@ export type MembershipFetchResult = {
   errorMessage: string | null;
 };
 
-const ACTIVE_MEMBERSHIP_STATUSES = ["active", "trialing"];
+export const ACTIVE_MEMBERSHIP_STATUSES = ["active", "trialing"] as const;
+
+export function isActiveMembershipStatus(status: string | null | undefined) {
+  if (!status) {
+    return false;
+  }
+
+  return ACTIVE_MEMBERSHIP_STATUSES.includes(status.toLowerCase() as (typeof ACTIVE_MEMBERSHIP_STATUSES)[number]);
+}
 
 export function normalizeMembershipPlan(plan: string | null | undefined): MembershipPlanKey {
   if (!plan) {
