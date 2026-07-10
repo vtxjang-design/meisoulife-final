@@ -44,7 +44,7 @@ export default function InnerProgramPage() {
   const program = useSiteCopy().programPages.inner;
 
   return (
-    <ProgramAccessGuard>
+    <ProgramAccessGuard requiredPlan="inner_circle">
       <div className="section-shell py-16 sm:py-24">
         <SectionHeading
           eyebrow={program.eyebrow}

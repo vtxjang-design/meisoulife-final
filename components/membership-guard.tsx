@@ -18,7 +18,7 @@ type MembershipAccessState = "checking" | "ready" | "unavailable" | "membership-
 export type MembershipAccessResult = {
   canRender: boolean;
   nextPath: string;
-  requiredPlan: ProtectedMembershipPlan;
+  requiredPlan: ProtectedMembershipPlan | null;
   status: MembershipAccessState;
 };
 
@@ -57,7 +57,7 @@ function buildNextPath(pathname: string, searchParams: ReturnType<typeof useSear
   return `${window.location.pathname}${window.location.search}${window.location.hash}`;
 }
 
-export function useMembershipAccess(requiredPlan: ProtectedMembershipPlan): MembershipAccessResult {
+export function useMembershipAccess(requiredPlan: ProtectedMembershipPlan | null): MembershipAccessResult {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -67,6 +67,11 @@ export function useMembershipAccess(requiredPlan: ProtectedMembershipPlan): Memb
   const nextPath = useMemo(() => buildNextPath(pathname, searchParams), [pathname, searchParams]);
 
   useEffect(() => {
+    if (!requiredPlan) {
+      setStatus("ready");
+      return;
+    }
+
     if (!authResolved) {
       setStatus("checking");
       return;

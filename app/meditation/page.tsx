@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState, type MutableRefObject } from "react";
+import { useAuthState } from "@/components/auth-provider";
+import { MembershipAccessStateView, useMembershipAccess } from "@/components/membership-guard";
 import { useLanguage, useSiteCopy } from "@/lib/i18n";
 import {
   getNatureSoundPreference,
@@ -15,6 +18,7 @@ import {
 import { handleMeditationComplete as triggerMeditationCompletion, supportsMeditationVibration } from "@/lib/meditation-completion";
 import { getRhythmJourneyContent, getRhythmJourneyGuidance, journeyAudioMap } from "@/lib/rhythm-journey";
 import { getBasicPracticeByRouteType, getBasicPracticeBySession } from "@/lib/basic-rhythm";
+import { resolveMeditationRequiredPlan } from "@/lib/membership-access";
 
 const CYCLE_SECONDS = 10;
 const INHALE_SECONDS = 4;
@@ -1463,10 +1467,20 @@ function getAwakeningPromptIndex(dayStamp: string, promptCount: number) {
 }
 
 export default function MeditationPage() {
+  const searchParams = useSearchParams();
+  const { authResolved } = useAuthState();
   const { language } = useLanguage();
   const copy = useSiteCopy().meditationPage;
   const journeyCopy = useMemo(() => getRhythmJourneyContent(language), [language]);
   const localizedLanguage = language === "kr" || language === "en" || language === "jp" ? language : "jp";
+  const routeTypeParam = searchParams.get("type");
+  const journeyModeParam = searchParams.get("journey") === "1";
+  const requiredMembershipPlan = useMemo(
+    () => resolveMeditationRequiredPlan(routeTypeParam, journeyModeParam),
+    [journeyModeParam, routeTypeParam]
+  );
+  const membershipAccess = useMembershipAccess(requiredMembershipPlan);
+  const requiresProtectedMembership = requiredMembershipPlan !== null;
   const focusGateLines = focusGateNarration[localizedLanguage];
   const calmGateLines = calmGateNarration[localizedLanguage];
   const releaseGateLines = releaseGateNarration[localizedLanguage];
@@ -1669,6 +1683,10 @@ export default function MeditationPage() {
   const continueToEnergyHref = `/meditation?duration=180&type=morning-energy&returnTo=${encodeURIComponent(morningGateReturnHref)}`;
   const rechargeReturnHref =
     returnToHref === "/rhythm-journey" ? "/program/basic?rhythm=daytime" : returnToHref;
+
+  if (requiresProtectedMembership && (!authResolved || !membershipAccess.canRender)) {
+    return <MembershipAccessStateView access={membershipAccess} />;
+  }
 
   function logStructuredMorningAmbientState(stage: string) {
     if (typeof window === "undefined") {
@@ -1900,6 +1918,10 @@ export default function MeditationPage() {
   }, [isComplete]);
 
   useEffect(() => {
+    if (requiresProtectedMembership && !membershipAccess.canRender) {
+      return;
+    }
+
     const searchParams = new URLSearchParams(window.location.search);
     const routeType = searchParams.get("type");
     const routePractice = getBasicPracticeByRouteType(routeType, localizedLanguage);
@@ -1996,7 +2018,7 @@ export default function MeditationPage() {
     );
     console.log("[Journey Audio] pending:", pendingJourneyAudio);
     console.log("[Journey Audio] audio element:", ambientAudioRef.current);
-  }, [localizedLanguage]);
+  }, [localizedLanguage, membershipAccess.canRender, requiresProtectedMembership]);
 
   async function handleAmbientStartResult(result: { started: boolean; error?: unknown }, manual = false) {
     if (journeyMode && journeyDay) {

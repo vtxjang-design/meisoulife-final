@@ -44,7 +44,7 @@ export default function GrowthProgramPage() {
   const program = useSiteCopy().programPages.growth;
 
   return (
-    <ProgramAccessGuard>
+    <ProgramAccessGuard requiredPlan="growth">
       <div className="section-shell py-16 sm:py-24">
         <SectionHeading
           eyebrow={program.eyebrow}
