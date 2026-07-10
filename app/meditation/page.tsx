@@ -1474,10 +1474,17 @@ export default function MeditationPage() {
   const journeyCopy = useMemo(() => getRhythmJourneyContent(language), [language]);
   const localizedLanguage = language === "kr" || language === "en" || language === "jp" ? language : "jp";
   const routeTypeParam = searchParams.get("type");
+  const routeDoorParam = searchParams.get("door");
   const journeyModeParam = searchParams.get("journey") === "1";
   const requiredMembershipPlan = useMemo(
-    () => resolveMeditationRequiredPlan(routeTypeParam, journeyModeParam),
-    [journeyModeParam, routeTypeParam]
+    () =>
+      resolveMeditationRequiredPlan({
+        routeType: routeTypeParam,
+        meditationType: routeTypeParam,
+        door: routeDoorParam,
+        journeyMode: journeyModeParam
+      }),
+    [journeyModeParam, routeDoorParam, routeTypeParam]
   );
   const membershipAccess = useMembershipAccess(requiredMembershipPlan);
   const requiresProtectedMembership = requiredMembershipPlan !== null;

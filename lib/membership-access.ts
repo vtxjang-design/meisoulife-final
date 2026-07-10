@@ -23,7 +23,14 @@ export function hasProtectedMembershipAccess(params: {
   return isActiveMembershipStatus(membershipStatus) && hasRequiredMembershipPlan(plan, requiredPlan);
 }
 
-export function resolveMeditationRequiredPlan(routeType: string | null, journeyMode: boolean) {
+export function resolveMeditationRequiredPlan(params: {
+  routeType: string | null;
+  meditationType: string | null;
+  door: string | null;
+  journeyMode: boolean;
+}) {
+  const { routeType, meditationType, door, journeyMode } = params;
+
   if (journeyMode) {
     return null;
   }
@@ -44,6 +51,20 @@ export function resolveMeditationRequiredPlan(routeType: string | null, journeyM
 
   if (routeType.startsWith("inner-module-") || routeType === "inner-today") {
     return "inner_circle" as const;
+  }
+
+  const normalizedDoor = door === "relax" ? "rest" : door === "vitality" ? "recharge" : door;
+
+  if (meditationType === "morning" && (normalizedDoor === "affirmation" || normalizedDoor === "energy" || normalizedDoor === "vision")) {
+    return "basic" as const;
+  }
+
+  if (meditationType === "day" && (normalizedDoor === "focus" || normalizedDoor === "rest" || normalizedDoor === "recharge")) {
+    return "basic" as const;
+  }
+
+  if (meditationType === "night" && (normalizedDoor === "release" || normalizedDoor === "gratitude" || normalizedDoor === "sleep")) {
+    return "basic" as const;
   }
 
   return null;
