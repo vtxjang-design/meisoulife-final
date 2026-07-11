@@ -30,15 +30,85 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-async function resolvePlanForUser(): Promise<MembershipResolutionResult> {
-  try {
-    const response = await fetch("/api/membership/resolve", {
-      method: "GET",
-      credentials: "include",
-      cache: "no-store"
-    });
+function getMembershipResolverFallback(errorMessage: string): MembershipResolutionResult {
+  return {
+    plan: "free",
+    resolved: false,
+    membershipStatus: null,
+    hasActiveSubscription: false,
+    errorMessage,
+    source: "unavailable",
+    repaired: false,
+    stripeCustomerId: null,
+    stripeSubscriptionId: null,
+    membershipSummary: {
+      currentPlan: "free",
+      subscriptionStatus: null,
+      nextBillingDate: null,
+      canManageMembership: false
+    }
+  };
+}
 
-    const data = (await response.json()) as MembershipResolutionResult;
+async function requestMembershipResolution(accessToken?: string | null): Promise<{
+  response: Response;
+  data: MembershipResolutionResult;
+}> {
+  const headers = new Headers();
+
+  if (accessToken) {
+    headers.set("Authorization", `Bearer ${accessToken}`);
+  }
+
+  const response = await fetch("/api/membership/resolve", {
+    method: "GET",
+    credentials: "include",
+    cache: "no-store",
+    headers
+  });
+
+  const data = (await response.json()) as MembershipResolutionResult;
+  return { response, data };
+}
+
+async function resolvePlanForUser(nextSession: Session | null): Promise<MembershipResolutionResult> {
+  try {
+    const supabase = getSupabaseBrowserClient();
+    const initialAccessToken = nextSession?.access_token ?? null;
+    const { response, data } = await requestMembershipResolution(initialAccessToken);
+
+    const shouldRetryWithRefresh =
+      Boolean(nextSession?.user) &&
+      Boolean(supabase) &&
+      (response.status === 401 || data.source === "guest");
+
+    if (shouldRetryWithRefresh && supabase) {
+      const { data: refreshedSessionData, error: refreshError } = await supabase.auth.refreshSession();
+
+      if (refreshError) {
+        return {
+          ...(response.ok ? data : getMembershipResolverFallback("Membership resolver request failed")),
+          resolved: false,
+          errorMessage: refreshError.message
+        };
+      }
+
+      const refreshedAccessToken = refreshedSessionData.session?.access_token ?? null;
+
+      if (refreshedAccessToken) {
+        const retryResult = await requestMembershipResolution(refreshedAccessToken);
+
+        if (!retryResult.response.ok) {
+          return {
+            ...retryResult.data,
+            resolved: false,
+            errorMessage: retryResult.data.errorMessage || "Membership resolver request failed"
+          };
+        }
+
+        return retryResult.data;
+      }
+    }
 
     if (!response.ok) {
       return {
@@ -50,23 +120,7 @@ async function resolvePlanForUser(): Promise<MembershipResolutionResult> {
 
     return data;
   } catch (error) {
-    return {
-      plan: "free",
-      resolved: false,
-      membershipStatus: null,
-      hasActiveSubscription: false,
-      errorMessage: error instanceof Error ? error.message : "Membership resolver request failed",
-      source: "unavailable",
-      repaired: false,
-      stripeCustomerId: null,
-      stripeSubscriptionId: null,
-      membershipSummary: {
-        currentPlan: "free",
-        subscriptionStatus: null,
-        nextBillingDate: null,
-        canManageMembership: false
-      }
-    };
+    return getMembershipResolverFallback(error instanceof Error ? error.message : "Membership resolver request failed");
   }
 }
 
@@ -126,7 +180,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setPlanResolved(false);
       setPlanError(null);
       setMembershipStatus(null);
-      const membershipState = await resolvePlanForUser();
+      const membershipState = await resolvePlanForUser(nextSession);
 
       if (!active) {
         return;
