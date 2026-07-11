@@ -10,6 +10,8 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json().catch(() => null);
     const email = typeof body?.email === "string" ? body.email.trim() : "";
+    const next =
+      typeof body?.next === "string" && body.next.startsWith("/") && !body.next.startsWith("//") ? body.next : "/program/basic";
 
     if (!SUPABASE_URL) {
       console.error("[send-magic-link] Missing Supabase URL");
@@ -55,7 +57,7 @@ export async function POST(request: NextRequest) {
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${siteUrl}/auth/callback?next=/program/basic`
+        emailRedirectTo: `${siteUrl}/auth/callback?next=${encodeURIComponent(next)}`
       }
     });
 

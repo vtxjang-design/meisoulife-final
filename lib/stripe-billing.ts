@@ -6,6 +6,7 @@ type StripePlanPreference = MembershipRecordPlan | "free";
 export type StripeResolvedBilling = {
   customerId: string | null;
   subscriptionId: string | null;
+  plan: MembershipRecordPlan | "free";
   status: string | null;
   currentPeriodStart: string | null;
   currentPeriodEnd: string | null;
@@ -17,6 +18,54 @@ type CandidateCustomer = {
   customerId: string;
   source: string;
 };
+
+function normalizeStripePlan(input?: string | null): MembershipRecordPlan | "free" {
+  if (!input) {
+    return "free";
+  }
+
+  const normalized = input.toLowerCase().replace(/[-\s]/g, "_");
+
+  if (normalized === "basic") {
+    return "basic";
+  }
+
+  if (normalized === "growth" || normalized === "leader") {
+    return "growth";
+  }
+
+  if (normalized === "inner_circle" || normalized === "premium" || normalized === "innercircle") {
+    return "inner_circle";
+  }
+
+  return "free";
+}
+
+function inferPlanFromSubscription(subscription: Stripe.Subscription): MembershipRecordPlan | "free" {
+  const metadataPlan = normalizeStripePlan(subscription.metadata?.plan || null);
+
+  if (metadataPlan !== "free") {
+    return metadataPlan;
+  }
+
+  const basicPriceId = getPlanPriceId("basic")?.priceId || null;
+  const growthPriceId = getPlanPriceId("growth")?.priceId || null;
+  const innerCirclePriceId = getPlanPriceId("inner-circle")?.priceId || null;
+
+  if (subscription.items.data.some((item) => item.price?.id === innerCirclePriceId)) {
+    return "inner_circle";
+  }
+
+  if (subscription.items.data.some((item) => item.price?.id === growthPriceId)) {
+    return "growth";
+  }
+
+  if (subscription.items.data.some((item) => item.price?.id === basicPriceId)) {
+    return "basic";
+  }
+
+  return "free";
+}
 
 function toIsoDateFromUnix(value?: number | null) {
   if (!value) {
@@ -152,6 +201,7 @@ export async function resolveStripeBillingDetails(params: {
         best = {
           customerId: candidate.customerId,
           subscriptionId: null,
+          plan: "free",
           status: null,
           currentPeriodStart: null,
           currentPeriodEnd: null,
@@ -171,10 +221,12 @@ export async function resolveStripeBillingDetails(params: {
       const currentPeriodStart = toIsoDateFromUnix(subscription.items.data[0]?.current_period_start ?? null);
       const currentPeriodEnd = toIsoDateFromUnix(subscription.items.data[0]?.current_period_end ?? null);
       const billingCycleAnchor = toIsoDateFromUnix(subscription.billing_cycle_anchor ?? null);
+      const resolvedPlan = inferPlanFromSubscription(subscription);
 
       console.log({
         customerId: maskStripeCustomerId(candidate.customerId),
         subscriptionId: subscription.id,
+        plan: resolvedPlan,
         status: subscription.status,
         currentPeriodStart,
         currentPeriodEnd,
@@ -185,6 +237,7 @@ export async function resolveStripeBillingDetails(params: {
         best = {
           customerId: candidate.customerId,
           subscriptionId: subscription.id,
+          plan: resolvedPlan,
           status: subscription.status,
           currentPeriodStart,
           currentPeriodEnd,
@@ -200,6 +253,7 @@ export async function resolveStripeBillingDetails(params: {
     return {
       customerId: null,
       subscriptionId: null,
+      plan: "free",
       status: null,
       currentPeriodStart: null,
       currentPeriodEnd: null,

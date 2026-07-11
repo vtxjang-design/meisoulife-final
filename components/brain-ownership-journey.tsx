@@ -1,11 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
+import { useAuthState } from "@/components/auth-provider";
 import { SectionHeading } from "@/components/section-heading";
 import { useLanguage } from "@/lib/i18n";
-import { fetchLatestMembershipPlan } from "@/lib/membership";
-import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 type MemberState = "guest" | "free" | "paid";
 
@@ -133,42 +132,9 @@ const stepRoutes = ["/meditation", "/brain-education", "/premium", "/premium", "
 
 export function BrainOwnershipJourney() {
   const { language } = useLanguage();
+  const { isLoggedIn, hasActiveSubscription } = useAuthState();
   const copy = journeyCopy[language];
-  const [memberState, setMemberState] = useState<MemberState>("guest");
-
-  useEffect(() => {
-    let active = true;
-
-    async function loadMembership() {
-      const supabase = getSupabaseBrowserClient();
-
-      if (!supabase) {
-        return;
-      }
-
-      const {
-        data: { session }
-      } = await supabase.auth.getSession();
-
-      if (!active || !session?.user) {
-        return;
-      }
-
-      const membership = await fetchLatestMembershipPlan(supabase, session.user.id, "[brain-ownership-journey]");
-
-      if (!active) {
-        return;
-      }
-
-      setMemberState(membership.resolved && membership.plan !== "free" ? "paid" : "free");
-    }
-
-    loadMembership();
-
-    return () => {
-      active = false;
-    };
-  }, []);
+  const memberState: MemberState = !isLoggedIn ? "guest" : hasActiveSubscription ? "paid" : "free";
 
   const memberBadge = useMemo(() => copy.badge[memberState], [copy.badge, memberState]);
 

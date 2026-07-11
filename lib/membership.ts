@@ -1,5 +1,25 @@
 export type MembershipPlanKey = "free" | "basic" | "growth" | "inner_circle";
 
+export type MembershipSummary = {
+  currentPlan: MembershipPlanKey;
+  subscriptionStatus: string | null;
+  nextBillingDate: string | null;
+  canManageMembership: boolean;
+};
+
+export type MembershipResolutionResult = {
+  plan: MembershipPlanKey;
+  resolved: boolean;
+  membershipStatus: string | null;
+  hasActiveSubscription: boolean;
+  errorMessage: string | null;
+  source: "guest" | "local" | "stripe" | "stripe_repaired" | "unavailable";
+  repaired: boolean;
+  stripeCustomerId: string | null;
+  stripeSubscriptionId: string | null;
+  membershipSummary: MembershipSummary;
+};
+
 type MembershipRow = {
   plan: string | null;
   status?: string | null;

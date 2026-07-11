@@ -1,11 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useAuthState } from "@/components/auth-provider";
 import { SectionHeading } from "@/components/section-heading";
 import { useLocaleCopy } from "@/lib/i18n";
-import { fetchLatestMembershipPlan } from "@/lib/membership";
-import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 const sectionCopy = {
   jp: {
@@ -66,39 +64,8 @@ const sectionCopy = {
 
 export function TogetherAwakeSection() {
   const copy = useLocaleCopy(sectionCopy);
-  const [hasPaidMembership, setHasPaidMembership] = useState(false);
-
-  useEffect(() => {
-    let active = true;
-
-    async function loadMembership() {
-      const supabase = getSupabaseBrowserClient();
-
-      if (!supabase) {
-        return;
-      }
-
-      const {
-        data: { session }
-      } = await supabase.auth.getSession();
-
-      if (!active || !session?.user) {
-        return;
-      }
-
-      const membership = await fetchLatestMembershipPlan(supabase, session.user.id, "[together-awake-section]");
-
-      if (active && membership.resolved && membership.plan !== "free") {
-        setHasPaidMembership(true);
-      }
-    }
-
-    loadMembership();
-
-    return () => {
-      active = false;
-    };
-  }, []);
+  const { hasActiveSubscription } = useAuthState();
+  const hasPaidMembership = hasActiveSubscription;
 
   return (
     <section className="section-shell mt-24">

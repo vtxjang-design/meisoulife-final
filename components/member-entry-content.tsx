@@ -1091,12 +1091,16 @@ export function MemberEntryContent({
     setApiResponse(null);
 
     try {
+      const next =
+        typeof window !== "undefined"
+          ? new URLSearchParams(window.location.search).get("next") || `${window.location.pathname}${window.location.search}`
+          : "/program/basic";
       const response = await fetch("/api/send-magic-link", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ email: normalizedEmail })
+        body: JSON.stringify({ email: normalizedEmail, next })
       });
 
       const data = (await response.json()) as MagicLinkApiResult;

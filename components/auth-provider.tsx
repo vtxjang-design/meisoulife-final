@@ -2,7 +2,12 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
-import { fetchLatestMembershipPlan, isActiveMembershipStatus, type MembershipPlanKey } from "@/lib/membership";
+import {
+  isActiveMembershipStatus,
+  type MembershipPlanKey,
+  type MembershipResolutionResult,
+  type MembershipSummary
+} from "@/lib/membership";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 export type AuthPlan = MembershipPlanKey;
@@ -18,36 +23,51 @@ type AuthContextValue = {
   plan: AuthPlan;
   membershipStatus: string | null;
   hasActiveSubscription: boolean;
+  membershipSummary: MembershipSummary;
   userEmail: string;
   planError: string | null;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-async function resolvePlanForUser(
-  userId: string
-): Promise<{ plan: AuthPlan; resolved: boolean; membershipStatus: string | null; errorMessage: string | null; table: string }> {
-  const supabase = getSupabaseBrowserClient();
+async function resolvePlanForUser(): Promise<MembershipResolutionResult> {
+  try {
+    const response = await fetch("/api/membership/resolve", {
+      method: "GET",
+      credentials: "include",
+      cache: "no-store"
+    });
 
-  if (!supabase) {
+    const data = (await response.json()) as MembershipResolutionResult;
+
+    if (!response.ok) {
+      return {
+        ...data,
+        resolved: false,
+        errorMessage: data.errorMessage || "Membership resolver request failed"
+      };
+    }
+
+    return data;
+  } catch (error) {
     return {
       plan: "free",
       resolved: false,
       membershipStatus: null,
-      errorMessage: "Supabase browser client is unavailable",
-      table: "memberships"
+      hasActiveSubscription: false,
+      errorMessage: error instanceof Error ? error.message : "Membership resolver request failed",
+      source: "unavailable",
+      repaired: false,
+      stripeCustomerId: null,
+      stripeSubscriptionId: null,
+      membershipSummary: {
+        currentPlan: "free",
+        subscriptionStatus: null,
+        nextBillingDate: null,
+        canManageMembership: false
+      }
     };
   }
-
-  const membership = await fetchLatestMembershipPlan(supabase, userId, "[auth-provider]");
-
-  return {
-    plan: membership.plan,
-    resolved: membership.resolved,
-    membershipStatus: membership.membershipStatus,
-    errorMessage: membership.errorMessage,
-    table: membership.table
-  };
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -57,6 +77,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [planResolved, setPlanResolved] = useState(false);
   const [planError, setPlanError] = useState<string | null>(null);
   const [membershipStatus, setMembershipStatus] = useState<string | null>(null);
+  const [membershipSummary, setMembershipSummary] = useState<MembershipSummary>({
+    currentPlan: "free",
+    subscriptionStatus: null,
+    nextBillingDate: null,
+    canManageMembership: false
+  });
 
   useEffect(() => {
     let active = true;
@@ -80,6 +106,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setPlanResolved(true);
         setPlanError(null);
         setMembershipStatus(null);
+        setMembershipSummary({
+          currentPlan: "free",
+          subscriptionStatus: null,
+          nextBillingDate: null,
+          canManageMembership: false
+        });
         setAuthResolved(true);
         console.log("[auth-provider] final access decision", {
           memberState: "guest",
@@ -94,24 +126,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setPlanResolved(false);
       setPlanError(null);
       setMembershipStatus(null);
-      const membershipState = await resolvePlanForUser(nextSession.user.id);
+      const membershipState = await resolvePlanForUser();
 
       if (!active) {
         return;
       }
 
       console.log("[auth-provider] membership query result", {
-        table: membershipState.table,
         plan: membershipState.plan,
         resolved: membershipState.resolved,
         membershipStatus: membershipState.membershipStatus,
-        error: membershipState.errorMessage
+        error: membershipState.errorMessage,
+        source: membershipState.source,
+        repaired: membershipState.repaired
       });
 
       setPlan(membershipState.plan);
       setPlanResolved(true);
       setPlanError(membershipState.errorMessage);
       setMembershipStatus(membershipState.membershipStatus);
+      setMembershipSummary(membershipState.membershipSummary);
       setAuthResolved(true);
       console.log("[auth-provider] final access decision", {
         memberState:
@@ -130,6 +164,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setPlanResolved(true);
         setPlanError("Supabase browser client is unavailable");
         setMembershipStatus(null);
+        setMembershipSummary({
+          currentPlan: "free",
+          subscriptionStatus: null,
+          nextBillingDate: null,
+          canManageMembership: false
+        });
         setAuthResolved(true);
         return;
       }
@@ -173,10 +213,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       plan,
       membershipStatus,
       hasActiveSubscription,
+      membershipSummary,
       userEmail: session?.user?.email || "",
       planError
     };
-  }, [session, authResolved, membershipStatus, plan, planError, planResolved]);
+  }, [session, authResolved, membershipStatus, membershipSummary, plan, planError, planResolved]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
