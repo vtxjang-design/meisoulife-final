@@ -837,7 +837,7 @@ const affirmationGateCopy = {
       { at: 38, key: "open-3", text: "Pause here\nfor a moment", speechDelayMs: 480 },
       { at: 54, key: "open-4", text: "Slowly breathe in", speechDelayMs: 520 },
       { at: 70, key: "open-5", text: "And gently breathe out", speechDelayMs: 520 },
-      { at: 88, key: "open-6", text: "Once more now\nA slower breath in", speechDelayMs: 540 },
+      { at: 88, key: "open-6", text: "Once more now\nslowly breathe in", speechDelayMs: 540 },
       { at: 104, key: "open-7", text: "And an easy breath out", speechDelayMs: 560 }
     ],
     affirmationLines: [
@@ -855,10 +855,10 @@ const affirmationGateCopy = {
 
 const energyGateCopy = {
   jp: {
-    title: "脳と身体を目覚めさせる",
+    title: "Energy Gate",
     subtitle: "体と脳を\n中心から目覚めさせます",
     duration: "3:00",
-    audioLabel: "朝のエネルギーリチュアル",
+    audioLabel: "Energy Gate",
     startAudio: "音声を開始",
     pause: "一度止める",
     resume: "続ける",
@@ -868,7 +868,7 @@ const energyGateCopy = {
     completionMessage: "エネルギーが\n静かに戻っています",
     completionNote: "少しずつ、早く\n戻れるようになっています",
     completionButton: "朝の扉へ戻る",
-    openingFade: "脳と身体を目覚めさせる",
+    openingFade: "Energy Gate",
     integration: "丹田を感じます\n今を感じます",
     openingLines: [
       { at: 5, key: "open-1", text: "ようこそ", speechDelayMs: 620 },
@@ -896,10 +896,10 @@ const energyGateCopy = {
     ]
   },
   kr: {
-    title: "뇌와 몸을 깨우기",
+    title: "Energy Gate",
     subtitle: "몸과 뇌를\n중심에서 조용히 깨웁니다",
     duration: "3:00",
-    audioLabel: "아침 에너지 리추얼",
+    audioLabel: "Energy Gate",
     startAudio: "음성 시작하기",
     pause: "잠시 멈추기",
     resume: "이어가기",
@@ -909,7 +909,7 @@ const energyGateCopy = {
     completionMessage: "에너지가\n조용히 돌아오고 있습니다",
     completionNote: "조금 더 빨리 자신에게\n돌아오고 있습니다",
     completionButton: "아침의 문으로 돌아가기",
-    openingFade: "뇌와 몸을 깨우기",
+    openingFade: "Energy Gate",
     integration: "단전을 느껴봅니다\n지금을 느껴봅니다",
     openingLines: [
       { at: 5, key: "open-1", text: "어서 오세요", speechDelayMs: 620 },
@@ -935,10 +935,10 @@ const energyGateCopy = {
     ]
   },
   en: {
-    title: "Wake Brain and Body",
-    subtitle: "A quiet ritual\nfor body brain and center",
+    title: "Energy Gate",
+    subtitle: "A quiet ritual\nto wake body, brain, and center",
     duration: "3:00",
-    audioLabel: "Morning Energy Ritual",
+    audioLabel: "Energy Gate",
     startAudio: "Start Audio",
     pause: "Pause",
     resume: "Continue",
@@ -948,11 +948,11 @@ const energyGateCopy = {
     completionMessage: "Your energy is\nreturning quietly",
     completionNote: "You are learning to\nreturn more easily",
     completionButton: "Return to Morning Gate",
-    openingFade: "Wake Brain and Body",
+    openingFade: "Energy Gate",
     integration: "Feel your center\nFeel this moment",
     openingLines: [
       { at: 5, key: "open-1", text: "Welcome", speechDelayMs: 620 },
-      { at: 10, key: "open-2", text: "Today\nwe awaken from our center", speechDelayMs: 420 },
+      { at: 10, key: "open-2", text: "Today\nwe awaken body and brain", speechDelayMs: 420 },
       { at: 26, key: "open-4", text: "Below the navel", speechDelayMs: 480 },
       { at: 34, key: "open-5", text: "feel your Danjeon", speechDelayMs: 500 }
     ],
@@ -979,10 +979,10 @@ const energyGateCopy = {
 
 const visionGateCopy = {
   jp: {
-    title: "方向を思い出す",
+    title: "Vision Gate",
     subtitle: "今日の方向を\n静かに思い出す時間です",
     duration: "3:00",
-    audioLabel: "朝のビジョンリチュアル",
+    audioLabel: "Vision Gate",
     startAudio: "音声を開始",
     pause: "一度止める",
     resume: "続ける",
@@ -992,7 +992,7 @@ const visionGateCopy = {
     completionMessage: "今日は\n一歩で十分です",
     completionNote: "リズムを思い出す力が\n育っています",
     completionButton: "朝の扉へ戻る",
-    openingFade: "方向を思い出す",
+    openingFade: "Vision Gate",
     integration: "静かに 今日を\n始めます",
     openingLines: [
       { at: 6, key: "open-1", text: "ようこそ", speechDelayMs: 640 },
@@ -1014,10 +1014,10 @@ const visionGateCopy = {
     ]
   },
   kr: {
-    title: "방향을 기억하기",
+    title: "Vision Gate",
     subtitle: "오늘의 방향을\n조용히 떠올리는 시간",
     duration: "3:00",
-    audioLabel: "아침 비전 리추얼",
+    audioLabel: "Vision Gate",
     startAudio: "음성 시작하기",
     pause: "잠시 멈추기",
     resume: "이어가기",
@@ -1027,7 +1027,7 @@ const visionGateCopy = {
     completionMessage: "오늘은\n한 걸음이면 충분합니다",
     completionNote: "리듬을 기억하는 힘이\n자라고 있습니다",
     completionButton: "아침의 문으로 돌아가기",
-    openingFade: "방향을 기억하기",
+    openingFade: "Vision Gate",
     integration: "조용히 오늘을\n시작합니다",
     openingLines: [
       { at: 6, key: "open-1", text: "좋은 아침입니다", speechDelayMs: 640 },
@@ -1049,10 +1049,10 @@ const visionGateCopy = {
     ]
   },
   en: {
-    title: "Remember Your Direction",
+    title: "Vision Gate",
     subtitle: "A quiet space\nto remember your direction",
     duration: "3:00",
-    audioLabel: "Morning Vision Ritual",
+    audioLabel: "Vision Gate",
     startAudio: "Start Audio",
     pause: "Pause",
     resume: "Continue",
@@ -1062,7 +1062,7 @@ const visionGateCopy = {
     completionMessage: "One step is enough\nfor today",
     completionNote: "Your rhythm is\nremembering itself",
     completionButton: "Return to Morning Gate",
-    openingFade: "Remember Your Direction",
+    openingFade: "Vision Gate",
     integration: "Begin this day\nquietly",
     openingLines: [
       { at: 6, key: "open-1", text: "Welcome", speechDelayMs: 640 },
@@ -4351,8 +4351,8 @@ function MeditationPageContent() {
             {isStructuredMorningGate ? (
               <div className="w-full max-w-xl space-y-4">
                 <p className="text-xs uppercase tracking-[0.28em] text-gold/74">{morningGateCopy.audioLabel}</p>
-                <h1 className="font-serif text-3xl text-white sm:text-4xl">{morningGateCopy.title}</h1>
-                <p className="text-[13px] leading-6 text-white/64 sm:text-[13.5px] sm:leading-6">{morningGateCopy.subtitle}</p>
+                <h1 className="hero-measure word-balance keep-phrase mx-auto font-serif text-3xl text-white sm:text-4xl">{morningGateCopy.title}</h1>
+                <p className="body-measure word-balance keep-phrase mx-auto text-[13px] leading-6 text-white/64 sm:text-[13.5px] sm:leading-6">{morningGateCopy.subtitle}</p>
                 <div className="mx-auto mt-4 h-[6px] w-full max-w-md overflow-hidden rounded-full bg-white/10">
                   <div
                     className="h-full rounded-full bg-gold/80 transition-[width] duration-700"
