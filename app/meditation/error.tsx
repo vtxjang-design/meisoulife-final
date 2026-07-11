@@ -37,13 +37,21 @@ export default function MeditationError({
   const copy = errorCopy[localizedLanguage];
 
   useEffect(() => {
-    if (process.env.NODE_ENV !== "production") {
-      console.error("[meditation-route-error]", {
-        name: error?.name,
-        message: error?.message,
-        digest: error?.digest
-      });
-    }
+    console.error("[meditation-route-error] runtime", error);
+    console.error("[meditation-route-error] stack", error?.stack);
+    console.error("[meditation-route-error] digest", error?.digest);
+
+    const componentStack =
+      typeof error === "object" &&
+      error !== null &&
+      "componentStack" in error
+        ? (error as Error & { componentStack?: string }).componentStack
+        : undefined;
+
+    console.error(
+      "[meditation-route-error] componentStack",
+      componentStack
+    );
   }, [error]);
 
   return (
