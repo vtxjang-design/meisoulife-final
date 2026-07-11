@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useLanguage } from "@/lib/i18n";
 
 const errorCopy = {
@@ -35,6 +35,7 @@ export default function MeditationError({
   const { language } = useLanguage();
   const localizedLanguage = language === "kr" || language === "en" || language === "jp" ? language : "jp";
   const copy = errorCopy[localizedLanguage];
+  const reportedFingerprintRef = useRef<string | null>(null);
 
   useEffect(() => {
     console.error("[meditation-route-error] runtime", error);
@@ -52,6 +53,70 @@ export default function MeditationError({
       "[meditation-route-error] componentStack",
       componentStack
     );
+
+    try {
+      const pathname = typeof window !== "undefined" ? window.location.pathname : "";
+      const search = typeof window !== "undefined" ? window.location.search : "";
+      const meditationType =
+        typeof window !== "undefined"
+          ? new URLSearchParams(window.location.search).get("type") ?? undefined
+          : undefined;
+      const userAgent =
+        typeof navigator !== "undefined" ? navigator.userAgent : undefined;
+      const buildId =
+        process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ||
+        process.env.NEXT_PUBLIC_BUILD_ID ||
+        undefined;
+      const payload = {
+        errorName: error?.name,
+        message: error?.message,
+        stack: error?.stack,
+        digest: error?.digest,
+        componentStack,
+        pathname,
+        search,
+        meditationType,
+        language: localizedLanguage,
+        userAgent,
+        timestamp: new Date().toISOString(),
+        buildId
+      };
+      const fingerprint = JSON.stringify({
+        errorName: payload.errorName ?? "",
+        message: payload.message ?? "",
+        digest: payload.digest ?? "",
+        pathname: payload.pathname ?? "",
+        search: payload.search ?? ""
+      });
+
+      if (reportedFingerprintRef.current === fingerprint) {
+        return;
+      }
+
+      reportedFingerprintRef.current = fingerprint;
+
+      const body = JSON.stringify(payload);
+
+      if (typeof navigator !== "undefined" && typeof navigator.sendBeacon === "function") {
+        const beaconBody = new Blob([body], { type: "application/json" });
+        const sent = navigator.sendBeacon("/api/client-error-report", beaconBody);
+
+        if (sent) {
+          return;
+        }
+      }
+
+      void fetch("/api/client-error-report", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json"
+        },
+        body,
+        keepalive: true
+      }).catch(() => undefined);
+    } catch {
+      // Ignore client-side reporting failures so the fallback UI remains stable.
+    }
   }, [error]);
 
   return (
