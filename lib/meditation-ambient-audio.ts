@@ -1,6 +1,7 @@
 "use client";
 
 import type { MutableRefObject } from "react";
+import { safeLocalStorageGet, safeLocalStorageSet } from "@/lib/safe-browser-storage";
 
 const AMBIENT_AUDIO_SRC = "/audio/birds-nature-ambience.mp3";
 const SOUND_PREFERENCE_KEY = "meisoulife_nature_sound_enabled";
@@ -68,11 +69,7 @@ function fadeVolume(
 }
 
 export function getNatureSoundPreference() {
-  if (typeof window === "undefined") {
-    return true;
-  }
-
-  const stored = window.localStorage.getItem(SOUND_PREFERENCE_KEY);
+  const stored = safeLocalStorageGet(SOUND_PREFERENCE_KEY);
 
   if (stored === null) {
     return true;
@@ -82,11 +79,7 @@ export function getNatureSoundPreference() {
 }
 
 export function setNatureSoundPreference(enabled: boolean) {
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  window.localStorage.setItem(SOUND_PREFERENCE_KEY, String(enabled));
+  safeLocalStorageSet(SOUND_PREFERENCE_KEY, String(enabled));
 }
 
 export async function startAmbientNatureAudio(

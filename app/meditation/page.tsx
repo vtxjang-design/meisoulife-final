@@ -19,6 +19,12 @@ import { handleMeditationComplete as triggerMeditationCompletion, supportsMedita
 import { getRhythmJourneyContent, getRhythmJourneyGuidance, journeyAudioMap } from "@/lib/rhythm-journey";
 import { getBasicPracticeByRouteType, getBasicPracticeBySession } from "@/lib/basic-rhythm";
 import { resolveMeditationRequiredPlan } from "@/lib/membership-access";
+import {
+  safeLocalStorageGet,
+  safeLocalStorageSet,
+  safeSessionStorageGet,
+  safeSessionStorageRemove
+} from "@/lib/safe-browser-storage";
 
 const CYCLE_SECONDS = 10;
 const INHALE_SECONDS = 4;
@@ -172,6 +178,17 @@ type GuidedCalmLine = { at: number; key: string; text: string; speechText?: stri
 type AwakeningRitualState = {
   streakCount: number;
   completedOn: string;
+};
+
+type ResolvedMeditationRoute = {
+  routeType: string | null;
+  meditationType: MeditationType;
+  meditationDoor: MeditationDoor;
+  durationSeconds: number;
+  journeyMode: boolean;
+  journeyDay: number | null;
+  returnToHref: string;
+  routeInvalid: boolean;
 };
 
 type StructuredMorningCopy = {
@@ -1106,6 +1123,66 @@ function normalizeDoor(value: string | null): MeditationDoor {
   return null;
 }
 
+function normalizeJourneyDay(value: string | null) {
+  const parsed = Number(value);
+
+  if (!Number.isInteger(parsed) || parsed < 1 || parsed > 7) {
+    return null;
+  }
+
+  return parsed;
+}
+
+function normalizeReturnTo(value: string | null) {
+  if (!value || !value.startsWith("/") || value.startsWith("//")) {
+    return "/program/basic";
+  }
+
+  return value;
+}
+
+function resolveMeditationRoute(
+  searchParams: URLSearchParams,
+  language: "jp" | "kr" | "en"
+): ResolvedMeditationRoute {
+  const routeType = searchParams.get("type");
+  const routeDoor = searchParams.get("door");
+  const routePractice = getBasicPracticeByRouteType(routeType, language);
+  const normalizedType = normalizeMeditationType(routeType);
+  const normalizedDoor = normalizeDoor(routeDoor);
+  const journeyMode = searchParams.get("journey") === "1";
+  const journeyDay = normalizeJourneyDay(searchParams.get("day"));
+  const meditationType = routePractice?.meditationType ?? normalizedType;
+  const meditationDoor = routePractice?.meditationDoor ?? normalizedDoor;
+  const isThreeMinuteMorningDoor =
+    meditationType === "morning" &&
+    (meditationDoor === "affirmation" || meditationDoor === "energy" || meditationDoor === "vision");
+  const isSixtySecondGate =
+    meditationType === "day" &&
+    (meditationDoor === "focus" || meditationDoor === "rest" || meditationDoor === "recharge");
+  const durationSeconds =
+    routePractice?.durationSeconds ??
+    (isThreeMinuteMorningDoor
+      ? AFFIRMATION_TOTAL_SECONDS
+      : isSixtySecondGate
+        ? FOCUS_GATE_TOTAL_SECONDS
+        : normalizeDuration(searchParams.get("duration")));
+  const routeInvalid =
+    !journeyMode &&
+    (!routeType || (!routePractice && normalizedType === "default" && normalizedDoor === null));
+
+  return {
+    routeType,
+    meditationType,
+    meditationDoor,
+    durationSeconds,
+    journeyMode,
+    journeyDay,
+    returnToHref: normalizeReturnTo(searchParams.get("returnTo")),
+    routeInvalid
+  };
+}
+
 function formatRemainingTime(seconds: number) {
   const minutes = Math.floor(seconds / 60);
   const remainder = seconds % 60;
@@ -1524,6 +1601,7 @@ function MeditationPageContent() {
   const [journeyDay, setJourneyDay] = useState<number | null>(null);
   const [returnToHref, setReturnToHref] = useState("/rhythm-journey");
   const [requestedRouteType, setRequestedRouteType] = useState<string | null>(null);
+  const [hasInvalidRoute, setHasInvalidRoute] = useState(false);
   const [awakeningRitualState, setAwakeningRitualState] = useState<AwakeningRitualState | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -1690,9 +1768,49 @@ function MeditationPageContent() {
   const continueToEnergyHref = `/meditation?duration=180&type=morning-energy&returnTo=${encodeURIComponent(morningGateReturnHref)}`;
   const rechargeReturnHref =
     returnToHref === "/rhythm-journey" ? "/program/basic?rhythm=daytime" : returnToHref;
+  const invalidRouteCopy =
+    localizedLanguage === "kr"
+      ? {
+          title: "명상을 여는 경로를 확인할 수 없습니다",
+          body: "다시 시도하거나 BASIC으로 돌아가 주세요.",
+          button: "BASIC으로 돌아가기"
+        }
+      : localizedLanguage === "en"
+        ? {
+            title: "This meditation link could not be opened",
+            body: "Please try again or return to BASIC.",
+            button: "Return to BASIC"
+          }
+        : {
+            title: "この瞑想のリンクを開けませんでした",
+            body: "もう一度試すか、BASICへ戻ってください。",
+            button: "BASICへ戻る"
+          };
 
   if (requiresProtectedMembership && (!authResolved || !membershipAccess.canRender)) {
     return <MembershipAccessStateView access={membershipAccess} />;
+  }
+
+  if (hasInvalidRoute) {
+    return (
+      <main className="section-shell py-16 sm:py-24">
+        <div className="mx-auto max-w-3xl">
+          <div className="premium-card rounded-[28px] p-8 text-center sm:p-12">
+            <div className="mx-auto max-w-xl space-y-4">
+              <p className="text-xs uppercase tracking-[0.28em] text-gold/72">Meditation Gate</p>
+              <h1 className="font-serif text-3xl text-white sm:text-4xl">{invalidRouteCopy.title}</h1>
+              <p className="text-sm leading-7 text-white/68 sm:text-base">{invalidRouteCopy.body}</p>
+              <Link
+                href="/program/basic"
+                className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold px-6 py-3 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
+              >
+                {invalidRouteCopy.button}
+              </Link>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
   }
 
   function logStructuredMorningAmbientState(stage: string) {
@@ -1930,45 +2048,58 @@ function MeditationPageContent() {
     }
 
     const searchParams = new URLSearchParams(window.location.search);
-    const routeType = searchParams.get("type");
-    const routePractice = getBasicPracticeByRouteType(routeType, localizedLanguage);
-    const nextDuration = normalizeDuration(searchParams.get("duration"));
-    const nextType = routePractice?.meditationType ?? normalizeMeditationType(routeType);
-    const nextDoor = routePractice?.meditationDoor ?? normalizeDoor(searchParams.get("door"));
-    const nextJourneyMode = searchParams.get("journey") === "1";
-    const nextJourneyDay = Number(searchParams.get("day"));
-    const nextReturnTo = searchParams.get("returnTo");
-    const pendingJourneyAudio =
-      typeof window === "undefined" ? null : window.sessionStorage.getItem(JOURNEY_AUDIO_PENDING_KEY);
-    const pendingStructuredAmbientAudio =
-      typeof window === "undefined" ? null : window.sessionStorage.getItem(STRUCTURED_AMBIENT_PENDING_KEY);
-    const storedJourneyDay =
-      typeof window === "undefined" ? null : window.sessionStorage.getItem(JOURNEY_AUDIO_DAY_KEY);
-    const resolvedJourneyDay = Number.isInteger(nextJourneyDay) && nextJourneyDay >= 1 && nextJourneyDay <= 7
-      ? nextJourneyDay
-      : Number(storedJourneyDay);
+    const resolvedRoute = resolveMeditationRoute(searchParams, localizedLanguage);
+    const pendingJourneyAudio = safeSessionStorageGet(JOURNEY_AUDIO_PENDING_KEY);
+    const pendingStructuredAmbientAudio = safeSessionStorageGet(STRUCTURED_AMBIENT_PENDING_KEY);
+    const storedJourneyDay = safeSessionStorageGet(JOURNEY_AUDIO_DAY_KEY);
+    const resolvedJourneyDay = resolvedRoute.journeyDay ?? Number(storedJourneyDay);
 
     const isThreeMinuteMorningDoor =
-      nextType === "morning" &&
-      (nextDoor === "affirmation" || nextDoor === "energy" || nextDoor === "vision");
-    const isFocusGateProgram = nextType === "day" && nextDoor === "focus";
-    const isCalmGateProgram = nextType === "day" && nextDoor === "rest";
-    const isRechargeGateProgram = nextType === "day" && nextDoor === "recharge";
-    const isReleaseGateProgram = nextType === "night" && nextDoor === "release";
-    const isGratitudeGateProgram = nextType === "night" && nextDoor === "gratitude";
-    const isSleepGateProgram = nextType === "night" && nextDoor === "sleep";
-    const shouldResumeStructuredAmbient = nextType === "morning" && nextDoor === "affirmation" && pendingStructuredAmbientAudio === "1";
+      resolvedRoute.meditationType === "morning" &&
+      (resolvedRoute.meditationDoor === "affirmation" || resolvedRoute.meditationDoor === "energy" || resolvedRoute.meditationDoor === "vision");
+    const isFocusGateProgram = resolvedRoute.meditationType === "day" && resolvedRoute.meditationDoor === "focus";
+    const isCalmGateProgram = resolvedRoute.meditationType === "day" && resolvedRoute.meditationDoor === "rest";
+    const isRechargeGateProgram = resolvedRoute.meditationType === "day" && resolvedRoute.meditationDoor === "recharge";
+    const isReleaseGateProgram = resolvedRoute.meditationType === "night" && resolvedRoute.meditationDoor === "release";
+    const isGratitudeGateProgram = resolvedRoute.meditationType === "night" && resolvedRoute.meditationDoor === "gratitude";
+    const isSleepGateProgram = resolvedRoute.meditationType === "night" && resolvedRoute.meditationDoor === "sleep";
+    const shouldResumeStructuredAmbient =
+      resolvedRoute.meditationType === "morning" &&
+      resolvedRoute.meditationDoor === "affirmation" &&
+      pendingStructuredAmbientAudio === "1";
     const mobileNeedsGesture = requiresMobileAudioGesture();
-    const isProgramMode = nextJourneyMode || nextType !== "default";
+    const isProgramMode = resolvedRoute.journeyMode || resolvedRoute.meditationType !== "default";
+    const isDev = process.env.NODE_ENV !== "production";
 
-    const resolvedDuration = routePractice?.durationSeconds ?? (isThreeMinuteMorningDoor ? AFFIRMATION_TOTAL_SECONDS : isFocusGateProgram || isCalmGateProgram || isRechargeGateProgram ? FOCUS_GATE_TOTAL_SECONDS : nextDuration);
-    setTotalSeconds(resolvedDuration);
-    setSecondsLeft(resolvedDuration);
-    setMeditationType(nextType);
-    setMeditationDoor(nextDoor);
-    setRequestedRouteType(routeType);
+    if (isDev) {
+      console.log("[meditation-bootstrap] route", {
+        normalizedType: resolvedRoute.meditationType,
+        normalizedDoor: resolvedRoute.meditationDoor,
+        journeyMode: resolvedRoute.journeyMode,
+        routeInvalid: resolvedRoute.routeInvalid,
+        hasSessionStorage: pendingJourneyAudio !== null || pendingStructuredAmbientAudio !== null || storedJourneyDay !== null,
+        hasAmbientRef: Boolean(ambientAudioRef.current),
+        hasAudioContextApi:
+          typeof window !== "undefined" && ("AudioContext" in window || "webkitAudioContext" in window),
+        hasSpeechSynthesis: typeof window !== "undefined" && "speechSynthesis" in window
+      });
+    }
+
+    if (resolvedRoute.routeInvalid) {
+      setHasInvalidRoute(true);
+      setRequestedRouteType(resolvedRoute.routeType);
+      setReturnToHref("/program/basic");
+      return;
+    }
+
+    setHasInvalidRoute(false);
+    setTotalSeconds(resolvedRoute.durationSeconds);
+    setSecondsLeft(resolvedRoute.durationSeconds);
+    setMeditationType(resolvedRoute.meditationType);
+    setMeditationDoor(resolvedRoute.meditationDoor);
+    setRequestedRouteType(resolvedRoute.routeType);
     const nextSoundEnabled =
-      nextJourneyMode && pendingJourneyAudio
+      resolvedRoute.journeyMode && pendingJourneyAudio
         ? true
         : shouldResumeStructuredAmbient
           ? true
@@ -1976,9 +2107,9 @@ function MeditationPageContent() {
     const shouldPromptForAudioStart = isThreeMinuteMorningDoor || isFocusGateProgram || isCalmGateProgram || isRechargeGateProgram || isReleaseGateProgram || isGratitudeGateProgram || isSleepGateProgram || (mobileNeedsGesture && (isProgramMode || nextSoundEnabled));
     setSoundEnabled(isFocusGateProgram || isCalmGateProgram || isRechargeGateProgram || isReleaseGateProgram || isGratitudeGateProgram || isSleepGateProgram ? true : nextSoundEnabled);
     setPendingStructuredAmbientStart(shouldResumeStructuredAmbient);
-    setJourneyMode(nextJourneyMode);
+    setJourneyMode(resolvedRoute.journeyMode);
     setJourneyDay(Number.isInteger(resolvedJourneyDay) && resolvedJourneyDay >= 1 && resolvedJourneyDay <= 7 ? resolvedJourneyDay : null);
-    setReturnToHref(nextReturnTo || "/rhythm-journey");
+    setReturnToHref(resolvedRoute.returnToHref || "/rhythm-journey");
     setAmbientVideoFailed(false);
     setShowAmbientRetry(false);
     setNeedsUserStart(shouldPromptForAudioStart);
@@ -2000,43 +2131,45 @@ function MeditationPageContent() {
     spokenSleepKeysRef.current = new Set();
     spokenAffirmationKeysRef.current = new Set();
     completionHandledRef.current = false;
-    console.log("[Morning Gate Audio] init", {
-      gate: nextDoor,
-      mobileNeedsGesture,
-      nextSoundEnabled,
-      shouldPromptForAudioStart,
-      pendingStructuredAmbientAudio,
-      structuredAudioSource:
-        nextType === "morning" && nextDoor === "affirmation"
-          ? AWAKENING_GATE_VIDEO_SRC
-          : nextType === "morning" && nextDoor === "energy"
-            ? MORNING_GATE_AUDIO.energy.src
-            : nextType === "morning" && nextDoor === "vision"
-              ? VISION_GATE_VIDEO_SRC
-              : null
-    });
-    console.log("[Journey Audio] journeyMode:", nextJourneyMode);
-    console.log("[Journey Audio] journeyDay:", resolvedJourneyDay);
-    console.log(
-      "[Journey Audio] src:",
-      Number.isInteger(resolvedJourneyDay) && resolvedJourneyDay >= 1 && resolvedJourneyDay <= 7
-        ? journeyAudioMap[resolvedJourneyDay]
-        : undefined
-    );
-    console.log("[Journey Audio] pending:", pendingJourneyAudio);
-    console.log("[Journey Audio] audio element:", ambientAudioRef.current);
+
+    if (isDev) {
+      console.log("[Morning Gate Audio] init", {
+        gate: resolvedRoute.meditationDoor,
+        mobileNeedsGesture,
+        nextSoundEnabled,
+        shouldPromptForAudioStart,
+        pendingStructuredAmbientAudio,
+        structuredAudioSource:
+          resolvedRoute.meditationType === "morning" && resolvedRoute.meditationDoor === "affirmation"
+            ? AWAKENING_GATE_VIDEO_SRC
+            : resolvedRoute.meditationType === "morning" && resolvedRoute.meditationDoor === "energy"
+              ? MORNING_GATE_AUDIO.energy.src
+              : resolvedRoute.meditationType === "morning" && resolvedRoute.meditationDoor === "vision"
+                ? VISION_GATE_VIDEO_SRC
+                : null
+      });
+      console.log("[Journey Audio] journeyMode:", resolvedRoute.journeyMode);
+      console.log("[Journey Audio] journeyDay:", resolvedJourneyDay);
+      console.log(
+        "[Journey Audio] src:",
+        Number.isInteger(resolvedJourneyDay) && resolvedJourneyDay >= 1 && resolvedJourneyDay <= 7
+          ? journeyAudioMap[resolvedJourneyDay]
+          : undefined
+      );
+      console.log("[Journey Audio] pending:", pendingJourneyAudio);
+      console.log("[Journey Audio] audio element:", ambientAudioRef.current);
+    }
   }, [localizedLanguage, membershipAccess.canRender, requiresProtectedMembership]);
 
   async function handleAmbientStartResult(result: { started: boolean; error?: unknown }, manual = false) {
     if (journeyMode && journeyDay) {
-      console.log("[Journey Audio] journeyMode:", journeyMode);
-      console.log("[Journey Audio] journeyDay:", journeyDay);
-      console.log("[Journey Audio] src:", ambientAudioSource);
-      console.log(
-        "[Journey Audio] pending:",
-        typeof window === "undefined" ? null : window.sessionStorage.getItem(JOURNEY_AUDIO_PENDING_KEY)
-      );
-      console.log("[Journey Audio] audio element:", ambientAudioRef.current);
+      if (process.env.NODE_ENV !== "production") {
+        console.log("[Journey Audio] journeyMode:", journeyMode);
+        console.log("[Journey Audio] journeyDay:", journeyDay);
+        console.log("[Journey Audio] src:", ambientAudioSource);
+        console.log("[Journey Audio] pending:", safeSessionStorageGet(JOURNEY_AUDIO_PENDING_KEY));
+        console.log("[Journey Audio] audio element:", ambientAudioRef.current);
+      }
     }
 
     if (result.started) {
@@ -2052,11 +2185,9 @@ function MeditationPageContent() {
       setNatureSoundPreference(true);
       setPendingStructuredAmbientStart(false);
 
-      if (typeof window !== "undefined") {
-        window.sessionStorage.removeItem(JOURNEY_AUDIO_PENDING_KEY);
-        window.sessionStorage.removeItem(JOURNEY_AUDIO_DAY_KEY);
-        window.sessionStorage.removeItem(STRUCTURED_AMBIENT_PENDING_KEY);
-      }
+      safeSessionStorageRemove(JOURNEY_AUDIO_PENDING_KEY);
+      safeSessionStorageRemove(JOURNEY_AUDIO_DAY_KEY);
+      safeSessionStorageRemove(STRUCTURED_AMBIENT_PENDING_KEY);
 
       return;
     }
@@ -2855,7 +2986,7 @@ function MeditationPageContent() {
     let streakCount = 1;
 
     try {
-      const storedValue = window.localStorage.getItem(AWAKENING_RITUAL_STORAGE_KEY);
+      const storedValue = safeLocalStorageGet(AWAKENING_RITUAL_STORAGE_KEY);
 
       if (storedValue) {
         const parsed = JSON.parse(storedValue) as AwakeningRitualState;
@@ -2868,7 +2999,7 @@ function MeditationPageContent() {
       }
 
       const nextState = { streakCount, completedOn: today };
-      window.localStorage.setItem(AWAKENING_RITUAL_STORAGE_KEY, JSON.stringify(nextState));
+      safeLocalStorageSet(AWAKENING_RITUAL_STORAGE_KEY, JSON.stringify(nextState));
       setAwakeningRitualState(nextState);
     } catch (error) {
       console.warn("[awakening-gate] failed to persist ritual continuity", error);
