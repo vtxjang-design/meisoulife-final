@@ -1787,32 +1787,6 @@ function MeditationPageContent() {
             button: "BASICへ戻る"
           };
 
-  if (requiresProtectedMembership && (!authResolved || !membershipAccess.canRender)) {
-    return <MembershipAccessStateView access={membershipAccess} />;
-  }
-
-  if (hasInvalidRoute) {
-    return (
-      <main className="section-shell py-16 sm:py-24">
-        <div className="mx-auto max-w-3xl">
-          <div className="premium-card rounded-[28px] p-8 text-center sm:p-12">
-            <div className="mx-auto max-w-xl space-y-4">
-              <p className="text-xs uppercase tracking-[0.28em] text-gold/72">Meditation Gate</p>
-              <h1 className="font-serif text-3xl text-white sm:text-4xl">{invalidRouteCopy.title}</h1>
-              <p className="text-sm leading-7 text-white/68 sm:text-base">{invalidRouteCopy.body}</p>
-              <Link
-                href="/program/basic"
-                className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold px-6 py-3 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
-              >
-                {invalidRouteCopy.button}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </main>
-    );
-  }
-
   function logStructuredMorningAmbientState(stage: string) {
     if (typeof window === "undefined") {
       return;
@@ -4098,6 +4072,32 @@ function MeditationPageContent() {
     setIsRechargeVideoPlaying(false);
     clearRechargeTimer();
     setSecondsLeft(0);
+  }
+
+  if (requiresProtectedMembership && (!authResolved || !membershipAccess.canRender)) {
+    return <MembershipAccessStateView access={membershipAccess} />;
+  }
+
+  if (hasInvalidRoute) {
+    return (
+      <main className="section-shell py-16 sm:py-24">
+        <div className="mx-auto max-w-3xl">
+          <div className="premium-card rounded-[28px] p-8 text-center sm:p-12">
+            <div className="mx-auto max-w-xl space-y-4">
+              <p className="text-xs uppercase tracking-[0.28em] text-gold/72">Meditation Gate</p>
+              <h1 className="font-serif text-3xl text-white sm:text-4xl">{invalidRouteCopy.title}</h1>
+              <p className="text-sm leading-7 text-white/68 sm:text-base">{invalidRouteCopy.body}</p>
+              <Link
+                href="/program/basic"
+                className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold px-6 py-3 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
+              >
+                {invalidRouteCopy.button}
+              </Link>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
   }
 
   return (
