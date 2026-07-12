@@ -99,7 +99,7 @@ const sanctuaryVisuals: Record<
     videoClassName: "brightness-[1.15] contrast-[0.98] saturate-[1.05]"
   },
   sleep: {
-    source: "/videos/one-minute-reset-moon9.mp4",
+    source: "/one-minute-reset/one-minute-reset-moon9.mp4",
     poster: "/images/quiet-meditation.jpg",
     overlayClassName:
       "bg-[linear-gradient(180deg,rgba(4,8,18,0.26),rgba(4,8,18,0.76)_72%,rgba(4,8,18,0.88))]",
