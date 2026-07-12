@@ -494,30 +494,29 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       ]
     },
     instant: {
-      eyebrow: "1-Minute Recovery",
+      eyebrow: "1-MINUTE RECOVERY",
       title: "1分リカバリー",
-      description:
-        "1分だけ、呼吸と身体に戻ります。がんばらなくても、少し落ち着ける入り口です。",
+      description: "今の自分に戻る、60秒。",
       start: "1分リカバリーを始める",
       pause: "一度止める",
       soundOn: "音あり",
       soundOff: "音なし",
       retryAudio: "自然音を再生",
       audioError: "音声を再生できませんでした。もう一度タップしてください。",
-      completionMessage: "今日の1分、お疲れさまでした。",
-      fullscreen: "全画面で開く",
+      completionMessage: "今日も、お疲れさまでした。",
+      fullscreen: "全画面",
       inhale: "吸って",
       hold: "止めて",
       exhale: "吐いて",
       sensory: "読む前に、まず呼吸へ。目を閉じたままでも、静かなリズムを感じられます。",
       stages: ["10 sec breathing", "20 sec body awareness", "20 sec emotional calming", "10 sec gratitude"],
-      moodQuestion: "少し軽くなりましたか？",
+      moodQuestion: "少し変わりましたか？",
       moodSaved: "小さな変化を受け取りました。",
       moods: [
-        { key: "lighter", label: "🙂 少し楽になった" },
+        { key: "lighter", label: "🙂 少し軽くなった" },
         { key: "calm", label: "😌 落ち着いた" },
         { key: "hard", label: "😢 まだ苦しい" },
-        { key: "again", label: "🔥 明日も続けたい" }
+        { key: "again", label: "🌱 また続けたい" }
       ]
     },
     coach: {
@@ -982,29 +981,29 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       ]
     },
     instant: {
-      eyebrow: "1-Minute Recovery",
+      eyebrow: "1-MINUTE RECOVERY",
       title: "1분 리커버리",
-      description: "1분만, 호흡과 몸으로 돌아옵니다. 애쓰지 않아도 조금 가벼워질 수 있는 시작입니다.",
+      description: "지금의 나로 돌아오는 60초.",
       start: "1분 리커버리 시작하기",
       pause: "잠시 멈추기",
-      soundOn: "음 있음",
-      soundOff: "음 없음",
+      soundOn: "소리 켜짐",
+      soundOff: "소리 꺼짐",
       retryAudio: "자연음 다시 재생",
       audioError: "오디오를 재생하지 못했습니다. 한 번 더 눌러 주세요.",
-      completionMessage: "오늘의 1분, 수고하셨습니다.",
-      fullscreen: "전체 화면으로 열기",
+      completionMessage: "오늘도 수고하셨습니다.",
+      fullscreen: "전체 화면",
       inhale: "들이쉬기",
       hold: "멈추기",
       exhale: "내쉬기",
       sensory: "읽기보다 먼저 호흡으로. 눈을 감은 채로도 조용한 리듬을 느낄 수 있습니다.",
       stages: ["10초 호흡", "20초 몸 감각", "20초 감정 진정", "10초 감사"],
-      moodQuestion: "조금 가벼워졌나요?",
+      moodQuestion: "조금 달라졌나요?",
       moodSaved: "작은 변화를 잘 받아두었습니다.",
       moods: [
         { key: "lighter", label: "🙂 조금 가벼워졌어요" },
-        { key: "calm", label: "😌 차분해졌어요" },
+        { key: "calm", label: "😌 마음이 차분해졌어요" },
         { key: "hard", label: "😢 아직 힘들어요" },
-        { key: "again", label: "🔥 내일도 이어가고 싶어요" }
+        { key: "again", label: "🌱 다시 이어가고 싶어요" }
       ]
     },
     coach: {
@@ -1464,29 +1463,29 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       ]
     },
     instant: {
-      eyebrow: "1-Minute Recovery",
-      title: "1-minute recovery",
-      description: "For one minute, return to breath and body. It is a gentle doorway back, not another task.",
-      start: "Begin 1-Minute Recovery",
+      eyebrow: "1-MINUTE RECOVERY",
+      title: "1-Minute Recovery",
+      description: "60 seconds to return to yourself.",
+      start: "Start 1-Minute Recovery",
       pause: "Pause",
-      soundOn: "Sound on",
-      soundOff: "Sound off",
+      soundOn: "Sound On",
+      soundOff: "Sound Off",
       retryAudio: "Play nature audio",
       audioError: "Audio could not be played. Please tap again.",
-      completionMessage: "Well done. Thank you for today’s minute.",
-      fullscreen: "Open full screen",
+      completionMessage: "You did well today.",
+      fullscreen: "Fullscreen",
       inhale: "Inhale",
       hold: "Hold",
       exhale: "Exhale",
       sensory: "Before reading more, return to breath first. The quiet rhythm can be felt even with your eyes closed.",
       stages: ["10 sec breathing", "20 sec body awareness", "20 sec emotional calming", "10 sec gratitude"],
-      moodQuestion: "Do you feel a little lighter?",
+      moodQuestion: "Do you feel a little different?",
       moodSaved: "Your small shift has been saved.",
       moods: [
-        { key: "lighter", label: "🙂 A little lighter" },
-        { key: "calm", label: "😌 More settled" },
+        { key: "lighter", label: "🙂 I feel lighter" },
+        { key: "calm", label: "😌 I feel calmer" },
         { key: "hard", label: "😢 Still struggling" },
-        { key: "again", label: "🔥 Want to continue tomorrow" }
+        { key: "again", label: "🌱 I want to continue" }
       ]
     },
     coach: {

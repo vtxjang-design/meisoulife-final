@@ -169,18 +169,6 @@ function getPhaseSecondsRemaining(elapsedSeconds: number) {
   return cycleLength - cyclePosition;
 }
 
-function getStartSupportText(startLabel: string) {
-  if (/[가-힣]/.test(startLabel)) {
-    return "지금의 리듬을, 조용히 정돈합니다";
-  }
-
-  if (/[ぁ-んァ-ン一-龯]/.test(startLabel)) {
-    return "今のリズムを、静かに整える";
-  }
-
-  return "Settle your rhythm, quietly";
-}
-
 function getCenterFocusText(startLabel: string) {
   if (/[가-힣]/.test(startLabel)) {
     return "자신에게 집중";
@@ -195,18 +183,50 @@ function getCenterFocusText(startLabel: string) {
 
 function getBottomBreathGuidance(startLabel: string) {
   if (/[가-힣]/.test(startLabel)) {
-    return "호흡을 자신에게 맞게 자연스럽게 하세요";
+    return "호흡을 자연스럽게.";
   }
 
   if (/[ぁ-んァ-ン一-龯]/.test(startLabel)) {
-    return "呼吸を自分に合わせて自然にしてください";
+    return "呼吸を自然に。";
   }
 
-  return "Let your breath move naturally at your own pace";
+  return "Let your breath be natural.";
 }
 
-function getReturnLabel() {
-  return "戻る / Back to 1-Minute Resets";
+function getReturnLabel(startLabel: string) {
+  if (/[가-힣]/.test(startLabel)) {
+    return "돌아가기";
+  }
+
+  if (/[ぁ-んァ-ン一-龯]/.test(startLabel)) {
+    return "戻る";
+  }
+
+  return "Back";
+}
+
+function getNextStepText(startLabel: string) {
+  if (/[가-힣]/.test(startLabel)) {
+    return "아침의 리듬을 깨우는 3분으로.";
+  }
+
+  if (/[ぁ-んァ-ン一-龯]/.test(startLabel)) {
+    return "朝のリズムを整える、3分へ。";
+  }
+
+  return "Continue with a 3-minute morning rhythm.";
+}
+
+function getNextStepCta(startLabel: string) {
+  if (/[가-힣]/.test(startLabel)) {
+    return "Morning Gate 체험하기";
+  }
+
+  if (/[ぁ-んァ-ン一-龯]/.test(startLabel)) {
+    return "Morning Gateを見る";
+  }
+
+  return "Explore Morning Gate";
 }
 
 export function InstantMeditationSection({ copy }: InstantMeditationSectionProps) {
@@ -312,11 +332,14 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     };
   }, []);
 
-  const startSupportText = getStartSupportText(copy.start);
   const centerFocusText = getCenterFocusText(copy.start);
   const bottomBreathGuidance = getBottomBreathGuidance(copy.start);
+  const returnLabel = getReturnLabel(copy.start);
+  const nextStepText = getNextStepText(copy.start);
+  const nextStepCta = getNextStepCta(copy.start);
   const sanctuaryVisual = sanctuaryVisuals[selectedGate];
   const activeVideoSource = hasSelectedGate ? sanctuaryVisual.source : null;
+  const visibleMoods = copy.moods.filter((mood) => mood.key !== "hard");
 
   async function fadeOutVideoAudio(video: HTMLVideoElement) {
     if (video.muted || video.volume <= 0) {
@@ -618,13 +641,6 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
       <div id="one-minute-meditation" />
       <div className="rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-8 shadow-[0_24px_80px_rgba(7,17,31,0.24)] sm:px-8 sm:py-10">
         <SectionHeading eyebrow={copy.eyebrow} title={copy.title} description={copy.description} align="center" />
-        <div className="mt-5 flex flex-wrap justify-center gap-2">
-          {[copy.inhale, copy.hold, copy.exhale].map((item) => (
-            <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-1.5 text-[13px] text-white/56">
-              {item}
-            </span>
-          ))}
-        </div>
         <div className="mt-8 grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div className="order-2 space-y-4.5 lg:order-1">
             {secondsLeft === 0 ? (
@@ -632,8 +648,8 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                 <p className="text-sm leading-[1.8] text-white/82">{copy.completionMessage}</p>
                 <div className="mt-5">
                   <p className="text-sm font-medium text-white/78">{copy.moodQuestion}</p>
-                  <div className="mt-3 grid grid-cols-2 gap-2">
-                    {copy.moods.map((mood) => {
+                  <div className="mt-3 grid gap-2 sm:grid-cols-3">
+                    {visibleMoods.map((mood) => {
                       const selected = selectedMood === mood.key;
 
                       return (
@@ -654,10 +670,18 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                   </div>
                   {selectedMood ? <p className="mt-3 text-sm leading-7 text-white/56">{copy.moodSaved}</p> : null}
                 </div>
+                <div className="mt-5 rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-4 text-center">
+                  <p className="text-sm leading-6 text-white/68">{nextStepText}</p>
+                  <a
+                    href="/program/basic"
+                    className="mt-3 inline-flex min-h-[46px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-2.5 text-sm font-medium text-white/86 transition duration-300 hover:bg-white/[0.08]"
+                  >
+                    {nextStepCta}
+                  </a>
+                </div>
               </div>
             ) : null}
             <div className="flex flex-col gap-3">
-              <p className="text-center text-sm tracking-[0.02em] text-white/62">{startSupportText}</p>
               <button
                 type="button"
                 onClick={handleStartPause}
@@ -665,16 +689,14 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
               >
                 {running ? copy.pause : copy.start}
               </button>
-              {hasSelectedGate ? (
+              <div className="grid gap-3 sm:grid-cols-3">
                 <button
                   type="button"
                   onClick={resetMeditationExperience}
                   className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-4 py-3 text-sm font-medium text-white/82 transition duration-300 hover:bg-white/[0.06]"
                 >
-                  {getReturnLabel()}
+                  {returnLabel}
                 </button>
-              ) : null}
-              <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
                   onClick={handleSoundToggle}
@@ -748,19 +770,10 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                     onClick={handleEnableAudio}
                     className="inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-gold/20 bg-gold/[0.16] px-4 py-3 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(0,0,0,0.18)] backdrop-blur-md transition hover:bg-gold/[0.22]"
                   >
-                    音ありで開始
+                    {copy.retryAudio}
                   </button>
                 </div>
               ) : null}
-              <div className="absolute right-5 top-5 z-[3]">
-                <button
-                  type="button"
-                  onClick={handleEnterFullscreen}
-                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/12 bg-[#07111b]/38 px-4 py-2 text-sm font-medium text-white/82 backdrop-blur-md transition duration-300 hover:bg-[#07111b]/52"
-                >
-                  {copy.fullscreen}
-                </button>
-              </div>
               <div className="relative z-[2] flex min-h-[480px] items-center justify-center px-4 py-8">
                 <div className="relative flex flex-col items-center">
                   <div className="absolute inset-0 -z-10 rounded-full bg-[radial-gradient(circle,rgba(212,186,117,0.1),transparent_66%)] blur-3xl" />
@@ -790,16 +803,13 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                       </p>
                     </div>
                   </div>
-                  <div className="mt-5 flex w-full max-w-[320px] flex-col items-center">
-                    <div className="flex w-full items-center gap-3 text-gold/76">
-                      <span className="h-px flex-1 bg-current/40" />
-                      <span className="text-lg leading-none">❦</span>
-                      <span className="h-px flex-1 bg-current/40" />
+                  {hasSelectedGate && secondsLeft > 0 ? (
+                    <div className="mt-5 flex w-full max-w-[320px] flex-col items-center">
+                      <p className="text-center text-sm font-medium leading-6 tracking-[0.01em] text-gold/92 sm:text-[15px]">
+                        {bottomBreathGuidance}
+                      </p>
                     </div>
-                    <p className="mt-3 text-center text-sm font-medium leading-6 tracking-[0.01em] text-gold/92 sm:text-[15px]">
-                      {bottomBreathGuidance}
-                    </p>
-                  </div>
+                  ) : null}
                 </div>
               </div>
             </div>
