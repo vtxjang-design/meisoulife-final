@@ -25,21 +25,21 @@ type BasicHomeProps = {
 const pageCopy = {
   jp: {
     badge: "BASIC Rhythm Space",
-    title: "おかえりなさい\n今日は ひとつのリズムから始めます",
-    body: "すべてをやる必要はありません\n今の自分に合う扉を ひとつ選べば十分です",
+    title: "今日は ひとつのリズムから始めます",
+    body: "今日の扉ひとつで 十分です",
     identityLine: "今日も また戻ることができます",
     current: "今日のはじまり",
     currentBody: "まずは 朝の扉から静かに始めます",
     gatesTitle: "TODAY'S RHYTHM",
-    gatesBody: "朝 昼 夜の扉が 静かに待っています",
+    gatesBody: "今日の扉を選びます",
     enter: "この扉へ戻る",
     primaryCta: "Morning Gateから始める",
     primaryHint: "急ぐ必要はありません",
     journeyTitle: "RECOVERY GARDEN",
-    journeyBody: "あなたのリズムは\n静かに根を下ろしています",
-    daily: "今日の小さな戻りも 庭の一部になります",
-    weekly: "競争がなくても 回復は育ちます",
-    monthly: "また戻るたびに 自分のリズムを思い出していきます",
+    journeyBody: "静かに根を下ろしています",
+    daily: "今日の戻りも 庭に残ります",
+    weekly: "静かに育っています",
+    monthly: "戻るたび 深くなります",
     whisperTitle: "DAILY WHISPER",
     whisperBody: "今日は何が 少し呼吸を楽にしてくれますか",
     returnTitle: "QUIET HOPE",
@@ -57,21 +57,21 @@ const pageCopy = {
   },
   kr: {
     badge: "BASIC Rhythm Space",
-    title: "다시 오신 것을 환영합니다\n오늘은 하나의 리듬으로 시작합니다",
-    body: "모든 것을 할 필요는 없습니다\n지금의 나에게 맞는 문 하나면 충분합니다",
+    title: "오늘도 하나의 리듬으로 시작합니다",
+    body: "오늘의 문 하나면 충분합니다",
     identityLine: "오늘도 다시 돌아올 수 있습니다",
     current: "오늘의 시작",
     currentBody: "먼저 아침의 문으로 조용히 시작합니다",
     gatesTitle: "TODAY'S RHYTHM",
-    gatesBody: "아침 낮 저녁의 문이 조용히 기다리고 있습니다",
+    gatesBody: "오늘의 문을 선택하세요",
     enter: "이 문으로 돌아가기",
     primaryCta: "Morning Gate로 시작하기",
     primaryHint: "서두를 필요는 없습니다",
     journeyTitle: "RECOVERY GARDEN",
-    journeyBody: "당신의 리듬은\n조용히 뿌리를 내리고 있습니다",
-    daily: "오늘의 작은 돌아옴도 정원의 일부가 됩니다",
-    weekly: "경쟁이 없어도 회복은 자랍니다",
-    monthly: "다시 돌아올 때마다 자기 리듬을 기억하게 됩니다",
+    journeyBody: "조용히 뿌리를 내리고 있습니다",
+    daily: "오늘의 돌아옴도 정원에 남습니다",
+    weekly: "조용히 자라고 있습니다",
+    monthly: "돌아올수록 깊어집니다",
     whisperTitle: "DAILY WHISPER",
     whisperBody: "오늘은 무엇이 당신의 숨을 조금 더 편하게 해줄까요",
     returnTitle: "QUIET HOPE",
@@ -89,21 +89,21 @@ const pageCopy = {
   },
   en: {
     badge: "BASIC Rhythm Space",
-    title: "Welcome back\nBegin today with one gentle rhythm",
-    body: "You do not need to do everything\nOne door that fits today is enough",
+    title: "Begin today with one gentle rhythm",
+    body: "One door for today is enough",
     identityLine: "You can return again today",
     current: "Today’s beginning",
     currentBody: "Begin quietly with the morning door",
     gatesTitle: "TODAY'S RHYTHM",
-    gatesBody: "Morning daytime and evening doors are quietly waiting",
+    gatesBody: "Choose today’s door",
     enter: "Return through this door",
     primaryCta: "Start Morning Gate",
     primaryHint: "There is no rush",
     journeyTitle: "RECOVERY GARDEN",
-    journeyBody: "Your rhythm is\nquietly taking root",
-    daily: "Today’s small return becomes part of the garden",
-    weekly: "Recovery grows without competition",
-    monthly: "Each return helps you remember your rhythm",
+    journeyBody: "Quietly taking root",
+    daily: "Today’s return stays in the garden",
+    weekly: "It is growing quietly",
+    monthly: "Each return deepens it",
     whisperTitle: "DAILY WHISPER",
     whisperBody: "What might help your breath feel a little easier today",
     returnTitle: "QUIET HOPE",
@@ -134,18 +134,6 @@ function mapDefaultRhythm(defaultRhythm?: "morning" | "day" | "night"): BasicGat
   if (defaultRhythm === "day") return "daytime";
   if (defaultRhythm === "night") return "evening";
   return undefined;
-}
-
-function getIdentityReflection(language: "jp" | "kr" | "en") {
-  if (language === "jp") {
-    return "少しずつ、リズムで生きる人に近づいています";
-  }
-
-  if (language === "kr") {
-    return "조금씩, 리듬으로 살아가는 사람에 가까워지고 있습니다";
-  }
-
-  return "You are becoming someone who lives with rhythm";
 }
 
 function getGardenStage(language: "jp" | "kr" | "en", currentDay: number) {
@@ -209,26 +197,26 @@ function getGateClasses(gate: BasicGateKey, active: boolean) {
     : "border-white/10";
 
   if (gate === "morning") {
-    return `${activeRing} bg-[radial-gradient(circle_at_top,rgba(216,192,138,0.18),transparent_36%),radial-gradient(circle_at_22%_18%,rgba(127,255,212,0.12),transparent_42%),linear-gradient(180deg,rgba(16,49,77,0.78),rgba(8,40,69,0.88)_54%,rgba(6,27,51,0.94))]`;
+    return `${activeRing} bg-[radial-gradient(circle_at_top,rgba(216,192,138,0.16),transparent_38%),radial-gradient(circle_at_22%_18%,rgba(127,255,212,0.10),transparent_44%),linear-gradient(180deg,rgba(16,49,77,0.76),rgba(8,40,69,0.87)_54%,rgba(6,27,51,0.94))]`;
   }
 
   if (gate === "daytime") {
-    return `${activeRing} bg-[radial-gradient(circle_at_top,rgba(77,182,172,0.18),transparent_38%),radial-gradient(circle_at_80%_24%,rgba(127,255,212,0.10),transparent_42%),linear-gradient(180deg,rgba(11,42,68,0.82),rgba(8,40,69,0.90)_52%,rgba(6,27,51,0.95))]`;
+    return `${activeRing} bg-[radial-gradient(circle_at_top,rgba(77,182,172,0.16),transparent_40%),radial-gradient(circle_at_80%_24%,rgba(127,255,212,0.08),transparent_44%),linear-gradient(180deg,rgba(11,42,68,0.80),rgba(8,40,69,0.89)_52%,rgba(6,27,51,0.95))]`;
   }
 
-  return `${activeRing} bg-[radial-gradient(circle_at_top,rgba(30,58,95,0.25),transparent_38%),radial-gradient(circle_at_76%_20%,rgba(127,255,212,0.08),transparent_42%),linear-gradient(180deg,rgba(9,34,59,0.86),rgba(7,27,50,0.94)_52%,rgba(5,18,34,0.98))]`;
+  return `${activeRing} bg-[radial-gradient(circle_at_top,rgba(30,58,95,0.22),transparent_40%),radial-gradient(circle_at_76%_20%,rgba(127,255,212,0.07),transparent_44%),linear-gradient(180deg,rgba(9,34,59,0.85),rgba(7,27,50,0.94)_52%,rgba(5,18,34,0.98))]`;
 }
 
 function getDoorClasses(gate: BasicGateKey) {
   if (gate === "morning") {
-    return "border-[rgba(255,255,255,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.04))] shadow-[0_18px_48px_rgba(0,0,0,0.16),0_0_0_1px_rgba(216,192,138,0.05)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.10),rgba(255,255,255,0.05))]";
+    return "border-[rgba(255,255,255,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.075),rgba(255,255,255,0.035))] shadow-[0_24px_64px_rgba(0,0,0,0.18),0_0_0_1px_rgba(216,192,138,0.05)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.095),rgba(255,255,255,0.045))] hover:shadow-[0_28px_72px_rgba(0,0,0,0.22),0_0_0_1px_rgba(216,192,138,0.06)]";
   }
 
   if (gate === "daytime") {
-    return "border-[rgba(255,255,255,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.04))] shadow-[0_24px_56px_rgba(0,0,0,0.20),0_0_0_1px_rgba(77,182,172,0.08)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.10),rgba(255,255,255,0.05))]";
+    return "border-[rgba(255,255,255,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.075),rgba(255,255,255,0.035))] shadow-[0_24px_56px_rgba(0,0,0,0.20),0_0_0_1px_rgba(77,182,172,0.08)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.095),rgba(255,255,255,0.045))] hover:shadow-[0_28px_64px_rgba(0,0,0,0.22),0_0_0_1px_rgba(77,182,172,0.09)]";
   }
 
-  return "border-[rgba(255,255,255,0.10)] bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.03))] shadow-[0_24px_56px_rgba(0,0,0,0.22),0_0_0_1px_rgba(30,58,95,0.10)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.085),rgba(255,255,255,0.04))]";
+  return "border-[rgba(255,255,255,0.10)] bg-[linear-gradient(180deg,rgba(255,255,255,0.055),rgba(255,255,255,0.028))] shadow-[0_24px_56px_rgba(0,0,0,0.22),0_0_0_1px_rgba(30,58,95,0.10)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.038))] hover:shadow-[0_28px_66px_rgba(0,0,0,0.24),0_0_0_1px_rgba(30,58,95,0.11)]";
 }
 
 function getDoorButtonClasses(door: BasicDoorKey) {
@@ -306,7 +294,6 @@ export function BasicHome({
     : copy.noBillingDate;
   const gardenStage = getGardenStage(localizedLanguage, currentDay);
   const dailyWhisper = getDailyWhisper(localizedLanguage, currentDay);
-  const identityReflection = getIdentityReflection(localizedLanguage);
 
   async function handleManageMembership() {
     if (portalLoading) {
@@ -360,36 +347,35 @@ export function BasicHome({
             <h1 className="whitespace-pre-line font-serif text-3xl leading-[1.3] text-[rgba(244,250,255,0.96)] sm:text-4xl">
               {copy.title}
             </h1>
-            <p className="mt-4 max-w-2xl whitespace-pre-line text-sm leading-7 text-[rgba(233,242,248,0.74)] sm:text-base">
+            <p className="mt-4 max-w-xl whitespace-pre-line text-sm leading-7 text-[rgba(233,242,248,0.74)] sm:text-base">
               {copy.body}
             </p>
-            <p className="mt-4 text-sm leading-7 text-[rgba(244,250,255,0.82)]">{copy.identityLine}</p>
           </div>
         </div>
       </div>
 
-      <section className="rounded-[20px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] px-3.5 py-2.5 shadow-[0_12px_32px_rgba(0,0,0,0.12)] sm:px-4 sm:py-2.5">
+      <section className="rounded-[20px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.025),rgba(255,255,255,0.012))] px-3 py-2 shadow-[0_10px_24px_rgba(0,0,0,0.10)] sm:px-3.5 sm:py-2">
         <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <div className="min-w-0">
-            <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[rgba(233,242,248,0.76)]">
+            <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-[rgba(233,242,248,0.66)]">
               <span className="text-[10px] uppercase tracking-[0.22em] text-[rgba(127,255,212,0.62)]">{copy.membershipTitle}</span>
               <span className="hidden text-white/18 sm:inline">·</span>
-              <span className="text-[rgba(244,250,255,0.92)]">{visiblePlan}</span>
+              <span className="text-[rgba(244,250,255,0.84)]">{visiblePlan}</span>
               <span className="text-white/18">·</span>
-              <span className="text-[rgba(233,242,248,0.68)]">{visibleStatus || copy.unknownStatus}</span>
+              <span className="text-[rgba(233,242,248,0.6)]">{visibleStatus || copy.unknownStatus}</span>
               <span className="text-white/18">·</span>
-              <span className="text-[rgba(233,242,248,0.6)]">
+              <span className="text-[rgba(233,242,248,0.54)]">
                 {copy.nextBillingDate} {visibleBillingDate}
               </span>
             </div>
-            <p className="mt-1 text-[11px] leading-5 text-[rgba(233,242,248,0.46)]">{copy.billingHelper}</p>
+            <p className="mt-1 text-[10px] leading-5 text-[rgba(233,242,248,0.4)]">{copy.billingHelper}</p>
           </div>
           <div className="self-start sm:self-auto">
             <button
               type="button"
               onClick={handleManageMembership}
               disabled={portalLoading}
-              className="inline-flex min-h-[34px] items-center justify-center rounded-full border border-white/10 bg-white/[0.035] px-3.5 py-1.5 text-[11px] font-medium text-[rgba(233,242,248,0.72)] transition hover:bg-white/[0.06] hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
+              className="inline-flex min-h-[32px] items-center justify-center rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] font-medium text-[rgba(233,242,248,0.62)] transition hover:bg-white/[0.05] hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
             >
               {portalLoading ? copy.openingPortal : copy.manageMembership}
             </button>
@@ -412,7 +398,7 @@ export function BasicHome({
               <section
                 key={gate.key}
                 id={`gate-${gate.key}`}
-                className={`relative rounded-[30px] border p-5 shadow-[0_30px_88px_rgba(0,0,0,0.20)] sm:p-6 ${getGateClasses(gate.key, active)} ${
+                className={`relative rounded-[30px] border ${gate.key === "morning" ? "p-6 shadow-[0_36px_96px_rgba(0,0,0,0.24)] sm:p-7" : "p-5 shadow-[0_28px_72px_rgba(0,0,0,0.18)] sm:p-6"} ${getGateClasses(gate.key, active)} ${
                   gate.key === "morning"
                     ? ""
                     : gate.key === "daytime"
@@ -423,10 +409,7 @@ export function BasicHome({
                 <div className="mb-6">
                   <p className="text-xs uppercase tracking-[0.30em] text-[rgba(127,255,212,0.66)]">{gate.eyebrow}</p>
                   <h2 className="mt-3 text-2xl font-semibold text-[rgba(244,250,255,0.96)]">{gate.title}</h2>
-                  <p className="mt-2 text-base leading-7 text-[rgba(242,248,252,0.88)]">{gate.question}</p>
-                  {gate.atmosphere ? (
-                    <p className="mt-2 text-sm leading-7 text-[rgba(233,242,248,0.62)]">{gate.atmosphere}</p>
-                  ) : null}
+                  <p className="mt-2 text-sm leading-7 text-[rgba(242,248,252,0.82)]">{gate.question}</p>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-3">
@@ -434,8 +417,8 @@ export function BasicHome({
                     <Link
                       key={door.key}
                       href={door.href}
-                      className={`group relative overflow-hidden rounded-[24px] border backdrop-blur-xl transition hover:-translate-y-0.5 ${
-                        gate.key === "daytime" ? "p-6 md:min-h-[320px]" : "p-5"
+                      className={`group relative overflow-hidden rounded-[24px] border backdrop-blur-xl transition duration-300 hover:-translate-y-0.5 ${
+                        gate.key === "daytime" ? "flex min-h-[272px] flex-col p-6" : "flex min-h-[220px] flex-col p-5"
                       } ${getDoorClasses(gate.key)} ${getDoorAccentClasses(door.key)}`}
                     >
                       <div className="pointer-events-none absolute inset-0 opacity-100 before:absolute before:inset-0 before:content-['']" />
@@ -448,18 +431,12 @@ export function BasicHome({
                       <h3 className="relative z-10 mt-5 text-lg font-semibold text-[rgba(244,250,255,0.95)]">{door.title}</h3>
                       {gate.key === "daytime" ? (
                         <>
-                          <p className="relative z-10 mt-3 text-xl font-semibold leading-[1.45] text-[rgba(244,250,255,0.92)]">
+                          <p className="relative z-10 mt-3 text-base font-semibold leading-7 text-[rgba(244,250,255,0.88)]">
                             {door.headline}
                           </p>
-                          <p className="relative z-10 mt-4 text-sm leading-7 text-[rgba(233,242,248,0.74)]">“{door.state}”</p>
-                          <p className="relative z-10 mt-3 text-sm leading-7 text-[rgba(233,242,248,0.62)]">{door.description}</p>
-                          <div className="relative z-10 mt-6">
-                            <span className="inline-flex rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[11px] uppercase tracking-[0.16em] text-[rgba(233,242,248,0.56)]">
-                              {door.purpose}
-                            </span>
-                          </div>
+                          <div className="flex-1" />
                           <span
-                            className={`relative z-10 mt-7 inline-flex min-h-[44px] items-center justify-center rounded-full border px-4 py-2 text-sm font-semibold transition ${getDoorButtonClasses(
+                            className={`relative z-10 mt-6 inline-flex min-h-[44px] items-center justify-center rounded-full border px-4 py-2 text-sm font-semibold transition ${getDoorButtonClasses(
                               door.key
                             )}`}
                           >
@@ -469,7 +446,8 @@ export function BasicHome({
                       ) : (
                         <>
                           <p className="relative z-10 mt-3 text-sm leading-7 text-[rgba(233,242,248,0.72)]">“{door.state}”</p>
-                          <span className="relative z-10 mt-6 inline-flex text-sm font-semibold text-[rgba(225,255,247,0.86)] transition group-hover:text-white">
+                          <div className="flex-1" />
+                          <span className="relative z-10 mt-6 inline-flex min-h-[42px] items-center justify-center self-start rounded-full border border-[rgba(127,255,212,0.18)] bg-[rgba(127,255,212,0.08)] px-4 py-2 text-sm font-semibold text-[rgba(225,255,247,0.86)] transition group-hover:bg-[rgba(127,255,212,0.14)] group-hover:text-white">
                             {copy.enter}
                           </span>
                         </>
@@ -484,24 +462,24 @@ export function BasicHome({
       </div>
 
       <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-        <section className="rounded-[30px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.07),transparent_34%),linear-gradient(180deg,rgba(9,34,59,0.76),rgba(7,27,50,0.88)_52%,rgba(5,18,34,0.96))] p-5 shadow-[0_28px_78px_rgba(0,0,0,0.20)]">
+        <section className="rounded-[30px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.07),transparent_34%),linear-gradient(180deg,rgba(9,34,59,0.76),rgba(7,27,50,0.88)_52%,rgba(5,18,34,0.96))] p-4 shadow-[0_24px_64px_rgba(0,0,0,0.18)]">
           <p className="text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.64)]">{copy.journeyTitle}</p>
-          <p className="mt-3 whitespace-pre-line text-sm leading-7 text-[rgba(233,242,248,0.68)]">{copy.journeyBody}</p>
-          <div className="mt-6 rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
+          <p className="mt-2 text-sm leading-7 text-[rgba(233,242,248,0.68)]">{copy.journeyBody}</p>
+          <div className="mt-4 rounded-[20px] border border-white/10 bg-white/[0.03] p-3.5">
             <div className="flex items-center gap-4">
               <span className="text-4xl">{gardenStage.icon}</span>
               <div>
                 <p className="text-sm uppercase tracking-[0.18em] text-[rgba(127,255,212,0.68)]">{gardenStage.label}</p>
-                <p className="mt-2 text-base text-[rgba(244,250,255,0.88)]">{gardenStage.body}</p>
+                <p className="mt-1.5 text-sm text-[rgba(244,250,255,0.86)]">{gardenStage.body}</p>
               </div>
             </div>
           </div>
-          <div className="mt-4 space-y-4">
-            <div className="rounded-[22px] border border-white/10 bg-white/[0.03] p-4">
-              <p className="text-sm leading-7 text-[rgba(242,248,252,0.84)]">{copy.daily}</p>
+          <div className="mt-3 space-y-3">
+            <div className="rounded-[20px] border border-white/10 bg-white/[0.03] p-3.5">
+              <p className="text-sm leading-6 text-[rgba(242,248,252,0.82)]">{copy.daily}</p>
             </div>
-            <div className="rounded-[22px] border border-white/10 bg-white/[0.03] p-4">
-              <p className="whitespace-pre-line text-sm leading-7 text-[rgba(242,248,252,0.84)]">{copy.weekly}</p>
+            <div className="rounded-[20px] border border-white/10 bg-white/[0.03] p-3.5">
+              <p className="whitespace-pre-line text-sm leading-6 text-[rgba(242,248,252,0.82)]">{copy.weekly}</p>
             </div>
             <div className="rounded-[22px] border border-white/10 bg-white/[0.03] p-4">
               <p className="text-sm leading-7 text-[rgba(242,248,252,0.84)]">{copy.monthly}</p>
@@ -509,16 +487,10 @@ export function BasicHome({
           </div>
         </section>
 
-        <section className="rounded-[30px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(30,58,95,0.20),transparent_38%),linear-gradient(180deg,rgba(8,29,50,0.82),rgba(6,22,42,0.92)_54%,rgba(4,16,30,0.98))] p-5 shadow-[0_28px_78px_rgba(0,0,0,0.20)]">
+        <section className="rounded-[30px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(30,58,95,0.20),transparent_38%),linear-gradient(180deg,rgba(8,29,50,0.82),rgba(6,22,42,0.92)_54%,rgba(4,16,30,0.98))] p-4 shadow-[0_24px_64px_rgba(0,0,0,0.18)]">
           <p className="text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.64)]">{copy.whisperTitle}</p>
-          <div className="mt-4 rounded-[24px] border border-white/10 bg-white/[0.03] p-4">
-            <p className="text-sm leading-7 text-[rgba(233,242,248,0.62)]">{copy.whisperBody}</p>
-            <p className="mt-4 text-xl font-semibold text-[rgba(244,250,255,0.94)]">{dailyWhisper}</p>
-          </div>
-          <div className="mt-5 rounded-[24px] border border-[rgba(127,255,212,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] p-4">
-            <p className="text-sm font-semibold text-[rgba(244,250,255,0.94)]">{copy.returnTitle}</p>
-            <p className="mt-3 whitespace-pre-line text-sm leading-7 text-[rgba(233,242,248,0.66)]">{copy.returnBody}</p>
-            <p className="mt-3 text-sm leading-7 text-[rgba(244,250,255,0.78)]">{identityReflection}</p>
+          <div className="mt-3 rounded-[22px] border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-sm leading-7 text-[rgba(244,250,255,0.9)]">{dailyWhisper}</p>
           </div>
         </section>
       </div>
