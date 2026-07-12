@@ -35,7 +35,7 @@ const sanctuaryVisuals: Record<
   }
 > = {
   overload: {
-    source: "/one-minute-reset/one-minute-reset-forest8.mp4",
+    source: "/one-minute-reset/one-minute-reset-forest1.mp4",
     poster: "/images/quiet-meditation.jpg",
     overlayClassName:
       "bg-[linear-gradient(180deg,rgba(4,10,18,0.18),rgba(4,10,18,0.72)_72%,rgba(4,10,18,0.84))]",
@@ -43,7 +43,7 @@ const sanctuaryVisuals: Record<
     videoClassName: "brightness-[1.15] contrast-[0.98] saturate-[1.05]"
   },
   anxiety: {
-    source: "/one-minute-reset/one-minute-reset-sky.mp4",
+    source: "/one-minute-reset/one-minute-reset-refresh1.mp4",
     poster: "/images/quiet-meditation.jpg",
     overlayClassName:
       "bg-[linear-gradient(180deg,rgba(5,10,18,0.22),rgba(5,10,18,0.74)_72%,rgba(5,10,18,0.86))]",
@@ -75,7 +75,7 @@ const sanctuaryVisuals: Record<
     videoClassName: "brightness-[0.95] contrast-[0.92] saturate-[0.95]"
   },
   "low-energy": {
-    source: "/one-minute-reset/one-minute-reset-energy.mp4",
+    source: "/one-minute-reset/one-minute-reset-energy1.mp4",
     poster: "/images/quiet-meditation.jpg",
     overlayClassName:
       "bg-[linear-gradient(180deg,rgba(6,10,16,0.18),rgba(6,10,16,0.68)_70%,rgba(6,10,16,0.82))]",
@@ -83,7 +83,7 @@ const sanctuaryVisuals: Record<
     videoClassName: "brightness-[1.15] contrast-[0.98] saturate-[1.05]"
   },
   distracted: {
-    source: "/one-minute-reset/one-minute-reset-path8.mp4",
+    source: "/one-minute-reset/one-minute-reset-focus1.mp4",
     poster: "/images/quiet-meditation.jpg",
     overlayClassName:
       "bg-[linear-gradient(180deg,rgba(4,11,19,0.2),rgba(4,11,19,0.72)_70%,rgba(4,11,19,0.84))]",
@@ -91,7 +91,7 @@ const sanctuaryVisuals: Record<
     videoClassName: "brightness-[1.15] contrast-[0.98] saturate-[1.05]"
   },
   "reset-mood": {
-    source: "/one-minute-reset/one-minute-reset-sea.mp4",
+    source: "/one-minute-reset/one-minute-reset-sea1.mp4",
     poster: "/images/quiet-meditation.jpg",
     overlayClassName:
       "bg-[linear-gradient(180deg,rgba(6,11,18,0.16),rgba(6,11,18,0.68)_72%,rgba(6,11,18,0.82))]",
@@ -99,7 +99,7 @@ const sanctuaryVisuals: Record<
     videoClassName: "brightness-[1.15] contrast-[0.98] saturate-[1.05]"
   },
   sleep: {
-    source: "/one-minute-reset/one-minute-reset-moon9.mp4",
+    source: "/one-minute-reset/one-minute-reset-moon1.mp4",
     poster: "/images/quiet-meditation.jpg",
     overlayClassName:
       "bg-[linear-gradient(180deg,rgba(4,8,18,0.26),rgba(4,8,18,0.76)_72%,rgba(4,8,18,0.88))]",
