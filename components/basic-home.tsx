@@ -355,7 +355,7 @@ export function BasicHome({
     <section className="space-y-10">
       <div className="overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_20%_0%,rgba(216,192,138,0.16),transparent_24%),radial-gradient(circle_at_75%_18%,rgba(127,255,212,0.14),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(8,40,69,0.22),transparent_38%),linear-gradient(180deg,rgba(8,40,69,0.82),rgba(6,27,51,0.92)_58%,rgba(5,18,34,0.98))] px-5 py-6 shadow-[0_28px_100px_rgba(0,0,0,0.24)] sm:px-7 sm:py-8">
         <p className="text-xs uppercase tracking-[0.30em] text-[rgba(127,255,212,0.72)]">{copy.badge}</p>
-        <div className="mt-4 grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+        <div className="mt-4">
           <div>
             <h1 className="whitespace-pre-line font-serif text-3xl leading-[1.3] text-[rgba(244,250,255,0.96)] sm:text-4xl">
               {copy.title}
@@ -364,18 +364,6 @@ export function BasicHome({
               {copy.body}
             </p>
             <p className="mt-4 text-sm leading-7 text-[rgba(244,250,255,0.82)]">{copy.identityLine}</p>
-          </div>
-          <div className="rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.07),rgba(255,255,255,0.03))] p-4 backdrop-blur-xl">
-            <p className="text-xs uppercase tracking-[0.24em] text-[rgba(127,255,212,0.68)]">{copy.current}</p>
-            <p className="mt-3 text-2xl font-semibold text-[rgba(244,250,255,0.95)]">{currentGate.title}</p>
-            <p className="mt-2 text-sm leading-7 text-[rgba(233,242,248,0.7)]">{copy.currentBody}</p>
-            <Link
-              href={`/meditation?duration=180&type=morning-affirmation`}
-              className="mt-5 inline-flex min-h-[48px] items-center justify-center rounded-full border border-[rgba(127,255,212,0.22)] bg-[rgba(127,255,212,0.10)] px-5 py-3 text-sm font-semibold text-[rgba(225,255,247,0.92)] transition hover:bg-[rgba(127,255,212,0.16)] hover:text-white"
-            >
-              {copy.primaryCta}
-            </Link>
-            <p className="mt-3 text-xs leading-6 text-[rgba(233,242,248,0.52)]">{copy.primaryHint}</p>
           </div>
         </div>
       </div>
