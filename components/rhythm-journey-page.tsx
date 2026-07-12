@@ -19,6 +19,7 @@ import { useLanguage } from "@/lib/i18n";
 const DAILY_RHYTHM_ROUTE = "/program/basic";
 const JOURNEY_AUDIO_PENDING_KEY = "meisoulife_journey_audio_pending";
 const JOURNEY_AUDIO_DAY_KEY = "meisoulife_journey_day";
+const JOURNEY_OVERVIEW_IMAGE_SRC = "/7day-recovery/7day-recovery-overview.png";
 
 const emptyProgress: RhythmJourneyProgress = {
   journeyStarted: false,
@@ -50,6 +51,12 @@ export function RhythmJourneyPage() {
     language === "jp" ? "日を選ぶ" : language === "kr" ? "날짜 선택" : "Choose a day";
   const resetToDayOneLabel =
     language === "jp" ? "Day 1へ戻る" : language === "kr" ? "Day 1로 돌아가기" : "Return to Day 1";
+  const overviewImageAlt =
+    language === "jp"
+      ? "7日間の小さな回復の7つのテーマ"
+      : language === "kr"
+        ? "7일간의 작은 회복 7가지 주제"
+        : "Seven themes of the 7-Day Recovery Journey";
 
   useEffect(() => {
     const stored = readRhythmJourneyProgress();
@@ -207,6 +214,13 @@ export function RhythmJourneyPage() {
               <p className="whitespace-pre-line text-base leading-8 text-white/82">
                 {journeyCopy.entryBody}
               </p>
+            </div>
+            <div className="mt-8 overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.04] shadow-[0_24px_80px_rgba(7,17,31,0.14)]">
+              <img
+                src={JOURNEY_OVERVIEW_IMAGE_SRC}
+                alt={overviewImageAlt}
+                className="block h-auto w-full object-contain"
+              />
             </div>
             <button
               type="button"
