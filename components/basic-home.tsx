@@ -32,7 +32,7 @@ const pageCopy = {
     currentBody: "まずは 朝の扉から静かに始めます",
     gatesTitle: "TODAY'S RHYTHM",
     gatesBody: "今日の扉を選びます",
-    enter: "この扉へ戻る",
+    enter: "扉を開く",
     primaryCta: "Morning Gateから始める",
     primaryHint: "急ぐ必要はありません",
     journeyTitle: "RECOVERY GARDEN",
@@ -64,7 +64,7 @@ const pageCopy = {
     currentBody: "먼저 아침의 문으로 조용히 시작합니다",
     gatesTitle: "TODAY'S RHYTHM",
     gatesBody: "오늘의 문을 선택하세요",
-    enter: "이 문으로 돌아가기",
+    enter: "문 열기",
     primaryCta: "Morning Gate로 시작하기",
     primaryHint: "서두를 필요는 없습니다",
     journeyTitle: "RECOVERY GARDEN",
@@ -96,7 +96,7 @@ const pageCopy = {
     currentBody: "Begin quietly with the morning door",
     gatesTitle: "TODAY'S RHYTHM",
     gatesBody: "Choose today’s door",
-    enter: "Return through this door",
+    enter: "Enter Gate",
     primaryCta: "Start Morning Gate",
     primaryHint: "There is no rush",
     journeyTitle: "RECOVERY GARDEN",
@@ -417,13 +417,13 @@ export function BasicHome({
                     <Link
                       key={door.key}
                       href={door.href}
-                      className={`group relative overflow-hidden rounded-[24px] border backdrop-blur-xl transition duration-300 hover:-translate-y-0.5 ${
+                      className={`group relative overflow-hidden rounded-[24px] border backdrop-blur-xl transition-[transform,box-shadow,border-color,background-color] duration-500 ease-out hover:-translate-y-0.5 hover:scale-[1.008] focus-visible:-translate-y-0.5 focus-visible:scale-[1.008] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/24 ${
                         gate.key === "daytime" ? "flex min-h-[272px] flex-col p-6" : "flex min-h-[220px] flex-col p-5"
                       } ${getDoorClasses(gate.key)} ${getDoorAccentClasses(door.key)}`}
                     >
                       <div className="pointer-events-none absolute inset-0 opacity-100 before:absolute before:inset-0 before:content-['']" />
                       <div className="flex items-start justify-between gap-3">
-                        <div className="relative z-10 text-2xl">{door.emoji}</div>
+                        <div className="relative z-10 text-[1.7rem] leading-none">{door.emoji}</div>
                         <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[11px] uppercase tracking-[0.18em] text-[rgba(233,242,248,0.58)]">
                           {Math.floor(door.durationSeconds / 60)} min
                         </span>
@@ -474,24 +474,14 @@ export function BasicHome({
               </div>
             </div>
           </div>
-          <div className="mt-3 space-y-3">
-            <div className="rounded-[20px] border border-white/10 bg-white/[0.03] p-3.5">
-              <p className="text-sm leading-6 text-[rgba(242,248,252,0.82)]">{copy.daily}</p>
-            </div>
-            <div className="rounded-[20px] border border-white/10 bg-white/[0.03] p-3.5">
-              <p className="whitespace-pre-line text-sm leading-6 text-[rgba(242,248,252,0.82)]">{copy.weekly}</p>
-            </div>
-            <div className="rounded-[22px] border border-white/10 bg-white/[0.03] p-4">
-              <p className="text-sm leading-7 text-[rgba(242,248,252,0.84)]">{copy.monthly}</p>
-            </div>
+          <div className="mt-3 rounded-[20px] border border-white/10 bg-white/[0.03] p-3.5">
+            <p className="text-sm leading-6 text-[rgba(242,248,252,0.82)]">{copy.daily}</p>
           </div>
         </section>
 
         <section className="rounded-[30px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(30,58,95,0.20),transparent_38%),linear-gradient(180deg,rgba(8,29,50,0.82),rgba(6,22,42,0.92)_54%,rgba(4,16,30,0.98))] p-4 shadow-[0_24px_64px_rgba(0,0,0,0.18)]">
           <p className="text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.64)]">{copy.whisperTitle}</p>
-          <div className="mt-3 rounded-[22px] border border-white/10 bg-white/[0.03] p-4">
-            <p className="text-sm leading-7 text-[rgba(244,250,255,0.9)]">{dailyWhisper}</p>
-          </div>
+          <p className="mt-3 text-sm leading-7 text-[rgba(244,250,255,0.9)]">{dailyWhisper}</p>
         </section>
       </div>
     </section>
