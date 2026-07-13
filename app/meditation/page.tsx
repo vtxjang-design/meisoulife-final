@@ -1277,6 +1277,18 @@ function getJourneyEntranceLine(language: "jp" | "kr" | "en", day: number | null
   }
 }
 
+function getJourneyAudioRetryMessage(language: "jp" | "kr" | "en") {
+  if (language === "kr") {
+    return "다시 한 번 눌러 시작해 주세요.";
+  }
+
+  if (language === "en") {
+    return "Please tap again to start the audio.";
+  }
+
+  return "もう一度押して音を始めてください。";
+}
+
 function getMorningGateStage(door: MeditationDoor, elapsedSeconds: number): StructuredMorningStage {
   if (door === "energy") {
     if (elapsedSeconds < 15) return "openingFade";
@@ -1656,6 +1668,7 @@ function MeditationPageContent() {
   const [selectedRechargeExercise, setSelectedRechargeExercise] = useState<RechargeExerciseKey>("heelRaise");
   const [journeyMode, setJourneyMode] = useState(false);
   const [journeyDay, setJourneyDay] = useState<number | null>(null);
+  const [journeyAudioRetryMessage, setJourneyAudioRetryMessage] = useState<string | null>(null);
   const [isJourneySettling, setIsJourneySettling] = useState(false);
   const [returnToHref, setReturnToHref] = useState("/rhythm-journey");
   const [requestedRouteType, setRequestedRouteType] = useState<string | null>(null);
@@ -1796,6 +1809,7 @@ function MeditationPageContent() {
         ? "Start Recharge"
         : "リチャージを始める";
   const journeyCalmingLine = getJourneyEntranceLine(localizedLanguage, journeyDay);
+  const journeyAudioRetryText = getJourneyAudioRetryMessage(localizedLanguage);
   const completionNoteText = isStructuredMorningGate
     ? morningGateCopy.completionNote
     : basicPracticeCopy
@@ -2130,7 +2144,16 @@ function MeditationPageContent() {
         : shouldResumeStructuredAmbient
           ? true
           : getNatureSoundPreference();
-    const shouldPromptForAudioStart = isThreeMinuteMorningDoor || isFocusGateProgram || isCalmGateProgram || isRechargeGateProgram || isReleaseGateProgram || isGratitudeGateProgram || isSleepGateProgram || (mobileNeedsGesture && (isProgramMode || nextSoundEnabled));
+    const shouldPromptForAudioStart =
+      resolvedRoute.journeyMode ||
+      isThreeMinuteMorningDoor ||
+      isFocusGateProgram ||
+      isCalmGateProgram ||
+      isRechargeGateProgram ||
+      isReleaseGateProgram ||
+      isGratitudeGateProgram ||
+      isSleepGateProgram ||
+      (mobileNeedsGesture && (isProgramMode || nextSoundEnabled));
     setSoundEnabled(isFocusGateProgram || isCalmGateProgram || isRechargeGateProgram || isReleaseGateProgram || isGratitudeGateProgram || isSleepGateProgram ? true : nextSoundEnabled);
     setPendingStructuredAmbientStart(shouldResumeStructuredAmbient);
     setJourneyMode(resolvedRoute.journeyMode);
@@ -2143,6 +2166,7 @@ function MeditationPageContent() {
     setRequiresExplicitAudioStart(shouldPromptForAudioStart);
     setHasUserGesture(!shouldPromptForAudioStart);
     setIsPaused(mobileNeedsGesture && isProgramMode);
+    setJourneyAudioRetryMessage(null);
     setAffirmationMessage(null);
     setFocusGateMessage(null);
     setCalmGateMessage(null);
@@ -2187,6 +2211,17 @@ function MeditationPageContent() {
       console.log("[Journey Audio] audio element:", ambientAudioRef.current);
     }
   }, [localizedLanguage, membershipAccess.canRender, requiresProtectedMembership]);
+
+  function stopJourneyAudio() {
+    const audio = ambientAudioRef.current;
+
+    if (!audio) {
+      return;
+    }
+
+    audio.pause();
+    audio.currentTime = 0;
+  }
 
   async function handleAmbientStartResult(result: { started: boolean; error?: unknown }, manual = false) {
     if (journeyMode && journeyDay) {
@@ -2261,12 +2296,16 @@ function MeditationPageContent() {
   }
 
   async function handleJourneyAudioStart() {
-    if (!journeyMode || !ambientAudioSource) {
+    const resolvedJourneyAudioSource =
+      journeyMode && journeyDay ? journeyAudioMap[journeyDay] : undefined;
+
+    if (!journeyMode || !resolvedJourneyAudioSource || typeof window === "undefined" || typeof Audio === "undefined") {
       return;
     }
 
     setHasUserGesture(true);
     setRequiresExplicitAudioStart(false);
+    setJourneyAudioRetryMessage(null);
 
     if (audioContextRef.current?.state === "suspended") {
       try {
@@ -2284,14 +2323,61 @@ function MeditationPageContent() {
       }
     }
 
-    const result = await startAmbientNatureAudio(
-      ambientAudioRef,
-      true,
-      ambientAudioSource,
-      ambientAudioVolume,
-      ambientFadeInOptions
-    );
-    await handleAmbientStartResult(result, true);
+    try {
+      const existingAudio = ambientAudioRef.current;
+      const existingSource = existingAudio?.dataset.meisoSrc;
+
+      if (existingAudio && existingSource !== resolvedJourneyAudioSource) {
+        stopJourneyAudio();
+        ambientAudioRef.current = null;
+      }
+
+      let audio = ambientAudioRef.current;
+      if (!audio) {
+        audio = new Audio(resolvedJourneyAudioSource);
+        audio.loop = true;
+        audio.preload = "auto";
+        audio.muted = false;
+        audio.dataset.meisoSrc = resolvedJourneyAudioSource;
+        ambientAudioRef.current = audio;
+      }
+
+      stopJourneyAudio();
+      audio.src = resolvedJourneyAudioSource;
+      audio.load();
+      audio.volume = ambientAudioVolume ?? 0.65;
+      audio.muted = false;
+      await audio.play();
+
+      if (journeySettlingTimeoutRef.current !== null) {
+        window.clearTimeout(journeySettlingTimeoutRef.current);
+      }
+      setSecondsLeft(totalSeconds);
+      setShowAmbientRetry(false);
+      setNeedsUserStart(false);
+      setIsPaused(false);
+      setSoundEnabled(true);
+      setNatureSoundPreference(true);
+      setIsJourneySettling(true);
+      journeySettlingTimeoutRef.current = window.setTimeout(() => {
+        setIsJourneySettling(false);
+        journeySettlingTimeoutRef.current = null;
+      }, JOURNEY_SETTLING_MS);
+
+      safeSessionStorageRemove(JOURNEY_AUDIO_PENDING_KEY);
+      safeSessionStorageRemove(JOURNEY_AUDIO_DAY_KEY);
+      safeSessionStorageRemove(STRUCTURED_AMBIENT_PENDING_KEY);
+    } catch (error) {
+      stopJourneyAudio();
+      setSoundEnabled(false);
+      setNeedsUserStart(true);
+      setIsPaused(true);
+      setIsJourneySettling(false);
+      setJourneyAudioRetryMessage(journeyAudioRetryText);
+      if (process.env.NODE_ENV !== "production") {
+        console.error("[Journey Audio] manual start failed:", error);
+      }
+    }
   }
 
   async function playAffirmationGateVideo(options?: { restartFromBeginning?: boolean }) {
@@ -2751,6 +2837,7 @@ function MeditationPageContent() {
       if (journeySettlingTimeoutRef.current !== null) {
         window.clearTimeout(journeySettlingTimeoutRef.current);
       }
+      stopJourneyAudio();
       void stopStructuredMorningAmbient();
 
       const focusVideo = focusVideoRef.current;
@@ -2803,6 +2890,24 @@ function MeditationPageContent() {
       void stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
     };
   }, []);
+
+  useEffect(() => {
+    if (!journeyMode) {
+      stopJourneyAudio();
+      return;
+    }
+
+    setJourneyAudioRetryMessage(null);
+    setNeedsUserStart(true);
+    setRequiresExplicitAudioStart(true);
+    setIsJourneySettling(false);
+    stopJourneyAudio();
+    setSecondsLeft(totalSeconds);
+
+    return () => {
+      stopJourneyAudio();
+    };
+  }, [journeyDay, journeyMode, totalSeconds]);
 
   useEffect(() => {
     if (!isGuidedEveningGate) {
@@ -2979,22 +3084,6 @@ function MeditationPageContent() {
       void handleAmbientStartResult(result);
     });
   }, [isAffirmationGate, isComplete, pendingStructuredAmbientStart, requiresExplicitAudioStart]);
-
-  useEffect(() => {
-    if (!journeyMode || !ambientAudioSource || !soundEnabled || isComplete || requiresExplicitAudioStart) {
-      return;
-    }
-
-    startAmbientNatureAudio(
-      ambientAudioRef,
-      true,
-      ambientAudioSource,
-      ambientAudioVolume,
-      ambientFadeInOptions
-    ).then((result) => {
-      void handleAmbientStartResult(result);
-    });
-  }, [ambientAudioSource, ambientAudioVolume, isComplete, journeyMode, requiresExplicitAudioStart, soundEnabled]);
 
   useEffect(() => {
     if (!isComplete || completionHandledRef.current) {
