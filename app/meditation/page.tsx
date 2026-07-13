@@ -43,6 +43,7 @@ const JOURNEY_DAY_IMAGE_MAP: Record<number, string> = {
   6: "/7day-recovery/day6.png",
   7: "/7day-recovery/day7.png"
 };
+const JOURNEY_AUDIO_SOURCES = Object.values(journeyAudioMap);
 const AFFIRMATION_TOTAL_SECONDS = 180;
 const JOURNEY_SETTLING_MS = 2000;
 const MORNING_GATE_FADE_IN_MS = 2000;
@@ -2219,6 +2220,11 @@ function MeditationPageContent() {
       return;
     }
 
+    const source = audio.dataset.meisoSrc ?? "";
+    if (!JOURNEY_AUDIO_SOURCES.includes(source)) {
+      return;
+    }
+
     audio.pause();
     audio.currentTime = 0;
   }
@@ -2328,7 +2334,8 @@ function MeditationPageContent() {
       const existingSource = existingAudio?.dataset.meisoSrc;
 
       if (existingAudio && existingSource !== resolvedJourneyAudioSource) {
-        stopJourneyAudio();
+        existingAudio.pause();
+        existingAudio.currentTime = 0;
         ambientAudioRef.current = null;
       }
 
@@ -4579,6 +4586,9 @@ function MeditationPageContent() {
                   >
                     {journeyCopy.audioStart}
                   </button>
+                  {journeyAudioRetryMessage ? (
+                    <p className="text-sm leading-6 text-white/72">{journeyAudioRetryMessage}</p>
+                  ) : null}
                 </div>
               ) : (journeyMode || meditationType !== "default") && needsUserStart ? (
                 <div className={`mb-6 w-full ${isRechargeGate ? "max-w-3xl" : "max-w-md"} rounded-[24px] border border-[rgba(212,178,106,0.18)] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-[clamp(16px,4vw,40px)] py-5 text-center shadow-[0_18px_50px_rgba(4,12,24,0.18)] ${isRechargeGate ? "overflow-visible" : ""}`}>
@@ -4645,9 +4655,7 @@ function MeditationPageContent() {
                     </div>
                   ) : (
                     <>
-                      <p className={`whitespace-pre-line ${journeyMode ? "mx-auto max-w-[18ch] font-serif text-[1.05rem] leading-[1.95] text-white/88" : "text-sm leading-7 text-white/76"}`}>
-                        {journeyMode ? journeyCalmingLine : copy.audioPrompt}
-                      </p>
+                      <p className="text-sm leading-7 text-white/76">{copy.audioPrompt}</p>
                       <button
                         type="button"
                         onClick={journeyMode ? handleJourneyAudioStart : handleProgramAudioStart}
