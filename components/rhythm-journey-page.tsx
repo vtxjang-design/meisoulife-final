@@ -81,6 +81,12 @@ export function RhythmJourneyPage() {
   const progressHeaderTitle =
     language === "jp" ? "7日間の小さな回復" : language === "kr" ? "7일간의 작은 회복" : "7-Day Recovery Journey";
   const todayLabel = language === "jp" ? "今日" : language === "kr" ? "오늘" : "Today";
+  const introSupportingLine =
+    language === "jp"
+      ? "今日は、ひとつだけ静かに整えてみましょう。"
+      : language === "kr"
+        ? "오늘은, 단 하나만 조용히 정돈해 봅시다."
+        : "Today, let us gently restore just one thing.";
   const completionBadge =
     language === "jp"
       ? "今日、小さな回復をひとつ作れました。"
@@ -293,16 +299,19 @@ export function RhythmJourneyPage() {
     <div className="section-shell py-14 sm:py-18">
       <div className="mx-auto max-w-3xl">
         {showIntro ? (
-          <section className="overflow-hidden rounded-[34px] border border-[#f3e8c8]/20 bg-[radial-gradient(circle_at_top,rgba(244,232,198,0.18),transparent_22%),linear-gradient(180deg,rgba(246,239,226,0.18),rgba(196,219,205,0.08))] px-6 py-8 shadow-[0_24px_80px_rgba(7,17,31,0.14)] backdrop-blur-[14px] sm:px-8 sm:py-10">
+          <section className="overflow-hidden rounded-[34px] border border-[#f3e8c8]/20 bg-[radial-gradient(circle_at_top,rgba(244,232,198,0.18),transparent_22%),linear-gradient(180deg,rgba(246,239,226,0.18),rgba(196,219,205,0.08))] px-6 py-10 shadow-[0_24px_80px_rgba(7,17,31,0.14)] backdrop-blur-[14px] sm:px-8 sm:py-12">
             <p className="text-sm uppercase tracking-[0.28em] text-[#f0d79c]">{journeyCopy.entryEyebrow}</p>
             <h1 className="hero-measure word-balance keep-phrase mt-4 max-w-[10ch] whitespace-pre-line font-serif text-[clamp(2rem,10vw,4.5rem)] leading-[1.16] text-white sm:max-w-none sm:leading-[1.22]">
               {journeyCopy.title}
             </h1>
-            <p className="hero-measure word-balance keep-phrase mt-3 max-w-[14ch] whitespace-pre-line text-lg leading-[1.7] text-[#f4ead1]/92 sm:max-w-[18ch] sm:leading-8">
+            <p className="hero-measure word-balance keep-phrase mt-4 max-w-[14ch] whitespace-pre-line text-base leading-[1.75] text-[#f4ead1]/88 sm:max-w-[18ch] sm:text-lg sm:leading-8">
               {journeyCopy.subtitle}
             </p>
+            <p className="hero-measure word-balance keep-phrase mt-4 max-w-[18ch] text-sm leading-7 text-white/70 sm:text-base">
+              {introSupportingLine}
+            </p>
             {hasExistingProgress ? (
-              <div className="mt-7 grid gap-3 rounded-[28px] border border-white/10 bg-white/[0.04] px-5 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] sm:grid-cols-3">
+              <div className="mt-8 grid gap-3 rounded-[28px] border border-white/10 bg-white/[0.04] px-5 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] sm:grid-cols-3">
                 <div>
                   <p className="text-xs uppercase tracking-[0.24em] text-[#f0d79c]">{progressEyebrow}</p>
                   <p className="mt-2 text-sm text-white/78">{currentDaySummary}</p>
@@ -317,12 +326,7 @@ export function RhythmJourneyPage() {
                 </div>
               </div>
             ) : null}
-            <div className="mt-7 rounded-[28px] border border-white/10 bg-[#f6f0e3]/10 px-5 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
-              <p className="whitespace-pre-line text-base leading-8 text-white/82">
-                {journeyCopy.entryBody}
-              </p>
-            </div>
-            <div className="mt-8 overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.04] shadow-[0_24px_80px_rgba(7,17,31,0.14)]">
+            <div className="mt-10 overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.04] shadow-[0_24px_80px_rgba(7,17,31,0.14)]">
               <img
                 src={JOURNEY_OVERVIEW_IMAGE_SRC}
                 alt={overviewImageAlt}
@@ -332,7 +336,7 @@ export function RhythmJourneyPage() {
             <button
               type="button"
               onClick={startJourney}
-              className="button-nowrap mt-8 inline-flex min-h-[56px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.22)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_46px_rgba(212,186,117,0.26)] sm:w-auto sm:min-w-[280px]"
+              className="button-nowrap mt-10 inline-flex min-h-[56px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.22)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_46px_rgba(212,186,117,0.26)] sm:w-auto sm:min-w-[280px]"
             >
               {continueCtaLabel}
             </button>
