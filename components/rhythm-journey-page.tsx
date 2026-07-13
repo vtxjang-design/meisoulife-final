@@ -36,6 +36,13 @@ export function RhythmJourneyPage() {
   const [hydrated, setHydrated] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
   const [showNaturePause, setShowNaturePause] = useState(false);
+  const completedCount = progress.completedDays.length;
+  const isJourneyComplete = completedCount >= RHYTHM_JOURNEY_DAY_COUNT;
+  const hasExistingProgress =
+    progress.journeyStarted ||
+    progress.currentDay > 1 ||
+    progress.completedDays.length > 0 ||
+    Object.keys(progress.selectedOptions).length > 0;
   const currentDay = useMemo(
     () => getRhythmJourneyDay(language, clampRhythmJourneyDay(progress.currentDay)),
     [language, progress.currentDay]
@@ -57,6 +64,72 @@ export function RhythmJourneyPage() {
       : language === "kr"
         ? "7일간의 작은 회복 7가지 주제"
         : "Seven themes of the 7-Day Recovery Journey";
+  const progressEyebrow =
+    language === "jp" ? "小さな回復の旅" : language === "kr" ? "작은 회복 여정" : "Small Recovery Journey";
+  const progressSummary =
+    language === "jp"
+      ? `${completedCount} / ${RHYTHM_JOURNEY_DAY_COUNT} 完了`
+      : language === "kr"
+        ? `${completedCount} / ${RHYTHM_JOURNEY_DAY_COUNT} 완료`
+        : `${completedCount} / ${RHYTHM_JOURNEY_DAY_COUNT} completed`;
+  const currentDaySummary =
+    language === "jp"
+      ? `Day ${clampRhythmJourneyDay(progress.currentDay)} / ${RHYTHM_JOURNEY_DAY_COUNT}`
+      : language === "kr"
+        ? `${clampRhythmJourneyDay(progress.currentDay)}일차 / ${RHYTHM_JOURNEY_DAY_COUNT}일`
+        : `Day ${clampRhythmJourneyDay(progress.currentDay)} of ${RHYTHM_JOURNEY_DAY_COUNT}`;
+  const progressHeaderTitle =
+    language === "jp" ? "7日間の小さな回復" : language === "kr" ? "7일간의 작은 회복" : "7-Day Recovery Journey";
+  const todayLabel = language === "jp" ? "今日" : language === "kr" ? "오늘" : "Today";
+  const completionBadge =
+    language === "jp"
+      ? "今日、小さな回復をひとつ作れました。"
+      : language === "kr"
+        ? "오늘, 작은 회복 하나를 만들었습니다."
+        : "Today, you created one small recovery.";
+  const completionCarryText =
+    language === "jp"
+      ? "この静けさを、そのまま一日に持っていきましょう。"
+      : language === "kr"
+        ? "이 감각을 그대로 하루에 가져가 봅시다."
+        : "Carry this feeling softly into your day.";
+  const completionTomorrowText =
+    language === "jp"
+      ? "明日も、また一緒に続けましょう。"
+      : language === "kr"
+        ? "내일도, 다시 함께 이어가 봅시다."
+        : "Tomorrow, we will continue together.";
+  const nextRhythmLabel =
+    language === "jp"
+      ? "あなたの次のリズムは、ここから始まります。"
+      : language === "kr"
+        ? "당신의 다음 리듬은 여기서 시작됩니다."
+        : "Your next rhythm begins here.";
+  const continueCtaLabel = isJourneyComplete
+    ? language === "jp"
+      ? "旅をもう一度始める"
+      : language === "kr"
+        ? "여정을 다시 시작하기"
+        : "Restart Journey"
+    : hasExistingProgress
+      ? language === "jp"
+        ? `Day ${clampRhythmJourneyDay(progress.currentDay)} を続ける`
+        : language === "kr"
+          ? `${clampRhythmJourneyDay(progress.currentDay)}일차 계속하기`
+          : `Continue Day ${clampRhythmJourneyDay(progress.currentDay)}`
+      : language === "jp"
+        ? "Day 1 を始める"
+        : language === "kr"
+          ? "1일차 시작하기"
+          : "Start Day 1";
+  const nextDayLabel =
+    currentDay.day < RHYTHM_JOURNEY_DAY_COUNT
+      ? language === "jp"
+        ? `Day ${currentDay.day + 1} を続ける`
+        : language === "kr"
+          ? `${currentDay.day + 1}일차 계속하기`
+          : `Continue to Day ${currentDay.day + 1}`
+      : "";
 
   useEffect(() => {
     const stored = readRhythmJourneyProgress();
@@ -85,7 +158,12 @@ export function RhythmJourneyPage() {
 
     setProgress(nextProgress);
     writeRhythmJourneyProgress(nextProgress);
-    setShowIntro(!nextProgress.journeyStarted);
+    setShowIntro(
+      !(
+        (Number.isInteger(completedDayParam) && completedDayParam >= 1 && completedDayParam <= RHYTHM_JOURNEY_DAY_COUNT) ||
+        hasRequestedDay
+      )
+    );
     setShowNaturePause(false);
     setHydrated(true);
   }, []);
@@ -96,6 +174,19 @@ export function RhythmJourneyPage() {
   }
 
   function startJourney() {
+    if (isJourneyComplete) {
+      const restarted = {
+        journeyStarted: true,
+        currentDay: 1,
+        completedDays: [],
+        selectedOptions: {}
+      };
+
+      updateProgress(restarted);
+      setShowIntro(false);
+      return;
+    }
+
     const next = {
       ...progress,
       journeyStarted: true
@@ -210,6 +301,22 @@ export function RhythmJourneyPage() {
             <p className="hero-measure word-balance keep-phrase mt-3 max-w-[14ch] whitespace-pre-line text-lg leading-[1.7] text-[#f4ead1]/92 sm:max-w-[18ch] sm:leading-8">
               {journeyCopy.subtitle}
             </p>
+            {hasExistingProgress ? (
+              <div className="mt-7 grid gap-3 rounded-[28px] border border-white/10 bg-white/[0.04] px-5 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] sm:grid-cols-3">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.24em] text-[#f0d79c]">{progressEyebrow}</p>
+                  <p className="mt-2 text-sm text-white/78">{currentDaySummary}</p>
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.24em] text-[#f0d79c]">{todayLabel}</p>
+                  <p className="mt-2 text-sm text-white/78">{currentDay.title}</p>
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.24em] text-[#f0d79c]">{dayNavLabel}</p>
+                  <p className="mt-2 text-sm text-white/78">{progressSummary}</p>
+                </div>
+              </div>
+            ) : null}
             <div className="mt-7 rounded-[28px] border border-white/10 bg-[#f6f0e3]/10 px-5 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
               <p className="whitespace-pre-line text-base leading-8 text-white/82">
                 {journeyCopy.entryBody}
@@ -227,12 +334,46 @@ export function RhythmJourneyPage() {
               onClick={startJourney}
               className="button-nowrap mt-8 inline-flex min-h-[56px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.22)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_46px_rgba(212,186,117,0.26)] sm:w-auto sm:min-w-[280px]"
             >
-              {journeyCopy.startCta}
+              {continueCtaLabel}
             </button>
             <p className="mt-4 text-sm text-white/54">{journeyCopy.approxMinute}</p>
           </section>
         ) : (
           <section className="space-y-5">
+            <div className="rounded-[28px] border border-white/10 bg-white/[0.04] px-5 py-5 shadow-[0_18px_52px_rgba(7,17,31,0.12)]">
+              <p className="text-xs uppercase tracking-[0.28em] text-[#f0d79c]">{progressHeaderTitle}</p>
+              <div className="mt-4 flex gap-2">
+                {Array.from({ length: RHYTHM_JOURNEY_DAY_COUNT }, (_, index) => {
+                  const day = index + 1;
+                  const completed = progress.completedDays.includes(day);
+                  const current = day === currentDay.day;
+
+                  return (
+                    <span
+                      key={day}
+                      className={`h-2.5 flex-1 rounded-full ${
+                        current
+                          ? "bg-[#f0d79c]"
+                          : completed
+                            ? "bg-[#f0d79c]/58"
+                            : "bg-white/[0.14]"
+                      }`}
+                    />
+                  );
+                })}
+              </div>
+              <div className="mt-4 grid gap-3 sm:grid-cols-[auto_auto_1fr] sm:items-end">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.24em] text-white/42">{todayLabel}</p>
+                  <p className="mt-1 text-sm text-white/70">Day {currentDay.day}</p>
+                </div>
+                <div className="hidden h-8 w-px bg-white/10 sm:block" />
+                <div>
+                  <p className="font-serif text-2xl text-white">{currentDay.title}</p>
+                  <p className="mt-1 text-sm text-white/64">{progressSummary}</p>
+                </div>
+              </div>
+            </div>
             <div className="flex items-center justify-between gap-4 px-1">
               <div>
                 <p className="text-sm uppercase tracking-[0.28em] text-[#f0d79c]">{journeyCopy.todayEyebrow}</p>
@@ -250,9 +391,9 @@ export function RhythmJourneyPage() {
 
             <div className="rounded-[24px] border border-white/10 bg-white/[0.04] px-4 py-4">
               <p className="text-xs uppercase tracking-[0.24em] text-[#f0d79c]">{dayNavLabel}</p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {Array.from({ length: RHYTHM_JOURNEY_DAY_COUNT }, (_, index) => {
-                  const day = index + 1;
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                {journeyCopy.days.map((dayContent) => {
+                  const day = dayContent.day;
                   const selected = day === currentDay.day;
                   const completed = progress.completedDays.includes(day);
 
@@ -261,15 +402,41 @@ export function RhythmJourneyPage() {
                       key={day}
                       type="button"
                       onClick={() => handleSelectDay(day)}
-                      className={`min-h-[40px] rounded-full px-3.5 py-2 text-sm transition duration-200 ${
+                      className={`rounded-[22px] border px-4 py-3 text-left transition duration-200 ${
                         selected
-                          ? "border border-[#f0d79c]/30 bg-[#f3e0af]/16 text-[#fff8e6]"
+                          ? "border-[#f0d79c]/30 bg-[#f3e0af]/16 text-[#fff8e6]"
                           : completed
-                            ? "border border-white/10 bg-white/[0.06] text-white/82"
-                            : "border border-white/10 bg-white/[0.03] text-white/62 hover:bg-white/[0.06]"
+                            ? "border-white/10 bg-white/[0.06] text-white/82"
+                            : "border-white/10 bg-white/[0.03] text-white/62 hover:bg-white/[0.06]"
                       }`}
                     >
-                      Day {day}
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <p className="text-xs uppercase tracking-[0.22em] text-[#f0d79c]/88">Day {day}</p>
+                          <p className="mt-1 font-serif text-lg text-white">{dayContent.title}</p>
+                        </div>
+                        <span className={`inline-flex min-h-[26px] items-center rounded-full px-2.5 py-1 text-[11px] ${
+                          selected
+                            ? "bg-[#f3e0af]/16 text-[#fff8e6]"
+                            : completed
+                              ? "bg-[#f3e0af]/12 text-[#f4ead1]"
+                              : "bg-white/[0.04] text-white/46"
+                        }`}>
+                          {completed
+                            ? language === "jp"
+                              ? "完了"
+                              : language === "kr"
+                                ? "완료"
+                                : "Done"
+                            : selected
+                              ? todayLabel
+                              : language === "jp"
+                                ? "これから"
+                                : language === "kr"
+                                  ? "앞으로"
+                                  : "Ahead"}
+                        </span>
+                      </div>
                     </button>
                   );
                 })}
@@ -389,12 +556,18 @@ export function RhythmJourneyPage() {
                     {currentDay.day < RHYTHM_JOURNEY_DAY_COUNT ? (
                       <>
                         <p className="text-sm uppercase tracking-[0.28em] text-[#f0d79c]">{journeyCopy.enoughEyebrow}</p>
+                        <p className="mt-4 text-sm text-[#f4ead1]/82">{completionBadge}</p>
                         <p className="mt-5 whitespace-pre-line font-serif text-[24px] leading-[1.8] text-white sm:text-[28px]">
                           {currentDay.completion}
                         </p>
+                        <div className="mt-5 space-y-2 text-sm leading-7 text-white/70">
+                          <p>{completionCarryText}</p>
+                          <p>{completionTomorrowText}</p>
+                        </div>
                       </>
                     ) : (
                       <div className="space-y-5">
+                        <p className="text-sm text-[#f4ead1]/82">{completionBadge}</p>
                         <p className="whitespace-pre-line font-serif text-[24px] leading-[1.8] text-white sm:text-[28px]">
                           {journeyCopy.day7Title}
                         </p>
@@ -404,6 +577,7 @@ export function RhythmJourneyPage() {
                         <p className="whitespace-pre-line text-base leading-8 text-[#f4ead1]/86">
                           {journeyCopy.day7Transition}
                         </p>
+                        <p className="text-sm leading-7 text-white/70">{nextRhythmLabel}</p>
                         <div className="grid gap-3 sm:grid-cols-3">
                           {journeyCopy.rhythmChoices.map((option) => {
                             const selected = day7RhythmSelection === option.value;
@@ -437,7 +611,7 @@ export function RhythmJourneyPage() {
                       onClick={handleNext}
                       className="button-nowrap inline-flex min-h-[54px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-3 text-sm font-semibold text-ink transition duration-300 hover:-translate-y-0.5"
                     >
-                      {journeyCopy.nextCta}
+                      {nextDayLabel}
                     </button>
                   ) : (
                     <div className="flex flex-col gap-3">
