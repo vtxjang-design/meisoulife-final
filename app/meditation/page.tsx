@@ -43,7 +43,17 @@ const JOURNEY_DAY_IMAGE_MAP: Record<number, string> = {
   6: "/7day-recovery/day6.png",
   7: "/7day-recovery/day7.png"
 };
-const JOURNEY_AUDIO_SOURCES = Object.values(journeyAudioMap);
+function resolveJourneyAudioSource(source: string | undefined) {
+  if (!source) {
+    return undefined;
+  }
+
+  if (source.startsWith("/audio/7day-recovery/")) {
+    return source.replace("/audio/7day-recovery/", "/7day-recovery/");
+  }
+
+  return source;
+}
 const AFFIRMATION_TOTAL_SECONDS = 180;
 const JOURNEY_SETTLING_MS = 2000;
 const MORNING_GATE_FADE_IN_MS = 2000;
@@ -1657,6 +1667,7 @@ function MeditationPageContent() {
   const [selectedRechargeExercise, setSelectedRechargeExercise] = useState<RechargeExerciseKey>("heelRaise");
   const [journeyMode, setJourneyMode] = useState(false);
   const [journeyDay, setJourneyDay] = useState<number | null>(null);
+  const [isJourneyPlaybackActive, setIsJourneyPlaybackActive] = useState(false);
   const [isJourneySettling, setIsJourneySettling] = useState(false);
   const [returnToHref, setReturnToHref] = useState("/rhythm-journey");
   const [requestedRouteType, setRequestedRouteType] = useState<string | null>(null);
@@ -1664,6 +1675,7 @@ function MeditationPageContent() {
   const [awakeningRitualState, setAwakeningRitualState] = useState<AwakeningRitualState | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
+  const journeyAudioRef = useRef<HTMLAudioElement | null>(null);
   const focusVideoRef = useRef<HTMLVideoElement | null>(null);
   const calmVideoRef = useRef<HTMLVideoElement | null>(null);
   const rechargeVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -1745,7 +1757,8 @@ function MeditationPageContent() {
   const hideSoundToggle = meditationType === "morning" || isFocusGate || isCalmGate || isRechargeGate || isGuidedEveningGate;
   const durationVariant = getDurationVariant(totalSeconds);
   const durationTextSet = copy.durationTexts?.[durationVariant];
-  const journeyAudioSource = journeyDay ? journeyAudioMap[journeyDay] : undefined;
+  const journeyAudioRequestedSource = journeyDay ? journeyAudioMap[journeyDay] : undefined;
+  const journeyAudioSource = resolveJourneyAudioSource(journeyAudioRequestedSource);
   const journeyImageSource = journeyDay ? JOURNEY_DAY_IMAGE_MAP[journeyDay] : JOURNEY_DAY_IMAGE_MAP[1];
   const ambientAudioSource =
     journeyMode && journeyAudioSource
@@ -2145,6 +2158,7 @@ function MeditationPageContent() {
     setPendingStructuredAmbientStart(shouldResumeStructuredAmbient);
     setJourneyMode(resolvedRoute.journeyMode);
     setJourneyDay(Number.isInteger(resolvedJourneyDay) && resolvedJourneyDay >= 1 && resolvedJourneyDay <= 7 ? resolvedJourneyDay : null);
+    setIsJourneyPlaybackActive(false);
     setIsJourneySettling(false);
     setReturnToHref(resolvedRoute.returnToHref || "/rhythm-journey");
     setAmbientVideoFailed(false);
@@ -2188,9 +2202,15 @@ function MeditationPageContent() {
       console.log("[Journey Audio] journeyMode:", resolvedRoute.journeyMode);
       console.log("[Journey Audio] journeyDay:", resolvedJourneyDay);
       console.log(
-        "[Journey Audio] src:",
+        "[Journey Audio] requested src:",
         Number.isInteger(resolvedJourneyDay) && resolvedJourneyDay >= 1 && resolvedJourneyDay <= 7
           ? journeyAudioMap[resolvedJourneyDay]
+          : undefined
+      );
+      console.log(
+        "[Journey Audio] resolved src:",
+        Number.isInteger(resolvedJourneyDay) && resolvedJourneyDay >= 1 && resolvedJourneyDay <= 7
+          ? resolveJourneyAudioSource(journeyAudioMap[resolvedJourneyDay])
           : undefined
       );
       console.log("[Journey Audio] pending:", pendingJourneyAudio);
@@ -2198,49 +2218,69 @@ function MeditationPageContent() {
     }
   }, [localizedLanguage, membershipAccess.canRender, requiresProtectedMembership]);
 
+  function logJourneyAudio(event: string, extra?: Record<string, unknown>) {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    const audio = journeyAudioRef.current;
+    console.log(`[Journey Audio] ${event}`, {
+      journeyDay,
+      journeyAudioRequestedSource,
+      journeyAudioSource,
+      readyState: audio?.readyState,
+      currentSrc: audio?.currentSrc,
+      paused: audio?.paused,
+      currentTime: audio?.currentTime,
+      volume: audio?.volume,
+      muted: audio?.muted,
+      ...extra
+    });
+  }
+
   function stopJourneyAudio() {
-    const audio = ambientAudioRef.current;
+    const audio = journeyAudioRef.current;
 
     if (!audio) {
       return;
     }
 
-    const source = audio.dataset.meisoSrc ?? "";
-    if (!JOURNEY_AUDIO_SOURCES.includes(source)) {
-      return;
-    }
-
+    logJourneyAudio("pause/reset");
     audio.pause();
     audio.currentTime = 0;
   }
 
   function ensureJourneyAudio(source: string) {
-    const existingAudio = ambientAudioRef.current;
+    const existingAudio = journeyAudioRef.current;
     const existingSource = existingAudio?.dataset.meisoSrc;
 
     if (existingAudio && existingSource !== source) {
+      logJourneyAudio("replace audio instance", { from: existingSource, to: source });
       existingAudio.pause();
       existingAudio.currentTime = 0;
-      ambientAudioRef.current = null;
+      journeyAudioRef.current = null;
     }
 
-    let audio = ambientAudioRef.current;
+    let audio = journeyAudioRef.current;
     if (!audio) {
       audio = new Audio(source);
-      audio.loop = true;
+      audio.loop = false;
       audio.preload = "auto";
       audio.muted = false;
       audio.dataset.meisoSrc = source;
-      ambientAudioRef.current = audio;
+      journeyAudioRef.current = audio;
+      logJourneyAudio("create audio instance", { source });
     }
 
-    if (audio.src !== source) {
+    const resolvedSource = typeof window !== "undefined" ? new URL(source, window.location.origin).href : source;
+    if (audio.currentSrc !== resolvedSource && audio.src !== resolvedSource) {
       audio.src = source;
+      logJourneyAudio("assign src", { source });
     }
 
     audio.preload = "auto";
     audio.dataset.meisoSrc = source;
-    audio.volume = ambientAudioVolume ?? 0.65;
+    audio.volume = 0.9;
     audio.muted = false;
 
     return audio;
@@ -2320,12 +2360,13 @@ function MeditationPageContent() {
 
   async function handleJourneyAudioStart() {
     const resolvedJourneyAudioSource =
-      journeyMode && journeyDay ? journeyAudioMap[journeyDay] : undefined;
+      journeyMode && journeyDay ? resolveJourneyAudioSource(journeyAudioMap[journeyDay]) : undefined;
 
     if (!journeyMode || !resolvedJourneyAudioSource || typeof window === "undefined" || typeof Audio === "undefined") {
       return;
     }
 
+    logJourneyAudio("button click", { resolvedJourneyAudioSource });
     setHasUserGesture(true);
     setRequiresExplicitAudioStart(false);
 
@@ -2348,7 +2389,10 @@ function MeditationPageContent() {
     try {
       const audio = ensureJourneyAudio(resolvedJourneyAudioSource);
       stopJourneyAudio();
+      audio.load();
+      logJourneyAudio("play start", { resolvedJourneyAudioSource });
       await audio.play();
+      logJourneyAudio("play success", { resolvedJourneyAudioSource });
 
       if (journeySettlingTimeoutRef.current !== null) {
         window.clearTimeout(journeySettlingTimeoutRef.current);
@@ -2358,6 +2402,7 @@ function MeditationPageContent() {
       setShowAmbientRetry(false);
       setNeedsUserStart(false);
       setIsPaused(false);
+      setIsJourneyPlaybackActive(true);
       setSoundEnabled(true);
       setNatureSoundPreference(true);
       setIsJourneySettling(false);
@@ -2367,9 +2412,11 @@ function MeditationPageContent() {
       safeSessionStorageRemove(STRUCTURED_AMBIENT_PENDING_KEY);
     } catch (error) {
       stopJourneyAudio();
+      logJourneyAudio("play rejection", { resolvedJourneyAudioSource, error });
       setSoundEnabled(false);
       setNeedsUserStart(true);
       setIsPaused(true);
+      setIsJourneyPlaybackActive(false);
       setIsJourneySettling(false);
       if (process.env.NODE_ENV !== "production") {
         console.error("[Journey Audio] manual start failed:", error);
@@ -2835,6 +2882,7 @@ function MeditationPageContent() {
         window.clearTimeout(journeySettlingTimeoutRef.current);
       }
       stopJourneyAudio();
+      journeyAudioRef.current = null;
       void stopStructuredMorningAmbient();
 
       const focusVideo = focusVideoRef.current;
@@ -2891,18 +2939,23 @@ function MeditationPageContent() {
   useEffect(() => {
     if (!journeyMode) {
       stopJourneyAudio();
+      setIsJourneyPlaybackActive(false);
       return;
     }
 
     setNeedsUserStart(true);
     setRequiresExplicitAudioStart(true);
+    setIsPaused(true);
+    setIsJourneyPlaybackActive(false);
     setIsJourneySettling(false);
     stopJourneyAudio();
     setSecondsLeft(totalSeconds);
 
     if (journeyAudioSource) {
       const audio = ensureJourneyAudio(journeyAudioSource);
+      logJourneyAudio("day change prepare", { journeyAudioSource });
       audio.load();
+      logJourneyAudio("load called", { journeyAudioSource });
     }
 
     return () => {
@@ -2919,6 +2972,10 @@ function MeditationPageContent() {
   }, [isGuidedEveningGate]);
 
   useEffect(() => {
+    if (journeyMode && !isJourneyPlaybackActive) {
+      return;
+    }
+
     if (isRechargeGate || secondsLeft <= 0 || isPaused || needsUserStart) {
       return;
     }
@@ -2930,7 +2987,7 @@ function MeditationPageContent() {
     return () => {
       window.clearTimeout(timer);
     };
-  }, [isPaused, isRechargeGate, needsUserStart, secondsLeft]);
+  }, [isJourneyPlaybackActive, isPaused, isRechargeGate, journeyMode, needsUserStart, secondsLeft]);
 
   useEffect(() => {
     if (!isStructuredMorningGate || !soundEnabled) {
