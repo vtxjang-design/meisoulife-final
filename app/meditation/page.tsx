@@ -299,43 +299,25 @@ const awakeningRitualCopy = {
 
 const focusGateNarration: Record<"jp" | "kr" | "en", GuidedFocusLine[]> = {
   jp: [
-    { at: 0, key: "focus-1", text: "背筋を\nやさしく伸ばします", speechDelayMs: 420 },
-    { at: 5, key: "focus-2", text: "肩の力を\n静かに下ろします", speechDelayMs: 420 },
-    { at: 10, key: "focus-3", text: "ゆっくり\n息を吸います", speechText: "ゆっくり、\n息を吸います", speechDelayMs: 460 },
-    { at: 20, key: "focus-6", text: "今この瞬間へ\n戻ります", speechText: "今この瞬間へ、\n戻ります", speechDelayMs: 420 },
-    { at: 32, key: "focus-7", text: "散っていた思考が\nひとつの点へ\n集まります", speechText: "散っていた思考が、\nひとつの点へ、\n集まります", speechDelayMs: 420 },
-    { at: 38, key: "focus-8", text: "今日いちばん大切な\nひとつを\n思い出します", speechText: "今日いちばん大切な、\nひとつを、\n思い出します", speechDelayMs: 440 },
-    { at: 45, key: "focus-9", text: "そのひとつに\n心を置きます", speechText: "そのひとつに、\n心を置きます", speechDelayMs: 440 },
-    { at: 50, key: "focus-10", text: "集中する力は\nもうあなたの中にあります", speechText: "集中する力は、\nもうあなたの中にあります", speechDelayMs: 460 },
-    { at: 55, key: "focus-11", text: "準備できました", speechDelayMs: 520 },
-    { at: 58, key: "focus-12", text: "いちばん大切な\nひとつを始めましょう", speechText: "いちばん大切な、\nひとつを始めましょう", speechDelayMs: 520 }
+    { at: 5, key: "focus-1", text: "息を、\nゆっくり吸ってみます", speechText: "息を、\nゆっくり吸ってみます", speechDelayMs: 620 },
+    { at: 12, key: "focus-2", text: "ゆっくり、\n吐きます", speechText: "ゆっくり、\n吐きます", speechDelayMs: 640 },
+    { at: 24, key: "focus-3", text: "すべてを、\n今すぐ考えなくても\n大丈夫です", speechText: "すべてを、\nいま すぐ かんがえなくても\nだいじょうぶです", speechDelayMs: 700 },
+    { at: 38, key: "focus-4", text: "今は、\nひとつだけに\n意識を戻してみます", speechText: "いまは、\nひとつだけに\nいしきを もどしてみます", speechDelayMs: 720 },
+    { at: 49, key: "focus-5", text: "その静けさのまま、\n戻りましょう", speechText: "その しずけさのまま、\nもどりましょう", speechDelayMs: 760 }
   ],
   kr: [
-    { at: 0, key: "focus-1", text: "척추를 편안하게 세웁니다", speechDelayMs: 420 },
-    { at: 5, key: "focus-2", text: "어깨의 힘을 내려놓습니다", speechDelayMs: 420 },
-    { at: 10, key: "focus-3", text: "천천히 숨을 들이마십니다", speechDelayMs: 460 },
-    { at: 15, key: "focus-4", text: "길게 내쉽니다", speechDelayMs: 500 },
-    { at: 21, key: "focus-5", text: "지금 이 순간으로 돌아옵니다", speechDelayMs: 420 },
-    { at: 27, key: "focus-6", text: "흩어진 생각이\n하나의 점으로 모입니다", speechDelayMs: 420 },
-    { at: 34, key: "focus-7", text: "오늘 가장 중요한\n한 가지를 떠올려 봅니다", speechDelayMs: 460 },
-    { at: 41, key: "focus-8", text: "그 하나에 마음을 둡니다", speechDelayMs: 460 },
-    { at: 47, key: "focus-9", text: "당신의 집중은\n이미 당신 안에 있습니다", speechDelayMs: 480 },
-    { at: 53, key: "focus-10", text: "한 번에 한 가지", speechDelayMs: 520 },
-    { at: 56, key: "focus-11", text: "이제\n가장 중요한 한 가지를 시작하세요", speechDelayMs: 540 }
+    { at: 5, key: "focus-1", text: "숨을 천천히 들이마셔 봅니다", speechDelayMs: 620 },
+    { at: 12, key: "focus-2", text: "천천히 내쉽니다", speechDelayMs: 640 },
+    { at: 24, key: "focus-3", text: "지금 모든 것을\n생각하지 않아도\n괜찮습니다", speechDelayMs: 700 },
+    { at: 38, key: "focus-4", text: "이제 한 가지에만\n마음을 돌려봅니다", speechDelayMs: 720 },
+    { at: 49, key: "focus-5", text: "이 고요함을 가지고\n다시 돌아갑니다", speechDelayMs: 760 }
   ],
   en: [
-    { at: 0, key: "focus-1", text: "Lengthen the spine\ngently", speechDelayMs: 420 },
-    { at: 5, key: "focus-2", text: "Let the shoulders\nsoften", speechDelayMs: 420 },
-    { at: 10, key: "focus-3", text: "Slowly breathe in", speechDelayMs: 460 },
-    { at: 15, key: "focus-4", text: "And breathe out", speechDelayMs: 460 },
-    { at: 20, key: "focus-5", text: "Once more\nA deeper breath in\nand out", speechDelayMs: 480 },
-    { at: 27, key: "focus-6", text: "Return to\nthis moment", speechDelayMs: 420 },
-    { at: 32, key: "focus-7", text: "Scattered thoughts\nbegin to gather\ninto one point", speechDelayMs: 420 },
-    { at: 38, key: "focus-8", text: "Bring to mind\nthe one thing\nthat matters most today", speechDelayMs: 440 },
-    { at: 45, key: "focus-9", text: "Place your attention\nthere", speechDelayMs: 440 },
-    { at: 50, key: "focus-10", text: "Your focus\nis already within you", speechDelayMs: 460 },
-    { at: 55, key: "focus-11", text: "You are ready", speechDelayMs: 520 },
-    { at: 58, key: "focus-12", text: "Begin the one thing\nthat matters most", speechDelayMs: 520 }
+    { at: 5, key: "focus-1", text: "Take a slow breath in", speechDelayMs: 620 },
+    { at: 12, key: "focus-2", text: "And gently breathe out", speechDelayMs: 640 },
+    { at: 24, key: "focus-3", text: "You do not need to hold\neverything right now", speechDelayMs: 700 },
+    { at: 38, key: "focus-4", text: "Bring your attention back\nto just one thing", speechDelayMs: 720 },
+    { at: 49, key: "focus-5", text: "Return with this quiet focus", speechDelayMs: 760 }
   ]
 };
 
@@ -1368,7 +1350,7 @@ function getFocusGateSpeechSettings(language: "jp" | "kr" | "en") {
   if (language === "kr") {
     return {
       lang: "ko-KR",
-      rate: 0.74,
+      rate: 0.68,
       pitch: 0.98,
       volume: 1,
       preferredNames: ["Yuna", "Sora", "Google 한국어", "Siri"]
@@ -1378,7 +1360,7 @@ function getFocusGateSpeechSettings(language: "jp" | "kr" | "en") {
   if (language === "en") {
     return {
       lang: "en-US",
-      rate: 0.82,
+      rate: 0.76,
       pitch: 1,
       volume: 1,
       preferredNames: ["Samantha", "Ava", "Victoria", "Google US English", "Siri"]
@@ -1387,7 +1369,7 @@ function getFocusGateSpeechSettings(language: "jp" | "kr" | "en") {
 
   return {
     lang: "ja-JP",
-    rate: 0.78,
+    rate: 0.72,
     pitch: 0.96,
     volume: 1,
     preferredNames: ["Kyoko", "Otoya", "Google 日本語", "Siri"]
