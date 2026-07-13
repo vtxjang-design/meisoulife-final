@@ -16,7 +16,7 @@ import {
   stopAmbientNatureAudio
 } from "@/lib/meditation-ambient-audio";
 import { handleMeditationComplete as triggerMeditationCompletion, supportsMeditationVibration } from "@/lib/meditation-completion";
-import { getRhythmJourneyContent, getRhythmJourneyGuidance, journeyAudioMap } from "@/lib/rhythm-journey";
+import { getRhythmJourneyContent, journeyAudioMap } from "@/lib/rhythm-journey";
 import { getBasicPracticeByRouteType, getBasicPracticeBySession } from "@/lib/basic-rhythm";
 import { resolveMeditationRequiredPlan } from "@/lib/membership-access";
 import {
@@ -36,7 +36,7 @@ const JOURNEY_AUDIO_PENDING_KEY = "meisoulife_journey_audio_pending";
 const JOURNEY_AUDIO_DAY_KEY = "meisoulife_journey_day";
 const JOURNEY_OVERVIEW_IMAGE_SRC = "/7day-recovery/7day-recovery-overview.png";
 const AFFIRMATION_TOTAL_SECONDS = 180;
-const JOURNEY_SETTLING_MS = 1600;
+const JOURNEY_SETTLING_MS = 2000;
 const MORNING_GATE_FADE_IN_MS = 2000;
 const MORNING_GATE_FADE_OUT_MS = 3000;
 const MORNING_GATE_NARRATION_VOLUME = 0.9;
@@ -1210,16 +1210,63 @@ function getDurationVariant(totalSeconds: number) {
   return totalSeconds >= 180 ? "threeMinutes" : "sixty";
 }
 
-function getJourneyGuidanceStage(elapsedSeconds: number, totalSeconds: number) {
-  if (elapsedSeconds < 8) {
-    return "opening";
+function getJourneyEntranceLine(language: "jp" | "kr" | "en", day: number | null) {
+  const safeDay = day ?? 1;
+
+  if (language === "kr") {
+    switch (safeDay) {
+      case 2:
+        return "호흡만\n느껴봅시다.";
+      case 3:
+        return "몸의 목소리를\n들어봅시다.";
+      case 4:
+        return "자연의 고요로\n돌아가 봅시다.";
+      case 5:
+        return "작은 감사 하나를\n느껴봅시다.";
+      case 6:
+        return "조용한 자리로\n돌아가 봅시다.";
+      case 7:
+        return "당신의 리듬을\n떠올려 봅시다.";
+      default:
+        return "오늘,\n그저 자신에게 돌아와 봅니다.";
+    }
   }
 
-  if (elapsedSeconds >= Math.max(totalSeconds - 5, 0)) {
-    return "closing";
+  if (language === "en") {
+    switch (safeDay) {
+      case 2:
+        return "Feel only\nthis breath.";
+      case 3:
+        return "Listen to\nyour body.";
+      case 4:
+        return "Return to\nthe quiet of nature.";
+      case 5:
+        return "Feel one small\nmoment of gratitude.";
+      case 6:
+        return "Return to\na quieter place.";
+      case 7:
+        return "Remember\nyour own rhythm.";
+      default:
+        return "Today,\nsimply return to yourself.";
+    }
   }
 
-  return "breathing";
+  switch (safeDay) {
+    case 2:
+      return "呼吸だけを\n感じてみましょう。";
+    case 3:
+      return "身体の声を\n聴いてみましょう。";
+    case 4:
+      return "自然の静けさに\n戻りましょう。";
+    case 5:
+      return "小さな恵みを\n感じてみましょう。";
+    case 6:
+      return "静けさの中へ\n戻りましょう。";
+    case 7:
+      return "あなたのリズムを\n思い出しましょう。";
+    default:
+      return "今日、\nただ自分に戻りましょう。";
+  }
 }
 
 function getMorningGateStage(door: MeditationDoor, elapsedSeconds: number): StructuredMorningStage {
@@ -1690,7 +1737,6 @@ function MeditationPageContent() {
   const durationVariant = getDurationVariant(totalSeconds);
   const durationTextSet = copy.durationTexts?.[durationVariant];
   const journeyAudioSource = journeyDay ? journeyAudioMap[journeyDay] : undefined;
-  const journeyGuidance = journeyDay ? getRhythmJourneyGuidance(language, journeyDay) : undefined;
   const ambientAudioSource =
     journeyMode && journeyAudioSource
       ? journeyAudioSource
@@ -1700,7 +1746,6 @@ function MeditationPageContent() {
   const ambientAudioVolume = journeyMode ? 0.65 : structuredMorningAudio?.volume;
   const ambientFadeInOptions = isStructuredMorningGate ? { fadeInMs: MORNING_GATE_FADE_IN_MS } : undefined;
   const ambientFadeOutMs = isStructuredMorningGate ? MORNING_GATE_FADE_OUT_MS : undefined;
-  const journeyGuidanceStage = getJourneyGuidanceStage(elapsedTotalSeconds, totalSeconds);
   const affirmationStage = isStructuredMorningGate ? getMorningGateStage(meditationDoor, elapsedTotalSeconds) : null;
   const topText = journeyMode
     ? journeyCopy.timerTopText
@@ -1741,12 +1786,7 @@ function MeditationPageContent() {
       : localizedLanguage === "en"
         ? "Start Recharge"
         : "リチャージを始める";
-  const journeyCalmingLine =
-    localizedLanguage === "kr"
-      ? "오늘,\n그저 자신에게 돌아와 봅니다."
-      : localizedLanguage === "en"
-        ? "Today,\nsimply return to yourself."
-        : "今日、\nただ自分に戻りましょう。";
+  const journeyCalmingLine = getJourneyEntranceLine(localizedLanguage, journeyDay);
   const completionNoteText = isStructuredMorningGate
     ? morningGateCopy.completionNote
     : basicPracticeCopy
@@ -1760,16 +1800,7 @@ function MeditationPageContent() {
       : null;
   const circleScaleClass =
     phase === "inhale" ? "scale-110" : phase === "hold" ? "scale-110" : "scale-90";
-  const journeyOverlayMessage =
-    journeyMode && journeyGuidance
-      ? journeyGuidanceStage === "opening"
-        ? journeyGuidance.opening
-        : journeyGuidanceStage === "closing"
-          ? journeyGuidance.closing
-          : null
-      : null;
   const showJourneyEntranceVisual = journeyMode && !isComplete && (needsUserStart || isJourneySettling);
-  const journeyDisplayMessage = showJourneyEntranceVisual ? journeyCalmingLine : journeyOverlayMessage ?? journeyCalmingLine;
   const affirmationProgress = isStructuredMorningGate ? Math.min(100, (elapsedTotalSeconds / AFFIRMATION_TOTAL_SECONDS) * 100) : 0;
   const awakeningCompletedOn = awakeningRitualState?.completedOn ?? getLocalDayStamp();
   const awakeningPrompt = ritualCopy.prompts[getAwakeningPromptIndex(awakeningCompletedOn, ritualCopy.prompts.length)];
@@ -4341,19 +4372,18 @@ function MeditationPageContent() {
         ) : null}
         {journeyMode ? (
           <div
-            className={`pointer-events-none absolute inset-0 z-[1] flex items-center justify-center px-6 transition-all duration-[1400ms] sm:px-10 ${
-              showJourneyEntranceVisual ? "opacity-100" : "opacity-[0.18]"
+            className={`pointer-events-none absolute inset-0 z-[1] overflow-hidden transition-all duration-[1600ms] ${
+              showJourneyEntranceVisual ? "opacity-100" : "opacity-[0.46]"
             }`}
           >
-            <div className={`w-full max-w-[760px] overflow-hidden rounded-[30px] border border-white/10 bg-white/[0.04] shadow-[0_30px_120px_rgba(4,12,24,0.26)] transition-all duration-[1400ms] ${
-              showJourneyEntranceVisual ? "scale-100" : "scale-[1.02]"
-            }`}>
-              <img
-                src={JOURNEY_OVERVIEW_IMAGE_SRC}
-                alt={journeyCopy.title}
-                className="block h-auto w-full object-contain"
-              />
-            </div>
+            <img
+              src={JOURNEY_OVERVIEW_IMAGE_SRC}
+              alt={journeyCopy.title}
+              className={`absolute inset-0 h-full w-full object-cover transition-all duration-[2200ms] ${
+                showJourneyEntranceVisual ? "scale-100 opacity-100" : "scale-[1.03] opacity-[0.88]"
+              }`}
+            />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(244,220,160,0.10),transparent_26%),linear-gradient(180deg,rgba(4,10,19,0.26),rgba(4,10,19,0.54))]" />
           </div>
         ) : null}
         <div className={`absolute inset-0 z-10 ${isStructuredMorningGate ? "bg-[linear-gradient(180deg,rgba(4,10,19,0.18),rgba(4,10,19,0.36))]" : "bg-black/25"}`} />
@@ -4415,14 +4445,16 @@ function MeditationPageContent() {
               </div>
             ) : journeyMode ? (
               <div className="flex min-h-[112px] w-full items-center justify-center">
-                <div
-                  key={`${journeyDay}-${journeyGuidanceStage}-${showJourneyEntranceVisual ? "settling" : "active"}`}
-                  className="animate-fade-in transition-opacity duration-500"
-                >
-                  <p className="body-measure word-balance keep-phrase mx-auto whitespace-pre-line text-center font-serif text-[1.2rem] leading-[1.95] text-white/90 sm:text-[1.5rem] sm:leading-[2]">
-                    {journeyDisplayMessage}
-                  </p>
-                </div>
+                {showJourneyEntranceVisual ? (
+                  <div
+                    key={`${journeyDay}-settling`}
+                    className="animate-fade-in transition-opacity duration-700"
+                  >
+                    <p className="body-measure word-balance keep-phrase mx-auto whitespace-pre-line text-center font-serif text-[1.24rem] leading-[1.98] text-white/92 sm:text-[1.6rem] sm:leading-[2.02]">
+                      {journeyCalmingLine}
+                    </p>
+                  </div>
+                ) : null}
               </div>
             ) : isRechargeGate ? null : (
               <div className="space-y-4">
@@ -4442,7 +4474,17 @@ function MeditationPageContent() {
             )}
 
             <div className="mt-12 flex min-h-[320px] w-full flex-col items-center justify-center">
-              {(journeyMode || meditationType !== "default") && needsUserStart ? (
+              {journeyMode && needsUserStart ? (
+                <div className="mb-6 flex w-full flex-col items-center justify-end gap-5">
+                  <button
+                    type="button"
+                    onClick={handleJourneyAudioStart}
+                    className="button-nowrap inline-flex min-h-[48px] items-center justify-center rounded-full border border-white/16 bg-white/[0.08] px-5 py-2.5 text-sm font-medium text-white/88 shadow-[0_18px_42px_rgba(4,12,24,0.2)] backdrop-blur-md transition duration-300 hover:bg-white/[0.12]"
+                  >
+                    {journeyCopy.audioStart}
+                  </button>
+                </div>
+              ) : (journeyMode || meditationType !== "default") && needsUserStart ? (
                 <div className={`mb-6 w-full ${isRechargeGate ? "max-w-3xl" : "max-w-md"} rounded-[24px] border border-[rgba(212,178,106,0.18)] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-[clamp(16px,4vw,40px)] py-5 text-center shadow-[0_18px_50px_rgba(4,12,24,0.18)] ${isRechargeGate ? "overflow-visible" : ""}`}>
                   {isRechargeGate ? (
                     <div className={`space-y-4 transition-all duration-300 sm:space-y-5 ${isRechargeStarting ? "scale-[0.98] opacity-0" : "scale-100 opacity-100"}`}>
@@ -4526,7 +4568,7 @@ function MeditationPageContent() {
                 </div>
               ) : null}
 
-              {!isRechargeGate ? (
+              {!isRechargeGate && !journeyMode ? (
               <div className="mb-6 flex items-center gap-2">
                 {vibrationSupported ? (
                   <button
@@ -4568,7 +4610,7 @@ function MeditationPageContent() {
                 ) : null}
               </div>
               ) : null}
-              {!isStructuredMorningGate && !isFocusGate && !isCalmGate && !isRechargeGate && !isGuidedEveningGate && !showJourneyEntranceVisual ? (
+              {!journeyMode && !isStructuredMorningGate && !isFocusGate && !isCalmGate && !isRechargeGate && !isGuidedEveningGate && !showJourneyEntranceVisual ? (
                 <p className="text-2xl font-medium text-white/72 transition-all duration-300 ease-out sm:text-3xl">
                   {copy.phases[phase]}
                 </p>
