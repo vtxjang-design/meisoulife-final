@@ -34,7 +34,15 @@ const AI_COACH_URL =
   "https://chatgpt.com/g/g-69f968bc9a408191a3e5f943912666c0-quiet-rhythm-guide";
 const JOURNEY_AUDIO_PENDING_KEY = "meisoulife_journey_audio_pending";
 const JOURNEY_AUDIO_DAY_KEY = "meisoulife_journey_day";
-const JOURNEY_OVERVIEW_IMAGE_SRC = "/7day-recovery/7day-recovery-overview.png";
+const JOURNEY_DAY_IMAGE_MAP: Record<number, string> = {
+  1: "/7day-recovery/day1.png",
+  2: "/7day-recovery/day2.png",
+  3: "/7day-recovery/day3.png",
+  4: "/7day-recovery/day4.png",
+  5: "/7day-recovery/day5.png",
+  6: "/7day-recovery/day6.png",
+  7: "/7day-recovery/day7.png"
+};
 const AFFIRMATION_TOTAL_SECONDS = 180;
 const JOURNEY_SETTLING_MS = 2000;
 const MORNING_GATE_FADE_IN_MS = 2000;
@@ -1216,56 +1224,56 @@ function getJourneyEntranceLine(language: "jp" | "kr" | "en", day: number | null
   if (language === "kr") {
     switch (safeDay) {
       case 2:
-        return "호흡만\n느껴봅시다.";
+        return "지금 이 호흡만 느껴봅시다.";
       case 3:
-        return "몸의 목소리를\n들어봅시다.";
+        return "몸의 목소리를 가만히 들어봅시다.";
       case 4:
-        return "자연의 고요로\n돌아가 봅시다.";
+        return "자연의 고요로 천천히 돌아가 봅시다.";
       case 5:
-        return "작은 감사 하나를\n느껴봅시다.";
+        return "작은 감사 하나를 마음에 올려봅시다.";
       case 6:
-        return "조용한 자리로\n돌아가 봅시다.";
+        return "조용한 자리로 다시 돌아가 봅시다.";
       case 7:
-        return "당신의 리듬을\n떠올려 봅시다.";
+        return "당신의 리듬을 다시 떠올려 봅시다.";
       default:
-        return "오늘,\n그저 자신에게 돌아와 봅니다.";
+        return "오늘은 그저 자신에게 돌아와 봅니다.";
     }
   }
 
   if (language === "en") {
     switch (safeDay) {
       case 2:
-        return "Feel only\nthis breath.";
+        return "Feel only this breath.";
       case 3:
-        return "Listen to\nyour body.";
+        return "Listen gently to your body.";
       case 4:
-        return "Return to\nthe quiet of nature.";
+        return "Return to the quiet of nature.";
       case 5:
-        return "Feel one small\nmoment of gratitude.";
+        return "Notice one small moment of gratitude.";
       case 6:
-        return "Return to\na quieter place.";
+        return "Return to a quieter place within.";
       case 7:
-        return "Remember\nyour own rhythm.";
+        return "Remember your own rhythm.";
       default:
-        return "Today,\nsimply return to yourself.";
+        return "Today, simply return to yourself.";
     }
   }
 
   switch (safeDay) {
     case 2:
-      return "呼吸だけを\n感じてみましょう。";
+      return "今はただ、この呼吸を感じてみましょう。";
     case 3:
-      return "身体の声を\n聴いてみましょう。";
+      return "身体の声に、そっと耳を澄ませましょう。";
     case 4:
-      return "自然の静けさに\n戻りましょう。";
+      return "自然の静けさへ、ゆっくり戻りましょう。";
     case 5:
-      return "小さな恵みを\n感じてみましょう。";
+      return "小さな恵みをひとつ感じてみましょう。";
     case 6:
-      return "静けさの中へ\n戻りましょう。";
+      return "静けさの中へ、もう一度戻りましょう。";
     case 7:
-      return "あなたのリズムを\n思い出しましょう。";
+      return "あなた自身のリズムを思い出しましょう。";
     default:
-      return "今日、\nただ自分に戻りましょう。";
+      return "今日は、ただ自分に戻りましょう。";
   }
 }
 
@@ -1737,6 +1745,7 @@ function MeditationPageContent() {
   const durationVariant = getDurationVariant(totalSeconds);
   const durationTextSet = copy.durationTexts?.[durationVariant];
   const journeyAudioSource = journeyDay ? journeyAudioMap[journeyDay] : undefined;
+  const journeyImageSource = journeyDay ? JOURNEY_DAY_IMAGE_MAP[journeyDay] : JOURNEY_DAY_IMAGE_MAP[1];
   const ambientAudioSource =
     journeyMode && journeyAudioSource
       ? journeyAudioSource
@@ -4373,17 +4382,17 @@ function MeditationPageContent() {
         {journeyMode ? (
           <div
             className={`pointer-events-none absolute inset-0 z-[1] overflow-hidden transition-all duration-[1600ms] ${
-              showJourneyEntranceVisual ? "opacity-100" : "opacity-[0.46]"
+              showJourneyEntranceVisual ? "opacity-100" : "opacity-[0.94]"
             }`}
           >
             <img
-              src={JOURNEY_OVERVIEW_IMAGE_SRC}
+              src={journeyImageSource}
               alt={journeyCopy.title}
               className={`absolute inset-0 h-full w-full object-cover transition-all duration-[2200ms] ${
-                showJourneyEntranceVisual ? "scale-100 opacity-100" : "scale-[1.03] opacity-[0.88]"
+                showJourneyEntranceVisual ? "scale-100 opacity-100" : "scale-[1.02] opacity-100"
               }`}
             />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(244,220,160,0.10),transparent_26%),linear-gradient(180deg,rgba(4,10,19,0.26),rgba(4,10,19,0.54))]" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,10,19,0.28)_0%,rgba(4,10,19,0.42)_40%,rgba(4,10,19,0.58)_100%)]" />
           </div>
         ) : null}
         <div className={`absolute inset-0 z-10 ${isStructuredMorningGate ? "bg-[linear-gradient(180deg,rgba(4,10,19,0.18),rgba(4,10,19,0.36))]" : "bg-black/25"}`} />
@@ -4445,16 +4454,14 @@ function MeditationPageContent() {
               </div>
             ) : journeyMode ? (
               <div className="flex min-h-[112px] w-full items-center justify-center">
-                {showJourneyEntranceVisual ? (
-                  <div
-                    key={`${journeyDay}-settling`}
-                    className="animate-fade-in transition-opacity duration-700"
-                  >
-                    <p className="body-measure word-balance keep-phrase mx-auto whitespace-pre-line text-center font-serif text-[1.24rem] leading-[1.98] text-white/92 sm:text-[1.6rem] sm:leading-[2.02]">
-                      {journeyCalmingLine}
-                    </p>
-                  </div>
-                ) : null}
+                <div
+                  key={`${journeyDay}-${showJourneyEntranceVisual ? "settling" : "active"}`}
+                  className={`transition-all duration-1000 ${showJourneyEntranceVisual ? "opacity-100" : "opacity-[0.88]"}`}
+                >
+                  <p className="body-measure word-balance keep-phrase mx-auto max-w-[20ch] text-center font-serif text-[1.08rem] leading-[1.85] text-white/92 sm:text-[1.22rem] sm:leading-[1.9]">
+                    {journeyCalmingLine}
+                  </p>
+                </div>
               </div>
             ) : isRechargeGate ? null : (
               <div className="space-y-4">
@@ -4617,8 +4624,8 @@ function MeditationPageContent() {
               ) : null}
 
               {!isRechargeGate && !isGuidedEveningGate ? (
-                <div className={`relative mt-10 flex h-56 w-56 items-center justify-center transition-all duration-[1200ms] sm:h-72 sm:w-72 ${
-                  showJourneyEntranceVisual ? "scale-[0.94] opacity-0 sm:scale-[0.96]" : "scale-100 opacity-100"
+                <div className={`relative mt-10 flex h-56 w-56 items-center justify-center transition-all duration-[1400ms] sm:h-72 sm:w-72 ${
+                  showJourneyEntranceVisual ? "translate-y-2 scale-[0.94] opacity-0 sm:scale-[0.96]" : "translate-y-0 scale-100 opacity-100"
                 }`}>
                   <div className="absolute inset-0 rounded-full bg-gold/10 blur-3xl" />
                   <div
