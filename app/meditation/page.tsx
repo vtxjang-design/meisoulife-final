@@ -1288,6 +1288,44 @@ function getJourneyEntranceLine(language: "jp" | "kr" | "en", day: number | null
   }
 }
 
+function getJourneyCompletionMomentCopy(language: "jp" | "kr" | "en", day: number | null) {
+  const isDaySeven = day === 7;
+
+  if (language === "kr") {
+    return isDaySeven
+      ? {
+          title: "7일간의 작은 회복을 걸어왔습니다.",
+          body: "당신의 리듬은 여기서부터 이어집니다."
+        }
+      : {
+          title: "오늘도 작은 회복을 만들었습니다.",
+          body: "내일 다시 이어가요."
+        };
+  }
+
+  if (language === "en") {
+    return isDaySeven
+      ? {
+          title: "You completed seven days of small recovery.",
+          body: "Your rhythm continues from here."
+        }
+      : {
+          title: "You created one small recovery today.",
+          body: "Let’s continue tomorrow."
+        };
+  }
+
+  return isDaySeven
+    ? {
+        title: "7日間の小さな回復を歩きました。",
+        body: "あなたのリズムは、ここから続きます。"
+      }
+    : {
+        title: "今日も、小さな回復ができました。",
+        body: "また明日、続けましょう。"
+      };
+}
+
 function getMorningGateStage(door: MeditationDoor, elapsedSeconds: number): StructuredMorningStage {
   if (door === "energy") {
     if (elapsedSeconds < 15) return "openingFade";
@@ -1668,6 +1706,9 @@ function MeditationPageContent() {
   const [journeyMode, setJourneyMode] = useState(false);
   const [journeyDay, setJourneyDay] = useState<number | null>(null);
   const [isJourneyPlaybackActive, setIsJourneyPlaybackActive] = useState(false);
+  const [showJourneyStartButton, setShowJourneyStartButton] = useState(false);
+  const [isJourneyStartButtonFading, setIsJourneyStartButtonFading] = useState(false);
+  const [isJourneyCompletionHolding, setIsJourneyCompletionHolding] = useState(false);
   const [isJourneySettling, setIsJourneySettling] = useState(false);
   const [returnToHref, setReturnToHref] = useState("/rhythm-journey");
   const [requestedRouteType, setRequestedRouteType] = useState<string | null>(null);
@@ -1722,6 +1763,8 @@ function MeditationPageContent() {
   const releaseSpeechUnlockedRef = useRef(false);
   const gratitudeSpeechUnlockedRef = useRef(false);
   const sleepSpeechUnlockedRef = useRef(false);
+  const journeyStartButtonTimeoutRef = useRef<number | null>(null);
+  const journeyCompletionHoldTimeoutRef = useRef<number | null>(null);
   const rechargeTimerIntervalRef = useRef<number | null>(null);
   const rechargeStartTriggerLockRef = useRef(false);
   const awakeningRitualHandledRef = useRef(false);
@@ -1810,6 +1853,7 @@ function MeditationPageContent() {
         ? "Start Recharge"
         : "リチャージを始める";
   const journeyCalmingLine = getJourneyEntranceLine(localizedLanguage, journeyDay);
+  const journeyCompletionMomentCopy = getJourneyCompletionMomentCopy(localizedLanguage, journeyDay);
   const completionNoteText = isStructuredMorningGate
     ? morningGateCopy.completionNote
     : basicPracticeCopy
@@ -1824,6 +1868,7 @@ function MeditationPageContent() {
   const circleScaleClass =
     phase === "inhale" ? "scale-110" : phase === "hold" ? "scale-110" : "scale-90";
   const showJourneyEntranceVisual = journeyMode && !isComplete && needsUserStart;
+  const showJourneyStartButtonPanel = journeyMode && showJourneyStartButton;
   const affirmationProgress = isStructuredMorningGate ? Math.min(100, (elapsedTotalSeconds / AFFIRMATION_TOTAL_SECONDS) * 100) : 0;
   const awakeningCompletedOn = awakeningRitualState?.completedOn ?? getLocalDayStamp();
   const awakeningPrompt = ritualCopy.prompts[getAwakeningPromptIndex(awakeningCompletedOn, ritualCopy.prompts.length)];
@@ -2403,9 +2448,19 @@ function MeditationPageContent() {
       setNeedsUserStart(false);
       setIsPaused(false);
       setIsJourneyPlaybackActive(true);
+      setIsJourneyStartButtonFading(true);
       setSoundEnabled(true);
       setNatureSoundPreference(true);
       setIsJourneySettling(false);
+
+      if (journeyStartButtonTimeoutRef.current !== null) {
+        window.clearTimeout(journeyStartButtonTimeoutRef.current);
+      }
+      journeyStartButtonTimeoutRef.current = window.setTimeout(() => {
+        setShowJourneyStartButton(false);
+        setIsJourneyStartButtonFading(false);
+        journeyStartButtonTimeoutRef.current = null;
+      }, 650);
 
       safeSessionStorageRemove(JOURNEY_AUDIO_PENDING_KEY);
       safeSessionStorageRemove(JOURNEY_AUDIO_DAY_KEY);
@@ -2417,6 +2472,8 @@ function MeditationPageContent() {
       setNeedsUserStart(true);
       setIsPaused(true);
       setIsJourneyPlaybackActive(false);
+      setShowJourneyStartButton(true);
+      setIsJourneyStartButtonFading(false);
       setIsJourneySettling(false);
       if (process.env.NODE_ENV !== "production") {
         console.error("[Journey Audio] manual start failed:", error);
@@ -2881,6 +2938,12 @@ function MeditationPageContent() {
       if (journeySettlingTimeoutRef.current !== null) {
         window.clearTimeout(journeySettlingTimeoutRef.current);
       }
+      if (journeyStartButtonTimeoutRef.current !== null) {
+        window.clearTimeout(journeyStartButtonTimeoutRef.current);
+      }
+      if (journeyCompletionHoldTimeoutRef.current !== null) {
+        window.clearTimeout(journeyCompletionHoldTimeoutRef.current);
+      }
       stopJourneyAudio();
       journeyAudioRef.current = null;
       void stopStructuredMorningAmbient();
@@ -2940,13 +3003,27 @@ function MeditationPageContent() {
     if (!journeyMode) {
       stopJourneyAudio();
       setIsJourneyPlaybackActive(false);
+      setShowJourneyStartButton(false);
+      setIsJourneyStartButtonFading(false);
+      setIsJourneyCompletionHolding(false);
       return;
     }
 
+    if (journeyStartButtonTimeoutRef.current !== null) {
+      window.clearTimeout(journeyStartButtonTimeoutRef.current);
+      journeyStartButtonTimeoutRef.current = null;
+    }
+    if (journeyCompletionHoldTimeoutRef.current !== null) {
+      window.clearTimeout(journeyCompletionHoldTimeoutRef.current);
+      journeyCompletionHoldTimeoutRef.current = null;
+    }
     setNeedsUserStart(true);
     setRequiresExplicitAudioStart(true);
     setIsPaused(true);
     setIsJourneyPlaybackActive(false);
+    setShowJourneyStartButton(true);
+    setIsJourneyStartButtonFading(false);
+    setIsJourneyCompletionHolding(false);
     setIsJourneySettling(false);
     stopJourneyAudio();
     setSecondsLeft(totalSeconds);
@@ -2988,6 +3065,27 @@ function MeditationPageContent() {
       window.clearTimeout(timer);
     };
   }, [isJourneyPlaybackActive, isPaused, isRechargeGate, journeyMode, needsUserStart, secondsLeft]);
+
+  useEffect(() => {
+    if (!journeyMode || !isComplete || completionHandledRef.current || isJourneyCompletionHolding) {
+      return;
+    }
+
+    stopJourneyAudio();
+    setIsJourneyPlaybackActive(false);
+    setIsJourneyCompletionHolding(true);
+
+    if (journeyCompletionHoldTimeoutRef.current !== null) {
+      window.clearTimeout(journeyCompletionHoldTimeoutRef.current);
+    }
+
+    journeyCompletionHoldTimeoutRef.current = window.setTimeout(() => {
+      setIsJourneyCompletionHolding(false);
+      completionHandledRef.current = true;
+      journeyCompletionHoldTimeoutRef.current = null;
+      void runMeditationComplete();
+    }, 3000);
+  }, [isComplete, isJourneyCompletionHolding, journeyMode]);
 
   useEffect(() => {
     if (!isStructuredMorningGate || !soundEnabled) {
@@ -3144,13 +3242,13 @@ function MeditationPageContent() {
   }, [isAffirmationGate, isComplete, pendingStructuredAmbientStart, requiresExplicitAudioStart]);
 
   useEffect(() => {
-    if (!isComplete || completionHandledRef.current) {
+    if (!isComplete || completionHandledRef.current || (journeyMode && isJourneyCompletionHolding)) {
       return;
     }
 
     completionHandledRef.current = true;
     runMeditationComplete();
-  }, [isComplete, hasUserGesture, soundEnabled, vibrationEnabled]);
+  }, [isComplete, isJourneyCompletionHolding, journeyMode, hasUserGesture, soundEnabled, vibrationEnabled]);
 
   useEffect(() => {
     if (!isAwakeningGate || !isComplete || typeof window === "undefined") {
@@ -4536,7 +4634,7 @@ function MeditationPageContent() {
               src={journeyImageSource}
               alt={journeyCopy.title}
               className={`absolute inset-0 h-full w-full object-cover transition-all duration-[2200ms] ${
-                showJourneyEntranceVisual ? "scale-100 opacity-100" : "scale-[1.02] opacity-100"
+                showJourneyEntranceVisual ? "scale-[1.04] opacity-100" : "scale-[1.08] opacity-100"
               }`}
             />
             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,10,19,0.28)_0%,rgba(4,10,19,0.42)_40%,rgba(4,10,19,0.58)_100%)]" />
@@ -4628,8 +4726,10 @@ function MeditationPageContent() {
             )}
 
             <div className="mt-12 flex min-h-[320px] w-full flex-col items-center justify-center">
-              {journeyMode && needsUserStart ? (
-                <div className="mb-6 flex w-full flex-col items-center justify-end gap-5">
+              {showJourneyStartButtonPanel ? (
+                <div className={`mb-6 flex w-full flex-col items-center justify-end gap-5 transition-opacity duration-700 ${
+                  isJourneyStartButtonFading ? "pointer-events-none opacity-0" : "opacity-100"
+                }`}>
                   <button
                     type="button"
                     onClick={handleJourneyAudioStart}
@@ -4768,7 +4868,11 @@ function MeditationPageContent() {
                 </p>
               ) : null}
 
-              {!journeyMode && !isRechargeGate && !isGuidedEveningGate ? (
+              {journeyMode && isJourneyPlaybackActive ? (
+                <div className="mt-10 flex items-center justify-center">
+                  <p className="font-serif text-5xl text-white/90 sm:text-6xl">{formatRemainingTime(secondsLeft)}</p>
+                </div>
+              ) : !journeyMode && !isRechargeGate && !isGuidedEveningGate ? (
                 <div className={`relative mt-10 flex h-56 w-56 items-center justify-center transition-all duration-[1400ms] sm:h-72 sm:w-72 ${
                   showJourneyEntranceVisual ? "translate-y-2 scale-[0.94] opacity-0 sm:scale-[0.96]" : "translate-y-0 scale-100 opacity-100"
                 }`}>
@@ -4844,7 +4948,7 @@ function MeditationPageContent() {
               ) : null}
             </div>
 
-            {!isStructuredMorningGate && !isFocusGate && !isCalmGate && !isRechargeGate && !isGuidedEveningGate ? (
+            {!journeyMode && !isStructuredMorningGate && !isFocusGate && !isCalmGate && !isRechargeGate && !isGuidedEveningGate ? (
               <div className="mt-8">
                 <p className="text-sm font-medium tracking-[0.18em] text-white/68 transition-opacity duration-300 sm:text-base">
                   {copy.bottomText[phase]}
@@ -4852,6 +4956,15 @@ function MeditationPageContent() {
               </div>
             ) : null}
           </>
+        ) : journeyMode && isJourneyCompletionHolding ? (
+          <div className="animate-fade-in space-y-6">
+            <p className="mx-auto max-w-2xl whitespace-pre-line font-serif text-[1.85rem] leading-[1.8] text-white/90 sm:text-[2.35rem] sm:leading-[1.82]">
+              {journeyCompletionMomentCopy.title}
+            </p>
+            <p className="mx-auto max-w-xl whitespace-pre-line text-base leading-8 text-white/70 sm:text-lg">
+              {journeyCompletionMomentCopy.body}
+            </p>
+          </div>
         ) : isAwakeningGate ? (
           <div className="animate-fade-in space-y-8">
             <div className="space-y-4">
