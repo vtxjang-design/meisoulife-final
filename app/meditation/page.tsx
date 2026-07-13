@@ -1278,18 +1278,6 @@ function getJourneyEntranceLine(language: "jp" | "kr" | "en", day: number | null
   }
 }
 
-function getJourneyAudioRetryMessage(language: "jp" | "kr" | "en") {
-  if (language === "kr") {
-    return "다시 한 번 눌러 시작해 주세요.";
-  }
-
-  if (language === "en") {
-    return "Please tap again to start the audio.";
-  }
-
-  return "もう一度押して音を始めてください。";
-}
-
 function getMorningGateStage(door: MeditationDoor, elapsedSeconds: number): StructuredMorningStage {
   if (door === "energy") {
     if (elapsedSeconds < 15) return "openingFade";
@@ -1669,7 +1657,6 @@ function MeditationPageContent() {
   const [selectedRechargeExercise, setSelectedRechargeExercise] = useState<RechargeExerciseKey>("heelRaise");
   const [journeyMode, setJourneyMode] = useState(false);
   const [journeyDay, setJourneyDay] = useState<number | null>(null);
-  const [journeyAudioRetryMessage, setJourneyAudioRetryMessage] = useState<string | null>(null);
   const [isJourneySettling, setIsJourneySettling] = useState(false);
   const [returnToHref, setReturnToHref] = useState("/rhythm-journey");
   const [requestedRouteType, setRequestedRouteType] = useState<string | null>(null);
@@ -1810,7 +1797,6 @@ function MeditationPageContent() {
         ? "Start Recharge"
         : "リチャージを始める";
   const journeyCalmingLine = getJourneyEntranceLine(localizedLanguage, journeyDay);
-  const journeyAudioRetryText = getJourneyAudioRetryMessage(localizedLanguage);
   const completionNoteText = isStructuredMorningGate
     ? morningGateCopy.completionNote
     : basicPracticeCopy
@@ -1824,7 +1810,7 @@ function MeditationPageContent() {
       : null;
   const circleScaleClass =
     phase === "inhale" ? "scale-110" : phase === "hold" ? "scale-110" : "scale-90";
-  const showJourneyEntranceVisual = journeyMode && !isComplete && (needsUserStart || isJourneySettling);
+  const showJourneyEntranceVisual = journeyMode && !isComplete && needsUserStart;
   const affirmationProgress = isStructuredMorningGate ? Math.min(100, (elapsedTotalSeconds / AFFIRMATION_TOTAL_SECONDS) * 100) : 0;
   const awakeningCompletedOn = awakeningRitualState?.completedOn ?? getLocalDayStamp();
   const awakeningPrompt = ritualCopy.prompts[getAwakeningPromptIndex(awakeningCompletedOn, ritualCopy.prompts.length)];
@@ -2167,7 +2153,6 @@ function MeditationPageContent() {
     setRequiresExplicitAudioStart(shouldPromptForAudioStart);
     setHasUserGesture(!shouldPromptForAudioStart);
     setIsPaused(mobileNeedsGesture && isProgramMode);
-    setJourneyAudioRetryMessage(null);
     setAffirmationMessage(null);
     setFocusGateMessage(null);
     setCalmGateMessage(null);
@@ -2227,6 +2212,38 @@ function MeditationPageContent() {
 
     audio.pause();
     audio.currentTime = 0;
+  }
+
+  function ensureJourneyAudio(source: string) {
+    const existingAudio = ambientAudioRef.current;
+    const existingSource = existingAudio?.dataset.meisoSrc;
+
+    if (existingAudio && existingSource !== source) {
+      existingAudio.pause();
+      existingAudio.currentTime = 0;
+      ambientAudioRef.current = null;
+    }
+
+    let audio = ambientAudioRef.current;
+    if (!audio) {
+      audio = new Audio(source);
+      audio.loop = true;
+      audio.preload = "auto";
+      audio.muted = false;
+      audio.dataset.meisoSrc = source;
+      ambientAudioRef.current = audio;
+    }
+
+    if (audio.src !== source) {
+      audio.src = source;
+    }
+
+    audio.preload = "auto";
+    audio.dataset.meisoSrc = source;
+    audio.volume = ambientAudioVolume ?? 0.65;
+    audio.muted = false;
+
+    return audio;
   }
 
   async function handleAmbientStartResult(result: { started: boolean; error?: unknown }, manual = false) {
@@ -2311,7 +2328,6 @@ function MeditationPageContent() {
 
     setHasUserGesture(true);
     setRequiresExplicitAudioStart(false);
-    setJourneyAudioRetryMessage(null);
 
     if (audioContextRef.current?.state === "suspended") {
       try {
@@ -2330,34 +2346,13 @@ function MeditationPageContent() {
     }
 
     try {
-      const existingAudio = ambientAudioRef.current;
-      const existingSource = existingAudio?.dataset.meisoSrc;
-
-      if (existingAudio && existingSource !== resolvedJourneyAudioSource) {
-        existingAudio.pause();
-        existingAudio.currentTime = 0;
-        ambientAudioRef.current = null;
-      }
-
-      let audio = ambientAudioRef.current;
-      if (!audio) {
-        audio = new Audio(resolvedJourneyAudioSource);
-        audio.loop = true;
-        audio.preload = "auto";
-        audio.muted = false;
-        audio.dataset.meisoSrc = resolvedJourneyAudioSource;
-        ambientAudioRef.current = audio;
-      }
-
+      const audio = ensureJourneyAudio(resolvedJourneyAudioSource);
       stopJourneyAudio();
-      audio.src = resolvedJourneyAudioSource;
-      audio.load();
-      audio.volume = ambientAudioVolume ?? 0.65;
-      audio.muted = false;
       await audio.play();
 
       if (journeySettlingTimeoutRef.current !== null) {
         window.clearTimeout(journeySettlingTimeoutRef.current);
+        journeySettlingTimeoutRef.current = null;
       }
       setSecondsLeft(totalSeconds);
       setShowAmbientRetry(false);
@@ -2365,11 +2360,7 @@ function MeditationPageContent() {
       setIsPaused(false);
       setSoundEnabled(true);
       setNatureSoundPreference(true);
-      setIsJourneySettling(true);
-      journeySettlingTimeoutRef.current = window.setTimeout(() => {
-        setIsJourneySettling(false);
-        journeySettlingTimeoutRef.current = null;
-      }, JOURNEY_SETTLING_MS);
+      setIsJourneySettling(false);
 
       safeSessionStorageRemove(JOURNEY_AUDIO_PENDING_KEY);
       safeSessionStorageRemove(JOURNEY_AUDIO_DAY_KEY);
@@ -2380,7 +2371,6 @@ function MeditationPageContent() {
       setNeedsUserStart(true);
       setIsPaused(true);
       setIsJourneySettling(false);
-      setJourneyAudioRetryMessage(journeyAudioRetryText);
       if (process.env.NODE_ENV !== "production") {
         console.error("[Journey Audio] manual start failed:", error);
       }
@@ -2904,17 +2894,21 @@ function MeditationPageContent() {
       return;
     }
 
-    setJourneyAudioRetryMessage(null);
     setNeedsUserStart(true);
     setRequiresExplicitAudioStart(true);
     setIsJourneySettling(false);
     stopJourneyAudio();
     setSecondsLeft(totalSeconds);
 
+    if (journeyAudioSource) {
+      const audio = ensureJourneyAudio(journeyAudioSource);
+      audio.load();
+    }
+
     return () => {
       stopJourneyAudio();
     };
-  }, [journeyDay, journeyMode, totalSeconds]);
+  }, [journeyAudioSource, journeyDay, journeyMode, totalSeconds]);
 
   useEffect(() => {
     if (!isGuidedEveningGate) {
@@ -4586,9 +4580,6 @@ function MeditationPageContent() {
                   >
                     {journeyCopy.audioStart}
                   </button>
-                  {journeyAudioRetryMessage ? (
-                    <p className="text-sm leading-6 text-white/72">{journeyAudioRetryMessage}</p>
-                  ) : null}
                 </div>
               ) : (journeyMode || meditationType !== "default") && needsUserStart ? (
                 <div className={`mb-6 w-full ${isRechargeGate ? "max-w-3xl" : "max-w-md"} rounded-[24px] border border-[rgba(212,178,106,0.18)] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-[clamp(16px,4vw,40px)] py-5 text-center shadow-[0_18px_50px_rgba(4,12,24,0.18)] ${isRechargeGate ? "overflow-visible" : ""}`}>
@@ -4720,7 +4711,7 @@ function MeditationPageContent() {
                 </p>
               ) : null}
 
-              {!isRechargeGate && !isGuidedEveningGate ? (
+              {!journeyMode && !isRechargeGate && !isGuidedEveningGate ? (
                 <div className={`relative mt-10 flex h-56 w-56 items-center justify-center transition-all duration-[1400ms] sm:h-72 sm:w-72 ${
                   showJourneyEntranceVisual ? "translate-y-2 scale-[0.94] opacity-0 sm:scale-[0.96]" : "translate-y-0 scale-100 opacity-100"
                 }`}>
@@ -4736,7 +4727,7 @@ function MeditationPageContent() {
                   </div>
                 </div>
               ) : (
-                <div className="mt-8 min-h-[260px] w-full" />
+                <div className={`${journeyMode ? "mt-4 min-h-[120px]" : "mt-8 min-h-[260px]"} w-full`} />
               )}
 
               {isStructuredMorningGate ? (
