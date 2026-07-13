@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useRef, useState, type MutableRefObject } from "react";
 import { useAuthState } from "@/components/auth-provider";
 import { MembershipAccessStateView, useMembershipAccess } from "@/components/membership-guard";
@@ -1293,37 +1293,19 @@ function getJourneyCompletionMomentCopy(language: "jp" | "kr" | "en", day: numbe
 
   if (language === "kr") {
     return isDaySeven
-      ? {
-          title: "7일간의 작은 회복을 걸어왔습니다.",
-          body: "당신의 리듬은 여기서부터 이어집니다."
-        }
-      : {
-          title: "오늘도 작은 회복을 만들었습니다.",
-          body: "내일 다시 이어가요."
-        };
+      ? ["7일간의 작은 회복을 걸어왔습니다.", "당신의 리듬은 여기서부터 이어집니다."]
+      : ["오늘,", "작은 회복을 만들었습니다.", "내일 다시 이어가요."];
   }
 
   if (language === "en") {
     return isDaySeven
-      ? {
-          title: "You completed seven days of small recovery.",
-          body: "Your rhythm continues from here."
-        }
-      : {
-          title: "You created one small recovery today.",
-          body: "Let’s continue tomorrow."
-        };
+      ? ["You completed seven days of small recovery.", "Your rhythm continues from here."]
+      : ["Today,", "You created one small recovery.", "See you tomorrow."];
   }
 
   return isDaySeven
-    ? {
-        title: "7日間の小さな回復を歩きました。",
-        body: "あなたのリズムは、ここから続きます。"
-      }
-    : {
-        title: "今日も、小さな回復ができました。",
-        body: "また明日、続けましょう。"
-      };
+    ? ["7日間の小さな回復を歩きました。", "あなたのリズムは、ここから続きます。"]
+    : ["今日も、", "小さな回復ができました。", "また明日。"];
 }
 
 function getMorningGateStage(door: MeditationDoor, elapsedSeconds: number): StructuredMorningStage {
@@ -1650,6 +1632,7 @@ function getAwakeningPromptIndex(dayStamp: string, promptCount: number) {
 }
 
 function MeditationPageContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const { authResolved } = useAuthState();
   const { language } = useLanguage();
@@ -2293,6 +2276,47 @@ function MeditationPageContent() {
     logJourneyAudio("pause/reset");
     audio.pause();
     audio.currentTime = 0;
+  }
+
+  async function softlyFinishJourneyAudio() {
+    const audio = journeyAudioRef.current;
+
+    if (!audio || audio.paused) {
+      return;
+    }
+
+    const startingVolume = audio.volume;
+    const holdMs = 2000;
+    const fadeMs = 800;
+
+    await new Promise<void>((resolve) => {
+      window.setTimeout(() => {
+        if (audio.paused) {
+          resolve();
+          return;
+        }
+
+        const fadeStartedAt = performance.now();
+
+        const tick = (now: number) => {
+          const progress = Math.min((now - fadeStartedAt) / fadeMs, 1);
+          audio.volume = startingVolume * (1 - progress);
+
+          if (progress >= 1) {
+            resolve();
+            return;
+          }
+
+          window.requestAnimationFrame(tick);
+        };
+
+        window.requestAnimationFrame(tick);
+      }, holdMs);
+    });
+
+    audio.pause();
+    audio.currentTime = 0;
+    audio.volume = startingVolume;
   }
 
   function ensureJourneyAudio(source: string) {
@@ -3071,7 +3095,6 @@ function MeditationPageContent() {
       return;
     }
 
-    stopJourneyAudio();
     setIsJourneyPlaybackActive(false);
     setIsJourneyCompletionHolding(true);
 
@@ -3079,13 +3102,16 @@ function MeditationPageContent() {
       window.clearTimeout(journeyCompletionHoldTimeoutRef.current);
     }
 
+    void softlyFinishJourneyAudio();
+
     journeyCompletionHoldTimeoutRef.current = window.setTimeout(() => {
-      setIsJourneyCompletionHolding(false);
       completionHandledRef.current = true;
       journeyCompletionHoldTimeoutRef.current = null;
-      void runMeditationComplete();
-    }, 3000);
-  }, [isComplete, isJourneyCompletionHolding, journeyMode]);
+      void runMeditationComplete().then(() => {
+        router.push(returnToHref);
+      });
+    }, 5000);
+  }, [isComplete, isJourneyCompletionHolding, journeyMode, returnToHref, router]);
 
   useEffect(() => {
     if (!isStructuredMorningGate || !soundEnabled) {
@@ -3242,7 +3268,7 @@ function MeditationPageContent() {
   }, [isAffirmationGate, isComplete, pendingStructuredAmbientStart, requiresExplicitAudioStart]);
 
   useEffect(() => {
-    if (!isComplete || completionHandledRef.current || (journeyMode && isJourneyCompletionHolding)) {
+    if (journeyMode || !isComplete || completionHandledRef.current || isJourneyCompletionHolding) {
       return;
     }
 
@@ -4634,7 +4660,11 @@ function MeditationPageContent() {
               src={journeyImageSource}
               alt={journeyCopy.title}
               className={`absolute inset-0 h-full w-full object-cover transition-all duration-[2200ms] ${
-                showJourneyEntranceVisual ? "scale-[1.04] opacity-100" : "scale-[1.08] opacity-100"
+                showJourneyEntranceVisual
+                  ? "scale-[1.04] opacity-100 brightness-[0.9]"
+                  : isJourneyCompletionHolding
+                    ? "scale-[1.08] opacity-100 brightness-100"
+                    : "scale-[1.08] opacity-100 brightness-[0.9]"
               }`}
             />
             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,10,19,0.28)_0%,rgba(4,10,19,0.42)_40%,rgba(4,10,19,0.58)_100%)]" />
@@ -4956,14 +4986,21 @@ function MeditationPageContent() {
               </div>
             ) : null}
           </>
-        ) : journeyMode && isJourneyCompletionHolding ? (
-          <div className="animate-fade-in space-y-6">
-            <p className="mx-auto max-w-2xl whitespace-pre-line font-serif text-[1.85rem] leading-[1.8] text-white/90 sm:text-[2.35rem] sm:leading-[1.82]">
-              {journeyCompletionMomentCopy.title}
-            </p>
-            <p className="mx-auto max-w-xl whitespace-pre-line text-base leading-8 text-white/70 sm:text-lg">
-              {journeyCompletionMomentCopy.body}
-            </p>
+        ) : journeyMode ? (
+          <div className="space-y-5">
+            {journeyCompletionMomentCopy.map((line, index) => (
+              <p
+                key={`${journeyDay ?? "journey"}-completion-line-${index}`}
+                className={`mx-auto whitespace-pre-line opacity-0 [animation-fill-mode:forwards] ${
+                  index === 0
+                    ? "max-w-xl font-serif text-[1rem] tracking-[0.08em] text-white/72 sm:text-[1.06rem]"
+                    : "max-w-2xl font-serif text-[1.28rem] leading-[1.78] text-white/88 sm:text-[1.55rem] sm:leading-[1.84]"
+                } animate-fade-in`}
+                style={{ animationDelay: `${index * 700}ms` }}
+              >
+                {line}
+              </p>
+            ))}
           </div>
         ) : isAwakeningGate ? (
           <div className="animate-fade-in space-y-8">
@@ -5035,12 +5072,14 @@ function MeditationPageContent() {
             <p className="whitespace-pre-line text-sm leading-7 text-white/54">{completionNoteText}</p>
             {completionBodyText ? <p className="mx-auto max-w-2xl text-base leading-8 text-white/68">{completionBodyText}</p> : null}
             <div className="flex flex-col items-center gap-3">
-              <Link
-                href={returnToHref}
-                className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
-              >
-                {isStructuredMorningGate ? morningGateCopy.completionButton : journeyMode ? journeyCopy.nextCta : copy.completionPrimary}
-              </Link>
+              {journeyMode ? null : (
+                <Link
+                  href={returnToHref}
+                  className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
+                >
+                  {isStructuredMorningGate ? morningGateCopy.completionButton : copy.completionPrimary}
+                </Link>
+              )}
               {!journeyMode && !isStructuredMorningGate ? (
                 <Link
                   href="/"
