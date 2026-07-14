@@ -1352,7 +1352,7 @@ function getFocusGateSpeechSettings(language: "jp" | "kr" | "en") {
       lang: "ko-KR",
       rate: 0.68,
       pitch: 0.98,
-      volume: 1,
+      volume: 0.9,
       preferredNames: ["Yuna", "Sora", "Google 한국어", "Siri"]
     };
   }
@@ -1362,7 +1362,7 @@ function getFocusGateSpeechSettings(language: "jp" | "kr" | "en") {
       lang: "en-US",
       rate: 0.76,
       pitch: 1,
-      volume: 1,
+      volume: 0.9,
       preferredNames: ["Samantha", "Ava", "Victoria", "Google US English", "Siri"]
     };
   }
@@ -1371,7 +1371,7 @@ function getFocusGateSpeechSettings(language: "jp" | "kr" | "en") {
     lang: "ja-JP",
     rate: 0.72,
     pitch: 0.96,
-    volume: 1,
+    volume: 0.9,
     preferredNames: ["Kyoko", "Otoya", "Google 日本語", "Siri"]
   };
 }
@@ -2799,6 +2799,20 @@ function MeditationPageContent() {
     }
   }
 
+  function cancelFocusGateSpeech() {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+      return;
+    }
+
+    if (focusSpeechTimeoutRef.current) {
+      window.clearTimeout(focusSpeechTimeoutRef.current);
+      focusSpeechTimeoutRef.current = null;
+    }
+
+    focusSpeechSequenceRef.current += 1;
+    window.speechSynthesis.cancel();
+  }
+
   function unlockCalmGateSpeech() {
     if (!isCalmGate || typeof window === "undefined" || !("speechSynthesis" in window)) {
       return;
@@ -3417,6 +3431,16 @@ function MeditationPageContent() {
   ]);
 
   useEffect(() => {
+    if (!isFocusGate || typeof window === "undefined") {
+      return;
+    }
+
+    return () => {
+      cancelFocusGateSpeech();
+    };
+  }, [isFocusGate, localizedLanguage]);
+
+  useEffect(() => {
     if (!isFocusGate || isComplete || isPaused || needsUserStart || typeof window === "undefined") {
       return;
     }
@@ -3447,7 +3471,8 @@ function MeditationPageContent() {
         focusSpeechTimeoutRef.current = null;
       }
 
-      const speechDelayMs = nextLine.speechDelayMs ?? 420;
+      const isFirstFocusLine = spokenFocusKeysRef.current.size === 1;
+      const speechDelayMs = nextLine.speechDelayMs ?? (isFirstFocusLine ? 700 : 420);
 
       const queueSpeak = (attempt: number) => {
         if (
@@ -3459,10 +3484,10 @@ function MeditationPageContent() {
         }
 
         if (synth.speaking || synth.pending) {
-          if (attempt >= 12) {
+          if (attempt >= 16) {
             synth.cancel();
           } else {
-            focusSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(attempt + 1), 140);
+            focusSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(attempt + 1), 180);
             return;
           }
         }
@@ -3496,7 +3521,6 @@ function MeditationPageContent() {
           focusSpeechTimeoutRef.current = null;
         };
 
-        synth.cancel();
         synth.speak(utterance);
       };
 
