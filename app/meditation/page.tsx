@@ -299,7 +299,7 @@ const awakeningRitualCopy = {
 
 const focusGateNarration: Record<"jp" | "kr" | "en", GuidedFocusLine[]> = {
   jp: [
-    { at: 5, key: "focus-1", text: "息を、\nゆっくり吸ってみます", speechText: "息を、\nゆっくり吸ってみます", speechDelayMs: 620 },
+    { at: 1, key: "focus-1", text: "鼻から、\n静かに息を入れます。", speechText: "鼻から、\n静かに、\n息を入れます。", speechDelayMs: 420 },
     { at: 12, key: "focus-2", text: "ゆっくり、\n吐きます", speechText: "ゆっくり、\n吐きます", speechDelayMs: 640 },
     { at: 24, key: "focus-3", text: "すべてを、\n今すぐ考えなくても\n大丈夫です", speechText: "すべてを、\nいま すぐ かんがえなくても\nだいじょうぶです", speechDelayMs: 700 },
     { at: 38, key: "focus-4", text: "今は、\nひとつだけに\n意識を戻してみます", speechText: "いまは、\nひとつだけに\nいしきを もどしてみます", speechDelayMs: 720 },
