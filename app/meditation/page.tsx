@@ -63,7 +63,7 @@ const VISION_GATE_SPEECH_RATE_RATIO = 0.9;
 const MORNING_GATE_AUDIO = {
   energy: {
     src: "/audio/morning/energy%20gate.mp3",
-    volume: 0.14
+    volume: 0.15
   }
 } as const;
 const AWAKENING_GATE_VIDEO_SRC = "/video/morning-gate/awakening-gate-1.mp4";
@@ -76,8 +76,8 @@ const RECHARGE_GATE_GUIDE_IMAGE_SRC = "/basic/daytime-gate/recharge%20gate.png";
 const EVENING_RELEASE_VIDEO_SRC = "/evening-gate/evening%20gate1.mp4";
 const EVENING_GRATITUDE_VIDEO_SRC = "/basic/evening-gate/Gratitude%20Gate1.mp4";
 const EVENING_SLEEP_VIDEO_SRC = "/basic/evening-gate/sleep%20gate1.mp4";
-const AWAKENING_GATE_VIDEO_VOLUME = 0.13;
-const VISION_GATE_VIDEO_VOLUME = 0.14;
+const AWAKENING_GATE_VIDEO_VOLUME = 0.14;
+const VISION_GATE_VIDEO_VOLUME = 0.15;
 const FOCUS_GATE_VIDEO_VOLUME = 0.34;
 const CALM_GATE_VIDEO_VOLUME = 0.35;
 const RECHARGE_GATE_VIDEO_VOLUME = 1;
