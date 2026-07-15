@@ -61,12 +61,36 @@ export function useMembershipAccess(requiredPlan: ProtectedMembershipPlan | null
   }, [pathname]);
 
   useEffect(() => {
+    function logMembershipAccess(reason: string, extras?: Record<string, unknown>) {
+      if (process.env.NODE_ENV === "production") {
+        return;
+      }
+
+      console.log("[membership-guard] access check", {
+        reason,
+        nextPath,
+        requiredPlan,
+        authResolved,
+        isLoggedIn,
+        planResolved,
+        plan,
+        membershipStatus,
+        hasActiveSubscription,
+        isMembershipLoading,
+        planError: planError || null,
+        emailMismatchEvidence: "not determinable from guard",
+        ...extras
+      });
+    }
+
     if (!requiredPlan) {
+      logMembershipAccess("no protected plan required");
       setStatus("ready");
       return;
     }
 
     if (!authResolved) {
+      logMembershipAccess("membership resolution pending", { phase: "auth unresolved" });
       setStatus("checking");
       return;
     }
@@ -74,32 +98,42 @@ export function useMembershipAccess(requiredPlan: ProtectedMembershipPlan | null
     const supabase = getSupabaseClient();
 
     if (!supabase) {
+      logMembershipAccess("missing Supabase configuration");
       setStatus("unavailable");
       return;
     }
 
     if (!isLoggedIn) {
+      logMembershipAccess("no authenticated user");
       setStatus("redirecting");
       router.replace(`/login?next=${encodeURIComponent(nextPath)}`);
       return;
     }
 
     if (!planResolved || isMembershipLoading) {
+      logMembershipAccess("authenticated user found", {
+        phase: "membership resolution pending"
+      });
       setStatus("checking");
       return;
     }
 
     if (planError) {
+      logMembershipAccess("membership API error");
       setStatus("membership-error");
       return;
     }
 
     if (!hasActiveSubscription || !hasProtectedMembershipAccess({ plan, membershipStatus, requiredPlan })) {
+      logMembershipAccess(!membershipStatus ? "no membership record" : "inactive membership", {
+        authenticatedUser: true
+      });
       setStatus("redirecting");
       router.replace(`/member?next=${encodeURIComponent(nextPath)}`);
       return;
     }
 
+    logMembershipAccess("active membership");
     setStatus("ready");
   }, [
     authResolved,
