@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import { normalizeLookupEmail, normalizeMembershipPlan } from "@/lib/membership";
 import { sendAdminPaymentNotification, sendPaymentConfirmationEmail } from "@/lib/resend";
 import { getStripeClient } from "@/lib/stripe";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
@@ -32,28 +33,6 @@ function getCurrentPeriodEnd(subscription: Stripe.Subscription | null) {
   return subscription?.items.data[0]?.current_period_end ?? null;
 }
 
-function normalizeMembershipPlan(input?: string | null) {
-  if (!input) {
-    return null;
-  }
-
-  const normalized = input.toLowerCase().replace(/[-\s]/g, "_");
-
-  if (normalized === "basic") {
-    return "basic";
-  }
-
-  if (normalized === "growth" || normalized === "leader") {
-    return "growth";
-  }
-
-  if (normalized === "inner_circle" || normalized === "premium") {
-    return "inner_circle";
-  }
-
-  return null;
-}
-
 function resolvePlanFromAmount(amountTotal?: number | null) {
   if (amountTotal === 1000) {
     return "basic";
@@ -76,16 +55,17 @@ function getMembershipPlan(record: MembershipSyncInput) {
 
 async function resolveMembershipUserId(email?: string | null, explicitUserId?: string | null) {
   const supabase = getSupabaseAdminClient();
+  const normalizedEmail = normalizeLookupEmail(email);
 
   if (explicitUserId) {
     return explicitUserId;
   }
 
-  if (!supabase || !email) {
+  if (!supabase || !normalizedEmail) {
     return null;
   }
 
-  console.log("[stripe-webhook] Stripe email", { email });
+  console.log("[stripe-webhook] Stripe email", { email: normalizedEmail });
 
   const { data, error } = await supabase.auth.admin.listUsers({
     page: 1,
@@ -94,16 +74,16 @@ async function resolveMembershipUserId(email?: string | null, explicitUserId?: s
 
   if (error) {
     console.error("[stripe-webhook] failed to lookup auth user by email", {
-      email,
+      email: normalizedEmail,
       message: error.message
     });
     return null;
   }
 
-  const matchedUser = data.users.find((user) => user.email?.toLowerCase() === email.toLowerCase());
+  const matchedUser = data.users.find((user) => normalizeLookupEmail(user.email) === normalizedEmail);
 
   console.log("[stripe-webhook] matched user id", {
-    email,
+    email: normalizedEmail,
     userId: matchedUser?.id || null
   });
 
@@ -123,11 +103,16 @@ async function upsertMembership(record: MembershipSyncInput) {
   const resolvedUserId = await resolveMembershipUserId(record.email, record.user_id);
   const resolvedPlan = getMembershipPlan(record);
   const resolvedStatus = record.status || "active";
+  const normalizedEmail = normalizeLookupEmail(record.email);
 
   if (!resolvedUserId) {
     console.warn("[stripe-webhook] membership sync skipped because user_id could not be resolved", {
-      email: record.email || null,
-      plan: resolvedPlan
+      email: normalizedEmail,
+      plan: resolvedPlan,
+      status: resolvedStatus,
+      stripeCustomerId: record.stripe_customer_id || null,
+      stripeSubscriptionId: record.stripe_subscription_id || null,
+      reason: "webhook_pending_or_email_mismatch"
     });
     return;
   }
@@ -137,7 +122,7 @@ async function upsertMembership(record: MembershipSyncInput) {
     .upsert(
       {
         user_id: resolvedUserId,
-        email: record.email || null,
+        email: normalizedEmail,
         stripe_customer_id: record.stripe_customer_id || null,
         stripe_subscription_id: record.stripe_subscription_id || null,
         plan: resolvedPlan,
@@ -179,7 +164,7 @@ async function upsertMembership(record: MembershipSyncInput) {
     const { data: fallbackData, error: fallbackError } = await supabase
       .from("memberships")
       .update({
-        email: record.email || null,
+        email: normalizedEmail,
         stripe_customer_id: record.stripe_customer_id || null,
         stripe_subscription_id: record.stripe_subscription_id || null,
         plan: resolvedPlan,
@@ -217,11 +202,12 @@ async function syncUserPlan(record: {
   }
 
   const resolvedUserId = await resolveMembershipUserId(record.email, record.userId);
+  const normalizedEmail = normalizeLookupEmail(record.email);
   const currentPlan = record.status === "active" || record.status === "trialing" ? normalizeMembershipPlan(record.plan) || "free" : "free";
   const { error } = await supabase.from("users").upsert(
     {
       auth_user_id: resolvedUserId || null,
-      email: record.email,
+      email: normalizedEmail,
       current_plan: currentPlan
     },
     {

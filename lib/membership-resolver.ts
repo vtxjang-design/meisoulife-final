@@ -4,6 +4,7 @@ import type Stripe from "stripe";
 import {
   fetchLatestMembershipPlan,
   isActiveMembershipStatus,
+  normalizeLookupEmail,
   normalizeMembershipPlan,
   type MembershipPlanKey,
   type MembershipResolutionResult
@@ -47,6 +48,25 @@ type LocalMembershipSnapshot = {
   subscription: LocalSubscriptionRow | null;
 };
 
+type MembershipFailureReason =
+  | "membership_active_local"
+  | "subscription_active_local"
+  | "membership_missing"
+  | "subscription_missing"
+  | "membership_inactive"
+  | "subscription_inactive"
+  | "membership_plan_mismatch"
+  | "subscription_plan_mismatch"
+  | "stripe_skipped_missing_config_or_lookup_key"
+  | "stripe_customer_not_found"
+  | "stripe_subscription_not_found"
+  | "stripe_subscription_inactive"
+  | "stripe_plan_mismatch"
+  | "webhook_pending_or_sync_missing"
+  | "repair_succeeded"
+  | "repair_skipped"
+  | "repair_not_needed";
+
 type ResolveMembershipEntitlementParams = {
   supabase: MembershipClient | null;
   userId: string;
@@ -77,11 +97,13 @@ function emptyResolution(source: MembershipResolutionResult["source"], errorMess
 
 async function loadLocalMembershipSnapshot(supabase: MembershipClient, userId: string, logPrefix: string) {
   const membershipState = await fetchLatestMembershipPlan(supabase, userId, logPrefix);
-  const { data: profile, error: profileError } = await supabase
+  const primaryProfileQuery = await supabase
     .from("users")
     .select("id, email, current_plan")
     .eq("auth_user_id", userId)
     .maybeSingle();
+  let profile = primaryProfileQuery.data ?? null;
+  const profileError = primaryProfileQuery.error;
 
   if (profileError) {
     console.error(`${logPrefix} profile fetch failed`, {
@@ -143,6 +165,7 @@ function resolveLocalMembership(
   stripeSubscriptionId: string | null;
   canManageMembership: boolean;
   hasActiveSubscription: boolean;
+  failureReasons: MembershipFailureReason[];
 } {
   const membershipPlan = normalizeMembershipPlan(snapshot.membership?.plan);
   const subscriptionPlan = normalizeMembershipPlan(snapshot.subscription?.plan_key);
@@ -168,6 +191,31 @@ function resolveLocalMembership(
     snapshot.membership?.stripe_subscription_id ?? snapshot.subscription?.stripe_subscription_id ?? null;
   const nextBillingDate =
     snapshot.membership?.current_period_end ?? snapshot.subscription?.current_period_end ?? null;
+  const failureReasons: MembershipFailureReason[] = [];
+
+  if (snapshot.membership) {
+    if (isActiveMembershipStatus(membershipStatus) && membershipPlan !== "free") {
+      failureReasons.push("membership_active_local");
+    } else if (!isActiveMembershipStatus(membershipStatus)) {
+      failureReasons.push("membership_inactive");
+    } else {
+      failureReasons.push("membership_plan_mismatch");
+    }
+  } else {
+    failureReasons.push("membership_missing");
+  }
+
+  if (snapshot.subscription) {
+    if (isActiveMembershipStatus(subscriptionStatus) && subscriptionPlan !== "free") {
+      failureReasons.push("subscription_active_local");
+    } else if (!isActiveMembershipStatus(subscriptionStatus)) {
+      failureReasons.push("subscription_inactive");
+    } else {
+      failureReasons.push("subscription_plan_mismatch");
+    }
+  } else {
+    failureReasons.push("subscription_missing");
+  }
 
   return {
     currentPlan,
@@ -176,7 +224,8 @@ function resolveLocalMembership(
     stripeCustomerId,
     stripeSubscriptionId,
     canManageMembership: Boolean(stripeCustomerId),
-    hasActiveSubscription: isActiveMembershipStatus(resolvedStatus) && currentPlan !== "free"
+    hasActiveSubscription: isActiveMembershipStatus(resolvedStatus) && currentPlan !== "free",
+    failureReasons
   };
 }
 
@@ -299,6 +348,7 @@ export async function resolveMembershipEntitlement(
   params: ResolveMembershipEntitlementParams
 ): Promise<MembershipResolutionResult> {
   const { supabase, userId, email = null, logPrefix = "[membership-resolver]" } = params;
+  const normalizedEmail = normalizeLookupEmail(email);
 
   if (!userId) {
     return emptyResolution("guest", null);
@@ -308,7 +358,56 @@ export async function resolveMembershipEntitlement(
     return emptyResolution("unavailable", "Supabase client is unavailable");
   }
 
-  const { membershipState, snapshot } = await loadLocalMembershipSnapshot(supabase, userId, logPrefix);
+  let { membershipState, snapshot } = await loadLocalMembershipSnapshot(supabase, userId, logPrefix);
+
+  if (!snapshot.profile && normalizedEmail) {
+    const { data: emailProfile, error: emailProfileError } = await supabase
+      .from("users")
+      .select("id, email, current_plan, auth_user_id")
+      .eq("email", normalizedEmail)
+      .maybeSingle();
+
+    if (emailProfileError) {
+      console.error(`${logPrefix} profile fallback by email failed`, {
+        userId,
+        email: normalizedEmail,
+        error: emailProfileError.message
+      });
+    } else if (emailProfile) {
+      console.log(`${logPrefix} profile recovered by email fallback`, {
+        userId,
+        email: normalizedEmail,
+        profileId: emailProfile.id ?? null,
+        authUserId: emailProfile.auth_user_id ?? null
+      });
+
+      const { data: emailSubscription, error: emailSubscriptionError } = await supabase
+        .from("subscriptions")
+        .select("id, stripe_customer_id, stripe_subscription_id, plan_key, status, current_period_end, created_at")
+        .eq("user_id", emailProfile.id)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (emailSubscriptionError) {
+        console.error(`${logPrefix} subscription fallback by email profile failed`, {
+          userId,
+          email: normalizedEmail,
+          error: emailSubscriptionError.message
+        });
+      }
+
+      snapshot = {
+        ...snapshot,
+        profile: {
+          id: emailProfile.id ?? null,
+          email: emailProfile.email ?? null,
+          current_plan: emailProfile.current_plan ?? null
+        },
+        subscription: emailSubscription ?? snapshot.subscription
+      };
+    }
+  }
   const local = resolveLocalMembership(snapshot, membershipState);
   const stripe = params.stripe ?? getStripeClient();
   const localCustomerIds = [
@@ -334,11 +433,12 @@ export async function resolveMembershipEntitlement(
   let finalStripeCustomerId = local.stripeCustomerId;
   let finalStripeSubscriptionId = local.stripeSubscriptionId;
   let finalCanManageMembership = local.canManageMembership;
+  let failureReasons = [...local.failureReasons];
 
-  if (stripe && (email || localCustomerIds.length > 0)) {
+  if (stripe && (normalizedEmail || localCustomerIds.length > 0)) {
     const stripeBilling = await resolveStripeBillingDetails({
       stripe,
-      email,
+      email: normalizedEmail,
       preferredPlan: local.currentPlan as "free" | "basic" | "growth" | "inner_circle",
       localCustomerIds
     });
@@ -365,7 +465,7 @@ export async function resolveMembershipEntitlement(
 
       repaired = await repairMembershipRecords({
         userId,
-        email: email ?? snapshot.profile?.email ?? snapshot.membership?.email ?? null,
+        email: normalizedEmail ?? normalizeLookupEmail(snapshot.profile?.email) ?? normalizeLookupEmail(snapshot.membership?.email) ?? null,
         profileId: snapshot.profile?.id ?? null,
         snapshot,
         plan: finalPlan,
@@ -378,12 +478,55 @@ export async function resolveMembershipEntitlement(
 
       if (repaired) {
         source = "stripe_repaired";
+        failureReasons.push("repair_succeeded");
+      } else if (isActiveMembershipStatus(finalStatus) && finalPlan === "free") {
+        failureReasons.push("stripe_plan_mismatch");
+      } else if (isActiveMembershipStatus(finalStatus) && finalPlan !== "free") {
+        failureReasons.push("repair_skipped");
+      } else {
+        failureReasons.push(stripeBilling.subscriptionId ? "stripe_subscription_inactive" : "stripe_subscription_not_found");
       }
+    } else if (normalizedEmail || localCustomerIds.length > 0) {
+      failureReasons.push(localCustomerIds.length > 0 ? "stripe_subscription_not_found" : "stripe_customer_not_found");
     }
+  } else {
+    failureReasons.push("stripe_skipped_missing_config_or_lookup_key");
   }
 
   const hasActiveSubscription = isActiveMembershipStatus(finalStatus) && finalPlan !== "free";
   const finalError = membershipState.errorMessage ?? null;
+  const shouldWarnWebhookPending =
+    !hasActiveSubscription &&
+    !snapshot.membership &&
+    !snapshot.subscription &&
+    Boolean(normalizedEmail);
+
+  if (shouldWarnWebhookPending) {
+    failureReasons.push("webhook_pending_or_sync_missing");
+  }
+
+  if (!hasActiveSubscription) {
+    console.warn(`${logPrefix} returning free membership state`, {
+      userId,
+      email: normalizedEmail,
+      localPlan: local.currentPlan,
+      localStatus: local.membershipStatus,
+      stripePlan: finalPlan,
+      stripeStatus: finalStatus,
+      source,
+      repaired,
+      reasons: Array.from(new Set(failureReasons))
+    });
+  } else {
+    console.log(`${logPrefix} paid membership confirmed`, {
+      userId,
+      email: normalizedEmail,
+      plan: finalPlan,
+      status: finalStatus,
+      source,
+      repaired
+    });
+  }
 
   return {
     plan: finalPlan,

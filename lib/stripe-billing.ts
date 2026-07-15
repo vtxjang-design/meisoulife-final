@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import { getPlanPriceId, type MembershipRecordPlan } from "@/lib/stripe";
+import { normalizeLookupEmail, normalizeMembershipPlan } from "@/lib/membership";
 
 type StripePlanPreference = MembershipRecordPlan | "free";
 
@@ -20,25 +21,7 @@ type CandidateCustomer = {
 };
 
 function normalizeStripePlan(input?: string | null): MembershipRecordPlan | "free" {
-  if (!input) {
-    return "free";
-  }
-
-  const normalized = input.toLowerCase().replace(/[-\s]/g, "_");
-
-  if (normalized === "basic") {
-    return "basic";
-  }
-
-  if (normalized === "growth" || normalized === "leader") {
-    return "growth";
-  }
-
-  if (normalized === "inner_circle" || normalized === "premium" || normalized === "innercircle") {
-    return "inner_circle";
-  }
-
-  return "free";
+  return normalizeMembershipPlan(input);
 }
 
 function inferPlanFromSubscription(subscription: Stripe.Subscription): MembershipRecordPlan | "free" {
@@ -117,7 +100,7 @@ function getSubscriptionPlanMatch(subscription: Stripe.Subscription, preferredPl
   }
 
   const preferredPriceId = getPlanPriceId(preferredPlan)?.priceId || null;
-  const metadataPlan = subscription.metadata?.plan?.toLowerCase().replace(/[-\s]/g, "_") || "";
+  const metadataPlan = normalizeStripePlan(subscription.metadata?.plan || null);
   const preferredMetadataPlan = preferredPlan.toLowerCase();
   const hasMatchingPrice = subscription.items.data.some((item) => item.price?.id === preferredPriceId);
 
@@ -134,6 +117,7 @@ async function buildCandidateCustomers(
   localCustomerIds: Array<{ customerId: string; source: string }>
 ) {
   const candidates = new Map<string, CandidateCustomer>();
+  const normalizedEmail = normalizeLookupEmail(email);
 
   for (const entry of localCustomerIds) {
     if (entry.customerId) {
@@ -144,14 +128,14 @@ async function buildCandidateCustomers(
     }
   }
 
-  if (email) {
+  if (normalizedEmail) {
     const customerList = await stripe.customers.list({
-      email,
+      email: normalizedEmail,
       limit: 10
     });
 
     console.log("[stripe-billing] stripe email lookup", {
-      email,
+      email: normalizedEmail,
       customerCount: customerList.data.length
     });
 

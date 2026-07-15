@@ -40,6 +40,15 @@ export type MembershipFetchResult = {
 
 export const ACTIVE_MEMBERSHIP_STATUSES = ["active", "trialing"] as const;
 
+export function normalizeLookupEmail(email: string | null | undefined) {
+  if (!email) {
+    return null;
+  }
+
+  const normalized = email.trim().toLowerCase();
+  return normalized || null;
+}
+
 export function isActiveMembershipStatus(status: string | null | undefined) {
   if (!status) {
     return false;
@@ -55,7 +64,13 @@ export function normalizeMembershipPlan(plan: string | null | undefined): Member
 
   const normalized = plan.toLowerCase().replace(/[-\s]/g, "_");
 
-  if (normalized === "basic") {
+  if (
+    normalized === "basic" ||
+    normalized === "basic_monthly" ||
+    normalized === "basic_plan" ||
+    normalized === "basic_annual" ||
+    normalized === "basic_yearly"
+  ) {
     return "basic";
   }
 
