@@ -279,6 +279,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const [videoLoading, setVideoLoading] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [audioBlocked, setAudioBlocked] = useState(false);
+  const [recoveryStarted, setRecoveryStarted] = useState(false);
   const [showOpeningOverlay, setShowOpeningOverlay] = useState(false);
   const [showOpeningMessage, setShowOpeningMessage] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
@@ -297,14 +298,14 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const progress = elapsedSeconds / TOTAL_SECONDS;
 
   useEffect(() => {
-    if (!running) {
+    if (!running || !recoveryStarted) {
       return;
     }
 
     if (navigator.vibrate) {
       navigator.vibrate(phase === "hold" ? 40 : 18);
     }
-  }, [phase, running]);
+  }, [phase, recoveryStarted, running]);
 
   useEffect(() => {
     if (secondsLeft === 0) {
@@ -408,6 +409,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const visibleMoods = copy.moods.filter((mood) => mood.key !== "hard");
   const openingMessage = isZeroGateKey(selectedGate) ? openingMessages[selectedGate][language] : null;
   const openingSequenceActive = showOpeningOverlay && openingMessage;
+  const recoveryUiVisible = recoveryStarted && hasSelectedGate && secondsLeft > 0;
 
   async function fadeOutVideoAudio(video: HTMLVideoElement) {
     if (video.muted || video.volume <= 0) {
@@ -443,6 +445,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     }
 
     openingTimerRefs.current = [];
+    setRecoveryStarted(false);
     setShowOpeningOverlay(false);
     setShowOpeningMessage(false);
   }
@@ -464,8 +467,12 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     const hideOverlayTimer = window.setTimeout(() => {
       setShowOpeningOverlay(false);
     }, OPENING_QUIET_MS + OPENING_MESSAGE_MS + OPENING_FADE_MS + OPENING_POST_FADE_MS);
+    const beginRecoveryTimer = window.setTimeout(() => {
+      setRecoveryStarted(true);
+      startTimer();
+    }, OPENING_QUIET_MS + OPENING_MESSAGE_MS + OPENING_FADE_MS + OPENING_POST_FADE_MS);
 
-    openingTimerRefs.current = [showMessageTimer, hideMessageTimer, hideOverlayTimer];
+    openingTimerRefs.current = [showMessageTimer, hideMessageTimer, hideOverlayTimer, beginRecoveryTimer];
   }
 
   function startTimer() {
@@ -510,7 +517,10 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
       video.load();
       await video.play();
       setAudioBlocked(false);
-      startTimer();
+      if (!isZeroGateKey(selectedGate)) {
+        setRecoveryStarted(true);
+        startTimer();
+      }
     } catch (error) {
       console.warn("Sanctuary video playback blocked or fell back", error);
       video.muted = true;
@@ -518,7 +528,10 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
       setAudioBlocked(nextSoundEnabled);
       try {
         await video.play();
-        startTimer();
+        if (!isZeroGateKey(selectedGate)) {
+          setRecoveryStarted(true);
+          startTimer();
+        }
       } catch (fallbackError) {
         console.warn("Sanctuary muted video playback failed", fallbackError);
       }
@@ -550,6 +563,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     setSecondsLeft(TOTAL_SECONDS);
     completionHandledRef.current = false;
     pendingAutoStartRef.current = true;
+    setRecoveryStarted(false);
 
     setRunning(true);
     startOpeningSequence(nextExperience);
@@ -892,9 +906,9 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                   <div className="absolute inset-0 -z-10 rounded-full bg-[radial-gradient(circle,rgba(212,186,117,0.1),transparent_66%)] blur-3xl" />
                   <div
                     className={`relative flex h-[288px] w-[288px] items-center justify-center transition-opacity duration-500 sm:h-[328px] sm:w-[328px] ${
-                      openingSequenceActive ? "opacity-0" : "opacity-100"
+                      recoveryUiVisible ? "opacity-100" : "opacity-0"
                     }`}
-                    aria-hidden={Boolean(openingSequenceActive)}
+                    aria-hidden={!recoveryUiVisible}
                   >
                     <svg viewBox="0 0 240 240" className="absolute inset-0 h-full w-full -rotate-90">
                       <circle cx="120" cy="120" r={ringRadius} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="5" />
@@ -921,7 +935,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                       </p>
                     </div>
                   </div>
-                  {hasSelectedGate && secondsLeft > 0 && !openingSequenceActive ? (
+                  {recoveryUiVisible ? (
                     <div className="mt-5 flex w-full max-w-[320px] flex-col items-center transition-opacity duration-500">
                       <p className="text-center text-sm font-medium leading-6 tracking-[0.01em] text-gold/92 sm:text-[15px]">
                         {bottomBreathGuidance}
