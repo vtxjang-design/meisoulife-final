@@ -902,47 +902,42 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                 </div>
               ) : null}
               <div className="relative z-[2] flex min-h-[480px] items-center justify-center px-4 py-8">
-                <div className="relative flex flex-col items-center">
-                  <div className="absolute inset-0 -z-10 rounded-full bg-[radial-gradient(circle,rgba(212,186,117,0.1),transparent_66%)] blur-3xl" />
-                  <div
-                    className={`relative flex h-[288px] w-[288px] items-center justify-center transition-opacity duration-500 sm:h-[328px] sm:w-[328px] ${
-                      recoveryUiVisible ? "opacity-100" : "opacity-0"
-                    }`}
-                    aria-hidden={!recoveryUiVisible}
-                  >
-                    <svg viewBox="0 0 240 240" className="absolute inset-0 h-full w-full -rotate-90">
-                      <circle cx="120" cy="120" r={ringRadius} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="5" />
-                      <circle
-                        cx="120"
-                        cy="120"
-                        r={ringRadius}
-                        fill="none"
-                        stroke="rgba(212,186,117,0.92)"
-                        strokeWidth="5"
-                        strokeLinecap="round"
-                        strokeDasharray={ringCircumference}
-                        strokeDashoffset={dashOffset}
-                        className="transition-all duration-1000 ease-linear"
-                      />
-                    </svg>
-                    <div className="absolute inset-[22%] rounded-full border border-white/7 bg-[#07111b]/10 shadow-[0_10px_28px_rgba(0,0,0,0.1)] backdrop-blur-sm" />
-                    <div className="relative z-10 flex max-w-[62%] flex-col items-center text-center">
-                      <p className="text-sm font-medium tracking-[0.08em] text-[rgba(244,248,252,0.88)] sm:text-base">
-                        {centerFocusText}
-                      </p>
-                      <p className="mt-5 font-serif text-[4rem] leading-none text-white drop-shadow-[0_10px_24px_rgba(0,0,0,0.32)] sm:text-[4.7rem]">
-                        {secondsLeft}
-                      </p>
+                {recoveryUiVisible ? (
+                  <div className="relative flex flex-col items-center">
+                    <div className="absolute inset-0 -z-10 rounded-full bg-[radial-gradient(circle,rgba(212,186,117,0.1),transparent_66%)] blur-3xl" />
+                    <div className="relative flex h-[288px] w-[288px] items-center justify-center sm:h-[328px] sm:w-[328px]">
+                      <svg viewBox="0 0 240 240" className="absolute inset-0 h-full w-full -rotate-90">
+                        <circle cx="120" cy="120" r={ringRadius} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="5" />
+                        <circle
+                          cx="120"
+                          cy="120"
+                          r={ringRadius}
+                          fill="none"
+                          stroke="rgba(212,186,117,0.92)"
+                          strokeWidth="5"
+                          strokeLinecap="round"
+                          strokeDasharray={ringCircumference}
+                          strokeDashoffset={dashOffset}
+                          className="transition-all duration-1000 ease-linear"
+                        />
+                      </svg>
+                      <div className="absolute inset-[22%] rounded-full border border-white/7 bg-[#07111b]/10 shadow-[0_10px_28px_rgba(0,0,0,0.1)] backdrop-blur-sm" />
+                      <div className="relative z-10 flex max-w-[62%] flex-col items-center text-center">
+                        <p className="text-sm font-medium tracking-[0.08em] text-[rgba(244,248,252,0.88)] sm:text-base">
+                          {centerFocusText}
+                        </p>
+                        <p className="mt-5 font-serif text-[4rem] leading-none text-white drop-shadow-[0_10px_24px_rgba(0,0,0,0.32)] sm:text-[4.7rem]">
+                          {secondsLeft}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  {recoveryUiVisible ? (
-                    <div className="mt-5 flex w-full max-w-[320px] flex-col items-center transition-opacity duration-500">
+                    <div className="mt-5 flex w-full max-w-[320px] flex-col items-center">
                       <p className="text-center text-sm font-medium leading-6 tracking-[0.01em] text-gold/92 sm:text-[15px]">
                         {bottomBreathGuidance}
                       </p>
                     </div>
-                  ) : null}
-                </div>
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>
