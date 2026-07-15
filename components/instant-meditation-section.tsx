@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { SectionHeading } from "@/components/section-heading";
+import { useLanguage, type Language } from "@/lib/i18n";
 import type { LandingCopy } from "@/lib/landing-copy";
 import { handleMeditationComplete as playMeditationCompletion } from "@/lib/meditation-completion";
 import { markDailyRhythmCompleted } from "@/lib/return-rhythm";
@@ -23,6 +24,9 @@ const EXHALE_SECONDS = 4;
 const MEDITATION_MOOD_STORAGE_KEY = "meisoulife_instant_meditation_mood";
 const ZERO_GATE_STORAGE_KEY = "meisoulife_zero_gate";
 const DEFAULT_SANCTUARY: ZeroGateKey = "overload";
+const OPENING_QUIET_MS = 2400;
+const OPENING_MESSAGE_MS = 3000;
+const OPENING_FADE_MS = 600;
 
 const sanctuaryVisuals: Record<
   MeditationExperienceKey,
@@ -105,6 +109,39 @@ const sanctuaryVisuals: Record<
       "bg-[linear-gradient(180deg,rgba(4,8,18,0.26),rgba(4,8,18,0.76)_72%,rgba(4,8,18,0.88))]",
     glowClassName: "bg-[radial-gradient(circle_at_78%_18%,rgba(138,152,196,0.16),transparent_40%)]",
     videoClassName: "brightness-[0.95] contrast-[0.92] saturate-[0.95]"
+  }
+};
+
+const openingMessages: Record<ZeroGateKey, Record<Language, string>> = {
+  overload: {
+    jp: "考えることを少し休んでも大丈夫です。",
+    kr: "생각을 잠시 쉬어도 괜찮습니다.",
+    en: "It's okay to let your thoughts rest for a moment."
+  },
+  anxiety: {
+    jp: "呼吸とともに、今ここへ戻ってみましょう。",
+    kr: "호흡과 함께, 지금으로 돌아와 보세요.",
+    en: "Return gently to this moment with your breath."
+  },
+  "low-energy": {
+    jp: "体の奥にある力を、もう一度目覚めさせましょう。",
+    kr: "몸 안의 작은 힘을 다시 깨워봅니다.",
+    en: "Awaken the quiet strength already within you."
+  },
+  distracted: {
+    jp: "散らばった心を、ゆっくり一つに集めてみましょう。",
+    kr: "흩어진 마음을 천천히 모아봅니다.",
+    en: "Gather your attention, one gentle breath at a time."
+  },
+  "reset-mood": {
+    jp: "新しい空気を迎え入れてみましょう。",
+    kr: "새로운 공기를 들이마셔 보세요.",
+    en: "Welcome a breath of fresh air."
+  },
+  sleep: {
+    jp: "今日を静かに手放しても大丈夫です。",
+    kr: "오늘을 조용히 내려놓아도 괜찮습니다.",
+    en: "It's okay to gently let today go."
   }
 };
 
@@ -230,6 +267,7 @@ function getNextStepCta(startLabel: string) {
 }
 
 export function InstantMeditationSection({ copy }: InstantMeditationSectionProps) {
+  const { language } = useLanguage();
   const [running, setRunning] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(TOTAL_SECONDS);
   const [soundEnabled, setSoundEnabled] = useState(true);
@@ -240,6 +278,9 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const [videoLoading, setVideoLoading] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [audioBlocked, setAudioBlocked] = useState(false);
+  const [showOpeningOverlay, setShowOpeningOverlay] = useState(false);
+  const [showOpeningMessage, setShowOpeningMessage] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const playerRef = useRef<HTMLDivElement | null>(null);
@@ -247,6 +288,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const timerRef = useRef<number | null>(null);
   const completionHandledRef = useRef(false);
   const pendingAutoStartRef = useRef(false);
+  const openingTimerRefs = useRef<number[]>([]);
 
   const elapsedSeconds = TOTAL_SECONDS - secondsLeft;
   const phase = useMemo(() => getPhase(elapsedSeconds), [elapsedSeconds]);
@@ -290,11 +332,34 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   }, [secondsLeft]);
 
   useEffect(() => {
+    if (!running) {
+      clearOpeningSequence();
+    }
+  }, [running]);
+
+  useEffect(() => {
     return () => {
+      clearOpeningSequence();
       clearTimer();
       videoRef.current?.pause();
       audioContextRef.current?.close().catch(() => undefined);
       audioContextRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const syncPreference = () => setPrefersReducedMotion(mediaQuery.matches);
+
+    syncPreference();
+    mediaQuery.addEventListener("change", syncPreference);
+
+    return () => {
+      mediaQuery.removeEventListener("change", syncPreference);
     };
   }, []);
 
@@ -340,6 +405,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const sanctuaryVisual = sanctuaryVisuals[selectedGate];
   const activeVideoSource = hasSelectedGate ? sanctuaryVisual.source : null;
   const visibleMoods = copy.moods.filter((mood) => mood.key !== "hard");
+  const openingMessage = isZeroGateKey(selectedGate) ? openingMessages[selectedGate][language] : null;
 
   async function fadeOutVideoAudio(video: HTMLVideoElement) {
     if (video.muted || video.volume <= 0) {
@@ -367,6 +433,37 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
       window.clearInterval(timerRef.current);
       timerRef.current = null;
     }
+  }
+
+  function clearOpeningSequence() {
+    for (const timerId of openingTimerRefs.current) {
+      window.clearTimeout(timerId);
+    }
+
+    openingTimerRefs.current = [];
+    setShowOpeningOverlay(false);
+    setShowOpeningMessage(false);
+  }
+
+  function startOpeningSequence(experienceKey: MeditationExperienceKey) {
+    clearOpeningSequence();
+
+    if (!isZeroGateKey(experienceKey)) {
+      return;
+    }
+
+    setShowOpeningOverlay(true);
+    const showMessageTimer = window.setTimeout(() => {
+      setShowOpeningMessage(true);
+    }, OPENING_QUIET_MS);
+    const hideMessageTimer = window.setTimeout(() => {
+      setShowOpeningMessage(false);
+    }, OPENING_QUIET_MS + OPENING_MESSAGE_MS);
+    const hideOverlayTimer = window.setTimeout(() => {
+      setShowOpeningOverlay(false);
+    }, OPENING_QUIET_MS + OPENING_MESSAGE_MS + OPENING_FADE_MS);
+
+    openingTimerRefs.current = [showMessageTimer, hideMessageTimer, hideOverlayTimer];
   }
 
   function startTimer() {
@@ -441,7 +538,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     window.scrollTo({ top: Math.max(top, 0), behavior: "smooth" });
   }
 
-  async function startMeditationExperience() {
+  async function startMeditationExperience(nextExperience: MeditationExperienceKey = selectedGate) {
     setHasUserGesture(true);
     setHasSelectedGate(true);
     setVideoLoading(true);
@@ -453,10 +550,12 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     pendingAutoStartRef.current = true;
 
     setRunning(true);
+    startOpeningSequence(nextExperience);
   }
 
   function resetMeditationExperience() {
     pendingAutoStartRef.current = false;
+    clearOpeningSequence();
     clearTimer();
     setRunning(false);
     setSecondsLeft(TOTAL_SECONDS);
@@ -504,7 +603,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
       });
     }
 
-    await startMeditationExperience();
+    await startMeditationExperience(nextGate);
   }
 
   async function handleStartPause() {
@@ -772,6 +871,18 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                   >
                     {copy.retryAudio}
                   </button>
+                </div>
+              ) : null}
+              {showOpeningOverlay && openingMessage ? (
+                <div className="absolute inset-0 z-[4] flex items-center justify-center px-6">
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,9,16,0.12),rgba(4,9,16,0.18)_42%,rgba(4,9,16,0.24))]" />
+                  <div
+                    className={`relative max-w-[22rem] text-center text-[1.05rem] font-medium leading-8 text-white/92 sm:max-w-[30rem] sm:text-[1.22rem] sm:leading-9 ${
+                      prefersReducedMotion ? "" : "transition-opacity duration-[600ms] ease-out"
+                    } ${showOpeningMessage ? "opacity-100" : "opacity-0"}`}
+                  >
+                    {openingMessage}
+                  </div>
                 </div>
               ) : null}
               <div className="relative z-[2] flex min-h-[480px] items-center justify-center px-4 py-8">
