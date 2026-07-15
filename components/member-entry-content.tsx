@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { recordAuthDiagnostic } from "@/lib/auth-flow-diagnostics";
 import { useLanguage, useLocaleCopy } from "@/lib/i18n";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
@@ -979,10 +980,15 @@ export function MemberEntryContent({
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const next = params.get("next") || `${window.location.pathname}${window.location.search}`;
+    const nextParam = params.get("next");
+    const next = nextParam && nextParam.startsWith("/") ? nextParam : "/program/basic";
     setCurrentOrigin(window.location.origin);
-    setRequestedNextPath(params.get("next") || "");
+    setRequestedNextPath(nextParam || "");
     setMemberLoginHref(`/login?next=${encodeURIComponent(next)}`);
+    recordAuthDiagnostic("basic_member_entrance_loaded", {
+      preservedNextRoute: next,
+      loginButtonDestination: `/login?next=${encodeURIComponent(next)}`
+    });
   }, []);
 
   useEffect(() => {

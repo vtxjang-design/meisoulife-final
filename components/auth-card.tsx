@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { recordAuthDiagnostic } from "@/lib/auth-flow-diagnostics";
 import { useSiteCopy } from "@/lib/i18n";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
@@ -25,7 +26,12 @@ export function AuthCard({ mode }: AuthCardProps) {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    setNextPath(params.get("next"));
+    const next = params.get("next");
+    setNextPath(next);
+    recordAuthDiagnostic("login_page_loaded", {
+      mode,
+      preservedNextRoute: next && next.startsWith("/") ? next : null
+    });
   }, []);
 
   function buildResetRedirectTarget() {
@@ -92,10 +98,22 @@ export function AuthCard({ mode }: AuthCardProps) {
           throw error;
         }
 
+        recordAuthDiagnostic("login_success", {
+          preservedNextRoute: redirectTarget,
+          authenticatedUserIdExists: true
+        });
+        recordAuthDiagnostic("post_login_redirect_requested", {
+          destination: redirectTarget,
+          reasonCode: "auth_success"
+        });
         router.push(redirectTarget);
         router.refresh();
       }
     } catch (error) {
+      recordAuthDiagnostic("login_error", {
+        preservedNextRoute: redirectTarget,
+        message: error instanceof Error ? error.message : "unknown_error"
+      });
       setMessage(
         error instanceof Error && error.message
           ? `${mode === "signup" ? copy.loginPage.signupError : copy.loginPage.error} (${error.message})`

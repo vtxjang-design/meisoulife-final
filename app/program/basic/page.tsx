@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useAuthState } from "@/components/auth-provider";
 import { BasicHome } from "@/components/basic-home";
 import { MembershipGuard } from "@/components/membership-guard";
+import { recordAuthDiagnostic } from "@/lib/auth-flow-diagnostics";
 import { getMockDashboard } from "@/lib/mock-data";
 import { useLanguage } from "@/lib/i18n";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -28,6 +29,16 @@ function BasicProgramContent() {
     highlightedRhythm === "morning" || highlightedRhythm === "day" || highlightedRhythm === "night"
       ? highlightedRhythm
       : undefined;
+
+  useEffect(() => {
+    recordAuthDiagnostic("program_basic_reached", {
+      authenticatedUserIdExists: Boolean(session?.user?.id),
+      resolvedMembershipState: plan,
+      membershipResolved: planResolved,
+      authResolved,
+      isLoggedIn
+    });
+  }, [authResolved, isLoggedIn, plan, planResolved, session?.user?.id]);
 
   useEffect(() => {
     let active = true;

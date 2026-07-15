@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthState } from "@/components/auth-provider";
+import { recordAuthDiagnostic } from "@/lib/auth-flow-diagnostics";
 import { getLocaleCopy, useLanguage, useSiteCopy } from "@/lib/i18n";
 import { hasProtectedMembershipAccess, type ProtectedMembershipPlan } from "@/lib/membership-access";
 import { getSupabaseClient } from "@/lib/supabase/client";
@@ -62,6 +63,22 @@ export function useMembershipAccess(requiredPlan: ProtectedMembershipPlan | null
 
   useEffect(() => {
     function logMembershipAccess(reason: string, extras?: Record<string, unknown>) {
+      recordAuthDiagnostic("membership_guard_decision", {
+        reasonCode: reason,
+        nextRoute: nextPath,
+        requiredPlan: requiredPlan ?? null,
+        authenticatedUserIdExists: isLoggedIn,
+        resolvedMembershipState: plan,
+        membershipResolved: planResolved,
+        hasActiveSubscription,
+        redirectDestination:
+          reason === "no authenticated user"
+            ? `/login?next=${encodeURIComponent(nextPath)}`
+            : reason === "no membership record" || reason === "inactive membership"
+              ? `/member?next=${encodeURIComponent(nextPath)}`
+              : null
+      });
+
       if (process.env.NODE_ENV === "production") {
         return;
       }

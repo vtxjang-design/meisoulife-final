@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
+import { recordAuthDiagnostic } from "@/lib/auth-flow-diagnostics";
 import {
   isActiveMembershipStatus,
   type MembershipPlanKey,
@@ -71,21 +72,40 @@ async function requestMembershipResolution(accessToken?: string | null): Promise
   return { response, data };
 }
 
+function getIncompleteMembershipMessage(data: MembershipResolutionResult, responseStatus: number) {
+  return (
+    data.errorMessage ||
+    `Membership resolution incomplete for authenticated user (${data.source}, HTTP ${responseStatus})`
+  );
+}
+
 async function resolvePlanForUser(nextSession: Session | null): Promise<MembershipResolutionResult> {
   try {
     const supabase = getSupabaseBrowserClient();
     const initialAccessToken = nextSession?.access_token ?? null;
     const { response, data } = await requestMembershipResolution(initialAccessToken);
+    recordAuthDiagnostic("membership_resolve_response", {
+      httpStatus: response.status,
+      resolvedMembershipState: data.plan,
+      membershipResolved: data.resolved,
+      membershipSource: data.source,
+      authenticatedUserIdExists: Boolean(nextSession?.user?.id)
+    });
 
     const shouldRetryWithRefresh =
       Boolean(nextSession?.user) &&
       Boolean(supabase) &&
-      (response.status === 401 || data.source === "guest");
+      (response.status === 401 || data.source === "guest" || !data.resolved);
 
     if (shouldRetryWithRefresh && supabase) {
       const { data: refreshedSessionData, error: refreshError } = await supabase.auth.refreshSession();
 
       if (refreshError) {
+        recordAuthDiagnostic("membership_resolve_refresh_failed", {
+          resolvedMembershipState: data.plan,
+          membershipSource: data.source,
+          authenticatedUserIdExists: Boolean(nextSession?.user?.id)
+        });
         return {
           ...(response.ok ? data : getMembershipResolverFallback("Membership resolver request failed")),
           resolved: false,
@@ -97,6 +117,13 @@ async function resolvePlanForUser(nextSession: Session | null): Promise<Membersh
 
       if (refreshedAccessToken) {
         const retryResult = await requestMembershipResolution(refreshedAccessToken);
+        recordAuthDiagnostic("membership_resolve_retry_response", {
+          httpStatus: retryResult.response.status,
+          resolvedMembershipState: retryResult.data.plan,
+          membershipResolved: retryResult.data.resolved,
+          membershipSource: retryResult.data.source,
+          authenticatedUserIdExists: Boolean(nextSession?.user?.id)
+        });
 
         if (!retryResult.response.ok) {
           return {
@@ -106,7 +133,23 @@ async function resolvePlanForUser(nextSession: Session | null): Promise<Membersh
           };
         }
 
+        if (nextSession?.user && (!retryResult.data.resolved || retryResult.data.source === "guest")) {
+          return {
+            ...retryResult.data,
+            resolved: false,
+            errorMessage: getIncompleteMembershipMessage(retryResult.data, retryResult.response.status)
+          };
+        }
+
         return retryResult.data;
+      }
+
+      if (nextSession?.user) {
+        return {
+          ...data,
+          resolved: false,
+          errorMessage: getIncompleteMembershipMessage(data, response.status)
+        };
       }
     }
 
@@ -115,6 +158,14 @@ async function resolvePlanForUser(nextSession: Session | null): Promise<Membersh
         ...data,
         resolved: false,
         errorMessage: data.errorMessage || "Membership resolver request failed"
+      };
+    }
+
+    if (nextSession?.user && (!data.resolved || data.source === "guest")) {
+      return {
+        ...data,
+        resolved: false,
+        errorMessage: getIncompleteMembershipMessage(data, response.status)
       };
     }
 
@@ -148,7 +199,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       setSession(nextSession);
-      console.log("[auth-provider] current session user id", nextSession?.user?.id ?? null);
+      recordAuthDiagnostic("auth_state_sync_started", {
+        authenticatedUserIdExists: Boolean(nextSession?.user?.id),
+        nextSessionExists: Boolean(nextSession)
+      });
       console.log("[auth-provider] loading state", {
         hasSession: Boolean(nextSession?.user),
         authResolved: true,
@@ -167,6 +221,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           canManageMembership: false
         });
         setAuthResolved(true);
+        recordAuthDiagnostic("auth_state_resolved", {
+          authenticatedUserIdExists: false,
+          resolvedMembershipState: "free",
+          memberState: "guest"
+        });
         console.log("[auth-provider] final access decision", {
           memberState: "guest",
           plan: "free",
@@ -186,6 +245,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
+      recordAuthDiagnostic("membership_resolution_completed", {
+        authenticatedUserIdExists: true,
+        membershipResolveHttpStatus: "see previous diagnostic",
+        resolvedMembershipState: membershipState.plan,
+        membershipResolved: membershipState.resolved,
+        membershipSource: membershipState.source,
+        membershipStatus: membershipState.membershipStatus ?? null,
+        hasActiveSubscription: membershipState.hasActiveSubscription,
+        hasError: Boolean(membershipState.errorMessage)
+      });
       console.log("[auth-provider] membership query result", {
         plan: membershipState.plan,
         resolved: membershipState.resolved,
@@ -201,6 +270,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setMembershipStatus(membershipState.membershipStatus);
       setMembershipSummary(membershipState.membershipSummary);
       setAuthResolved(true);
+      recordAuthDiagnostic("auth_state_resolved", {
+        authenticatedUserIdExists: true,
+        resolvedMembershipState: membershipState.plan,
+        memberState:
+          membershipState.plan === "free" || !isActiveMembershipStatus(membershipState.membershipStatus) ? "free" : "paid",
+        membershipResolved: membershipState.resolved,
+        hasError: Boolean(membershipState.errorMessage)
+      });
       console.log("[auth-provider] final access decision", {
         memberState:
           membershipState.plan === "free" || !isActiveMembershipStatus(membershipState.membershipStatus) ? "free" : "paid",
