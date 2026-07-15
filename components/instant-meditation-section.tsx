@@ -24,9 +24,10 @@ const EXHALE_SECONDS = 4;
 const MEDITATION_MOOD_STORAGE_KEY = "meisoulife_instant_meditation_mood";
 const ZERO_GATE_STORAGE_KEY = "meisoulife_zero_gate";
 const DEFAULT_SANCTUARY: ZeroGateKey = "overload";
-const OPENING_QUIET_MS = 2400;
-const OPENING_MESSAGE_MS = 3000;
-const OPENING_FADE_MS = 600;
+const OPENING_QUIET_MS = 2000;
+const OPENING_MESSAGE_MS = 5000;
+const OPENING_FADE_MS = 700;
+const OPENING_POST_FADE_MS = 900;
 
 const sanctuaryVisuals: Record<
   MeditationExperienceKey,
@@ -406,6 +407,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const activeVideoSource = hasSelectedGate ? sanctuaryVisual.source : null;
   const visibleMoods = copy.moods.filter((mood) => mood.key !== "hard");
   const openingMessage = isZeroGateKey(selectedGate) ? openingMessages[selectedGate][language] : null;
+  const openingSequenceActive = showOpeningOverlay && openingMessage;
 
   async function fadeOutVideoAudio(video: HTMLVideoElement) {
     if (video.muted || video.volume <= 0) {
@@ -461,7 +463,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     }, OPENING_QUIET_MS + OPENING_MESSAGE_MS);
     const hideOverlayTimer = window.setTimeout(() => {
       setShowOpeningOverlay(false);
-    }, OPENING_QUIET_MS + OPENING_MESSAGE_MS + OPENING_FADE_MS);
+    }, OPENING_QUIET_MS + OPENING_MESSAGE_MS + OPENING_FADE_MS + OPENING_POST_FADE_MS);
 
     openingTimerRefs.current = [showMessageTimer, hideMessageTimer, hideOverlayTimer];
   }
@@ -873,12 +875,12 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                   </button>
                 </div>
               ) : null}
-              {showOpeningOverlay && openingMessage ? (
+              {openingSequenceActive ? (
                 <div className="absolute inset-0 z-[4] flex items-center justify-center px-6">
-                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,9,16,0.12),rgba(4,9,16,0.18)_42%,rgba(4,9,16,0.24))]" />
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,9,16,0.08),rgba(4,9,16,0.14)_42%,rgba(4,9,16,0.18))]" />
                   <div
-                    className={`relative max-w-[22rem] text-center text-[1.05rem] font-medium leading-8 text-white/92 sm:max-w-[30rem] sm:text-[1.22rem] sm:leading-9 ${
-                      prefersReducedMotion ? "" : "transition-opacity duration-[600ms] ease-out"
+                    className={`relative max-w-[23rem] text-center text-[1.05rem] font-medium leading-[2.1] text-white/92 [text-shadow:0_2px_16px_rgba(0,0,0,0.18)] sm:max-w-[31rem] sm:text-[1.22rem] sm:leading-[2.15] ${
+                      prefersReducedMotion ? "" : "transition-opacity duration-[700ms] ease-out"
                     } ${showOpeningMessage ? "opacity-100" : "opacity-0"}`}
                   >
                     {openingMessage}
@@ -888,7 +890,12 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
               <div className="relative z-[2] flex min-h-[480px] items-center justify-center px-4 py-8">
                 <div className="relative flex flex-col items-center">
                   <div className="absolute inset-0 -z-10 rounded-full bg-[radial-gradient(circle,rgba(212,186,117,0.1),transparent_66%)] blur-3xl" />
-                  <div className="relative flex h-[288px] w-[288px] items-center justify-center sm:h-[328px] sm:w-[328px]">
+                  <div
+                    className={`relative flex h-[288px] w-[288px] items-center justify-center transition-opacity duration-500 sm:h-[328px] sm:w-[328px] ${
+                      openingSequenceActive ? "opacity-0" : "opacity-100"
+                    }`}
+                    aria-hidden={Boolean(openingSequenceActive)}
+                  >
                     <svg viewBox="0 0 240 240" className="absolute inset-0 h-full w-full -rotate-90">
                       <circle cx="120" cy="120" r={ringRadius} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="5" />
                       <circle
@@ -914,8 +921,8 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                       </p>
                     </div>
                   </div>
-                  {hasSelectedGate && secondsLeft > 0 ? (
-                    <div className="mt-5 flex w-full max-w-[320px] flex-col items-center">
+                  {hasSelectedGate && secondsLeft > 0 && !openingSequenceActive ? (
+                    <div className="mt-5 flex w-full max-w-[320px] flex-col items-center transition-opacity duration-500">
                       <p className="text-center text-sm font-medium leading-6 tracking-[0.01em] text-gold/92 sm:text-[15px]">
                         {bottomBreathGuidance}
                       </p>
