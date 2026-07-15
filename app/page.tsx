@@ -4,13 +4,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuthState } from "@/components/auth-provider";
-import { InstantMeditationSection } from "@/components/instant-meditation-section";
-import { ZeroGateSection } from "@/components/zero-gate-section";
 import { useLocaleCopy } from "@/lib/i18n";
 import { landingCopy } from "@/lib/landing-copy";
 import { updateReturnRhythmVisit, type ReturnRhythmSnapshot } from "@/lib/return-rhythm";
 
 const MEDITATION_MOOD_STORAGE_KEY = "meisoulife_instant_meditation_mood";
+const FREE_ENTRY_HREF = "/meditation?duration=30&type=day&returnTo=%2F";
 const fallbackHeroNatureVisual =
   "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=1400&q=80";
 
@@ -37,7 +36,8 @@ const sceneCopy = {
       eyebrow: "RELIEF",
       title: "今、必要な回復を選んでください。",
       description: "いちばん近い入口から、静かに戻れます。",
-      meditationTitle: "選んだ場所から、1分だけ静かに戻ります。"
+      note: "気持ちに近い入口をひとつ選び、1分の回復へ進みます。",
+      cta: "1分の回復へ"
     },
     rhythm: {
       eyebrow: "RHYTHM",
@@ -75,6 +75,7 @@ const sceneCopy = {
       eyebrow: "CONTINUE",
       title: "毎日の回復を、続けていきましょう。",
       description: "明日も、ここでまた会いましょう。",
+      support: "必要なときに、またこの場所へ戻ってこられます。",
       guestCta: "無料ではじめる",
       freeCta: "今日のリズムへ戻る",
       paidCta: "自分のリズムへ戻る",
@@ -94,7 +95,8 @@ const sceneCopy = {
       eyebrow: "RELIEF",
       title: "지금 필요한 회복을 선택하세요.",
       description: "가장 가까운 입구에서 조용히 돌아올 수 있습니다.",
-      meditationTitle: "선택한 자리에서, 1분만 조용히 돌아옵니다."
+      note: "지금의 마음과 가장 가까운 입구 하나를 골라 1분 회복으로 이어갑니다.",
+      cta: "1분 회복으로"
     },
     rhythm: {
       eyebrow: "RHYTHM",
@@ -132,6 +134,7 @@ const sceneCopy = {
       eyebrow: "CONTINUE",
       title: "매일의 회복을 이어가세요.",
       description: "내일도, 이곳에서 다시 만나요.",
+      support: "필요할 때마다 다시 돌아올 수 있는 자리입니다.",
       guestCta: "무료로 시작하기",
       freeCta: "오늘의 리듬으로 돌아가기",
       paidCta: "나의 리듬으로 돌아가기",
@@ -151,7 +154,8 @@ const sceneCopy = {
       eyebrow: "RELIEF",
       title: "Choose the recovery you need now.",
       description: "Begin from the quiet entrance that fits your state.",
-      meditationTitle: "From the place you chose, return quietly for one minute."
+      note: "Choose the entrance that feels closest to your state, then continue into one quiet minute.",
+      cta: "Enter a 1-minute recovery"
     },
     rhythm: {
       eyebrow: "RHYTHM",
@@ -189,6 +193,7 @@ const sceneCopy = {
       eyebrow: "CONTINUE",
       title: "Continue your daily recovery.",
       description: "Let's meet here again tomorrow.",
+      support: "Whenever you need it, this place is here to return to.",
       guestCta: "Start free",
       freeCta: "Return to today's rhythm",
       paidCta: "Return to my rhythm",
@@ -197,6 +202,37 @@ const sceneCopy = {
     giftBanner: "A one-minute rest has been sent to you."
   }
 } as const;
+
+const reliefGateCopy = {
+  jp: [
+    { key: "overload", label: "脳過負荷", subtitle: "思考を少し休ませたいとき" },
+    { key: "anxiety", label: "不安", subtitle: "心を静かに落ち着かせたいとき" },
+    { key: "low-energy", label: "気力不足", subtitle: "少しだけ内側に火を灯したいとき" },
+    { key: "distracted", label: "散漫", subtitle: "注意をやさしく戻したいとき" },
+    { key: "reset-mood", label: "気分転換", subtitle: "空気を変えて整えたいとき" },
+    { key: "sleep", label: "睡眠", subtitle: "夜へ静かに移りたいとき" }
+  ],
+  kr: [
+    { key: "overload", label: "뇌과부하", subtitle: "생각을 잠시 쉬게 하고 싶을 때" },
+    { key: "anxiety", label: "불안", subtitle: "마음을 조용히 가라앉히고 싶을 때" },
+    { key: "low-energy", label: "기력 없음", subtitle: "안쪽의 힘을 조금 깨우고 싶을 때" },
+    { key: "distracted", label: "산만", subtitle: "흩어진 주의를 다시 모으고 싶을 때" },
+    { key: "reset-mood", label: "기분전환", subtitle: "공기를 바꾸며 정리하고 싶을 때" },
+    { key: "sleep", label: "수면", subtitle: "밤의 고요로 천천히 가고 싶을 때" }
+  ],
+  en: [
+    { key: "overload", label: "Mental Overload", subtitle: "When you want to rest the mind a little" },
+    { key: "anxiety", label: "Anxiety", subtitle: "When you want to settle the heart quietly" },
+    { key: "low-energy", label: "Low Energy", subtitle: "When you need a small inner spark" },
+    { key: "distracted", label: "Distraction", subtitle: "When you want to gather attention back gently" },
+    { key: "reset-mood", label: "Refresh", subtitle: "When you want to change the air around you" },
+    { key: "sleep", label: "Sleep", subtitle: "When you want to move softly toward night" }
+  ]
+} as const;
+
+const sceneIds = ["state", "relief", "rhythm", "return", "continue"] as const;
+type SceneId = (typeof sceneIds)[number];
+type ReliefGateKey = (typeof reliefGateCopy)["jp"][number]["key"];
 
 function HomeScene({
   id,
@@ -208,7 +244,7 @@ function HomeScene({
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className={`scroll-mt-28 sm:scroll-mt-32 ${className}`}>
+    <section id={id} className={`snap-start scroll-mt-28 sm:scroll-mt-32 ${className}`}>
       {children}
     </section>
   );
@@ -283,15 +319,52 @@ function RhythmEntryCard({
   );
 }
 
+function SceneDots({
+  activeScene,
+  onSelect
+}: {
+  activeScene: SceneId;
+  onSelect: (scene: SceneId) => void;
+}) {
+  return (
+    <nav
+      aria-label="Homepage scenes"
+      className="fixed right-6 top-1/2 z-40 hidden -translate-y-1/2 xl:flex xl:flex-col xl:gap-3"
+    >
+      {sceneIds.map((scene) => {
+        const isActive = scene === activeScene;
+
+        return (
+          <button
+            key={scene}
+            type="button"
+            aria-label={`Go to ${scene} scene`}
+            aria-pressed={isActive}
+            onClick={() => onSelect(scene)}
+            className={`h-2.5 w-2.5 rounded-full border transition duration-200 ${
+              isActive
+                ? "border-gold/80 bg-gold/90 shadow-[0_0_0_6px_rgba(212,186,117,0.08)]"
+                : "border-white/28 bg-white/18 hover:border-white/50 hover:bg-white/35"
+            }`}
+          />
+        );
+      })}
+    </nav>
+  );
+}
+
 export default function HomePage() {
   const router = useRouter();
   const { authResolved, isLoggedIn, memberState } = useAuthState();
   const landing = useLocaleCopy(landingCopy);
   const copy = useLocaleCopy(sceneCopy);
+  const reliefGates = useLocaleCopy(reliefGateCopy);
   const [giftDelivered, setGiftDelivered] = useState(false);
   const [lastMoodLabel, setLastMoodLabel] = useState("");
   const [heroNatureSrc, setHeroNatureSrc] = useState<string>(fallbackHeroNatureVisual);
   const [heroNatureImageFailed, setHeroNatureImageFailed] = useState(false);
+  const [activeScene, setActiveScene] = useState<SceneId>("state");
+  const [hasScrolledPastHero, setHasScrolledPastHero] = useState(false);
   const [returnRhythm, setReturnRhythm] = useState<ReturnRhythmSnapshot>({
     lastVisitDate: null,
     lastCompletedDate: null,
@@ -344,40 +417,85 @@ export default function HomePage() {
     }
   }, [landing.instant.moods]);
 
-  function scrollToZeroGate() {
+  useEffect(() => {
     if (typeof window === "undefined") {
       return;
     }
 
-    document.querySelector("#zero-gate")?.scrollIntoView({
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntries = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+        const topEntry = visibleEntries[0];
+        const scene = topEntry?.target.getAttribute("data-scene-id") as SceneId | null;
+
+        if (scene) {
+          setActiveScene(scene);
+        }
+      },
+      {
+        threshold: [0.35, 0.55, 0.75],
+        rootMargin: "-18% 0px -18% 0px"
+      }
+    );
+
+    sceneIds.forEach((scene) => {
+      const node = document.getElementById(scene);
+      if (node) {
+        node.setAttribute("data-scene-id", scene);
+        observer.observe(node);
+      }
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const handleScroll = () => {
+      setHasScrolledPastHero(window.scrollY > 56);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  function scrollToScene(scene: SceneId) {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    document.getElementById(scene)?.scrollIntoView({
       behavior: "smooth",
       block: "start"
     });
   }
 
-  function scrollToOneMinute() {
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    document.querySelector("#one-minute-experience")?.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-  }
-
-  function handleZeroGateEnter(gateKey: string) {
+  function handleFreeEntry(gateKey?: ReliefGateKey) {
     if (typeof window !== "undefined") {
-      const payload = {
-        gateKey,
-        enteredAt: new Date().toISOString()
-      };
+      if (gateKey) {
+        const payload = {
+          gateKey,
+          enteredAt: new Date().toISOString()
+        };
 
-      window.localStorage.setItem("meisoulife_zero_gate", JSON.stringify(payload));
-      window.dispatchEvent(new CustomEvent("meisoulife:zero-gate-change", { detail: payload }));
+        window.localStorage.setItem("meisoulife_zero_gate", JSON.stringify(payload));
+        window.dispatchEvent(new CustomEvent("meisoulife:zero-gate-change", { detail: payload }));
+      }
     }
 
-    scrollToOneMinute();
+    router.push(FREE_ENTRY_HREF);
   }
 
   function handleContinueCta() {
@@ -413,10 +531,11 @@ export default function HomePage() {
         </section>
       ) : null}
 
-      <div className="relative">
+      <div className="relative snap-y snap-proximity">
+        <SceneDots activeScene={activeScene} onSelect={scrollToScene} />
         <div className="pointer-events-none absolute inset-x-0 top-0 -z-20 h-[32rem] bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.1),transparent_30%),linear-gradient(180deg,rgba(5,14,24,0.22),rgba(5,14,24,0))]" />
 
-        <HomeScene className="section-shell pt-6 sm:pt-10">
+        <HomeScene id="state" className="section-shell pt-6 sm:pt-10">
           <div className="relative overflow-hidden rounded-[36px] border border-white/10 bg-[linear-gradient(180deg,rgba(7,18,29,0.86),rgba(7,18,29,0.72))] px-6 py-10 shadow-[0_28px_100px_rgba(7,17,31,0.22)] sm:px-8 sm:py-14 lg:min-h-[calc(100svh-10rem)] lg:px-12 lg:py-16">
             <div className="pointer-events-none absolute inset-0">
               <div className="absolute left-[6%] top-[8%] h-28 w-28 rounded-full bg-gold/[0.12] blur-[80px] motion-reduce:hidden" />
@@ -436,12 +555,14 @@ export default function HomePage() {
                 <div className="mt-8 flex flex-col items-start gap-4">
                   <button
                     type="button"
-                    onClick={scrollToZeroGate}
+                    onClick={() => scrollToScene("relief")}
                     className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.18)] transition hover:bg-[#e7cd92]"
                   >
                     {copy.state.cta}
                   </button>
-                  <ScrollCue label={copy.state.scrollCue} onClick={scrollToZeroGate} />
+                  <div className={`transition duration-500 ${hasScrolledPastHero ? "opacity-0" : "opacity-100"}`}>
+                    <ScrollCue label={copy.state.scrollCue} onClick={() => scrollToScene("relief")} />
+                  </div>
                 </div>
               </div>
 
@@ -459,22 +580,34 @@ export default function HomePage() {
           </div>
         </HomeScene>
 
-        <HomeScene className="mt-12 bg-[linear-gradient(180deg,rgba(218,228,216,0.03),rgba(218,228,216,0)_100%)] py-14 sm:mt-16 sm:py-18">
+        <HomeScene id="relief" className="mt-12 bg-[linear-gradient(180deg,rgba(218,228,216,0.03),rgba(218,228,216,0)_100%)] py-14 sm:mt-16 sm:py-18">
           <div className="section-shell">
             <SceneHeading
               eyebrow={copy.relief.eyebrow}
               title={copy.relief.title}
               description={copy.relief.description}
             />
+            <div className="mt-10 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              {reliefGates.map((gate) => (
+                <button
+                  key={gate.key}
+                  type="button"
+                  onClick={() => handleFreeEntry(gate.key)}
+                  className="group rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.025))] px-5 py-6 text-left shadow-[0_18px_60px_rgba(7,17,31,0.12)] transition duration-200 hover:border-white/18 hover:bg-white/[0.06] motion-reduce:transform-none"
+                >
+                  <p className="text-lg font-semibold text-white">{gate.label}</p>
+                  <p className="mt-3 max-w-[18rem] text-sm leading-7 text-white/58">{gate.subtitle}</p>
+                  <div className="mt-6 inline-flex min-h-[42px] items-center rounded-full border border-white/12 bg-white/[0.03] px-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/72 transition group-hover:bg-white/[0.08]">
+                    {copy.relief.cta}
+                  </div>
+                </button>
+              ))}
+            </div>
+            <p className="mt-8 max-w-2xl text-sm leading-7 text-white/46 sm:text-base">{copy.relief.note}</p>
           </div>
-          <ZeroGateSection onEnterGate={handleZeroGateEnter} />
-          <div className="section-shell mt-12 sm:mt-16">
-            <p className="max-w-2xl text-sm uppercase tracking-[0.24em] text-white/42 sm:text-base">{copy.relief.meditationTitle}</p>
-          </div>
-          <InstantMeditationSection copy={landing.instant} />
         </HomeScene>
 
-        <HomeScene className="mt-12 bg-[linear-gradient(180deg,rgba(212,186,117,0.05),rgba(212,186,117,0)_100%)] py-14 sm:mt-16 sm:py-18">
+        <HomeScene id="rhythm" className="mt-12 bg-[linear-gradient(180deg,rgba(212,186,117,0.05),rgba(212,186,117,0)_100%)] py-14 sm:mt-16 sm:py-18">
           <div className="section-shell">
             <SceneHeading
               eyebrow={copy.rhythm.eyebrow}
@@ -516,7 +649,7 @@ export default function HomePage() {
           </div>
         </HomeScene>
 
-        <HomeScene className="mt-12 bg-[linear-gradient(180deg,rgba(11,21,32,0.32),rgba(11,21,32,0)_100%)] py-14 sm:mt-16 sm:py-18">
+        <HomeScene id="return" className="mt-12 bg-[linear-gradient(180deg,rgba(11,21,32,0.32),rgba(11,21,32,0)_100%)] py-14 sm:mt-16 sm:py-18">
           <div className="section-shell">
             <div className="overflow-hidden rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(9,19,28,0.88),rgba(9,19,28,0.72))] px-6 py-8 shadow-[0_24px_80px_rgba(7,17,31,0.18)] sm:px-8 sm:py-10">
               <SceneHeading
@@ -558,7 +691,7 @@ export default function HomePage() {
           </div>
         </HomeScene>
 
-        <HomeScene className="mt-12 pb-4 pt-14 sm:mt-16 sm:pt-18">
+        <HomeScene id="continue" className="mt-12 pb-4 pt-14 sm:mt-16 sm:pt-18">
           <div className="section-shell">
             <div className="overflow-hidden rounded-[34px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-6 py-10 shadow-[0_24px_80px_rgba(7,17,31,0.18)] sm:px-10 sm:py-12">
               <SceneHeading
@@ -576,7 +709,7 @@ export default function HomePage() {
                   {continueLabel}
                 </button>
               </div>
-              <p className="mx-auto mt-5 max-w-2xl text-center text-sm leading-7 text-white/54">{copy.continue.footnote}</p>
+              <p className="mx-auto mt-5 max-w-2xl text-center text-sm leading-7 text-white/54">{copy.continue.support}</p>
             </div>
           </div>
         </HomeScene>
