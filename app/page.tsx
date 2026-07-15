@@ -4,12 +4,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuthState } from "@/components/auth-provider";
+import { InstantMeditationSection } from "@/components/instant-meditation-section";
+import { ZeroGateSection } from "@/components/zero-gate-section";
 import { useLocaleCopy } from "@/lib/i18n";
 import { landingCopy } from "@/lib/landing-copy";
 import { updateReturnRhythmVisit, type ReturnRhythmSnapshot } from "@/lib/return-rhythm";
 
 const MEDITATION_MOOD_STORAGE_KEY = "meisoulife_instant_meditation_mood";
-const FREE_ENTRY_HREF = "/meditation?duration=30&type=day&returnTo=%2F";
 const fallbackHeroNatureVisual =
   "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=1400&q=80";
 
@@ -36,8 +37,7 @@ const sceneCopy = {
       eyebrow: "RELIEF",
       title: "今、必要な回復を選んでください。",
       description: "いちばん近い入口から、静かに戻れます。",
-      note: "気持ちに近い入口をひとつ選び、1分の回復へ進みます。",
-      cta: "1分の回復へ"
+      meditationTitle: "選んだ場所から、1分だけ静かに戻ります。"
     },
     rhythm: {
       eyebrow: "RHYTHM",
@@ -95,8 +95,7 @@ const sceneCopy = {
       eyebrow: "RELIEF",
       title: "지금 필요한 회복을 선택하세요.",
       description: "가장 가까운 입구에서 조용히 돌아올 수 있습니다.",
-      note: "지금의 마음과 가장 가까운 입구 하나를 골라 1분 회복으로 이어갑니다.",
-      cta: "1분 회복으로"
+      meditationTitle: "선택한 자리에서, 1분만 조용히 돌아옵니다."
     },
     rhythm: {
       eyebrow: "RHYTHM",
@@ -154,8 +153,7 @@ const sceneCopy = {
       eyebrow: "RELIEF",
       title: "Choose the recovery you need now.",
       description: "Begin from the quiet entrance that fits your state.",
-      note: "Choose the entrance that feels closest to your state, then continue into one quiet minute.",
-      cta: "Enter a 1-minute recovery"
+      meditationTitle: "From the place you chose, return quietly for one minute."
     },
     rhythm: {
       eyebrow: "RHYTHM",
@@ -203,36 +201,8 @@ const sceneCopy = {
   }
 } as const;
 
-const reliefGateCopy = {
-  jp: [
-    { key: "overload", label: "脳過負荷", subtitle: "思考を少し休ませたいとき" },
-    { key: "anxiety", label: "不安", subtitle: "心を静かに落ち着かせたいとき" },
-    { key: "low-energy", label: "気力不足", subtitle: "少しだけ内側に火を灯したいとき" },
-    { key: "distracted", label: "散漫", subtitle: "注意をやさしく戻したいとき" },
-    { key: "reset-mood", label: "気分転換", subtitle: "空気を変えて整えたいとき" },
-    { key: "sleep", label: "睡眠", subtitle: "夜へ静かに移りたいとき" }
-  ],
-  kr: [
-    { key: "overload", label: "뇌과부하", subtitle: "생각을 잠시 쉬게 하고 싶을 때" },
-    { key: "anxiety", label: "불안", subtitle: "마음을 조용히 가라앉히고 싶을 때" },
-    { key: "low-energy", label: "기력 없음", subtitle: "안쪽의 힘을 조금 깨우고 싶을 때" },
-    { key: "distracted", label: "산만", subtitle: "흩어진 주의를 다시 모으고 싶을 때" },
-    { key: "reset-mood", label: "기분전환", subtitle: "공기를 바꾸며 정리하고 싶을 때" },
-    { key: "sleep", label: "수면", subtitle: "밤의 고요로 천천히 가고 싶을 때" }
-  ],
-  en: [
-    { key: "overload", label: "Mental Overload", subtitle: "When you want to rest the mind a little" },
-    { key: "anxiety", label: "Anxiety", subtitle: "When you want to settle the heart quietly" },
-    { key: "low-energy", label: "Low Energy", subtitle: "When you need a small inner spark" },
-    { key: "distracted", label: "Distraction", subtitle: "When you want to gather attention back gently" },
-    { key: "reset-mood", label: "Refresh", subtitle: "When you want to change the air around you" },
-    { key: "sleep", label: "Sleep", subtitle: "When you want to move softly toward night" }
-  ]
-} as const;
-
 const sceneIds = ["state", "relief", "rhythm", "return", "continue"] as const;
 type SceneId = (typeof sceneIds)[number];
-type ReliefGateKey = (typeof reliefGateCopy)["jp"][number]["key"];
 
 function HomeScene({
   id,
@@ -358,7 +328,6 @@ export default function HomePage() {
   const { authResolved, isLoggedIn, memberState } = useAuthState();
   const landing = useLocaleCopy(landingCopy);
   const copy = useLocaleCopy(sceneCopy);
-  const reliefGates = useLocaleCopy(reliefGateCopy);
   const [giftDelivered, setGiftDelivered] = useState(false);
   const [lastMoodLabel, setLastMoodLabel] = useState("");
   const [heroNatureSrc, setHeroNatureSrc] = useState<string>(fallbackHeroNatureVisual);
@@ -482,20 +451,40 @@ export default function HomePage() {
     });
   }
 
-  function handleFreeEntry(gateKey?: ReliefGateKey) {
-    if (typeof window !== "undefined") {
-      if (gateKey) {
-        const payload = {
-          gateKey,
-          enteredAt: new Date().toISOString()
-        };
-
-        window.localStorage.setItem("meisoulife_zero_gate", JSON.stringify(payload));
-        window.dispatchEvent(new CustomEvent("meisoulife:zero-gate-change", { detail: payload }));
-      }
+  function scrollToZeroGate() {
+    if (typeof window === "undefined") {
+      return;
     }
 
-    router.push(FREE_ENTRY_HREF);
+    document.querySelector("#zero-gate")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  function scrollToOneMinute() {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    document.querySelector("#one-minute-experience")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  function handleZeroGateEnter(gateKey: string) {
+    if (typeof window !== "undefined") {
+      const payload = {
+        gateKey,
+        enteredAt: new Date().toISOString()
+      };
+
+      window.localStorage.setItem("meisoulife_zero_gate", JSON.stringify(payload));
+      window.dispatchEvent(new CustomEvent("meisoulife:zero-gate-change", { detail: payload }));
+    }
+
+    scrollToOneMinute();
   }
 
   function handleContinueCta() {
@@ -555,13 +544,13 @@ export default function HomePage() {
                 <div className="mt-8 flex flex-col items-start gap-4">
                   <button
                     type="button"
-                    onClick={() => scrollToScene("relief")}
+                    onClick={scrollToZeroGate}
                     className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.18)] transition hover:bg-[#e7cd92]"
                   >
                     {copy.state.cta}
                   </button>
                   <div className={`transition duration-500 ${hasScrolledPastHero ? "opacity-0" : "opacity-100"}`}>
-                    <ScrollCue label={copy.state.scrollCue} onClick={() => scrollToScene("relief")} />
+                    <ScrollCue label={copy.state.scrollCue} onClick={scrollToZeroGate} />
                   </div>
                 </div>
               </div>
@@ -587,24 +576,12 @@ export default function HomePage() {
               title={copy.relief.title}
               description={copy.relief.description}
             />
-            <div className="mt-10 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-              {reliefGates.map((gate) => (
-                <button
-                  key={gate.key}
-                  type="button"
-                  onClick={() => handleFreeEntry(gate.key)}
-                  className="group rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.025))] px-5 py-6 text-left shadow-[0_18px_60px_rgba(7,17,31,0.12)] transition duration-200 hover:border-white/18 hover:bg-white/[0.06] motion-reduce:transform-none"
-                >
-                  <p className="text-lg font-semibold text-white">{gate.label}</p>
-                  <p className="mt-3 max-w-[18rem] text-sm leading-7 text-white/58">{gate.subtitle}</p>
-                  <div className="mt-6 inline-flex min-h-[42px] items-center rounded-full border border-white/12 bg-white/[0.03] px-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/72 transition group-hover:bg-white/[0.08]">
-                    {copy.relief.cta}
-                  </div>
-                </button>
-              ))}
-            </div>
-            <p className="mt-8 max-w-2xl text-sm leading-7 text-white/46 sm:text-base">{copy.relief.note}</p>
           </div>
+          <ZeroGateSection onEnterGate={handleZeroGateEnter} />
+          <div className="section-shell mt-12 sm:mt-16">
+            <p className="max-w-2xl text-sm uppercase tracking-[0.24em] text-white/42 sm:text-base">{copy.relief.meditationTitle}</p>
+          </div>
+          <InstantMeditationSection copy={landing.instant} />
         </HomeScene>
 
         <HomeScene id="rhythm" className="mt-12 bg-[linear-gradient(180deg,rgba(212,186,117,0.05),rgba(212,186,117,0)_100%)] py-14 sm:mt-16 sm:py-18">
