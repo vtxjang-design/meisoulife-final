@@ -4955,10 +4955,10 @@ function MeditationPageContent() {
                   </p>
                 </div>
               ) : isReleaseGate ? (
-                <div className="mt-10 min-h-[120px] max-w-2xl space-y-3">
+                <div className="-translate-y-6 mt-8 min-h-[156px] w-full max-w-[24rem] px-6 pb-10 text-center sm:-translate-y-8 sm:mt-9 sm:max-w-[28rem] sm:px-8 sm:pb-14 lg:max-w-[30rem]">
                   <p
                     key={releaseGateMessage ?? "release-gate-empty"}
-                    className="mx-auto animate-fade-in whitespace-pre-line font-serif text-[1.18rem] leading-[2.02] text-white/82 sm:text-[1.45rem] sm:leading-[2.08]"
+                    className="mx-auto animate-fade-in whitespace-pre-line break-keep text-balance font-serif text-[1.18rem] leading-[2.18] tracking-[0.01em] text-white/82 [overflow-wrap:normal] [word-break:keep-all] sm:text-[1.45rem] sm:leading-[2.24]"
                   >
                     {releaseGateMessage}
                   </p>
