@@ -14,7 +14,7 @@ export function GateCard({ emoji, label, worldName, description, ctaLabel, onCli
     <button
       type="button"
       onClick={onClick}
-      className="group flex min-h-[118px] w-full cursor-pointer flex-col items-start justify-between rounded-[20px] border border-white/7 bg-[linear-gradient(180deg,rgba(255,255,255,0.038),rgba(255,255,255,0.016))] px-3.5 py-3 text-left shadow-[0_12px_28px_rgba(5,12,22,0.12)] transition duration-200 hover:-translate-y-[1px] hover:border-gold/30 hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.055),rgba(255,255,255,0.022))] hover:shadow-[0_20px_44px_rgba(212,186,117,0.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b1620] active:translate-y-0 sm:min-h-[154px] sm:rounded-[24px] sm:px-4.5 sm:py-4.5 sm:shadow-[0_16px_40px_rgba(5,12,22,0.14)]"
+      className="group flex min-h-[118px] w-full cursor-pointer flex-col items-start justify-between rounded-[20px] border border-white/7 bg-[linear-gradient(180deg,rgba(255,255,255,0.038),rgba(255,255,255,0.016))] px-3.5 py-3 text-left shadow-[0_12px_28px_rgba(5,12,22,0.12)] transition duration-200 hover:-translate-y-[1px] hover:border-gold/30 hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.055),rgba(255,255,255,0.022))] hover:shadow-[0_20px_44px_rgba(212,186,117,0.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b1620] active:scale-[0.985] active:translate-y-[1px] sm:min-h-[154px] sm:rounded-[24px] sm:px-4.5 sm:py-4.5 sm:shadow-[0_16px_40px_rgba(5,12,22,0.14)]"
     >
       <div className="w-full">
         <div className="flex items-start gap-2.5 sm:block sm:space-y-3">
