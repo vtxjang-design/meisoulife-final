@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { SectionHeading } from "@/components/section-heading";
 import { useLanguage, type Language } from "@/lib/i18n";
 import type { LandingCopy } from "@/lib/landing-copy";
 import { handleMeditationComplete as playMeditationCompletion } from "@/lib/meditation-completion";
@@ -454,6 +453,8 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const recoveryUiVisible = recoveryStarted && hasSelectedGate && secondsLeft > 0;
   const transitionMeta = isZeroGateKey(selectedGate) ? gateTransitionMeta[selectedGate] : null;
   const showCompletionState = secondsLeft === 0;
+  const showTransitionLayer = showGateTransition && transitionMeta;
+  const showRecoveryLayer = running || showCompletionState || videoFailed;
 
   async function fadeOutVideoAudio(video: HTMLVideoElement) {
     if (video.muted || video.volume <= 0) {
@@ -724,7 +725,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const dashOffset = ringCircumference - progress * ringCircumference;
 
   return (
-    <section id="one-minute-experience" className="section-shell mt-16">
+    <>
       <style jsx>{`
         .zero-gate-reset-container:fullscreen,
         .zero-gate-reset-container:-webkit-full-screen {
@@ -741,181 +742,179 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
           object-fit: cover;
         }
       `}</style>
+      <div id="one-minute-experience" ref={playerRef} className="h-0 scroll-mt-24" />
       <div id="one-minute-meditation" />
-      <div className="rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-5 py-8 shadow-[0_24px_80px_rgba(7,17,31,0.24)] sm:px-8 sm:py-10">
-        <SectionHeading eyebrow={copy.eyebrow} title={copy.title} description={copy.description} align="center" />
-        <div className={`mt-8 ${showCompletionState ? "grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center" : ""}`}>
-          {showCompletionState ? (
-            <div className="order-2 space-y-4.5 lg:order-1">
-              <div className="rounded-[24px] border border-gold/18 bg-gold/[0.06] p-5">
-                <p className="text-sm leading-[1.8] text-white/82">{copy.completionMessage}</p>
-                <div className="mt-5">
-                  <p className="text-sm font-medium text-white/78">{copy.moodQuestion}</p>
-                  <div className="mt-3 grid gap-2 sm:grid-cols-3">
-                    {visibleMoods.map((mood) => {
-                      const selected = selectedMood === mood.key;
+      {showTransitionLayer ? (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-[linear-gradient(180deg,rgba(2,6,12,0.82),rgba(2,6,12,0.92)_54%,rgba(2,6,12,0.96))] px-6">
+          <div
+            className={`relative flex flex-col items-center text-center ${
+              prefersReducedMotion ? "" : "transition-opacity duration-[700ms] ease-out"
+            } ${showGateTransitionContent ? "opacity-100" : "opacity-0"}`}
+          >
+            <div className="inline-flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-[1.5rem] shadow-[0_12px_30px_rgba(0,0,0,0.18)]">
+              <span aria-hidden="true">{transitionMeta.emoji}</span>
+            </div>
+            <p className="mt-5 text-[1.15rem] font-medium leading-8 text-white/92 sm:text-[1.3rem]">
+              {transitionMeta.title[language]}
+            </p>
+          </div>
+        </div>
+      ) : null}
+      {showRecoveryLayer ? (
+        <section className="section-shell mt-8 sm:mt-10">
+          <div className={showCompletionState ? "grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center" : ""}>
+            {showCompletionState ? (
+              <div className="order-2 space-y-4.5 lg:order-1">
+                <div className="rounded-[24px] border border-gold/18 bg-gold/[0.06] p-5">
+                  <p className="text-sm leading-[1.8] text-white/82">{copy.completionMessage}</p>
+                  <div className="mt-5">
+                    <p className="text-sm font-medium text-white/78">{copy.moodQuestion}</p>
+                    <div className="mt-3 grid gap-2 sm:grid-cols-3">
+                      {visibleMoods.map((mood) => {
+                        const selected = selectedMood === mood.key;
 
-                      return (
-                        <button
-                          key={mood.key}
-                          type="button"
-                          onClick={() => handleMoodSelect(mood.key)}
-                          className={`min-h-[52px] rounded-[20px] border px-4 py-3 text-sm font-medium transition duration-300 ${
-                            selected
-                              ? "border-gold/35 bg-gold/[0.16] text-white shadow-[0_12px_28px_rgba(212,186,117,0.12)]"
-                              : "border-white/10 bg-white/[0.05] text-white/72 hover:border-white/14 hover:bg-white/[0.07] hover:text-white"
-                          }`}
-                        >
-                          {mood.label}
-                        </button>
-                      );
-                    })}
+                        return (
+                          <button
+                            key={mood.key}
+                            type="button"
+                            onClick={() => handleMoodSelect(mood.key)}
+                            className={`min-h-[52px] rounded-[20px] border px-4 py-3 text-sm font-medium transition duration-300 ${
+                              selected
+                                ? "border-gold/35 bg-gold/[0.16] text-white shadow-[0_12px_28px_rgba(212,186,117,0.12)]"
+                                : "border-white/10 bg-white/[0.05] text-white/72 hover:border-white/14 hover:bg-white/[0.07] hover:text-white"
+                            }`}
+                          >
+                            {mood.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {selectedMood ? <p className="mt-3 text-sm leading-7 text-white/56">{copy.moodSaved}</p> : null}
                   </div>
-                  {selectedMood ? <p className="mt-3 text-sm leading-7 text-white/56">{copy.moodSaved}</p> : null}
-                </div>
-                <div className="mt-5 rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-4 text-center">
-                  <p className="text-sm leading-6 text-white/68">{nextStepText}</p>
-                  <a
-                    href="/program/basic"
-                    className="mt-3 inline-flex min-h-[46px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-2.5 text-sm font-medium text-white/86 transition duration-300 hover:bg-white/[0.08]"
-                  >
-                    {nextStepCta}
-                  </a>
+                  <div className="mt-5 rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-4 text-center">
+                    <p className="text-sm leading-6 text-white/68">{nextStepText}</p>
+                    <a
+                      href="/program/basic"
+                      className="mt-3 inline-flex min-h-[46px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-2.5 text-sm font-medium text-white/86 transition duration-300 hover:bg-white/[0.08]"
+                    >
+                      {nextStepCta}
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
-          ) : null}
-          <div className={`order-1 flex justify-center ${showCompletionState ? "lg:order-2" : ""}`}>
-            <div
-              ref={(node) => {
-                playerRef.current = node;
-              }}
-              className={`zero-gate-reset-container relative min-h-[480px] overflow-hidden rounded-[32px] border border-white/10 bg-[#08111b] ${
-                showCompletionState ? "w-full" : "w-full max-w-[58rem]"
-              }`}
-            >
-              {activeVideoSource && !videoFailed ? (
-                <video
-                  key={activeVideoSource}
-                  ref={videoRef}
-                  className={`absolute inset-0 z-[1] h-full w-full object-cover opacity-[0.68] blur-[1.5px] transition-opacity duration-700 ${sanctuaryVisual.videoClassName}`}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                  poster={sanctuaryVisual.poster}
-                  onLoadStart={() => setVideoLoading(true)}
-                  onLoadedData={() => setVideoLoading(false)}
-                  onCanPlay={handleVideoCanPlay}
-                  onError={handleVideoError}
-                >
-                  <source src={activeVideoSource} type="video/mp4" />
-                </video>
-              ) : (
-                <div
-                  className="absolute inset-0 z-[1] bg-cover bg-center opacity-[0.42]"
-                  style={{ backgroundImage: `url(${sanctuaryVisual.poster})` }}
-                />
-              )}
-              <div className={`absolute inset-0 z-[2] ${sanctuaryVisual.glowClassName}`} />
-              <div className="absolute inset-0 z-[2] bg-[radial-gradient(circle_at_82%_18%,rgba(255,255,255,0.05),transparent_20%),radial-gradient(circle_at_74%_32%,rgba(212,186,117,0.07),transparent_34%)] opacity-50 blur-2xl" />
-              <div className={`absolute inset-0 z-[2] ${sanctuaryVisual.overlayClassName}`} />
-              <div className="absolute inset-0 z-[2] bg-[linear-gradient(180deg,rgba(3,9,16,0.06),rgba(3,9,16,0.18)_36%,rgba(3,9,16,0.34)_100%)] backdrop-blur-[0.5px]" />
-              {videoLoading ? (
-                <div className="absolute inset-0 z-[3] flex items-center justify-center">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/12 bg-[#07111b]/62 backdrop-blur-md">
-                    <span className="h-6 w-6 animate-spin rounded-full border-2 border-white/22 border-t-white/90" />
-                  </div>
-                </div>
-              ) : null}
-              {videoFailed ? (
-                <div className="absolute inset-x-5 top-5 z-[3] rounded-[20px] border border-white/10 bg-[#07111b]/72 px-4 py-3 text-sm leading-6 text-white/72 backdrop-blur-md">
-                  {copy.audioError}
-                </div>
-              ) : null}
-              {audioBlocked ? (
-                <div className="absolute inset-x-5 bottom-5 z-[3]">
-                  <button
-                    type="button"
-                    onClick={handleEnableAudio}
-                    className="inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-gold/20 bg-gold/[0.16] px-4 py-3 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(0,0,0,0.18)] backdrop-blur-md transition hover:bg-gold/[0.22]"
+            ) : null}
+            <div className={`order-1 flex justify-center ${showCompletionState ? "lg:order-2" : ""}`}>
+              <div
+                className={`zero-gate-reset-container relative min-h-[480px] overflow-hidden rounded-[32px] border border-white/10 bg-[#08111b] ${
+                  showCompletionState ? "w-full" : "w-full max-w-[58rem]"
+                }`}
+              >
+                {activeVideoSource && !videoFailed ? (
+                  <video
+                    key={activeVideoSource}
+                    ref={videoRef}
+                    className={`absolute inset-0 z-[1] h-full w-full object-cover opacity-[0.68] blur-[1.5px] transition-opacity duration-700 ${sanctuaryVisual.videoClassName}`}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    poster={sanctuaryVisual.poster}
+                    onLoadStart={() => setVideoLoading(true)}
+                    onLoadedData={() => setVideoLoading(false)}
+                    onCanPlay={handleVideoCanPlay}
+                    onError={handleVideoError}
                   >
-                    {copy.retryAudio}
-                  </button>
-                </div>
-              ) : null}
-              {showGateTransition && transitionMeta ? (
-                <div className="absolute inset-0 z-[4] flex items-center justify-center px-6">
-                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,6,12,0.54),rgba(2,6,12,0.72)_54%,rgba(2,6,12,0.84))]" />
+                    <source src={activeVideoSource} type="video/mp4" />
+                  </video>
+                ) : (
                   <div
-                    className={`relative flex flex-col items-center text-center ${
-                      prefersReducedMotion ? "" : "transition-opacity duration-[700ms] ease-out"
-                    } ${showGateTransitionContent ? "opacity-100" : "opacity-0"}`}
-                  >
-                    <div className="inline-flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-[1.5rem] shadow-[0_12px_30px_rgba(0,0,0,0.18)]">
-                      <span aria-hidden="true">{transitionMeta.emoji}</span>
-                    </div>
-                    <p className="mt-5 text-[1.15rem] font-medium leading-8 text-white/92 sm:text-[1.3rem]">
-                      {transitionMeta.title[language]}
-                    </p>
-                  </div>
-                </div>
-              ) : null}
-              {openingSequenceActive ? (
-                <div className="absolute inset-0 z-[4] flex items-center justify-center px-6">
-                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,9,16,0.08),rgba(4,9,16,0.14)_42%,rgba(4,9,16,0.18))]" />
-                  <div
-                    className={`relative max-w-[23rem] text-center text-[1.05rem] font-medium leading-[2.1] text-white/92 [text-shadow:0_2px_16px_rgba(0,0,0,0.18)] sm:max-w-[31rem] sm:text-[1.22rem] sm:leading-[2.15] ${
-                      prefersReducedMotion ? "" : "transition-opacity duration-[700ms] ease-out"
-                    } ${showOpeningMessage ? "opacity-100" : "opacity-0"}`}
-                  >
-                    {openingMessage}
-                  </div>
-                </div>
-              ) : null}
-              <div className="relative z-[2] flex min-h-[480px] items-center justify-center px-4 py-8">
-                {recoveryUiVisible ? (
-                  <div className="relative flex flex-col items-center">
-                    <div className="absolute inset-0 -z-10 rounded-full bg-[radial-gradient(circle,rgba(212,186,117,0.1),transparent_66%)] blur-3xl" />
-                    <div className="relative flex h-[288px] w-[288px] items-center justify-center sm:h-[328px] sm:w-[328px]">
-                      <svg viewBox="0 0 240 240" className="absolute inset-0 h-full w-full -rotate-90">
-                        <circle cx="120" cy="120" r={ringRadius} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="5" />
-                        <circle
-                          cx="120"
-                          cy="120"
-                          r={ringRadius}
-                          fill="none"
-                          stroke="rgba(212,186,117,0.92)"
-                          strokeWidth="5"
-                          strokeLinecap="round"
-                          strokeDasharray={ringCircumference}
-                          strokeDashoffset={dashOffset}
-                          className="transition-all duration-1000 ease-linear"
-                        />
-                      </svg>
-                      <div className="absolute inset-[22%] rounded-full border border-white/7 bg-[#07111b]/10 shadow-[0_10px_28px_rgba(0,0,0,0.1)] backdrop-blur-sm" />
-                      <div className="relative z-10 flex max-w-[62%] flex-col items-center text-center">
-                        <p className="text-sm font-medium tracking-[0.08em] text-[rgba(244,248,252,0.88)] sm:text-base">
-                          {centerFocusText}
-                        </p>
-                        <p className="mt-5 font-serif text-[4rem] leading-none text-white drop-shadow-[0_10px_24px_rgba(0,0,0,0.32)] sm:text-[4.7rem]">
-                          {secondsLeft}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="mt-5 flex w-full max-w-[320px] flex-col items-center">
-                      <p className="text-center text-sm font-medium leading-6 tracking-[0.01em] text-gold/92 sm:text-[15px]">
-                        {bottomBreathGuidance}
-                      </p>
+                    className="absolute inset-0 z-[1] bg-cover bg-center opacity-[0.42]"
+                    style={{ backgroundImage: `url(${sanctuaryVisual.poster})` }}
+                  />
+                )}
+                <div className={`absolute inset-0 z-[2] ${sanctuaryVisual.glowClassName}`} />
+                <div className="absolute inset-0 z-[2] bg-[radial-gradient(circle_at_82%_18%,rgba(255,255,255,0.05),transparent_20%),radial-gradient(circle_at_74%_32%,rgba(212,186,117,0.07),transparent_34%)] opacity-50 blur-2xl" />
+                <div className={`absolute inset-0 z-[2] ${sanctuaryVisual.overlayClassName}`} />
+                <div className="absolute inset-0 z-[2] bg-[linear-gradient(180deg,rgba(3,9,16,0.06),rgba(3,9,16,0.18)_36%,rgba(3,9,16,0.34)_100%)] backdrop-blur-[0.5px]" />
+                {videoLoading ? (
+                  <div className="absolute inset-0 z-[3] flex items-center justify-center">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/12 bg-[#07111b]/62 backdrop-blur-md">
+                      <span className="h-6 w-6 animate-spin rounded-full border-2 border-white/22 border-t-white/90" />
                     </div>
                   </div>
                 ) : null}
+                {videoFailed ? (
+                  <div className="absolute inset-x-5 top-5 z-[3] rounded-[20px] border border-white/10 bg-[#07111b]/72 px-4 py-3 text-sm leading-6 text-white/72 backdrop-blur-md">
+                    {copy.audioError}
+                  </div>
+                ) : null}
+                {audioBlocked ? (
+                  <div className="absolute inset-x-5 bottom-5 z-[3]">
+                    <button
+                      type="button"
+                      onClick={handleEnableAudio}
+                      className="inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-gold/20 bg-gold/[0.16] px-4 py-3 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(0,0,0,0.18)] backdrop-blur-md transition hover:bg-gold/[0.22]"
+                    >
+                      {copy.retryAudio}
+                    </button>
+                  </div>
+                ) : null}
+                {openingSequenceActive ? (
+                  <div className="absolute inset-0 z-[4] flex items-center justify-center px-6">
+                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,9,16,0.08),rgba(4,9,16,0.14)_42%,rgba(4,9,16,0.18))]" />
+                    <div
+                      className={`relative max-w-[23rem] text-center text-[1.05rem] font-medium leading-[2.1] text-white/92 [text-shadow:0_2px_16px_rgba(0,0,0,0.18)] sm:max-w-[31rem] sm:text-[1.22rem] sm:leading-[2.15] ${
+                        prefersReducedMotion ? "" : "transition-opacity duration-[700ms] ease-out"
+                      } ${showOpeningMessage ? "opacity-100" : "opacity-0"}`}
+                    >
+                      {openingMessage}
+                    </div>
+                  </div>
+                ) : null}
+                <div className="relative z-[2] flex min-h-[480px] items-center justify-center px-4 py-8">
+                  {recoveryUiVisible ? (
+                    <div className="relative flex flex-col items-center">
+                      <div className="absolute inset-0 -z-10 rounded-full bg-[radial-gradient(circle,rgba(212,186,117,0.1),transparent_66%)] blur-3xl" />
+                      <div className="relative flex h-[288px] w-[288px] items-center justify-center sm:h-[328px] sm:w-[328px]">
+                        <svg viewBox="0 0 240 240" className="absolute inset-0 h-full w-full -rotate-90">
+                          <circle cx="120" cy="120" r={ringRadius} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="5" />
+                          <circle
+                            cx="120"
+                            cy="120"
+                            r={ringRadius}
+                            fill="none"
+                            stroke="rgba(212,186,117,0.92)"
+                            strokeWidth="5"
+                            strokeLinecap="round"
+                            strokeDasharray={ringCircumference}
+                            strokeDashoffset={dashOffset}
+                            className="transition-all duration-1000 ease-linear"
+                          />
+                        </svg>
+                        <div className="absolute inset-[22%] rounded-full border border-white/7 bg-[#07111b]/10 shadow-[0_10px_28px_rgba(0,0,0,0.1)] backdrop-blur-sm" />
+                        <div className="relative z-10 flex max-w-[62%] flex-col items-center text-center">
+                          <p className="text-sm font-medium tracking-[0.08em] text-[rgba(244,248,252,0.88)] sm:text-base">
+                            {centerFocusText}
+                          </p>
+                          <p className="mt-5 font-serif text-[4rem] leading-none text-white drop-shadow-[0_10px_24px_rgba(0,0,0,0.32)] sm:text-[4.7rem]">
+                            {secondsLeft}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="mt-5 flex w-full max-w-[320px] flex-col items-center">
+                        <p className="text-center text-sm font-medium leading-6 tracking-[0.01em] text-gold/92 sm:text-[15px]">
+                          {bottomBreathGuidance}
+                        </p>
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
+        </section>
+      ) : null}
+    </>
   );
 }
