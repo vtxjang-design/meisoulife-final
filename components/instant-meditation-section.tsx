@@ -24,6 +24,7 @@ const EXHALE_SECONDS = 4;
 const MEDITATION_MOOD_STORAGE_KEY = "meisoulife_instant_meditation_mood";
 const ZERO_GATE_STORAGE_KEY = "meisoulife_zero_gate";
 const DEFAULT_SANCTUARY: ZeroGateKey = "overload";
+const PRE_START_TRANSITION_MS = 1000;
 const OPENING_QUIET_MS = 2000;
 const OPENING_MESSAGE_MS = 5000;
 const OPENING_FADE_MS = 700;
@@ -143,6 +144,57 @@ const openingMessages: Record<ZeroGateKey, Record<Language, string>> = {
     jp: "今日を静かに手放しても大丈夫です。",
     kr: "오늘을 조용히 내려놓아도 괜찮습니다.",
     en: "It's okay to gently let today go."
+  }
+};
+
+const gateTransitionMeta: Record<ZeroGateKey, { emoji: string; title: Record<Language, string> }> = {
+  overload: {
+    emoji: "🌲",
+    title: {
+      jp: "思考を空ける森",
+      kr: "생각을 비우는 숲",
+      en: "Empty Mind Forest"
+    }
+  },
+  anxiety: {
+    emoji: "🏕️",
+    title: {
+      jp: "安心の休息地",
+      kr: "안심의 쉼터",
+      en: "Rest Haven"
+    }
+  },
+  "low-energy": {
+    emoji: "🔥",
+    title: {
+      jp: "生命の火種",
+      kr: "생명의 불씨",
+      en: "Spark of Life"
+    }
+  },
+  distracted: {
+    emoji: "🌊",
+    title: {
+      jp: "集中の道",
+      kr: "집중의 길",
+      en: "Path of Focus"
+    }
+  },
+  "reset-mood": {
+    emoji: "🌊",
+    title: {
+      jp: "自由の海",
+      kr: "자유의 바다",
+      en: "Sea of Freedom"
+    }
+  },
+  sleep: {
+    emoji: "🌙",
+    title: {
+      jp: "月明かりの休み場",
+      kr: "달빛 쉼터",
+      en: "Moonlight Resting Place"
+    }
   }
 };
 
@@ -280,6 +332,8 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const [videoFailed, setVideoFailed] = useState(false);
   const [audioBlocked, setAudioBlocked] = useState(false);
   const [recoveryStarted, setRecoveryStarted] = useState(false);
+  const [showGateTransition, setShowGateTransition] = useState(false);
+  const [showGateTransitionContent, setShowGateTransitionContent] = useState(false);
   const [showOpeningOverlay, setShowOpeningOverlay] = useState(false);
   const [showOpeningMessage, setShowOpeningMessage] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
@@ -291,6 +345,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const completionHandledRef = useRef(false);
   const pendingAutoStartRef = useRef(false);
   const openingTimerRefs = useRef<number[]>([]);
+  const gateTransitionTimerRefs = useRef<number[]>([]);
 
   const elapsedSeconds = TOTAL_SECONDS - secondsLeft;
   const phase = useMemo(() => getPhase(elapsedSeconds), [elapsedSeconds]);
@@ -341,6 +396,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
 
   useEffect(() => {
     return () => {
+      clearGateTransition();
       clearOpeningSequence();
       clearTimer();
       videoRef.current?.pause();
@@ -410,6 +466,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const openingMessage = isZeroGateKey(selectedGate) ? openingMessages[selectedGate][language] : null;
   const openingSequenceActive = showOpeningOverlay && openingMessage;
   const recoveryUiVisible = recoveryStarted && hasSelectedGate && secondsLeft > 0;
+  const transitionMeta = isZeroGateKey(selectedGate) ? gateTransitionMeta[selectedGate] : null;
 
   async function fadeOutVideoAudio(video: HTMLVideoElement) {
     if (video.muted || video.volume <= 0) {
@@ -448,6 +505,33 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     setRecoveryStarted(false);
     setShowOpeningOverlay(false);
     setShowOpeningMessage(false);
+  }
+
+  function clearGateTransition() {
+    for (const timerId of gateTransitionTimerRefs.current) {
+      window.clearTimeout(timerId);
+    }
+
+    gateTransitionTimerRefs.current = [];
+    setShowGateTransition(false);
+    setShowGateTransitionContent(false);
+  }
+
+  function startGateTransition() {
+    clearGateTransition();
+    setShowGateTransition(true);
+
+    const revealTimer = window.setTimeout(() => {
+      setShowGateTransitionContent(true);
+    }, 50);
+    const hideContentTimer = window.setTimeout(() => {
+      setShowGateTransitionContent(false);
+    }, Math.max(PRE_START_TRANSITION_MS - 260, 600));
+    const hideTransitionTimer = window.setTimeout(() => {
+      setShowGateTransition(false);
+    }, PRE_START_TRANSITION_MS);
+
+    gateTransitionTimerRefs.current = [revealTimer, hideContentTimer, hideTransitionTimer];
   }
 
   function startOpeningSequence(experienceKey: MeditationExperienceKey) {
@@ -571,6 +655,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
 
   function resetMeditationExperience() {
     pendingAutoStartRef.current = false;
+    clearGateTransition();
     clearOpeningSequence();
     clearTimer();
     setRunning(false);
@@ -603,6 +688,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
 
   async function enterGate(nextGate: MeditationExperienceKey) {
     clearTimer();
+    clearGateTransition();
     setSelectedGate(nextGate);
     setHasSelectedGate(true);
     setVideoLoading(true);
@@ -618,6 +704,12 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
         }, 120);
       });
     }
+
+    startGateTransition();
+
+    await new Promise<void>((resolve) => {
+      window.setTimeout(resolve, PRE_START_TRANSITION_MS);
+    });
 
     await startMeditationExperience(nextGate);
   }
@@ -797,37 +889,41 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
               </div>
             ) : null}
             <div className="flex flex-col gap-3">
-              <button
-                type="button"
-                onClick={handleStartPause}
-                className="inline-flex min-h-[60px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f0ddb0_0%,#dcc086_52%,#caa160_100%)] px-7 py-4 text-sm font-semibold text-[#17202a] shadow-[0_18px_40px_rgba(212,186,117,0.24),inset_0_1px_0_rgba(255,255,255,0.3)] transition duration-300 hover:scale-[1.015] hover:brightness-[1.03] active:scale-[0.985]"
-              >
-                {running ? copy.pause : copy.start}
-              </button>
-              <div className="grid gap-3 sm:grid-cols-3">
+              {!hasSelectedGate ? (
                 <button
                   type="button"
-                  onClick={resetMeditationExperience}
-                  className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-4 py-3 text-sm font-medium text-white/82 transition duration-300 hover:bg-white/[0.06]"
+                  onClick={handleStartPause}
+                  className="inline-flex min-h-[60px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f0ddb0_0%,#dcc086_52%,#caa160_100%)] px-7 py-4 text-sm font-semibold text-[#17202a] shadow-[0_18px_40px_rgba(212,186,117,0.24),inset_0_1px_0_rgba(255,255,255,0.3)] transition duration-300 hover:scale-[1.015] hover:brightness-[1.03] active:scale-[0.985]"
                 >
-                  {returnLabel}
+                  {running ? copy.pause : copy.start}
                 </button>
-                <button
-                  type="button"
-                  onClick={handleSoundToggle}
-                  className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-4 py-3 text-sm font-medium text-white/82 transition duration-300 hover:bg-white/[0.06]"
-                  aria-pressed={soundEnabled}
-                >
-                  {soundEnabled ? copy.soundOn : copy.soundOff}
-                </button>
-                <button
-                  type="button"
-                  onClick={handleEnterFullscreen}
-                  className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-4 py-3 text-sm font-medium text-white/82 transition duration-300 hover:bg-white/[0.06]"
-                >
-                  {copy.fullscreen}
-                </button>
-              </div>
+              ) : null}
+              {!showGateTransition ? (
+                <div className="grid gap-3 sm:grid-cols-3">
+                  <button
+                    type="button"
+                    onClick={resetMeditationExperience}
+                    className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-4 py-3 text-sm font-medium text-white/82 transition duration-300 hover:bg-white/[0.06]"
+                  >
+                    {returnLabel}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleSoundToggle}
+                    className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-4 py-3 text-sm font-medium text-white/82 transition duration-300 hover:bg-white/[0.06]"
+                    aria-pressed={soundEnabled}
+                  >
+                    {soundEnabled ? copy.soundOn : copy.soundOff}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleEnterFullscreen}
+                    className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-4 py-3 text-sm font-medium text-white/82 transition duration-300 hover:bg-white/[0.06]"
+                  >
+                    {copy.fullscreen}
+                  </button>
+                </div>
+              ) : null}
             </div>
           </div>
           <div className="order-1 flex justify-center lg:order-2">
@@ -887,6 +983,30 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                   >
                     {copy.retryAudio}
                   </button>
+                </div>
+              ) : null}
+              {showGateTransition && transitionMeta ? (
+                <div className="absolute inset-0 z-[4] flex items-center justify-center px-6">
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,9,16,0.22),rgba(4,9,16,0.36)_54%,rgba(4,9,16,0.48))]" />
+                  <div
+                    className={`relative flex flex-col items-center text-center ${
+                      prefersReducedMotion ? "" : "transition-opacity duration-300 ease-out"
+                    } ${showGateTransitionContent ? "opacity-100" : "opacity-0"}`}
+                  >
+                    <div className="inline-flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-[1.5rem] shadow-[0_12px_30px_rgba(0,0,0,0.18)]">
+                      <span aria-hidden="true">{transitionMeta.emoji}</span>
+                    </div>
+                    <p className="mt-5 text-[1.15rem] font-medium leading-8 text-white/92 sm:text-[1.3rem]">
+                      {transitionMeta.title[language]}
+                    </p>
+                    <p className="mt-2 text-sm leading-7 text-white/62 sm:text-base">
+                      {language === "jp"
+                        ? "静かな60秒を始めます。"
+                        : language === "kr"
+                          ? "조용한 60초를 시작합니다."
+                          : "Beginning a quiet 60 seconds."}
+                    </p>
+                  </div>
                 </div>
               ) : null}
               {openingSequenceActive ? (
