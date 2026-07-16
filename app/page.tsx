@@ -25,7 +25,7 @@ const homeCopy = {
     recovery: {
       eyebrow: "Recovery First",
       title: "まずは、\n今の自分に合う\n入口を選びましょう。",
-      description: "必要なのは説明ではなく、\n今の自分に合う入口です。",
+      description: "一つ選ぶだけで、\n静かな60秒が始まります。",
       meditationLabel: "一つ選ぶだけで、\n静かな60秒が始まります。"
     },
     hros: {
@@ -123,7 +123,7 @@ const homeCopy = {
     recovery: {
       eyebrow: "Recovery First",
       title: "먼저,\n지금의 나에게 맞는\n입구를 고르세요.",
-      description: "필요한 것은 설명이 아니라,\n지금의 나에게 맞는 입구입니다.",
+      description: "하나만 고르면,\n조용한 60초가 시작됩니다.",
       meditationLabel: "하나만 고르면,\n조용한 60초가 시작됩니다."
     },
     hros: {
@@ -221,7 +221,7 @@ const homeCopy = {
     recovery: {
       eyebrow: "Recovery First",
       title: "First,\nchoose the entrance\nthat fits you now.",
-      description: "What you need is not more explanation,\nbut the right entrance for this moment.",
+      description: "Choose one,\nand a quiet 60 seconds begins.",
       meditationLabel: "Choose one,\nand a quiet 60 seconds begins."
     },
     hros: {
@@ -326,7 +326,7 @@ function SectionHeader({
     <div className={`max-w-3xl ${alignment}`}>
       <p className="text-xs uppercase tracking-[0.34em] text-[#d8c08a]/78 sm:text-sm">{eyebrow}</p>
       <h2 className="mt-4 text-balance font-serif text-[clamp(1.75rem,4.2vw,3.2rem)] leading-[1.1] text-white">{title}</h2>
-      <p className="mt-4 max-w-[32rem] text-pretty text-[15px] leading-7 text-white/62 sm:text-base sm:leading-8">{description}</p>
+      <p className="mt-4 max-w-[32rem] whitespace-pre-line text-pretty text-[15px] leading-8 text-white/62 sm:text-base sm:leading-9">{description}</p>
     </div>
   );
 }
@@ -479,9 +479,6 @@ export default function HomePage() {
         </div>
         <div className="mt-7 sm:mt-8">
           <ZeroGateSection onEnterGate={handleZeroGateEnter} />
-        </div>
-        <div className="section-shell mt-9 sm:mt-11">
-          <p className="whitespace-pre-line text-sm uppercase tracking-[0.18em] text-white/46 sm:text-base">{copy.recovery.meditationLabel}</p>
         </div>
         <InstantMeditationSection copy={landing.instant} />
       </section>
