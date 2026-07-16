@@ -9,18 +9,8 @@ import { ZeroGateSection } from "@/components/zero-gate-section";
 import { useLocaleCopy } from "@/lib/i18n";
 import { landingCopy } from "@/lib/landing-copy";
 
-const fallbackHeroNatureVisual =
+const heroWindowVisual =
   "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=1400&q=80";
-
-const heroNatureVisualByWeekday: Record<number, string> = {
-  0: "/images/todays-nature/sunday.jpg",
-  1: "/images/todays-nature/monday.jpg",
-  2: "/images/todays-nature/tuesday.jpg",
-  3: "/images/todays-nature/wednesday.jpg",
-  4: "/images/todays-nature/thursday.jpg",
-  5: "/images/todays-nature/friday.jpg",
-  6: "/images/todays-nature/saturday.jpg"
-} as const;
 
 const homeCopy = {
   jp: {
@@ -29,10 +19,8 @@ const homeCopy = {
       headline: "今日は、\nどんな回復が必要ですか？",
       subtitle: "Human Recovery Operating System",
       description: "AI時代に、\n人間本来のリズムを取り戻す場所。",
-      primaryCta: "1分回復を始める",
-      secondaryCta: "7日間の小さな回復",
-      libraryLink: "HROSとは？",
-      quietNote: "Experience before explanation."
+      primaryCta: "1分リセットを始める",
+      secondaryCta: "7日間のリズム回復"
     },
     recovery: {
       eyebrow: "Recovery First",
@@ -96,10 +84,8 @@ const homeCopy = {
       headline: "오늘,\n어떤 회복이 필요하세요?",
       subtitle: "Human Recovery Operating System",
       description: "AI 시대에,\n인간 본래의 리듬을 되찾는 곳.",
-      primaryCta: "1분 회복 시작하기",
-      secondaryCta: "7일간의 작은 회복",
-      libraryLink: "HROS란?",
-      quietNote: "Experience before explanation."
+      primaryCta: "1분 리셋 시작하기",
+      secondaryCta: "7일간의 리듬 회복"
     },
     recovery: {
       eyebrow: "Recovery First",
@@ -160,13 +146,11 @@ const homeCopy = {
   en: {
     giftBanner: "A one-minute rest has been sent to you.",
     hero: {
-      headline: "What kind of recovery\n do you need today?",
+      headline: "What kind of recovery\ndo you need today?",
       subtitle: "Human Recovery Operating System",
       description: "A place to recover the original human rhythm\nin the AI era.",
-      primaryCta: "Start a 1-minute recovery",
-      secondaryCta: "7-Day Recovery Journey",
-      libraryLink: "What is HROS?",
-      quietNote: "Experience before explanation."
+      primaryCta: "Start the 1-Minute Reset",
+      secondaryCta: "7-Day Rhythm Recovery"
     },
     recovery: {
       eyebrow: "Recovery First",
@@ -254,14 +238,6 @@ export default function HomePage() {
   const landing = useLocaleCopy(landingCopy);
   const copy = useLocaleCopy(homeCopy);
   const [giftDelivered, setGiftDelivered] = useState(false);
-  const [heroNatureSrc, setHeroNatureSrc] = useState<string>(fallbackHeroNatureVisual);
-  const [heroNatureImageFailed, setHeroNatureImageFailed] = useState(false);
-
-  useEffect(() => {
-    const weekdayIndex = new Date().getDay();
-    setHeroNatureSrc(heroNatureVisualByWeekday[weekdayIndex] ?? fallbackHeroNatureVisual);
-    setHeroNatureImageFailed(false);
-  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -332,56 +308,52 @@ export default function HomePage() {
       ) : null}
 
       <section className="section-shell pt-6 sm:pt-10">
-        <div className="relative overflow-hidden rounded-[40px] border border-white/10 bg-[linear-gradient(180deg,rgba(6,14,22,0.92),rgba(6,14,22,0.78))] px-6 py-10 shadow-[0_28px_120px_rgba(2,8,14,0.36)] sm:px-8 sm:py-14 lg:min-h-[calc(100svh-9rem)] lg:px-12 lg:py-16">
+        <div className="relative overflow-hidden rounded-[40px] border border-white/10 bg-[linear-gradient(180deg,rgba(6,14,22,0.94),rgba(6,14,22,0.8))] px-6 py-9 shadow-[0_28px_120px_rgba(2,8,14,0.36)] sm:px-8 sm:py-12 lg:min-h-[calc(100svh-9rem)] lg:px-12 lg:py-14">
           <div className="pointer-events-none absolute inset-0">
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(3,8,14,0.18),rgba(3,8,14,0.56)_68%,rgba(3,8,14,0.72))]" />
-            <div className="absolute left-[8%] top-[10%] h-28 w-28 rounded-full bg-[#d8c08a]/[0.14] blur-[80px]" />
-            <div className="absolute right-[10%] top-[18%] h-40 w-40 rounded-full bg-white/[0.06] blur-[96px]" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(3,8,14,0.14),rgba(3,8,14,0.48)_66%,rgba(3,8,14,0.68))]" />
+            <div className="absolute left-[8%] top-[10%] h-28 w-28 rounded-full bg-[#d8c08a]/[0.1] blur-[88px]" />
+            <div className="absolute right-[12%] top-[18%] h-40 w-40 rounded-full bg-white/[0.05] blur-[104px]" />
           </div>
 
-          <div className="relative z-10 grid gap-10 lg:grid-cols-[1.02fr_0.98fr] lg:items-center">
-            <div className="max-w-2xl">
-              <p className="text-sm font-medium uppercase tracking-[0.32em] text-[#d8c08a]/80">{copy.hero.subtitle}</p>
-              <h1 className="mt-5 whitespace-pre-line text-balance font-serif text-[clamp(2.7rem,7vw,5.6rem)] leading-[1.02] text-white">
+          <div className="relative z-10 grid gap-8 lg:grid-cols-[minmax(0,0.98fr)_minmax(0,1.02fr)] lg:items-center lg:gap-10">
+            <div className="max-w-[36rem]">
+              <p className="text-sm font-medium uppercase tracking-[0.26em] text-[#d8c08a]/78 sm:text-[0.95rem]">
+                {copy.hero.subtitle}
+              </p>
+              <h1 className="mt-5 whitespace-pre-line text-balance font-serif text-[clamp(3.2rem,5.2vw,5.4rem)] leading-[1.06] text-white">
                 {copy.hero.headline}
               </h1>
-              <p className="mt-5 whitespace-pre-line text-pretty text-lg leading-8 text-white/68 sm:text-xl">
+              <p className="mt-5 max-w-[28rem] whitespace-pre-line text-pretty text-base leading-8 text-white/66 sm:text-lg">
                 {copy.hero.description}
               </p>
 
-              <div className="mt-9 flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap">
+              <div className="mt-8 flex w-full flex-col items-stretch gap-3 sm:max-w-[38rem] sm:flex-row sm:flex-wrap sm:items-center">
                 <button
                   type="button"
                   onClick={scrollToRecovery}
-                  className="inline-flex min-h-[58px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f0ddb0_0%,#dcc086_56%,#caa160_100%)] px-7 py-4 text-sm font-semibold text-[#16202b] shadow-[0_18px_40px_rgba(212,186,117,0.2)] transition hover:brightness-[1.03]"
+                  className="inline-flex min-h-[58px] items-center justify-center rounded-[18px] border border-[#f3e4bc]/50 bg-[#e8d5a6] px-6 py-4 text-sm font-semibold text-[#132030] shadow-[0_16px_34px_rgba(212,186,117,0.14)] transition duration-200 hover:brightness-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f0ddb0] focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
                 >
                   {copy.hero.primaryCta}
                 </button>
                 <Link
                   href="/rhythm-journey"
-                  className="inline-flex min-h-[58px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-7 py-4 text-sm font-semibold text-white/86 transition hover:bg-white/[0.08]"
+                  className="inline-flex min-h-[58px] items-center justify-center rounded-[18px] border border-[#d8c08a]/28 bg-[#0c1620]/78 px-6 py-4 text-sm font-semibold text-white/88 transition duration-200 hover:border-[#d8c08a]/42 hover:bg-[#101b26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d8c08a]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
                 >
                   {copy.hero.secondaryCta}
                 </Link>
               </div>
-
-              <div className="mt-6 flex items-center gap-4">
-                <Link href="/brain-education" className="text-sm font-medium text-white/64 underline decoration-white/16 underline-offset-4 transition hover:text-white">
-                  {copy.hero.libraryLink}
-                </Link>
-                <span className="text-xs uppercase tracking-[0.26em] text-white/28">{copy.hero.quietNote}</span>
-              </div>
             </div>
 
-            <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-[#09131c]">
-              <img
-                src={heroNatureImageFailed ? fallbackHeroNatureVisual : heroNatureSrc}
-                alt=""
-                aria-hidden="true"
-                onError={() => setHeroNatureImageFailed(true)}
-                className="h-[22rem] w-full object-cover object-center opacity-[0.84] brightness-[0.72] sm:h-[26rem] lg:h-[38rem]"
-              />
-              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(4,12,18,0.06),rgba(4,12,18,0.28)_40%,rgba(4,12,18,0.7)_100%),radial-gradient(circle_at_18%_16%,rgba(255,242,216,0.15),transparent_22%),radial-gradient(circle_at_78%_18%,rgba(154,187,204,0.12),transparent_26%)]" />
+            <div className="relative overflow-hidden rounded-[34px] border border-white/12 bg-[#09131c] p-2 shadow-[0_24px_80px_rgba(4,10,18,0.28)]">
+              <div className="relative overflow-hidden rounded-[28px] border border-white/8 bg-[#0b1620]">
+                <img
+                  src={heroWindowVisual}
+                  alt=""
+                  aria-hidden="true"
+                  className="h-[16.5rem] w-full object-cover object-center opacity-[0.92] brightness-[0.9] contrast-[0.94] saturate-[0.9] sm:h-[20rem] lg:h-[31rem]"
+                />
+                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(8,17,26,0.22),rgba(8,17,26,0.02)_24%,rgba(8,17,26,0.1)_100%),linear-gradient(180deg,rgba(4,11,18,0.06),rgba(4,11,18,0.18)_46%,rgba(4,11,18,0.42)_100%),radial-gradient(circle_at_20%_18%,rgba(255,242,216,0.12),transparent_22%)]" />
+              </div>
             </div>
           </div>
         </div>
