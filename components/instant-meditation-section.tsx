@@ -306,6 +306,18 @@ function getNextStepCta(startLabel: string) {
   return "Explore Morning Gate";
 }
 
+function getFullscreenLabel(language: Language) {
+  if (language === "jp") {
+    return "全画面で表示";
+  }
+
+  if (language === "kr") {
+    return "전체 화면으로 보기";
+  }
+
+  return "View fullscreen";
+}
+
 export function InstantMeditationSection({ copy }: InstantMeditationSectionProps) {
   const { language } = useLanguage();
   const [running, setRunning] = useState(false);
@@ -324,9 +336,11 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const [showOpeningOverlay, setShowOpeningOverlay] = useState(false);
   const [showOpeningMessage, setShowOpeningMessage] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [fullscreenAvailable, setFullscreenAvailable] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const playerRef = useRef<HTMLDivElement | null>(null);
+  const recoveryContainerRef = useRef<HTMLDivElement | null>(null);
   const timerRef = useRef<number | null>(null);
   const completionHandledRef = useRef(false);
   const pendingAutoStartRef = useRef(false);
@@ -408,6 +422,35 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   }, []);
 
   useEffect(() => {
+    if (typeof document === "undefined") {
+      return;
+    }
+
+    const video = videoRef.current;
+    const container = recoveryContainerRef.current;
+    const videoTarget = video as
+      | (HTMLVideoElement & {
+          webkitEnterFullscreen?: () => void;
+          webkitRequestFullscreen?: () => Promise<void> | void;
+        })
+      | null;
+    const containerTarget = container as
+      | (HTMLDivElement & {
+          webkitRequestFullscreen?: () => Promise<void> | void;
+        })
+      | null;
+
+    setFullscreenAvailable(
+      Boolean(
+        (document.fullscreenEnabled && (container?.requestFullscreen || video?.requestFullscreen)) ||
+          containerTarget?.webkitRequestFullscreen ||
+          videoTarget?.webkitRequestFullscreen ||
+          videoTarget?.webkitEnterFullscreen
+      )
+    );
+  }, [running, secondsLeft, hasSelectedGate, videoLoading, videoFailed]);
+
+  useEffect(() => {
     setSelectedGate(readStoredGate());
     setHasSelectedGate(false);
     setVideoLoading(false);
@@ -445,6 +488,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const bottomBreathGuidance = getBottomBreathGuidance(copy.start);
   const nextStepText = getNextStepText(copy.start);
   const nextStepCta = getNextStepCta(copy.start);
+  const fullscreenLabel = getFullscreenLabel(language);
   const sanctuaryVisual = sanctuaryVisuals[selectedGate];
   const activeVideoSource = hasSelectedGate ? sanctuaryVisual.source : null;
   const visibleMoods = copy.moods.filter((mood) => mood.key !== "hard");
@@ -455,6 +499,14 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const showCompletionState = secondsLeft === 0;
   const showTransitionLayer = showGateTransition && transitionMeta;
   const showRecoveryLayer = running || showCompletionState || videoFailed;
+  const showFullscreenButton =
+    running &&
+    hasSelectedGate &&
+    !showTransitionLayer &&
+    !showCompletionState &&
+    !!activeVideoSource &&
+    !!videoRef.current &&
+    fullscreenAvailable;
 
   async function fadeOutVideoAudio(video: HTMLVideoElement) {
     if (video.muted || video.volume <= 0) {
@@ -676,6 +728,44 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     await syncVideoAudio(true, true);
   }
 
+  async function handleEnterFullscreen() {
+    const video = videoRef.current;
+    const container = recoveryContainerRef.current;
+
+    if (!video && !container) {
+      return;
+    }
+
+    const videoTarget = video as HTMLVideoElement & {
+      webkitEnterFullscreen?: () => void;
+      webkitRequestFullscreen?: () => Promise<void> | void;
+    };
+    const containerTarget = container as HTMLDivElement & {
+      webkitRequestFullscreen?: () => Promise<void> | void;
+    };
+
+    try {
+      if (document.fullscreenEnabled && container?.requestFullscreen) {
+        await container.requestFullscreen();
+        return;
+      }
+
+      if (containerTarget?.webkitRequestFullscreen) {
+        await containerTarget.webkitRequestFullscreen();
+        return;
+      }
+
+      if (videoTarget?.webkitRequestFullscreen) {
+        await videoTarget.webkitRequestFullscreen();
+        return;
+      }
+
+      videoTarget?.webkitEnterFullscreen?.();
+    } catch (error) {
+      console.warn("Failed to enter ZERO GATE fullscreen", error);
+    }
+  }
+
   async function handleMeditationComplete() {
     await playMeditationCompletion({
       hasUserGesture,
@@ -805,6 +895,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
             ) : null}
             <div className={`order-1 flex justify-center ${showCompletionState ? "lg:order-2" : ""}`}>
               <div
+                ref={recoveryContainerRef}
                 className={`zero-gate-reset-container relative min-h-[480px] overflow-hidden rounded-[32px] border border-white/10 bg-[#08111b] ${
                   showCompletionState ? "w-full" : "w-full max-w-[58rem]"
                 }`}
@@ -857,6 +948,32 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                       className="inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-gold/20 bg-gold/[0.16] px-4 py-3 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(0,0,0,0.18)] backdrop-blur-md transition hover:bg-gold/[0.22]"
                     >
                       {copy.retryAudio}
+                    </button>
+                  </div>
+                ) : null}
+                {showFullscreenButton ? (
+                  <div className="pointer-events-none absolute bottom-[max(1rem,env(safe-area-inset-bottom))] right-[max(1rem,env(safe-area-inset-right))] z-[4]">
+                    <button
+                      type="button"
+                      aria-label={fullscreenLabel}
+                      onClick={handleEnterFullscreen}
+                      className="pointer-events-auto inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/14 bg-[#07111b]/54 text-white/88 backdrop-blur-md transition duration-200 hover:bg-[#07111b]/68 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/65 focus-visible:ring-offset-2 focus-visible:ring-offset-[#08111b]"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 24 24"
+                        className="h-[18px] w-[18px]"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.9"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M8 3H4v4" />
+                        <path d="M16 3h4v4" />
+                        <path d="M8 21H4v-4" />
+                        <path d="M20 21h-4v-4" />
+                      </svg>
                     </button>
                   </div>
                 ) : null}
