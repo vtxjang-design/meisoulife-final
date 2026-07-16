@@ -76,6 +76,39 @@ const homeCopy = {
           cta: "BASICへ"
         }
       ]
+    },
+    chapters: {
+      next: "Next Journey →",
+      recovery: {
+        eyebrow: "Chapter 1",
+        title: "1分の回復から始める。",
+        description: "今の自分に合う入口を一つ選べば十分です。",
+        cta: "FREEを始める"
+      },
+      sevenDay: {
+        eyebrow: "Chapter 2",
+        title: "7日かけて、感覚を取り戻す。",
+        description: "小さな回復を毎日に戻すための静かなリズムです。",
+        cta: "7-Dayへ"
+      },
+      basic: {
+        eyebrow: "Chapter 3",
+        title: "回復を、朝・昼・夜に住まわせる。",
+        description: "BASICは回復を一度きりで終わらせないための生活設計です。",
+        cta: "BASICへ"
+      },
+      hros: {
+        eyebrow: "Chapter 4",
+        title: "HROSは、一つの旅です。",
+        description: "RecoveryからCoexistenceへ、人の回復がそのまま生き方になる流れです。",
+        cta: "HROS Library"
+      },
+      founder: {
+        eyebrow: "Chapter 5",
+        title: "一人の回復は、やがて共に歩く力になる。",
+        description: "創設者のビジョンと、静かに続ける仲間たちの場へ。",
+        cta: "Communityへ"
+      }
     }
   },
   kr: {
@@ -141,6 +174,39 @@ const homeCopy = {
           cta: "BASIC으로"
         }
       ]
+    },
+    chapters: {
+      next: "Next Journey →",
+      recovery: {
+        eyebrow: "Chapter 1",
+        title: "1분의 회복으로 시작합니다.",
+        description: "지금의 나에게 맞는 입구를 하나 고르면 충분합니다.",
+        cta: "FREE 시작하기"
+      },
+      sevenDay: {
+        eyebrow: "Chapter 2",
+        title: "7일 동안 감각을 되찾습니다.",
+        description: "작은 회복을 일상으로 돌려놓는 조용한 리듬입니다.",
+        cta: "7-Day로"
+      },
+      basic: {
+        eyebrow: "Chapter 3",
+        title: "회복을 아침, 낮, 저녁에 머물게 합니다.",
+        description: "BASIC은 회복을 한 번의 경험이 아닌 생활의 구조로 바꿉니다.",
+        cta: "BASIC으로"
+      },
+      hros: {
+        eyebrow: "Chapter 4",
+        title: "HROS는 하나의 여정입니다.",
+        description: "Recovery에서 Coexistence까지, 회복이 삶의 방식이 되는 흐름입니다.",
+        cta: "HROS Library"
+      },
+      founder: {
+        eyebrow: "Chapter 5",
+        title: "한 사람의 회복은 함께 걷는 힘이 됩니다.",
+        description: "창립자의 비전과 조용히 이어가는 사람들의 공간으로.",
+        cta: "Community로"
+      }
     }
   },
   en: {
@@ -206,6 +272,39 @@ const homeCopy = {
           cta: "Enter BASIC"
         }
       ]
+    },
+    chapters: {
+      next: "Next Journey →",
+      recovery: {
+        eyebrow: "Chapter 1",
+        title: "Begin with one minute of recovery.",
+        description: "Choose the entrance that fits this moment, and begin quietly.",
+        cta: "Enter FREE"
+      },
+      sevenDay: {
+        eyebrow: "Chapter 2",
+        title: "Recover your rhythm over seven days.",
+        description: "A calmer way to bring small recovery back into every day.",
+        cta: "Enter 7-Day"
+      },
+      basic: {
+        eyebrow: "Chapter 3",
+        title: "Let recovery live in morning, daytime, and evening.",
+        description: "BASIC turns recovery from a moment into a way of living.",
+        cta: "Enter BASIC"
+      },
+      hros: {
+        eyebrow: "Chapter 4",
+        title: "HROS is one continuous journey.",
+        description: "From Recovery to Coexistence, human recovery becomes a lived rhythm.",
+        cta: "Open HROS Library"
+      },
+      founder: {
+        eyebrow: "Chapter 5",
+        title: "One person’s recovery becomes a shared path.",
+        description: "Step into the founder’s vision and the quiet community that continues it.",
+        cta: "Enter Community"
+      }
     }
   }
 } as const;
@@ -265,6 +364,17 @@ export default function HomePage() {
     }
 
     document.querySelector("#one-minute-experience")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  function scrollToSection(sectionId: string) {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    document.getElementById(sectionId)?.scrollIntoView({
       behavior: "smooth",
       block: "start"
     });
@@ -376,98 +486,174 @@ export default function HomePage() {
         <InstantMeditationSection copy={landing.instant} />
       </section>
 
-      <section className="section-shell pt-18 sm:pt-24">
-        <div className="overflow-hidden rounded-[36px] bg-[linear-gradient(180deg,rgba(8,17,26,0.72),rgba(8,17,26,0.52))] px-6 py-10 shadow-[0_24px_90px_rgba(2,8,14,0.18)] sm:px-8 sm:py-12 lg:px-10 lg:py-14">
-          <SectionHeader
-            eyebrow={copy.hros.eyebrow}
-            title={copy.hros.title}
-            description={copy.hros.description}
-          />
-
-          <div className="mt-10 flex flex-col gap-5">
-            {copy.hros.stages.map((stage, index) => (
-              <div key={stage.label} className="flex flex-col gap-4">
-                <article className="max-w-[28rem] rounded-[28px] bg-white/[0.03] px-5 py-5 shadow-[0_18px_46px_rgba(2,8,14,0.12)] sm:px-6 sm:py-6">
-                  <p className="text-[11px] uppercase tracking-[0.28em] text-[#d8c08a]/70">{`0${index + 1}`}</p>
-                  <h3 className="mt-3 text-[1.15rem] font-semibold text-white sm:text-[1.28rem]">{stage.label}</h3>
-                  <p className="mt-2 text-sm leading-7 text-white/62">{stage.body}</p>
-                </article>
-                {index < copy.hros.stages.length - 1 ? (
-                  <div className="ml-5 h-8 w-px bg-[linear-gradient(180deg,rgba(216,192,138,0.42),rgba(216,192,138,0.08))] sm:ml-6" />
-                ) : null}
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-8">
-            <Link
-              href="/brain-education"
-              className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-white/[0.04] px-5 py-2.5 text-sm font-medium text-white/74 transition hover:bg-white/[0.06] hover:text-white"
+      <section id="journey-free" className="section-shell flex min-h-[100svh] items-center py-20 sm:py-24">
+        <div className="grid w-full gap-10 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,0.12fr)] lg:items-end">
+          <article className="max-w-[42rem] rounded-[40px] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.018))] px-7 py-10 shadow-[0_28px_110px_rgba(5,12,24,0.16)] sm:px-10 sm:py-12">
+            <p className="text-xs uppercase tracking-[0.32em] text-[#d8c08a]/74">{copy.chapters.recovery.eyebrow}</p>
+            <h2 className="mt-6 max-w-[12ch] text-balance font-serif text-[clamp(2.4rem,5vw,4.8rem)] leading-[1.04] text-white">
+              {copy.chapters.recovery.title}
+            </h2>
+            <p className="mt-6 max-w-[30rem] text-pretty text-base leading-8 text-white/64 sm:text-lg">
+              {copy.chapters.recovery.description}
+            </p>
+            <button
+              type="button"
+              onClick={scrollToRecovery}
+              className="mt-10 inline-flex min-h-[58px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f0ddb0_0%,#dcc086_56%,#caa160_100%)] px-7 py-3 text-sm font-semibold text-[#16202b] shadow-[0_16px_36px_rgba(212,186,117,0.16)] transition hover:brightness-[1.03]"
             >
-              {copy.hros.libraryCta}
-            </Link>
+              {copy.chapters.recovery.cta}
+            </button>
+          </article>
+          <div className="lg:pb-2">
+            <button
+              type="button"
+              onClick={() => scrollToSection("journey-seven-day")}
+              className="inline-flex items-center gap-2 text-sm font-medium text-white/56 transition hover:text-white/84"
+            >
+              {copy.chapters.next}
+            </button>
           </div>
         </div>
       </section>
 
-      <section className="section-shell pt-18 sm:pt-24">
-        <SectionHeader
-          eyebrow={copy.journey.eyebrow}
-          title={copy.journey.title}
-          description={copy.journey.description}
-          align="center"
-        />
-
-        <div className="mt-12 flex flex-col gap-6">
-          <article className="flex flex-col rounded-[32px] bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.018))] px-6 py-7 shadow-[0_20px_70px_rgba(7,17,31,0.12)] sm:max-w-[26rem] sm:px-7 sm:py-8">
-            <p className="text-xs uppercase tracking-[0.3em] text-[#d8c08a]/78">{copy.journey.cards[0].label}</p>
-            <h3 className="mt-4 text-[1.5rem] font-semibold text-white">{copy.journey.cards[0].title}</h3>
-            <p className="mt-3 text-[15px] leading-7 text-white/66">{copy.journey.cards[0].body}</p>
-            <button
-              type="button"
-              onClick={scrollToRecovery}
-              className="mt-7 inline-flex min-h-[56px] items-center justify-center self-start rounded-full bg-[linear-gradient(135deg,#f0ddb0_0%,#dcc086_56%,#caa160_100%)] px-6 py-3 text-sm font-semibold text-[#16202b] shadow-[0_14px_28px_rgba(212,186,117,0.16)] transition hover:brightness-[1.03]"
-            >
-              {copy.journey.cards[0].cta}
-            </button>
-          </article>
-
-          <div className="flex items-center gap-4 pl-4 sm:pl-8">
-            <div className="h-px flex-1 bg-[linear-gradient(90deg,rgba(216,192,138,0.32),rgba(216,192,138,0.04))]" />
-            <span className="text-[#d8c08a]/54">↓</span>
-            <div className="h-px flex-1 bg-[linear-gradient(90deg,rgba(216,192,138,0.04),rgba(216,192,138,0.32))]" />
-          </div>
-
-          <article className="flex flex-col rounded-[32px] bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.018))] px-6 py-8 shadow-[0_20px_70px_rgba(7,17,31,0.12)] sm:ml-12 sm:max-w-[30rem] sm:px-7 sm:py-9">
-            <p className="text-xs uppercase tracking-[0.3em] text-[#d8c08a]/78">{copy.journey.cards[1].label}</p>
-            <h3 className="mt-4 text-[1.55rem] font-semibold text-white">{copy.journey.cards[1].title}</h3>
-            <p className="mt-3 text-[15px] leading-7 text-white/66">{copy.journey.cards[1].body}</p>
+      <section id="journey-seven-day" className="section-shell flex min-h-[100svh] items-center py-20 sm:py-24">
+        <div className="grid w-full gap-10 lg:grid-cols-[minmax(0,0.16fr)_minmax(0,0.84fr)] lg:items-end">
+          <div className="hidden lg:block" />
+          <article className="justify-self-end max-w-[42rem] rounded-[40px] bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.016))] px-7 py-10 shadow-[0_28px_110px_rgba(5,12,24,0.14)] sm:px-10 sm:py-12">
+            <p className="text-xs uppercase tracking-[0.32em] text-[#d8c08a]/74">{copy.chapters.sevenDay.eyebrow}</p>
+            <h2 className="mt-6 max-w-[13ch] text-balance font-serif text-[clamp(2.4rem,5vw,4.8rem)] leading-[1.04] text-white">
+              {copy.chapters.sevenDay.title}
+            </h2>
+            <p className="mt-6 max-w-[30rem] text-pretty text-base leading-8 text-white/64 sm:text-lg">
+              {copy.chapters.sevenDay.description}
+            </p>
             <Link
               href="/rhythm-journey"
-              className="mt-7 inline-flex min-h-[52px] items-center justify-center self-start rounded-full bg-white/[0.04] px-5 py-2.5 text-sm font-medium text-white/82 transition hover:bg-white/[0.06]"
+              className="mt-10 inline-flex min-h-[58px] items-center justify-center rounded-full bg-white/[0.04] px-7 py-3 text-sm font-medium text-white/84 transition hover:bg-white/[0.06]"
             >
-              {copy.journey.cards[1].cta}
+              {copy.chapters.sevenDay.cta}
             </Link>
           </article>
-
-          <div className="flex items-center gap-4 pl-4 sm:pl-16">
-            <div className="h-px flex-1 bg-[linear-gradient(90deg,rgba(216,192,138,0.32),rgba(216,192,138,0.04))]" />
-            <span className="text-[#d8c08a]/54">↓</span>
-            <div className="h-px flex-1 bg-[linear-gradient(90deg,rgba(216,192,138,0.04),rgba(216,192,138,0.32))]" />
+          <div className="lg:col-start-2">
+            <button
+              type="button"
+              onClick={() => scrollToSection("journey-basic")}
+              className="inline-flex items-center gap-2 text-sm font-medium text-white/56 transition hover:text-white/84"
+            >
+              {copy.chapters.next}
+            </button>
           </div>
+        </div>
+      </section>
 
-          <article className="flex flex-col rounded-[34px] bg-[linear-gradient(180deg,rgba(212,186,117,0.1),rgba(255,255,255,0.025))] px-6 py-9 shadow-[0_24px_80px_rgba(7,17,31,0.16)] sm:ml-24 sm:max-w-[34rem] sm:px-8 sm:py-10">
-            <p className="text-xs uppercase tracking-[0.3em] text-[#f0ddb0]/84">{copy.journey.cards[2].label}</p>
-            <h3 className="mt-4 text-[1.7rem] font-semibold text-white">{copy.journey.cards[2].title}</h3>
-            <p className="mt-3 text-[15px] leading-7 text-white/72">{copy.journey.cards[2].body}</p>
+      <section id="journey-basic" className="section-shell flex min-h-[100svh] items-center py-20 sm:py-24">
+        <div className="grid w-full gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,0.1fr)] lg:items-end">
+          <article className="max-w-[44rem] rounded-[42px] bg-[linear-gradient(180deg,rgba(212,186,117,0.1),rgba(255,255,255,0.02))] px-7 py-10 shadow-[0_32px_120px_rgba(5,12,24,0.18)] sm:px-10 sm:py-12">
+            <p className="text-xs uppercase tracking-[0.32em] text-[#f0ddb0]/82">{copy.chapters.basic.eyebrow}</p>
+            <h2 className="mt-6 max-w-[14ch] text-balance font-serif text-[clamp(2.5rem,5vw,5rem)] leading-[1.03] text-white">
+              {copy.chapters.basic.title}
+            </h2>
+            <p className="mt-6 max-w-[31rem] text-pretty text-base leading-8 text-white/68 sm:text-lg">
+              {copy.chapters.basic.description}
+            </p>
             <button
               type="button"
               onClick={handleBasicJourneyCta}
-              className="mt-8 inline-flex min-h-[56px] items-center justify-center self-start rounded-full bg-[linear-gradient(135deg,#f0ddb0_0%,#dcc086_56%,#caa160_100%)] px-6 py-3 text-sm font-semibold text-[#16202b] shadow-[0_16px_36px_rgba(212,186,117,0.18)] transition hover:brightness-[1.03]"
+              className="mt-10 inline-flex min-h-[58px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f0ddb0_0%,#dcc086_56%,#caa160_100%)] px-7 py-3 text-sm font-semibold text-[#16202b] shadow-[0_18px_40px_rgba(212,186,117,0.18)] transition hover:brightness-[1.03]"
             >
-              {copy.journey.cards[2].cta}
+              {copy.chapters.basic.cta}
             </button>
           </article>
+          <div className="lg:pb-2">
+            <button
+              type="button"
+              onClick={() => scrollToSection("journey-hros")}
+              className="inline-flex items-center gap-2 text-sm font-medium text-white/56 transition hover:text-white/84"
+            >
+              {copy.chapters.next}
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="journey-hros" className="section-shell flex min-h-[100svh] items-center py-20 sm:py-24">
+        <div className="grid w-full gap-12 lg:grid-cols-[minmax(0,0.62fr)_minmax(0,0.38fr)] lg:items-end">
+          <article className="max-w-[38rem]">
+            <p className="text-xs uppercase tracking-[0.32em] text-[#d8c08a]/74">{copy.chapters.hros.eyebrow}</p>
+            <h2 className="mt-6 max-w-[12ch] text-balance font-serif text-[clamp(2.4rem,5vw,4.8rem)] leading-[1.04] text-white">
+              {copy.chapters.hros.title}
+            </h2>
+            <p className="mt-6 max-w-[28rem] text-pretty text-base leading-8 text-white/64 sm:text-lg">
+              {copy.chapters.hros.description}
+            </p>
+            <Link
+              href="/brain-education"
+              className="mt-10 inline-flex min-h-[58px] items-center justify-center rounded-full bg-white/[0.04] px-7 py-3 text-sm font-medium text-white/84 transition hover:bg-white/[0.06]"
+            >
+              {copy.chapters.hros.cta}
+            </Link>
+          </article>
+
+          <div className="rounded-[36px] bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.016))] px-6 py-7 shadow-[0_24px_80px_rgba(5,12,24,0.12)] sm:px-8 sm:py-8">
+            <div className="flex flex-col gap-5">
+              {copy.hros.stages.map((stage, index) => (
+                <div key={stage.label} className="flex items-start gap-4">
+                  <p className="pt-1 text-[11px] uppercase tracking-[0.28em] text-[#d8c08a]/64">{`0${index + 1}`}</p>
+                  <div>
+                    <h3 className="text-[1.02rem] font-semibold text-white sm:text-[1.12rem]">{stage.label}</h3>
+                    <p className="mt-1 text-sm leading-7 text-white/58">{stage.body}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="lg:col-span-2">
+            <button
+              type="button"
+              onClick={() => scrollToSection("journey-founder")}
+              className="inline-flex items-center gap-2 text-sm font-medium text-white/56 transition hover:text-white/84"
+            >
+              {copy.chapters.next}
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="journey-founder" className="section-shell flex min-h-[100svh] items-center py-20 sm:py-24">
+        <div className="grid w-full gap-10 lg:grid-cols-[minmax(0,0.5fr)_minmax(0,0.5fr)] lg:items-end">
+          <article className="max-w-[38rem] rounded-[40px] bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.014))] px-7 py-10 shadow-[0_28px_110px_rgba(5,12,24,0.14)] sm:px-10 sm:py-12">
+            <p className="text-xs uppercase tracking-[0.32em] text-[#d8c08a]/74">{copy.chapters.founder.eyebrow}</p>
+            <h2 className="mt-6 max-w-[14ch] text-balance font-serif text-[clamp(2.4rem,5vw,4.8rem)] leading-[1.04] text-white">
+              {copy.chapters.founder.title}
+            </h2>
+            <p className="mt-6 max-w-[30rem] text-pretty text-base leading-8 text-white/64 sm:text-lg">
+              {copy.chapters.founder.description}
+            </p>
+            <Link
+              href="/community"
+              className="mt-10 inline-flex min-h-[58px] items-center justify-center rounded-full bg-white/[0.04] px-7 py-3 text-sm font-medium text-white/84 transition hover:bg-white/[0.06]"
+            >
+              {copy.chapters.founder.cta}
+            </Link>
+          </article>
+
+          <div className="justify-self-end rounded-[36px] border border-white/8 bg-[linear-gradient(180deg,rgba(8,17,26,0.46),rgba(8,17,26,0.22))] px-6 py-8 sm:px-8">
+            <p className="text-[11px] uppercase tracking-[0.3em] text-[#d8c08a]/62">HROS</p>
+            <p className="mt-4 max-w-[20rem] text-[1.02rem] leading-8 text-white/72 sm:text-[1.08rem]">
+              {copy.hros.stages[0].label} → {copy.hros.stages[1].label} → {copy.hros.stages[2].label} → {copy.hros.stages[3].label}
+            </p>
+          </div>
+
+          <div className="lg:col-span-2">
+            <button
+              type="button"
+              onClick={() => scrollToSection("homepage-recovery")}
+              className="inline-flex items-center gap-2 text-sm font-medium text-white/56 transition hover:text-white/84"
+            >
+              {copy.chapters.next}
+            </button>
+          </div>
         </div>
       </section>
     </div>

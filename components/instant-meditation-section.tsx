@@ -45,7 +45,7 @@ const sanctuaryVisuals: Record<
     overlayClassName:
       "bg-[linear-gradient(180deg,rgba(4,10,18,0.18),rgba(4,10,18,0.72)_72%,rgba(4,10,18,0.84))]",
     glowClassName: "bg-[radial-gradient(circle_at_78%_24%,rgba(125,151,130,0.16),transparent_42%)]",
-    videoClassName: "brightness-[1.15] contrast-[0.98] saturate-[1.05]"
+    videoClassName: "brightness-[1.29] contrast-[0.95] saturate-[1.04]"
   },
   anxiety: {
     source: "/one-minute-reset/one-minute-reset-refresh1.mp4",
@@ -53,7 +53,7 @@ const sanctuaryVisuals: Record<
     overlayClassName:
       "bg-[linear-gradient(180deg,rgba(5,10,18,0.22),rgba(5,10,18,0.74)_72%,rgba(5,10,18,0.86))]",
     glowClassName: "bg-[radial-gradient(circle_at_72%_22%,rgba(120,138,169,0.14),transparent_38%)]",
-    videoClassName: "brightness-[1.15] contrast-[0.98] saturate-[1.05]"
+    videoClassName: "brightness-[1.29] contrast-[0.95] saturate-[1.04]"
   },
   morning: {
     source: "/videos2/morning-one-minute-rhythm.mp4",
@@ -61,7 +61,7 @@ const sanctuaryVisuals: Record<
     overlayClassName:
       "bg-[linear-gradient(180deg,rgba(11,15,22,0.12),rgba(11,15,22,0.56)_70%,rgba(11,15,22,0.76))]",
     glowClassName: "bg-[radial-gradient(circle_at_76%_20%,rgba(230,197,120,0.16),transparent_40%)]",
-    videoClassName: "brightness-[1.25] contrast-[0.95] saturate-[1.08]"
+    videoClassName: "brightness-[1.39] contrast-[0.92] saturate-[1.06]"
   },
   day: {
     source: "/videos/one-minute-reset-energy.mp4",
@@ -69,7 +69,7 @@ const sanctuaryVisuals: Record<
     overlayClassName:
       "bg-[linear-gradient(180deg,rgba(6,10,16,0.16),rgba(6,10,16,0.64)_70%,rgba(6,10,16,0.8))]",
     glowClassName: "bg-[radial-gradient(circle_at_74%_26%,rgba(212,186,117,0.14),transparent_40%)]",
-    videoClassName: "brightness-[1.15] contrast-[0.98] saturate-[1.05]"
+    videoClassName: "brightness-[1.29] contrast-[0.95] saturate-[1.04]"
   },
   night: {
     source: "/videos/one-minute-reset-moon8.mp4",
@@ -77,7 +77,7 @@ const sanctuaryVisuals: Record<
     overlayClassName:
       "bg-[linear-gradient(180deg,rgba(4,8,18,0.24),rgba(4,8,18,0.74)_72%,rgba(4,8,18,0.88))]",
     glowClassName: "bg-[radial-gradient(circle_at_78%_18%,rgba(138,152,196,0.16),transparent_40%)]",
-    videoClassName: "brightness-[0.95] contrast-[0.92] saturate-[0.95]"
+    videoClassName: "brightness-[1.09] contrast-[0.89] saturate-[0.95]"
   },
   "low-energy": {
     source: "/one-minute-reset/one-minute-reset-energy1.mp4",
@@ -85,7 +85,7 @@ const sanctuaryVisuals: Record<
     overlayClassName:
       "bg-[linear-gradient(180deg,rgba(6,10,16,0.18),rgba(6,10,16,0.68)_70%,rgba(6,10,16,0.82))]",
     glowClassName: "bg-[radial-gradient(circle_at_74%_26%,rgba(212,186,117,0.14),transparent_40%)]",
-    videoClassName: "brightness-[1.15] contrast-[0.98] saturate-[1.05]"
+    videoClassName: "brightness-[1.29] contrast-[0.95] saturate-[1.04]"
   },
   distracted: {
     source: "/one-minute-reset/one-minute-reset-focus1.mp4",
@@ -93,7 +93,7 @@ const sanctuaryVisuals: Record<
     overlayClassName:
       "bg-[linear-gradient(180deg,rgba(4,11,19,0.2),rgba(4,11,19,0.72)_70%,rgba(4,11,19,0.84))]",
     glowClassName: "bg-[radial-gradient(circle_at_80%_22%,rgba(105,145,169,0.14),transparent_42%)]",
-    videoClassName: "brightness-[1.15] contrast-[0.98] saturate-[1.05]"
+    videoClassName: "brightness-[1.29] contrast-[0.95] saturate-[1.04]"
   },
   "reset-mood": {
     source: "/one-minute-reset/one-minute-reset-sea1.mp4",
@@ -101,7 +101,7 @@ const sanctuaryVisuals: Record<
     overlayClassName:
       "bg-[linear-gradient(180deg,rgba(6,11,18,0.16),rgba(6,11,18,0.68)_72%,rgba(6,11,18,0.82))]",
     glowClassName: "bg-[radial-gradient(circle_at_78%_20%,rgba(157,177,129,0.14),transparent_40%)]",
-    videoClassName: "brightness-[1.15] contrast-[0.98] saturate-[1.05]"
+    videoClassName: "brightness-[1.29] contrast-[0.95] saturate-[1.04]"
   },
   sleep: {
     source: "/one-minute-reset/one-minute-reset-moon1.mp4",
@@ -109,7 +109,7 @@ const sanctuaryVisuals: Record<
     overlayClassName:
       "bg-[linear-gradient(180deg,rgba(4,8,18,0.26),rgba(4,8,18,0.76)_72%,rgba(4,8,18,0.88))]",
     glowClassName: "bg-[radial-gradient(circle_at_78%_18%,rgba(138,152,196,0.16),transparent_40%)]",
-    videoClassName: "brightness-[0.95] contrast-[0.92] saturate-[0.95]"
+    videoClassName: "brightness-[1.09] contrast-[0.89] saturate-[0.95]"
   }
 };
 
@@ -904,7 +904,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                   <video
                     key={activeVideoSource}
                     ref={videoRef}
-                    className={`absolute inset-0 z-[1] h-full w-full object-cover opacity-[0.68] blur-[1.5px] transition-opacity duration-700 ${sanctuaryVisual.videoClassName}`}
+                    className={`absolute inset-0 z-[1] h-full w-full object-cover opacity-[0.74] blur-[1.5px] transition-opacity duration-700 ${sanctuaryVisual.videoClassName}`}
                     autoPlay
                     muted
                     loop
@@ -927,7 +927,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                 <div className={`absolute inset-0 z-[2] ${sanctuaryVisual.glowClassName}`} />
                 <div className="absolute inset-0 z-[2] bg-[radial-gradient(circle_at_82%_18%,rgba(255,255,255,0.05),transparent_20%),radial-gradient(circle_at_74%_32%,rgba(212,186,117,0.07),transparent_34%)] opacity-50 blur-2xl" />
                 <div className={`absolute inset-0 z-[2] ${sanctuaryVisual.overlayClassName}`} />
-                <div className="absolute inset-0 z-[2] bg-[linear-gradient(180deg,rgba(3,9,16,0.06),rgba(3,9,16,0.18)_36%,rgba(3,9,16,0.34)_100%)] backdrop-blur-[0.5px]" />
+                <div className="absolute inset-0 z-[2] bg-[linear-gradient(180deg,rgba(3,9,16,0.05),rgba(3,9,16,0.16)_36%,rgba(3,9,16,0.29)_100%)] backdrop-blur-[0.5px]" />
                 {videoLoading ? (
                   <div className="absolute inset-0 z-[3] flex items-center justify-center">
                     <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/12 bg-[#07111b]/62 backdrop-blur-md">
