@@ -10,7 +10,7 @@ import { useLocaleCopy } from "@/lib/i18n";
 import { landingCopy } from "@/lib/landing-copy";
 
 const heroWindowVisual =
-  "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=1400&q=80";
+  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80";
 
 const homeCopy = {
   jp: {
@@ -418,11 +418,11 @@ export default function HomePage() {
       ) : null}
 
       <section className="section-shell pt-6 sm:pt-10">
-        <div className="relative overflow-hidden rounded-[40px] border border-white/10 bg-[linear-gradient(180deg,rgba(6,14,22,0.94),rgba(6,14,22,0.8))] px-6 py-9 shadow-[0_28px_120px_rgba(2,8,14,0.36)] sm:px-8 sm:py-12 lg:min-h-[calc(100svh-9rem)] lg:px-12 lg:py-14">
+        <div className="relative overflow-hidden rounded-[40px] border border-white/10 bg-[linear-gradient(180deg,rgba(6,14,22,0.96),rgba(6,14,22,0.84))] px-6 py-8 shadow-[0_28px_120px_rgba(2,8,14,0.36)] sm:px-8 sm:py-10 lg:min-h-[calc(80svh-8rem)] lg:px-12 lg:py-12">
           <div className="pointer-events-none absolute inset-0">
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(3,8,14,0.14),rgba(3,8,14,0.48)_66%,rgba(3,8,14,0.68))]" />
-            <div className="absolute left-[8%] top-[10%] h-28 w-28 rounded-full bg-[#d8c08a]/[0.1] blur-[88px]" />
-            <div className="absolute right-[12%] top-[18%] h-40 w-40 rounded-full bg-white/[0.05] blur-[104px]" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(3,8,14,0.22),rgba(3,8,14,0.34)_52%,rgba(3,8,14,0.56))]" />
+            <div className="absolute left-[8%] top-[12%] h-28 w-28 rounded-full bg-[#d8c08a]/[0.08] blur-[88px]" />
+            <div className="absolute right-[10%] top-[16%] h-40 w-40 rounded-full bg-[#9ebbd2]/[0.08] blur-[104px]" />
           </div>
 
           <div className="relative z-10 grid gap-8 lg:grid-cols-[minmax(0,0.98fr)_minmax(0,1.02fr)] lg:items-center lg:gap-10">
@@ -460,9 +460,9 @@ export default function HomePage() {
                   src={heroWindowVisual}
                   alt=""
                   aria-hidden="true"
-                  className="h-[16.5rem] w-full object-cover object-center opacity-[0.92] brightness-[0.9] contrast-[0.94] saturate-[0.9] sm:h-[20rem] lg:h-[31rem]"
+                  className="h-[15rem] w-full object-cover object-center opacity-[0.92] brightness-[0.88] contrast-[0.92] saturate-[0.88] sm:h-[18rem] lg:h-[25rem]"
                 />
-                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(8,17,26,0.22),rgba(8,17,26,0.02)_24%,rgba(8,17,26,0.1)_100%),linear-gradient(180deg,rgba(4,11,18,0.06),rgba(4,11,18,0.18)_46%,rgba(4,11,18,0.42)_100%),radial-gradient(circle_at_20%_18%,rgba(255,242,216,0.12),transparent_22%)]" />
+                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(8,17,26,0.24),rgba(8,17,26,0.08)_24%,rgba(8,17,26,0.18)_100%),linear-gradient(180deg,rgba(4,11,18,0.1),rgba(4,11,18,0.22)_46%,rgba(4,11,18,0.3)_100%),radial-gradient(circle_at_24%_20%,rgba(244,220,173,0.12),transparent_24%)]" />
               </div>
             </div>
           </div>
