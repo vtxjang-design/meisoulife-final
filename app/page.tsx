@@ -30,49 +30,49 @@ const homeCopy = {
     },
     hros: {
       eyebrow: "HROS",
-      title: "回復から、リズムと目覚めへ。",
-      description: "Meisou Lifeは、回復だけで終わらず、人が本来のリズムと意識へ戻っていく流れを育てるHuman Recovery Operating Systemです。",
+      title: "回復から、静かな旅が始まります。",
+      description: "HROSは、回復が生活と意識へ自然につながっていく流れです。",
       libraryCta: "HROS Library",
       stages: [
         {
           label: "Recovery",
-          body: "まずは神経と感情を静かに整え、自分に戻ります。"
+          body: "自分に戻る。"
         },
         {
           label: "Rhythm",
-          body: "一度きりではなく、毎日に戻ってこられる流れを育てます。"
+          body: "毎日に戻る。"
         },
         {
           label: "Awakening",
-          body: "自分の状態に気づき、選び直す力を少しずつ取り戻します。"
+          body: "気づき、選び、育つ。"
         },
         {
           label: "Coexistence",
-          body: "回復を自分だけで終わらせず、関係と社会へ広げていきます。"
+          body: "回復した生を分かち合う。"
         }
       ]
     },
     journey: {
       eyebrow: "Your Journey",
-      title: "FREEから、7-Day、BASICへ。",
-      description: "細かく説明するのではなく、今の場所から次の一歩へ自然につながる流れだけを置いています。",
+      title: "今日の回復から、生活のリズムへ。",
+      description: "必要なのは比較ではなく、次の静かな一歩です。",
       cards: [
         {
-          label: "FREE",
+          label: "Today",
           title: "1分回復",
-          body: "気持ちが重い日でも、今ここから静かに始められる入口です。",
+          body: "今ここで、静かに始める。",
           cta: "1分回復へ"
         },
         {
           label: "7-Day",
-          title: "7日間の小さな回復",
-          body: "毎日一度、自分の感覚へ戻る小さな旅です。",
+          title: "7日間のリズム回復",
+          body: "7日かけて、感覚を取り戻す。",
           cta: "7-Dayへ"
         },
         {
           label: "BASIC",
           title: "Life Rhythm Membership",
-          body: "朝・昼・夜のリズムで、回復を生活の流れへ育てます。",
+          body: "朝・昼・夜に、回復を住まわせる。",
           cta: "BASICへ"
         }
       ]
@@ -95,49 +95,49 @@ const homeCopy = {
     },
     hros: {
       eyebrow: "HROS",
-      title: "회복에서, 리듬과 깨어남으로.",
-      description: "Meisou Life는 단순한 회복으로 끝나지 않고, 사람이 본래의 리듬과 의식으로 돌아가도록 돕는 Human Recovery Operating System입니다.",
+      title: "회복에서, 조용한 여정이 시작됩니다.",
+      description: "HROS는 회복이 삶과 의식으로 자연스럽게 이어지는 흐름입니다.",
       libraryCta: "HROS Library",
       stages: [
         {
           label: "Recovery",
-          body: "먼저 신경과 감정을 조용히 정돈하며 자신에게 돌아옵니다."
+          body: "자신에게 돌아옵니다."
         },
         {
           label: "Rhythm",
-          body: "한 번의 전환이 아니라 다시 돌아올 수 있는 생활 흐름을 만듭니다."
+          body: "매일 다시 돌아옵니다."
         },
         {
           label: "Awakening",
-          body: "자신의 상태를 알아차리고 다시 선택하는 힘을 조금씩 회복합니다."
+          body: "알아차리고, 선택하고, 자랍니다."
         },
         {
           label: "Coexistence",
-          body: "회복을 나에게서 끝내지 않고 관계와 사회로 넓혀갑니다."
+          body: "회복된 삶을 함께 나눕니다."
         }
       ]
     },
     journey: {
       eyebrow: "Your Journey",
-      title: "FREE에서, 7-Day, BASIC으로.",
-      description: "자세한 설명보다 지금의 자리에서 다음 단계로 자연스럽게 이어지는 흐름만 남겼습니다.",
+      title: "오늘의 회복에서, 삶의 리듬으로.",
+      description: "비교보다 필요한 것은 다음의 조용한 한 걸음입니다.",
       cards: [
         {
-          label: "FREE",
+          label: "Today",
           title: "1분 회복",
-          body: "마음이 무거운 날에도 지금 여기서 조용히 시작할 수 있는 입구입니다.",
+          body: "지금 여기서 조용히 시작합니다.",
           cta: "1분 회복으로"
         },
         {
           label: "7-Day",
-          title: "7일간의 작은 회복",
-          body: "매일 한 번, 자신의 감각으로 돌아오는 작은 여정입니다.",
+          title: "7일간의 리듬 회복",
+          body: "7일 동안 감각을 되찾습니다.",
           cta: "7-Day로"
         },
         {
           label: "BASIC",
           title: "Life Rhythm Membership",
-          body: "아침, 낮, 저녁의 리듬으로 회복을 생활의 흐름으로 키웁니다.",
+          body: "아침, 낮, 저녁에 회복을 머무르게 합니다.",
           cta: "BASIC으로"
         }
       ]
@@ -160,49 +160,49 @@ const homeCopy = {
     },
     hros: {
       eyebrow: "HROS",
-      title: "From recovery into rhythm and awakening.",
-      description: "Meisou Life is a Human Recovery Operating System that helps people move from recovery into restored rhythm, awareness, and coexistence.",
+      title: "From recovery, a quieter journey begins.",
+      description: "HROS is a gentle path from recovery into daily rhythm and shared life.",
       libraryCta: "HROS Library",
       stages: [
         {
           label: "Recovery",
-          body: "Calm the nervous system and emotions first, then return to yourself."
+          body: "Return to yourself."
         },
         {
           label: "Rhythm",
-          body: "Build a pattern you can return to, not a one-time moment of relief."
+          body: "Return every day."
         },
         {
           label: "Awakening",
-          body: "Gradually recover the ability to notice your state and choose again."
+          body: "Notice. Choose. Grow."
         },
         {
           label: "Coexistence",
-          body: "Let recovery extend beyond the self into relationships and society."
+          body: "Share your recovered life."
         }
       ]
     },
     journey: {
       eyebrow: "Your Journey",
-      title: "From FREE to 7-Day to BASIC.",
-      description: "Rather than explaining every detail, the homepage simply guides you from where you are to the next calm step.",
+      title: "From today’s recovery into daily rhythm.",
+      description: "You do not need comparison. You only need the next quiet step.",
       cards: [
         {
-          label: "FREE",
+          label: "Today",
           title: "1-Minute Recovery",
-          body: "A quiet entrance for the days when life already feels heavy.",
+          body: "Begin quietly, right here.",
           cta: "Enter FREE"
         },
         {
           label: "7-Day",
-          title: "7-Day Recovery Journey",
-          body: "A small daily path back to your senses and steadiness.",
+          title: "7-Day Rhythm Recovery",
+          body: "Recover your rhythm over seven days.",
           cta: "Enter 7-Day"
         },
         {
           label: "BASIC",
           title: "Life Rhythm Membership",
-          body: "Carry recovery through morning, daytime, and evening rhythm.",
+          body: "Let recovery live in morning, daytime, and evening.",
           cta: "Enter BASIC"
         }
       ]
@@ -226,8 +226,8 @@ function SectionHeader({
   return (
     <div className={`max-w-3xl ${alignment}`}>
       <p className="text-xs uppercase tracking-[0.34em] text-[#d8c08a]/78 sm:text-sm">{eyebrow}</p>
-      <h2 className="mt-4 text-balance font-serif text-[clamp(2rem,5vw,4rem)] leading-[1.08] text-white">{title}</h2>
-      <p className="mt-4 text-pretty text-base leading-8 text-white/64 sm:text-lg">{description}</p>
+      <h2 className="mt-4 text-balance font-serif text-[clamp(1.75rem,4.2vw,3.2rem)] leading-[1.1] text-white">{title}</h2>
+      <p className="mt-4 max-w-[32rem] text-pretty text-[15px] leading-7 text-white/62 sm:text-base sm:leading-8">{description}</p>
     </div>
   );
 }
@@ -377,30 +377,32 @@ export default function HomePage() {
       </section>
 
       <section className="section-shell pt-18 sm:pt-24">
-        <div className="overflow-hidden rounded-[36px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,17,26,0.9),rgba(8,17,26,0.72))] px-6 py-9 shadow-[0_24px_90px_rgba(2,8,14,0.26)] sm:px-8 sm:py-10 lg:px-10 lg:py-12">
+        <div className="overflow-hidden rounded-[36px] bg-[linear-gradient(180deg,rgba(8,17,26,0.72),rgba(8,17,26,0.52))] px-6 py-10 shadow-[0_24px_90px_rgba(2,8,14,0.18)] sm:px-8 sm:py-12 lg:px-10 lg:py-14">
           <SectionHeader
             eyebrow={copy.hros.eyebrow}
             title={copy.hros.title}
             description={copy.hros.description}
           />
 
-          <div className="mt-10 grid gap-4 lg:grid-cols-4">
+          <div className="mt-10 flex flex-col gap-5">
             {copy.hros.stages.map((stage, index) => (
-              <article
-                key={stage.label}
-                className="rounded-[28px] border border-white/10 bg-white/[0.03] px-5 py-6"
-              >
-                <p className="text-xs uppercase tracking-[0.3em] text-[#d8c08a]/74">{`0${index + 1}`}</p>
-                <h3 className="mt-4 text-xl font-semibold text-white">{stage.label}</h3>
-                <p className="mt-3 text-sm leading-7 text-white/66">{stage.body}</p>
-              </article>
+              <div key={stage.label} className="flex flex-col gap-4">
+                <article className="max-w-[28rem] rounded-[28px] bg-white/[0.03] px-5 py-5 shadow-[0_18px_46px_rgba(2,8,14,0.12)] sm:px-6 sm:py-6">
+                  <p className="text-[11px] uppercase tracking-[0.28em] text-[#d8c08a]/70">{`0${index + 1}`}</p>
+                  <h3 className="mt-3 text-[1.15rem] font-semibold text-white sm:text-[1.28rem]">{stage.label}</h3>
+                  <p className="mt-2 text-sm leading-7 text-white/62">{stage.body}</p>
+                </article>
+                {index < copy.hros.stages.length - 1 ? (
+                  <div className="ml-5 h-8 w-px bg-[linear-gradient(180deg,rgba(216,192,138,0.42),rgba(216,192,138,0.08))] sm:ml-6" />
+                ) : null}
+              </div>
             ))}
           </div>
 
           <div className="mt-8">
             <Link
               href="/brain-education"
-              className="inline-flex min-h-[54px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
+              className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-white/[0.04] px-5 py-2.5 text-sm font-medium text-white/74 transition hover:bg-white/[0.06] hover:text-white"
             >
               {copy.hros.libraryCta}
             </Link>
@@ -416,40 +418,52 @@ export default function HomePage() {
           align="center"
         />
 
-        <div className="mt-10 grid gap-5 lg:grid-cols-3">
-          <article className="flex h-full flex-col rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-6 py-7 shadow-[0_20px_80px_rgba(7,17,31,0.16)] sm:px-8 sm:py-8">
+        <div className="mt-12 flex flex-col gap-6">
+          <article className="flex flex-col rounded-[32px] bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.018))] px-6 py-7 shadow-[0_20px_70px_rgba(7,17,31,0.12)] sm:max-w-[26rem] sm:px-7 sm:py-8">
             <p className="text-xs uppercase tracking-[0.3em] text-[#d8c08a]/78">{copy.journey.cards[0].label}</p>
-            <h3 className="mt-4 text-2xl font-semibold text-white">{copy.journey.cards[0].title}</h3>
-            <p className="mt-4 flex-1 text-base leading-8 text-white/68">{copy.journey.cards[0].body}</p>
+            <h3 className="mt-4 text-[1.5rem] font-semibold text-white">{copy.journey.cards[0].title}</h3>
+            <p className="mt-3 text-[15px] leading-7 text-white/66">{copy.journey.cards[0].body}</p>
             <button
               type="button"
               onClick={scrollToRecovery}
-              className="mt-8 inline-flex min-h-[54px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
+              className="mt-7 inline-flex min-h-[56px] items-center justify-center self-start rounded-full bg-[linear-gradient(135deg,#f0ddb0_0%,#dcc086_56%,#caa160_100%)] px-6 py-3 text-sm font-semibold text-[#16202b] shadow-[0_14px_28px_rgba(212,186,117,0.16)] transition hover:brightness-[1.03]"
             >
               {copy.journey.cards[0].cta}
             </button>
           </article>
 
-          <article className="flex h-full flex-col rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-6 py-7 shadow-[0_20px_80px_rgba(7,17,31,0.16)] sm:px-8 sm:py-8">
+          <div className="flex items-center gap-4 pl-4 sm:pl-8">
+            <div className="h-px flex-1 bg-[linear-gradient(90deg,rgba(216,192,138,0.32),rgba(216,192,138,0.04))]" />
+            <span className="text-[#d8c08a]/54">↓</span>
+            <div className="h-px flex-1 bg-[linear-gradient(90deg,rgba(216,192,138,0.04),rgba(216,192,138,0.32))]" />
+          </div>
+
+          <article className="flex flex-col rounded-[32px] bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.018))] px-6 py-8 shadow-[0_20px_70px_rgba(7,17,31,0.12)] sm:ml-12 sm:max-w-[30rem] sm:px-7 sm:py-9">
             <p className="text-xs uppercase tracking-[0.3em] text-[#d8c08a]/78">{copy.journey.cards[1].label}</p>
-            <h3 className="mt-4 text-2xl font-semibold text-white">{copy.journey.cards[1].title}</h3>
-            <p className="mt-4 flex-1 text-base leading-8 text-white/68">{copy.journey.cards[1].body}</p>
+            <h3 className="mt-4 text-[1.55rem] font-semibold text-white">{copy.journey.cards[1].title}</h3>
+            <p className="mt-3 text-[15px] leading-7 text-white/66">{copy.journey.cards[1].body}</p>
             <Link
               href="/rhythm-journey"
-              className="mt-8 inline-flex min-h-[54px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
+              className="mt-7 inline-flex min-h-[52px] items-center justify-center self-start rounded-full bg-white/[0.04] px-5 py-2.5 text-sm font-medium text-white/82 transition hover:bg-white/[0.06]"
             >
               {copy.journey.cards[1].cta}
             </Link>
           </article>
 
-          <article className="flex h-full flex-col rounded-[32px] border border-[#d8c08a]/20 bg-[linear-gradient(180deg,rgba(212,186,117,0.12),rgba(255,255,255,0.03))] px-6 py-7 shadow-[0_20px_80px_rgba(7,17,31,0.16)] sm:px-8 sm:py-8">
+          <div className="flex items-center gap-4 pl-4 sm:pl-16">
+            <div className="h-px flex-1 bg-[linear-gradient(90deg,rgba(216,192,138,0.32),rgba(216,192,138,0.04))]" />
+            <span className="text-[#d8c08a]/54">↓</span>
+            <div className="h-px flex-1 bg-[linear-gradient(90deg,rgba(216,192,138,0.04),rgba(216,192,138,0.32))]" />
+          </div>
+
+          <article className="flex flex-col rounded-[34px] bg-[linear-gradient(180deg,rgba(212,186,117,0.1),rgba(255,255,255,0.025))] px-6 py-9 shadow-[0_24px_80px_rgba(7,17,31,0.16)] sm:ml-24 sm:max-w-[34rem] sm:px-8 sm:py-10">
             <p className="text-xs uppercase tracking-[0.3em] text-[#f0ddb0]/84">{copy.journey.cards[2].label}</p>
-            <h3 className="mt-4 text-2xl font-semibold text-white">{copy.journey.cards[2].title}</h3>
-            <p className="mt-4 flex-1 text-base leading-8 text-white/72">{copy.journey.cards[2].body}</p>
+            <h3 className="mt-4 text-[1.7rem] font-semibold text-white">{copy.journey.cards[2].title}</h3>
+            <p className="mt-3 text-[15px] leading-7 text-white/72">{copy.journey.cards[2].body}</p>
             <button
               type="button"
               onClick={handleBasicJourneyCta}
-              className="mt-8 inline-flex min-h-[54px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f0ddb0_0%,#dcc086_56%,#caa160_100%)] px-6 py-3 text-sm font-semibold text-[#16202b] shadow-[0_16px_36px_rgba(212,186,117,0.18)] transition hover:brightness-[1.03]"
+              className="mt-8 inline-flex min-h-[56px] items-center justify-center self-start rounded-full bg-[linear-gradient(135deg,#f0ddb0_0%,#dcc086_56%,#caa160_100%)] px-6 py-3 text-sm font-semibold text-[#16202b] shadow-[0_16px_36px_rgba(212,186,117,0.18)] transition hover:brightness-[1.03]"
             >
               {copy.journey.cards[2].cta}
             </button>
