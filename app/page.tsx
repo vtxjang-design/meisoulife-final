@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuthState } from "@/components/auth-provider";
 import { InstantMeditationSection } from "@/components/instant-meditation-section";
 import { ZeroGateSection } from "@/components/zero-gate-section";
@@ -28,86 +28,47 @@ const homeCopy = {
       description: "一つ選ぶだけで、\n静かな60秒が始まります。",
       meditationLabel: "一つ選ぶだけで、\n静かな60秒が始まります。"
     },
-    hros: {
-      eyebrow: "HROS",
-      title: "回復から、静かな旅が始まります。",
-      description: "HROSは、回復が生活と意識へ自然につながっていく流れです。",
-      libraryCta: "HROS Library",
-      stages: [
-        {
-          label: "Recovery",
-          body: "自分に戻る。"
-        },
-        {
-          label: "Rhythm",
-          body: "毎日に戻る。"
-        },
-        {
-          label: "Awakening",
-          body: "気づき、選び、育つ。"
-        },
-        {
-          label: "Coexistence",
-          body: "回復した生を分かち合う。"
-        }
-      ]
-    },
-    journey: {
-      eyebrow: "Your Journey",
-      title: "今日の回復から、生活のリズムへ。",
-      description: "必要なのは比較ではなく、次の静かな一歩です。",
-      cards: [
-        {
-          label: "Today",
-          title: "1分回復",
-          body: "今ここで、静かに始める。",
-          cta: "1分回復へ"
-        },
-        {
-          label: "7-Day",
-          title: "7日間のリズム回復",
-          body: "7日かけて、感覚を取り戻す。",
-          cta: "7-Dayへ"
-        },
-        {
-          label: "BASIC",
-          title: "Life Rhythm Membership",
-          body: "朝・昼・夜に、回復を住まわせる。",
-          cta: "BASICへ"
-        }
-      ]
-    },
     chapters: {
-      next: "Next Journey →",
+      continueJourney: "回復の旅を続ける",
+      previous: "← 前の章",
+      next: "次の章 →",
+      close: "回復へ戻る",
+      position: "章",
+      exploreHros: "HROSをもっと知る",
+      membership: "BASIC Membershipへ",
       recovery: {
-        eyebrow: "Chapter 1",
-        title: "1分の回復から始める。",
-        description: "今の自分に合う入口を一つ選べば十分です。",
-        cta: "FREEを始める"
+        identity: "RECOVERY",
+        headline: "回復は、\n終わりではなく始まりです。",
+        supporting: "本来の自分へ戻る、最初の一歩。"
       },
-      sevenDay: {
-        eyebrow: "Chapter 2",
-        title: "7日かけて、感覚を取り戻す。",
-        description: "小さな回復を毎日に戻すための静かなリズムです。",
-        cta: "7-Dayへ"
+      rhythm: {
+        identity: "RHYTHM",
+        headline: "小さな回復が、\n毎日のリズムになります。",
+        supporting: "戻ることを重ねると、暮らしが変わり始めます。"
       },
-      basic: {
-        eyebrow: "Chapter 3",
-        title: "回復を、朝・昼・夜に住まわせる。",
-        description: "BASICは回復を一度きりで終わらせないための生活設計です。",
-        cta: "BASICへ"
+      awakening: {
+        identity: "AWAKENING",
+        headline: "静けさの中で、\n本来の感覚が目覚めます。",
+        supporting: "気づき、選び、自分の人生を生きる。"
       },
       hros: {
-        eyebrow: "Chapter 4",
-        title: "HROSは、一つの旅です。",
-        description: "RecoveryからCoexistenceへ、人の回復がそのまま生き方になる流れです。",
-        cta: "HROS Library"
+        identity: "HROS",
+        label: "Human Recovery Operating System",
+        headline: "AI時代に、\n人間本来のリズムへ戻るために。",
+        supporting: "回復し、目覚め、自然知能を広げ、人生の主人になる。"
       },
-      founder: {
-        eyebrow: "Chapter 5",
-        title: "一人の回復は、やがて共に歩く力になる。",
-        description: "創設者のビジョンと、静かに続ける仲間たちの場へ。",
-        cta: "Communityへ"
+      coexistence: {
+        identity: "COEXISTENCE",
+        headline: "一人の回復が、\nともに生きる力になります。",
+        supporting: "自分を整え、互いに目覚め、共生する文化へ。"
+      },
+      doorway: {
+        identity: "NEXT DOOR",
+        headline: "この旅を、毎日のリズムへ。",
+        supporting: "必要な深さへ、静かに進めます。",
+        recoveryCta: "7-Day Recoveryへ",
+        libraryCta: "HROSをもっと知る",
+        basicCta: "BASICを始める"
       }
     }
   },
@@ -126,86 +87,47 @@ const homeCopy = {
       description: "하나만 고르면,\n조용한 60초가 시작됩니다.",
       meditationLabel: "하나만 고르면,\n조용한 60초가 시작됩니다."
     },
-    hros: {
-      eyebrow: "HROS",
-      title: "회복에서, 조용한 여정이 시작됩니다.",
-      description: "HROS는 회복이 삶과 의식으로 자연스럽게 이어지는 흐름입니다.",
-      libraryCta: "HROS Library",
-      stages: [
-        {
-          label: "Recovery",
-          body: "자신에게 돌아옵니다."
-        },
-        {
-          label: "Rhythm",
-          body: "매일 다시 돌아옵니다."
-        },
-        {
-          label: "Awakening",
-          body: "알아차리고, 선택하고, 자랍니다."
-        },
-        {
-          label: "Coexistence",
-          body: "회복된 삶을 함께 나눕니다."
-        }
-      ]
-    },
-    journey: {
-      eyebrow: "Your Journey",
-      title: "오늘의 회복에서, 삶의 리듬으로.",
-      description: "비교보다 필요한 것은 다음의 조용한 한 걸음입니다.",
-      cards: [
-        {
-          label: "Today",
-          title: "1분 회복",
-          body: "지금 여기서 조용히 시작합니다.",
-          cta: "1분 회복으로"
-        },
-        {
-          label: "7-Day",
-          title: "7일간의 리듬 회복",
-          body: "7일 동안 감각을 되찾습니다.",
-          cta: "7-Day로"
-        },
-        {
-          label: "BASIC",
-          title: "Life Rhythm Membership",
-          body: "아침, 낮, 저녁에 회복을 머무르게 합니다.",
-          cta: "BASIC으로"
-        }
-      ]
-    },
     chapters: {
-      next: "Next Journey →",
+      continueJourney: "회복의 여정 계속하기",
+      previous: "← 이전 장",
+      next: "다음 장 →",
+      close: "회복으로 돌아가기",
+      position: "장",
+      exploreHros: "HROS 더 알아보기",
+      membership: "BASIC Membership으로",
       recovery: {
-        eyebrow: "Chapter 1",
-        title: "1분의 회복으로 시작합니다.",
-        description: "지금의 나에게 맞는 입구를 하나 고르면 충분합니다.",
-        cta: "FREE 시작하기"
+        identity: "RECOVERY",
+        headline: "회복은\n끝이 아니라 시작입니다.",
+        supporting: "본래의 나로 돌아가는 첫걸음."
       },
-      sevenDay: {
-        eyebrow: "Chapter 2",
-        title: "7일 동안 감각을 되찾습니다.",
-        description: "작은 회복을 일상으로 돌려놓는 조용한 리듬입니다.",
-        cta: "7-Day로"
+      rhythm: {
+        identity: "RHYTHM",
+        headline: "작은 회복이\n매일의 리듬이 됩니다.",
+        supporting: "돌아오는 경험이 쌓이면 삶이 달라지기 시작합니다."
       },
-      basic: {
-        eyebrow: "Chapter 3",
-        title: "회복을 아침, 낮, 저녁에 머물게 합니다.",
-        description: "BASIC은 회복을 한 번의 경험이 아닌 생활의 구조로 바꿉니다.",
-        cta: "BASIC으로"
+      awakening: {
+        identity: "AWAKENING",
+        headline: "고요함 속에서\n본래의 감각이 깨어납니다.",
+        supporting: "알아차리고, 선택하며, 자기 삶을 살아갑니다."
       },
       hros: {
-        eyebrow: "Chapter 4",
-        title: "HROS는 하나의 여정입니다.",
-        description: "Recovery에서 Coexistence까지, 회복이 삶의 방식이 되는 흐름입니다.",
-        cta: "HROS Library"
+        identity: "HROS",
+        label: "Human Recovery Operating System",
+        headline: "AI 시대,\n인간 본래의 리듬으로 돌아가기 위하여.",
+        supporting: "회복하고, 깨어나며, 자연지능을 확장하고, 자기 삶의 주인이 됩니다."
       },
-      founder: {
-        eyebrow: "Chapter 5",
-        title: "한 사람의 회복은 함께 걷는 힘이 됩니다.",
-        description: "창립자의 비전과 조용히 이어가는 사람들의 공간으로.",
-        cta: "Community로"
+      coexistence: {
+        identity: "COEXISTENCE",
+        headline: "한 사람의 회복이\n함께 살아가는 힘이 됩니다.",
+        supporting: "자신을 회복하고, 함께 깨어나며, 공생하는 문화로 나아갑니다."
+      },
+      doorway: {
+        identity: "NEXT DOOR",
+        headline: "이 여정을, 매일의 리듬으로.",
+        supporting: "필요한 깊이로 조용히 이어갈 수 있습니다.",
+        recoveryCta: "7-Day Recovery로",
+        libraryCta: "HROS 더 알아보기",
+        basicCta: "BASIC 시작하기"
       }
     }
   },
@@ -224,86 +146,47 @@ const homeCopy = {
       description: "Choose one,\nand a quiet 60 seconds begins.",
       meditationLabel: "Choose one,\nand a quiet 60 seconds begins."
     },
-    hros: {
-      eyebrow: "HROS",
-      title: "From recovery, a quieter journey begins.",
-      description: "HROS is a gentle path from recovery into daily rhythm and shared life.",
-      libraryCta: "HROS Library",
-      stages: [
-        {
-          label: "Recovery",
-          body: "Return to yourself."
-        },
-        {
-          label: "Rhythm",
-          body: "Return every day."
-        },
-        {
-          label: "Awakening",
-          body: "Notice. Choose. Grow."
-        },
-        {
-          label: "Coexistence",
-          body: "Share your recovered life."
-        }
-      ]
-    },
-    journey: {
-      eyebrow: "Your Journey",
-      title: "From today’s recovery into daily rhythm.",
-      description: "You do not need comparison. You only need the next quiet step.",
-      cards: [
-        {
-          label: "Today",
-          title: "1-Minute Recovery",
-          body: "Begin quietly, right here.",
-          cta: "Enter FREE"
-        },
-        {
-          label: "7-Day",
-          title: "7-Day Rhythm Recovery",
-          body: "Recover your rhythm over seven days.",
-          cta: "Enter 7-Day"
-        },
-        {
-          label: "BASIC",
-          title: "Life Rhythm Membership",
-          body: "Let recovery live in morning, daytime, and evening.",
-          cta: "Enter BASIC"
-        }
-      ]
-    },
     chapters: {
-      next: "Next Journey →",
+      continueJourney: "Continue the Recovery Journey",
+      previous: "← Previous",
+      next: "Next Chapter →",
+      close: "Return to Recovery",
+      position: "Chapter",
+      exploreHros: "Explore HROS",
+      membership: "Enter BASIC Membership",
       recovery: {
-        eyebrow: "Chapter 1",
-        title: "Begin with one minute of recovery.",
-        description: "Choose the entrance that fits this moment, and begin quietly.",
-        cta: "Enter FREE"
+        identity: "RECOVERY",
+        headline: "Recovery is not the end.\nIt is the beginning.",
+        supporting: "The first step back to yourself."
       },
-      sevenDay: {
-        eyebrow: "Chapter 2",
-        title: "Recover your rhythm over seven days.",
-        description: "A calmer way to bring small recovery back into every day.",
-        cta: "Enter 7-Day"
+      rhythm: {
+        identity: "RHYTHM",
+        headline: "Small recoveries\nbecome a daily rhythm.",
+        supporting: "When returning becomes a practice, life begins to change."
       },
-      basic: {
-        eyebrow: "Chapter 3",
-        title: "Let recovery live in morning, daytime, and evening.",
-        description: "BASIC turns recovery from a moment into a way of living.",
-        cta: "Enter BASIC"
+      awakening: {
+        identity: "AWAKENING",
+        headline: "In stillness,\nyour original awareness awakens.",
+        supporting: "Notice. Choose. Live your own life."
       },
       hros: {
-        eyebrow: "Chapter 4",
-        title: "HROS is one continuous journey.",
-        description: "From Recovery to Coexistence, human recovery becomes a lived rhythm.",
-        cta: "Open HROS Library"
+        identity: "HROS",
+        label: "Human Recovery Operating System",
+        headline: "For the AI era,\na return to our original human rhythm.",
+        supporting: "Recover, awaken, expand natural intelligence, and become the owner of your life."
       },
-      founder: {
-        eyebrow: "Chapter 5",
-        title: "One person’s recovery becomes a shared path.",
-        description: "Step into the founder’s vision and the quiet community that continues it.",
-        cta: "Enter Community"
+      coexistence: {
+        identity: "COEXISTENCE",
+        headline: "One person’s recovery\nbecomes the strength to live together.",
+        supporting: "Recover within. Awaken together. Grow into coexistence."
+      },
+      doorway: {
+        identity: "NEXT DOOR",
+        headline: "Carry this journey into daily life.",
+        supporting: "Continue recovery, explore the deeper world, or enter BASIC when ready.",
+        recoveryCta: "Enter 7-Day Recovery",
+        libraryCta: "Explore HROS",
+        basicCta: "Enter BASIC"
       }
     }
   }
@@ -331,12 +214,33 @@ function SectionHeader({
   );
 }
 
+const journeyChapterOrder = ["recovery", "rhythm", "awakening", "hros", "coexistence", "doorway"] as const;
+type JourneyChapterKey = (typeof journeyChapterOrder)[number];
+
+const chapterBackdropClasses: Record<JourneyChapterKey, string> = {
+  recovery:
+    "bg-[radial-gradient(circle_at_18%_22%,rgba(230,204,142,0.12),transparent_24%),linear-gradient(180deg,rgba(8,18,28,0.92),rgba(8,18,28,0.82))]",
+  rhythm:
+    "bg-[radial-gradient(circle_at_72%_18%,rgba(173,191,214,0.12),transparent_26%),linear-gradient(180deg,rgba(8,19,29,0.92),rgba(8,19,29,0.82))]",
+  awakening:
+    "bg-[radial-gradient(circle_at_50%_16%,rgba(240,223,176,0.12),transparent_24%),linear-gradient(180deg,rgba(9,20,30,0.92),rgba(9,20,30,0.82))]",
+  hros:
+    "bg-[radial-gradient(circle_at_78%_22%,rgba(216,192,138,0.11),transparent_26%),linear-gradient(180deg,rgba(7,16,26,0.92),rgba(7,16,26,0.82))]",
+  coexistence:
+    "bg-[radial-gradient(circle_at_24%_24%,rgba(217,199,151,0.11),transparent_26%),linear-gradient(180deg,rgba(9,18,28,0.92),rgba(9,18,28,0.82))]",
+  doorway:
+    "bg-[radial-gradient(circle_at_52%_18%,rgba(236,214,162,0.11),transparent_28%),linear-gradient(180deg,rgba(8,17,27,0.92),rgba(8,17,27,0.82))]"
+};
+
 export default function HomePage() {
   const router = useRouter();
   const { authResolved, isLoggedIn, memberState } = useAuthState();
   const landing = useLocaleCopy(landingCopy);
   const copy = useLocaleCopy(homeCopy);
   const [giftDelivered, setGiftDelivered] = useState(false);
+  const [activeChapterIndex, setActiveChapterIndex] = useState<number | null>(null);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const chapterHeadingRef = useRef<HTMLHeadingElement | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -346,6 +250,100 @@ export default function HomePage() {
     const url = new URL(window.location.href);
     setGiftDelivered(url.searchParams.get("gift") === "1min");
   }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const syncPreference = () => setPrefersReducedMotion(mediaQuery.matches);
+
+    syncPreference();
+    mediaQuery.addEventListener("change", syncPreference);
+
+    return () => {
+      mediaQuery.removeEventListener("change", syncPreference);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const syncChapterFromHash = () => {
+      const hashValue = window.location.hash.replace(/^#/, "");
+      const nextIndex = journeyChapterOrder.findIndex((chapterKey) => hashValue === `journey-${chapterKey}`);
+      setActiveChapterIndex(nextIndex >= 0 ? nextIndex : null);
+    };
+
+    syncChapterFromHash();
+    window.addEventListener("hashchange", syncChapterFromHash);
+
+    return () => {
+      window.removeEventListener("hashchange", syncChapterFromHash);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (activeChapterIndex === null || typeof window === "undefined") {
+      return;
+    }
+
+    const target = document.getElementById("chapter-journey");
+
+    target?.scrollIntoView({
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+      block: "start"
+    });
+
+    const focusTimer = window.setTimeout(() => {
+      chapterHeadingRef.current?.focus();
+    }, prefersReducedMotion ? 0 : 180);
+
+    return () => {
+      window.clearTimeout(focusTimer);
+    };
+  }, [activeChapterIndex, prefersReducedMotion]);
+
+  useEffect(() => {
+    if (activeChapterIndex === null || typeof window === "undefined") {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      const tagName = target?.tagName;
+      const isTypingContext =
+        tagName === "INPUT" || tagName === "TEXTAREA" || tagName === "SELECT" || target?.isContentEditable;
+
+      if (isTypingContext || event.altKey || event.ctrlKey || event.metaKey) {
+        return;
+      }
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        goToNextChapter();
+      }
+
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        goToPreviousChapter();
+      }
+
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeChapterJourney();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeChapterIndex]);
 
   function scrollToRecovery() {
     if (typeof window === "undefined") {
@@ -380,6 +378,52 @@ export default function HomePage() {
     });
   }
 
+  function updateJourneyHash(nextIndex: number | null) {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const nextUrl =
+      nextIndex === null
+        ? `${window.location.pathname}${window.location.search}`
+        : `${window.location.pathname}${window.location.search}#journey-${journeyChapterOrder[nextIndex]}`;
+
+    window.history.pushState(null, "", nextUrl);
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
+  }
+
+  function openChapterJourney(nextIndex = 0) {
+    updateJourneyHash(nextIndex);
+  }
+
+  function closeChapterJourney() {
+    updateJourneyHash(null);
+    scrollToSection("homepage-recovery");
+  }
+
+  function goToNextChapter() {
+    if (activeChapterIndex === null) {
+      openChapterJourney(0);
+      return;
+    }
+
+    const nextIndex = Math.min(activeChapterIndex + 1, journeyChapterOrder.length - 1);
+    updateJourneyHash(nextIndex);
+  }
+
+  function goToPreviousChapter() {
+    if (activeChapterIndex === null) {
+      return;
+    }
+
+    if (activeChapterIndex === 0) {
+      closeChapterJourney();
+      return;
+    }
+
+    updateJourneyHash(activeChapterIndex - 1);
+  }
+
   function handleZeroGateEnter(gateKey: string) {
     if (typeof window !== "undefined") {
       const payload = {
@@ -402,6 +446,48 @@ export default function HomePage() {
 
     router.push("/program/basic");
   }
+
+  const chapterSequence = [
+    {
+      key: "recovery",
+      identity: copy.chapters.recovery.identity,
+      headline: copy.chapters.recovery.headline,
+      supporting: copy.chapters.recovery.supporting
+    },
+    {
+      key: "rhythm",
+      identity: copy.chapters.rhythm.identity,
+      headline: copy.chapters.rhythm.headline,
+      supporting: copy.chapters.rhythm.supporting
+    },
+    {
+      key: "awakening",
+      identity: copy.chapters.awakening.identity,
+      headline: copy.chapters.awakening.headline,
+      supporting: copy.chapters.awakening.supporting
+    },
+    {
+      key: "hros",
+      identity: copy.chapters.hros.identity,
+      label: copy.chapters.hros.label,
+      headline: copy.chapters.hros.headline,
+      supporting: copy.chapters.hros.supporting
+    },
+    {
+      key: "coexistence",
+      identity: copy.chapters.coexistence.identity,
+      headline: copy.chapters.coexistence.headline,
+      supporting: copy.chapters.coexistence.supporting
+    },
+    {
+      key: "doorway",
+      identity: copy.chapters.doorway.identity,
+      headline: copy.chapters.doorway.headline,
+      supporting: copy.chapters.doorway.supporting
+    }
+  ] as const;
+
+  const activeChapter = activeChapterIndex === null ? null : chapterSequence[activeChapterIndex];
 
   return (
     <div className="relative overflow-hidden pb-24">
@@ -484,178 +570,153 @@ export default function HomePage() {
           <ZeroGateSection onEnterGate={handleZeroGateEnter} />
         </div>
         <InstantMeditationSection copy={landing.instant} />
-      </section>
-
-      <section id="journey-free" className="section-shell flex min-h-[100svh] items-center py-20 sm:py-24">
-        <div className="grid w-full gap-10 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,0.12fr)] lg:items-end">
-          <article className="max-w-[42rem] rounded-[40px] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.018))] px-7 py-10 shadow-[0_28px_110px_rgba(5,12,24,0.16)] sm:px-10 sm:py-12">
-            <p className="text-xs uppercase tracking-[0.32em] text-[#d8c08a]/74">{copy.chapters.recovery.eyebrow}</p>
-            <h2 className="mt-6 max-w-[12ch] text-balance font-serif text-[clamp(2.4rem,5vw,4.8rem)] leading-[1.04] text-white">
-              {copy.chapters.recovery.title}
-            </h2>
-            <p className="mt-6 max-w-[30rem] text-pretty text-base leading-8 text-white/64 sm:text-lg">
-              {copy.chapters.recovery.description}
-            </p>
-            <button
-              type="button"
-              onClick={scrollToRecovery}
-              className="mt-10 inline-flex min-h-[58px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f0ddb0_0%,#dcc086_56%,#caa160_100%)] px-7 py-3 text-sm font-semibold text-[#16202b] shadow-[0_16px_36px_rgba(212,186,117,0.16)] transition hover:brightness-[1.03]"
-            >
-              {copy.chapters.recovery.cta}
-            </button>
-          </article>
-          <div className="lg:pb-2">
-            <button
-              type="button"
-              onClick={() => scrollToSection("journey-seven-day")}
-              className="inline-flex items-center gap-2 text-sm font-medium text-white/56 transition hover:text-white/84"
-            >
-              {copy.chapters.next}
-            </button>
-          </div>
+        <div className="section-shell mt-10 flex justify-start sm:mt-12">
+          <button
+            type="button"
+            onClick={() => openChapterJourney(0)}
+            className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-white/[0.04] px-5 py-2.5 text-sm font-medium text-white/80 transition hover:bg-white/[0.06] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
+          >
+            {copy.chapters.continueJourney}
+          </button>
         </div>
       </section>
 
-      <section id="journey-seven-day" className="section-shell flex min-h-[100svh] items-center py-20 sm:py-24">
-        <div className="grid w-full gap-10 lg:grid-cols-[minmax(0,0.16fr)_minmax(0,0.84fr)] lg:items-end">
-          <div className="hidden lg:block" />
-          <article className="justify-self-end max-w-[42rem] rounded-[40px] bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.016))] px-7 py-10 shadow-[0_28px_110px_rgba(5,12,24,0.14)] sm:px-10 sm:py-12">
-            <p className="text-xs uppercase tracking-[0.32em] text-[#d8c08a]/74">{copy.chapters.sevenDay.eyebrow}</p>
-            <h2 className="mt-6 max-w-[13ch] text-balance font-serif text-[clamp(2.4rem,5vw,4.8rem)] leading-[1.04] text-white">
-              {copy.chapters.sevenDay.title}
-            </h2>
-            <p className="mt-6 max-w-[30rem] text-pretty text-base leading-8 text-white/64 sm:text-lg">
-              {copy.chapters.sevenDay.description}
-            </p>
-            <Link
-              href="/rhythm-journey"
-              className="mt-10 inline-flex min-h-[58px] items-center justify-center rounded-full bg-white/[0.04] px-7 py-3 text-sm font-medium text-white/84 transition hover:bg-white/[0.06]"
-            >
-              {copy.chapters.sevenDay.cta}
-            </Link>
-          </article>
-          <div className="lg:col-start-2">
-            <button
-              type="button"
-              onClick={() => scrollToSection("journey-basic")}
-              className="inline-flex items-center gap-2 text-sm font-medium text-white/56 transition hover:text-white/84"
-            >
-              {copy.chapters.next}
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <section id="journey-basic" className="section-shell flex min-h-[100svh] items-center py-20 sm:py-24">
-        <div className="grid w-full gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,0.1fr)] lg:items-end">
-          <article className="max-w-[44rem] rounded-[42px] bg-[linear-gradient(180deg,rgba(212,186,117,0.1),rgba(255,255,255,0.02))] px-7 py-10 shadow-[0_32px_120px_rgba(5,12,24,0.18)] sm:px-10 sm:py-12">
-            <p className="text-xs uppercase tracking-[0.32em] text-[#f0ddb0]/82">{copy.chapters.basic.eyebrow}</p>
-            <h2 className="mt-6 max-w-[14ch] text-balance font-serif text-[clamp(2.5rem,5vw,5rem)] leading-[1.03] text-white">
-              {copy.chapters.basic.title}
-            </h2>
-            <p className="mt-6 max-w-[31rem] text-pretty text-base leading-8 text-white/68 sm:text-lg">
-              {copy.chapters.basic.description}
-            </p>
-            <button
-              type="button"
-              onClick={handleBasicJourneyCta}
-              className="mt-10 inline-flex min-h-[58px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f0ddb0_0%,#dcc086_56%,#caa160_100%)] px-7 py-3 text-sm font-semibold text-[#16202b] shadow-[0_18px_40px_rgba(212,186,117,0.18)] transition hover:brightness-[1.03]"
-            >
-              {copy.chapters.basic.cta}
-            </button>
-          </article>
-          <div className="lg:pb-2">
-            <button
-              type="button"
-              onClick={() => scrollToSection("journey-hros")}
-              className="inline-flex items-center gap-2 text-sm font-medium text-white/56 transition hover:text-white/84"
-            >
-              {copy.chapters.next}
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <section id="journey-hros" className="section-shell flex min-h-[100svh] items-center py-20 sm:py-24">
-        <div className="grid w-full gap-12 lg:grid-cols-[minmax(0,0.62fr)_minmax(0,0.38fr)] lg:items-end">
-          <article className="max-w-[38rem]">
-            <p className="text-xs uppercase tracking-[0.32em] text-[#d8c08a]/74">{copy.chapters.hros.eyebrow}</p>
-            <h2 className="mt-6 max-w-[12ch] text-balance font-serif text-[clamp(2.4rem,5vw,4.8rem)] leading-[1.04] text-white">
-              {copy.chapters.hros.title}
-            </h2>
-            <p className="mt-6 max-w-[28rem] text-pretty text-base leading-8 text-white/64 sm:text-lg">
-              {copy.chapters.hros.description}
-            </p>
-            <Link
-              href="/brain-education"
-              className="mt-10 inline-flex min-h-[58px] items-center justify-center rounded-full bg-white/[0.04] px-7 py-3 text-sm font-medium text-white/84 transition hover:bg-white/[0.06]"
-            >
-              {copy.chapters.hros.cta}
-            </Link>
-          </article>
-
-          <div className="rounded-[36px] bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.016))] px-6 py-7 shadow-[0_24px_80px_rgba(5,12,24,0.12)] sm:px-8 sm:py-8">
-            <div className="flex flex-col gap-5">
-              {copy.hros.stages.map((stage, index) => (
-                <div key={stage.label} className="flex items-start gap-4">
-                  <p className="pt-1 text-[11px] uppercase tracking-[0.28em] text-[#d8c08a]/64">{`0${index + 1}`}</p>
-                  <div>
-                    <h3 className="text-[1.02rem] font-semibold text-white sm:text-[1.12rem]">{stage.label}</h3>
-                    <p className="mt-1 text-sm leading-7 text-white/58">{stage.body}</p>
-                  </div>
+      {activeChapter ? (
+        <section
+          id="chapter-journey"
+          className="section-shell flex min-h-[calc(100svh-6.5rem)] items-center py-10 sm:min-h-[calc(100svh-7rem)] sm:py-12"
+          aria-label={`${copy.chapters.position} ${activeChapterIndex! + 1}`}
+        >
+          <div
+            className={`w-full overflow-hidden rounded-[40px] border border-white/8 px-6 py-8 shadow-[0_24px_100px_rgba(6,12,22,0.16)] sm:px-8 sm:py-10 lg:px-12 lg:py-12 ${
+              chapterBackdropClasses[activeChapter.key]
+            } ${prefersReducedMotion ? "" : "animate-[chapterFade_420ms_ease-out]"}`}
+          >
+            <div className="pointer-events-none absolute opacity-0" aria-live="polite">
+              {`${copy.chapters.position} ${activeChapterIndex! + 1} / ${chapterSequence.length}`}
+            </div>
+            <div className="flex flex-col gap-12 lg:min-h-[calc(100svh-16rem)] lg:justify-between">
+              <div className="flex items-start justify-between gap-4">
+                <div className="space-y-3">
+                  <p className="text-[11px] uppercase tracking-[0.34em] text-[#d8c08a]/72">{activeChapter.identity}</p>
+                  {"label" in activeChapter ? (
+                    <p className="text-sm tracking-[0.16em] text-white/54">{activeChapter.label}</p>
+                  ) : null}
                 </div>
-              ))}
+                <p className="rounded-full border border-white/8 bg-white/[0.04] px-3 py-1.5 text-[11px] uppercase tracking-[0.24em] text-white/52">
+                  {`${copy.chapters.position} ${activeChapterIndex! + 1} / ${chapterSequence.length}`}
+                </p>
+              </div>
+
+              <div className="grid gap-10 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,0.28fr)] lg:items-end">
+                <div className="max-w-[42rem]">
+                  <h2
+                    ref={chapterHeadingRef}
+                    tabIndex={-1}
+                    className="whitespace-pre-line text-balance font-serif text-[clamp(2.5rem,5.2vw,5rem)] leading-[1.12] tracking-[-0.03em] text-white focus:outline-none"
+                  >
+                    {activeChapter.headline}
+                  </h2>
+                  <p className="mt-6 max-w-[30rem] whitespace-pre-line text-pretty text-base leading-8 text-white/64 sm:text-lg sm:leading-9">
+                    {activeChapter.supporting}
+                  </p>
+
+                  {activeChapter.key === "hros" ? (
+                    <div className="mt-10">
+                      <Link
+                        href="/brain-education"
+                        className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-white/[0.04] px-6 py-3 text-sm font-medium text-white/82 transition hover:bg-white/[0.06] hover:text-white"
+                      >
+                        {copy.chapters.exploreHros}
+                      </Link>
+                    </div>
+                  ) : null}
+
+                  {activeChapter.key === "doorway" ? (
+                    <div className="mt-10 flex flex-col gap-3 sm:max-w-[28rem]">
+                      <Link
+                        href="/rhythm-journey"
+                        className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-white/[0.04] px-6 py-3 text-sm font-medium text-white/84 transition hover:bg-white/[0.06]"
+                      >
+                        {copy.chapters.doorway.recoveryCta}
+                      </Link>
+                      <Link
+                        href="/brain-education"
+                        className="inline-flex min-h-[54px] items-center justify-center rounded-full border border-white/10 bg-transparent px-6 py-3 text-sm font-medium text-white/72 transition hover:border-white/16 hover:bg-white/[0.04] hover:text-white/86"
+                      >
+                        {copy.chapters.doorway.libraryCta}
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={handleBasicJourneyCta}
+                        className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f0ddb0_0%,#dcc086_56%,#caa160_100%)] px-6 py-3 text-sm font-semibold text-[#16202b] shadow-[0_16px_34px_rgba(212,186,117,0.16)] transition hover:brightness-[1.03]"
+                      >
+                        {copy.chapters.doorway.basicCta}
+                      </button>
+                    </div>
+                  ) : null}
+                </div>
+
+                <div className="rounded-[32px] border border-white/7 bg-white/[0.03] px-5 py-6 shadow-[0_18px_54px_rgba(5,12,24,0.1)] sm:px-6">
+                  <div className="h-20 rounded-[24px] bg-[radial-gradient(circle_at_50%_50%,rgba(240,221,176,0.18),rgba(240,221,176,0.02)_48%,transparent_72%)]" />
+                  <p className="mt-5 text-sm leading-7 text-white/58">
+                    {activeChapter.key === "recovery"
+                      ? copy.recovery.description
+                      : activeChapter.key === "rhythm"
+                        ? copy.chapters.rhythm.supporting
+                        : activeChapter.key === "awakening"
+                          ? copy.chapters.awakening.supporting
+                          : activeChapter.key === "hros"
+                            ? copy.chapters.hros.supporting
+                            : activeChapter.key === "coexistence"
+                              ? copy.chapters.coexistence.supporting
+                              : copy.chapters.doorway.supporting}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-4 border-t border-white/8 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-wrap items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={goToPreviousChapter}
+                    className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm font-medium text-white/74 transition hover:bg-white/[0.05] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
+                    aria-label={copy.chapters.previous}
+                  >
+                    {copy.chapters.previous}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={closeChapterJourney}
+                    className="inline-flex min-h-[48px] items-center justify-center rounded-full px-3 py-2.5 text-sm font-medium text-white/54 transition hover:text-white/82 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
+                    aria-label={copy.chapters.close}
+                  >
+                    {copy.chapters.close}
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-2 self-start sm:self-auto" aria-hidden="true">
+                  {chapterSequence.map((chapter, index) => (
+                    <span
+                      key={chapter.key}
+                      className={`h-1.5 rounded-full transition-all ${index === activeChapterIndex ? "w-8 bg-[#e8d5a6]" : "w-3 bg-white/18"}`}
+                    />
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={activeChapterIndex === chapterSequence.length - 1 ? () => openChapterJourney(0) : goToNextChapter}
+                  className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-white/[0.05] px-5 py-2.5 text-sm font-medium text-white/86 transition hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
+                  aria-label={copy.chapters.next}
+                >
+                  {activeChapterIndex === chapterSequence.length - 1 ? copy.chapters.continueJourney : copy.chapters.next}
+                </button>
+              </div>
             </div>
           </div>
-
-          <div className="lg:col-span-2">
-            <button
-              type="button"
-              onClick={() => scrollToSection("journey-founder")}
-              className="inline-flex items-center gap-2 text-sm font-medium text-white/56 transition hover:text-white/84"
-            >
-              {copy.chapters.next}
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <section id="journey-founder" className="section-shell flex min-h-[100svh] items-center py-20 sm:py-24">
-        <div className="grid w-full gap-10 lg:grid-cols-[minmax(0,0.5fr)_minmax(0,0.5fr)] lg:items-end">
-          <article className="max-w-[38rem] rounded-[40px] bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.014))] px-7 py-10 shadow-[0_28px_110px_rgba(5,12,24,0.14)] sm:px-10 sm:py-12">
-            <p className="text-xs uppercase tracking-[0.32em] text-[#d8c08a]/74">{copy.chapters.founder.eyebrow}</p>
-            <h2 className="mt-6 max-w-[14ch] text-balance font-serif text-[clamp(2.4rem,5vw,4.8rem)] leading-[1.04] text-white">
-              {copy.chapters.founder.title}
-            </h2>
-            <p className="mt-6 max-w-[30rem] text-pretty text-base leading-8 text-white/64 sm:text-lg">
-              {copy.chapters.founder.description}
-            </p>
-            <Link
-              href="/community"
-              className="mt-10 inline-flex min-h-[58px] items-center justify-center rounded-full bg-white/[0.04] px-7 py-3 text-sm font-medium text-white/84 transition hover:bg-white/[0.06]"
-            >
-              {copy.chapters.founder.cta}
-            </Link>
-          </article>
-
-          <div className="justify-self-end rounded-[36px] border border-white/8 bg-[linear-gradient(180deg,rgba(8,17,26,0.46),rgba(8,17,26,0.22))] px-6 py-8 sm:px-8">
-            <p className="text-[11px] uppercase tracking-[0.3em] text-[#d8c08a]/62">HROS</p>
-            <p className="mt-4 max-w-[20rem] text-[1.02rem] leading-8 text-white/72 sm:text-[1.08rem]">
-              {copy.hros.stages[0].label} → {copy.hros.stages[1].label} → {copy.hros.stages[2].label} → {copy.hros.stages[3].label}
-            </p>
-          </div>
-
-          <div className="lg:col-span-2">
-            <button
-              type="button"
-              onClick={() => scrollToSection("homepage-recovery")}
-              className="inline-flex items-center gap-2 text-sm font-medium text-white/56 transition hover:text-white/84"
-            >
-              {copy.chapters.next}
-            </button>
-          </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
     </div>
   );
 }
