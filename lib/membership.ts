@@ -7,6 +7,24 @@ export type MembershipSummary = {
   canManageMembership: boolean;
 };
 
+export type MembershipMatchSource = "user_id" | "email" | "customer_id" | "none";
+
+export type MembershipResolutionDebug = {
+  authenticated: boolean;
+  userIdPresent: boolean;
+  normalizedLoginEmail: string | null;
+  matchedBy: MembershipMatchSource;
+  membershipRowFound: boolean;
+  subscriptionRowFound: boolean;
+  profileRowFound: boolean;
+  stripeCustomerIdPresent: boolean;
+  stripeSubscriptionIdPresent: boolean;
+  stripeAvailable: boolean;
+  stripeCustomerSource: string | null;
+  paymentState: string | null;
+  failureReasons: string[];
+};
+
 export type MembershipResolutionResult = {
   plan: MembershipPlanKey;
   resolved: boolean;
@@ -18,6 +36,7 @@ export type MembershipResolutionResult = {
   stripeCustomerId: string | null;
   stripeSubscriptionId: string | null;
   membershipSummary: MembershipSummary;
+  debug?: MembershipResolutionDebug;
 };
 
 type MembershipRow = {

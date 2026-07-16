@@ -62,6 +62,8 @@ export function useMembershipAccess(requiredPlan: ProtectedMembershipPlan | null
   }, [pathname]);
 
   useEffect(() => {
+    const membershipDebugEnabled = nextPath.includes("membershipDebug=1");
+
     function logMembershipAccess(reason: string, extras?: Record<string, unknown>) {
       recordAuthDiagnostic("membership_guard_decision", {
         reasonCode: reason,
@@ -146,7 +148,10 @@ export function useMembershipAccess(requiredPlan: ProtectedMembershipPlan | null
         authenticatedUser: true
       });
       setStatus("redirecting");
-      router.replace(`/member?next=${encodeURIComponent(nextPath)}`);
+      const memberDestination = membershipDebugEnabled
+        ? `/member?next=${encodeURIComponent(nextPath)}&membershipDebug=1`
+        : `/member?next=${encodeURIComponent(nextPath)}`;
+      router.replace(memberDestination);
       return;
     }
 

@@ -6,6 +6,7 @@ import {
   isActiveMembershipStatus,
   normalizeLookupEmail,
   normalizeMembershipPlan,
+  type MembershipMatchSource,
   type MembershipPlanKey,
   type MembershipResolutionResult
 } from "@/lib/membership";
@@ -73,6 +74,7 @@ type ResolveMembershipEntitlementParams = {
   email?: string | null;
   logPrefix?: string;
   stripe?: Stripe | null;
+  debug?: boolean;
 };
 
 function emptyResolution(source: MembershipResolutionResult["source"], errorMessage: string | null): MembershipResolutionResult {
@@ -347,7 +349,7 @@ async function repairMembershipRecords(params: {
 export async function resolveMembershipEntitlement(
   params: ResolveMembershipEntitlementParams
 ): Promise<MembershipResolutionResult> {
-  const { supabase, userId, email = null, logPrefix = "[membership-resolver]" } = params;
+  const { supabase, userId, email = null, logPrefix = "[membership-resolver]", debug = false } = params;
   const normalizedEmail = normalizeLookupEmail(email);
 
   if (!userId) {
@@ -359,6 +361,8 @@ export async function resolveMembershipEntitlement(
   }
 
   let { membershipState, snapshot } = await loadLocalMembershipSnapshot(supabase, userId, logPrefix);
+  let matchedBy: MembershipMatchSource = snapshot.membership ? "user_id" : "none";
+  let stripeCustomerSource: string | null = null;
 
   if (!snapshot.profile && normalizedEmail) {
     const { data: emailProfile, error: emailProfileError } = await supabase
@@ -406,6 +410,9 @@ export async function resolveMembershipEntitlement(
         },
         subscription: emailSubscription ?? snapshot.subscription
       };
+      if (matchedBy === "none") {
+        matchedBy = "email";
+      }
     }
   }
   const local = resolveLocalMembership(snapshot, membershipState);
@@ -453,9 +460,13 @@ export async function resolveMembershipEntitlement(
       currentPeriodEnd: stripeBilling.currentPeriodEnd,
       customerSource: stripeBilling.customerSource
     });
+    stripeCustomerSource = stripeBilling.customerSource;
 
     if (stripeBilling.customerId || stripeBilling.subscriptionId || stripeBilling.status) {
       source = "stripe";
+      if (matchedBy === "none") {
+        matchedBy = stripeBilling.customerSource === "stripe_email" ? "email" : stripeBilling.customerId ? "customer_id" : "none";
+      }
       finalPlan = stripeBilling.plan !== "free" ? stripeBilling.plan : local.currentPlan;
       finalStatus = stripeBilling.status ?? local.membershipStatus;
       finalNextBillingDate = stripeBilling.currentPeriodEnd ?? local.nextBillingDate;
@@ -543,6 +554,23 @@ export async function resolveMembershipEntitlement(
       subscriptionStatus: finalStatus,
       nextBillingDate: finalNextBillingDate,
       canManageMembership: finalCanManageMembership
-    }
+    },
+    debug: debug
+      ? {
+          authenticated: true,
+          userIdPresent: Boolean(userId),
+          normalizedLoginEmail: normalizedEmail,
+          matchedBy,
+          membershipRowFound: Boolean(snapshot.membership),
+          subscriptionRowFound: Boolean(snapshot.subscription),
+          profileRowFound: Boolean(snapshot.profile),
+          stripeCustomerIdPresent: Boolean(finalStripeCustomerId),
+          stripeSubscriptionIdPresent: Boolean(finalStripeSubscriptionId),
+          stripeAvailable: Boolean(stripe),
+          stripeCustomerSource,
+          paymentState: finalStatus,
+          failureReasons: Array.from(new Set(failureReasons))
+        }
+      : undefined
   };
 }

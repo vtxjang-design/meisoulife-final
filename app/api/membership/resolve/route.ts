@@ -13,6 +13,8 @@ function resolveBearerToken(request: Request) {
 }
 
 export async function GET(request: Request) {
+  const requestUrl = new URL(request.url);
+  const debug = requestUrl.searchParams.get("debug") === "1";
   const supabase = await getSupabaseServerClient();
 
   if (!supabase) {
@@ -32,7 +34,24 @@ export async function GET(request: Request) {
           subscriptionStatus: null,
           nextBillingDate: null,
           canManageMembership: false
-        }
+        },
+        debug: debug
+          ? {
+              authenticated: false,
+              userIdPresent: false,
+              normalizedLoginEmail: null,
+              matchedBy: "none",
+              membershipRowFound: false,
+              subscriptionRowFound: false,
+              profileRowFound: false,
+              stripeCustomerIdPresent: false,
+              stripeSubscriptionIdPresent: false,
+              stripeAvailable: false,
+              stripeCustomerSource: null,
+              paymentState: null,
+              failureReasons: ["supabase_unavailable"]
+            }
+          : undefined
       },
       { status: 503 }
     );
@@ -97,7 +116,24 @@ export async function GET(request: Request) {
           subscriptionStatus: null,
           nextBillingDate: null,
           canManageMembership: false
-        }
+        },
+        debug: debug
+          ? {
+              authenticated: false,
+              userIdPresent: false,
+              normalizedLoginEmail: null,
+              matchedBy: "none",
+              membershipRowFound: false,
+              subscriptionRowFound: false,
+              profileRowFound: false,
+              stripeCustomerIdPresent: false,
+              stripeSubscriptionIdPresent: false,
+              stripeAvailable: false,
+              stripeCustomerSource: null,
+              paymentState: null,
+              failureReasons: ["guest"]
+            }
+          : undefined
       },
       { status: 200 }
     );
@@ -107,7 +143,8 @@ export async function GET(request: Request) {
     supabase,
     userId: user.id,
     email: user.email ?? null,
-    logPrefix: "[api-membership-resolve]"
+    logPrefix: "[api-membership-resolve]",
+    debug
   });
 
   return NextResponse.json(entitlement);

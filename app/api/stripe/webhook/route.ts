@@ -50,7 +50,14 @@ function resolvePlanFromAmount(amountTotal?: number | null) {
 }
 
 function getMembershipPlan(record: MembershipSyncInput) {
-  return normalizeMembershipPlan(record.plan) || resolvePlanFromAmount(record.amount_total) || "basic";
+  const normalizedPlan = normalizeMembershipPlan(record.plan);
+  const amountDerivedPlan = resolvePlanFromAmount(record.amount_total);
+
+  if (normalizedPlan !== "free") {
+    return normalizedPlan;
+  }
+
+  return amountDerivedPlan || "basic";
 }
 
 async function resolveMembershipUserId(email?: string | null, explicitUserId?: string | null) {
