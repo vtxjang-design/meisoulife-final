@@ -24,9 +24,9 @@ const homeCopy = {
     },
     recovery: {
       eyebrow: "Recovery First",
-      title: "まずは、今の自分に合う静かな入口から。",
-      description: "説明より先に、いま必要な1分の回復を選べます。",
-      meditationLabel: "選んだ回復から、そのまま1分へ。"
+      title: "まずは、\n今の自分に合う\n入口を選びましょう。",
+      description: "必要なのは説明ではなく、\n今の自分に合う入口です。",
+      meditationLabel: "一つ選ぶだけで、\n静かな60秒が始まります。"
     },
     hros: {
       eyebrow: "HROS",
@@ -89,9 +89,9 @@ const homeCopy = {
     },
     recovery: {
       eyebrow: "Recovery First",
-      title: "먼저, 지금의 나에게 맞는 조용한 입구부터.",
-      description: "설명보다 먼저, 지금 필요한 1분 회복을 선택할 수 있습니다.",
-      meditationLabel: "선택한 회복에서 바로 1분으로 이어집니다."
+      title: "먼저,\n지금의 나에게 맞는\n입구를 고르세요.",
+      description: "필요한 것은 설명이 아니라,\n지금의 나에게 맞는 입구입니다.",
+      meditationLabel: "하나만 고르면,\n조용한 60초가 시작됩니다."
     },
     hros: {
       eyebrow: "HROS",
@@ -154,9 +154,9 @@ const homeCopy = {
     },
     recovery: {
       eyebrow: "Recovery First",
-      title: "Begin with the quiet entrance that fits your state.",
-      description: "Before explanation, choose the one minute of recovery you need now.",
-      meditationLabel: "From the recovery you choose, continue directly into one minute."
+      title: "First,\nchoose the entrance\nthat fits you now.",
+      description: "What you need is not more explanation,\nbut the right entrance for this moment.",
+      meditationLabel: "Choose one,\nand a quiet 60 seconds begins."
     },
     hros: {
       eyebrow: "HROS",
@@ -359,7 +359,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="homepage-recovery" className="pt-16 sm:pt-20">
+      <section id="homepage-recovery" className="pt-12 sm:pt-15">
         <div className="section-shell">
           <SectionHeader
             eyebrow={copy.recovery.eyebrow}
@@ -367,11 +367,11 @@ export default function HomePage() {
             description={copy.recovery.description}
           />
         </div>
-        <div className="mt-10">
+        <div className="mt-7 sm:mt-8">
           <ZeroGateSection onEnterGate={handleZeroGateEnter} />
         </div>
-        <div className="section-shell mt-12 sm:mt-16">
-          <p className="text-sm uppercase tracking-[0.24em] text-white/42 sm:text-base">{copy.recovery.meditationLabel}</p>
+        <div className="section-shell mt-9 sm:mt-11">
+          <p className="whitespace-pre-line text-sm uppercase tracking-[0.18em] text-white/46 sm:text-base">{copy.recovery.meditationLabel}</p>
         </div>
         <InstantMeditationSection copy={landing.instant} />
       </section>
