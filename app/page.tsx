@@ -240,6 +240,7 @@ export default function HomePage() {
   const [giftDelivered, setGiftDelivered] = useState(false);
   const [activeChapterIndex, setActiveChapterIndex] = useState<number | null>(null);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [headerOffset, setHeaderOffset] = useState(112);
   const chapterHeadingRef = useRef<HTMLHeadingElement | null>(null);
 
   useEffect(() => {
@@ -272,17 +273,27 @@ export default function HomePage() {
       return;
     }
 
-    const syncChapterFromHash = () => {
-      const hashValue = window.location.hash.replace(/^#/, "");
-      const nextIndex = journeyChapterOrder.findIndex((chapterKey) => hashValue === `journey-${chapterKey}`);
-      setActiveChapterIndex(nextIndex >= 0 ? nextIndex : null);
+    const headerElement = document.querySelector("header");
+    if (!headerElement) {
+      return;
+    }
+
+    const updateHeaderOffset = () => {
+      const nextHeight = Math.ceil(headerElement.getBoundingClientRect().height);
+      if (nextHeight > 0) {
+        setHeaderOffset(nextHeight);
+      }
     };
 
-    syncChapterFromHash();
-    window.addEventListener("hashchange", syncChapterFromHash);
+    updateHeaderOffset();
+
+    const resizeObserver = new ResizeObserver(updateHeaderOffset);
+    resizeObserver.observe(headerElement);
+    window.addEventListener("resize", updateHeaderOffset);
 
     return () => {
-      window.removeEventListener("hashchange", syncChapterFromHash);
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", updateHeaderOffset);
     };
   }, []);
 
@@ -290,13 +301,6 @@ export default function HomePage() {
     if (activeChapterIndex === null || typeof window === "undefined") {
       return;
     }
-
-    const target = document.getElementById("chapter-journey");
-
-    target?.scrollIntoView({
-      behavior: prefersReducedMotion ? "auto" : "smooth",
-      block: "start"
-    });
 
     const focusTimer = window.setTimeout(() => {
       chapterHeadingRef.current?.focus();
@@ -343,6 +347,23 @@ export default function HomePage() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
+  }, [activeChapterIndex, prefersReducedMotion]);
+
+  useEffect(() => {
+    if (typeof document === "undefined" || activeChapterIndex === null) {
+      return;
+    }
+
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousBodyTouchAction = document.body.style.touchAction;
+
+    document.body.style.overflow = "hidden";
+    document.body.style.touchAction = "none";
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.body.style.touchAction = previousBodyTouchAction;
+    };
   }, [activeChapterIndex]);
 
   function scrollToRecovery() {
@@ -351,7 +372,7 @@ export default function HomePage() {
     }
 
     document.getElementById("homepage-recovery")?.scrollIntoView({
-      behavior: "smooth",
+      behavior: prefersReducedMotion ? "auto" : "smooth",
       block: "start"
     });
   }
@@ -362,7 +383,7 @@ export default function HomePage() {
     }
 
     document.querySelector("#one-minute-experience")?.scrollIntoView({
-      behavior: "smooth",
+      behavior: prefersReducedMotion ? "auto" : "smooth",
       block: "start"
     });
   }
@@ -373,32 +394,22 @@ export default function HomePage() {
     }
 
     document.getElementById(sectionId)?.scrollIntoView({
-      behavior: "smooth",
+      behavior: prefersReducedMotion ? "auto" : "smooth",
       block: "start"
     });
   }
 
-  function updateJourneyHash(nextIndex: number | null) {
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    const nextUrl =
-      nextIndex === null
-        ? `${window.location.pathname}${window.location.search}`
-        : `${window.location.pathname}${window.location.search}#journey-${journeyChapterOrder[nextIndex]}`;
-
-    window.history.pushState(null, "", nextUrl);
-    window.dispatchEvent(new HashChangeEvent("hashchange"));
-  }
-
   function openChapterJourney(nextIndex = 0) {
-    updateJourneyHash(nextIndex);
+    setActiveChapterIndex(Math.max(0, Math.min(nextIndex, journeyChapterOrder.length - 1)));
   }
 
   function closeChapterJourney() {
-    updateJourneyHash(null);
-    scrollToSection("homepage-recovery");
+    setActiveChapterIndex(null);
+    if (typeof window !== "undefined") {
+      window.setTimeout(() => {
+        scrollToSection("homepage-recovery");
+      }, prefersReducedMotion ? 0 : 80);
+    }
   }
 
   function goToNextChapter() {
@@ -407,8 +418,9 @@ export default function HomePage() {
       return;
     }
 
-    const nextIndex = Math.min(activeChapterIndex + 1, journeyChapterOrder.length - 1);
-    updateJourneyHash(nextIndex);
+    setActiveChapterIndex((currentIndex) =>
+      currentIndex === null ? 0 : Math.min(currentIndex + 1, journeyChapterOrder.length - 1)
+    );
   }
 
   function goToPreviousChapter() {
@@ -421,7 +433,7 @@ export default function HomePage() {
       return;
     }
 
-    updateJourneyHash(activeChapterIndex - 1);
+    setActiveChapterIndex((currentIndex) => (currentIndex === null ? null : Math.max(currentIndex - 1, 0)));
   }
 
   function handleZeroGateEnter(gateKey: string) {
@@ -488,6 +500,11 @@ export default function HomePage() {
   ] as const;
 
   const activeChapter = activeChapterIndex === null ? null : chapterSequence[activeChapterIndex];
+  const viewportSectionMinHeight = `calc(100dvh - ${headerOffset}px)`;
+  const chapterOverlayStyle = {
+    top: `${headerOffset}px`,
+    paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))"
+  } as const;
 
   return (
     <div className="relative overflow-hidden pb-24">
@@ -503,8 +520,11 @@ export default function HomePage() {
         </section>
       ) : null}
 
-      <section className="section-shell pt-6 sm:pt-10">
-        <div className="relative overflow-hidden rounded-[44px] border border-white/9 bg-[linear-gradient(180deg,rgba(8,16,25,0.9),rgba(8,16,25,0.78))] px-6 py-7 shadow-[0_22px_90px_rgba(6,12,22,0.24)] sm:px-8 sm:py-9 lg:min-h-[calc(83svh-7.5rem)] lg:px-11 lg:py-10">
+      <section className="section-shell pt-6 sm:pt-8">
+        <div
+          className="relative overflow-hidden rounded-[44px] border border-white/9 bg-[linear-gradient(180deg,rgba(8,16,25,0.9),rgba(8,16,25,0.78))] px-6 py-7 shadow-[0_22px_90px_rgba(6,12,22,0.24)] sm:px-8 sm:py-9 lg:px-11 lg:py-10"
+          style={{ minHeight: viewportSectionMinHeight }}
+        >
           <div className="pointer-events-none absolute inset-0">
             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,14,22,0.18),rgba(7,14,22,0.26)_48%,rgba(7,14,22,0.42))]" />
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,rgba(232,203,145,0.08),transparent_24%),radial-gradient(circle_at_72%_28%,rgba(236,216,170,0.06),transparent_28%)]" />
@@ -566,156 +586,167 @@ export default function HomePage() {
             description={copy.recovery.description}
           />
         </div>
-        <div className="mt-7 sm:mt-8">
-          <ZeroGateSection onEnterGate={handleZeroGateEnter} />
-        </div>
-        <InstantMeditationSection copy={landing.instant} />
-        <div className="section-shell mt-10 flex justify-start sm:mt-12">
-          <button
-            type="button"
-            onClick={() => openChapterJourney(0)}
-            className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-white/[0.04] px-5 py-2.5 text-sm font-medium text-white/80 transition hover:bg-white/[0.06] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
+        <div className="section-shell mt-7 sm:mt-8">
+          <div
+            className="flex flex-col justify-between gap-10"
+            style={{ minHeight: viewportSectionMinHeight, paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
           >
-            {copy.chapters.continueJourney}
-          </button>
+            <div>
+              <ZeroGateSection onEnterGate={handleZeroGateEnter} />
+              <InstantMeditationSection copy={landing.instant} />
+            </div>
+            <div className="flex justify-start">
+              <button
+                type="button"
+                onClick={() => openChapterJourney(0)}
+                className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-white/[0.04] px-5 py-2.5 text-sm font-medium text-white/80 transition hover:bg-white/[0.06] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
+              >
+                {copy.chapters.continueJourney}
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
       {activeChapter ? (
-        <section
-          id="chapter-journey"
-          className="section-shell flex min-h-[calc(100svh-6.5rem)] items-center py-10 sm:min-h-[calc(100svh-7rem)] sm:py-12"
-          aria-label={`${copy.chapters.position} ${activeChapterIndex! + 1}`}
-        >
-          <div
-            className={`w-full overflow-hidden rounded-[40px] border border-white/8 px-6 py-8 shadow-[0_24px_100px_rgba(6,12,22,0.16)] sm:px-8 sm:py-10 lg:px-12 lg:py-12 ${
-              chapterBackdropClasses[activeChapter.key]
-            } ${prefersReducedMotion ? "" : "animate-[chapterFade_420ms_ease-out]"}`}
+        <div className="fixed inset-x-0 bottom-0 z-40" style={chapterOverlayStyle}>
+          <div className="absolute inset-0 bg-[#04101a]/88 backdrop-blur-2xl" aria-hidden="true" />
+          <section
+            id="chapter-journey"
+            className="section-shell relative flex h-full items-center py-6 sm:py-8"
+            aria-label={`${copy.chapters.position} ${activeChapterIndex! + 1}`}
           >
-            <div className="pointer-events-none absolute opacity-0" aria-live="polite">
-              {`${copy.chapters.position} ${activeChapterIndex! + 1} / ${chapterSequence.length}`}
-            </div>
-            <div className="flex flex-col gap-12 lg:min-h-[calc(100svh-16rem)] lg:justify-between">
-              <div className="flex items-start justify-between gap-4">
-                <div className="space-y-3">
-                  <p className="text-[11px] uppercase tracking-[0.34em] text-[#d8c08a]/72">{activeChapter.identity}</p>
-                  {"label" in activeChapter ? (
-                    <p className="text-sm tracking-[0.16em] text-white/54">{activeChapter.label}</p>
-                  ) : null}
-                </div>
-                <p className="rounded-full border border-white/8 bg-white/[0.04] px-3 py-1.5 text-[11px] uppercase tracking-[0.24em] text-white/52">
-                  {`${copy.chapters.position} ${activeChapterIndex! + 1} / ${chapterSequence.length}`}
-                </p>
+            <div
+              className={`w-full overflow-y-auto rounded-[40px] border border-white/8 px-6 py-8 shadow-[0_24px_100px_rgba(6,12,22,0.16)] sm:px-8 sm:py-10 lg:px-12 lg:py-12 ${
+                chapterBackdropClasses[activeChapter.key]
+              } ${prefersReducedMotion ? "" : "animate-[chapterFade_420ms_ease-out]"}`}
+              style={{ minHeight: `calc(100dvh - ${headerOffset}px - 3rem)` }}
+            >
+              <div className="pointer-events-none absolute opacity-0" aria-live="polite">
+                {`${copy.chapters.position} ${activeChapterIndex! + 1} / ${chapterSequence.length}`}
               </div>
-
-              <div className="grid gap-10 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,0.28fr)] lg:items-end">
-                <div className="max-w-[42rem]">
-                  <h2
-                    ref={chapterHeadingRef}
-                    tabIndex={-1}
-                    className="whitespace-pre-line text-balance font-serif text-[clamp(2.5rem,5.2vw,5rem)] leading-[1.12] tracking-[-0.03em] text-white focus:outline-none"
-                  >
-                    {activeChapter.headline}
-                  </h2>
-                  <p className="mt-6 max-w-[30rem] whitespace-pre-line text-pretty text-base leading-8 text-white/64 sm:text-lg sm:leading-9">
-                    {activeChapter.supporting}
-                  </p>
-
-                  {activeChapter.key === "hros" ? (
-                    <div className="mt-10">
-                      <Link
-                        href="/brain-education"
-                        className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-white/[0.04] px-6 py-3 text-sm font-medium text-white/82 transition hover:bg-white/[0.06] hover:text-white"
-                      >
-                        {copy.chapters.exploreHros}
-                      </Link>
-                    </div>
-                  ) : null}
-
-                  {activeChapter.key === "doorway" ? (
-                    <div className="mt-10 flex flex-col gap-3 sm:max-w-[28rem]">
-                      <Link
-                        href="/rhythm-journey"
-                        className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-white/[0.04] px-6 py-3 text-sm font-medium text-white/84 transition hover:bg-white/[0.06]"
-                      >
-                        {copy.chapters.doorway.recoveryCta}
-                      </Link>
-                      <Link
-                        href="/brain-education"
-                        className="inline-flex min-h-[54px] items-center justify-center rounded-full border border-white/10 bg-transparent px-6 py-3 text-sm font-medium text-white/72 transition hover:border-white/16 hover:bg-white/[0.04] hover:text-white/86"
-                      >
-                        {copy.chapters.doorway.libraryCta}
-                      </Link>
-                      <button
-                        type="button"
-                        onClick={handleBasicJourneyCta}
-                        className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f0ddb0_0%,#dcc086_56%,#caa160_100%)] px-6 py-3 text-sm font-semibold text-[#16202b] shadow-[0_16px_34px_rgba(212,186,117,0.16)] transition hover:brightness-[1.03]"
-                      >
-                        {copy.chapters.doorway.basicCta}
-                      </button>
-                    </div>
-                  ) : null}
-                </div>
-
-                <div className="rounded-[32px] border border-white/7 bg-white/[0.03] px-5 py-6 shadow-[0_18px_54px_rgba(5,12,24,0.1)] sm:px-6">
-                  <div className="h-20 rounded-[24px] bg-[radial-gradient(circle_at_50%_50%,rgba(240,221,176,0.18),rgba(240,221,176,0.02)_48%,transparent_72%)]" />
-                  <p className="mt-5 text-sm leading-7 text-white/58">
-                    {activeChapter.key === "recovery"
-                      ? copy.recovery.description
-                      : activeChapter.key === "rhythm"
-                        ? copy.chapters.rhythm.supporting
-                        : activeChapter.key === "awakening"
-                          ? copy.chapters.awakening.supporting
-                          : activeChapter.key === "hros"
-                            ? copy.chapters.hros.supporting
-                            : activeChapter.key === "coexistence"
-                              ? copy.chapters.coexistence.supporting
-                              : copy.chapters.doorway.supporting}
+              <div className="flex flex-col gap-12 lg:min-h-[calc(100svh-16rem)] lg:justify-between">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="space-y-3">
+                    <p className="text-[11px] uppercase tracking-[0.34em] text-[#d8c08a]/72">{activeChapter.identity}</p>
+                    {"label" in activeChapter ? (
+                      <p className="text-sm tracking-[0.16em] text-white/54">{activeChapter.label}</p>
+                    ) : null}
+                  </div>
+                  <p className="rounded-full border border-white/8 bg-white/[0.04] px-3 py-1.5 text-[11px] uppercase tracking-[0.24em] text-white/52">
+                    {`${copy.chapters.position} ${activeChapterIndex! + 1} / ${chapterSequence.length}`}
                   </p>
                 </div>
-              </div>
 
-              <div className="flex flex-col gap-4 border-t border-white/8 pt-6 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex flex-wrap items-center gap-3">
-                  <button
-                    type="button"
-                    onClick={goToPreviousChapter}
-                    className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm font-medium text-white/74 transition hover:bg-white/[0.05] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
-                    aria-label={copy.chapters.previous}
-                  >
-                    {copy.chapters.previous}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={closeChapterJourney}
-                    className="inline-flex min-h-[48px] items-center justify-center rounded-full px-3 py-2.5 text-sm font-medium text-white/54 transition hover:text-white/82 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
-                    aria-label={copy.chapters.close}
-                  >
-                    {copy.chapters.close}
-                  </button>
+                <div className="grid gap-10 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,0.28fr)] lg:items-end">
+                  <div className="max-w-[42rem]">
+                    <h2
+                      ref={chapterHeadingRef}
+                      tabIndex={-1}
+                      className="whitespace-pre-line text-balance font-serif text-[clamp(2.5rem,5.2vw,5rem)] leading-[1.12] tracking-[-0.03em] text-white focus:outline-none"
+                    >
+                      {activeChapter.headline}
+                    </h2>
+                    <p className="mt-6 max-w-[30rem] whitespace-pre-line text-pretty text-base leading-8 text-white/64 sm:text-lg sm:leading-9">
+                      {activeChapter.supporting}
+                    </p>
+
+                    {activeChapter.key === "hros" ? (
+                      <div className="mt-10">
+                        <Link
+                          href="/brain-education"
+                          className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-white/[0.04] px-6 py-3 text-sm font-medium text-white/82 transition hover:bg-white/[0.06] hover:text-white"
+                        >
+                          {copy.chapters.exploreHros}
+                        </Link>
+                      </div>
+                    ) : null}
+
+                    {activeChapter.key === "doorway" ? (
+                      <div className="mt-10 flex flex-col gap-3 sm:max-w-[28rem]">
+                        <Link
+                          href="/rhythm-journey"
+                          className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-white/[0.04] px-6 py-3 text-sm font-medium text-white/84 transition hover:bg-white/[0.06]"
+                        >
+                          {copy.chapters.doorway.recoveryCta}
+                        </Link>
+                        <Link
+                          href="/brain-education"
+                          className="inline-flex min-h-[54px] items-center justify-center rounded-full border border-white/10 bg-transparent px-6 py-3 text-sm font-medium text-white/72 transition hover:border-white/16 hover:bg-white/[0.04] hover:text-white/86"
+                        >
+                          {copy.chapters.doorway.libraryCta}
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={handleBasicJourneyCta}
+                          className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f0ddb0_0%,#dcc086_56%,#caa160_100%)] px-6 py-3 text-sm font-semibold text-[#16202b] shadow-[0_16px_34px_rgba(212,186,117,0.16)] transition hover:brightness-[1.03]"
+                        >
+                          {copy.chapters.doorway.basicCta}
+                        </button>
+                      </div>
+                    ) : null}
+                  </div>
+
+                  <div className="rounded-[32px] border border-white/7 bg-white/[0.03] px-5 py-6 shadow-[0_18px_54px_rgba(5,12,24,0.1)] sm:px-6">
+                    <div className="h-20 rounded-[24px] bg-[radial-gradient(circle_at_50%_50%,rgba(240,221,176,0.18),rgba(240,221,176,0.02)_48%,transparent_72%)]" />
+                    <p className="mt-5 text-sm leading-7 text-white/58">
+                      {activeChapter.key === "recovery"
+                        ? copy.recovery.description
+                        : activeChapter.key === "rhythm"
+                          ? copy.chapters.rhythm.supporting
+                          : activeChapter.key === "awakening"
+                            ? copy.chapters.awakening.supporting
+                            : activeChapter.key === "hros"
+                              ? copy.chapters.hros.supporting
+                              : activeChapter.key === "coexistence"
+                                ? copy.chapters.coexistence.supporting
+                                : copy.chapters.doorway.supporting}
+                    </p>
+                  </div>
                 </div>
 
-                <div className="flex items-center gap-2 self-start sm:self-auto" aria-hidden="true">
-                  {chapterSequence.map((chapter, index) => (
-                    <span
-                      key={chapter.key}
-                      className={`h-1.5 rounded-full transition-all ${index === activeChapterIndex ? "w-8 bg-[#e8d5a6]" : "w-3 bg-white/18"}`}
-                    />
-                  ))}
-                </div>
+                <div className="flex flex-col gap-4 border-t border-white/8 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={goToPreviousChapter}
+                      className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm font-medium text-white/74 transition hover:bg-white/[0.05] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
+                      aria-label={copy.chapters.previous}
+                    >
+                      {copy.chapters.previous}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={closeChapterJourney}
+                      className="inline-flex min-h-[48px] items-center justify-center rounded-full px-3 py-2.5 text-sm font-medium text-white/54 transition hover:text-white/82 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
+                      aria-label={copy.chapters.close}
+                    >
+                      {copy.chapters.close}
+                    </button>
+                  </div>
 
-                <button
-                  type="button"
-                  onClick={activeChapterIndex === chapterSequence.length - 1 ? () => openChapterJourney(0) : goToNextChapter}
-                  className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-white/[0.05] px-5 py-2.5 text-sm font-medium text-white/86 transition hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
-                  aria-label={copy.chapters.next}
-                >
-                  {activeChapterIndex === chapterSequence.length - 1 ? copy.chapters.continueJourney : copy.chapters.next}
-                </button>
+                  <div className="flex items-center gap-2 self-start sm:self-auto" aria-hidden="true">
+                    {chapterSequence.map((chapter, index) => (
+                      <span
+                        key={chapter.key}
+                        className={`h-1.5 rounded-full transition-all ${index === activeChapterIndex ? "w-8 bg-[#e8d5a6]" : "w-3 bg-white/18"}`}
+                      />
+                    ))}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={activeChapterIndex === chapterSequence.length - 1 ? closeChapterJourney : goToNextChapter}
+                    className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-white/[0.05] px-5 py-2.5 text-sm font-medium text-white/86 transition hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
+                    aria-label={copy.chapters.next}
+                  >
+                    {activeChapterIndex === chapterSequence.length - 1 ? copy.chapters.close : copy.chapters.next}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
       ) : null}
     </div>
   );
