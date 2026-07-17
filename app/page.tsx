@@ -143,8 +143,8 @@ const homeCopy = {
     recovery: {
       eyebrow: "Recovery First",
       title: "First,\nchoose the entrance\nthat fits you now.",
-      description: "Choose one,\nand a quiet 60 seconds begins.",
-      meditationLabel: "Choose one,\nand a quiet 60 seconds begins."
+      description: "Choose one,\nand your quiet 60 seconds begin.",
+      meditationLabel: "Choose one,\nand your quiet 60 seconds begin."
     },
     chapters: {
       continueJourney: "Continue the Recovery Journey",
@@ -767,25 +767,31 @@ export default function HomePage() {
         </div>
         <div className="section-shell mt-4 sm:mt-5">
           <div
-            className="flex max-h-[calc(100dvh-var(--header-offset,0px))] min-h-0 flex-col gap-5 overflow-y-auto pr-1 sm:gap-6 lg:gap-7"
+            className="flex max-h-[calc(100dvh-var(--header-offset,0px))] min-h-0 flex-col overflow-y-auto pr-1"
             style={{
               minHeight: viewportSectionMinHeight,
               paddingBottom: "max(1rem, env(safe-area-inset-bottom))",
               ["--header-offset" as string]: `${headerOffset}px`
             }}
           >
-            <div className="space-y-0">
+            <div className="space-y-5 sm:space-y-6">
               <ZeroGateSection onEnterGate={handleZeroGateEnter} />
+              <div className="flex justify-stretch sm:justify-end">
+                <button
+                  type="button"
+                  onClick={() => openChapterJourney(0)}
+                  className="group inline-flex min-h-[46px] w-full items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm font-medium text-white/74 transition duration-200 hover:border-gold/22 hover:text-white/88 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d] motion-reduce:transform-none sm:min-h-[44px] sm:w-auto sm:justify-end sm:px-5"
+                >
+                  <span>{copy.chapters.continueJourney}</span>
+                  <span
+                    aria-hidden="true"
+                    className="text-[15px] leading-none text-white/52 transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none"
+                  >
+                    →
+                  </span>
+                </button>
+              </div>
               <InstantMeditationSection copy={landing.instant} />
-            </div>
-            <div className="mt-auto flex justify-start pt-1 sm:pt-2">
-              <button
-                type="button"
-                onClick={() => openChapterJourney(0)}
-                className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-white/[0.04] px-5 py-2.5 text-sm font-medium text-white/80 transition hover:bg-white/[0.06] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
-              >
-                {copy.chapters.continueJourney}
-              </button>
             </div>
           </div>
         </div>
