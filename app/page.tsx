@@ -238,8 +238,14 @@ function renderHeroHeadline(language: "jp" | "kr" | "en") {
     return (
       <>
         <span className="block">오늘,</span>
-        <span className="mt-[0.18em] block whitespace-normal">
+        <span className="mt-[0.18em] hidden whitespace-normal sm:block">
           <span className="inline-block whitespace-nowrap">어떤 회복이 필요하세요?</span>
+        </span>
+        <span className="mt-[0.12em] block sm:hidden">
+          <span className="inline-block whitespace-nowrap">어떤 회복이</span>
+        </span>
+        <span className="mt-[0.08em] block sm:hidden">
+          <span className="inline-block whitespace-nowrap">필요하세요?</span>
         </span>
       </>
     );
@@ -266,7 +272,7 @@ function getHeroHeadlineClass(language: "jp" | "kr" | "en") {
   }
 
   if (language === "kr") {
-    return "mt-4 font-serif text-[clamp(2.55rem,8.6vw,4.72rem)] font-normal leading-[1.12] tracking-[-0.022em] text-white sm:mt-5 lg:max-w-[8.85em]";
+    return "mt-4 max-w-full font-serif text-[clamp(2.25rem,10vw,2.95rem)] font-normal leading-[1.1] tracking-[-0.018em] text-white sm:mt-5 sm:text-[clamp(2.55rem,8.6vw,4.72rem)] sm:leading-[1.12] sm:tracking-[-0.022em] lg:max-w-[8.85em]";
   }
 
   return "mt-4 font-serif text-[clamp(2.22rem,9vw,4.68rem)] font-normal leading-[1.08] tracking-[-0.026em] text-white sm:mt-5 sm:text-[clamp(2.58rem,4vw,4.68rem)] lg:max-w-[9.4em]";
