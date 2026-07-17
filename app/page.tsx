@@ -214,6 +214,47 @@ function SectionHeader({
   );
 }
 
+function renderHeroHeadline(language: "jp" | "kr" | "en") {
+  if (language === "jp") {
+    return (
+      <>
+        <span className="block">今日は、</span>
+        <span className="mt-[0.16em] hidden whitespace-normal sm:block">
+          <span className="inline-block whitespace-nowrap">どんな回復が必要ですか？</span>
+        </span>
+        <span className="mt-[0.16em] block whitespace-normal sm:hidden">
+          <span className="block">
+            <span className="inline-block whitespace-nowrap">どんな回復が</span>
+          </span>
+          <span className="mt-[0.12em] block">
+            <span className="inline-block whitespace-nowrap">必要ですか？</span>
+          </span>
+        </span>
+      </>
+    );
+  }
+
+  if (language === "kr") {
+    return (
+      <>
+        <span className="block">오늘,</span>
+        <span className="mt-[0.18em] block whitespace-normal">
+          <span className="inline-block whitespace-nowrap">어떤 회복이 필요하세요?</span>
+        </span>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <span className="block">What kind of recovery</span>
+      <span className="mt-[0.18em] block whitespace-normal">
+        <span className="inline-block whitespace-nowrap">do you need today?</span>
+      </span>
+    </>
+  );
+}
+
 const journeyChapterOrder = ["recovery", "rhythm", "awakening", "hros", "coexistence", "doorway"] as const;
 type JourneyChapterKey = (typeof journeyChapterOrder)[number];
 
@@ -532,8 +573,6 @@ export default function HomePage() {
     top: `${headerOffset}px`,
     paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))"
   } as const;
-  const isJapanese = language === "jp";
-
   return (
     <div className="relative overflow-hidden pb-24">
       <div className="pointer-events-none absolute inset-0 -z-30 bg-[radial-gradient(circle_at_top,rgba(216,192,138,0.12),transparent_18%),radial-gradient(circle_at_18%_14%,rgba(98,127,146,0.16),transparent_22%),linear-gradient(180deg,#050d15_0%,#09131d_38%,#06111c_100%)]" />
@@ -548,67 +587,48 @@ export default function HomePage() {
         </section>
       ) : null}
 
-      <section className="section-shell flex items-stretch py-3 sm:py-4" style={{ height: viewportSectionMinHeight }}>
-        <div
-          className="relative flex h-full w-full overflow-hidden rounded-[36px] border border-white/7 bg-[linear-gradient(180deg,rgba(8,16,25,0.88),rgba(8,16,25,0.76))] px-5 py-5 shadow-[0_18px_72px_rgba(6,12,22,0.18)] sm:px-7 sm:py-7 lg:px-9 lg:py-8"
-        >
-          <div className="pointer-events-none absolute inset-0">
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,14,22,0.14),rgba(7,14,22,0.22)_48%,rgba(7,14,22,0.36))]" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,rgba(232,203,145,0.06),transparent_24%),radial-gradient(circle_at_72%_28%,rgba(236,216,170,0.04),transparent_28%)]" />
-            <div className="absolute left-[6%] top-[11%] h-32 w-32 rounded-full bg-[#e5c989]/[0.07] blur-[94px]" />
-            <div className="absolute right-[8%] top-[14%] h-40 w-40 rounded-full bg-[#cddbeb]/[0.06] blur-[110px]" />
-          </div>
-
-          <div className="relative z-10 grid h-full gap-6 md:gap-7 lg:grid-cols-[minmax(0,1.27fr)_minmax(0,1fr)] lg:items-center lg:gap-9">
-            <div className="flex min-w-0 flex-col justify-center">
-              <p className="text-[0.72rem] font-medium uppercase tracking-[0.24em] text-[#d8c08a]/76 sm:text-[0.82rem]">
+      <section className="relative overflow-hidden" style={{ height: viewportSectionMinHeight }}>
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,#061018_0%,#09131d_42%,#08121b_100%)]" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-full md:w-[62%] lg:w-[54%]">
+          <img
+            src={heroWindowVisual}
+            alt=""
+            aria-hidden="true"
+            className="h-full w-full object-cover object-[66%_center] opacity-[0.92] brightness-[0.9] contrast-[0.95] saturate-[0.9] sepia-[0.04] lg:object-[70%_center]"
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,#061018_0%,rgba(6,16,24,0.97)_12%,rgba(6,16,24,0.84)_26%,rgba(6,16,24,0.42)_48%,rgba(6,16,24,0.16)_68%,rgba(6,16,24,0.12)_100%),linear-gradient(180deg,rgba(4,10,18,0.44)_0%,rgba(4,10,18,0.18)_32%,rgba(4,10,18,0.28)_100%),radial-gradient(circle_at_74%_26%,rgba(237,212,160,0.09),transparent_24%)]" />
+        </div>
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(228,205,154,0.08),transparent_20%),radial-gradient(circle_at_84%_18%,rgba(189,205,220,0.08),transparent_18%)]" />
+        <div className="section-shell relative z-10 flex h-full items-center">
+          <div className="grid w-full lg:grid-cols-[minmax(0,0.52fr)_minmax(0,0.48fr)] lg:items-center">
+            <div className="flex min-w-0 flex-col justify-center lg:-translate-y-[3svh]">
+              <p className="text-[0.69rem] font-medium uppercase tracking-[0.22em] text-[#d8c08a]/72 sm:text-[0.8rem]">
                 {copy.hero.subtitle}
               </p>
-              <h1 className="mt-4 font-serif text-[clamp(3rem,4.5vw,5.4rem)] font-normal leading-[1.14] tracking-[-0.025em] text-white sm:mt-5">
-                {isJapanese ? (
-                  <>
-                    <span className="block">今日は、</span>
-                    <span className="mt-[0.16em] block whitespace-normal">
-                      <span className="inline-block whitespace-nowrap">どんな回復が</span>
-                      <span className="inline-block whitespace-nowrap md:ml-[0.22em]">必要ですか？</span>
-                    </span>
-                  </>
-                ) : (
-                  <span className="block whitespace-pre-line">{copy.hero.headline}</span>
-                )}
+              <h1 className="mt-4 font-serif text-[clamp(2.8rem,4vw,4.85rem)] font-normal leading-[1.1] tracking-[-0.024em] text-white sm:mt-5 lg:max-w-[8.8em]">
+                {renderHeroHeadline(language)}
               </h1>
-              <p className="mt-5 max-w-[31rem] text-[15px] leading-7 text-white/66 sm:text-base sm:leading-8">
+              <p className="mt-5 max-w-[34rem] text-[15px] leading-7 text-white/70 sm:text-base sm:leading-8 lg:whitespace-nowrap">
                 {copy.hero.description}
               </p>
 
-              <div className="mt-7 flex w-full flex-col items-stretch gap-3 sm:max-w-[33rem] sm:mt-8 sm:flex-row sm:flex-wrap sm:items-center">
+              <div className="mt-7 flex w-full flex-col items-stretch gap-3.5 sm:mt-8 sm:max-w-[33rem] sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
                 <button
                   type="button"
                   onClick={scrollToRecovery}
-                  className="inline-flex min-h-[54px] items-center justify-center rounded-[17px] border border-[#f3e4bc]/38 bg-[#e4d1a0] px-5 py-3 text-sm font-semibold text-[#132030] shadow-[0_12px_24px_rgba(212,186,117,0.1)] transition duration-200 hover:brightness-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f0ddb0] focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d] sm:min-w-[12.3rem]"
+                  className="inline-flex min-h-[54px] items-center justify-center rounded-[16px] border border-[#ebd7a8]/32 bg-[#deca97] px-5 py-3 text-sm font-semibold text-[#12202f] transition duration-200 hover:bg-[#e7d4a4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f0ddb0] focus-visible:ring-offset-2 focus-visible:ring-offset-[#08121b] sm:min-w-[12.8rem]"
                 >
                   {copy.hero.primaryCta}
                 </button>
                 <Link
                   href="/rhythm-journey"
-                  className="inline-flex min-h-[54px] items-center justify-center rounded-[17px] border border-white/16 bg-transparent px-5 py-3 text-sm font-medium text-white/82 transition duration-200 hover:border-[#d8c08a]/34 hover:bg-white/[0.03] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d8c08a]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d] sm:min-w-[12rem]"
+                  className="inline-flex min-h-[54px] items-center justify-center rounded-[16px] border border-white/14 bg-[rgba(8,18,27,0.16)] px-5 py-3 text-sm font-medium text-white/84 transition duration-200 hover:border-[#d8c08a]/30 hover:bg-[rgba(255,255,255,0.04)] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d8c08a]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#08121b] sm:min-w-[12.8rem]"
                 >
                   {copy.hero.secondaryCta}
                 </Link>
               </div>
             </div>
-
-            <div className="relative min-h-0 overflow-hidden rounded-[30px] border border-white/7 bg-[#0b1620]/56 p-1.5 shadow-[0_18px_54px_rgba(4,10,18,0.14)]">
-              <div className="relative overflow-hidden rounded-[26px] bg-[#0b1620]">
-                <img
-                  src={heroWindowVisual}
-                  alt=""
-                  aria-hidden="true"
-                  className="h-[13.8rem] w-full object-cover object-center opacity-[0.93] brightness-[0.9] contrast-[0.94] saturate-[0.88] sepia-[0.03] sm:h-[16rem] md:h-[18.5rem] lg:h-[22.5rem]"
-                />
-                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(8,17,26,0.18),rgba(8,17,26,0.06)_30%,rgba(8,17,26,0.14)_100%),linear-gradient(180deg,rgba(4,11,18,0.08),rgba(4,11,18,0.16)_46%,rgba(4,11,18,0.24)_100%),radial-gradient(circle_at_24%_20%,rgba(244,220,173,0.08),transparent_24%),radial-gradient(circle_at_70%_32%,rgba(237,212,160,0.05),transparent_28%)]" />
-              </div>
-            </div>
+            <div className="hidden lg:block" aria-hidden="true" />
           </div>
         </div>
       </section>
