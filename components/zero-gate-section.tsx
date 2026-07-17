@@ -70,7 +70,7 @@ export function ZeroGateSection({ onEnterGate }: ZeroGateSectionProps) {
 
   return (
     <section id="zero-gate" className="section-shell mt-4 scroll-mt-24 sm:mt-5">
-      <div className="relative overflow-hidden rounded-[24px] border border-white/6 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.07),transparent_22%),radial-gradient(circle_at_82%_20%,rgba(107,168,159,0.06),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.024),rgba(255,255,255,0.012))] px-3.5 py-4.5 shadow-[0_10px_28px_rgba(7,17,31,0.1)] sm:rounded-[28px] sm:px-5 sm:py-5.5 sm:shadow-[0_14px_40px_rgba(7,17,31,0.12)] lg:px-6 lg:py-6">
+      <div className="relative overflow-hidden rounded-[24px] border border-white/4 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.05),transparent_22%),radial-gradient(circle_at_82%_20%,rgba(107,168,159,0.05),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01))] px-3.5 py-4.5 shadow-[0_8px_22px_rgba(7,17,31,0.08)] sm:rounded-[28px] sm:px-5 sm:py-5.5 sm:shadow-[0_12px_32px_rgba(7,17,31,0.1)] lg:px-6 lg:py-6">
         <div className="pointer-events-none absolute inset-0 sm:hidden">
           <div className="absolute right-[-4%] top-[7%] h-48 w-48 rounded-full bg-emerald-200/[0.06] blur-[92px] animate-meditation-ambient-breathe motion-reduce:animate-none" />
           <div className="absolute left-[-4%] top-[-2%] h-32 w-32 rounded-full bg-gold/[0.08] blur-[76px] animate-meditation-fog motion-reduce:animate-none" />
@@ -79,8 +79,8 @@ export function ZeroGateSection({ onEnterGate }: ZeroGateSectionProps) {
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,12,22,0.01),rgba(4,12,22,0.04)_24%,rgba(4,12,22,0.12)_52%,rgba(4,12,22,0.24)_100%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_68%,rgba(6,23,31,0.2),transparent_24%)]" />
         </div>
-        <div className="relative max-w-[18ch] sm:max-w-[32rem]">
-          <p className="text-[0.68rem] uppercase tracking-[0.28em] text-gold/72 sm:text-[0.74rem] sm:tracking-[0.3em]">{copy.eyebrow}</p>
+        <div className="relative max-w-[24ch] sm:max-w-[32rem]">
+          <p className="text-[0.66rem] uppercase tracking-[0.24em] text-gold/68 sm:text-[0.74rem] sm:tracking-[0.3em]">{copy.eyebrow}</p>
           <h2 className="hero-measure keep-phrase mt-2 whitespace-pre-line font-serif text-[clamp(1.34rem,5.1vw,2rem)] leading-[1.18] text-white sm:max-w-[13ch] sm:text-[clamp(1.6rem,3vw,2.12rem)]">
             {copy.title}
           </h2>
