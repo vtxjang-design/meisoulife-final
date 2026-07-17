@@ -247,12 +247,41 @@ function renderHeroHeadline(language: "jp" | "kr" | "en") {
 
   return (
     <>
-      <span className="block">What kind of recovery</span>
-      <span className="mt-[0.18em] block whitespace-normal">
+      <span className="hidden sm:block">What kind of recovery</span>
+      <span className="mt-[0.18em] hidden whitespace-normal sm:block">
+        <span className="inline-block whitespace-nowrap">do you need today?</span>
+      </span>
+      <span className="block sm:hidden">What kind</span>
+      <span className="mt-[0.14em] block sm:hidden">of recovery</span>
+      <span className="mt-[0.14em] block whitespace-normal sm:hidden">
         <span className="inline-block whitespace-nowrap">do you need today?</span>
       </span>
     </>
   );
+}
+
+function getHeroHeadlineClass(language: "jp" | "kr" | "en") {
+  if (language === "jp") {
+    return "mt-4 font-serif text-[clamp(2.8rem,4vw,4.85rem)] font-normal leading-[1.1] tracking-[-0.024em] text-white sm:mt-5 lg:max-w-[8.8em]";
+  }
+
+  if (language === "kr") {
+    return "mt-4 font-serif text-[clamp(2.55rem,8.6vw,4.72rem)] font-normal leading-[1.12] tracking-[-0.022em] text-white sm:mt-5 lg:max-w-[8.85em]";
+  }
+
+  return "mt-4 font-serif text-[clamp(2.22rem,9vw,4.68rem)] font-normal leading-[1.08] tracking-[-0.026em] text-white sm:mt-5 sm:text-[clamp(2.58rem,4vw,4.68rem)] lg:max-w-[9.4em]";
+}
+
+function getHeroDescriptionClass(language: "jp" | "kr" | "en") {
+  if (language === "en") {
+    return "mt-5 max-w-[32rem] text-[15px] leading-7 text-white/70 sm:text-base sm:leading-8 lg:max-w-[33rem]";
+  }
+
+  if (language === "kr") {
+    return "mt-5 max-w-[33rem] text-[15px] leading-7 text-white/70 sm:text-base sm:leading-8";
+  }
+
+  return "mt-5 max-w-[34rem] text-[15px] leading-7 text-white/70 sm:text-base sm:leading-8 lg:whitespace-nowrap";
 }
 
 const journeyChapterOrder = ["recovery", "rhythm", "awakening", "hros", "coexistence", "doorway"] as const;
@@ -594,9 +623,9 @@ export default function HomePage() {
             src={heroWindowVisual}
             alt=""
             aria-hidden="true"
-            className="h-full w-full object-cover object-[66%_center] opacity-[0.92] brightness-[0.9] contrast-[0.95] saturate-[0.9] sepia-[0.04] lg:object-[70%_center]"
+            className="h-full w-full object-cover object-[66%_center] opacity-[0.92] brightness-[0.9] contrast-[0.95] saturate-[0.9] sepia-[0.04] md:max-lg:object-[70%_center] md:max-lg:opacity-[0.88] md:max-lg:brightness-[0.84] md:max-lg:contrast-[0.93] md:max-lg:saturate-[0.86] lg:object-[70%_center]"
           />
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,#061018_0%,rgba(6,16,24,0.97)_12%,rgba(6,16,24,0.84)_26%,rgba(6,16,24,0.42)_48%,rgba(6,16,24,0.16)_68%,rgba(6,16,24,0.12)_100%),linear-gradient(180deg,rgba(4,10,18,0.44)_0%,rgba(4,10,18,0.18)_32%,rgba(4,10,18,0.28)_100%),radial-gradient(circle_at_74%_26%,rgba(237,212,160,0.09),transparent_24%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,#061018_0%,rgba(6,16,24,0.97)_12%,rgba(6,16,24,0.84)_26%,rgba(6,16,24,0.42)_48%,rgba(6,16,24,0.16)_68%,rgba(6,16,24,0.12)_100%),linear-gradient(180deg,rgba(4,10,18,0.44)_0%,rgba(4,10,18,0.18)_32%,rgba(4,10,18,0.28)_100%),radial-gradient(circle_at_74%_26%,rgba(237,212,160,0.09),transparent_24%)] md:max-lg:bg-[linear-gradient(90deg,#061018_0%,rgba(6,16,24,0.985)_14%,rgba(6,16,24,0.9)_32%,rgba(6,16,24,0.54)_52%,rgba(6,16,24,0.2)_72%,rgba(6,16,24,0.14)_100%),linear-gradient(180deg,rgba(4,10,18,0.5)_0%,rgba(4,10,18,0.24)_30%,rgba(4,10,18,0.3)_100%),radial-gradient(circle_at_76%_24%,rgba(237,212,160,0.06),transparent_24%)]" />
         </div>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(228,205,154,0.08),transparent_20%),radial-gradient(circle_at_84%_18%,rgba(189,205,220,0.08),transparent_18%)]" />
         <div className="section-shell relative z-10 flex h-full items-center">
@@ -605,10 +634,10 @@ export default function HomePage() {
               <p className="text-[0.69rem] font-medium uppercase tracking-[0.22em] text-[#d8c08a]/72 sm:text-[0.8rem]">
                 {copy.hero.subtitle}
               </p>
-              <h1 className="mt-4 font-serif text-[clamp(2.8rem,4vw,4.85rem)] font-normal leading-[1.1] tracking-[-0.024em] text-white sm:mt-5 lg:max-w-[8.8em]">
+              <h1 className={getHeroHeadlineClass(language)}>
                 {renderHeroHeadline(language)}
               </h1>
-              <p className="mt-5 max-w-[34rem] text-[15px] leading-7 text-white/70 sm:text-base sm:leading-8 lg:whitespace-nowrap">
+              <p className={getHeroDescriptionClass(language)}>
                 {copy.hero.description}
               </p>
 
