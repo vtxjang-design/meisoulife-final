@@ -355,15 +355,41 @@ export default function HomePage() {
       return;
     }
 
+    const scrollY = window.scrollY;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    const previousHtmlOverscrollBehavior = document.documentElement.style.overscrollBehavior;
     const previousBodyOverflow = document.body.style.overflow;
     const previousBodyTouchAction = document.body.style.touchAction;
+    const previousBodyPosition = document.body.style.position;
+    const previousBodyTop = document.body.style.top;
+    const previousBodyLeft = document.body.style.left;
+    const previousBodyRight = document.body.style.right;
+    const previousBodyWidth = document.body.style.width;
+    const previousBodyOverscrollBehavior = document.body.style.overscrollBehavior;
 
+    document.documentElement.style.overflow = "hidden";
+    document.documentElement.style.overscrollBehavior = "none";
     document.body.style.overflow = "hidden";
     document.body.style.touchAction = "none";
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.width = "100%";
+    document.body.style.overscrollBehavior = "none";
 
     return () => {
+      document.documentElement.style.overflow = previousHtmlOverflow;
+      document.documentElement.style.overscrollBehavior = previousHtmlOverscrollBehavior;
       document.body.style.overflow = previousBodyOverflow;
       document.body.style.touchAction = previousBodyTouchAction;
+      document.body.style.position = previousBodyPosition;
+      document.body.style.top = previousBodyTop;
+      document.body.style.left = previousBodyLeft;
+      document.body.style.right = previousBodyRight;
+      document.body.style.width = previousBodyWidth;
+      document.body.style.overscrollBehavior = previousBodyOverscrollBehavior;
+      window.scrollTo({ top: scrollY, behavior: "auto" });
     };
   }, [activeChapterIndex]);
 
@@ -618,23 +644,24 @@ export default function HomePage() {
       </section>
 
       {activeChapter ? (
-        <div className="fixed inset-x-0 bottom-0 z-40" style={chapterOverlayStyle}>
-          <div className="absolute inset-0 bg-[#04101a]/88 backdrop-blur-2xl" aria-hidden="true" />
+        <div className="fixed inset-x-0 bottom-0 z-40 overflow-hidden bg-[#07111a]" style={chapterOverlayStyle}>
+          <div className="absolute inset-0 bg-[#07111a]" aria-hidden="true" />
           <section
             id="chapter-journey"
-            className="section-shell relative flex h-full items-center py-6 sm:py-8"
+            className="section-shell relative flex h-full items-center py-4 sm:py-5"
             aria-label={`${copy.chapters.position} ${activeChapterIndex! + 1}`}
           >
             <div
-              className={`w-full overflow-y-auto rounded-[40px] border border-white/8 px-6 py-8 shadow-[0_24px_100px_rgba(6,12,22,0.16)] sm:px-8 sm:py-10 lg:px-12 lg:py-12 ${
+              key={activeChapter.key}
+              className={`flex h-full w-full flex-col overflow-hidden rounded-[34px] border border-white/7 px-5 py-5 shadow-[0_20px_72px_rgba(6,12,22,0.18)] sm:rounded-[38px] sm:px-7 sm:py-7 lg:px-10 lg:py-9 ${
                 chapterBackdropClasses[activeChapter.key]
               } ${prefersReducedMotion ? "" : "animate-[chapterFade_420ms_ease-out]"}`}
-              style={{ minHeight: `calc(100dvh - ${headerOffset}px - 3rem)` }}
+              style={{ height: `calc(100dvh - ${headerOffset}px - 2rem)` }}
             >
               <div className="pointer-events-none absolute opacity-0" aria-live="polite">
                 {`${copy.chapters.position} ${activeChapterIndex! + 1} / ${chapterSequence.length}`}
               </div>
-              <div className="flex flex-col gap-12 lg:min-h-[calc(100svh-16rem)] lg:justify-between">
+              <div className="flex h-full flex-col gap-8 sm:gap-10 lg:justify-between">
                 <div className="flex items-start justify-between gap-4">
                   <div className="space-y-3">
                     <p className="text-[11px] uppercase tracking-[0.34em] text-[#d8c08a]/72">{activeChapter.identity}</p>
@@ -647,8 +674,8 @@ export default function HomePage() {
                   </p>
                 </div>
 
-                <div className="grid gap-10 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,0.28fr)] lg:items-end">
-                  <div className="max-w-[42rem]">
+                <div className="grid flex-1 gap-8 lg:grid-cols-[minmax(0,0.74fr)_minmax(0,0.26fr)] lg:items-end lg:gap-9">
+                  <div className="flex min-h-0 flex-col justify-end max-w-[42rem]">
                     <h2
                       ref={chapterHeadingRef}
                       tabIndex={-1}
@@ -656,12 +683,12 @@ export default function HomePage() {
                     >
                       {activeChapter.headline}
                     </h2>
-                    <p className="mt-6 max-w-[30rem] whitespace-pre-line text-pretty text-base leading-8 text-white/64 sm:text-lg sm:leading-9">
+                    <p className="mt-5 max-w-[29rem] whitespace-pre-line text-pretty text-[15px] leading-7 text-white/64 sm:text-base sm:leading-8">
                       {activeChapter.supporting}
                     </p>
 
                     {activeChapter.key === "hros" ? (
-                      <div className="mt-10">
+                      <div className="mt-8">
                         <Link
                           href="/brain-education"
                           className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-white/[0.04] px-6 py-3 text-sm font-medium text-white/82 transition hover:bg-white/[0.06] hover:text-white"
@@ -672,7 +699,7 @@ export default function HomePage() {
                     ) : null}
 
                     {activeChapter.key === "doorway" ? (
-                      <div className="mt-10 flex flex-col gap-3 sm:max-w-[28rem]">
+                      <div className="mt-8 flex flex-col gap-3 sm:max-w-[28rem]">
                         <Link
                           href="/rhythm-journey"
                           className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-white/[0.04] px-6 py-3 text-sm font-medium text-white/84 transition hover:bg-white/[0.06]"
@@ -696,7 +723,7 @@ export default function HomePage() {
                     ) : null}
                   </div>
 
-                  <div className="rounded-[32px] border border-white/7 bg-white/[0.03] px-5 py-6 shadow-[0_18px_54px_rgba(5,12,24,0.1)] sm:px-6">
+                  <div className="self-end rounded-[28px] border border-white/7 bg-white/[0.03] px-5 py-5 shadow-[0_18px_54px_rgba(5,12,24,0.1)] sm:rounded-[32px] sm:px-6">
                     <div className="h-20 rounded-[24px] bg-[radial-gradient(circle_at_50%_50%,rgba(240,221,176,0.18),rgba(240,221,176,0.02)_48%,transparent_72%)]" />
                     <p className="mt-5 text-sm leading-7 text-white/58">
                       {activeChapter.key === "recovery"
@@ -714,7 +741,7 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-4 border-t border-white/8 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-col gap-4 border-t border-white/8 pt-5 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex flex-wrap items-center gap-3">
                     <button
                       type="button"
