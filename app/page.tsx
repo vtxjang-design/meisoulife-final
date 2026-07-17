@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useAuthState } from "@/components/auth-provider";
 import { InstantMeditationSection } from "@/components/instant-meditation-section";
 import { ZeroGateSection } from "@/components/zero-gate-section";
@@ -192,24 +192,112 @@ const homeCopy = {
   }
 } as const;
 
+function renderRecoveryHeadline(language: "jp" | "kr" | "en") {
+  if (language === "jp") {
+    return (
+      <>
+        <span className="hidden sm:block">
+          <span className="inline-block whitespace-nowrap">まずは、今の自分に合う</span>
+        </span>
+        <span className="mt-[0.14em] hidden sm:block">
+          <span className="inline-block whitespace-nowrap">入口を選びましょう。</span>
+        </span>
+        <span className="block sm:hidden">
+          <span className="inline-block whitespace-nowrap">まずは、</span>
+        </span>
+        <span className="mt-[0.14em] block sm:hidden">
+          <span className="inline-block whitespace-nowrap">今の自分に合う</span>
+        </span>
+        <span className="mt-[0.1em] block sm:hidden">
+          <span className="inline-block whitespace-nowrap">入口を選びましょう。</span>
+        </span>
+      </>
+    );
+  }
+
+  if (language === "kr") {
+    return (
+      <>
+        <span className="hidden sm:block">
+          <span className="inline-block whitespace-nowrap">먼저, 지금의 나에게 맞는</span>
+        </span>
+        <span className="mt-[0.16em] hidden sm:block">
+          <span className="inline-block whitespace-nowrap">입구를 고르세요.</span>
+        </span>
+        <span className="block sm:hidden">
+          <span className="inline-block whitespace-nowrap">먼저,</span>
+        </span>
+        <span className="mt-[0.14em] block sm:hidden">
+          <span className="inline-block whitespace-nowrap">지금의 나에게 맞는</span>
+        </span>
+        <span className="mt-[0.1em] block sm:hidden">
+          <span className="inline-block whitespace-nowrap">입구를 고르세요.</span>
+        </span>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <span className="hidden sm:block">
+        <span className="inline-block whitespace-nowrap">First, choose the entrance</span>
+      </span>
+      <span className="mt-[0.16em] hidden sm:block">
+        <span className="inline-block whitespace-nowrap">that fits you now.</span>
+      </span>
+      <span className="block sm:hidden">
+        <span className="inline-block whitespace-nowrap">First,</span>
+      </span>
+      <span className="mt-[0.14em] block sm:hidden">
+        <span className="inline-block whitespace-nowrap">choose the entrance</span>
+      </span>
+      <span className="mt-[0.1em] block sm:hidden">
+        <span className="inline-block whitespace-nowrap">that fits you now.</span>
+      </span>
+    </>
+  );
+}
+
+function getRecoveryHeadlineClass(language: "jp" | "kr" | "en") {
+  if (language === "jp") {
+    return "mt-3 font-serif text-[clamp(1.72rem,4vw,2.78rem)] leading-[1.14] tracking-[-0.022em] text-white sm:mt-4";
+  }
+
+  if (language === "kr") {
+    return "mt-3 font-serif text-[clamp(1.62rem,5vw,2.68rem)] leading-[1.16] tracking-[-0.02em] text-white sm:mt-4";
+  }
+
+  return "mt-3 font-serif text-[clamp(1.56rem,5vw,2.58rem)] leading-[1.14] tracking-[-0.022em] text-white sm:mt-4";
+}
+
+function getRecoveryDescriptionClass(language: "jp" | "kr" | "en") {
+  if (language === "en") {
+    return "mt-3 max-w-[23rem] whitespace-pre-line text-[14px] leading-7 text-white/62 sm:mt-4 sm:max-w-[25rem] sm:text-[15px] sm:leading-8";
+  }
+
+  return "mt-3 max-w-[20rem] whitespace-pre-line text-[14px] leading-7 text-white/62 sm:mt-4 sm:max-w-[23rem] sm:text-[15px] sm:leading-8";
+}
+
 function SectionHeader({
   eyebrow,
   title,
   description,
+  language,
   align = "left"
 }: {
   eyebrow: string;
-  title: string;
+  title: ReactNode;
   description: string;
+  language: "jp" | "kr" | "en";
   align?: "left" | "center";
 }) {
   const alignment = align === "center" ? "mx-auto text-center" : "";
 
   return (
-    <div className={`max-w-3xl ${alignment}`}>
-      <p className="text-xs uppercase tracking-[0.34em] text-[#d8c08a]/78 sm:text-sm">{eyebrow}</p>
-      <h2 className="mt-4 text-balance font-serif text-[clamp(1.75rem,4.2vw,3.2rem)] leading-[1.1] text-white">{title}</h2>
-      <p className="mt-4 max-w-[32rem] whitespace-pre-line text-pretty text-[15px] leading-8 text-white/62 sm:text-base sm:leading-9">{description}</p>
+    <div className={`max-w-[44rem] ${alignment}`}>
+      <p className="text-[0.7rem] uppercase tracking-[0.28em] text-[#d8c08a]/74 sm:text-xs sm:tracking-[0.32em]">{eyebrow}</p>
+      <h2 className={getRecoveryHeadlineClass(language)}>{title}</h2>
+      <p className={getRecoveryDescriptionClass(language)}>{description}</p>
     </div>
   );
 }
@@ -672,20 +760,25 @@ export default function HomePage() {
         <div className="section-shell">
           <SectionHeader
             eyebrow={copy.recovery.eyebrow}
-            title={copy.recovery.title}
+            title={renderRecoveryHeadline(language)}
             description={copy.recovery.description}
+            language={language}
           />
         </div>
-        <div className="section-shell mt-7 sm:mt-8">
+        <div className="section-shell mt-4 sm:mt-5">
           <div
-            className="flex flex-col justify-between gap-10"
-            style={{ minHeight: viewportSectionMinHeight, paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
+            className="flex max-h-[calc(100dvh-var(--header-offset,0px))] min-h-0 flex-col gap-5 overflow-y-auto pr-1 sm:gap-6 lg:gap-7"
+            style={{
+              minHeight: viewportSectionMinHeight,
+              paddingBottom: "max(1rem, env(safe-area-inset-bottom))",
+              ["--header-offset" as string]: `${headerOffset}px`
+            }}
           >
-            <div>
+            <div className="space-y-0">
               <ZeroGateSection onEnterGate={handleZeroGateEnter} />
               <InstantMeditationSection copy={landing.instant} />
             </div>
-            <div className="flex justify-start">
+            <div className="mt-auto flex justify-start pt-1 sm:pt-2">
               <button
                 type="button"
                 onClick={() => openChapterJourney(0)}

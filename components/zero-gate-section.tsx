@@ -69,29 +69,29 @@ export function ZeroGateSection({ onEnterGate }: ZeroGateSectionProps) {
   const copy = useLocaleCopy(zeroGateCopy);
 
   return (
-    <section id="zero-gate" className="section-shell mt-8 scroll-mt-24 sm:mt-10">
-      <div className="relative overflow-hidden rounded-[28px] border border-white/8 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.1),transparent_22%),radial-gradient(circle_at_84%_22%,rgba(107,168,159,0.08),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.038),rgba(255,255,255,0.016))] px-4 py-5 shadow-[0_20px_64px_rgba(7,17,31,0.18)] sm:rounded-[32px] sm:px-6 sm:py-7 sm:shadow-[0_24px_76px_rgba(7,17,31,0.2)] lg:px-7 lg:py-8">
+    <section id="zero-gate" className="section-shell mt-4 scroll-mt-24 sm:mt-5">
+      <div className="relative overflow-hidden rounded-[24px] border border-white/6 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.07),transparent_22%),radial-gradient(circle_at_82%_20%,rgba(107,168,159,0.06),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.024),rgba(255,255,255,0.012))] px-3.5 py-4.5 shadow-[0_10px_28px_rgba(7,17,31,0.1)] sm:rounded-[28px] sm:px-5 sm:py-5.5 sm:shadow-[0_14px_40px_rgba(7,17,31,0.12)] lg:px-6 lg:py-6">
         <div className="pointer-events-none absolute inset-0 sm:hidden">
-          <div className="absolute right-[-4%] top-[7%] h-48 w-48 rounded-full bg-emerald-200/[0.09] blur-[92px] animate-meditation-ambient-breathe motion-reduce:animate-none" />
-          <div className="absolute left-[-4%] top-[-2%] h-32 w-32 rounded-full bg-gold/[0.11] blur-[76px] animate-meditation-fog motion-reduce:animate-none" />
+          <div className="absolute right-[-4%] top-[7%] h-48 w-48 rounded-full bg-emerald-200/[0.06] blur-[92px] animate-meditation-ambient-breathe motion-reduce:animate-none" />
+          <div className="absolute left-[-4%] top-[-2%] h-32 w-32 rounded-full bg-gold/[0.08] blur-[76px] animate-meditation-fog motion-reduce:animate-none" />
           <div className="absolute right-[8%] top-[14%] h-24 w-24 rounded-full bg-white/[0.02] blur-[56px] animate-meditation-float motion-reduce:animate-none" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_86%_20%,rgba(126,162,171,0.14),transparent_19%),radial-gradient(circle_at_18%_0%,rgba(212,186,117,0.1),transparent_24%),linear-gradient(180deg,rgba(7,17,31,0.01),rgba(7,17,31,0.06)_16%,rgba(7,17,31,0.14)_56%,rgba(7,17,31,0.26))]" />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,12,22,0.01),rgba(4,12,22,0.05)_24%,rgba(4,12,22,0.16)_52%,rgba(4,12,22,0.3)_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_86%_20%,rgba(126,162,171,0.1),transparent_19%),radial-gradient(circle_at_18%_0%,rgba(212,186,117,0.08),transparent_24%),linear-gradient(180deg,rgba(7,17,31,0.01),rgba(7,17,31,0.05)_16%,rgba(7,17,31,0.12)_56%,rgba(7,17,31,0.22))]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,12,22,0.01),rgba(4,12,22,0.04)_24%,rgba(4,12,22,0.12)_52%,rgba(4,12,22,0.24)_100%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_68%,rgba(6,23,31,0.2),transparent_24%)]" />
         </div>
-        <div className="relative max-w-[18ch] sm:max-w-[44rem]">
-          <p className="text-sm uppercase tracking-[0.3em] text-gold/90">{copy.eyebrow}</p>
-          <h2 className="hero-measure keep-phrase mt-3 whitespace-pre-line font-serif text-[clamp(1.4rem,5.5vw,2.15rem)] leading-[1.22] text-white sm:max-w-[13ch] sm:text-[clamp(1.7rem,3.3vw,2.3rem)]">
+        <div className="relative max-w-[18ch] sm:max-w-[32rem]">
+          <p className="text-[0.68rem] uppercase tracking-[0.28em] text-gold/72 sm:text-[0.74rem] sm:tracking-[0.3em]">{copy.eyebrow}</p>
+          <h2 className="hero-measure keep-phrase mt-2 whitespace-pre-line font-serif text-[clamp(1.34rem,5.1vw,2rem)] leading-[1.18] text-white sm:max-w-[13ch] sm:text-[clamp(1.6rem,3vw,2.12rem)]">
             {copy.title}
           </h2>
-          <p className="body-measure keep-phrase mt-2 whitespace-pre-line text-[clamp(0.92rem,3.3vw,1rem)] leading-[1.7] text-white/62 sm:mt-3 sm:max-w-[20ch] sm:text-[1rem] sm:leading-[1.78]">
+          <p className="body-measure keep-phrase mt-1.5 whitespace-pre-line text-[clamp(0.9rem,3.1vw,0.98rem)] leading-[1.65] text-white/58 sm:mt-2 sm:max-w-[20ch] sm:text-[0.98rem] sm:leading-[1.72]">
             {copy.description}
           </p>
         </div>
         {copy.encouragement ? (
           <p className="relative mt-3 max-w-[16ch] text-[13px] leading-6 text-white/44 sm:mt-5 sm:max-w-none sm:text-sm sm:leading-7">{copy.encouragement}</p>
         ) : null}
-        <div className="relative mt-4 grid grid-cols-2 gap-2.5 sm:mt-5 sm:gap-3 lg:gap-4 xl:grid-cols-3">
+        <div className="relative mt-3.5 grid grid-cols-1 gap-2.5 sm:mt-4 sm:grid-cols-2 sm:gap-3 lg:gap-3.5 xl:grid-cols-3">
           {copy.gates.map((gate) => (
             <GateCard
               key={gate.key}
