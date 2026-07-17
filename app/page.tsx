@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAuthState } from "@/components/auth-provider";
 import { InstantMeditationSection } from "@/components/instant-meditation-section";
 import { ZeroGateSection } from "@/components/zero-gate-section";
-import { useLocaleCopy } from "@/lib/i18n";
+import { useLanguage, useLocaleCopy } from "@/lib/i18n";
 import { landingCopy } from "@/lib/landing-copy";
 
 const heroWindowVisual =
@@ -16,11 +16,11 @@ const homeCopy = {
   jp: {
     giftBanner: "あなたに、1分の休息が届きました。",
     hero: {
-      headline: "今日は、\n\nどんな回復が必要ですか？",
+      headline: "今日は、どんな回復が必要ですか？",
       subtitle: "Human Recovery Operating System",
-      description: "AI時代に、\n人間本来のリズムへ還る場所。",
+      description: "AI時代に、人間本来のリズムへ還る場所。",
       primaryCta: "1分リセットを始める",
-      secondaryCta: "7日間のリズム回復"
+      secondaryCta: "7日間の小さな回復"
     },
     recovery: {
       eyebrow: "Recovery First",
@@ -234,6 +234,7 @@ const chapterBackdropClasses: Record<JourneyChapterKey, string> = {
 
 export default function HomePage() {
   const router = useRouter();
+  const { language } = useLanguage();
   const { authResolved, isLoggedIn, memberState } = useAuthState();
   const landing = useLocaleCopy(landingCopy);
   const copy = useLocaleCopy(homeCopy);
@@ -505,6 +506,7 @@ export default function HomePage() {
     top: `${headerOffset}px`,
     paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))"
   } as const;
+  const isJapanese = language === "jp";
 
   return (
     <div className="relative overflow-hidden pb-24">
@@ -520,58 +522,65 @@ export default function HomePage() {
         </section>
       ) : null}
 
-      <section className="section-shell pt-6 sm:pt-8">
+      <section className="section-shell flex items-stretch py-3 sm:py-4" style={{ height: viewportSectionMinHeight }}>
         <div
-          className="relative overflow-hidden rounded-[44px] border border-white/9 bg-[linear-gradient(180deg,rgba(8,16,25,0.9),rgba(8,16,25,0.78))] px-6 py-7 shadow-[0_22px_90px_rgba(6,12,22,0.24)] sm:px-8 sm:py-9 lg:px-11 lg:py-10"
-          style={{ minHeight: viewportSectionMinHeight }}
+          className="relative flex h-full w-full overflow-hidden rounded-[36px] border border-white/7 bg-[linear-gradient(180deg,rgba(8,16,25,0.88),rgba(8,16,25,0.76))] px-5 py-5 shadow-[0_18px_72px_rgba(6,12,22,0.18)] sm:px-7 sm:py-7 lg:px-9 lg:py-8"
         >
           <div className="pointer-events-none absolute inset-0">
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,14,22,0.18),rgba(7,14,22,0.26)_48%,rgba(7,14,22,0.42))]" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,rgba(232,203,145,0.08),transparent_24%),radial-gradient(circle_at_72%_28%,rgba(236,216,170,0.06),transparent_28%)]" />
-            <div className="absolute left-[6%] top-[11%] h-36 w-36 rounded-full bg-[#e5c989]/[0.09] blur-[100px]" />
-            <div className="absolute right-[8%] top-[14%] h-44 w-44 rounded-full bg-[#cddbeb]/[0.08] blur-[118px]" />
-            <div className="absolute inset-x-[18%] top-[-8%] h-32 rounded-full bg-[#efd8a7]/[0.06] blur-[92px]" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,14,22,0.14),rgba(7,14,22,0.22)_48%,rgba(7,14,22,0.36))]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,rgba(232,203,145,0.06),transparent_24%),radial-gradient(circle_at_72%_28%,rgba(236,216,170,0.04),transparent_28%)]" />
+            <div className="absolute left-[6%] top-[11%] h-32 w-32 rounded-full bg-[#e5c989]/[0.07] blur-[94px]" />
+            <div className="absolute right-[8%] top-[14%] h-40 w-40 rounded-full bg-[#cddbeb]/[0.06] blur-[110px]" />
           </div>
 
-          <div className="relative z-10 grid gap-8 lg:grid-cols-[minmax(0,0.98fr)_minmax(0,1.02fr)] lg:items-center lg:gap-10">
-            <div className="max-w-[38rem]">
-              <p className="text-sm font-medium uppercase tracking-[0.26em] text-[#d8c08a]/78 sm:text-[0.95rem]">
+          <div className="relative z-10 grid h-full gap-6 md:gap-7 lg:grid-cols-[minmax(0,1.27fr)_minmax(0,1fr)] lg:items-center lg:gap-9">
+            <div className="flex min-w-0 flex-col justify-center">
+              <p className="text-[0.72rem] font-medium uppercase tracking-[0.24em] text-[#d8c08a]/76 sm:text-[0.82rem]">
                 {copy.hero.subtitle}
               </p>
-              <h1 className="mt-5 whitespace-pre-line text-balance font-serif text-[clamp(3.35rem,5.4vw,5.75rem)] leading-[1.12] tracking-[-0.03em] text-white">
-                {copy.hero.headline}
+              <h1 className="mt-4 font-serif text-[clamp(3rem,4.5vw,5.4rem)] font-normal leading-[1.14] tracking-[-0.025em] text-white sm:mt-5">
+                {isJapanese ? (
+                  <>
+                    <span className="block">今日は、</span>
+                    <span className="mt-[0.16em] block whitespace-normal">
+                      <span className="inline-block whitespace-nowrap">どんな回復が</span>
+                      <span className="inline-block whitespace-nowrap md:ml-[0.22em]">必要ですか？</span>
+                    </span>
+                  </>
+                ) : (
+                  <span className="block whitespace-pre-line">{copy.hero.headline}</span>
+                )}
               </h1>
-              <p className="mt-6 max-w-[28rem] whitespace-pre-line text-pretty text-base leading-9 text-white/68 sm:text-lg sm:leading-9">
+              <p className="mt-5 max-w-[31rem] text-[15px] leading-7 text-white/66 sm:text-base sm:leading-8">
                 {copy.hero.description}
               </p>
 
-              <div className="mt-8 flex w-full flex-col items-stretch gap-3.5 sm:max-w-[34rem] sm:flex-row sm:flex-wrap sm:items-center">
+              <div className="mt-7 flex w-full flex-col items-stretch gap-3 sm:max-w-[33rem] sm:mt-8 sm:flex-row sm:flex-wrap sm:items-center">
                 <button
                   type="button"
                   onClick={scrollToRecovery}
-                  className="inline-flex min-h-[56px] items-center justify-center rounded-[18px] border border-[#f3e4bc]/44 bg-[#e8d5a6] px-5.5 py-3.5 text-sm font-semibold text-[#132030] shadow-[0_14px_28px_rgba(212,186,117,0.12)] transition duration-200 hover:brightness-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f0ddb0] focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d] sm:min-w-[13.4rem]"
+                  className="inline-flex min-h-[54px] items-center justify-center rounded-[17px] border border-[#f3e4bc]/38 bg-[#e4d1a0] px-5 py-3 text-sm font-semibold text-[#132030] shadow-[0_12px_24px_rgba(212,186,117,0.1)] transition duration-200 hover:brightness-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f0ddb0] focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d] sm:min-w-[12.3rem]"
                 >
                   {copy.hero.primaryCta}
                 </button>
                 <Link
                   href="/rhythm-journey"
-                  className="inline-flex min-h-[56px] items-center justify-center rounded-[18px] border border-[#d8c08a]/24 bg-[#0d1721]/66 px-5.5 py-3.5 text-sm font-semibold text-white/86 transition duration-200 hover:border-[#d8c08a]/38 hover:bg-[#101b26]/92 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d8c08a]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d] sm:min-w-[13rem]"
+                  className="inline-flex min-h-[54px] items-center justify-center rounded-[17px] border border-white/16 bg-transparent px-5 py-3 text-sm font-medium text-white/82 transition duration-200 hover:border-[#d8c08a]/34 hover:bg-white/[0.03] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d8c08a]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d] sm:min-w-[12rem]"
                 >
                   {copy.hero.secondaryCta}
                 </Link>
               </div>
             </div>
 
-            <div className="relative overflow-hidden rounded-[38px] border border-white/10 bg-[#0b1620]/74 p-2 shadow-[0_20px_72px_rgba(4,10,18,0.2)]">
-              <div className="pointer-events-none absolute inset-x-[10%] top-0 h-8 rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,0.18),rgba(255,255,255,0))] opacity-40 blur-xl" />
-              <div className="relative overflow-hidden rounded-[31px] border border-white/8 bg-[#0b1620]">
+            <div className="relative min-h-0 overflow-hidden rounded-[30px] border border-white/7 bg-[#0b1620]/56 p-1.5 shadow-[0_18px_54px_rgba(4,10,18,0.14)]">
+              <div className="relative overflow-hidden rounded-[26px] bg-[#0b1620]">
                 <img
                   src={heroWindowVisual}
                   alt=""
                   aria-hidden="true"
-                  className="h-[16.5rem] w-full object-cover object-center opacity-[0.95] brightness-[0.93] contrast-[0.95] saturate-[0.9] sepia-[0.04] sm:h-[19.5rem] lg:h-[27rem]"
+                  className="h-[13.8rem] w-full object-cover object-center opacity-[0.93] brightness-[0.9] contrast-[0.94] saturate-[0.88] sepia-[0.03] sm:h-[16rem] md:h-[18.5rem] lg:h-[22.5rem]"
                 />
-                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(8,17,26,0.18),rgba(8,17,26,0.05)_26%,rgba(8,17,26,0.14)_100%),linear-gradient(180deg,rgba(4,11,18,0.08),rgba(4,11,18,0.18)_46%,rgba(4,11,18,0.26)_100%),radial-gradient(circle_at_24%_20%,rgba(244,220,173,0.12),transparent_24%),radial-gradient(circle_at_70%_32%,rgba(237,212,160,0.07),transparent_28%)]" />
+                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(8,17,26,0.18),rgba(8,17,26,0.06)_30%,rgba(8,17,26,0.14)_100%),linear-gradient(180deg,rgba(4,11,18,0.08),rgba(4,11,18,0.16)_46%,rgba(4,11,18,0.24)_100%),radial-gradient(circle_at_24%_20%,rgba(244,220,173,0.08),transparent_24%),radial-gradient(circle_at_70%_32%,rgba(237,212,160,0.05),transparent_28%)]" />
               </div>
             </div>
           </div>
