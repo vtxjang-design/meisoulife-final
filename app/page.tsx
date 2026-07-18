@@ -922,9 +922,6 @@ export default function HomePage() {
                     >
                       {activeChapter.headline}
                     </h2>
-                    <p className="mt-5 hidden max-w-[29rem] whitespace-pre-line text-pretty text-base leading-8 text-white/64 sm:block">
-                      {chapterSupportingText}
-                    </p>
 
                     {activeChapter.key === "hros" ? (
                       <div className="mt-6 sm:mt-8">
@@ -992,7 +989,7 @@ export default function HomePage() {
                       aria-hidden="true"
                     />
                     <div className="relative flex min-h-[7.8rem] w-full max-w-[13.5rem] flex-col justify-end pt-[4rem] sm:min-h-[18.5rem] sm:max-w-[21rem] sm:pt-[8.8rem] lg:min-h-[21rem] lg:max-w-[23rem] lg:pt-[9.6rem]">
-                      <p className="mt-2 max-w-[13.5rem] whitespace-pre-line text-center text-[15px] leading-[1.62] text-white/62 sm:hidden">
+                      <p className="mx-auto mt-2 w-[86%] max-w-[13.5rem] whitespace-pre-line text-center text-[15px] leading-[1.62] text-white/62 sm:hidden">
                         {chapterSupportingText}
                       </p>
                       <p className="hidden max-w-[18rem] text-sm leading-7 text-white/60 sm:block sm:text-[15px] sm:leading-7 lg:max-w-[19rem]">
@@ -1074,14 +1071,16 @@ export default function HomePage() {
                       ))}
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={activeChapterIndex === chapterSequence.length - 1 ? closeChapterJourney : goToNextChapter}
-                      className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-white/[0.05] px-5 py-2.5 text-sm font-medium text-white/86 transition hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
-                      aria-label={copy.chapters.next}
-                    >
-                      {activeChapterIndex === chapterSequence.length - 1 ? copy.chapters.close : copy.chapters.next}
-                    </button>
+                    {isFinalChapter ? <div aria-hidden="true" className="min-w-[7rem]" /> : (
+                      <button
+                        type="button"
+                        onClick={goToNextChapter}
+                        className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-white/[0.05] px-5 py-2.5 text-sm font-medium text-white/86 transition hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
+                        aria-label={copy.chapters.next}
+                      >
+                        {copy.chapters.next}
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
