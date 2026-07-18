@@ -914,7 +914,7 @@ export default function HomePage() {
                 </div>
 
                 <div className="grid flex-1 gap-4 sm:gap-8 lg:grid-cols-[minmax(0,0.74fr)_minmax(0,0.26fr)] lg:items-end lg:gap-9">
-                  <div className="flex min-h-0 max-w-[42rem] flex-col justify-start lg:justify-end">
+                  <div className="flex min-h-0 max-w-[42rem] flex-col justify-start lg:-translate-y-[5.5vh] lg:justify-end">
                     <h2
                       ref={chapterHeadingRef}
                       tabIndex={-1}
@@ -959,7 +959,7 @@ export default function HomePage() {
                     ) : null}
                   </div>
 
-                  <div className="relative mt-2 self-center lg:mt-0 lg:self-end">
+                  <div className="relative mt-2 self-center lg:mt-0 lg:self-end lg:-translate-y-[3.5vh]">
                     <div
                       className={`pointer-events-none absolute left-1/2 top-0 h-[clamp(6.2rem,18vw,11.5rem)] w-[clamp(6.2rem,18vw,11.5rem)] -translate-x-1/2 rounded-full opacity-80 blur-[1px] sm:h-[clamp(11.5rem,24vw,16.25rem)] sm:w-[clamp(11.5rem,24vw,16.25rem)] sm:opacity-90 sm:blur-[2px] ${
                         activeChapterLight?.fieldClassName ?? ""
