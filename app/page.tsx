@@ -396,6 +396,59 @@ const chapterBackdropClasses: Record<JourneyChapterKey, string> = {
     "bg-[radial-gradient(circle_at_52%_18%,rgba(236,214,162,0.11),transparent_28%),linear-gradient(180deg,rgba(8,17,27,0.92),rgba(8,17,27,0.82))]"
 };
 
+const chapterLightVisuals: Record<
+  JourneyChapterKey,
+  {
+    fieldClassName: string;
+    coreClassName: string;
+    innerGlowClassName: string;
+    outerGlowClassName: string;
+  }
+> = {
+  recovery: {
+    fieldClassName:
+      "bg-[radial-gradient(circle_at_58%_40%,rgba(244,230,194,0.18),transparent_18%),radial-gradient(circle_at_50%_46%,rgba(221,197,137,0.12),transparent_34%),radial-gradient(circle_at_54%_48%,rgba(98,121,140,0.18),transparent_68%)]",
+    coreClassName: "bg-[radial-gradient(circle,rgba(250,244,226,0.8),rgba(240,224,182,0.26)_42%,transparent_76%)]",
+    innerGlowClassName: "bg-[radial-gradient(circle,rgba(225,202,147,0.28),rgba(225,202,147,0.08)_48%,transparent_82%)]",
+    outerGlowClassName: "bg-[radial-gradient(circle,rgba(88,109,129,0.26),rgba(88,109,129,0.08)_54%,transparent_88%)]"
+  },
+  rhythm: {
+    fieldClassName:
+      "bg-[radial-gradient(circle_at_56%_42%,rgba(240,236,225,0.14),transparent_18%),radial-gradient(circle_at_50%_46%,rgba(170,191,214,0.14),transparent_34%),radial-gradient(circle_at_56%_50%,rgba(95,122,147,0.18),transparent_68%)]",
+    coreClassName: "bg-[radial-gradient(circle,rgba(243,246,248,0.74),rgba(217,226,234,0.2)_44%,transparent_76%)]",
+    innerGlowClassName: "bg-[radial-gradient(circle,rgba(174,196,214,0.24),rgba(174,196,214,0.08)_50%,transparent_82%)]",
+    outerGlowClassName: "bg-[radial-gradient(circle,rgba(84,110,138,0.28),rgba(84,110,138,0.09)_56%,transparent_90%)]"
+  },
+  awakening: {
+    fieldClassName:
+      "bg-[radial-gradient(circle_at_58%_38%,rgba(247,238,207,0.18),transparent_18%),radial-gradient(circle_at_50%_46%,rgba(229,198,125,0.13),transparent_32%),radial-gradient(circle_at_55%_52%,rgba(108,122,138,0.16),transparent_68%)]",
+    coreClassName: "bg-[radial-gradient(circle,rgba(250,245,226,0.82),rgba(240,223,176,0.28)_42%,transparent_76%)]",
+    innerGlowClassName: "bg-[radial-gradient(circle,rgba(226,196,126,0.27),rgba(226,196,126,0.08)_48%,transparent_82%)]",
+    outerGlowClassName: "bg-[radial-gradient(circle,rgba(86,101,118,0.24),rgba(86,101,118,0.08)_56%,transparent_90%)]"
+  },
+  hros: {
+    fieldClassName:
+      "bg-[radial-gradient(circle_at_56%_40%,rgba(242,231,199,0.16),transparent_18%),radial-gradient(circle_at_50%_46%,rgba(212,186,117,0.13),transparent_34%),radial-gradient(circle_at_56%_52%,rgba(80,104,124,0.18),transparent_70%)]",
+    coreClassName: "bg-[radial-gradient(circle,rgba(247,241,223,0.78),rgba(235,214,166,0.24)_42%,transparent_76%)]",
+    innerGlowClassName: "bg-[radial-gradient(circle,rgba(214,189,130,0.26),rgba(214,189,130,0.08)_48%,transparent_82%)]",
+    outerGlowClassName: "bg-[radial-gradient(circle,rgba(78,100,122,0.26),rgba(78,100,122,0.08)_56%,transparent_90%)]"
+  },
+  coexistence: {
+    fieldClassName:
+      "bg-[radial-gradient(circle_at_58%_40%,rgba(243,235,210,0.16),transparent_18%),radial-gradient(circle_at_50%_46%,rgba(203,188,150,0.12),transparent_32%),radial-gradient(circle_at_54%_50%,rgba(94,118,132,0.18),transparent_68%)]",
+    coreClassName: "bg-[radial-gradient(circle,rgba(248,243,228,0.78),rgba(231,216,184,0.22)_42%,transparent_76%)]",
+    innerGlowClassName: "bg-[radial-gradient(circle,rgba(214,198,156,0.24),rgba(214,198,156,0.08)_48%,transparent_82%)]",
+    outerGlowClassName: "bg-[radial-gradient(circle,rgba(89,111,126,0.26),rgba(89,111,126,0.08)_56%,transparent_90%)]"
+  },
+  doorway: {
+    fieldClassName:
+      "bg-[radial-gradient(circle_at_58%_38%,rgba(246,236,207,0.18),transparent_18%),radial-gradient(circle_at_50%_46%,rgba(223,196,134,0.14),transparent_32%),radial-gradient(circle_at_56%_52%,rgba(91,112,128,0.18),transparent_70%)]",
+    coreClassName: "bg-[radial-gradient(circle,rgba(248,243,228,0.8),rgba(236,214,162,0.26)_42%,transparent_76%)]",
+    innerGlowClassName: "bg-[radial-gradient(circle,rgba(224,197,136,0.28),rgba(224,197,136,0.08)_48%,transparent_82%)]",
+    outerGlowClassName: "bg-[radial-gradient(circle,rgba(84,106,123,0.28),rgba(84,106,123,0.08)_56%,transparent_90%)]"
+  }
+};
+
 export default function HomePage() {
   const router = useRouter();
   const { language } = useLanguage();
@@ -691,6 +744,7 @@ export default function HomePage() {
   ] as const;
 
   const activeChapter = activeChapterIndex === null ? null : chapterSequence[activeChapterIndex];
+  const activeChapterLight = activeChapter ? chapterLightVisuals[activeChapter.key] : null;
   const viewportSectionMinHeight = `calc(100dvh - ${headerOffset}px)`;
   const chapterOverlayStyle = {
     top: `${headerOffset}px`,
@@ -877,9 +931,33 @@ export default function HomePage() {
                     ) : null}
                   </div>
 
-                  <div className="self-end rounded-[28px] border border-white/7 bg-white/[0.03] px-5 py-5 shadow-[0_18px_54px_rgba(5,12,24,0.1)] sm:rounded-[32px] sm:px-6">
-                    <div className="h-20 rounded-[24px] bg-[radial-gradient(circle_at_50%_50%,rgba(240,221,176,0.18),rgba(240,221,176,0.02)_48%,transparent_72%)]" />
-                    <p className="mt-5 text-sm leading-7 text-white/58">
+                  <div className="relative self-center lg:self-end">
+                    <div
+                      className={`pointer-events-none absolute left-1/2 top-0 h-[clamp(11.5rem,24vw,16.25rem)] w-[clamp(11.5rem,24vw,16.25rem)] -translate-x-1/2 rounded-full opacity-90 blur-[2px] ${
+                        activeChapterLight?.fieldClassName ?? ""
+                      } ${prefersReducedMotion ? "" : "animate-[meditation-ambient-breathe_10s_ease-in-out_infinite]"}`}
+                      aria-hidden="true"
+                    />
+                    <div
+                      className={`pointer-events-none absolute left-1/2 top-[14%] h-[clamp(3.1rem,7vw,4.4rem)] w-[clamp(3.1rem,7vw,4.4rem)] -translate-x-1/2 rounded-full ${
+                        activeChapterLight?.coreClassName ?? ""
+                      } ${prefersReducedMotion ? "" : "animate-[meditation-soft-pulse_7.4s_ease-in-out_infinite]"}`}
+                      aria-hidden="true"
+                    />
+                    <div
+                      className={`pointer-events-none absolute left-1/2 top-[6%] h-[clamp(8.8rem,18vw,12.4rem)] w-[clamp(8.8rem,18vw,12.4rem)] -translate-x-1/2 rounded-full blur-[34px] ${
+                        activeChapterLight?.innerGlowClassName ?? ""
+                      }`}
+                      aria-hidden="true"
+                    />
+                    <div
+                      className={`pointer-events-none absolute left-1/2 top-[-8%] h-[clamp(18rem,34vw,28rem)] w-[clamp(18rem,34vw,28rem)] -translate-x-1/2 rounded-full blur-[72px] sm:blur-[88px] ${
+                        activeChapterLight?.outerGlowClassName ?? ""
+                      }`}
+                      aria-hidden="true"
+                    />
+                    <div className="relative flex min-h-[17.5rem] w-full max-w-[20rem] flex-col justify-end pt-[8.2rem] sm:min-h-[18.5rem] sm:max-w-[21rem] sm:pt-[8.8rem] lg:min-h-[21rem] lg:max-w-[23rem] lg:pt-[9.6rem]">
+                      <p className="max-w-[17rem] text-sm leading-7 text-white/60 sm:max-w-[18rem] sm:text-[15px] sm:leading-7 lg:max-w-[19rem]">
                       {activeChapter.key === "recovery"
                         ? copy.recovery.description
                         : activeChapter.key === "rhythm"
@@ -889,9 +967,10 @@ export default function HomePage() {
                             : activeChapter.key === "hros"
                               ? copy.chapters.hros.supporting
                               : activeChapter.key === "coexistence"
-                                ? copy.chapters.coexistence.supporting
-                                : copy.chapters.doorway.supporting}
-                    </p>
+                              ? copy.chapters.coexistence.supporting
+                              : copy.chapters.doorway.supporting}
+                      </p>
+                    </div>
                   </div>
                 </div>
 
