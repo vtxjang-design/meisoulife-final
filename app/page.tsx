@@ -278,6 +278,18 @@ function getRecoveryDescriptionClass(language: "jp" | "kr" | "en") {
   return "mt-3 max-w-[20rem] whitespace-pre-line text-[14px] leading-7 text-white/62 sm:mt-4 sm:max-w-[23rem] sm:text-[15px] sm:leading-8";
 }
 
+function getChapterHeadlineClass(language: "jp" | "kr" | "en") {
+  if (language === "kr") {
+    return "whitespace-pre-line font-serif text-[clamp(2.05rem,8.7vw,3.18rem)] leading-[1.08] tracking-[-0.026em] text-white focus:outline-none sm:text-[clamp(2.5rem,5.2vw,5rem)] sm:leading-[1.12] sm:tracking-[-0.03em]";
+  }
+
+  if (language === "jp") {
+    return "whitespace-pre-line font-serif text-[clamp(2rem,8.3vw,3.08rem)] leading-[1.1] tracking-[-0.024em] text-white focus:outline-none sm:text-[clamp(2.5rem,5.2vw,5rem)] sm:leading-[1.12] sm:tracking-[-0.03em]";
+  }
+
+  return "whitespace-pre-line font-serif text-[clamp(1.95rem,8vw,3rem)] leading-[1.06] tracking-[-0.026em] text-white focus:outline-none sm:text-[clamp(2.5rem,5.2vw,5rem)] sm:leading-[1.12] sm:tracking-[-0.03em]";
+}
+
 function SectionHeader({
   eyebrow,
   title,
@@ -862,12 +874,12 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-[#07111a]" aria-hidden="true" />
           <section
             id="chapter-journey"
-            className="section-shell relative flex h-full items-center py-4 sm:py-5"
+            className="section-shell relative flex h-full items-center py-3 sm:py-5"
             aria-label={`${copy.chapters.position} ${activeChapterIndex! + 1}`}
           >
             <div
               key={activeChapter.key}
-              className={`flex h-full w-full flex-col overflow-x-hidden overflow-y-auto rounded-[34px] border border-white/7 px-5 py-5 shadow-[0_20px_72px_rgba(6,12,22,0.18)] sm:overflow-hidden sm:rounded-[38px] sm:px-7 sm:py-7 lg:px-10 lg:py-9 ${
+              className={`flex h-full w-full flex-col overflow-x-hidden overflow-y-auto rounded-[32px] border border-white/7 px-4 py-4 shadow-[0_20px_72px_rgba(6,12,22,0.18)] sm:overflow-hidden sm:rounded-[38px] sm:px-7 sm:py-7 lg:px-10 lg:py-9 ${
                 chapterBackdropClasses[activeChapter.key]
               } ${prefersReducedMotion ? "" : "animate-[chapterFade_420ms_ease-out]"}`}
               style={{ height: `calc(100dvh - ${headerOffset}px - 2rem)` }}
@@ -875,37 +887,41 @@ export default function HomePage() {
               <div className="pointer-events-none absolute opacity-0" aria-live="polite">
                 {`${copy.chapters.position} ${activeChapterIndex! + 1} / ${chapterSequence.length}`}
               </div>
-              <div className="flex h-full flex-col gap-8 sm:gap-10 lg:justify-between">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="space-y-3">
-                    <p className="text-[11px] uppercase tracking-[0.34em] text-[#d8c08a]/72">{activeChapter.identity}</p>
+              <div className="flex h-full flex-col gap-6 sm:gap-10 lg:justify-between">
+                <div className="flex items-start justify-between gap-3 sm:gap-4">
+                  <div className="min-w-0 space-y-2 sm:space-y-3">
+                    <p className="max-w-[11rem] text-[10px] uppercase tracking-[0.28em] text-[#d8c08a]/72 sm:max-w-none sm:text-[11px] sm:tracking-[0.34em]">
+                      {activeChapter.identity}
+                    </p>
                     {"label" in activeChapter ? (
-                      <p className="text-sm tracking-[0.16em] text-white/54">{activeChapter.label}</p>
+                      <p className="max-w-[12rem] text-[12px] leading-5 tracking-[0.14em] text-white/54 sm:max-w-none sm:text-sm sm:tracking-[0.16em]">
+                        {activeChapter.label}
+                      </p>
                     ) : null}
                   </div>
-                  <p className="rounded-full border border-white/8 bg-white/[0.04] px-3 py-1.5 text-[11px] uppercase tracking-[0.24em] text-white/52">
+                  <p className="shrink-0 whitespace-nowrap rounded-full border border-white/8 bg-white/[0.04] px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-white/52 sm:px-3 sm:py-1.5 sm:text-[11px] sm:tracking-[0.24em]">
                     {`${copy.chapters.position} ${activeChapterIndex! + 1} / ${chapterSequence.length}`}
                   </p>
                 </div>
 
-                <div className="grid flex-1 gap-8 lg:grid-cols-[minmax(0,0.74fr)_minmax(0,0.26fr)] lg:items-end lg:gap-9">
-                  <div className="flex min-h-0 flex-col justify-end max-w-[42rem]">
+                <div className="grid flex-1 gap-4 sm:gap-8 lg:grid-cols-[minmax(0,0.74fr)_minmax(0,0.26fr)] lg:items-end lg:gap-9">
+                  <div className="flex min-h-0 max-w-[42rem] flex-col justify-start lg:justify-end">
                     <h2
                       ref={chapterHeadingRef}
                       tabIndex={-1}
-                      className="whitespace-pre-line text-balance font-serif text-[clamp(2.5rem,5.2vw,5rem)] leading-[1.12] tracking-[-0.03em] text-white focus:outline-none"
+                      className={getChapterHeadlineClass(language)}
                     >
                       {activeChapter.headline}
                     </h2>
-                    <p className="mt-5 max-w-[29rem] whitespace-pre-line text-pretty text-[15px] leading-7 text-white/64 sm:text-base sm:leading-8">
+                    <p className="mt-4 max-w-[19rem] whitespace-pre-line text-pretty text-[15px] leading-[1.62] text-white/64 sm:mt-5 sm:max-w-[29rem] sm:text-base sm:leading-8">
                       {activeChapter.supporting}
                     </p>
 
                     {activeChapter.key === "hros" ? (
-                      <div className="mt-8">
+                      <div className="mt-6 sm:mt-8">
                         <Link
                           href="/brain-education"
-                          className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-white/[0.04] px-6 py-3 text-sm font-medium text-white/82 transition hover:bg-white/[0.06] hover:text-white"
+                          className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-white/[0.04] px-5 py-2.5 text-sm font-medium text-white/82 transition hover:bg-white/[0.06] hover:text-white sm:min-h-[54px] sm:px-6 sm:py-3"
                         >
                           {copy.chapters.exploreHros}
                         </Link>
@@ -913,23 +929,23 @@ export default function HomePage() {
                     ) : null}
 
                     {activeChapter.key === "doorway" ? (
-                      <div className="mt-8 flex flex-col gap-3 sm:max-w-[28rem]">
+                      <div className="mt-6 flex flex-col gap-2.5 sm:mt-8 sm:max-w-[28rem] sm:gap-3">
                         <Link
                           href="/rhythm-journey"
-                          className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-white/[0.04] px-6 py-3 text-sm font-medium text-white/84 transition hover:bg-white/[0.06]"
+                          className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-white/[0.04] px-5 py-2.5 text-sm font-medium text-white/84 transition hover:bg-white/[0.06] sm:min-h-[54px] sm:px-6 sm:py-3"
                         >
                           {copy.chapters.doorway.recoveryCta}
                         </Link>
                         <Link
                           href="/brain-education"
-                          className="inline-flex min-h-[54px] items-center justify-center rounded-full border border-white/10 bg-transparent px-6 py-3 text-sm font-medium text-white/72 transition hover:border-white/16 hover:bg-white/[0.04] hover:text-white/86"
+                          className="inline-flex min-h-[50px] items-center justify-center rounded-full border border-white/10 bg-transparent px-5 py-2.5 text-sm font-medium text-white/72 transition hover:border-white/16 hover:bg-white/[0.04] hover:text-white/86 sm:min-h-[54px] sm:px-6 sm:py-3"
                         >
                           {copy.chapters.doorway.libraryCta}
                         </Link>
                         <button
                           type="button"
                           onClick={handleBasicJourneyCta}
-                          className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f0ddb0_0%,#dcc086_56%,#caa160_100%)] px-6 py-3 text-sm font-semibold text-[#16202b] shadow-[0_16px_34px_rgba(212,186,117,0.16)] transition hover:brightness-[1.03]"
+                          className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f0ddb0_0%,#dcc086_56%,#caa160_100%)] px-5 py-2.5 text-sm font-semibold text-[#16202b] shadow-[0_16px_34px_rgba(212,186,117,0.16)] transition hover:brightness-[1.03] sm:min-h-[54px] sm:px-6 sm:py-3"
                         >
                           {copy.chapters.doorway.basicCta}
                         </button>
@@ -937,33 +953,33 @@ export default function HomePage() {
                     ) : null}
                   </div>
 
-                  <div className="relative self-center lg:self-end">
+                  <div className="relative mt-1 self-center lg:mt-0 lg:self-end">
                     <div
-                      className={`pointer-events-none absolute left-1/2 top-0 h-[clamp(11.5rem,24vw,16.25rem)] w-[clamp(11.5rem,24vw,16.25rem)] -translate-x-1/2 rounded-full opacity-90 blur-[2px] ${
+                      className={`pointer-events-none absolute left-1/2 top-0 h-[clamp(6.2rem,18vw,11.5rem)] w-[clamp(6.2rem,18vw,11.5rem)] -translate-x-1/2 rounded-full opacity-90 blur-[1px] sm:h-[clamp(11.5rem,24vw,16.25rem)] sm:w-[clamp(11.5rem,24vw,16.25rem)] sm:blur-[2px] ${
                         activeChapterLight?.fieldClassName ?? ""
                       } ${prefersReducedMotion ? "" : "animate-[meditation-ambient-breathe_10s_ease-in-out_infinite]"}`}
                       aria-hidden="true"
                     />
                     <div
-                      className={`pointer-events-none absolute left-1/2 top-[14%] h-[clamp(3.1rem,7vw,4.4rem)] w-[clamp(3.1rem,7vw,4.4rem)] -translate-x-1/2 rounded-full ${
+                      className={`pointer-events-none absolute left-1/2 top-[16%] h-[clamp(2rem,6vw,3.1rem)] w-[clamp(2rem,6vw,3.1rem)] -translate-x-1/2 rounded-full sm:top-[14%] sm:h-[clamp(3.1rem,7vw,4.4rem)] sm:w-[clamp(3.1rem,7vw,4.4rem)] ${
                         activeChapterLight?.coreClassName ?? ""
                       } ${prefersReducedMotion ? "" : "animate-[meditation-soft-pulse_7.4s_ease-in-out_infinite]"}`}
                       aria-hidden="true"
                     />
                     <div
-                      className={`pointer-events-none absolute left-1/2 top-[6%] h-[clamp(8.8rem,18vw,12.4rem)] w-[clamp(8.8rem,18vw,12.4rem)] -translate-x-1/2 rounded-full blur-[34px] ${
+                      className={`pointer-events-none absolute left-1/2 top-[8%] h-[clamp(4.8rem,14vw,8.8rem)] w-[clamp(4.8rem,14vw,8.8rem)] -translate-x-1/2 rounded-full blur-[18px] sm:top-[6%] sm:h-[clamp(8.8rem,18vw,12.4rem)] sm:w-[clamp(8.8rem,18vw,12.4rem)] sm:blur-[34px] ${
                         activeChapterLight?.innerGlowClassName ?? ""
                       }`}
                       aria-hidden="true"
                     />
                     <div
-                      className={`pointer-events-none absolute left-1/2 top-[-8%] h-[clamp(18rem,34vw,28rem)] w-[clamp(18rem,34vw,28rem)] -translate-x-1/2 rounded-full blur-[72px] sm:blur-[88px] ${
+                      className={`pointer-events-none absolute left-1/2 top-[-10%] h-[clamp(9rem,24vw,18rem)] w-[clamp(9rem,24vw,18rem)] -translate-x-1/2 rounded-full blur-[32px] sm:top-[-8%] sm:h-[clamp(18rem,34vw,28rem)] sm:w-[clamp(18rem,34vw,28rem)] sm:blur-[88px] ${
                         activeChapterLight?.outerGlowClassName ?? ""
                       }`}
                       aria-hidden="true"
                     />
-                    <div className="relative flex min-h-[17.5rem] w-full max-w-[20rem] flex-col justify-end pt-[8.2rem] sm:min-h-[18.5rem] sm:max-w-[21rem] sm:pt-[8.8rem] lg:min-h-[21rem] lg:max-w-[23rem] lg:pt-[9.6rem]">
-                      <p className="max-w-[17rem] text-sm leading-7 text-white/60 sm:max-w-[18rem] sm:text-[15px] sm:leading-7 lg:max-w-[19rem]">
+                    <div className="relative flex min-h-[7.2rem] w-full max-w-[12rem] flex-col justify-end pt-[3.8rem] sm:min-h-[18.5rem] sm:max-w-[21rem] sm:pt-[8.8rem] lg:min-h-[21rem] lg:max-w-[23rem] lg:pt-[9.6rem]">
+                      <p className="hidden max-w-[18rem] text-sm leading-7 text-white/60 sm:block sm:text-[15px] sm:leading-7 lg:max-w-[19rem]">
                       {activeChapter.key === "recovery"
                         ? copy.recovery.description
                         : activeChapter.key === "rhythm"
