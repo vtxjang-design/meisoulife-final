@@ -69,8 +69,8 @@ export function ZeroGateSection({ onEnterGate }: ZeroGateSectionProps) {
   const copy = useLocaleCopy(zeroGateCopy);
 
   return (
-    <section id="zero-gate" className="section-shell mt-4 scroll-mt-24 sm:mt-5">
-      <div className="relative overflow-hidden rounded-[24px] border border-white/4 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.05),transparent_22%),radial-gradient(circle_at_82%_20%,rgba(107,168,159,0.05),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01))] px-3.5 py-4.5 shadow-[0_8px_22px_rgba(7,17,31,0.08)] sm:rounded-[28px] sm:px-5 sm:py-5.5 sm:shadow-[0_12px_32px_rgba(7,17,31,0.1)] lg:px-6 lg:py-6">
+    <section id="zero-gate" className="mt-1 scroll-mt-24 sm:mt-5">
+      <div className="relative overflow-visible rounded-[22px] border border-white/[0.035] bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.04),transparent_22%),radial-gradient(circle_at_82%_20%,rgba(107,168,159,0.04),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01))] px-3 py-3.5 shadow-[0_8px_20px_rgba(7,17,31,0.07)] sm:overflow-hidden sm:rounded-[28px] sm:border-white/4 sm:px-5 sm:py-5.5 sm:shadow-[0_12px_32px_rgba(7,17,31,0.1)] lg:px-6 lg:py-6">
         <div className="pointer-events-none absolute inset-0 sm:hidden">
           <div className="absolute right-[-4%] top-[7%] h-48 w-48 rounded-full bg-emerald-200/[0.06] blur-[92px] animate-meditation-ambient-breathe motion-reduce:animate-none" />
           <div className="absolute left-[-4%] top-[-2%] h-32 w-32 rounded-full bg-gold/[0.08] blur-[76px] animate-meditation-fog motion-reduce:animate-none" />
@@ -91,7 +91,7 @@ export function ZeroGateSection({ onEnterGate }: ZeroGateSectionProps) {
         {copy.encouragement ? (
           <p className="relative mt-3 max-w-[16ch] text-[13px] leading-6 text-white/44 sm:mt-5 sm:max-w-none sm:text-sm sm:leading-7">{copy.encouragement}</p>
         ) : null}
-        <div className="relative mt-3.5 grid grid-cols-1 gap-2.5 sm:mt-4 sm:grid-cols-2 sm:gap-3 lg:gap-3.5 xl:grid-cols-3">
+        <div className="relative mt-3 grid grid-cols-1 gap-3 sm:mt-4 sm:grid-cols-2 sm:gap-3 lg:gap-3.5 xl:grid-cols-3">
           {copy.gates.map((gate) => (
             <GateCard
               key={gate.key}

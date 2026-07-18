@@ -460,6 +460,7 @@ export default function HomePage() {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [headerOffset, setHeaderOffset] = useState(112);
   const chapterHeadingRef = useRef<HTMLHeadingElement | null>(null);
+  const recoveryScrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -615,6 +616,7 @@ export default function HomePage() {
       return;
     }
 
+    recoveryScrollRef.current?.scrollTo({ top: 0, behavior: "auto" });
     document.getElementById("homepage-recovery")?.scrollIntoView({
       behavior: prefersReducedMotion ? "auto" : "smooth",
       block: "start"
@@ -651,6 +653,7 @@ export default function HomePage() {
     setActiveChapterIndex(null);
     if (typeof window !== "undefined") {
       window.setTimeout(() => {
+        recoveryScrollRef.current?.scrollTo({ top: 0, behavior: "auto" });
         scrollToSection("homepage-recovery");
       }, prefersReducedMotion ? 0 : 80);
     }
@@ -810,25 +813,28 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="homepage-recovery" className="pt-12 sm:pt-15">
+      <section
+        id="homepage-recovery"
+        className="relative overflow-hidden bg-[#08121b] pt-8 sm:pt-15"
+        style={{ minHeight: viewportSectionMinHeight }}
+      >
         <div className="section-shell">
-          <SectionHeader
-            eyebrow={copy.recovery.eyebrow}
-            title={renderRecoveryHeadline(language)}
-            description={copy.recovery.description}
-            language={language}
-          />
-        </div>
-        <div className="section-shell mt-4 sm:mt-5">
           <div
-            className="flex max-h-[calc(100dvh-var(--header-offset,0px))] min-h-0 flex-col overflow-y-auto pr-1"
+            ref={recoveryScrollRef}
+            className="flex max-h-[calc(100dvh-var(--header-offset,0px))] min-h-0 flex-col overflow-y-auto overscroll-contain pr-0.5 [-webkit-overflow-scrolling:touch] sm:pr-1"
             style={{
               minHeight: viewportSectionMinHeight,
-              paddingBottom: "max(1rem, env(safe-area-inset-bottom))",
+              paddingBottom: "max(1.25rem, calc(env(safe-area-inset-bottom) + 0.5rem))",
               ["--header-offset" as string]: `${headerOffset}px`
             }}
           >
-            <div className="space-y-5 sm:space-y-6">
+            <div className="space-y-4 sm:space-y-6">
+              <SectionHeader
+                eyebrow={copy.recovery.eyebrow}
+                title={renderRecoveryHeadline(language)}
+                description={copy.recovery.description}
+                language={language}
+              />
               <ZeroGateSection onEnterGate={handleZeroGateEnter} />
               <div className="flex justify-stretch sm:justify-end">
                 <button
