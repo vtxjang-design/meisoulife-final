@@ -867,7 +867,7 @@ export default function HomePage() {
           >
             <div
               key={activeChapter.key}
-              className={`flex h-full w-full flex-col overflow-hidden rounded-[34px] border border-white/7 px-5 py-5 shadow-[0_20px_72px_rgba(6,12,22,0.18)] sm:rounded-[38px] sm:px-7 sm:py-7 lg:px-10 lg:py-9 ${
+              className={`flex h-full w-full flex-col overflow-x-hidden overflow-y-auto rounded-[34px] border border-white/7 px-5 py-5 shadow-[0_20px_72px_rgba(6,12,22,0.18)] sm:overflow-hidden sm:rounded-[38px] sm:px-7 sm:py-7 lg:px-10 lg:py-9 ${
                 chapterBackdropClasses[activeChapter.key]
               } ${prefersReducedMotion ? "" : "animate-[chapterFade_420ms_ease-out]"}`}
               style={{ height: `calc(100dvh - ${headerOffset}px - 2rem)` }}
@@ -980,43 +980,87 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-4 border-t border-white/8 pt-5 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={goToPreviousChapter}
-                      className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm font-medium text-white/74 transition hover:bg-white/[0.05] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
-                      aria-label={copy.chapters.previous}
-                    >
-                      {copy.chapters.previous}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={closeChapterJourney}
-                      className="inline-flex min-h-[48px] items-center justify-center rounded-full px-3 py-2.5 text-sm font-medium text-white/54 transition hover:text-white/82 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
-                      aria-label={copy.chapters.close}
-                    >
-                      {copy.chapters.close}
-                    </button>
+                <div className="border-t border-white/8 pt-5 pb-[calc(0.5rem+env(safe-area-inset-bottom))] sm:pb-0">
+                  <div className="flex flex-col gap-3 sm:hidden">
+                    <div className="grid min-w-0 grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={goToPreviousChapter}
+                        className="inline-flex min-h-[48px] min-w-0 items-center justify-start rounded-full border border-white/10 bg-white/[0.03] px-3 py-2.5 text-[13px] font-medium leading-5 text-white/74 transition hover:bg-white/[0.05] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
+                        aria-label={copy.chapters.previous}
+                      >
+                        <span className="min-w-0 text-left [text-wrap:balance]">{copy.chapters.previous}</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={activeChapterIndex === chapterSequence.length - 1 ? closeChapterJourney : goToNextChapter}
+                        className="inline-flex min-h-[48px] min-w-0 items-center justify-end rounded-full bg-white/[0.05] px-3 py-2.5 text-[13px] font-medium leading-5 text-white/86 transition hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
+                        aria-label={copy.chapters.next}
+                      >
+                        <span className="min-w-0 text-right [text-wrap:balance]">
+                          {activeChapterIndex === chapterSequence.length - 1 ? copy.chapters.close : copy.chapters.next}
+                        </span>
+                      </button>
+                    </div>
+
+                    <div className="flex flex-col items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={closeChapterJourney}
+                        className="inline-flex min-h-[44px] items-center justify-center rounded-full px-3 py-2 text-[13px] font-medium leading-5 text-white/54 transition hover:text-white/82 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
+                        aria-label={copy.chapters.close}
+                      >
+                        {copy.chapters.close}
+                      </button>
+                      <div className="flex items-center gap-2" aria-hidden="true">
+                        {chapterSequence.map((chapter, index) => (
+                          <span
+                            key={chapter.key}
+                            className={`h-1.5 rounded-full transition-all ${index === activeChapterIndex ? "w-8 bg-[#e8d5a6]" : "w-3 bg-white/18"}`}
+                          />
+                        ))}
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="flex items-center gap-2 self-start sm:self-auto" aria-hidden="true">
-                    {chapterSequence.map((chapter, index) => (
-                      <span
-                        key={chapter.key}
-                        className={`h-1.5 rounded-full transition-all ${index === activeChapterIndex ? "w-8 bg-[#e8d5a6]" : "w-3 bg-white/18"}`}
-                      />
-                    ))}
-                  </div>
+                  <div className="hidden sm:flex sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={goToPreviousChapter}
+                        className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm font-medium text-white/74 transition hover:bg-white/[0.05] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
+                        aria-label={copy.chapters.previous}
+                      >
+                        {copy.chapters.previous}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={closeChapterJourney}
+                        className="inline-flex min-h-[48px] items-center justify-center rounded-full px-3 py-2.5 text-sm font-medium text-white/54 transition hover:text-white/82 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
+                        aria-label={copy.chapters.close}
+                      >
+                        {copy.chapters.close}
+                      </button>
+                    </div>
 
-                  <button
-                    type="button"
-                    onClick={activeChapterIndex === chapterSequence.length - 1 ? closeChapterJourney : goToNextChapter}
-                    className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-white/[0.05] px-5 py-2.5 text-sm font-medium text-white/86 transition hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
-                    aria-label={copy.chapters.next}
-                  >
-                    {activeChapterIndex === chapterSequence.length - 1 ? copy.chapters.close : copy.chapters.next}
-                  </button>
+                    <div className="flex items-center gap-2 self-start sm:self-auto" aria-hidden="true">
+                      {chapterSequence.map((chapter, index) => (
+                        <span
+                          key={chapter.key}
+                          className={`h-1.5 rounded-full transition-all ${index === activeChapterIndex ? "w-8 bg-[#e8d5a6]" : "w-3 bg-white/18"}`}
+                        />
+                      ))}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={activeChapterIndex === chapterSequence.length - 1 ? closeChapterJourney : goToNextChapter}
+                      className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-white/[0.05] px-5 py-2.5 text-sm font-medium text-white/86 transition hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
+                      aria-label={copy.chapters.next}
+                    >
+                      {activeChapterIndex === chapterSequence.length - 1 ? copy.chapters.close : copy.chapters.next}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
