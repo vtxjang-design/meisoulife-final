@@ -125,7 +125,7 @@ const homeCopy = {
         identity: "NEXT DOOR",
         headline: "이 여정을, 매일의 리듬으로.",
         supporting: "필요한 깊이로 조용히 이어갈 수 있습니다.",
-        recoveryCta: "7-Day Recovery로",
+        recoveryCta: "7일 회복 여정으로",
         libraryCta: "HROS 더 알아보기",
         basicCta: "BASIC 시작하기"
       }
@@ -288,6 +288,13 @@ function getChapterHeadlineClass(language: "jp" | "kr" | "en") {
   }
 
   return "whitespace-pre-line font-serif text-[clamp(1.95rem,8vw,3rem)] leading-[1.06] tracking-[-0.026em] text-white focus:outline-none sm:text-[clamp(2.5rem,5.2vw,5rem)] sm:leading-[1.12] sm:tracking-[-0.03em]";
+}
+
+function getChapterSupportingText(
+  activeChapter: { key: JourneyChapterKey; supporting: string },
+  copy: ReturnType<typeof useLocaleCopy<typeof homeCopy>>
+) {
+  return activeChapter.key === "recovery" ? copy.recovery.description : activeChapter.supporting;
 }
 
 function SectionHeader({
@@ -760,6 +767,8 @@ export default function HomePage() {
 
   const activeChapter = activeChapterIndex === null ? null : chapterSequence[activeChapterIndex];
   const activeChapterLight = activeChapter ? chapterLightVisuals[activeChapter.key] : null;
+  const chapterSupportingText = activeChapter ? getChapterSupportingText(activeChapter, copy) : "";
+  const isFinalChapter = activeChapterIndex === chapterSequence.length - 1;
   const viewportSectionMinHeight = `calc(100dvh - ${headerOffset}px)`;
   const chapterOverlayStyle = {
     top: `${headerOffset}px`,
@@ -913,8 +922,8 @@ export default function HomePage() {
                     >
                       {activeChapter.headline}
                     </h2>
-                    <p className="mt-4 max-w-[19rem] whitespace-pre-line text-pretty text-[15px] leading-[1.62] text-white/64 sm:mt-5 sm:max-w-[29rem] sm:text-base sm:leading-8">
-                      {activeChapter.supporting}
+                    <p className="mt-5 hidden max-w-[29rem] whitespace-pre-line text-pretty text-base leading-8 text-white/64 sm:block">
+                      {chapterSupportingText}
                     </p>
 
                     {activeChapter.key === "hros" ? (
@@ -953,44 +962,41 @@ export default function HomePage() {
                     ) : null}
                   </div>
 
-                  <div className="relative mt-1 self-center lg:mt-0 lg:self-end">
+                  <div className="relative mt-2 self-center lg:mt-0 lg:self-end">
                     <div
-                      className={`pointer-events-none absolute left-1/2 top-0 h-[clamp(6.2rem,18vw,11.5rem)] w-[clamp(6.2rem,18vw,11.5rem)] -translate-x-1/2 rounded-full opacity-90 blur-[1px] sm:h-[clamp(11.5rem,24vw,16.25rem)] sm:w-[clamp(11.5rem,24vw,16.25rem)] sm:blur-[2px] ${
+                      className={`pointer-events-none absolute left-1/2 top-0 h-[clamp(6.2rem,18vw,11.5rem)] w-[clamp(6.2rem,18vw,11.5rem)] -translate-x-1/2 rounded-full opacity-80 blur-[1px] sm:h-[clamp(11.5rem,24vw,16.25rem)] sm:w-[clamp(11.5rem,24vw,16.25rem)] sm:opacity-90 sm:blur-[2px] ${
                         activeChapterLight?.fieldClassName ?? ""
                       } ${prefersReducedMotion ? "" : "animate-[meditation-ambient-breathe_10s_ease-in-out_infinite]"}`}
                       aria-hidden="true"
                     />
                     <div
-                      className={`pointer-events-none absolute left-1/2 top-[16%] h-[clamp(2rem,6vw,3.1rem)] w-[clamp(2rem,6vw,3.1rem)] -translate-x-1/2 rounded-full sm:top-[14%] sm:h-[clamp(3.1rem,7vw,4.4rem)] sm:w-[clamp(3.1rem,7vw,4.4rem)] ${
+                      className={`pointer-events-none absolute left-1/2 top-[17%] h-[clamp(2.25rem,6.6vw,3.45rem)] w-[clamp(2.25rem,6.6vw,3.45rem)] -translate-x-1/2 rounded-full sm:top-[14%] sm:h-[clamp(3.1rem,7vw,4.4rem)] sm:w-[clamp(3.1rem,7vw,4.4rem)] ${
                         activeChapterLight?.coreClassName ?? ""
                       } ${prefersReducedMotion ? "" : "animate-[meditation-soft-pulse_7.4s_ease-in-out_infinite]"}`}
                       aria-hidden="true"
                     />
                     <div
-                      className={`pointer-events-none absolute left-1/2 top-[8%] h-[clamp(4.8rem,14vw,8.8rem)] w-[clamp(4.8rem,14vw,8.8rem)] -translate-x-1/2 rounded-full blur-[18px] sm:top-[6%] sm:h-[clamp(8.8rem,18vw,12.4rem)] sm:w-[clamp(8.8rem,18vw,12.4rem)] sm:blur-[34px] ${
+                      className="pointer-events-none absolute left-1/2 top-[22%] h-[clamp(0.82rem,2vw,1.08rem)] w-[clamp(0.82rem,2vw,1.08rem)] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(255,251,241,0.96),rgba(255,241,214,0.34)_58%,transparent_88%)] opacity-92 blur-[0.35px] sm:hidden"
+                      aria-hidden="true"
+                    />
+                    <div
+                      className={`pointer-events-none absolute left-1/2 top-[9%] h-[clamp(4.4rem,13vw,8.2rem)] w-[clamp(4.4rem,13vw,8.2rem)] -translate-x-1/2 rounded-full opacity-86 blur-[15px] sm:top-[6%] sm:h-[clamp(8.8rem,18vw,12.4rem)] sm:w-[clamp(8.8rem,18vw,12.4rem)] sm:opacity-100 sm:blur-[34px] ${
                         activeChapterLight?.innerGlowClassName ?? ""
                       }`}
                       aria-hidden="true"
                     />
                     <div
-                      className={`pointer-events-none absolute left-1/2 top-[-10%] h-[clamp(9rem,24vw,18rem)] w-[clamp(9rem,24vw,18rem)] -translate-x-1/2 rounded-full blur-[32px] sm:top-[-8%] sm:h-[clamp(18rem,34vw,28rem)] sm:w-[clamp(18rem,34vw,28rem)] sm:blur-[88px] ${
+                      className={`pointer-events-none absolute left-1/2 top-[-10%] h-[clamp(8.1rem,22vw,15rem)] w-[clamp(8.1rem,22vw,15rem)] -translate-x-1/2 rounded-full opacity-48 blur-[24px] sm:top-[-8%] sm:h-[clamp(18rem,34vw,28rem)] sm:w-[clamp(18rem,34vw,28rem)] sm:opacity-100 sm:blur-[88px] ${
                         activeChapterLight?.outerGlowClassName ?? ""
                       }`}
                       aria-hidden="true"
                     />
-                    <div className="relative flex min-h-[7.2rem] w-full max-w-[12rem] flex-col justify-end pt-[3.8rem] sm:min-h-[18.5rem] sm:max-w-[21rem] sm:pt-[8.8rem] lg:min-h-[21rem] lg:max-w-[23rem] lg:pt-[9.6rem]">
+                    <div className="relative flex min-h-[7.8rem] w-full max-w-[13.5rem] flex-col justify-end pt-[4rem] sm:min-h-[18.5rem] sm:max-w-[21rem] sm:pt-[8.8rem] lg:min-h-[21rem] lg:max-w-[23rem] lg:pt-[9.6rem]">
+                      <p className="mt-2 max-w-[13.5rem] whitespace-pre-line text-center text-[15px] leading-[1.62] text-white/62 sm:hidden">
+                        {chapterSupportingText}
+                      </p>
                       <p className="hidden max-w-[18rem] text-sm leading-7 text-white/60 sm:block sm:text-[15px] sm:leading-7 lg:max-w-[19rem]">
-                      {activeChapter.key === "recovery"
-                        ? copy.recovery.description
-                        : activeChapter.key === "rhythm"
-                          ? copy.chapters.rhythm.supporting
-                          : activeChapter.key === "awakening"
-                            ? copy.chapters.awakening.supporting
-                            : activeChapter.key === "hros"
-                              ? copy.chapters.hros.supporting
-                              : activeChapter.key === "coexistence"
-                              ? copy.chapters.coexistence.supporting
-                              : copy.chapters.doorway.supporting}
+                        {chapterSupportingText}
                       </p>
                     </div>
                   </div>
@@ -998,7 +1004,7 @@ export default function HomePage() {
 
                 <div className="border-t border-white/8 pt-5 pb-[calc(0.5rem+env(safe-area-inset-bottom))] sm:pb-0">
                   <div className="flex flex-col gap-3 sm:hidden">
-                    <div className="grid min-w-0 grid-cols-2 gap-3">
+                    <div className={`grid min-w-0 gap-3 ${isFinalChapter ? "grid-cols-[minmax(0,1fr)_auto]" : "grid-cols-2"}`}>
                       <button
                         type="button"
                         onClick={goToPreviousChapter}
@@ -1007,16 +1013,16 @@ export default function HomePage() {
                       >
                         <span className="min-w-0 text-left [text-wrap:balance]">{copy.chapters.previous}</span>
                       </button>
-                      <button
-                        type="button"
-                        onClick={activeChapterIndex === chapterSequence.length - 1 ? closeChapterJourney : goToNextChapter}
-                        className="inline-flex min-h-[48px] min-w-0 items-center justify-end rounded-full bg-white/[0.05] px-3 py-2.5 text-[13px] font-medium leading-5 text-white/86 transition hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
-                        aria-label={copy.chapters.next}
-                      >
-                        <span className="min-w-0 text-right [text-wrap:balance]">
-                          {activeChapterIndex === chapterSequence.length - 1 ? copy.chapters.close : copy.chapters.next}
-                        </span>
-                      </button>
+                      {isFinalChapter ? <div aria-hidden="true" className="min-w-0" /> : (
+                        <button
+                          type="button"
+                          onClick={goToNextChapter}
+                          className="inline-flex min-h-[48px] min-w-0 items-center justify-end rounded-full bg-white/[0.05] px-3 py-2.5 text-[13px] font-medium leading-5 text-white/86 transition hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d]"
+                          aria-label={copy.chapters.next}
+                        >
+                          <span className="min-w-0 text-right [text-wrap:balance]">{copy.chapters.next}</span>
+                        </button>
+                      )}
                     </div>
 
                     <div className="flex flex-col items-center gap-3">
