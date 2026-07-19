@@ -266,7 +266,7 @@ export const siteCopy = {
       brand: "瞑想life",
       line1: "回復から共生へ。共生から地球経営へ。",
       links: [
-        { href: "/rhythm-journey", label: "無料参加" },
+        { href: "/", label: "ホーム" },
         { href: "/pricing", label: "料金" },
         { href: "/community", label: "コミュニティ" },
         { href: "/leaders", label: "リーダー成長" },
@@ -1152,7 +1152,7 @@ export const siteCopy = {
       brand: "명상life",
       line1: "회복에서 공생으로. 공생에서 지구경영으로.",
       links: [
-        { href: "/rhythm-journey", label: "무료 참여" },
+        { href: "/", label: "홈" },
         { href: "/pricing", label: "요금" },
         { href: "/community", label: "커뮤니티" },
         { href: "/leaders", label: "리더 성장" },
@@ -2038,7 +2038,7 @@ export const siteCopy = {
       brand: "Meisou Life",
       line1: "From recovery to coexistence. From coexistence to earth stewardship.",
       links: [
-        { href: "/rhythm-journey", label: "Free Join" },
+        { href: "/", label: "Home" },
         { href: "/pricing", label: "Pricing" },
         { href: "/community", label: "Community" },
         { href: "/leaders", label: "Leader Path" },
