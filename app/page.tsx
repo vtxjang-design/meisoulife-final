@@ -914,7 +914,7 @@ export default function HomePage() {
                 </div>
 
                 <div className="grid flex-1 gap-4 sm:gap-8 lg:grid-cols-[minmax(0,0.74fr)_minmax(0,0.26fr)] lg:items-end lg:gap-9">
-                  <div className="flex min-h-0 max-w-[42rem] flex-col justify-start lg:-translate-y-[5.5vh] lg:justify-end">
+                  <div className="flex min-h-0 max-w-[42rem] flex-col justify-start lg:-translate-y-[7.8vh] lg:justify-end">
                     <h2
                       ref={chapterHeadingRef}
                       tabIndex={-1}
@@ -961,7 +961,7 @@ export default function HomePage() {
 
                   <div className="relative mt-2 self-center lg:mt-0 lg:self-end lg:-translate-y-[3.5vh]">
                     <div
-                      className={`pointer-events-none absolute left-1/2 top-0 h-[clamp(6.2rem,18vw,11.5rem)] w-[clamp(6.2rem,18vw,11.5rem)] -translate-x-1/2 rounded-full opacity-80 blur-[1px] sm:h-[clamp(11.5rem,24vw,16.25rem)] sm:w-[clamp(11.5rem,24vw,16.25rem)] sm:opacity-90 sm:blur-[2px] ${
+                      className={`pointer-events-none absolute left-1/2 top-0 h-[clamp(6.2rem,18vw,11.5rem)] w-[clamp(6.2rem,18vw,11.5rem)] -translate-x-1/2 rounded-full opacity-80 blur-[1px] sm:h-[clamp(11.5rem,24vw,16.25rem)] sm:w-[clamp(11.5rem,24vw,16.25rem)] sm:opacity-[0.74] sm:blur-[2px] ${
                         activeChapterLight?.fieldClassName ?? ""
                       } ${prefersReducedMotion ? "" : "animate-[meditation-ambient-breathe_10s_ease-in-out_infinite]"}`}
                       aria-hidden="true"
@@ -973,26 +973,26 @@ export default function HomePage() {
                       aria-hidden="true"
                     />
                     <div
-                      className="pointer-events-none absolute left-1/2 top-[22%] h-[clamp(0.82rem,2vw,1.08rem)] w-[clamp(0.82rem,2vw,1.08rem)] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(255,251,241,0.96),rgba(255,241,214,0.34)_58%,transparent_88%)] opacity-92 blur-[0.35px] sm:hidden"
+                      className="pointer-events-none absolute left-1/2 top-[22%] h-[clamp(0.82rem,2vw,1.08rem)] w-[clamp(0.82rem,2vw,1.08rem)] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(255,251,241,0.96),rgba(255,241,214,0.34)_58%,transparent_88%)] opacity-92 blur-[0.35px] sm:block sm:h-[1.02rem] sm:w-[1.02rem] sm:opacity-[0.78] sm:blur-[0.45px]"
                       aria-hidden="true"
                     />
                     <div
-                      className={`pointer-events-none absolute left-1/2 top-[9%] h-[clamp(4.4rem,13vw,8.2rem)] w-[clamp(4.4rem,13vw,8.2rem)] -translate-x-1/2 rounded-full opacity-86 blur-[15px] sm:top-[6%] sm:h-[clamp(8.8rem,18vw,12.4rem)] sm:w-[clamp(8.8rem,18vw,12.4rem)] sm:opacity-100 sm:blur-[34px] ${
+                      className={`pointer-events-none absolute left-1/2 top-[9%] h-[clamp(4.4rem,13vw,8.2rem)] w-[clamp(4.4rem,13vw,8.2rem)] -translate-x-1/2 rounded-full opacity-86 blur-[15px] sm:top-[6%] sm:h-[clamp(8.8rem,18vw,12.4rem)] sm:w-[clamp(8.8rem,18vw,12.4rem)] sm:opacity-[0.92] sm:blur-[30px] ${
                         activeChapterLight?.innerGlowClassName ?? ""
                       }`}
                       aria-hidden="true"
                     />
                     <div
-                      className={`pointer-events-none absolute left-1/2 top-[-10%] h-[clamp(8.1rem,22vw,15rem)] w-[clamp(8.1rem,22vw,15rem)] -translate-x-1/2 rounded-full opacity-48 blur-[24px] sm:top-[-8%] sm:h-[clamp(18rem,34vw,28rem)] sm:w-[clamp(18rem,34vw,28rem)] sm:opacity-100 sm:blur-[88px] ${
+                      className={`pointer-events-none absolute left-1/2 top-[-10%] h-[clamp(8.1rem,22vw,15rem)] w-[clamp(8.1rem,22vw,15rem)] -translate-x-1/2 rounded-full opacity-48 blur-[24px] sm:top-[-8%] sm:h-[clamp(18rem,34vw,28rem)] sm:w-[clamp(18rem,34vw,28rem)] sm:opacity-[0.78] sm:blur-[78px] ${
                         activeChapterLight?.outerGlowClassName ?? ""
                       }`}
                       aria-hidden="true"
                     />
-                    <div className="relative flex min-h-[7.8rem] w-full max-w-[13.5rem] flex-col justify-end pt-[4rem] sm:min-h-[18.5rem] sm:max-w-[21rem] sm:pt-[8.8rem] lg:min-h-[21rem] lg:max-w-[23rem] lg:pt-[9.6rem]">
+                    <div className="relative flex min-h-[7.8rem] w-full max-w-[13.5rem] flex-col justify-end pt-[4rem] sm:min-h-[18.5rem] sm:max-w-[21rem] sm:items-center sm:pt-[11.35rem] lg:min-h-[21rem] lg:max-w-[23rem] lg:pt-[11.8rem]">
                       <p className="mx-auto mt-2 w-[86%] max-w-[13.5rem] whitespace-pre-line text-center text-[15px] leading-[1.62] text-white/62 sm:hidden">
                         {chapterSupportingText}
                       </p>
-                      <p className="hidden max-w-[18rem] text-sm leading-7 text-white/60 sm:block sm:text-[15px] sm:leading-7 lg:max-w-[19rem]">
+                      <p className="hidden max-w-[16.5rem] text-center text-[15px] leading-[1.72] text-white/68 sm:block lg:max-w-[17.5rem]">
                         {chapterSupportingText}
                       </p>
                     </div>
