@@ -20,6 +20,7 @@ type ZeroGateCard = {
 const zeroGateCopy = {
   jp: {
     eyebrow: "ZERO GATE — 1分リセット",
+    mobilePrompt: "今の自分に合う入口を選びましょう。",
     title: "1分だけ",
     description: "呼吸・回復・静けさ",
     encouragement: "",
@@ -35,6 +36,7 @@ const zeroGateCopy = {
   },
   kr: {
     eyebrow: "ZERO GATE — 1분 리셋",
+    mobilePrompt: "지금 필요한 문을 선택하세요.",
     title: "1분만",
     description: "호흡 · 회복 · 고요",
     encouragement: "",
@@ -50,6 +52,7 @@ const zeroGateCopy = {
   },
   en: {
     eyebrow: "ZERO GATE — 1-Minute Reset",
+    mobilePrompt: "Choose the door you need now.",
     title: "One minute",
     description: "Breath · Recovery · Quiet",
     encouragement: "",
@@ -70,7 +73,7 @@ export function ZeroGateSection({ onEnterGate }: ZeroGateSectionProps) {
 
   return (
     <section id="zero-gate" className="mt-1 scroll-mt-24 sm:mt-5">
-      <div className="relative overflow-visible rounded-[22px] border border-white/[0.035] bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.04),transparent_22%),radial-gradient(circle_at_82%_20%,rgba(107,168,159,0.04),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01))] px-3 py-3.5 shadow-[0_8px_20px_rgba(7,17,31,0.07)] sm:overflow-hidden sm:rounded-[28px] sm:border-white/4 sm:px-5 sm:py-5.5 sm:shadow-[0_12px_32px_rgba(7,17,31,0.1)] lg:px-6 lg:py-6">
+      <div className="relative overflow-visible rounded-[20px] border border-white/[0.02] bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.035),transparent_22%),radial-gradient(circle_at_82%_20%,rgba(107,168,159,0.035),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.018),rgba(255,255,255,0.008))] px-2.5 py-2.5 shadow-none sm:overflow-hidden sm:rounded-[28px] sm:border-white/4 sm:px-5 sm:py-5.5 sm:shadow-[0_12px_32px_rgba(7,17,31,0.1)] lg:px-6 lg:py-6">
         <div className="pointer-events-none absolute inset-0 sm:hidden">
           <div className="absolute right-[-4%] top-[7%] h-48 w-48 rounded-full bg-emerald-200/[0.06] blur-[92px] animate-meditation-ambient-breathe motion-reduce:animate-none" />
           <div className="absolute left-[-4%] top-[-2%] h-32 w-32 rounded-full bg-gold/[0.08] blur-[76px] animate-meditation-fog motion-reduce:animate-none" />
@@ -80,18 +83,19 @@ export function ZeroGateSection({ onEnterGate }: ZeroGateSectionProps) {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_68%,rgba(6,23,31,0.2),transparent_24%)]" />
         </div>
         <div className="relative max-w-[24ch] sm:max-w-[32rem]">
-          <p className="text-[0.66rem] uppercase tracking-[0.24em] text-gold/68 sm:text-[0.74rem] sm:tracking-[0.3em]">{copy.eyebrow}</p>
-          <h2 className="hero-measure keep-phrase mt-2 whitespace-pre-line font-serif text-[clamp(1.34rem,5.1vw,2rem)] leading-[1.18] text-white sm:max-w-[13ch] sm:text-[clamp(1.6rem,3vw,2.12rem)]">
+          <p className="text-[0.7rem] uppercase tracking-[0.2em] text-gold/70 sm:text-[0.74rem] sm:tracking-[0.3em]">{copy.eyebrow}</p>
+          <p className="mt-1 text-[13px] leading-[1.45] text-white/60 sm:hidden">{copy.mobilePrompt}</p>
+          <h2 className="hero-measure keep-phrase mt-2 hidden whitespace-pre-line font-serif text-[clamp(1.34rem,5.1vw,2rem)] leading-[1.18] text-white sm:block sm:max-w-[13ch] sm:text-[clamp(1.6rem,3vw,2.12rem)]">
             {copy.title}
           </h2>
-          <p className="body-measure keep-phrase mt-1.5 whitespace-pre-line text-[clamp(0.9rem,3.1vw,0.98rem)] leading-[1.65] text-white/58 sm:mt-2 sm:max-w-[20ch] sm:text-[0.98rem] sm:leading-[1.72]">
+          <p className="body-measure keep-phrase mt-1.5 hidden whitespace-pre-line text-[clamp(0.9rem,3.1vw,0.98rem)] leading-[1.65] text-white/58 sm:block sm:mt-2 sm:max-w-[20ch] sm:text-[0.98rem] sm:leading-[1.72]">
             {copy.description}
           </p>
         </div>
         {copy.encouragement ? (
           <p className="relative mt-3 max-w-[16ch] text-[13px] leading-6 text-white/44 sm:mt-5 sm:max-w-none sm:text-sm sm:leading-7">{copy.encouragement}</p>
         ) : null}
-        <div className="relative mt-3 grid grid-cols-1 gap-3 sm:mt-4 sm:grid-cols-2 sm:gap-3 lg:gap-3.5 xl:grid-cols-3">
+        <div className="relative mt-3 grid auto-rows-fr grid-cols-2 gap-2.5 min-[400px]:gap-3 sm:mt-4 sm:grid-cols-2 sm:gap-3 lg:gap-3.5 xl:grid-cols-3">
           {copy.gates.map((gate) => (
             <GateCard
               key={gate.key}

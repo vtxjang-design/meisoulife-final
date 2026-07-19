@@ -260,22 +260,22 @@ function renderRecoveryHeadline(language: "jp" | "kr" | "en") {
 
 function getRecoveryHeadlineClass(language: "jp" | "kr" | "en") {
   if (language === "jp") {
-    return "mt-3 font-serif text-[clamp(1.72rem,4vw,2.78rem)] leading-[1.14] tracking-[-0.022em] text-white sm:mt-4";
+    return "mt-2 font-serif text-[clamp(1.56rem,4vw,2.78rem)] leading-[1.14] tracking-[-0.022em] text-white sm:mt-4 sm:text-[clamp(1.72rem,4vw,2.78rem)]";
   }
 
   if (language === "kr") {
-    return "mt-3 font-serif text-[clamp(1.62rem,5vw,2.68rem)] leading-[1.16] tracking-[-0.02em] text-white sm:mt-4";
+    return "mt-2 font-serif text-[clamp(1.5rem,5vw,2.68rem)] leading-[1.16] tracking-[-0.02em] text-white sm:mt-4 sm:text-[clamp(1.62rem,5vw,2.68rem)]";
   }
 
-  return "mt-3 font-serif text-[clamp(1.56rem,5vw,2.58rem)] leading-[1.14] tracking-[-0.022em] text-white sm:mt-4";
+  return "mt-2 font-serif text-[clamp(1.42rem,5vw,2.58rem)] leading-[1.14] tracking-[-0.022em] text-white sm:mt-4 sm:text-[clamp(1.56rem,5vw,2.58rem)]";
 }
 
 function getRecoveryDescriptionClass(language: "jp" | "kr" | "en") {
   if (language === "en") {
-    return "mt-3 max-w-[23rem] whitespace-pre-line text-[14px] leading-7 text-white/62 sm:mt-4 sm:max-w-[25rem] sm:text-[15px] sm:leading-8";
+    return "mt-2 max-w-[23rem] whitespace-pre-line text-[13px] leading-6 text-white/62 sm:mt-4 sm:text-[15px] sm:leading-8";
   }
 
-  return "mt-3 max-w-[20rem] whitespace-pre-line text-[14px] leading-7 text-white/62 sm:mt-4 sm:max-w-[23rem] sm:text-[15px] sm:leading-8";
+  return "mt-2 max-w-[20rem] whitespace-pre-line text-[13px] leading-6 text-white/62 sm:mt-4 sm:max-w-[23rem] sm:text-[15px] sm:leading-8";
 }
 
 function getChapterHeadlineClass(language: "jp" | "kr" | "en") {
@@ -314,7 +314,7 @@ function SectionHeader({
 
   return (
     <div className={`max-w-[44rem] ${alignment}`}>
-      <p className="text-[0.7rem] uppercase tracking-[0.28em] text-[#d8c08a]/74 sm:text-xs sm:tracking-[0.32em]">{eyebrow}</p>
+      <p className="text-[0.68rem] uppercase tracking-[0.24em] text-[#d8c08a]/74 sm:text-xs sm:tracking-[0.32em]">{eyebrow}</p>
       <h2 className={getRecoveryHeadlineClass(language)}>{title}</h2>
       <p className={getRecoveryDescriptionClass(language)}>{description}</p>
     </div>
@@ -836,7 +836,7 @@ export default function HomePage() {
 
       <section
         id="homepage-recovery"
-        className="relative overflow-hidden bg-[#08121b] pt-8 sm:pt-15"
+        className="relative overflow-hidden bg-[#08121b] pt-4 sm:pt-15"
         style={{ minHeight: viewportSectionMinHeight }}
       >
         <div className="section-shell">
@@ -845,11 +845,11 @@ export default function HomePage() {
             className="flex max-h-[calc(100dvh-var(--header-offset,0px))] min-h-0 flex-col overflow-y-auto overscroll-contain pr-0.5 [-webkit-overflow-scrolling:touch] sm:pr-1"
             style={{
               minHeight: viewportSectionMinHeight,
-              paddingBottom: "max(1.25rem, calc(env(safe-area-inset-bottom) + 0.5rem))",
+              paddingBottom: "max(1rem, calc(env(safe-area-inset-bottom) + 0.5rem))",
               ["--header-offset" as string]: `${headerOffset}px`
             }}
           >
-            <div className="space-y-4 sm:space-y-6">
+            <div className="space-y-3 sm:space-y-6">
               <SectionHeader
                 eyebrow={copy.recovery.eyebrow}
                 title={renderRecoveryHeadline(language)}
@@ -861,12 +861,12 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={() => openChapterJourney(0)}
-                  className="group inline-flex min-h-[46px] w-full items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm font-medium text-white/74 transition duration-200 hover:border-gold/22 hover:text-white/88 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d] motion-reduce:transform-none sm:min-h-[44px] sm:w-auto sm:justify-end sm:px-5"
+                  className="group inline-flex min-h-[44px] w-full items-center justify-between gap-2 rounded-[14px] border border-white/8 bg-transparent px-3.5 py-2 text-[13px] font-medium text-white/68 transition duration-200 hover:border-gold/22 hover:text-white/84 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d] motion-reduce:transform-none sm:min-h-[44px] sm:w-auto sm:justify-end sm:rounded-full sm:border-white/10 sm:bg-white/[0.03] sm:px-5 sm:py-2.5 sm:text-sm sm:text-white/74"
                 >
                   <span>{copy.chapters.continueJourney}</span>
                   <span
                     aria-hidden="true"
-                    className="text-[15px] leading-none text-white/52 transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none"
+                    className="text-[14px] leading-none text-white/46 transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none sm:text-[15px] sm:text-white/52"
                   >
                     →
                   </span>
