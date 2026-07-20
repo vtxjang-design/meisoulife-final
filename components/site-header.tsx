@@ -19,6 +19,9 @@ export function SiteHeader() {
   const logoutLabel = copy.header.logout;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const homepageHeaderNav = useMemo(() => {
+    return isHome ? copy.header.nav.filter((item) => item.href !== "/leaders") : copy.header.nav;
+  }, [copy.header.nav, isHome]);
   const programHref = plan === "inner_circle" ? "/program/inner" : plan === "growth" ? "/program/growth" : "/program/basic";
   const oneMinuteLabel = copy.header.mobileMenu.find((item) => item.href === "/#one-minute-experience")?.label ?? copy.header.nav[0]?.label ?? "1-Minute Recovery";
   const rhythmLabel = copy.header.nav[1]?.label ?? "7-Day Rhythm";
@@ -49,8 +52,9 @@ export function SiteHeader() {
     return copy.header.mobileGuestTabs;
   }, [copy.header.login, copy.header.mobileGuestTabs, copy.header.mobileMemberTabs, copy.header.myPage, isHome, isLoggedIn, oneMinuteLabel, programHref, rhythmLabel]);
   const mobileMenuLinks = useMemo(() => {
-    return isLoggedIn ? copy.header.mobileMemberMenu : copy.header.mobileGuestMenu;
-  }, [copy.header.mobileGuestMenu, copy.header.mobileMemberMenu, isLoggedIn]);
+    const links = isLoggedIn ? copy.header.mobileMemberMenu : copy.header.mobileGuestMenu;
+    return isHome ? links.filter((item) => item.href !== "/leaders") : links;
+  }, [copy.header.mobileGuestMenu, copy.header.mobileMemberMenu, isHome, isLoggedIn]);
   const memberBadgeLabel = useMemo(() => {
     if (!isLoggedIn) {
       return "";
@@ -166,7 +170,7 @@ export function SiteHeader() {
           {copy.header.brand}
         </Link>
         <nav className="hidden items-center gap-2 lg:flex">
-          {copy.header.nav.map((item) => (
+          {homepageHeaderNav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
