@@ -26,7 +26,9 @@ export default function BrainEducationPage() {
           id="founder-message"
           className="mt-10 rounded-[32px] border border-gold/14 bg-gold/[0.05] px-6 py-8 sm:px-8 sm:py-10"
         >
-          <p className="text-xs uppercase tracking-[0.24em] text-gold/82">{copy.founderMessageTitle}</p>
+          <p className="max-w-full text-xs tracking-[0.16em] text-gold/82 sm:tracking-[0.2em]">
+            {copy.founderMessageTitle}
+          </p>
           <h2 className="mt-4 font-serif text-2xl leading-tight text-white sm:text-3xl">{copy.founderMessageSubtitle}</h2>
           <div className="mt-6 h-px w-full bg-white/10" />
           <p className="mt-6 max-w-4xl whitespace-pre-line text-base leading-8 text-white/76 sm:text-lg sm:leading-9">
