@@ -18,6 +18,18 @@ type LanguageContextValue = {
 };
 
 type LocaleRecord<T = unknown> = Partial<Record<Language, T>>;
+type RetreatCardCopy = {
+  place: string;
+  title: string;
+  description: string;
+};
+type RetreatsPageContent = {
+  eyebrow: string;
+  title: string;
+  description: string;
+  items: RetreatCardCopy[];
+  cta: string;
+};
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
@@ -139,6 +151,48 @@ export function useLocaleCopy<T extends LocaleRecord>(copy: T) {
 
   return useMemo(() => getLocaleCopy(copy, language), [copy, language]);
 }
+
+export const retreatsPageCopy = {
+  jp: {
+    eyebrow: "RETREATS",
+    title: "世界につながるリトリートネットワーク",
+    description: "日常の継続から、人生の節目になる深い滞在体験まで。瞑想lifeの次の旅路を紹介します。",
+    items: [
+      { place: "日本 伊勢", title: "浄化と始まり", description: "静かな節目をつくる、日本の再出発リトリート。" },
+      { place: "アメリカ セドナ", title: "グローバル覚醒リトリート", description: "大地の広さの中で、視点を解き放つ体験。" },
+      { place: "韓国 済州・国学園", title: "哲学とリーダー教育", description: "実践と思想をつなぐ、深い学びの拠点。" },
+      { place: "ニュージーランド Earth Village", title: "自然治癒と共生生活", description: "自然と調和しながら、本来のリズムを思い出す。" },
+      { place: "ヨーロッパ テネレフェ", title: "欧州リトリート拠点", description: "光と風の中で、静けさを取り戻す滞在型プログラム。" }
+    ],
+    cta: "リトリート案内を受け取る"
+  },
+  kr: {
+    eyebrow: "RETREATS",
+    title: "세계로 이어지는 리트리트 네트워크",
+    description: "일상의 꾸준한 실천부터 삶의 전환점이 되는 깊은 체류 경험까지. 명상life의 다음 여정을 소개합니다.",
+    items: [
+      { place: "일본 이세", title: "정화와 새로운 시작", description: "고요한 전환점을 만드는 일본의 새로운 출발 리트리트." },
+      { place: "미국 세도나", title: "글로벌 깨어남 리트리트", description: "광활한 대지 속에서 시야와 의식을 자유롭게 여는 경험." },
+      { place: "한국 제주·국학원", title: "철학과 리더 교육", description: "실천과 철학을 연결하는 깊은 배움의 거점." },
+      { place: "뉴질랜드 EARTH VILLAGE", title: "자연 치유와 공생 생활", description: "자연과 조화를 이루며 본래의 리듬을 되찾는 경험." },
+      { place: "유럽 테네리페", title: "유럽 리트리트 거점", description: "빛과 바람 속에서 고요함을 되찾는 체류형 프로그램." }
+    ],
+    cta: "리트리트 안내 받기"
+  },
+  en: {
+    eyebrow: "RETREATS",
+    title: "A Retreat Network Connected to the World",
+    description: "From ongoing daily practice to immersive stays that become turning points in life, discover the next journey of Meisou Life.",
+    items: [
+      { place: "Ise, Japan", title: "Purification and New Beginnings", description: "A retreat in Japan for creating a quiet turning point and beginning again." },
+      { place: "Sedona, USA", title: "Global Awakening Retreat", description: "An experience that opens your perspective within the vastness of the land." },
+      { place: "Jeju and Kookhakwon, Korea", title: "Philosophy and Leadership Education", description: "A place of deep learning that connects practice with philosophy." },
+      { place: "EARTH VILLAGE, New Zealand", title: "Natural Healing and Coexistence", description: "An experience of remembering your original rhythm while living in harmony with nature." },
+      { place: "Tenerife, Europe", title: "European Retreat Base", description: "A stay-based program for recovering stillness among light and wind." }
+    ],
+    cta: "Receive Retreat Updates"
+  }
+} satisfies Record<Language, RetreatsPageContent>;
 
 export const siteCopy = {
   jp: {
@@ -574,18 +628,7 @@ export const siteCopy = {
           }
         ]
       },
-      retreats: {
-        eyebrow: "Global Retreat Network",
-        title: "世界につながるリトリート導線",
-        description: "日本での日常実践から、世界各地の深い体験へ。瞑想lifeは長期的な成長動線まで設計します。",
-        items: [
-          { place: "日本 伊勢", title: "浄化と始まり", description: "静かな節目をつくる、日本の再出発リトリート。" },
-          { place: "アメリカ セドナ", title: "グローバル覚醒リトリート", description: "大地の広さの中で、視点を解き放つ体験。" },
-          { place: "韓国 済州・国学園", title: "哲学とリーダー教育", description: "実践と思想をつなぐ、深い学びの拠点。" },
-          { place: "ニュージーランド Earth Village", title: "自然治癒と共生生活", description: "自然と調和しながら、本来のリズムを思い出す。" },
-          { place: "ヨーロッパ テネレフェ", title: "欧州リトリート拠点", description: "光と風の中で、静けさを取り戻す滞在型プログラム。" }
-        ]
-      },
+      retreats: retreatsPageCopy.jp,
       faq: {
         eyebrow: "FAQ",
         title: "よくある質問",
@@ -1460,18 +1503,7 @@ export const siteCopy = {
           }
         ]
       },
-      retreats: {
-        eyebrow: "Global Retreat Network",
-        title: "세계로 이어지는 리트릿 흐름",
-        description: "일상의 실천에서 시작해 세계 각지의 깊은 체험으로 확장됩니다.",
-        items: [
-          { place: "일본 이세", title: "정화와 시작", description: "조용한 전환점을 만드는 일본의 재시작 리트릿." },
-          { place: "미국 세도나", title: "글로벌 각성 리트릿", description: "대지의 넓음 속에서 시야를 풀어내는 경험." },
-          { place: "한국 제주 · 국학원", title: "철학과 리더 교육", description: "실천과 사상을 연결하는 깊은 배움의 거점." },
-          { place: "뉴질랜드 Earth Village", title: "자연 치유와 공생 생활", description: "자연과 조화하며 본래의 리듬을 회복합니다." },
-          { place: "유럽 테네리페", title: "유럽 리트릿 거점", description: "빛과 바람 속에서 고요함을 되찾는 체류형 프로그램." }
-        ]
-      },
+      retreats: retreatsPageCopy.kr,
       faq: {
         eyebrow: "FAQ",
         title: "자주 묻는 질문",
@@ -2346,18 +2378,7 @@ export const siteCopy = {
           }
         ]
       },
-      retreats: {
-        eyebrow: "Global Retreat Network",
-        title: "A retreat path connected to the world",
-        description: "From daily practice in Japan to deeper experiences around the world, Meisou Life designs a long-term growth path.",
-        items: [
-          { place: "Japan · Ise", title: "Purification and beginning", description: "A quiet retreat for meaningful new starts." },
-          { place: "USA · Sedona", title: "Global awakening retreat", description: "A wide-open experience that helps release your perspective." },
-          { place: "Korea · Jeju · Kookhakwon", title: "Philosophy and leader education", description: "A place for deeper learning that joins practice and thought." },
-          { place: "New Zealand · Earth Village", title: "Natural healing and co-living", description: "Restore your original rhythm in harmony with nature." },
-          { place: "Europe · Tenerife", title: "European retreat base", description: "A stay-based retreat to recover stillness among light and wind." }
-        ]
-      },
+      retreats: retreatsPageCopy.en,
       faq: {
         eyebrow: "FAQ",
         title: "Frequently asked questions",
