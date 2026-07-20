@@ -251,20 +251,12 @@ export function SiteHeader() {
               </button>
             </>
           ) : authResolved ? (
-            <>
-              <Link
-                href="/login"
-                className="hidden rounded-md border border-white/12 px-4 py-2 text-sm text-white/88 transition hover:border-gold/50 hover:text-white sm:inline-flex"
-              >
-                {copy.header.login}
-              </Link>
-              <Link
-                href="/welcome-member"
-                className="hidden rounded-md border border-[#ebd7a8]/32 bg-[#deca97] px-4 py-2 text-sm font-semibold text-ink transition hover:bg-[#e7d4a4] sm:inline-flex"
-              >
-                {copy.header.freeJoin}
-              </Link>
-            </>
+            <Link
+              href="/login"
+              className="hidden rounded-md border border-white/12 px-4 py-2 text-sm text-white/88 transition hover:border-gold/50 hover:text-white sm:inline-flex"
+            >
+              {copy.header.login}
+            </Link>
           ) : (
             <div className="hidden h-10 w-[220px] sm:block" />
           )}
@@ -391,13 +383,6 @@ export function SiteHeader() {
                     className="inline-flex min-h-[52px] w-full items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
                   >
                     {copy.header.login}
-                  </Link>
-                  <Link
-                    href="/welcome-member"
-                    onClick={() => setMobileOpen(false)}
-                    className="inline-flex min-h-[52px] w-full items-center rounded-2xl bg-gold px-4 py-3 text-base font-semibold text-ink transition hover:bg-[#e7cd92]"
-                  >
-                    {copy.header.freeJoin}
                   </Link>
                 </div>
               )}

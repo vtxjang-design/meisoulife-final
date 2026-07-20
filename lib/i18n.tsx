@@ -211,33 +211,33 @@ export const siteCopy = {
       mobileGuestTabs: [
         { href: "/", label: "ホーム" },
         { href: "/rhythm-journey", label: "7日間の小さな回復" },
-        { href: "/pricing", label: "料金" },
+        { href: "/pricing", label: "メンバーシップ" },
         { href: "/community", label: "コミュニティ" },
         { href: "/leaders", label: "リーダー成長" }
       ],
       mobileMemberTabs: [
         { href: "/", label: "ホーム" },
         { href: "/program/basic", label: "マイプログラム" },
-        { href: "/pricing", label: "料金" },
+        { href: "/pricing", label: "メンバーシップ" },
         { href: "/community", label: "コミュニティ" },
         { href: "/member", label: "マイページ" }
       ],
       mobileGuestMenu: [
         { href: "/", label: "ホーム" },
         { href: "/rhythm-journey", label: "7日間の小さな回復" },
-        { href: "/pricing", label: "料金" },
+        { href: "/pricing", label: "メンバーシップ" },
         { href: "/community", label: "コミュニティ" },
         { href: "/leaders", label: "リーダー成長" }
       ],
       mobileMemberMenu: [
         { href: "/", label: "ホーム" },
-        { href: "/pricing", label: "料金" },
+        { href: "/pricing", label: "メンバーシップ" },
         { href: "/community", label: "コミュニティ" }
       ],
       nav: [
         { href: "/", label: "ホーム" },
         { href: "/rhythm-journey", label: "7日間の小さな回復" },
-        { href: "/pricing", label: "料金" },
+        { href: "/pricing", label: "メンバーシップ" },
         { href: "/community", label: "コミュニティ" },
         { href: "/leaders", label: "リーダー成長" }
       ],
@@ -245,7 +245,7 @@ export const siteCopy = {
         { href: "/", label: "ホーム" },
         { href: "/#one-minute-experience", label: "1分リカバリー" },
         { href: "/#ai-rhythm-coach", label: "AIコーチ" },
-        { href: "/pricing", label: "料金" },
+        { href: "/pricing", label: "メンバーシップ" },
         { href: "/program/basic", label: "プログラム" },
         { href: "/community", label: "コミュニティ" },
         { href: "/rhythm-journey", label: "7日間の小さな回復へ" }
@@ -1086,33 +1086,33 @@ export const siteCopy = {
       mobileGuestTabs: [
         { href: "/", label: "홈" },
         { href: "/rhythm-journey", label: "7일간의 작은 회복" },
-        { href: "/pricing", label: "요금" },
+        { href: "/pricing", label: "멤버십" },
         { href: "/community", label: "커뮤니티" },
         { href: "/leaders", label: "리더 성장" }
       ],
       mobileMemberTabs: [
         { href: "/", label: "홈" },
         { href: "/program/basic", label: "나의 프로그램" },
-        { href: "/pricing", label: "요금" },
+        { href: "/pricing", label: "멤버십" },
         { href: "/community", label: "커뮤니티" },
         { href: "/member", label: "마이페이지" }
       ],
       mobileGuestMenu: [
         { href: "/", label: "홈" },
         { href: "/rhythm-journey", label: "7일간의 작은 회복" },
-        { href: "/pricing", label: "요금" },
+        { href: "/pricing", label: "멤버십" },
         { href: "/community", label: "커뮤니티" },
         { href: "/leaders", label: "리더 성장" }
       ],
       mobileMemberMenu: [
         { href: "/", label: "홈" },
-        { href: "/pricing", label: "요금" },
+        { href: "/pricing", label: "멤버십" },
         { href: "/community", label: "커뮤니티" }
       ],
       nav: [
         { href: "/", label: "홈" },
         { href: "/rhythm-journey", label: "7일간의 작은 회복" },
-        { href: "/pricing", label: "요금" },
+        { href: "/pricing", label: "멤버십" },
         { href: "/community", label: "커뮤니티" },
         { href: "/leaders", label: "리더 성장" }
       ],
@@ -1120,7 +1120,7 @@ export const siteCopy = {
         { href: "/", label: "홈" },
         { href: "/#one-minute-experience", label: "1분 리커버리" },
         { href: "/#ai-rhythm-coach", label: "AI 코치" },
-        { href: "/pricing", label: "요금" },
+        { href: "/pricing", label: "멤버십" },
         { href: "/program/basic", label: "프로그램" },
         { href: "/community", label: "커뮤니티" },
         { href: "/rhythm-journey", label: "7일간의 작은 회복으로" }
@@ -1960,34 +1960,34 @@ export const siteCopy = {
       close: "Close",
       mobileGuestTabs: [
         { href: "/", label: "Home" },
-        { href: "/rhythm-journey", label: "7 Days of Small Recovery" },
-        { href: "/pricing", label: "Pricing" },
+        { href: "/rhythm-journey", label: "7-Day Recovery" },
+        { href: "/pricing", label: "Membership" },
         { href: "/community", label: "Community" },
         { href: "/leaders", label: "Leader Growth" }
       ],
       mobileMemberTabs: [
         { href: "/", label: "Home" },
         { href: "/program/basic", label: "My Program" },
-        { href: "/pricing", label: "Pricing" },
+        { href: "/pricing", label: "Membership" },
         { href: "/community", label: "Community" },
         { href: "/member", label: "My Page" }
       ],
       mobileGuestMenu: [
         { href: "/", label: "Home" },
-        { href: "/rhythm-journey", label: "7 Days of Small Recovery" },
-        { href: "/pricing", label: "Pricing" },
+        { href: "/rhythm-journey", label: "7-Day Recovery" },
+        { href: "/pricing", label: "Membership" },
         { href: "/community", label: "Community" },
         { href: "/leaders", label: "Leader Growth" }
       ],
       mobileMemberMenu: [
         { href: "/", label: "Home" },
-        { href: "/pricing", label: "Pricing" },
+        { href: "/pricing", label: "Membership" },
         { href: "/community", label: "Community" }
       ],
       nav: [
         { href: "/", label: "Home" },
-        { href: "/rhythm-journey", label: "7 Days of Small Recovery" },
-        { href: "/pricing", label: "Pricing" },
+        { href: "/rhythm-journey", label: "7-Day Recovery" },
+        { href: "/pricing", label: "Membership" },
         { href: "/community", label: "Community" },
         { href: "/leaders", label: "Leader Path" }
       ],
@@ -1995,7 +1995,7 @@ export const siteCopy = {
         { href: "/", label: "Home" },
         { href: "/#one-minute-experience", label: "1-Minute Recovery" },
         { href: "/#ai-rhythm-coach", label: "AI Coach" },
-        { href: "/pricing", label: "Pricing" },
+        { href: "/pricing", label: "Membership" },
         { href: "/program/basic", label: "Programs" },
         { href: "/community", label: "Community" },
         { href: "/rhythm-journey", label: "Begin Gently" }

@@ -19,6 +19,7 @@ const homeCopy = {
       headline: "今日は、どんな回復が必要ですか？",
       subtitle: "Human Recovery Operating System",
       description: "AI時代に、人間本来のリズムへ還る場所。",
+      freeLabel: "FREE RECOVERY",
       primaryCta: "1分リセットを始める",
       secondaryCta: "7日間の小さな回復"
     },
@@ -78,8 +79,9 @@ const homeCopy = {
       headline: "오늘,\n어떤 회복이 필요하세요?",
       subtitle: "Human Recovery Operating System",
       description: "AI 시대에,\n인간 본래의 리듬을 되찾는 곳.",
+      freeLabel: "FREE RECOVERY",
       primaryCta: "1분 리셋 시작하기",
-      secondaryCta: "7일간의 리듬 회복"
+      secondaryCta: "7일간의 작은 회복"
     },
     recovery: {
       eyebrow: "Recovery First",
@@ -137,8 +139,9 @@ const homeCopy = {
       headline: "What kind of recovery\ndo you need today?",
       subtitle: "Human Recovery Operating System",
       description: "A place to recover the original human rhythm\nin the AI era.",
+      freeLabel: "FREE RECOVERY",
       primaryCta: "Start the 1-Minute Reset",
-      secondaryCta: "7-Day Rhythm Recovery"
+      secondaryCta: "7-Day Recovery"
     },
     recovery: {
       eyebrow: "Recovery First",
@@ -863,8 +866,11 @@ export default function HomePage() {
               <p className={getHeroDescriptionClass(language)}>
                 {copy.hero.description}
               </p>
+              <p className="mt-5 text-[0.68rem] font-medium uppercase tracking-[0.24em] text-[#d8c08a]/66 sm:mt-6 sm:text-[0.78rem] sm:tracking-[0.28em]">
+                {copy.hero.freeLabel}
+              </p>
 
-              <div className="mt-7 flex w-full flex-col items-stretch gap-3.5 sm:mt-8 sm:max-w-[33rem] sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+              <div className="mt-4 flex w-full flex-col items-stretch gap-3.5 sm:mt-5 sm:max-w-[33rem] sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
                 <button
                   type="button"
                   onClick={scrollToRecovery}
