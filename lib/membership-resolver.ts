@@ -41,6 +41,7 @@ type LocalProfileRow = {
   id?: string | null;
   email?: string | null;
   current_plan?: string | null;
+  stripe_customer_id?: string | null;
 };
 
 type LocalMembershipSnapshot = {
@@ -99,11 +100,22 @@ function emptyResolution(source: MembershipResolutionResult["source"], errorMess
 
 async function loadLocalMembershipSnapshot(supabase: MembershipClient, userId: string, logPrefix: string) {
   const membershipState = await fetchLatestMembershipPlan(supabase, userId, logPrefix);
-  const primaryProfileQuery = await supabase
+  let primaryProfileQuery = await supabase
     .from("users")
-    .select("id, email, current_plan")
+    .select("id, email, current_plan, stripe_customer_id")
     .eq("auth_user_id", userId)
     .maybeSingle();
+
+  // Some older deployments do not have users.stripe_customer_id. Keep the
+  // entitlement resolver compatible with those schemas while using this
+  // authenticated mapping whenever it is available.
+  if (primaryProfileQuery.error?.message?.includes("stripe_customer_id")) {
+    primaryProfileQuery = await supabase
+      .from("users")
+      .select("id, email, current_plan")
+      .eq("auth_user_id", userId)
+      .maybeSingle();
+  }
   let profile = primaryProfileQuery.data ?? null;
   const profileError = primaryProfileQuery.error;
 
@@ -188,7 +200,11 @@ function resolveLocalMembership(
 
   const currentPlan = planCandidates.find((plan) => plan !== "free") ?? "free";
   const resolvedStatus = membershipStatus ?? subscriptionStatus ?? null;
-  const stripeCustomerId = snapshot.membership?.stripe_customer_id ?? snapshot.subscription?.stripe_customer_id ?? null;
+  const stripeCustomerId =
+    snapshot.membership?.stripe_customer_id ??
+    snapshot.subscription?.stripe_customer_id ??
+    snapshot.profile?.stripe_customer_id ??
+    null;
   const stripeSubscriptionId =
     snapshot.membership?.stripe_subscription_id ?? snapshot.subscription?.stripe_subscription_id ?? null;
   const nextBillingDate =
@@ -428,6 +444,12 @@ export async function resolveMembershipEntitlement(
       ? {
           customerId: snapshot.subscription.stripe_customer_id,
           source: "subscriptions"
+        }
+      : null,
+    snapshot.profile?.stripe_customer_id
+      ? {
+          customerId: snapshot.profile.stripe_customer_id,
+          source: "users"
         }
       : null
   ].filter((entry): entry is { customerId: string; source: string } => Boolean(entry?.customerId));
