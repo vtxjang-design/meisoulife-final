@@ -34,7 +34,7 @@ const pageCopy = {
       daytime: "集中や緊張を少し戻したいとき",
       evening: "一日を静かに手放したいとき"
     },
-    enter: "扉を開く",
+    enter: "この扉へ",
     primaryCta: "Morning Gateから始める",
     primaryHint: "急ぐ必要はありません",
     journeyTitle: "RECOVERY GARDEN",
@@ -62,7 +62,7 @@ const pageCopy = {
       daytime: "흐트러진 집중과 긴장을 잠시 되돌리고 싶을 때",
       evening: "하루를 조용히 내려놓고 싶을 때"
     },
-    enter: "문 열기",
+    enter: "이 문으로",
     primaryCta: "Morning Gate로 시작하기",
     primaryHint: "서두를 필요는 없습니다",
     journeyTitle: "RECOVERY GARDEN",
@@ -90,7 +90,7 @@ const pageCopy = {
       daytime: "When you want to restore focus and release tension",
       evening: "When you want to quietly let go of the day"
     },
-    enter: "Enter Gate",
+    enter: "Enter this gate",
     primaryCta: "Start Morning Gate",
     primaryHint: "There is no rush",
     journeyTitle: "RECOVERY GARDEN",
@@ -158,8 +158,8 @@ function getGardenStage(language: "jp" | "kr" | "en", currentDay: number) {
 
 function getGateClasses(gate: BasicGateKey, active: boolean) {
   const activeRing = active
-    ? "ring-1 ring-[rgba(127,255,212,0.22)] border-[rgba(127,255,212,0.22)]"
-    : "border-white/10";
+    ? "border-[rgba(127,255,212,0.16)]"
+    : "border-white/[0.08]";
 
   if (gate === "morning") {
     return `${activeRing} bg-[radial-gradient(circle_at_top,rgba(216,192,138,0.16),transparent_38%),radial-gradient(circle_at_22%_18%,rgba(127,255,212,0.10),transparent_44%),linear-gradient(180deg,rgba(16,49,77,0.76),rgba(8,40,69,0.87)_54%,rgba(6,27,51,0.94))]`;
@@ -174,14 +174,14 @@ function getGateClasses(gate: BasicGateKey, active: boolean) {
 
 function getDoorClasses(gate: BasicGateKey) {
   if (gate === "morning") {
-    return "border-[rgba(255,255,255,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.075),rgba(255,255,255,0.035))] shadow-[0_24px_64px_rgba(0,0,0,0.18),0_0_0_1px_rgba(216,192,138,0.05)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.095),rgba(255,255,255,0.045))] hover:shadow-[0_28px_72px_rgba(0,0,0,0.22),0_0_0_1px_rgba(216,192,138,0.06)]";
+    return "border-[rgba(255,255,255,0.085)] bg-[linear-gradient(180deg,rgba(255,255,255,0.065),rgba(255,255,255,0.028))] shadow-[0_16px_40px_rgba(0,0,0,0.14)] hover:border-[rgba(216,192,138,0.28)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.095),rgba(216,192,138,0.055))] hover:shadow-[0_20px_48px_rgba(0,0,0,0.18)]";
   }
 
   if (gate === "daytime") {
-    return "border-[rgba(255,255,255,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.075),rgba(255,255,255,0.035))] shadow-[0_24px_56px_rgba(0,0,0,0.20),0_0_0_1px_rgba(77,182,172,0.08)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.095),rgba(255,255,255,0.045))] hover:shadow-[0_28px_64px_rgba(0,0,0,0.22),0_0_0_1px_rgba(77,182,172,0.09)]";
+    return "border-[rgba(255,255,255,0.085)] bg-[linear-gradient(180deg,rgba(255,255,255,0.065),rgba(255,255,255,0.028))] shadow-[0_16px_40px_rgba(0,0,0,0.14)] hover:border-[rgba(127,255,212,0.25)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.09),rgba(77,182,172,0.05))] hover:shadow-[0_20px_48px_rgba(0,0,0,0.18)]";
   }
 
-  return "border-[rgba(255,255,255,0.10)] bg-[linear-gradient(180deg,rgba(255,255,255,0.055),rgba(255,255,255,0.028))] shadow-[0_24px_56px_rgba(0,0,0,0.22),0_0_0_1px_rgba(30,58,95,0.10)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.038))] hover:shadow-[0_28px_66px_rgba(0,0,0,0.24),0_0_0_1px_rgba(30,58,95,0.11)]";
+  return "border-[rgba(255,255,255,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.052),rgba(255,255,255,0.024))] shadow-[0_16px_40px_rgba(0,0,0,0.15)] hover:border-[rgba(190,166,118,0.22)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.075),rgba(96,132,182,0.05))] hover:shadow-[0_20px_48px_rgba(0,0,0,0.19)]";
 }
 
 function getDoorAccentClasses(door: BasicDoorKey) {
@@ -235,14 +235,13 @@ export function BasicHome({
   const fallbackPlan =
     membershipSummary?.currentPlan && membershipSummary.currentPlan !== "free" ? membershipSummary.currentPlan : "basic";
   const visiblePlan =
-    fallbackPlan === "growth" ? "Growth" : fallbackPlan === "inner_circle" ? "Inner Circle" : "Basic";
+    fallbackPlan === "growth" ? "Growth" : fallbackPlan === "inner_circle" ? "Inner Circle" : "BASIC";
   const visibleStatus = membershipSummary?.subscriptionStatus || "Active";
   const visibleBillingDate = membershipSummary?.nextBillingDate
-    ? new Intl.DateTimeFormat(undefined, {
-        year: "numeric",
-        month: "short",
-        day: "numeric"
-      }).format(new Date(membershipSummary.nextBillingDate))
+    ? new Intl.DateTimeFormat(
+        localizedLanguage === "jp" ? "ja-JP" : localizedLanguage === "kr" ? "ko-KR" : "en-US",
+        { dateStyle: "long" }
+      ).format(new Date(membershipSummary.nextBillingDate))
     : copy.noBillingDate;
   const gardenStage = getGardenStage(localizedLanguage, currentDay);
 
@@ -359,13 +358,14 @@ export function BasicHome({
                     <Link
                       key={door.key}
                       href={door.href}
-                      className={`group relative flex min-h-[92px] min-w-0 flex-col overflow-hidden rounded-[18px] border p-3.5 backdrop-blur-xl transition-[transform,box-shadow,border-color,background-color] duration-300 hover:-translate-y-0.5 focus-visible:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/24 ${getDoorClasses(gate.key)} ${getDoorAccentClasses(door.key)}`}
+                      className={`group relative flex min-h-[92px] min-w-0 cursor-pointer flex-col overflow-hidden rounded-[18px] border p-3.5 backdrop-blur-xl transition-[transform,box-shadow,border-color,background-color] duration-300 ease-out hover:-translate-y-0.5 focus-visible:-translate-y-0.5 focus-visible:border-[rgba(244,250,255,0.36)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(216,192,138,0.72)] active:scale-[0.99] active:border-white/[0.28] motion-reduce:transform-none motion-reduce:transition-none motion-reduce:hover:transform-none motion-reduce:focus-visible:transform-none motion-reduce:active:transform-none ${getDoorClasses(gate.key)} ${getDoorAccentClasses(door.key)}`}
                     >
                       <div className="pointer-events-none absolute inset-0 opacity-100 before:absolute before:inset-0 before:content-['']" />
                       <h3 className="relative z-10 text-base font-semibold text-[rgba(244,250,255,0.95)]">{door.title}</h3>
                       <p className="relative z-10 mt-1.5 text-sm leading-5 text-[rgba(233,242,248,0.72)]">{door.description}</p>
-                      <span className="relative z-10 mt-auto pt-2 text-sm font-medium text-[rgba(225,255,247,0.88)] transition group-hover:text-white">
-                        {door.entryLabel || copy.enter}
+                      <span className="relative z-10 mt-auto flex items-center gap-2 pt-2 text-sm font-medium text-[rgba(225,255,247,0.7)] transition-colors duration-300 group-hover:text-white group-focus-visible:text-white">
+                        <span>{copy.enter}</span>
+                        <span aria-hidden="true" className="transition-transform duration-300 ease-out group-hover:translate-x-1 group-focus-visible:translate-x-1 motion-reduce:transform-none motion-reduce:transition-none">→</span>
                       </span>
                     </Link>
                   ))}
@@ -376,11 +376,10 @@ export function BasicHome({
         </div>
       </div>
 
-      <section className="rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.07),transparent_34%),linear-gradient(180deg,rgba(9,34,59,0.76),rgba(7,27,50,0.88)_52%,rgba(5,18,34,0.96))] px-5 py-6 sm:px-6">
+      <section data-recovery-stage={gardenStage.label} className="rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.07),transparent_34%),linear-gradient(180deg,rgba(9,34,59,0.76),rgba(7,27,50,0.88)_52%,rgba(5,18,34,0.96))] px-5 py-6 sm:px-6">
           <p className="text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.64)]">{copy.journeyTitle}</p>
           <h2 className="mt-3 whitespace-pre-line font-serif text-2xl leading-tight text-[rgba(244,250,255,0.94)] sm:text-3xl">{copy.journeyHeadline}</h2>
           <p className="mt-3 text-sm leading-7 text-[rgba(233,242,248,0.7)]">{copy.journeyBody}</p>
-          <p className="mt-3 text-sm leading-6 text-[rgba(233,242,248,0.48)]">{gardenStage.body}</p>
       </section>
     </section>
   );
