@@ -64,13 +64,11 @@ const memberEntryCopy = {
       community: "共に続ける場を見る"
     },
     lineNote: "決済済みの方も、まずはLINEから静かにサポートを受けられます。",
-    fallback: "BASIC会員の方は、登録したメールアドレスでログインしてください。",
+    fallback: "BASIC会員の方は、ログインして続きから始められます。",
     supportCta: "決済済みです。LINEで確認する",
     loginTitle: "BASIC会員ログイン",
     loginDescription:
-      "BASIC会員の方は、登録したメールアドレスでログインしてください。",
-    loginEmailHint:
-      "決済済みなのに入れない場合は、決済時と同じメールアドレスかをご確認ください。",
+      "BASIC会員の方は、お支払い時に使用したメールアドレスと同じメールアドレスでログインしてください。",
     loginSupportHint: "解決しない場合は、LINEサポートをご利用ください。",
     unavailableMessage:
       "ログイン準備を確認できませんでした。登録メールアドレスをご確認のうえ、解決しない場合はLINEサポートをご利用ください。",
@@ -251,20 +249,18 @@ const memberEntryCopy = {
       community: "함께 이어가는 곳 보기"
     },
     lineNote: "결제하신 분도 먼저 LINE에서 조용히 안내를 받을 수 있습니다.",
-    fallback: "BASIC 회원이시면 가입한 이메일 주소로 로그인해 주세요.",
+    fallback: "BASIC 회원은 로그인 후 이어서 시작할 수 있습니다.",
     supportCta: "결제 완료했습니다. LINE으로 확인하기",
     loginTitle: "BASIC 회원 로그인",
     loginDescription:
-      "BASIC 회원이시면 가입한 이메일 주소로 로그인해 주세요.",
-    loginEmailHint:
-      "결제했는데 들어가지지 않으면 결제에 사용한 이메일과 같은지 먼저 확인해 주세요.",
+      "BASIC 회원은 결제 시 사용한 이메일과 동일한 이메일로 로그인해 주세요.",
     loginSupportHint: "그래도 해결되지 않으면 LINE 지원을 이용해 주세요.",
     unavailableMessage:
       "로그인 준비 상태를 확인하지 못했습니다. 가입 이메일을 확인해 보시고, 해결되지 않으면 LINE 지원을 이용해 주세요.",
     loggedIn: "이미 로그인되어 있습니다. 이어서 조용히 시작하실 수 있습니다.",
     loggedInBox: "로그인되었습니다. 오늘의 1분부터 시작해볼까요?",
     accessNoticeTitle: "이 계정에서는 BASIC 회원 정보를 확인하지 못했습니다.",
-    accessNoticeBody: "결제할 때 사용한 이메일과 같은 계정으로 로그인했는지 확인해 주세요.",
+    accessNoticeBody: "결제 시 사용한 이메일과 동일한 이메일로 로그인했는지 확인해 주세요.",
     accessNoticeSupport: "해결되지 않으면 LINE 지원으로 문의해 주세요.",
     planLabel: "현재 단계",
     planLabels: {
@@ -438,20 +434,18 @@ const memberEntryCopy = {
       community: "See the shared path"
     },
     lineNote: "Paid members can always receive gentle support through LINE first.",
-    fallback: "If you are a BASIC member, please log in with the email address you registered.",
+    fallback: "BASIC members can log in and continue from here.",
     supportCta: "I already paid. Check on LINE",
     loginTitle: "BASIC member login",
     loginDescription:
-      "If you are a BASIC member, please log in with the email address you registered.",
-    loginEmailHint:
-      "If you already paid but still cannot enter, first confirm that this is the same email address you used at checkout.",
+      "BASIC members should log in with the same email address used for payment.",
     loginSupportHint: "If it still does not work, please contact LINE support.",
     unavailableMessage:
       "We could not verify login readiness. Please confirm your registered email address, and if it still does not work, contact LINE support.",
     loggedIn: "You are already logged in. You can quietly continue from here.",
     loggedInBox: "You are logged in. Start with today’s one minute.",
     accessNoticeTitle: "We could not confirm BASIC membership for this account.",
-    accessNoticeBody: "Please make sure you are logged in with the same email address used for payment.",
+    accessNoticeBody: "Confirm that you are logged in with the same email used for payment.",
     accessNoticeSupport: "If it still does not work, please contact LINE support.",
     planLabel: "Current layer",
     planLabels: {
@@ -1072,6 +1066,15 @@ export function MemberEntryContent({
             </div>
             <h1 className="mt-5 font-serif text-3xl leading-tight text-white sm:text-4xl">{copy.title}</h1>
             <p className="mt-4 text-sm leading-8 text-white/74 sm:text-base">{copy.description}</p>
+            <div className="mt-5 sm:hidden">
+              <p className="text-sm leading-7 text-white/78">{copy.loginDescription}</p>
+              <Link
+                href={memberLoginHref}
+                className="mt-4 inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
+              >
+                {copy.actions.login}
+              </Link>
+            </div>
           </div>
         ) : null}
 
@@ -1246,11 +1249,10 @@ export function MemberEntryContent({
           </div>
         ) : !showMemberLoadingState ? (
           <>
-            <div className="mx-auto mt-8 max-w-4xl rounded-[28px] border border-[#f1d7a1]/18 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-5 sm:p-6">
+            <div className="mx-auto mt-8 hidden max-w-4xl rounded-[28px] border border-[#f1d7a1]/18 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-5 sm:block sm:p-6">
               <p className="text-xs uppercase tracking-[0.24em] text-gold/78">{copy.badge}</p>
               <h2 className="mt-3 text-2xl font-semibold text-white">{copy.loginTitle}</h2>
               <p className="mt-3 text-sm leading-7 text-white/78">{copy.loginDescription}</p>
-              <p className="mt-2 text-sm leading-7 text-white/66">{copy.loginEmailHint}</p>
               <p className="mt-2 text-sm leading-7 text-white/58">{hasSupabaseUrl && hasSupabaseAnonKey ? copy.loginSupportHint : copy.unavailableMessage}</p>
               <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Link

@@ -715,6 +715,7 @@ export const siteCopy = {
       description:
         "瞑想lifeの会員は、瞑想コンテンツを買う人ではありません。1分の回復から始まり、毎日のリズム、脳の主人として生きる力、共生文化へ進んでいく仲間です。",
       checkoutNote: "決済後、この画面に戻ると次のステップに進みます",
+      basicPaymentEmailNotice: "このメールアドレスが、BASICログインにも使用されます。",
       badges: ["Appleのように静かで明快", "日本のウェルネスらしい余白", "今すぐ始められる導線"],
       supportText:
         "Freeは、心の過負荷を1分でやさしく戻す入口です。\nBasicは、毎日戻る生活リズムを育てます。\nGrowthは、AIと共に脳の主人として生きる感覚を深めます。\nInner Circleは、共生文化と文明ビジョンを支えるリーダーの場です。",
@@ -917,7 +918,8 @@ export const siteCopy = {
       signupSuccess: "登録確認メールを送信しました。確認後にログインしてください。",
       signupError: "現在、接続を確認しています。",
       loading: "処理中...",
-      error: "ログインに失敗しました。メールとパスワードを確認してください。"
+      error: "ログインに失敗しました。メールとパスワードを確認してください。",
+      basicPaymentEmailNotice: "お支払い時と同じメールアドレスをご使用ください。"
     },
     meditationPage: {
       durationTexts: {
@@ -1590,6 +1592,7 @@ export const siteCopy = {
       description:
         "명상life의 회원은 1분 회복에서 시작해 일상의 리듬을 되찾고, 자연지능을 확장하며, 자기 삶의 주인으로 살아가고, 공생으로 성장해가는 사람들입니다.",
       checkoutNote: "결제 후 이 화면으로 돌아오면 다음 단계로 이어집니다",
+      basicPaymentEmailNotice: "이 이메일은 BASIC 로그인에도 사용됩니다.",
       badges: ["Apple처럼 조용하고 명확하게", "일본 웰니스다운 여백", "지금 바로 시작할 수 있는 흐름"],
       supportText:
         "Free는 마음의 과부하를 1분 안에 부드럽게 돌려놓는 입구입니다.\nBasic은 매일 돌아오는 생활 리듬을 만듭니다.\nGrowth는 AI와 함께 뇌의 주인으로 살아가는 감각을 깊게 합니다.\nInner Circle은 공생 문화와 문명 비전을 떠받치는 리더의 장입니다.",
@@ -1792,7 +1795,8 @@ export const siteCopy = {
       signupSuccess: "등록 확인 메일을 보냈습니다. 확인 후 로그인해 주세요.",
       signupError: "현재 연결 상태를 확인하고 있습니다.",
       loading: "처리 중...",
-      error: "로그인에 실패했습니다. 이메일과 비밀번호를 확인해 주세요."
+      error: "로그인에 실패했습니다. 이메일과 비밀번호를 확인해 주세요.",
+      basicPaymentEmailNotice: "결제할 때 사용한 이메일을 입력해 주세요."
     },
     meditationPage: {
       durationTexts: {
@@ -2465,6 +2469,7 @@ export const siteCopy = {
       description:
         "A Meisou Life member is not buying meditation content. They are entering a path that begins with one-minute recovery and grows into daily rhythm, brain ownership, coexistence, and a larger human vision.",
       checkoutNote: "After payment, return to this screen to move to the next step",
+      basicPaymentEmailNotice: "This email will also be used to log in to BASIC.",
       badges: ["Quiet and clear like Apple", "Space that feels true to Japanese wellness", "A path you can begin right now"],
       supportText:
         "Free is the doorway to one-minute recovery when life feels overwhelming.\nBasic builds a daily rhythm you can return to.\nGrowth deepens brain ownership with AI support.\nInner Circle is for leadership in coexistence culture and a wider civilization vision.",
@@ -2667,7 +2672,8 @@ export const siteCopy = {
       signupSuccess: "A confirmation email has been sent. Please verify it, then log in.",
       signupError: "Login will be available soon.",
       loading: "Processing...",
-      error: "Login failed. Please check your email and password."
+      error: "Login failed. Please check your email and password.",
+      basicPaymentEmailNotice: "Use the same email address used for payment."
     },
     meditationPage: {
       durationTexts: {

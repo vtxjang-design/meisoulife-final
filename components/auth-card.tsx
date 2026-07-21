@@ -23,12 +23,15 @@ export function AuthCard({ mode }: AuthCardProps) {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [nextPath, setNextPath] = useState(DEFAULT_AUTH_NEXT_PATH);
+  const [isBasicAccessLogin, setIsBasicAccessLogin] = useState(false);
   const redirectTarget = resolveSafeInternalNextPath(nextPath);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const next = resolveSafeInternalNextPath(params.get("next"));
+    const requestedNext = params.get("next");
+    const next = resolveSafeInternalNextPath(requestedNext);
     setNextPath(next);
+    setIsBasicAccessLogin(mode === "login" && requestedNext !== null && next === DEFAULT_AUTH_NEXT_PATH);
     recordAuthDiagnostic("login_page_loaded", {
       mode,
       preservedNextRoute: next
@@ -231,6 +234,9 @@ export function AuthCard({ mode }: AuthCardProps) {
             className="rounded-md border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition focus:border-gold/60"
           />
         </label>
+        {isBasicAccessLogin ? (
+          <p className="text-sm leading-6 text-white/62">{copy.loginPage.basicPaymentEmailNotice}</p>
+        ) : null}
         <label className="grid gap-2 text-sm text-white/76">
           <span>{copy.loginPage.password}</span>
           <input

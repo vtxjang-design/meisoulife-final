@@ -61,12 +61,15 @@ export default function PricingPage() {
 
             <div className="relative z-50 mt-6">
               {plan.key === "basic" ? (
-                <CheckoutButton
-                  plan="basic"
-                  className="button-nowrap relative z-50 min-h-[52px] w-full cursor-pointer rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  {plan.cta}
-                </CheckoutButton>
+                <>
+                  <p className="mb-3 text-sm leading-6 text-zinc-600">{pricing.basicPaymentEmailNotice}</p>
+                  <CheckoutButton
+                    plan="basic"
+                    className="button-nowrap relative z-50 min-h-[52px] w-full cursor-pointer rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {plan.cta}
+                  </CheckoutButton>
+                </>
               ) : null}
               {plan.key === "leader" ? (
                 <CheckoutButton
