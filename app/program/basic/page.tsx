@@ -224,7 +224,7 @@ function BasicProgramContent() {
 
 export default function BasicProgramPage() {
   return (
-    <MembershipGuard requiredPlan="basic">
+    <MembershipGuard requiredPlan="basic" showLogout={false}>
       <Suspense
         fallback={
           <div className="section-shell py-16 sm:py-24">
