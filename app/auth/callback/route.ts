@@ -1,3 +1,4 @@
+import { resolveSafeInternalNextPath } from "@/lib/auth-next";
 import { SUPABASE_ANON_KEY, SUPABASE_URL } from "@/lib/supabase-config";
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest, NextResponse } from "next/server";
@@ -13,8 +14,7 @@ export async function GET(request: NextRequest) {
   const code = requestUrl.searchParams.get("code");
   const tokenHash = requestUrl.searchParams.get("token_hash");
   const type = requestUrl.searchParams.get("type");
-  const nextParam = requestUrl.searchParams.get("next");
-  const next = nextParam?.startsWith("/") ? nextParam : "/program/basic";
+  const next = resolveSafeInternalNextPath(requestUrl.searchParams.get("next"));
 
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
     console.error("[auth-callback] Missing Supabase public environment variables");

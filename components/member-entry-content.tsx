@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { useAuthState } from "@/components/auth-provider";
+import { buildLoginHref, resolveSafeInternalNextPath } from "@/lib/auth-next";
 import { recordAuthDiagnostic } from "@/lib/auth-flow-diagnostics";
 import { useLanguage, useLocaleCopy } from "@/lib/i18n";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -845,9 +848,11 @@ export function MemberEntryContent({
   initialEmail,
   membershipSummary
 }: MemberEntryContentProps) {
+  const router = useRouter();
   const { language } = useLanguage();
+  const { authResolved, isLoggedIn: resolvedIsLoggedIn, planResolved, isMembershipLoading, hasActiveSubscription, plan } =
+    useAuthState();
   const copy = useLocaleCopy(memberEntryCopy);
-  const [isLoggedIn] = useState(isLoggedInInitially);
   const [activeForestKey, setActiveForestKey] = useState<RecoveryForestKey | null>(null);
   const [forestSecondsLeft, setForestSecondsLeft] = useState(60);
   const [forestRunning, setForestRunning] = useState(false);
@@ -861,13 +866,16 @@ export function MemberEntryContent({
   const [portalLoading, setPortalLoading] = useState(false);
   const [portalError, setPortalError] = useState("");
   const debugEnabled = process.env.NODE_ENV !== "production" || debug;
+  const effectiveIsLoggedIn = authResolved ? resolvedIsLoggedIn : isLoggedInInitially;
+  const effectivePlan = authResolved && resolvedIsLoggedIn ? plan : initialPlan;
+  const showMemberLoadingState = !authResolved || (resolvedIsLoggedIn && (!planResolved || isMembershipLoading));
   const recoveryHome = useMemo(
     () => getRecoveryHomeContent(resolveRecoveryHomeLanguage(language)),
     [language]
   );
   const gardenStage = useMemo(
-    () => getRecoveryGardenStage(resolveRecoveryHomeLanguage(language), initialPlan),
-    [initialPlan, language]
+    () => getRecoveryGardenStage(resolveRecoveryHomeLanguage(language), effectivePlan),
+    [effectivePlan, language]
   );
   const founderWisdom = copy.dashboard.founderWisdoms[new Date().getDay() % copy.dashboard.founderWisdoms.length];
   const activeForestCard = activeForestKey
@@ -884,7 +892,19 @@ export function MemberEntryContent({
     : copy.membershipPanel.noBillingDate;
   const membershipStatusLabel = membershipSummary.subscriptionStatus ?? copy.membershipPanel.noStatus;
   const cameFromProtectedPage = Boolean(requestedNextPath);
-  const showAccessNotice = isLoggedIn && cameFromProtectedPage;
+  const showAccessNotice = effectiveIsLoggedIn && !showMemberLoadingState && !hasActiveSubscription && cameFromProtectedPage;
+  const loadingMessage =
+    authResolved && resolvedIsLoggedIn
+      ? language === "jp"
+        ? "メンバーシップを確認しています..."
+        : language === "kr"
+          ? "멤버십 상태를 확인하고 있습니다..."
+          : "Checking your membership..."
+      : language === "jp"
+        ? "ログイン状態を確認しています..."
+        : language === "kr"
+          ? "로그인 상태를 확인하고 있습니다..."
+          : "Checking your login status...";
 
   async function handleManageMembership() {
     setPortalLoading(true);
@@ -981,15 +1001,24 @@ export function MemberEntryContent({
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const nextParam = params.get("next");
-    const next = nextParam && nextParam.startsWith("/") ? nextParam : "/program/basic";
+    const next = resolveSafeInternalNextPath(nextParam);
     setCurrentOrigin(window.location.origin);
-    setRequestedNextPath(nextParam || "");
-    setMemberLoginHref(`/login?next=${encodeURIComponent(next)}`);
+    setRequestedNextPath(next);
+    setMemberLoginHref(buildLoginHref(next));
     recordAuthDiagnostic("basic_member_entrance_loaded", {
       preservedNextRoute: next,
-      loginButtonDestination: `/login?next=${encodeURIComponent(next)}`
+      loginButtonDestination: buildLoginHref(next)
     });
   }, []);
+
+  useEffect(() => {
+    if (!authResolved || !resolvedIsLoggedIn || !planResolved || isMembershipLoading || !hasActiveSubscription) {
+      return;
+    }
+
+    const destination = resolveSafeInternalNextPath(requestedNextPath);
+    router.replace(destination);
+  }, [authResolved, hasActiveSubscription, isMembershipLoading, planResolved, requestedNextPath, resolvedIsLoggedIn, router]);
 
   useEffect(() => {
     if (!debugEnabled) {
@@ -1027,7 +1056,16 @@ export function MemberEntryContent({
   return (
     <div className="section-shell py-12 sm:py-16">
       <div className="mx-auto max-w-5xl overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.14),transparent_22%),linear-gradient(180deg,#0a1716_0%,#0d1824_54%,#08131d_100%)] px-5 py-8 shadow-[0_28px_90px_rgba(7,17,31,0.28)] sm:px-8 sm:py-10">
-        {!isLoggedIn ? (
+        {showMemberLoadingState ? (
+          <div className="mx-auto max-w-3xl py-10 text-center sm:py-14">
+            <div className="inline-flex rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm font-medium text-white/70">
+              {copy.badge}
+            </div>
+            <p className="mt-5 text-sm leading-7 text-white/70 sm:text-base">{loadingMessage}</p>
+          </div>
+        ) : null}
+
+        {!showMemberLoadingState && !effectiveIsLoggedIn ? (
           <div className="mx-auto max-w-3xl text-center">
             <div className="inline-flex rounded-full border border-gold/20 bg-gold/[0.08] px-4 py-2 text-sm font-medium text-gold">
               {copy.badge}
@@ -1037,7 +1075,7 @@ export function MemberEntryContent({
           </div>
         ) : null}
 
-        {isLoggedIn ? (
+        {!showMemberLoadingState && effectiveIsLoggedIn ? (
           <div className="mx-auto mt-2 max-w-5xl space-y-6">
             {showAccessNotice ? (
               <section className="rounded-[24px] border border-[#f1d7a1]/20 bg-[linear-gradient(180deg,rgba(212,186,117,0.10),rgba(255,255,255,0.02))] px-5 py-5 sm:px-6">
@@ -1184,7 +1222,7 @@ export function MemberEntryContent({
           </div>
         ) : null}
 
-        {isLoggedIn ? (
+        {!showMemberLoadingState && effectiveIsLoggedIn ? (
           <div className="mx-auto mt-6 max-w-4xl rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
             <p className="text-xs uppercase tracking-[0.24em] text-gold/78">{recoveryHome.supportTitle}</p>
             <p className="mt-3 text-sm leading-7 text-white/68">{recoveryHome.supportBody}</p>
@@ -1206,7 +1244,7 @@ export function MemberEntryContent({
               </button>
             </div>
           </div>
-        ) : (
+        ) : !showMemberLoadingState ? (
           <>
             <div className="mx-auto mt-8 max-w-4xl rounded-[28px] border border-[#f1d7a1]/18 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-5 sm:p-6">
               <p className="text-xs uppercase tracking-[0.24em] text-gold/78">{copy.badge}</p>
@@ -1276,9 +1314,9 @@ export function MemberEntryContent({
               </div>
             </div>
           </>
-        )}
+        ) : null}
 
-        {!isLoggedIn && debugEnabled ? (
+        {!showMemberLoadingState && !effectiveIsLoggedIn && debugEnabled ? (
           <div className="mx-auto mt-5 max-w-4xl rounded-[24px] border border-white/10 bg-white/[0.04] p-5 sm:p-6">
             <div className="rounded-2xl border border-white/10 bg-black/15 p-4 text-left text-sm text-white/66">
               <p className="font-semibold text-white/84">{copy.debug.title}</p>

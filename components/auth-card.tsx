@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { DEFAULT_AUTH_NEXT_PATH, resolveSafeInternalNextPath } from "@/lib/auth-next";
 import { recordAuthDiagnostic } from "@/lib/auth-flow-diagnostics";
 import { useSiteCopy } from "@/lib/i18n";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -21,21 +22,21 @@ export function AuthCard({ mode }: AuthCardProps) {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [nextPath, setNextPath] = useState<string | null>(null);
-  const redirectTarget = nextPath && nextPath.startsWith("/") ? nextPath : "/program/basic";
+  const [nextPath, setNextPath] = useState(DEFAULT_AUTH_NEXT_PATH);
+  const redirectTarget = resolveSafeInternalNextPath(nextPath);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const next = params.get("next");
+    const next = resolveSafeInternalNextPath(params.get("next"));
     setNextPath(next);
     recordAuthDiagnostic("login_page_loaded", {
       mode,
-      preservedNextRoute: next && next.startsWith("/") ? next : null
+      preservedNextRoute: next
     });
   }, []);
 
   function buildResetRedirectTarget() {
-    const next = nextPath && nextPath.startsWith("/") ? nextPath : "/program/basic";
+    const next = resolveSafeInternalNextPath(nextPath);
     return `${window.location.origin}/auth/callback?next=${encodeURIComponent(`/auth/update-password?next=${next}`)}`;
   }
 

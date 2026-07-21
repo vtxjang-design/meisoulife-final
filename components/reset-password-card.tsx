@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { buildLoginHref, resolveSafeInternalNextPath } from "@/lib/auth-next";
 import { useSiteCopy } from "@/lib/i18n";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
@@ -17,15 +18,13 @@ export function ResetPasswordCard() {
   const [loading, setLoading] = useState(false);
   const [ready, setReady] = useState(false);
   const [nextPath, setNextPath] = useState<string | null>(null);
-  const loginHref = nextPath && nextPath.startsWith("/")
-    ? `/login?next=${encodeURIComponent(nextPath)}`
-    : "/login";
+  const loginHref = buildLoginHref(nextPath);
 
   useEffect(() => {
     let active = true;
 
     const params = new URLSearchParams(window.location.search);
-    setNextPath(params.get("next"));
+    setNextPath(resolveSafeInternalNextPath(params.get("next")));
 
     async function prepareRecoverySession() {
       if (!supabase) {

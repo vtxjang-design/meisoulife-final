@@ -1,8 +1,10 @@
 import { MemberEntryContent } from "@/components/member-entry-content";
+import { resolveSafeInternalNextPath } from "@/lib/auth-next";
 import type { MembershipResolutionResult, MembershipSummary } from "@/lib/membership";
 import { resolveMembershipEntitlement } from "@/lib/membership-resolver";
 import { getSupabaseConfigStatus } from "@/lib/supabase-config";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 
 const LINE_URL =
   process.env.NEXT_PUBLIC_LINE_URL ||
@@ -13,6 +15,7 @@ type MemberPageProps = {
   searchParams?: Promise<{
     debug?: string;
     membershipDebug?: string;
+    next?: string;
   }>;
 };
 
@@ -44,6 +47,7 @@ function MembershipDebugPanel({ result }: { result: MembershipResolutionResult |
 
 export default async function MemberPage({ searchParams }: MemberPageProps) {
   const params = searchParams ? await searchParams : undefined;
+  const safeNext = resolveSafeInternalNextPath(params?.next);
   const supabaseConfig = getSupabaseConfigStatus();
   const supabase = await getSupabaseServerClient();
   let initialPlan: "free" | "basic" | "growth" | "inner_circle" = "free";
@@ -72,6 +76,10 @@ export default async function MemberPage({ searchParams }: MemberPageProps) {
     initialEmail = user.email || "";
     membershipSummary = entitlement.membershipSummary;
     membershipDebugResult = entitlement;
+
+    if (entitlement.hasActiveSubscription && params?.membershipDebug !== "1") {
+      redirect(safeNext);
+    }
   }
 
   return (

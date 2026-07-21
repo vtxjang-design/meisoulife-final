@@ -1,3 +1,4 @@
+import { resolveSafeInternalNextPath } from "@/lib/auth-next";
 import { SUPABASE_ANON_KEY, SUPABASE_URL, getSupabaseConfigStatus } from "@/lib/supabase-config";
 import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
@@ -10,8 +11,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json().catch(() => null);
     const email = typeof body?.email === "string" ? body.email.trim() : "";
-    const next =
-      typeof body?.next === "string" && body.next.startsWith("/") && !body.next.startsWith("//") ? body.next : "/program/basic";
+    const next = resolveSafeInternalNextPath(typeof body?.next === "string" ? body.next : null);
 
     if (!SUPABASE_URL) {
       console.error("[send-magic-link] Missing Supabase URL");
