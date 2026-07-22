@@ -261,13 +261,13 @@ export function SiteHeader() {
             <div
               id={mobileMenuId}
               className={cn(
-                "pointer-events-none absolute right-[0.125rem] top-[calc(100%+0.6rem)] z-[120] w-[clamp(190px,52vw,210px)] origin-top-right rounded-[18px] border border-white/10 bg-[rgba(7,17,31,0.96)] p-2 shadow-[0_14px_30px_rgba(2,8,20,0.28)] backdrop-blur-xl transition duration-200",
+                "pointer-events-none absolute right-[0.125rem] top-[calc(100%+0.18rem)] z-[120] w-[clamp(190px,52vw,210px)] origin-top-right rounded-[18px] border border-white/10 bg-[rgba(7,17,31,0.96)] px-2 py-1.5 shadow-[0_14px_30px_rgba(2,8,20,0.28)] backdrop-blur-xl transition duration-200",
                 mobileOpen ? "pointer-events-auto translate-y-0 scale-100 opacity-100" : "translate-y-[-6px] scale-[0.98] opacity-0"
               )}
               role="menu"
               aria-label={copy.header.menu}
             >
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-0.5">
                 {mobileDropdownLinks.map((item) => {
                   const active = isActivePath(item.href);
 
@@ -277,7 +277,7 @@ export function SiteHeader() {
                       href={item.href}
                       onClick={() => setMobileOpen(false)}
                       className={cn(
-                        "inline-flex min-h-[44px] w-full items-center whitespace-nowrap rounded-[12px] px-[14px] py-2.5 text-[14px] font-medium text-white/88 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131f]",
+                        "inline-flex min-h-[44px] w-full items-center whitespace-nowrap rounded-[12px] px-[14px] py-2 text-[14px] font-medium text-white/88 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131f]",
                         active ? "bg-white/[0.07] text-white" : "hover:bg-white/[0.06] hover:text-white"
                       )}
                       role="menuitem"
@@ -291,7 +291,7 @@ export function SiteHeader() {
                     type="button"
                     onClick={handleLogout}
                     disabled={loggingOut}
-                    className="inline-flex min-h-[44px] w-full items-center whitespace-nowrap rounded-[12px] px-[14px] py-2.5 text-left text-[14px] font-medium text-white/78 transition hover:bg-white/[0.06] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131f] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="inline-flex min-h-[44px] w-full items-center whitespace-nowrap rounded-[12px] px-[14px] py-2 text-left text-[14px] font-medium text-white/78 transition hover:bg-white/[0.06] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131f] disabled:cursor-not-allowed disabled:opacity-60"
                     role="menuitem"
                   >
                     {loggingOut ? "..." : logoutLabel}
