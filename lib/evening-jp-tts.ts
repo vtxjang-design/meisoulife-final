@@ -132,11 +132,11 @@ export const JAPANESE_GRATITUDE_GATE_NARRATION: JapaneseEveningNarrationLine[] =
     at: 44,
     key: "gratitude-3",
     text: "近すぎて、\n気づかなかった\nあたたかさが\nあったかもしれません",
-    speechText: "近すぎて、\n気づかなかった\nあたたかさが、\nあったかもしれません。",
+    speechText: "ちかすぎて、\n気づかなかった\nあたたかさが、\nあったかもしれません。",
     speechDelayMs: 1020
   },
   { at: 60, key: "gratitude-4", text: "空気", speechText: "空気。", speechDelayMs: 1060 },
-  { at: 68, key: "gratitude-5", text: "陽ざし", speechText: "陽ざし。", speechDelayMs: 1060 },
+  { at: 68, key: "gratitude-5", text: "日差し", speechText: "ひざし。", speechDelayMs: 1060 },
   { at: 76, key: "gratitude-6", text: "風", speechText: "風。", speechDelayMs: 1060 },
   { at: 84, key: "gratitude-7", text: "自然の香り", speechText: "自然の香り。", speechDelayMs: 1080 },
   {
@@ -281,7 +281,7 @@ export function getJapaneseEveningSpeechSettings(gate: EveningGateKind): Japanes
     case "gratitude":
       return {
         lang: "ja-JP",
-        rate: 0.8,
+        rate: 0.76,
         pitch: 0.87,
         volume: 0.82,
         preferredNames: JAPANESE_EVENING_PREFERRED_NAMES

@@ -5,6 +5,7 @@ import {
   getJapaneseEveningSpeechSettings,
   isJapaneseSpeechLocale,
   JAPANESE_EVENING_PREFERRED_NAMES,
+  JAPANESE_GRATITUDE_GATE_NARRATION,
   JAPANESE_SLEEP_GATE_NARRATION,
   pickJapaneseEveningVoice,
   type SpeechSynthesisVoiceLike
@@ -107,7 +108,7 @@ test("Japanese evening settings use conservative natural pacing ranges", () => {
   });
   assert.deepEqual(getJapaneseEveningSpeechSettings("gratitude"), {
     lang: "ja-JP",
-    rate: 0.8,
+    rate: 0.76,
     pitch: 0.87,
     volume: 0.82,
     preferredNames: JAPANESE_EVENING_PREFERRED_NAMES
@@ -119,6 +120,16 @@ test("Japanese evening settings use conservative natural pacing ranges", () => {
     volume: 0.78,
     preferredNames: JAPANESE_EVENING_PREFERRED_NAMES
   });
+});
+
+test("Japanese Gratitude narration keeps display text while providing safer spoken readings", () => {
+  const warmthLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-3");
+  const sunlightLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-5");
+
+  assert.equal(warmthLine?.text, "近すぎて、\n気づかなかった\nあたたかさが\nあったかもしれません");
+  assert.equal(warmthLine?.speechText, "ちかすぎて、\n気づかなかった\nあたたかさが、\nあったかもしれません。");
+  assert.equal(sunlightLine?.text, "日差し");
+  assert.equal(sunlightLine?.speechText, "ひざし。");
 });
 
 test("Japanese Sleep narration is reduced to three cues or fewer", () => {
