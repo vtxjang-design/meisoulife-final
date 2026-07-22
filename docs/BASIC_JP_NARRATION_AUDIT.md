@@ -48,6 +48,30 @@ This document tracks the current Japanese narration foundation for BASIC Gates s
 | Sleep | `sleep-3` | 呼吸は...そのままで大丈夫です | こきゅうは...そのままで だいじょうぶです | Keep breath cue gentle, not directive | 1080ms | Evening release | tuned |
 | Sleep | `sleep-4` | 今は...何もしなくて大丈夫です | いまは...なにも しなくて だいじょうぶです | Final permission line; leave silence after this | 1100ms | Evening release | tuned |
 
+## Evening TTS Stabilization Pass (Pre-recording)
+
+This pass does not replace the Japanese voice actor. It stabilizes browser `speechSynthesis` until approved recorded narration is available.
+
+| Gate | Displayed text | Old spoken text | Proposed spoken text | Pronunciation / pause intention | Native review |
+| --- | --- | --- | --- | --- | --- |
+| Release | 今は、少し休んでも大丈夫です | いまは、すこし やすんでも だいじょうぶです | いまは、少し休んでも大丈夫です。 | Remove unnatural spacing and let the landing fall gently | needs-review |
+| Release | 今日という 一日は、いろいろな時間があったことでしょう | きょうという いちにちは、いろいろな じかんが あったことでしょう | きょうという いちにちは、いろいろな時間があったことでしょう。 | Keep `一日` as `いちにち` and keep the phrase connected | needs-review |
+| Release | 今日終わらなかったことは、明日のあなたに任せても大丈夫です | きょう おわらなかったことは、あしたの あなたに まかせても だいじょうぶです | きょう終わらなかったことは、明日のあなたに、任せても大丈夫です。 | One soft pause before `任せても` instead of word-by-word spacing | needs-review |
+| Gratitude | 今日は、少しだけ一日を思い返してみます | きょうは、すこしだけ いちにちを おもいかえしてみます | きょうは、少しだけ、いちにちを思い返してみます。 | Keep it reflective, not explanatory | needs-review |
+| Gratitude | 近すぎて、気づかなかったあたたかさがあったかもしれません | 近すぎて、気づかなかった あたたかさが あったかもしれません | 近すぎて、気づかなかった あたたかさが、あったかもしれません。 | Small pause before the closing clause | needs-review |
+| Gratitude | 今日も頑張ってくれた自分自身 | きょうも がんばってくれた じぶんじしん | きょうも、頑張ってくれた 自分自身。 | Warm self-compassion line with a softer opening breath | needs-review |
+| Sleep | 今日も...お疲れさまでした | 今日も...お疲れさまでした | 今日も…お疲れさまでした。 | Let the acknowledgement feel complete on its own | needs-review |
+| Sleep | 呼吸は...そのままで大丈夫です | こきゅうは...そのままで だいじょうぶです | 呼吸は…そのままで大丈夫です。 | Brief non-commanding breath cue | needs-review |
+| Sleep | もう...何もしなくて大丈夫です | もう...なにもしなくて だいじょうぶです | もう…何もしなくて大丈夫です。 | Final permission line; no narration after this | needs-review |
+
+### Selected Short-term JP Evening TTS Settings
+
+- Release: `rate 0.80`, `pitch 0.88`, `volume 0.84`
+- Gratitude: `rate 0.80`, `pitch 0.90`, `volume 0.82`
+- Sleep: `rate 0.76`, `pitch 0.84`, `volume 0.78`
+
+These values were chosen to avoid the stretched feel of the previous `0.60–0.66` range on older iOS engines while keeping the tone calm and grounded.
+
 ## Morning Gates
 
 | Gate | Key | On-screen copy | Spoken copy | Pronunciation / reading note | Delay | Voice | Status |

@@ -21,6 +21,14 @@ import { getRhythmJourneyContent, journeyAudioMap } from "@/lib/rhythm-journey";
 import { getBasicPracticeByRouteType, getBasicPracticeBySession } from "@/lib/basic-rhythm";
 import { resolveMeditationRequiredPlan } from "@/lib/membership-access";
 import {
+  createJapaneseEveningVoiceSession,
+  getJapaneseEveningSpeechSettings,
+  JAPANESE_GRATITUDE_GATE_NARRATION,
+  JAPANESE_RELEASE_GATE_NARRATION,
+  JAPANESE_SLEEP_GATE_NARRATION,
+  type EveningGateKind
+} from "@/lib/evening-jp-tts";
+import {
   safeLocalStorageGet,
   safeLocalStorageSet,
   safeSessionStorageGet,
@@ -380,31 +388,7 @@ const calmGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
 };
 
 const releaseGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
-  jp: [
-    { at: 10, key: "release-1", text: "今日も…\nお疲れさまでした", speechDelayMs: 880 },
-    {
-      at: 24,
-      key: "release-2",
-      text: "今は、\n少し休んでも\n大丈夫です",
-      speechText: "いまは、\nすこし やすんでも\nだいじょうぶです",
-      speechDelayMs: 920
-    },
-    {
-      at: 40,
-      key: "release-3",
-      text: "今日という 一日は、\nいろいろな時間が\nあったことでしょう",
-      speechText: "きょうという いちにちは、\nいろいろな じかんが\nあったことでしょう",
-      speechDelayMs: 940
-    },
-    { at: 58, key: "release-4", text: "今は、\nそのすべてを\nそっと置いてみましょう", speechText: "いまは、\nそのすべてを\nそっと おいてみましょう", speechDelayMs: 960 },
-    { at: 74, key: "release-5", text: "体の力を、\n少しゆるめます", speechText: "からだの ちからを、\nすこし ゆるめます", speechDelayMs: 940 },
-    { at: 98, key: "release-6", text: "心も、\n静かに休ませます", speechText: "こころも、\nしずかに やすませます", speechDelayMs: 1000 },
-    { at: 122, key: "release-7", text: "今日終わらなかったことは、\n明日のあなたに\n任せても大丈夫です", speechText: "きょう おわらなかったことは、\nあしたの あなたに\nまかせても だいじょうぶです", speechDelayMs: 1020 },
-    { at: 136, key: "release-8", text: "何も\n頑張らなくて\n大丈夫です", speechText: "なにも\nがんばらなくて\nだいじょうぶです", speechDelayMs: 1020 },
-    { at: 148, key: "release-9", text: "ただ、\nここに\n静かにいてみましょう", speechText: "ただ、\nここに\nしずかに いてみましょう", speechDelayMs: 1080 },
-    { at: 155, key: "release-10", text: "今日も…\n十分でした", speechText: "きょうも…\nじゅうぶんでした", speechDelayMs: 1120 },
-    { at: 170, key: "release-11", text: "今日の重さを…\nゆっくり下ろします", speechText: "きょうの おもさを…\nゆっくり おろします", speechDelayMs: 1120 }
-  ],
+  jp: JAPANESE_RELEASE_GATE_NARRATION,
   kr: [
     { at: 10, key: "release-1", text: "오늘도…\n수고하셨습니다", speechDelayMs: 880 },
     { at: 24, key: "release-2", text: "지금은\n잠시 쉬어도\n괜찮습니다", speechDelayMs: 920 },
@@ -433,61 +417,7 @@ const releaseGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
 };
 
 const gratitudeGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
-  jp: [
-    { at: 12, key: "gratitude-1", text: "今日も...\nありがとうございます", speechDelayMs: 980 },
-    {
-      at: 26,
-      key: "gratitude-2",
-      text: "今日は、\n少しだけ\n一日を\n思い返してみます",
-      speechText: "きょうは、\nすこしだけ\nいちにちを\nおもいかえしてみます",
-      speechDelayMs: 980
-    },
-    {
-      at: 44,
-      key: "gratitude-3",
-      text: "近すぎて、\n気づかなかった\nあたたかさが\nあったかもしれません",
-      speechDelayMs: 1020
-    },
-    { at: 60, key: "gratitude-4", text: "空気", speechDelayMs: 1060 },
-    { at: 68, key: "gratitude-5", text: "陽ざし", speechDelayMs: 1060 },
-    { at: 76, key: "gratitude-6", text: "風", speechDelayMs: 1060 },
-    { at: 84, key: "gratitude-7", text: "自然の香り", speechDelayMs: 1080 },
-    {
-      at: 100,
-      key: "gratitude-8",
-      text: "今日、\n当たり前すぎて\n見過ごしていたものは\nありませんでしたか",
-      speechDelayMs: 1040
-    },
-    {
-      at: 118,
-      key: "gratitude-9",
-      text: "いつも\nそばにいてくれた\n大切な人たち",
-      speechDelayMs: 1040
-    },
-    { at: 132, key: "gratitude-10", text: "家族", speechDelayMs: 1080 },
-    { at: 139, key: "gratitude-11", text: "友人", speechDelayMs: 1080 },
-    { at: 146, key: "gratitude-12", text: "仲間", speechDelayMs: 1080 },
-    {
-      at: 156,
-      key: "gratitude-13",
-      text: "今日も\n頑張ってくれた\n自分自身",
-      speechText: "きょうも\nがんばってくれた\nじぶんじしん",
-      speechDelayMs: 1180
-    },
-    {
-      at: 170,
-      key: "gratitude-14",
-      text: "今日も...\nたくさんの贈りものの中で\n生きていました",
-      speechDelayMs: 1080
-    },
-    {
-      at: 184,
-      key: "gratitude-15",
-      text: "その温もりを\n静かに\n心にしまいます",
-      speechDelayMs: 1120
-    },
-    { at: 200, key: "gratitude-16", text: "今日も...\nありがとうございます", speechDelayMs: 1120 }
-  ],
+  jp: JAPANESE_GRATITUDE_GATE_NARRATION,
   kr: [
     { at: 12, key: "gratitude-1", text: "오늘도...\n고맙습니다", speechDelayMs: 980 },
     {
@@ -597,30 +527,7 @@ const gratitudeGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
 };
 
 const sleepGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
-  jp: [
-    { at: 15, key: "sleep-1", text: "今日も...\nお疲れさまでした", speechDelayMs: 1040 },
-    {
-      at: 32,
-      key: "sleep-2",
-      text: "もう...\n何もしなくて\n大丈夫です",
-      speechText: "もう...\nなにもしなくて\nだいじょうぶです",
-      speechDelayMs: 1080
-    },
-    {
-      at: 50,
-      key: "sleep-3",
-      text: "呼吸は...\nそのままで\n大丈夫です",
-      speechText: "こきゅうは...\nそのままで\nだいじょうぶです",
-      speechDelayMs: 1080
-    },
-    {
-      at: 72,
-      key: "sleep-4",
-      text: "今は...\n何も\nしなくて大丈夫です",
-      speechText: "いまは...\nなにも\nしなくて だいじょうぶです",
-      speechDelayMs: 1100
-    }
-  ],
+  jp: JAPANESE_SLEEP_GATE_NARRATION,
   kr: [
     { at: 15, key: "sleep-1", text: "오늘도...\n수고하셨습니다", speechDelayMs: 1040 },
     { at: 32, key: "sleep-2", text: "이제는...\n아무것도\n하지 않아도 됩니다", speechDelayMs: 1080 },
@@ -1353,13 +1260,7 @@ function getReleaseGateSpeechSettings(language: "jp" | "kr" | "en") {
     };
   }
 
-  return {
-    lang: "ja-JP",
-    rate: 0.66,
-    pitch: 0.92,
-    volume: 0.84,
-    preferredNames: ["Kyoko", "Otoya", "Sakura", "Google 日本語", "Siri"]
-  };
+  return getJapaneseEveningSpeechSettings("release");
 }
 
 function getGratitudeGateSpeechSettings(language: "jp" | "kr" | "en") {
@@ -1383,13 +1284,7 @@ function getGratitudeGateSpeechSettings(language: "jp" | "kr" | "en") {
     };
   }
 
-  return {
-    lang: "ja-JP",
-    rate: 0.64,
-    pitch: 0.93,
-    volume: 0.82,
-    preferredNames: ["Kyoko", "Otoya", "Sakura", "Google 日本語", "Siri"]
-  };
+  return getJapaneseEveningSpeechSettings("gratitude");
 }
 
 function getSleepGateSpeechSettings(language: "jp" | "kr" | "en") {
@@ -1413,19 +1308,13 @@ function getSleepGateSpeechSettings(language: "jp" | "kr" | "en") {
     };
   }
 
-  return {
-    lang: "ja-JP",
-    rate: 0.6,
-    pitch: 0.8,
-    volume: 0.78,
-    preferredNames: ["Otoya", "Kyoko", "Google 日本語", "Siri"]
-  };
+  return getJapaneseEveningSpeechSettings("sleep");
 }
 
 function pickStructuredMorningVoice(
   voices: SpeechSynthesisVoice[],
   lang: string,
-  preferredNames: string[]
+  preferredNames: readonly string[]
 ) {
   const matchingVoices = voices.filter((voice) =>
     voice.lang.toLowerCase().startsWith(lang.toLowerCase().slice(0, 2))
@@ -1666,6 +1555,12 @@ function MeditationPageContent() {
   const releaseSpeechUnlockedRef = useRef(false);
   const gratitudeSpeechUnlockedRef = useRef(false);
   const sleepSpeechUnlockedRef = useRef(false);
+  const releaseJapaneseVoiceSessionRef = useRef(createJapaneseEveningVoiceSession<SpeechSynthesisVoice>());
+  const gratitudeJapaneseVoiceSessionRef = useRef(createJapaneseEveningVoiceSession<SpeechSynthesisVoice>());
+  const sleepJapaneseVoiceSessionRef = useRef(createJapaneseEveningVoiceSession<SpeechSynthesisVoice>());
+  const releaseJapaneseVoiceWatcherCleanupRef = useRef<(() => void) | null>(null);
+  const gratitudeJapaneseVoiceWatcherCleanupRef = useRef<(() => void) | null>(null);
+  const sleepJapaneseVoiceWatcherCleanupRef = useRef<(() => void) | null>(null);
   const journeyStartButtonTimeoutRef = useRef<number | null>(null);
   const journeyCompletionHoldTimeoutRef = useRef<number | null>(null);
   const rechargeTimerIntervalRef = useRef<number | null>(null);
@@ -1812,6 +1707,80 @@ function MeditationPageContent() {
         ? "mx-auto block w-full min-w-0 max-w-[min(100%,46rem)] animate-fade-in text-center font-serif text-[clamp(1rem,4.1vw,1.125rem)] leading-[1.62] text-white/84 [text-wrap:balance] [writing-mode:horizontal-tb] [overflow-wrap:normal] [word-break:normal] md:text-[clamp(1.125rem,2.7vw,1.3125rem)] md:leading-[1.56] lg:text-[clamp(1.3125rem,1.9vw,1.5rem)] lg:leading-[1.5]"
         : "mx-auto block w-full min-w-0 max-w-[min(100%,46rem)] animate-fade-in text-center font-serif text-[clamp(1rem,4.1vw,1.125rem)] leading-[1.62] text-white/84 [text-wrap:balance] [writing-mode:horizontal-tb] [line-break:strict] [overflow-wrap:normal] [word-break:normal] md:text-[clamp(1.125rem,2.7vw,1.3125rem)] md:leading-[1.56] lg:text-[clamp(1.3125rem,1.9vw,1.5rem)] lg:leading-[1.5]";
 
+  function getJapaneseEveningVoiceSession(kind: EveningGateKind) {
+    switch (kind) {
+      case "release":
+        return releaseJapaneseVoiceSessionRef.current;
+      case "gratitude":
+        return gratitudeJapaneseVoiceSessionRef.current;
+      case "sleep":
+        return sleepJapaneseVoiceSessionRef.current;
+    }
+  }
+
+  function getJapaneseEveningVoiceWatcherCleanupRef(kind: EveningGateKind) {
+    switch (kind) {
+      case "release":
+        return releaseJapaneseVoiceWatcherCleanupRef;
+      case "gratitude":
+        return gratitudeJapaneseVoiceWatcherCleanupRef;
+      case "sleep":
+        return sleepJapaneseVoiceWatcherCleanupRef;
+    }
+  }
+
+  function clearJapaneseEveningVoiceWatcher(kind: EveningGateKind) {
+    const cleanupRef = getJapaneseEveningVoiceWatcherCleanupRef(kind);
+    cleanupRef.current?.();
+    cleanupRef.current = null;
+  }
+
+  function resetJapaneseEveningVoiceSession(kind: EveningGateKind) {
+    clearJapaneseEveningVoiceWatcher(kind);
+    getJapaneseEveningVoiceSession(kind).reset();
+  }
+
+  function primeJapaneseEveningVoiceSession(kind: EveningGateKind, options?: { lock?: boolean }) {
+    if (localizedLanguage !== "jp" || typeof window === "undefined" || !("speechSynthesis" in window)) {
+      return undefined;
+    }
+
+    const shouldLock = options?.lock ?? false;
+    const synth = window.speechSynthesis;
+    const session = getJapaneseEveningVoiceSession(kind);
+    const availableVoices = synth.getVoices();
+
+    if (availableVoices.length > 0) {
+      clearJapaneseEveningVoiceWatcher(kind);
+      return shouldLock ? session.lock(availableVoices) : session.prime(availableVoices);
+    }
+
+    if (shouldLock) {
+      clearJapaneseEveningVoiceWatcher(kind);
+      return session.lock([]);
+    }
+
+    const cleanupRef = getJapaneseEveningVoiceWatcherCleanupRef(kind);
+    if (cleanupRef.current) {
+      return session.getVoice();
+    }
+
+    const handleVoicesChanged = () => {
+      const nextVoices = synth.getVoices();
+      if (nextVoices.length > 0 && !session.isLocked()) {
+        session.prime(nextVoices);
+        clearJapaneseEveningVoiceWatcher(kind);
+      }
+    };
+
+    if ("addEventListener" in synth) {
+      synth.addEventListener("voiceschanged", handleVoicesChanged);
+      cleanupRef.current = () => synth.removeEventListener("voiceschanged", handleVoicesChanged);
+    }
+
+    return session.getVoice();
+  }
+
   function cancelGuidedSpeech() {
     if (typeof window === "undefined") {
       return;
@@ -1852,6 +1821,10 @@ function MeditationPageContent() {
     if ("speechSynthesis" in window) {
       window.speechSynthesis.cancel();
     }
+
+    resetJapaneseEveningVoiceSession("release");
+    resetJapaneseEveningVoiceSession("gratitude");
+    resetJapaneseEveningVoiceSession("sleep");
   }
 
   async function stopCurrentGatePlayback(options: { resetTime?: boolean } = {}) {
@@ -2936,6 +2909,7 @@ function MeditationPageContent() {
       const synth = window.speechSynthesis;
       const settings = getReleaseGateSpeechSettings(localizedLanguage);
       synth.getVoices();
+      const selectedVoice = localizedLanguage === "jp" ? primeJapaneseEveningVoiceSession("release") : undefined;
 
       if (releaseSpeechUnlockedRef.current) {
         return;
@@ -2946,6 +2920,9 @@ function MeditationPageContent() {
       unlockUtterance.volume = 0;
       unlockUtterance.rate = settings.rate;
       unlockUtterance.pitch = settings.pitch;
+      if (selectedVoice) {
+        unlockUtterance.voice = selectedVoice;
+      }
       releaseSpeechUnlockedRef.current = true;
       synth.cancel();
       synth.speak(unlockUtterance);
@@ -2963,6 +2940,7 @@ function MeditationPageContent() {
       const synth = window.speechSynthesis;
       const settings = getGratitudeGateSpeechSettings(localizedLanguage);
       synth.getVoices();
+      const selectedVoice = localizedLanguage === "jp" ? primeJapaneseEveningVoiceSession("gratitude") : undefined;
 
       if (gratitudeSpeechUnlockedRef.current) {
         return;
@@ -2973,6 +2951,9 @@ function MeditationPageContent() {
       unlockUtterance.volume = 0;
       unlockUtterance.rate = settings.rate;
       unlockUtterance.pitch = settings.pitch;
+      if (selectedVoice) {
+        unlockUtterance.voice = selectedVoice;
+      }
       gratitudeSpeechUnlockedRef.current = true;
       synth.cancel();
       synth.speak(unlockUtterance);
@@ -2990,6 +2971,7 @@ function MeditationPageContent() {
       const synth = window.speechSynthesis;
       const settings = getSleepGateSpeechSettings(localizedLanguage);
       synth.getVoices();
+      const selectedVoice = localizedLanguage === "jp" ? primeJapaneseEveningVoiceSession("sleep") : undefined;
 
       if (sleepSpeechUnlockedRef.current) {
         return;
@@ -3000,6 +2982,9 @@ function MeditationPageContent() {
       unlockUtterance.volume = 0;
       unlockUtterance.rate = settings.rate;
       unlockUtterance.pitch = settings.pitch;
+      if (selectedVoice) {
+        unlockUtterance.voice = selectedVoice;
+      }
       sleepSpeechUnlockedRef.current = true;
       synth.cancel();
       synth.speak(unlockUtterance);
@@ -3101,6 +3086,10 @@ function MeditationPageContent() {
         sleepSpeechSequenceRef.current += 1;
         window.speechSynthesis.cancel();
       }
+
+      resetJapaneseEveningVoiceSession("release");
+      resetJapaneseEveningVoiceSession("gratitude");
+      resetJapaneseEveningVoiceSession("sleep");
 
       void stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
     };
@@ -3636,11 +3625,14 @@ function MeditationPageContent() {
         utterance.pitch = settings.pitch;
         utterance.volume = settings.volume;
 
-        const selectedVoice = pickStructuredMorningVoice(
-          synth.getVoices(),
-          settings.lang,
-          settings.preferredNames
-        );
+        const selectedVoice =
+          localizedLanguage === "jp"
+            ? primeJapaneseEveningVoiceSession("release", { lock: true })
+            : pickStructuredMorningVoice(
+                synth.getVoices(),
+                settings.lang,
+                settings.preferredNames
+              );
 
         if (selectedVoice) {
           utterance.voice = selectedVoice;
@@ -3725,11 +3717,14 @@ function MeditationPageContent() {
         utterance.pitch = settings.pitch;
         utterance.volume = settings.volume;
 
-        const selectedVoice = pickStructuredMorningVoice(
-          synth.getVoices(),
-          settings.lang,
-          settings.preferredNames
-        );
+        const selectedVoice =
+          localizedLanguage === "jp"
+            ? primeJapaneseEveningVoiceSession("gratitude", { lock: true })
+            : pickStructuredMorningVoice(
+                synth.getVoices(),
+                settings.lang,
+                settings.preferredNames
+              );
 
         if (selectedVoice) {
           utterance.voice = selectedVoice;
@@ -3815,11 +3810,14 @@ function MeditationPageContent() {
         utterance.pitch = settings.pitch;
         utterance.volume = settings.volume;
 
-        const selectedVoice = pickStructuredMorningVoice(
-          synth.getVoices(),
-          settings.lang,
-          settings.preferredNames
-        );
+        const selectedVoice =
+          localizedLanguage === "jp"
+            ? primeJapaneseEveningVoiceSession("release", { lock: true })
+            : pickStructuredMorningVoice(
+                synth.getVoices(),
+                settings.lang,
+                settings.preferredNames
+              );
 
         if (selectedVoice) {
           utterance.voice = selectedVoice;
@@ -3905,11 +3903,14 @@ function MeditationPageContent() {
         utterance.pitch = settings.pitch;
         utterance.volume = settings.volume;
 
-        const selectedVoice = pickStructuredMorningVoice(
-          synth.getVoices(),
-          settings.lang,
-          settings.preferredNames
-        );
+        const selectedVoice =
+          localizedLanguage === "jp"
+            ? primeJapaneseEveningVoiceSession("gratitude", { lock: true })
+            : pickStructuredMorningVoice(
+                synth.getVoices(),
+                settings.lang,
+                settings.preferredNames
+              );
 
         if (selectedVoice) {
           utterance.voice = selectedVoice;
@@ -3995,11 +3996,14 @@ function MeditationPageContent() {
         utterance.pitch = settings.pitch;
         utterance.volume = settings.volume;
 
-        const selectedVoice = pickStructuredMorningVoice(
-          synth.getVoices(),
-          settings.lang,
-          settings.preferredNames
-        );
+        const selectedVoice =
+          localizedLanguage === "jp"
+            ? primeJapaneseEveningVoiceSession("sleep", { lock: true })
+            : pickStructuredMorningVoice(
+                synth.getVoices(),
+                settings.lang,
+                settings.preferredNames
+              );
 
         if (selectedVoice) {
           utterance.voice = selectedVoice;
