@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useRef, useState, type MutableRefObject } from "react";
 import { useAuthState } from "@/components/auth-provider";
 import { MembershipAccessStateView, useMembershipAccess } from "@/components/membership-guard";
+import { preparePlaybackMediaElement } from "@/lib/basic-experience";
 import { useLanguage, useSiteCopy } from "@/lib/i18n";
 import {
   getNatureSoundPreference,
@@ -78,12 +79,12 @@ const EVENING_GRATITUDE_VIDEO_SRC = "/basic/evening-gate/Gratitude%20Gate1.mp4";
 const EVENING_SLEEP_VIDEO_SRC = "/basic/evening-gate/sleep%20gate1.mp4";
 const AWAKENING_GATE_VIDEO_VOLUME = 0.14;
 const VISION_GATE_VIDEO_VOLUME = 0.15;
-const FOCUS_GATE_VIDEO_VOLUME = 0.34;
-const CALM_GATE_VIDEO_VOLUME = 0.35;
-const RECHARGE_GATE_VIDEO_VOLUME = 1;
-const EVENING_RELEASE_VIDEO_VOLUME = 0.65;
-const EVENING_GRATITUDE_VIDEO_VOLUME = 0.65;
-const EVENING_SLEEP_VIDEO_VOLUME = 0.65;
+const FOCUS_GATE_VIDEO_VOLUME = 0.16;
+const CALM_GATE_VIDEO_VOLUME = 0.15;
+const RECHARGE_GATE_VIDEO_VOLUME = 0.18;
+const EVENING_RELEASE_VIDEO_VOLUME = 0.14;
+const EVENING_GRATITUDE_VIDEO_VOLUME = 0.14;
+const EVENING_SLEEP_VIDEO_VOLUME = 0.12;
 const AWAKENING_RITUAL_STORAGE_KEY = "meisoulife_awakening_gate_ritual";
 const FOCUS_GATE_TOTAL_SECONDS = 60;
 const rechargeCompletionCopy = {
@@ -122,6 +123,30 @@ const rechargeIntroCopy = {
     subtitle: "From Fatigue to Vitality",
     state: "\"My energy feels low.\"",
     body: "Choose one one-minute exercise you want to do and practice it for one minute."
+  }
+} as const;
+
+const basicGateUiCopy = {
+  jp: {
+    pause: "一度止める",
+    resume: "続ける",
+    exit: "静かに戻る",
+    returnToBasic: "BASICへ戻る",
+    repeat: "もう一度始める"
+  },
+  kr: {
+    pause: "잠시 멈추기",
+    resume: "이어가기",
+    exit: "조용히 나가기",
+    returnToBasic: "BASIC으로 돌아가기",
+    repeat: "다시 시작하기"
+  },
+  en: {
+    pause: "Pause",
+    resume: "Continue",
+    exit: "Leave quietly",
+    returnToBasic: "Return to BASIC",
+    repeat: "Begin again"
   }
 } as const;
 
@@ -584,128 +609,29 @@ const sleepGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
     {
       at: 50,
       key: "sleep-3",
-      text: "体の力を\n少しずつ\nほどいていきます",
-      speechText: "からだの ちからを\nすこしずつ\nほどいていきます",
+      text: "呼吸は...\nそのままで\n大丈夫です",
+      speechText: "こきゅうは...\nそのままで\nだいじょうぶです",
       speechDelayMs: 1080
     },
     {
-      at: 68,
+      at: 72,
       key: "sleep-4",
-      text: "呼吸も\n無理に\n変えなくて大丈夫です",
-      speechText: "こきゅうも\nむりに\nかえなくて だいじょうぶです",
+      text: "今は...\n何も\nしなくて大丈夫です",
+      speechText: "いまは...\nなにも\nしなくて だいじょうぶです",
       speechDelayMs: 1100
-    },
-    {
-      at: 88,
-      key: "sleep-5",
-      text: "ただ...\n静かに\nここにいてみましょう",
-      speechText: "ただ...\nしずかに\nここに いてみましょう",
-      speechDelayMs: 1120
-    },
-    {
-      at: 120,
-      key: "sleep-6",
-      text: "今日は\nもう\n十分でした",
-      speechText: "きょうは\nもう\nじゅうぶんでした",
-      speechDelayMs: 1120
-    },
-    {
-      at: 138,
-      key: "sleep-7",
-      text: "これ以上\n頑張らなくて\n大丈夫です",
-      speechText: "これいじょう\nがんばらなくて\nだいじょうぶです",
-      speechDelayMs: 1140
-    },
-    {
-      at: 156,
-      key: "sleep-8",
-      text: "体は...\nもう\n知っています",
-      speechText: "からだは...\nもう\nしっています",
-      speechDelayMs: 1160
-    },
-    { at: 174, key: "sleep-9", text: "休むことを", speechText: "やすむことを", speechDelayMs: 1180 },
-    {
-      at: 192,
-      key: "sleep-10",
-      text: "脳も...\nもう\n知っています",
-      speechText: "のうも...\nもう\nしっています",
-      speechDelayMs: 1160
-    },
-    { at: 210, key: "sleep-11", text: "回復することを", speechText: "かいふくすることを", speechDelayMs: 1180 },
-    {
-      at: 242,
-      key: "sleep-12",
-      text: "今日の疲れは\nゆっくり\nほどけていきます",
-      speechText: "きょうの つかれは\nゆっくり\nほどけていきます",
-      speechDelayMs: 1200
-    },
-    {
-      at: 260,
-      key: "sleep-13",
-      text: "あなたが\n休んでいるあいだ\n体と脳は\n静かに回復を始めます",
-      speechText: "あなたが\nやすんでいる あいだ\nからだと のうは\nしずかに かいふくを はじめます",
-      speechDelayMs: 1220
-    },
-    {
-      at: 286,
-      key: "sleep-14",
-      text: "もう\n何も\n抱えなくて大丈夫です",
-      speechText: "もう\nなにも\nかかえなくて だいじょうぶです",
-      speechDelayMs: 1220
-    },
-    {
-      at: 300,
-      key: "sleep-15",
-      text: "ただ...\n休んでください",
-      speechText: "ただ...\nやすんでください",
-      speechDelayMs: 1220
-    },
-    {
-      at: 340,
-      key: "sleep-16",
-      text: "今日も...\nよく生きてこられました",
-      speechText: "きょうも...\nよく いきてこられました",
-      speechDelayMs: 1240
-    },
-    { at: 350, key: "sleep-17", text: "穏やかな夜を", speechText: "おだやかな よるを", speechDelayMs: 1260 }
+    }
   ],
   kr: [
     { at: 15, key: "sleep-1", text: "오늘도...\n수고하셨습니다", speechDelayMs: 1040 },
     { at: 32, key: "sleep-2", text: "이제는...\n아무것도\n하지 않아도 됩니다", speechDelayMs: 1080 },
-    { at: 50, key: "sleep-3", text: "몸의 힘을\n조금씩\n놓아봅니다", speechDelayMs: 1080 },
-    { at: 68, key: "sleep-4", text: "호흡도\n억지로\n바꾸지 않습니다", speechDelayMs: 1100 },
-    { at: 88, key: "sleep-5", text: "그저...\n편안히\n머물러 봅니다", speechDelayMs: 1120 },
-    { at: 120, key: "sleep-6", text: "오늘은\n충분했습니다", speechDelayMs: 1120 },
-    { at: 138, key: "sleep-7", text: "더 애쓰지 않아도 됩니다", speechDelayMs: 1140 },
-    { at: 156, key: "sleep-8", text: "몸은...\n이미\n알고 있습니다", speechDelayMs: 1160 },
-    { at: 174, key: "sleep-9", text: "쉼을...", speechDelayMs: 1180 },
-    { at: 192, key: "sleep-10", text: "뇌도...\n알고 있습니다", speechDelayMs: 1160 },
-    { at: 210, key: "sleep-11", text: "회복을...", speechDelayMs: 1180 },
-    { at: 242, key: "sleep-12", text: "오늘의 피로는\n천천히\n사라집니다", speechDelayMs: 1200 },
-    { at: 260, key: "sleep-13", text: "당신이\n쉬는 동안,\n몸과 뇌는\n조용히\n회복을 시작합니다", speechDelayMs: 1220 },
-    { at: 286, key: "sleep-14", text: "지금은\n아무것도\n붙잡지 않아도 됩니다", speechDelayMs: 1220 },
-    { at: 300, key: "sleep-15", text: "그저...\n쉬면 됩니다", speechDelayMs: 1220 },
-    { at: 340, key: "sleep-16", text: "오늘도...\n잘 살아오셨습니다", speechDelayMs: 1240 },
-    { at: 350, key: "sleep-17", text: "편안한 밤 되세요", speechDelayMs: 1260 }
+    { at: 50, key: "sleep-3", text: "호흡은...\n그대로 두어도 됩니다", speechDelayMs: 1080 },
+    { at: 72, key: "sleep-4", text: "지금은...\n아무것도\n붙잡지 않아도 됩니다", speechDelayMs: 1100 }
   ],
   en: [
     { at: 15, key: "sleep-1", text: "You have done enough\ntoday", speechDelayMs: 1040 },
     { at: 32, key: "sleep-2", text: "Now...\nyou do not need\nto do anything", speechDelayMs: 1080 },
-    { at: 50, key: "sleep-3", text: "Let the body\nsoften\nlittle by little", speechDelayMs: 1080 },
-    { at: 68, key: "sleep-4", text: "There is no need\nto change\nyour breathing", speechDelayMs: 1100 },
-    { at: 88, key: "sleep-5", text: "Simply...\nrest here\nfor a while", speechDelayMs: 1120 },
-    { at: 120, key: "sleep-6", text: "Today\nhas been enough", speechDelayMs: 1120 },
-    { at: 138, key: "sleep-7", text: "You do not need\nto try anymore", speechDelayMs: 1140 },
-    { at: 156, key: "sleep-8", text: "Your body...\nalready knows", speechDelayMs: 1160 },
-    { at: 174, key: "sleep-9", text: "how to rest", speechDelayMs: 1180 },
-    { at: 192, key: "sleep-10", text: "Your mind...\nalready knows", speechDelayMs: 1160 },
-    { at: 210, key: "sleep-11", text: "how to recover", speechDelayMs: 1180 },
-    { at: 242, key: "sleep-12", text: "The fatigue of today\nbegins to fade\nslowly away", speechDelayMs: 1200 },
-    { at: 260, key: "sleep-13", text: "While you rest,\nyour body and mind\nbegin their quiet recovery", speechDelayMs: 1220 },
-    { at: 286, key: "sleep-14", text: "You do not need\nto hold onto\nanything now", speechDelayMs: 1220 },
-    { at: 300, key: "sleep-15", text: "Simply...\nrest", speechDelayMs: 1220 },
-    { at: 340, key: "sleep-16", text: "You have come\nthrough today\nwell enough", speechDelayMs: 1240 },
-    { at: 350, key: "sleep-17", text: "May your night be gentle", speechDelayMs: 1260 }
+    { at: 50, key: "sleep-3", text: "Your breathing\ncan stay\njust as it is", speechDelayMs: 1080 },
+    { at: 72, key: "sleep-4", text: "You do not need\nto hold onto\nanything now", speechDelayMs: 1100 }
   ]
 };
 
@@ -1410,9 +1336,9 @@ function getReleaseGateSpeechSettings(language: "jp" | "kr" | "en") {
   if (language === "kr") {
     return {
       lang: "ko-KR",
-      rate: 0.57,
-      pitch: 0.92,
-      volume: 0.56,
+      rate: 0.68,
+      pitch: 0.94,
+      volume: 0.82,
       preferredNames: ["Yuna", "Sora", "Google 한국어", "Siri"]
     };
   }
@@ -1420,19 +1346,19 @@ function getReleaseGateSpeechSettings(language: "jp" | "kr" | "en") {
   if (language === "en") {
     return {
       lang: "en-US",
-      rate: 0.6,
-      pitch: 0.94,
-      volume: 0.54,
+      rate: 0.7,
+      pitch: 0.96,
+      volume: 0.8,
       preferredNames: ["Samantha", "Ava", "Victoria", "Google US English", "Siri"]
     };
   }
 
   return {
     lang: "ja-JP",
-    rate: 0.54,
-    pitch: 0.9,
-    volume: 0.7,
-    preferredNames: ["Kyoko", "Sakura", "Google 日本語", "Siri"]
+    rate: 0.66,
+    pitch: 0.92,
+    volume: 0.84,
+    preferredNames: ["Kyoko", "Otoya", "Sakura", "Google 日本語", "Siri"]
   };
 }
 
@@ -1440,9 +1366,9 @@ function getGratitudeGateSpeechSettings(language: "jp" | "kr" | "en") {
   if (language === "kr") {
     return {
       lang: "ko-KR",
-      rate: 0.56,
-      pitch: 0.93,
-      volume: 0.58,
+      rate: 0.66,
+      pitch: 0.95,
+      volume: 0.8,
       preferredNames: ["Yuna", "Sora", "Google 한국어", "Siri"]
     };
   }
@@ -1450,19 +1376,19 @@ function getGratitudeGateSpeechSettings(language: "jp" | "kr" | "en") {
   if (language === "en") {
     return {
       lang: "en-US",
-      rate: 0.58,
-      pitch: 0.95,
-      volume: 0.56,
+      rate: 0.68,
+      pitch: 0.97,
+      volume: 0.78,
       preferredNames: ["Samantha", "Ava", "Victoria", "Google US English", "Siri"]
     };
   }
 
   return {
     lang: "ja-JP",
-    rate: 0.53,
-    pitch: 0.91,
-    volume: 0.72,
-    preferredNames: ["Kyoko", "Sakura", "Google 日本語", "Siri"]
+    rate: 0.64,
+    pitch: 0.93,
+    volume: 0.82,
+    preferredNames: ["Kyoko", "Otoya", "Sakura", "Google 日本語", "Siri"]
   };
 }
 
@@ -1470,9 +1396,9 @@ function getSleepGateSpeechSettings(language: "jp" | "kr" | "en") {
   if (language === "kr") {
     return {
       lang: "ko-KR",
-      rate: 0.52,
+      rate: 0.62,
       pitch: 0.82,
-      volume: 0.52,
+      volume: 0.76,
       preferredNames: ["InJoon", "MinJoon", "Google 한국어", "Siri"]
     };
   }
@@ -1480,19 +1406,19 @@ function getSleepGateSpeechSettings(language: "jp" | "kr" | "en") {
   if (language === "en") {
     return {
       lang: "en-US",
-      rate: 0.54,
+      rate: 0.64,
       pitch: 0.82,
-      volume: 0.5,
+      volume: 0.74,
       preferredNames: ["Daniel", "Alex", "Google US English", "Siri"]
     };
   }
 
   return {
     lang: "ja-JP",
-    rate: 0.5,
+    rate: 0.6,
     pitch: 0.8,
-    volume: 0.56,
-    preferredNames: ["Otoya", "Google 日本語", "Siri"]
+    volume: 0.78,
+    preferredNames: ["Otoya", "Kyoko", "Google 日本語", "Siri"]
   };
 }
 
@@ -1752,6 +1678,7 @@ function MeditationPageContent() {
   const isSleepGate = meditationType === "night" && mappedDoor === "sleep";
   const isGuidedEveningGate = isReleaseGate || isGratitudeGate || isSleepGate;
   const isStructuredMorningGate = isAffirmationGate || isEnergyGate || isVisionGate;
+  const isBasicGateExperience = isStructuredMorningGate || isFocusGate || isCalmGate || isRechargeGate || isGuidedEveningGate;
   const ritualCopy = awakeningRitualCopy[localizedLanguage];
   const structuredMorningAudio =
     isEnergyGate
@@ -1841,6 +1768,7 @@ function MeditationPageContent() {
   const morningGateReturnHref =
     returnToHref === "/rhythm-journey" ? "/program/basic?rhythm=morning" : returnToHref;
   const finishForTodayHref = morningGateReturnHref.split("?")[0] || "/program/basic";
+  const basicCompletionReturnHref = "/program/basic";
   const continueToEnergyHref = `/meditation?duration=180&type=morning-energy&returnTo=${encodeURIComponent(morningGateReturnHref)}`;
   const rechargeReturnHref =
     returnToHref === "/rhythm-journey" ? "/program/basic?rhythm=daytime" : returnToHref;
@@ -1862,6 +1790,127 @@ function MeditationPageContent() {
             body: "もう一度試すか、BASICへ戻ってください。",
             button: "BASICへ戻る"
           };
+  const basicGateUi = basicGateUiCopy[localizedLanguage];
+  const currentSessionUrl =
+    typeof window !== "undefined" ? `${window.location.pathname}${window.location.search}` : "/meditation";
+
+  function cancelGuidedSpeech() {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    if (structuredSpeechTimeoutRef.current) {
+      window.clearTimeout(structuredSpeechTimeoutRef.current);
+      structuredSpeechTimeoutRef.current = null;
+    }
+    if (focusSpeechTimeoutRef.current) {
+      window.clearTimeout(focusSpeechTimeoutRef.current);
+      focusSpeechTimeoutRef.current = null;
+    }
+    if (calmSpeechTimeoutRef.current) {
+      window.clearTimeout(calmSpeechTimeoutRef.current);
+      calmSpeechTimeoutRef.current = null;
+    }
+    if (releaseSpeechTimeoutRef.current) {
+      window.clearTimeout(releaseSpeechTimeoutRef.current);
+      releaseSpeechTimeoutRef.current = null;
+    }
+    if (gratitudeSpeechTimeoutRef.current) {
+      window.clearTimeout(gratitudeSpeechTimeoutRef.current);
+      gratitudeSpeechTimeoutRef.current = null;
+    }
+    if (sleepSpeechTimeoutRef.current) {
+      window.clearTimeout(sleepSpeechTimeoutRef.current);
+      sleepSpeechTimeoutRef.current = null;
+    }
+
+    structuredSpeechSequenceRef.current += 1;
+    focusSpeechSequenceRef.current += 1;
+    calmSpeechSequenceRef.current += 1;
+    releaseSpeechSequenceRef.current += 1;
+    gratitudeSpeechSequenceRef.current += 1;
+    sleepSpeechSequenceRef.current += 1;
+
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+  }
+
+  async function stopCurrentGatePlayback(options: { resetTime?: boolean } = {}) {
+    const resetTime = options.resetTime ?? true;
+    cancelGuidedSpeech();
+
+    if (journeyMode) {
+      stopJourneyAudio();
+      setIsJourneyPlaybackActive(false);
+      return;
+    }
+
+    if (isStructuredMorningGate) {
+      await stopStructuredMorningAmbient();
+      return;
+    }
+
+    const resetVideo = (video: HTMLVideoElement | null) => {
+      if (!video) {
+        return;
+      }
+
+      video.pause();
+      if (resetTime) {
+        video.currentTime = 0;
+      }
+    };
+
+    if (isFocusGate) {
+      resetVideo(focusVideoRef.current);
+      return;
+    }
+
+    if (isCalmGate) {
+      resetVideo(calmVideoRef.current);
+      return;
+    }
+
+    if (isReleaseGate) {
+      resetVideo(releaseVideoRef.current);
+      return;
+    }
+
+    if (isGratitudeGate) {
+      resetVideo(gratitudeVideoRef.current);
+      return;
+    }
+
+    if (isSleepGate) {
+      resetVideo(sleepVideoRef.current);
+      return;
+    }
+
+    if (isRechargeGate) {
+      clearRechargeTimer();
+      resetVideo(rechargeVideoRef.current);
+      setIsRechargeVideoPlaying(false);
+      return;
+    }
+
+    await stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
+  }
+
+  async function handleExitGate() {
+    completionHandledRef.current = true;
+    setIsPaused(true);
+    await stopCurrentGatePlayback();
+    router.push(returnToHref);
+  }
+
+  async function handleRepeatGate() {
+    completionHandledRef.current = true;
+    await stopCurrentGatePlayback();
+    if (typeof window !== "undefined") {
+      window.location.assign(currentSessionUrl);
+    }
+  }
 
   function logStructuredMorningAmbientState(stage: string) {
     if (typeof window === "undefined") {
@@ -2499,10 +2548,12 @@ function MeditationPageContent() {
     }
 
     try {
-      video.defaultMuted = false;
-      video.muted = false;
-      video.volume = AWAKENING_GATE_VIDEO_VOLUME;
-      video.playsInline = true;
+      preparePlaybackMediaElement(video, {
+        muted: false,
+        volume: AWAKENING_GATE_VIDEO_VOLUME,
+        playsInline: true,
+        preload: "metadata"
+      });
       if (options?.restartFromBeginning ?? false) {
         video.currentTime = 0;
       }
@@ -2526,10 +2577,12 @@ function MeditationPageContent() {
     }
 
     try {
-      video.defaultMuted = false;
-      video.muted = false;
-      video.volume = FOCUS_GATE_VIDEO_VOLUME;
-      video.playsInline = true;
+      preparePlaybackMediaElement(video, {
+        muted: false,
+        volume: FOCUS_GATE_VIDEO_VOLUME,
+        playsInline: true,
+        preload: "metadata"
+      });
       if (options?.restartFromBeginning ?? false) {
         video.currentTime = 0;
       }
@@ -2553,10 +2606,12 @@ function MeditationPageContent() {
     }
 
     try {
-      video.defaultMuted = false;
-      video.muted = false;
-      video.volume = CALM_GATE_VIDEO_VOLUME;
-      video.playsInline = true;
+      preparePlaybackMediaElement(video, {
+        muted: false,
+        volume: CALM_GATE_VIDEO_VOLUME,
+        playsInline: true,
+        preload: "metadata"
+      });
       if (options?.restartFromBeginning ?? false) {
         video.currentTime = 0;
       }
@@ -2580,10 +2635,12 @@ function MeditationPageContent() {
     }
 
     try {
-      video.defaultMuted = false;
-      video.muted = false;
-      video.volume = RECHARGE_GATE_VIDEO_VOLUME;
-      video.playsInline = true;
+      preparePlaybackMediaElement(video, {
+        muted: false,
+        volume: RECHARGE_GATE_VIDEO_VOLUME,
+        playsInline: true,
+        preload: "auto"
+      });
       if (options?.restartFromBeginning ?? false) {
         video.currentTime = 0;
       }
@@ -2626,10 +2683,12 @@ function MeditationPageContent() {
     }
 
     try {
-      video.defaultMuted = false;
-      video.muted = false;
-      video.volume = EVENING_RELEASE_VIDEO_VOLUME;
-      video.playsInline = true;
+      preparePlaybackMediaElement(video, {
+        muted: false,
+        volume: EVENING_RELEASE_VIDEO_VOLUME,
+        playsInline: true,
+        preload: "auto"
+      });
       if (options?.restartFromBeginning ?? false) {
         video.currentTime = 0;
       }
@@ -2653,10 +2712,12 @@ function MeditationPageContent() {
     }
 
     try {
-      video.defaultMuted = false;
-      video.muted = false;
-      video.volume = EVENING_GRATITUDE_VIDEO_VOLUME;
-      video.playsInline = true;
+      preparePlaybackMediaElement(video, {
+        muted: false,
+        volume: EVENING_GRATITUDE_VIDEO_VOLUME,
+        playsInline: true,
+        preload: "auto"
+      });
       if (options?.restartFromBeginning ?? false) {
         video.currentTime = 0;
       }
@@ -2680,10 +2741,12 @@ function MeditationPageContent() {
     }
 
     try {
-      video.defaultMuted = false;
-      video.muted = false;
-      video.volume = EVENING_SLEEP_VIDEO_VOLUME;
-      video.playsInline = true;
+      preparePlaybackMediaElement(video, {
+        muted: false,
+        volume: EVENING_SLEEP_VIDEO_VOLUME,
+        playsInline: true,
+        preload: "auto"
+      });
       if (options?.restartFromBeginning ?? false) {
         video.currentTime = 0;
       }
@@ -2707,8 +2770,12 @@ function MeditationPageContent() {
     }
 
     try {
-      video.muted = true;
-      video.playsInline = true;
+      preparePlaybackMediaElement(video, {
+        muted: true,
+        volume: 1,
+        playsInline: true,
+        preload: "metadata"
+      });
       video.currentTime = 0;
       await video.play();
       setAmbientVideoFailed(false);
@@ -2730,10 +2797,12 @@ function MeditationPageContent() {
     }
 
     try {
-      video.defaultMuted = false;
-      video.muted = false;
-      video.volume = VISION_GATE_VIDEO_VOLUME;
-      video.playsInline = true;
+      preparePlaybackMediaElement(video, {
+        muted: false,
+        volume: VISION_GATE_VIDEO_VOLUME,
+        playsInline: true,
+        preload: "metadata"
+      });
       if (options?.restartFromBeginning ?? false) {
         video.currentTime = 0;
       }
@@ -3108,6 +3177,57 @@ function MeditationPageContent() {
       });
     }, 5000);
   }, [isComplete, isJourneyCompletionHolding, journeyMode, returnToHref, router]);
+
+  useEffect(() => {
+    if (!isPaused || isComplete) {
+      return;
+    }
+
+    if (isStructuredMorningGate) {
+      return;
+    }
+
+    if (isFocusGate) {
+      focusVideoRef.current?.pause();
+      return;
+    }
+
+    if (isCalmGate) {
+      calmVideoRef.current?.pause();
+      return;
+    }
+
+    if (isReleaseGate) {
+      releaseVideoRef.current?.pause();
+      return;
+    }
+
+    if (isGratitudeGate) {
+      gratitudeVideoRef.current?.pause();
+      return;
+    }
+
+    if (isSleepGate) {
+      sleepVideoRef.current?.pause();
+      return;
+    }
+
+    if (isRechargeGate) {
+      clearRechargeTimer();
+      rechargeVideoRef.current?.pause();
+      setIsRechargeVideoPlaying(false);
+    }
+  }, [
+    isCalmGate,
+    isComplete,
+    isFocusGate,
+    isGratitudeGate,
+    isPaused,
+    isRechargeGate,
+    isReleaseGate,
+    isSleepGate,
+    isStructuredMorningGate
+  ]);
 
   useEffect(() => {
     if (!isStructuredMorningGate || !soundEnabled) {
@@ -4004,12 +4124,14 @@ function MeditationPageContent() {
     } else {
       await stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
     }
-    await triggerMeditationCompletion({
-      hasUserGesture,
-      soundEnabled,
-      vibrationEnabled,
-      audioContextRef
-    });
+    if (!isSleepGate) {
+      await triggerMeditationCompletion({
+        hasUserGesture,
+        soundEnabled,
+        vibrationEnabled,
+        audioContextRef
+      });
+    }
   }
 
   async function handleSoundToggle() {
@@ -4185,10 +4307,12 @@ function MeditationPageContent() {
         video.src = RECHARGE_GATE_VIDEO_SRC;
       }
       video.currentTime = 0;
-      video.defaultMuted = false;
-      video.muted = false;
-      video.volume = RECHARGE_GATE_VIDEO_VOLUME;
-      video.playsInline = true;
+      preparePlaybackMediaElement(video, {
+        muted: false,
+        volume: RECHARGE_GATE_VIDEO_VOLUME,
+        playsInline: true,
+        preload: "auto"
+      });
 
       console.log("[recharge-gate] currentSrc", video.currentSrc);
       console.log("[recharge-gate] readyState before play", video.readyState);
@@ -4363,10 +4487,20 @@ function MeditationPageContent() {
           window.clearTimeout(releaseSpeechTimeoutRef.current);
           releaseSpeechTimeoutRef.current = null;
         }
+        if (gratitudeSpeechTimeoutRef.current) {
+          window.clearTimeout(gratitudeSpeechTimeoutRef.current);
+          gratitudeSpeechTimeoutRef.current = null;
+        }
+        if (sleepSpeechTimeoutRef.current) {
+          window.clearTimeout(sleepSpeechTimeoutRef.current);
+          sleepSpeechTimeoutRef.current = null;
+        }
         structuredSpeechSequenceRef.current += 1;
         focusSpeechSequenceRef.current += 1;
         calmSpeechSequenceRef.current += 1;
         releaseSpeechSequenceRef.current += 1;
+        gratitudeSpeechSequenceRef.current += 1;
+        sleepSpeechSequenceRef.current += 1;
         window.speechSynthesis.cancel();
       }
 
@@ -4731,6 +4865,15 @@ function MeditationPageContent() {
                   >
                     {isPaused ? morningGateCopy.resume : morningGateCopy.pause}
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      void handleExitGate();
+                    }}
+                    className="button-nowrap inline-flex min-h-[34px] items-center justify-center rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-white/68 transition hover:bg-white/[0.07] hover:text-white"
+                  >
+                    {basicGateUi.exit}
+                  </button>
                 </div>
               </div>
             ) : journeyMode ? (
@@ -4760,6 +4903,27 @@ function MeditationPageContent() {
                 <p className="body-measure keep-phrase mx-auto text-sm leading-7 text-white/60 sm:text-base">{introText}</p>
               </div>
             )}
+
+            {!isStructuredMorningGate && isBasicGateExperience && !needsUserStart ? (
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+                <button
+                  type="button"
+                  onClick={handlePauseToggle}
+                  className="button-nowrap inline-flex min-h-[38px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-2 text-xs font-medium text-white/76 transition hover:bg-white/[0.08] hover:text-white"
+                >
+                  {isPaused ? basicGateUi.resume : basicGateUi.pause}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    void handleExitGate();
+                  }}
+                  className="button-nowrap inline-flex min-h-[38px] items-center justify-center rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs font-medium text-white/66 transition hover:bg-white/[0.07] hover:text-white"
+                >
+                  {basicGateUi.exit}
+                </button>
+              </div>
+            ) : null}
 
             <div className="mt-12 flex min-h-[320px] w-full flex-col items-center justify-center">
               {showJourneyStartButtonPanel ? (
@@ -5079,23 +5243,44 @@ function MeditationPageContent() {
             {completionBodyText ? <p className="mx-auto max-w-2xl text-base leading-8 text-white/68">{completionBodyText}</p> : null}
             <div className="flex flex-col items-center gap-3">
               {journeyMode ? null : (
-                <Link
-                  href={returnToHref}
-                  className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
-                >
-                  {isStructuredMorningGate ? morningGateCopy.completionButton : copy.completionPrimary}
-                </Link>
+                isBasicGateExperience ? (
+                  <Link
+                    href={basicCompletionReturnHref}
+                    className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
+                  >
+                    {basicGateUi.returnToBasic}
+                  </Link>
+                ) : (
+                  <Link
+                    href={returnToHref}
+                    className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
+                  >
+                    {isStructuredMorningGate ? morningGateCopy.completionButton : copy.completionPrimary}
+                  </Link>
+                )
               )}
               {!journeyMode && !isStructuredMorningGate ? (
-                <Link
-                  href="/"
-                  className="inline-flex min-h-[52px] min-w-[240px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
-                >
-                  {copy.completionSecondary}
-                </Link>
+                isBasicGateExperience ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      void handleRepeatGate();
+                    }}
+                    className="inline-flex min-h-[52px] min-w-[240px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
+                  >
+                    {basicGateUi.repeat}
+                  </button>
+                ) : (
+                  <Link
+                    href="/"
+                    className="inline-flex min-h-[52px] min-w-[240px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
+                  >
+                    {copy.completionSecondary}
+                  </Link>
+                )
               ) : null}
             </div>
-            {!journeyMode && !isStructuredMorningGate ? (
+            {!journeyMode && !isStructuredMorningGate && !isBasicGateExperience ? (
               <div className="mx-auto max-w-2xl border-t border-white/10 pt-8">
                 <p className="text-base leading-8 text-white/68">{copy.coachPrompt}</p>
                 <div className="mt-5">

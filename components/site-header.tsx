@@ -365,14 +365,6 @@ export function SiteHeader() {
                     >
                       {copy.header.billingMembership}
                     </Link>
-                    <button
-                      type="button"
-                      onClick={handleLogout}
-                      disabled={loggingOut}
-                      className="inline-flex min-h-[52px] w-full items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base font-medium text-white/84 transition hover:bg-white/[0.07] hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
-                    >
-                      {loggingOut ? "..." : logoutLabel}
-                    </button>
                   </div>
                 </>
               ) : (
@@ -399,6 +391,19 @@ export function SiteHeader() {
                   </Link>
                 ))}
               </nav>
+
+              {authResolved && isLoggedIn ? (
+                <div className="flex justify-center pt-1">
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    disabled={loggingOut}
+                    className="inline-flex min-h-[40px] items-center justify-center rounded-full border border-white/8 bg-transparent px-4 py-2 text-sm font-medium text-white/54 transition hover:border-white/14 hover:text-white/76 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {loggingOut ? "..." : logoutLabel}
+                  </button>
+                </div>
+              ) : null}
             </div>
 
             <div className="mt-auto pt-6">

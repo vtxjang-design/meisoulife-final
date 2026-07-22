@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthState } from "@/components/auth-provider";
 import { recordAuthDiagnostic } from "@/lib/auth-flow-diagnostics";
+import { resolveMembershipAccessState, type MembershipAccessState } from "@/lib/basic-experience";
 import { getLocaleCopy, useLanguage, useSiteCopy } from "@/lib/i18n";
 import { hasProtectedMembershipAccess, type ProtectedMembershipPlan } from "@/lib/membership-access";
 import { getSupabaseClient } from "@/lib/supabase/client";
@@ -13,8 +14,6 @@ type MembershipGuardProps = {
   requiredPlan: ProtectedMembershipPlan;
   showLogout?: boolean;
 };
-
-type MembershipAccessState = "checking" | "ready" | "unavailable" | "membership-error" | "redirecting";
 
 export type MembershipAccessResult = {
   canRender: boolean;
@@ -52,7 +51,6 @@ export function useMembershipAccess(requiredPlan: ProtectedMembershipPlan | null
   const pathname = usePathname();
   const { authResolved, isLoggedIn, planResolved, planError, plan, membershipStatus, hasActiveSubscription, isMembershipLoading } =
     useAuthState();
-  const [status, setStatus] = useState<MembershipAccessState>("checking");
   const nextPath = useMemo(() => {
     if (typeof window === "undefined") {
       return pathname;
@@ -60,6 +58,32 @@ export function useMembershipAccess(requiredPlan: ProtectedMembershipPlan | null
 
     return `${window.location.pathname}${window.location.search}${window.location.hash}`;
   }, [pathname]);
+  const supabase = getSupabaseClient();
+  const status = useMemo<MembershipAccessState>(() => {
+    return resolveMembershipAccessState({
+      requiredPlan: Boolean(requiredPlan),
+      authResolved,
+      hasSupabaseClient: Boolean(supabase),
+      isLoggedIn,
+      planResolved,
+      isMembershipLoading,
+      planError,
+      hasActiveSubscription,
+      hasRequiredAccess: requiredPlan ? hasProtectedMembershipAccess({ plan, membershipStatus, requiredPlan }) : true,
+      membershipStatus
+    });
+  }, [
+    authResolved,
+    hasActiveSubscription,
+    isLoggedIn,
+    isMembershipLoading,
+    membershipStatus,
+    plan,
+    planError,
+    planResolved,
+    requiredPlan,
+    supabase
+  ]);
 
   useEffect(() => {
     const membershipDebugEnabled = nextPath.includes("membershipDebug=1");
@@ -104,27 +128,21 @@ export function useMembershipAccess(requiredPlan: ProtectedMembershipPlan | null
 
     if (!requiredPlan) {
       logMembershipAccess("no protected plan required");
-      setStatus("ready");
       return;
     }
 
     if (!authResolved) {
       logMembershipAccess("membership resolution pending", { phase: "auth unresolved" });
-      setStatus("checking");
       return;
     }
 
-    const supabase = getSupabaseClient();
-
     if (!supabase) {
       logMembershipAccess("missing Supabase configuration");
-      setStatus("unavailable");
       return;
     }
 
     if (!isLoggedIn) {
       logMembershipAccess("no authenticated user");
-      setStatus("redirecting");
       router.replace(`/login?next=${encodeURIComponent(nextPath)}`);
       return;
     }
@@ -133,13 +151,11 @@ export function useMembershipAccess(requiredPlan: ProtectedMembershipPlan | null
       logMembershipAccess("authenticated user found", {
         phase: "membership resolution pending"
       });
-      setStatus("checking");
       return;
     }
 
     if (planError) {
       logMembershipAccess("membership API error");
-      setStatus("membership-error");
       return;
     }
 
@@ -147,7 +163,6 @@ export function useMembershipAccess(requiredPlan: ProtectedMembershipPlan | null
       logMembershipAccess(!membershipStatus ? "no membership record" : "inactive membership", {
         authenticatedUser: true
       });
-      setStatus("redirecting");
       const memberDestination = membershipDebugEnabled
         ? `/member?next=${encodeURIComponent(nextPath)}&membershipDebug=1`
         : `/member?next=${encodeURIComponent(nextPath)}`;
@@ -156,7 +171,6 @@ export function useMembershipAccess(requiredPlan: ProtectedMembershipPlan | null
     }
 
     logMembershipAccess("active membership");
-    setStatus("ready");
   }, [
     authResolved,
     hasActiveSubscription,
@@ -168,7 +182,8 @@ export function useMembershipAccess(requiredPlan: ProtectedMembershipPlan | null
     planError,
     planResolved,
     requiredPlan,
-    router
+    router,
+    supabase
   ]);
 
   return {
