@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthState } from "@/components/auth-provider";
@@ -19,12 +19,15 @@ export function SiteHeader() {
   const logoutLabel = copy.header.logout;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const mobileMenuId = "site-mobile-menu";
+  const mobileMenuContainerRef = useRef<HTMLDivElement | null>(null);
   const homepageHeaderNav = useMemo(() => {
     return isHome ? copy.header.nav.filter((item) => item.href !== "/leaders") : copy.header.nav;
   }, [copy.header.nav, isHome]);
   const programHref = plan === "inner_circle" ? "/program/inner" : plan === "growth" ? "/program/growth" : "/program/basic";
   const oneMinuteLabel = copy.header.mobileMenu.find((item) => item.href === "/#one-minute-experience")?.label ?? copy.header.nav[0]?.label ?? "1-Minute Recovery";
   const rhythmLabel = copy.header.nav[1]?.label ?? "7-Day Rhythm";
+  const homeLabel = copy.header.nav[0]?.label ?? "Home";
   const mobileTabs = useMemo(() => {
     if (isHome) {
       if (isLoggedIn) {
@@ -51,10 +54,29 @@ export function SiteHeader() {
 
     return copy.header.mobileGuestTabs;
   }, [copy.header.login, copy.header.mobileGuestTabs, copy.header.mobileMemberTabs, copy.header.myPage, isHome, isLoggedIn, oneMinuteLabel, programHref, rhythmLabel]);
-  const mobileMenuLinks = useMemo(() => {
-    const links = isLoggedIn ? copy.header.mobileMemberMenu : copy.header.mobileGuestMenu;
-    return isHome ? links.filter((item) => item.href !== "/leaders") : links;
-  }, [copy.header.mobileGuestMenu, copy.header.mobileMemberMenu, isHome, isLoggedIn]);
+  const mobileDropdownLinks = useMemo(() => {
+    if (isLoggedIn) {
+      const links: Array<{ href: string; label: string }> = [
+        { href: programHref, label: copy.header.myProgram },
+        { href: "/", label: homeLabel }
+      ];
+
+      return links.filter((item, index, array) => {
+        return array.findIndex((candidate) => candidate.href === item.href) === index;
+      });
+    }
+
+    const guestLinks: Array<{ href: string; label: string }> = [
+      { href: "/login", label: copy.header.login },
+      { href: "/rhythm-journey", label: rhythmLabel }
+    ];
+
+    if (!isHome) {
+      guestLinks.push({ href: "/", label: homeLabel });
+    }
+
+    return guestLinks;
+  }, [copy.header.login, copy.header.myProgram, homeLabel, isHome, isLoggedIn, programHref, rhythmLabel]);
   const memberBadgeLabel = useMemo(() => {
     if (!isLoggedIn) {
       return "";
@@ -84,14 +106,6 @@ export function SiteHeader() {
   }, [pathname]);
 
   useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
-
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [mobileOpen]);
-
-  useEffect(() => {
     if (!mobileOpen) {
       return;
     }
@@ -106,6 +120,34 @@ export function SiteHeader() {
 
     return () => {
       window.removeEventListener("keydown", handleEscape);
+    };
+  }, [mobileOpen]);
+
+  useEffect(() => {
+    if (!mobileOpen) {
+      return;
+    }
+
+    function handlePointerDown(event: MouseEvent | TouchEvent) {
+      const target = event.target;
+
+      if (!(target instanceof Node)) {
+        return;
+      }
+
+      if (mobileMenuContainerRef.current?.contains(target)) {
+        return;
+      }
+
+      setMobileOpen(false);
+    }
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("touchstart", handlePointerDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("touchstart", handlePointerDown);
     };
   }, [mobileOpen]);
 
@@ -201,19 +243,63 @@ export function SiteHeader() {
               </button>
             ))}
           </div>
-          <button
-            type="button"
-            onClick={() => setMobileOpen(true)}
-            className="inline-flex h-8.5 w-8.5 items-center justify-center rounded-full bg-white/[0.03] text-white/80 backdrop-blur-md transition hover:bg-white/[0.06] hover:text-white lg:hidden"
-            aria-label={copy.header.menu}
-            aria-expanded={mobileOpen}
-          >
-            <span className="relative h-4 w-5">
-              <span className="absolute left-0 top-0 h-[2px] w-5 rounded-full bg-current" />
-              <span className="absolute left-0 top-1.5 h-[2px] w-5 rounded-full bg-current" />
-              <span className="absolute left-0 top-3 h-[2px] w-5 rounded-full bg-current" />
-            </span>
-          </button>
+          <div ref={mobileMenuContainerRef} className="relative lg:hidden">
+            <button
+              type="button"
+              onClick={() => setMobileOpen((current) => !current)}
+              className="inline-flex h-8.5 w-8.5 items-center justify-center rounded-full bg-white/[0.03] text-white/80 backdrop-blur-md transition hover:bg-white/[0.06] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131f]"
+              aria-label={copy.header.menu}
+              aria-expanded={mobileOpen}
+              aria-controls={mobileMenuId}
+            >
+              <span className="relative h-4 w-5">
+                <span className="absolute left-0 top-0 h-[2px] w-5 rounded-full bg-current" />
+                <span className="absolute left-0 top-1.5 h-[2px] w-5 rounded-full bg-current" />
+                <span className="absolute left-0 top-3 h-[2px] w-5 rounded-full bg-current" />
+              </span>
+            </button>
+            <div
+              id={mobileMenuId}
+              className={cn(
+                "pointer-events-none absolute right-0 top-[calc(100%+0.6rem)] z-[120] w-[min(15rem,calc(100vw-1rem))] min-w-[11.5rem] origin-top-right rounded-2xl border border-white/14 bg-[rgba(7,17,31,0.96)] p-2 shadow-[0_22px_48px_rgba(2,8,20,0.46)] backdrop-blur-xl transition duration-200",
+                mobileOpen ? "pointer-events-auto translate-y-0 scale-100 opacity-100" : "translate-y-[-6px] scale-[0.98] opacity-0"
+              )}
+              role="menu"
+              aria-label={copy.header.menu}
+            >
+              <div className="flex flex-col gap-1">
+                {mobileDropdownLinks.map((item) => {
+                  const active = isActivePath(item.href);
+
+                  return (
+                    <Link
+                      key={`${item.href}-${item.label}`}
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      className={cn(
+                        "inline-flex min-h-[44px] w-full items-center rounded-xl px-3.5 py-2.5 text-sm font-medium text-white/88 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131f]",
+                        active ? "bg-white/[0.09] text-white" : "hover:bg-white/[0.08] hover:text-white"
+                      )}
+                      role="menuitem"
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                })}
+                {authResolved && isLoggedIn ? (
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    disabled={loggingOut}
+                    className="inline-flex min-h-[44px] w-full items-center rounded-xl px-3.5 py-2.5 text-left text-sm font-medium text-white/78 transition hover:bg-white/[0.08] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131f] disabled:cursor-not-allowed disabled:opacity-60"
+                    role="menuitem"
+                  >
+                    {loggingOut ? "..." : logoutLabel}
+                  </button>
+                ) : null}
+              </div>
+            </div>
+          </div>
           <div className="hidden rounded-full border border-white/8 bg-white/[0.025] p-1 lg:inline-flex">
             {languageButtons.map((button) => (
               <button
@@ -287,160 +373,6 @@ export function SiteHeader() {
         </div>
       </div>
 
-      <div
-        className={cn(
-          "pointer-events-none fixed inset-0 z-[9999] opacity-0 transition duration-300 lg:hidden",
-          mobileOpen && "pointer-events-auto opacity-100"
-        )}
-        onClick={(event) => {
-          if (event.target === event.currentTarget) {
-            setMobileOpen(false);
-          }
-        }}
-      >
-        <div className="absolute inset-0 bg-[#020814]/88 backdrop-blur-xl" />
-        <div
-          className={cn(
-            "relative flex h-full w-full flex-col overflow-y-auto px-5 pb-6 pt-5 transition duration-300",
-            mobileOpen ? "translate-y-0" : "-translate-y-3"
-          )}
-        >
-          <div className="mx-auto flex w-full max-w-md flex-1 flex-col">
-            <div className="flex items-center justify-between gap-4">
-              <Link
-                href="/"
-                onClick={() => setMobileOpen(false)}
-                className="text-base font-semibold tracking-[0.16em] text-white"
-              >
-                {copy.header.brand}
-              </Link>
-              <button
-                type="button"
-                onClick={() => setMobileOpen(false)}
-                className="inline-flex h-11 min-w-[44px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 text-sm font-medium text-white/82 transition hover:bg-white/[0.08]"
-                aria-label={copy.header.close}
-              >
-                {copy.header.close}
-              </button>
-            </div>
-
-            <div className="mt-6 grid gap-4">
-              {!authResolved ? (
-                <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                  <p className="text-sm text-white/62">{copy.loginPage.checking}</p>
-                </div>
-              ) : isLoggedIn ? (
-                <>
-                  <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-medium text-white">{userEmail || memberCenterLabel}</p>
-                        <p className="mt-1 text-xs text-white/56">{copy.header.billingMembership}</p>
-                      </div>
-                      <span className="inline-flex min-h-[36px] items-center rounded-full border border-gold/20 bg-gold/[0.08] px-3 py-1.5 text-xs font-semibold tracking-[0.14em] text-gold">
-                        {memberBadgeLabel}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-3">
-                    <Link
-                      href={programHref}
-                      onClick={() => setMobileOpen(false)}
-                      className="inline-flex min-h-[52px] w-full items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
-                    >
-                      {copy.header.myPage}
-                    </Link>
-                    <Link
-                      href={programHref}
-                      onClick={() => setMobileOpen(false)}
-                      className="inline-flex min-h-[52px] w-full items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
-                    >
-                      {copy.header.myProgram}
-                    </Link>
-                    <Link
-                      href="/pricing"
-                      onClick={() => setMobileOpen(false)}
-                      className="inline-flex min-h-[52px] w-full items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
-                    >
-                      {copy.header.billingMembership}
-                    </Link>
-                  </div>
-                </>
-              ) : (
-                <div className="grid gap-2">
-                  <Link
-                    href="/login"
-                    onClick={() => setMobileOpen(false)}
-                    className="inline-flex min-h-[52px] w-full items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
-                  >
-                    {copy.header.login}
-                  </Link>
-                </div>
-              )}
-
-              <nav className="grid gap-2 rounded-2xl border border-white/10 bg-white/[0.03] p-3">
-                {mobileMenuLinks.map((item) => (
-                  <Link
-                    key={`${item.href}-${item.label}`}
-                    href={item.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="inline-flex min-h-[52px] w-full items-center rounded-2xl border border-white/8 px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </nav>
-
-              {authResolved && isLoggedIn ? (
-                <div className="flex justify-center pt-1">
-                  <button
-                    type="button"
-                    onClick={handleLogout}
-                    disabled={loggingOut}
-                    className="inline-flex min-h-[40px] items-center justify-center rounded-full border border-white/8 bg-transparent px-4 py-2 text-sm font-medium text-white/54 transition hover:border-white/14 hover:text-white/76 disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    {loggingOut ? "..." : logoutLabel}
-                  </button>
-                </div>
-              ) : null}
-            </div>
-
-            <div className="mt-auto pt-6">
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
-                <p className="px-1 text-xs font-semibold uppercase tracking-[0.24em] text-white/42">
-                  {copy.header.languageSettings}
-                </p>
-                <div className="mt-3 inline-flex rounded-full border border-white/10 bg-white/[0.03] p-1">
-                  {languageButtons.map((button) => (
-                    <button
-                      key={button.key}
-                      type="button"
-                      onClick={() => setLanguage(button.key)}
-                      className={cn(
-                        "rounded-full px-3 py-1.5 text-xs font-semibold tracking-[0.2em] transition duration-300",
-                        language === button.key ? "bg-white text-ink" : "text-white/68 hover:text-white"
-                      )}
-                    >
-                      {button.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-3 grid gap-2">
-                <Link
-                  href="/community"
-                  onClick={() => setMobileOpen(false)}
-                  className="inline-flex min-h-[52px] w-full items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-base text-white/84 transition hover:bg-white/[0.07] hover:text-white"
-                >
-                  {copy.header.customerSupport}
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </header>
   );
 }
