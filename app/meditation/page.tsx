@@ -1534,6 +1534,14 @@ function getPreviousDayStamp(dayStamp: string) {
   return getLocalDayStamp(date);
 }
 
+function formatGateComment(message: string | null) {
+  if (!message) {
+    return "";
+  }
+
+  return message.replace(/\s*\n+\s*/g, " ").replace(/\s{2,}/g, " ").trim();
+}
+
 function getAwakeningPromptIndex(dayStamp: string, promptCount: number) {
   const numeric = Number(dayStamp.replaceAll("-", ""));
   return Number.isFinite(numeric) && promptCount > 0 ? numeric % promptCount : 0;
@@ -1793,6 +1801,12 @@ function MeditationPageContent() {
   const basicGateUi = basicGateUiCopy[localizedLanguage];
   const currentSessionUrl =
     typeof window !== "undefined" ? `${window.location.pathname}${window.location.search}` : "/meditation";
+  const gateCommentTextClass =
+    localizedLanguage === "kr"
+      ? "mx-auto w-full max-w-[min(90%,42rem)] animate-fade-in text-center font-serif text-[clamp(1rem,4vw,1.125rem)] leading-[1.58] text-white/84 [text-wrap:balance] [word-break:keep-all] md:text-[clamp(1.125rem,2.7vw,1.3125rem)] lg:text-[clamp(1.3125rem,1.9vw,1.625rem)]"
+      : localizedLanguage === "en"
+        ? "mx-auto w-full max-w-[min(90%,42rem)] animate-fade-in text-center font-serif text-[clamp(1rem,4vw,1.125rem)] leading-[1.58] text-white/84 [text-wrap:balance] [overflow-wrap:normal] [word-break:normal] md:text-[clamp(1.125rem,2.7vw,1.3125rem)] lg:text-[clamp(1.3125rem,1.9vw,1.625rem)]"
+        : "mx-auto w-full max-w-[min(90%,42rem)] animate-fade-in text-center font-serif text-[clamp(1rem,4vw,1.125rem)] leading-[1.58] text-white/84 [text-wrap:balance] [overflow-wrap:normal] [word-break:normal] md:text-[clamp(1.125rem,2.7vw,1.3125rem)] lg:text-[clamp(1.3125rem,1.9vw,1.625rem)]";
 
   function cancelGuidedSpeech() {
     if (typeof window === "undefined") {
@@ -5092,57 +5106,57 @@ function MeditationPageContent() {
               )}
 
               {isStructuredMorningGate ? (
-                <div className="mt-8 min-h-[92px] max-w-xl space-y-3">
+                <div className="mt-10 flex min-h-[5.25rem] w-full items-start justify-center px-3 sm:px-4">
                   <p
                     key={affirmationMessage ?? "structured-morning-empty"}
-                    className="mx-auto animate-fade-in whitespace-pre-line font-serif text-[1.3rem] leading-[1.82] text-white/88 sm:text-[1.65rem] sm:leading-[1.92]"
+                    className={gateCommentTextClass}
                   >
-                    {affirmationMessage}
+                    {formatGateComment(affirmationMessage)}
                   </p>
                 </div>
               ) : isFocusGate ? (
-                <div className="mt-8 min-h-[92px] max-w-xl space-y-3">
+                <div className="mt-10 flex min-h-[5.25rem] w-full items-start justify-center px-3 sm:px-4">
                   <p
                     key={focusGateMessage ?? "focus-gate-empty"}
-                    className="mx-auto animate-fade-in whitespace-pre-line font-serif text-[1.25rem] leading-[1.78] text-white/88 sm:text-[1.55rem] sm:leading-[1.86]"
+                    className={gateCommentTextClass}
                   >
-                    {focusGateMessage}
+                    {formatGateComment(focusGateMessage)}
                   </p>
                 </div>
               ) : isCalmGate ? (
-                <div className="mt-8 min-h-[92px] max-w-xl space-y-3">
+                <div className="mt-10 flex min-h-[5.25rem] w-full items-start justify-center px-3 sm:px-4">
                   <p
                     key={calmGateMessage ?? "calm-gate-empty"}
-                    className="mx-auto animate-fade-in whitespace-pre-line font-serif text-[1.22rem] leading-[1.84] text-white/88 sm:text-[1.5rem] sm:leading-[1.9]"
+                    className={gateCommentTextClass}
                   >
-                    {calmGateMessage}
+                    {formatGateComment(calmGateMessage)}
                   </p>
                 </div>
               ) : isReleaseGate ? (
-                <div className="-translate-y-6 mt-8 min-h-[156px] w-full max-w-[24rem] px-6 pb-10 text-center sm:-translate-y-8 sm:mt-9 sm:max-w-[28rem] sm:px-8 sm:pb-14 lg:max-w-[30rem]">
+                <div className="mt-10 flex min-h-[5.75rem] w-full items-start justify-center px-3 pb-10 sm:px-4 sm:pb-14">
                   <p
                     key={releaseGateMessage ?? "release-gate-empty"}
-                    className="mx-auto animate-fade-in whitespace-pre-line break-keep text-balance font-serif text-[1.18rem] leading-[2.18] tracking-[0.01em] text-white/82 [overflow-wrap:normal] [word-break:keep-all] sm:text-[1.45rem] sm:leading-[2.24]"
+                    className={gateCommentTextClass}
                   >
-                    {releaseGateMessage}
+                    {formatGateComment(releaseGateMessage)}
                   </p>
                 </div>
               ) : isGratitudeGate ? (
-                <div className="mt-10 min-h-[120px] max-w-2xl space-y-3">
+                <div className="mt-10 flex min-h-[5.75rem] w-full items-start justify-center px-3 sm:px-4">
                   <p
                     key={gratitudeGateMessage ?? "gratitude-gate-empty"}
-                    className="mx-auto animate-fade-in whitespace-pre-line font-serif text-[1.18rem] leading-[2.02] text-white/82 sm:text-[1.45rem] sm:leading-[2.08]"
+                    className={gateCommentTextClass}
                   >
-                    {gratitudeGateMessage}
+                    {formatGateComment(gratitudeGateMessage)}
                   </p>
                 </div>
               ) : isSleepGate ? (
-                <div className="mt-10 min-h-[120px] max-w-2xl space-y-3">
+                <div className="mt-10 flex min-h-[5.75rem] w-full items-start justify-center px-3 sm:px-4">
                   <p
                     key={sleepGateMessage ?? "sleep-gate-empty"}
-                    className="mx-auto animate-fade-in whitespace-pre-line font-serif text-[1.14rem] leading-[2.08] text-white/78 sm:text-[1.38rem] sm:leading-[2.14]"
+                    className={gateCommentTextClass}
                   >
-                    {sleepGateMessage}
+                    {formatGateComment(sleepGateMessage)}
                   </p>
                 </div>
               ) : null}
