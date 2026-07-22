@@ -101,21 +101,21 @@ test("Japanese evening settings use conservative natural pacing ranges", () => {
   assert.deepEqual(getJapaneseEveningSpeechSettings("release"), {
     lang: "ja-JP",
     rate: 0.8,
-    pitch: 0.88,
+    pitch: 0.85,
     volume: 0.84,
     preferredNames: JAPANESE_EVENING_PREFERRED_NAMES
   });
   assert.deepEqual(getJapaneseEveningSpeechSettings("gratitude"), {
     lang: "ja-JP",
     rate: 0.8,
-    pitch: 0.9,
+    pitch: 0.87,
     volume: 0.82,
     preferredNames: JAPANESE_EVENING_PREFERRED_NAMES
   });
   assert.deepEqual(getJapaneseEveningSpeechSettings("sleep"), {
     lang: "ja-JP",
     rate: 0.76,
-    pitch: 0.84,
+    pitch: 0.82,
     volume: 0.78,
     preferredNames: JAPANESE_EVENING_PREFERRED_NAMES
   });
