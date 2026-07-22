@@ -3,6 +3,7 @@ import { getPlanPriceId, type MembershipRecordPlan } from "@/lib/stripe";
 import { normalizeLookupEmail, normalizeMembershipPlan } from "@/lib/membership";
 
 type StripePlanPreference = MembershipRecordPlan | "free";
+type StripeLookupStatus = "matched" | "not_found" | "ambiguous";
 
 export type StripeResolvedBilling = {
   customerId: string | null;
@@ -13,6 +14,8 @@ export type StripeResolvedBilling = {
   currentPeriodEnd: string | null;
   billingCycleAnchor: string | null;
   customerSource: string;
+  lookupStatus: StripeLookupStatus;
+  matchedCustomerCount: number;
 };
 
 type CandidateCustomer = {
@@ -111,6 +114,10 @@ function getSubscriptionPlanMatch(subscription: Stripe.Subscription, preferredPl
   return 0;
 }
 
+function isEntitledSubscription(params: { status: Stripe.Subscription.Status; plan: MembershipRecordPlan | "free" }) {
+  return (params.status === "active" || params.status === "trialing") && params.plan !== "free";
+}
+
 async function buildCandidateCustomers(
   stripe: Stripe,
   email: string | null,
@@ -160,6 +167,8 @@ export async function resolveStripeBillingDetails(params: {
 }) {
   const { stripe, email, preferredPlan, localCustomerIds } = params;
   const candidates = await buildCandidateCustomers(stripe, email, localCustomerIds);
+  const hasCanonicalCustomerId = localCustomerIds.length > 0;
+  const activePaidCustomers = new Set<string>();
 
   let best:
     | (StripeResolvedBilling & {
@@ -191,6 +200,8 @@ export async function resolveStripeBillingDetails(params: {
           currentPeriodEnd: null,
           billingCycleAnchor: null,
           customerSource: candidate.source,
+          lookupStatus: "not_found",
+          matchedCustomerCount: candidates.length,
           score: 0
         };
       }
@@ -206,6 +217,15 @@ export async function resolveStripeBillingDetails(params: {
       const currentPeriodEnd = toIsoDateFromUnix(subscription.items.data[0]?.current_period_end ?? null);
       const billingCycleAnchor = toIsoDateFromUnix(subscription.billing_cycle_anchor ?? null);
       const resolvedPlan = inferPlanFromSubscription(subscription);
+      const sourceScore = candidate.source === "stripe_email" ? 0 : 1000;
+      const entitled = isEntitledSubscription({
+        status: subscription.status,
+        plan: resolvedPlan
+      });
+
+      if (entitled) {
+        activePaidCustomers.add(candidate.customerId);
+      }
 
       console.log({
         customerId: maskStripeCustomerId(candidate.customerId),
@@ -217,7 +237,7 @@ export async function resolveStripeBillingDetails(params: {
         billingCycleAnchor
       });
 
-      if (!best || score > best.score) {
+      if (!best || score + sourceScore > best.score) {
         best = {
           customerId: candidate.customerId,
           subscriptionId: subscription.id,
@@ -227,10 +247,27 @@ export async function resolveStripeBillingDetails(params: {
           currentPeriodEnd,
           billingCycleAnchor,
           customerSource: candidate.source,
-          score
+          lookupStatus: "matched",
+          matchedCustomerCount: candidates.length,
+          score: score + sourceScore
         };
       }
     }
+  }
+
+  if (!hasCanonicalCustomerId && activePaidCustomers.size > 1) {
+    return {
+      customerId: null,
+      subscriptionId: null,
+      plan: "free",
+      status: null,
+      currentPeriodStart: null,
+      currentPeriodEnd: null,
+      billingCycleAnchor: null,
+      customerSource: "ambiguous",
+      lookupStatus: "ambiguous",
+      matchedCustomerCount: activePaidCustomers.size
+    } satisfies StripeResolvedBilling;
   }
 
   if (!best) {
@@ -242,7 +279,9 @@ export async function resolveStripeBillingDetails(params: {
       currentPeriodStart: null,
       currentPeriodEnd: null,
       billingCycleAnchor: null,
-      customerSource: "none"
+      customerSource: "none",
+      lookupStatus: "not_found",
+      matchedCustomerCount: candidates.length
     } satisfies StripeResolvedBilling;
   }
 

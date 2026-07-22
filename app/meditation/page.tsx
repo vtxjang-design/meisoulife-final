@@ -77,7 +77,7 @@ const RECHARGE_GATE_GUIDE_IMAGE_SRC = "/basic/daytime-gate/recharge%20gate.png";
 const EVENING_RELEASE_VIDEO_SRC = "/evening-gate/evening%20gate1.mp4";
 const EVENING_GRATITUDE_VIDEO_SRC = "/basic/evening-gate/Gratitude%20Gate1.mp4";
 const EVENING_SLEEP_VIDEO_SRC = "/basic/evening-gate/sleep%20gate1.mp4";
-const AWAKENING_GATE_VIDEO_VOLUME = 0.14;
+const AWAKENING_GATE_VIDEO_VOLUME = 0.36;
 const VISION_GATE_VIDEO_VOLUME = 0.15;
 const FOCUS_GATE_VIDEO_VOLUME = 0.16;
 const CALM_GATE_VIDEO_VOLUME = 0.15;
@@ -1534,9 +1534,13 @@ function getPreviousDayStamp(dayStamp: string) {
   return getLocalDayStamp(date);
 }
 
-function formatGateComment(message: string | null) {
+function formatGateComment(message: string | null, language: "jp" | "kr" | "en") {
   if (!message) {
     return "";
+  }
+
+  if (language === "jp") {
+    return message.replace(/\s*\n+\s*/g, "").replace(/[ \t]{2,}/g, " ").trim();
   }
 
   return message.replace(/\s*\n+\s*/g, " ").replace(/\s{2,}/g, " ").trim();
@@ -1803,10 +1807,10 @@ function MeditationPageContent() {
     typeof window !== "undefined" ? `${window.location.pathname}${window.location.search}` : "/meditation";
   const gateCommentTextClass =
     localizedLanguage === "kr"
-      ? "mx-auto w-full max-w-[min(90%,42rem)] animate-fade-in text-center font-serif text-[clamp(1rem,4vw,1.125rem)] leading-[1.58] text-white/84 [text-wrap:balance] [word-break:keep-all] md:text-[clamp(1.125rem,2.7vw,1.3125rem)] lg:text-[clamp(1.3125rem,1.9vw,1.625rem)]"
+      ? "mx-auto block w-full min-w-0 max-w-[min(100%,46rem)] animate-fade-in text-center font-serif text-[clamp(1rem,4.1vw,1.125rem)] leading-[1.62] text-white/84 [text-wrap:balance] [writing-mode:horizontal-tb] [overflow-wrap:normal] [word-break:keep-all] md:text-[clamp(1.125rem,2.7vw,1.3125rem)] md:leading-[1.56] lg:text-[clamp(1.3125rem,1.9vw,1.5rem)] lg:leading-[1.5]"
       : localizedLanguage === "en"
-        ? "mx-auto w-full max-w-[min(90%,42rem)] animate-fade-in text-center font-serif text-[clamp(1rem,4vw,1.125rem)] leading-[1.58] text-white/84 [text-wrap:balance] [overflow-wrap:normal] [word-break:normal] md:text-[clamp(1.125rem,2.7vw,1.3125rem)] lg:text-[clamp(1.3125rem,1.9vw,1.625rem)]"
-        : "mx-auto w-full max-w-[min(90%,42rem)] animate-fade-in text-center font-serif text-[clamp(1rem,4vw,1.125rem)] leading-[1.58] text-white/84 [text-wrap:balance] [overflow-wrap:normal] [word-break:normal] md:text-[clamp(1.125rem,2.7vw,1.3125rem)] lg:text-[clamp(1.3125rem,1.9vw,1.625rem)]";
+        ? "mx-auto block w-full min-w-0 max-w-[min(100%,46rem)] animate-fade-in text-center font-serif text-[clamp(1rem,4.1vw,1.125rem)] leading-[1.62] text-white/84 [text-wrap:balance] [writing-mode:horizontal-tb] [overflow-wrap:normal] [word-break:normal] md:text-[clamp(1.125rem,2.7vw,1.3125rem)] md:leading-[1.56] lg:text-[clamp(1.3125rem,1.9vw,1.5rem)] lg:leading-[1.5]"
+        : "mx-auto block w-full min-w-0 max-w-[min(100%,46rem)] animate-fade-in text-center font-serif text-[clamp(1rem,4.1vw,1.125rem)] leading-[1.62] text-white/84 [text-wrap:balance] [writing-mode:horizontal-tb] [line-break:strict] [overflow-wrap:normal] [word-break:normal] md:text-[clamp(1.125rem,2.7vw,1.3125rem)] md:leading-[1.56] lg:text-[clamp(1.3125rem,1.9vw,1.5rem)] lg:leading-[1.5]";
 
   function cancelGuidedSpeech() {
     if (typeof window === "undefined") {
@@ -5111,7 +5115,7 @@ function MeditationPageContent() {
                     key={affirmationMessage ?? "structured-morning-empty"}
                     className={gateCommentTextClass}
                   >
-                    {formatGateComment(affirmationMessage)}
+                    {formatGateComment(affirmationMessage, localizedLanguage)}
                   </p>
                 </div>
               ) : isFocusGate ? (
@@ -5120,7 +5124,7 @@ function MeditationPageContent() {
                     key={focusGateMessage ?? "focus-gate-empty"}
                     className={gateCommentTextClass}
                   >
-                    {formatGateComment(focusGateMessage)}
+                    {formatGateComment(focusGateMessage, localizedLanguage)}
                   </p>
                 </div>
               ) : isCalmGate ? (
@@ -5129,7 +5133,7 @@ function MeditationPageContent() {
                     key={calmGateMessage ?? "calm-gate-empty"}
                     className={gateCommentTextClass}
                   >
-                    {formatGateComment(calmGateMessage)}
+                    {formatGateComment(calmGateMessage, localizedLanguage)}
                   </p>
                 </div>
               ) : isReleaseGate ? (
@@ -5138,7 +5142,7 @@ function MeditationPageContent() {
                     key={releaseGateMessage ?? "release-gate-empty"}
                     className={gateCommentTextClass}
                   >
-                    {formatGateComment(releaseGateMessage)}
+                    {formatGateComment(releaseGateMessage, localizedLanguage)}
                   </p>
                 </div>
               ) : isGratitudeGate ? (
@@ -5147,7 +5151,7 @@ function MeditationPageContent() {
                     key={gratitudeGateMessage ?? "gratitude-gate-empty"}
                     className={gateCommentTextClass}
                   >
-                    {formatGateComment(gratitudeGateMessage)}
+                    {formatGateComment(gratitudeGateMessage, localizedLanguage)}
                   </p>
                 </div>
               ) : isSleepGate ? (
@@ -5156,7 +5160,7 @@ function MeditationPageContent() {
                     key={sleepGateMessage ?? "sleep-gate-empty"}
                     className={gateCommentTextClass}
                   >
-                    {formatGateComment(sleepGateMessage)}
+                    {formatGateComment(sleepGateMessage, localizedLanguage)}
                   </p>
                 </div>
               ) : null}

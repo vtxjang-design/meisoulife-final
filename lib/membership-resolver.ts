@@ -20,6 +20,7 @@ type MembershipClient = {
 
 type LocalMembershipRow = {
   id?: string | null;
+  user_id?: string | null;
   plan?: string | null;
   status?: string | null;
   stripe_customer_id?: string | null;
@@ -128,7 +129,7 @@ async function loadLocalMembershipSnapshot(supabase: MembershipClient, userId: s
 
   const { data: membership, error: membershipError } = await supabase
     .from("memberships")
-    .select("id, email, stripe_customer_id, stripe_subscription_id, plan, status, current_period_end, created_at")
+    .select("id, user_id, email, stripe_customer_id, stripe_subscription_id, plan, status, current_period_end, created_at")
     .eq("user_id", userId)
     .order("created_at", { ascending: false })
     .limit(1)
@@ -165,6 +166,55 @@ async function loadLocalMembershipSnapshot(supabase: MembershipClient, userId: s
       membership: membership ?? null,
       subscription: subscription ?? null
     } satisfies LocalMembershipSnapshot
+  };
+}
+
+async function loadEmailMatchedMembership(params: {
+  supabase: MembershipClient;
+  email: string;
+  logPrefix: string;
+}) {
+  const { supabase, email, logPrefix } = params;
+  const { data, error } = await supabase
+    .from("memberships")
+    .select("id, user_id, email, stripe_customer_id, stripe_subscription_id, plan, status, current_period_end, created_at")
+    .eq("email", email)
+    .in("status", ["active", "trialing"])
+    .order("created_at", { ascending: false })
+    .limit(2);
+
+  if (error) {
+    console.error(`${logPrefix} membership fallback by email failed`, {
+      email,
+      error: error.message
+    });
+    return {
+      membership: null,
+      ambiguous: false
+    };
+  }
+
+  if (!data || data.length === 0) {
+    return {
+      membership: null,
+      ambiguous: false
+    };
+  }
+
+  if (data.length > 1) {
+    console.warn(`${logPrefix} membership fallback by email ambiguous`, {
+      email,
+      count: data.length
+    });
+    return {
+      membership: null,
+      ambiguous: true
+    };
+  }
+
+  return {
+    membership: data[0] ?? null,
+    ambiguous: false
   };
 }
 
@@ -273,6 +323,7 @@ async function repairMembershipRecords(params: {
   const effectivePlan = params.plan === "free" && isActiveMembershipStatus(normalizedStatus) ? "basic" : params.plan;
 
   const needsMembershipRepair =
+    (params.snapshot.membership?.user_id ?? null) !== params.userId ||
     normalizeMembershipPlan(params.snapshot.membership?.plan) !== effectivePlan ||
     (params.snapshot.membership?.status ?? null) !== normalizedStatus ||
     (params.snapshot.membership?.stripe_customer_id ?? null) !== params.stripeCustomerId ||
@@ -294,18 +345,31 @@ async function repairMembershipRecords(params: {
   let repaired = false;
 
   if (needsMembershipRepair) {
-    const { error } = await admin.from("memberships").upsert(
-      {
-        user_id: params.userId,
-        email: params.email,
-        stripe_customer_id: params.stripeCustomerId,
-        stripe_subscription_id: params.stripeSubscriptionId,
-        plan: effectivePlan,
-        status: normalizedStatus,
-        current_period_end: params.nextBillingDate
-      },
-      { onConflict: "user_id" }
-    );
+    const existingMembershipId =
+      params.snapshot.membership?.id ??
+      (params.stripeSubscriptionId
+        ? (
+            await admin
+              .from("memberships")
+              .select("id")
+              .eq("stripe_subscription_id", params.stripeSubscriptionId)
+              .limit(1)
+              .maybeSingle()
+          ).data?.id ??
+          null
+        : null);
+    const payload = {
+      user_id: params.userId,
+      email: params.email,
+      stripe_customer_id: params.stripeCustomerId,
+      stripe_subscription_id: params.stripeSubscriptionId,
+      plan: effectivePlan,
+      status: normalizedStatus,
+      current_period_end: params.nextBillingDate
+    };
+    const { error } = existingMembershipId
+      ? await admin.from("memberships").update(payload).eq("id", existingMembershipId)
+      : await admin.from("memberships").insert(payload);
 
     if (error) {
       console.error(`${params.logPrefix} membership repair failed`, {
@@ -379,6 +443,8 @@ export async function resolveMembershipEntitlement(
   let { membershipState, snapshot } = await loadLocalMembershipSnapshot(supabase, userId, logPrefix);
   let matchedBy: MembershipMatchSource = snapshot.membership ? "user_id" : "none";
   let stripeCustomerSource: string | null = null;
+  let resolverErrorMessage: string | null = membershipState.errorMessage ?? null;
+  let emailMembershipAmbiguous = false;
 
   if (!snapshot.profile && normalizedEmail) {
     const { data: emailProfile, error: emailProfileError } = await supabase
@@ -431,6 +497,24 @@ export async function resolveMembershipEntitlement(
       }
     }
   }
+
+  if (!snapshot.membership && normalizedEmail) {
+    const emailMembershipResult = await loadEmailMatchedMembership({
+      supabase,
+      email: normalizedEmail,
+      logPrefix
+    });
+
+    if (emailMembershipResult.membership) {
+      snapshot = {
+        ...snapshot,
+        membership: emailMembershipResult.membership
+      };
+      matchedBy = "email";
+    } else if (emailMembershipResult.ambiguous) {
+      emailMembershipAmbiguous = true;
+    }
+  }
   const local = resolveLocalMembership(snapshot, membershipState);
   const stripe = params.stripe ?? getStripeClient();
   const localCustomerIds = [
@@ -464,7 +548,10 @@ export async function resolveMembershipEntitlement(
   let finalCanManageMembership = local.canManageMembership;
   let failureReasons = [...local.failureReasons];
 
-  if (stripe && (normalizedEmail || localCustomerIds.length > 0)) {
+  if (emailMembershipAmbiguous) {
+    resolverErrorMessage = "Multiple active membership records matched the verified email";
+    failureReasons.push("repair_skipped");
+  } else if (stripe && (normalizedEmail || localCustomerIds.length > 0)) {
     const stripeBilling = await resolveStripeBillingDetails({
       stripe,
       email: normalizedEmail,
@@ -480,11 +567,16 @@ export async function resolveMembershipEntitlement(
       plan: stripeBilling.plan,
       status: stripeBilling.status,
       currentPeriodEnd: stripeBilling.currentPeriodEnd,
-      customerSource: stripeBilling.customerSource
+      customerSource: stripeBilling.customerSource,
+      lookupStatus: stripeBilling.lookupStatus,
+      matchedCustomerCount: stripeBilling.matchedCustomerCount
     });
     stripeCustomerSource = stripeBilling.customerSource;
 
-    if (stripeBilling.customerId || stripeBilling.subscriptionId || stripeBilling.status) {
+    if (stripeBilling.lookupStatus === "ambiguous") {
+      resolverErrorMessage = "Multiple active Stripe customers matched the verified email";
+      failureReasons.push("repair_skipped");
+    } else if (stripeBilling.customerId || stripeBilling.subscriptionId || stripeBilling.status) {
       source = "stripe";
       if (matchedBy === "none") {
         matchedBy = stripeBilling.customerSource === "stripe_email" ? "email" : stripeBilling.customerId ? "customer_id" : "none";
@@ -524,10 +616,13 @@ export async function resolveMembershipEntitlement(
     }
   } else {
     failureReasons.push("stripe_skipped_missing_config_or_lookup_key");
+    if (!local.hasActiveSubscription && normalizedEmail) {
+      resolverErrorMessage = "Stripe reconciliation is unavailable";
+    }
   }
 
   const hasActiveSubscription = isActiveMembershipStatus(finalStatus) && finalPlan !== "free";
-  const finalError = membershipState.errorMessage ?? null;
+  const finalError = resolverErrorMessage;
   const shouldWarnWebhookPending =
     !hasActiveSubscription &&
     !snapshot.membership &&
@@ -563,7 +658,9 @@ export async function resolveMembershipEntitlement(
 
   return {
     plan: finalPlan,
-    resolved: membershipState.resolved || source !== "local" || hasActiveSubscription || finalPlan === "free",
+    resolved:
+      !finalError &&
+      (membershipState.resolved || source !== "local" || hasActiveSubscription || finalPlan === "free"),
     membershipStatus: finalStatus,
     hasActiveSubscription,
     errorMessage: finalError,

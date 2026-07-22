@@ -844,7 +844,15 @@ export function MemberEntryContent({
 }: MemberEntryContentProps) {
   const router = useRouter();
   const { language } = useLanguage();
-  const { authResolved, isLoggedIn: resolvedIsLoggedIn, planResolved, isMembershipLoading, hasActiveSubscription, plan } =
+  const {
+    authResolved,
+    isLoggedIn: resolvedIsLoggedIn,
+    planResolved,
+    isMembershipLoading,
+    hasActiveSubscription,
+    plan,
+    planError
+  } =
     useAuthState();
   const copy = useLocaleCopy(memberEntryCopy);
   const [activeForestKey, setActiveForestKey] = useState<RecoveryForestKey | null>(null);
@@ -887,6 +895,8 @@ export function MemberEntryContent({
   const membershipStatusLabel = membershipSummary.subscriptionStatus ?? copy.membershipPanel.noStatus;
   const cameFromProtectedPage = Boolean(requestedNextPath);
   const showAccessNotice = effectiveIsLoggedIn && !showMemberLoadingState && !hasActiveSubscription && cameFromProtectedPage;
+  const showMembershipErrorState =
+    effectiveIsLoggedIn && !showMemberLoadingState && !hasActiveSubscription && Boolean(planError);
   const loadingMessage =
     authResolved && resolvedIsLoggedIn
       ? language === "jp"
@@ -899,6 +909,18 @@ export function MemberEntryContent({
         : language === "kr"
           ? "로그인 상태를 확인하고 있습니다..."
           : "Checking your login status...";
+  const membershipErrorTitle =
+    language === "jp"
+      ? "会員情報をまだ確定できませんでした。"
+      : language === "kr"
+        ? "멤버십 정보를 아직 확정하지 못했습니다."
+        : "We could not confirm your membership yet.";
+  const membershipErrorBody =
+    language === "jp"
+      ? "認証は確認できています。現在、決済情報との照合を再確認しています。しばらくしてからもう一度開くか、LINEサポートへご連絡ください。"
+      : language === "kr"
+        ? "로그인은 확인되었습니다. 현재 결제 정보와의 연결을 다시 확인하고 있습니다. 잠시 후 다시 열어보시거나 LINE 지원으로 문의해 주세요."
+        : "Your login is confirmed. We are rechecking the connection to your billing record. Please try again shortly or contact LINE support.";
 
   async function handleManageMembership() {
     setPortalLoading(true);
@@ -1078,7 +1100,7 @@ export function MemberEntryContent({
           </div>
         ) : null}
 
-        {!showMemberLoadingState && effectiveIsLoggedIn ? (
+        {!showMemberLoadingState && effectiveIsLoggedIn && !showMembershipErrorState ? (
           <div className="mx-auto mt-2 max-w-5xl space-y-6">
             {showAccessNotice ? (
               <section className="rounded-[24px] border border-[#f1d7a1]/20 bg-[linear-gradient(180deg,rgba(212,186,117,0.10),rgba(255,255,255,0.02))] px-5 py-5 sm:px-6">
@@ -1225,7 +1247,7 @@ export function MemberEntryContent({
           </div>
         ) : null}
 
-        {!showMemberLoadingState && effectiveIsLoggedIn ? (
+        {!showMemberLoadingState && effectiveIsLoggedIn && !showMembershipErrorState ? (
           <div className="mx-auto mt-6 max-w-4xl rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-5">
             <p className="text-xs uppercase tracking-[0.24em] text-gold/78">{recoveryHome.supportTitle}</p>
             <p className="mt-3 text-sm leading-7 text-white/68">{recoveryHome.supportBody}</p>
@@ -1245,6 +1267,22 @@ export function MemberEntryContent({
               >
                 {copy.actions.minute}
               </button>
+            </div>
+          </div>
+        ) : showMembershipErrorState ? (
+          <div className="mx-auto mt-8 max-w-4xl rounded-[28px] border border-[#f1d7a1]/18 bg-[radial-gradient(circle_at_top,rgba(212,186,117,0.12),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-5 sm:p-6">
+            <p className="text-xs uppercase tracking-[0.24em] text-gold/78">{copy.badge}</p>
+            <h2 className="mt-3 text-2xl font-semibold text-white">{membershipErrorTitle}</h2>
+            <p className="mt-3 text-sm leading-7 text-white/78">{membershipErrorBody}</p>
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <a
+                href={lineUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-gold/20 bg-gold/[0.08] px-6 py-3 text-sm font-semibold text-gold transition duration-300 hover:bg-gold/[0.12]"
+              >
+                {copy.actions.line}
+              </a>
             </div>
           </div>
         ) : !showMemberLoadingState ? (
