@@ -283,21 +283,54 @@ export function BasicHome({
               <stop offset="100%" stopColor="rgba(214,244,235,0)" />
             </radialGradient>
           </defs>
-          <ellipse cx="140" cy="184" rx="96" ry="28" fill="rgba(5,18,34,0.72)" />
-          <ellipse cx="140" cy="178" rx="102" ry="24" fill="url(#gardenSoil)" />
+          <ellipse
+            cx="140"
+            cy="184"
+            rx="96"
+            ry="28"
+            fill="rgba(5,18,34,0.72)"
+            className="motion-safe:animate-[gardenGroundBreath_11s_ease-in-out_infinite] motion-reduce:animate-none"
+            style={{ transformOrigin: "140px 184px" }}
+          />
+          <ellipse
+            cx="140"
+            cy="178"
+            rx="102"
+            ry="24"
+            fill="url(#gardenSoil)"
+            className="motion-safe:animate-[gardenGroundBreath_11s_ease-in-out_infinite] motion-reduce:animate-none"
+            style={{ transformOrigin: "140px 178px", animationDelay: "0.35s" }}
+          />
           <ellipse cx="140" cy="173" rx="10" ry="7" fill="rgba(216,192,138,0.44)" opacity={gardenVisual.hasRecordedRecovery ? 0.28 : 0.7} />
-          <g className="motion-safe:animate-[gardenPlantBreath_12s_ease-in-out_infinite] motion-reduce:animate-none">
+          <g
+            className="motion-safe:animate-[gardenStemSway_9.2s_ease-in-out_infinite] motion-reduce:animate-none"
+            style={{ transformOrigin: "140px 176px" }}
+          >
             <path d="M140 176 C138 164 137 148 140 130" stroke="url(#gardenStem)" strokeWidth="3.2" strokeLinecap="round" fill="none" />
+          </g>
+          <g
+            className="motion-safe:animate-[gardenBranchLeft_8.8s_ease-in-out_infinite] motion-reduce:animate-none"
+            style={{ transformOrigin: "140px 158px" }}
+          >
             <path d="M140 158 C126 154 116 146 110 132" stroke="url(#gardenStem)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
-            <path d="M141 149 C157 143 170 132 176 116" stroke="url(#gardenStem)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
             <path d="M138 136 C124 130 114 118 108 104" stroke="url(#gardenStem)" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9" />
+          </g>
+          <g
+            className="motion-safe:animate-[gardenBranchRight_10.6s_ease-in-out_infinite] motion-reduce:animate-none"
+            style={{ transformOrigin: "141px 149px", animationDelay: "0.8s" }}
+          >
+            <path d="M141 149 C157 143 170 132 176 116" stroke="url(#gardenStem)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
             <path d="M142 128 C155 122 164 112 170 100" stroke="url(#gardenStem)" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9" />
           </g>
           {gardenVisual.marks.map((mark, index) => (
             <g
               key={`${mark.x}-${mark.y}-${index}`}
-              className="motion-safe:animate-[gardenDrift_11s_ease-in-out_infinite] motion-reduce:animate-none"
-              style={{ animationDelay: `${index * 0.6}s` }}
+              className="motion-safe:animate-[gardenLightPulse_7.2s_ease-in-out_infinite] motion-reduce:animate-none"
+              style={{
+                animationDelay: `${index * 0.7}s`,
+                animationDuration: `${6 + index * 0.55}s`,
+                transformOrigin: `${mark.x}px ${mark.y}px`
+              }}
             >
               <path
                 d={`M${mark.anchorX} ${mark.anchorY} Q${(mark.anchorX + mark.x) / 2} ${(mark.anchorY + mark.y) / 2 + 3} ${mark.x} ${mark.y + 1}`}
@@ -502,13 +535,25 @@ export function BasicHome({
           0%, 100% { opacity: 0.55; transform: scale(0.98); }
           50% { opacity: 0.85; transform: scale(1.02); }
         }
-        @keyframes gardenPlantBreath {
-          0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-          50% { transform: translate3d(0, -1.5px, 0) scale(1.01); }
+        @keyframes gardenStemSway {
+          0%, 100% { transform: translate3d(0, 0, 0) rotate(-0.8deg); }
+          50% { transform: translate3d(1px, 0, 0) rotate(0.95deg); }
         }
-        @keyframes gardenDrift {
-          0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.88; }
-          50% { transform: translate3d(0, -3px, 0); opacity: 1; }
+        @keyframes gardenBranchLeft {
+          0%, 100% { transform: rotate(-1.15deg) translate3d(0, 0, 0); }
+          50% { transform: rotate(1.25deg) translate3d(-0.5px, -0.5px, 0); }
+        }
+        @keyframes gardenBranchRight {
+          0%, 100% { transform: rotate(1deg) translate3d(0, 0, 0); }
+          50% { transform: rotate(-1.35deg) translate3d(0.6px, -0.4px, 0); }
+        }
+        @keyframes gardenLightPulse {
+          0%, 100% { transform: scale(0.97); opacity: 0.74; }
+          50% { transform: scale(1.04); opacity: 1; }
+        }
+        @keyframes gardenGroundBreath {
+          0%, 100% { transform: scale(0.995); opacity: 0.92; }
+          50% { transform: scale(1.01); opacity: 1; }
         }
       `}</style>
 
