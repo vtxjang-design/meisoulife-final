@@ -162,6 +162,17 @@ export async function stopAmbientNatureAudio(
     return;
   }
 
+  if (fadeOutMs <= 0) {
+    const state = fadeStateMap.get(audio);
+    if (state) {
+      state.token += 1;
+    }
+    audio.volume = 0;
+    audio.pause();
+    audio.currentTime = 0;
+    return;
+  }
+
   await fadeVolume(audio, audio.volume, 0, fadeOutMs);
   audio.pause();
   audio.currentTime = 0;

@@ -1503,6 +1503,7 @@ function MeditationPageContent() {
   const [isJourneyCompletionHolding, setIsJourneyCompletionHolding] = useState(false);
   const [isJourneySettling, setIsJourneySettling] = useState(false);
   const [returnToHref, setReturnToHref] = useState("/rhythm-journey");
+  const [navigationPendingAction, setNavigationPendingAction] = useState<"exit" | "repeat" | "return" | null>(null);
   const [requestedRouteType, setRequestedRouteType] = useState<string | null>(null);
   const [hasInvalidRoute, setHasInvalidRoute] = useState(false);
   const [awakeningRitualState, setAwakeningRitualState] = useState<AwakeningRitualState | null>(null);
@@ -1695,9 +1696,24 @@ function MeditationPageContent() {
         : {
             title: "この瞑想のリンクを開けませんでした",
             body: "もう一度試すか、BASICへ戻ってください。",
-            button: "BASICへ戻る"
-          };
+          button: "BASICへ戻る"
+        };
   const basicGateUi = basicGateUiCopy[localizedLanguage];
+  const navigationPendingCopy =
+    localizedLanguage === "kr"
+      ? {
+          moving: "이동하고 있습니다…",
+          reopening: "다시 여는 중입니다…"
+        }
+      : localizedLanguage === "en"
+        ? {
+            moving: "Moving…",
+            reopening: "Reopening…"
+          }
+        : {
+            moving: "移動しています…",
+            reopening: "開いています…"
+          };
   const currentSessionUrl =
     typeof window !== "undefined" ? `${window.location.pathname}${window.location.search}` : "/meditation";
   const gateCommentTextClass =
@@ -1827,7 +1843,8 @@ function MeditationPageContent() {
     resetJapaneseEveningVoiceSession("sleep");
   }
 
-  async function stopCurrentGatePlayback(options: { resetTime?: boolean } = {}) {
+  async function stopCurrentGatePlayback(options: { immediate?: boolean; resetTime?: boolean } = {}) {
+    const immediate = options.immediate ?? false;
     const resetTime = options.resetTime ?? true;
     cancelGuidedSpeech();
 
@@ -1838,7 +1855,7 @@ function MeditationPageContent() {
     }
 
     if (isStructuredMorningGate) {
-      await stopStructuredMorningAmbient();
+      await stopStructuredMorningAmbient(immediate);
       return;
     }
 
@@ -1885,22 +1902,59 @@ function MeditationPageContent() {
       return;
     }
 
-    await stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
+    await stopAmbientNatureAudio(ambientAudioRef, immediate ? 0 : ambientFadeOutMs);
   }
 
   async function handleExitGate() {
+    if (navigationPendingAction) {
+      return;
+    }
+
     completionHandledRef.current = true;
     setIsPaused(true);
-    await stopCurrentGatePlayback();
+    setNavigationPendingAction("exit");
+    if (process.env.NODE_ENV !== "production") {
+      console.debug("[meditation-navigation] exit requested", {
+        returnToHref,
+        at: performance.now()
+      });
+    }
+    void stopCurrentGatePlayback({ immediate: true });
     router.push(returnToHref);
   }
 
   async function handleRepeatGate() {
+    if (navigationPendingAction) {
+      return;
+    }
+
     completionHandledRef.current = true;
-    await stopCurrentGatePlayback();
+    setNavigationPendingAction("repeat");
+    if (process.env.NODE_ENV !== "production") {
+      console.debug("[meditation-navigation] repeat requested", {
+        currentSessionUrl,
+        at: performance.now()
+      });
+    }
+    void stopCurrentGatePlayback({ immediate: true });
     if (typeof window !== "undefined") {
       window.location.assign(currentSessionUrl);
     }
+  }
+
+  function handleReturnNavigation(destination: string) {
+    if (navigationPendingAction) {
+      return;
+    }
+
+    setNavigationPendingAction("return");
+    if (process.env.NODE_ENV !== "production") {
+      console.debug("[meditation-navigation] return requested", {
+        destination,
+        at: performance.now()
+      });
+    }
+    router.push(destination);
   }
 
   function logStructuredMorningAmbientState(stage: string) {
@@ -2097,7 +2151,7 @@ function MeditationPageContent() {
     return await startStructuredMorningAmbient({ fadeInMs: MORNING_GATE_FADE_IN_MS });
   }
 
-  async function stopStructuredMorningAmbient() {
+  async function stopStructuredMorningAmbient(immediate = false) {
     if (isAffirmationGate) {
       const video = affirmationVideoRef.current;
       if (video) {
@@ -2119,7 +2173,7 @@ function MeditationPageContent() {
     }
 
     logStructuredMorningAmbientState("structured-stop-before");
-    await stopAmbientNatureAudio(ambientAudioRef, MORNING_GATE_FADE_OUT_MS);
+    await stopAmbientNatureAudio(ambientAudioRef, immediate ? 0 : MORNING_GATE_FADE_OUT_MS);
     stopMorningAmbientSource(true);
     logStructuredMorningAmbientState("structured-stop-after");
   }
@@ -2131,6 +2185,13 @@ function MeditationPageContent() {
   useEffect(() => {
     isCompleteRef.current = isComplete;
   }, [isComplete]);
+
+  useEffect(() => {
+    router.prefetch(returnToHref);
+    if (basicCompletionReturnHref !== returnToHref) {
+      router.prefetch(basicCompletionReturnHref);
+    }
+  }, [basicCompletionReturnHref, returnToHref, router]);
 
   useEffect(() => {
     if (requiresProtectedMembership && !membershipAccess.canRender) {
@@ -4892,9 +4953,11 @@ function MeditationPageContent() {
                     onClick={() => {
                       void handleExitGate();
                     }}
-                    className="button-nowrap inline-flex min-h-[34px] items-center justify-center rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-white/68 transition hover:bg-white/[0.07] hover:text-white"
+                    disabled={navigationPendingAction !== null}
+                    aria-busy={navigationPendingAction === "exit"}
+                    className="button-nowrap inline-flex min-h-[34px] items-center justify-center rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-white/68 transition hover:bg-white/[0.07] hover:text-white disabled:cursor-not-allowed disabled:opacity-72"
                   >
-                    {basicGateUi.exit}
+                    {navigationPendingAction === "exit" ? navigationPendingCopy.moving : basicGateUi.exit}
                   </button>
                 </div>
               </div>
@@ -4940,9 +5003,11 @@ function MeditationPageContent() {
                   onClick={() => {
                     void handleExitGate();
                   }}
-                  className="button-nowrap inline-flex min-h-[38px] items-center justify-center rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs font-medium text-white/66 transition hover:bg-white/[0.07] hover:text-white"
+                  disabled={navigationPendingAction !== null}
+                  aria-busy={navigationPendingAction === "exit"}
+                  className="button-nowrap inline-flex min-h-[38px] items-center justify-center rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs font-medium text-white/66 transition hover:bg-white/[0.07] hover:text-white disabled:cursor-not-allowed disabled:opacity-72"
                 >
-                  {basicGateUi.exit}
+                  {navigationPendingAction === "exit" ? navigationPendingCopy.moving : basicGateUi.exit}
                 </button>
               </div>
             ) : null}
@@ -5266,19 +5331,29 @@ function MeditationPageContent() {
             <div className="flex flex-col items-center gap-3">
               {journeyMode ? null : (
                 isBasicGateExperience ? (
-                  <Link
-                    href={basicCompletionReturnHref}
-                    className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
+                  <button
+                    type="button"
+                    onClick={() => handleReturnNavigation(basicCompletionReturnHref)}
+                    disabled={navigationPendingAction !== null}
+                    aria-busy={navigationPendingAction === "return"}
+                    className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-72"
                   >
-                    {basicGateUi.returnToBasic}
-                  </Link>
+                    {navigationPendingAction === "return" ? navigationPendingCopy.moving : basicGateUi.returnToBasic}
+                  </button>
                 ) : (
-                  <Link
-                    href={returnToHref}
-                    className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
+                  <button
+                    type="button"
+                    onClick={() => handleReturnNavigation(returnToHref)}
+                    disabled={navigationPendingAction !== null}
+                    aria-busy={navigationPendingAction === "return"}
+                    className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-72"
                   >
-                    {isStructuredMorningGate ? morningGateCopy.completionButton : copy.completionPrimary}
-                  </Link>
+                    {navigationPendingAction === "return"
+                      ? navigationPendingCopy.moving
+                      : isStructuredMorningGate
+                        ? morningGateCopy.completionButton
+                        : copy.completionPrimary}
+                  </button>
                 )
               )}
               {!journeyMode && !isStructuredMorningGate ? (
@@ -5288,9 +5363,11 @@ function MeditationPageContent() {
                     onClick={() => {
                       void handleRepeatGate();
                     }}
-                    className="inline-flex min-h-[52px] min-w-[240px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
+                    disabled={navigationPendingAction !== null}
+                    aria-busy={navigationPendingAction === "repeat"}
+                    className="inline-flex min-h-[52px] min-w-[240px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06] disabled:cursor-not-allowed disabled:opacity-72"
                   >
-                    {basicGateUi.repeat}
+                    {navigationPendingAction === "repeat" ? navigationPendingCopy.reopening : basicGateUi.repeat}
                   </button>
                 ) : (
                   <Link

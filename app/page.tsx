@@ -530,6 +530,7 @@ export default function HomePage() {
   const copy = useLocaleCopy(homeCopy);
   const [giftDelivered, setGiftDelivered] = useState(false);
   const [activeChapterIndex, setActiveChapterIndex] = useState<number | null>(null);
+  const [basicJourneyPending, setBasicJourneyPending] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [headerOffset, setHeaderOffset] = useState(112);
   const chapterHeadingRef = useRef<HTMLHeadingElement | null>(null);
@@ -588,6 +589,12 @@ export default function HomePage() {
       window.removeEventListener("resize", updateHeaderOffset);
     };
   }, []);
+
+  useEffect(() => {
+    router.prefetch("/rhythm-journey");
+    router.prefetch("/program/basic");
+    router.prefetch("/member?next=/program/basic");
+  }, [router]);
 
   useEffect(() => {
     if (activeChapterIndex === null || typeof window === "undefined") {
@@ -771,6 +778,12 @@ export default function HomePage() {
   }
 
   function handleBasicJourneyCta() {
+    if (basicJourneyPending) {
+      return;
+    }
+
+    setBasicJourneyPending(true);
+
     if (!authResolved || !isLoggedIn || memberState !== "paid") {
       router.push("/member?next=/program/basic");
       return;
@@ -824,6 +837,12 @@ export default function HomePage() {
   const chapterSupportingText = activeChapter ? getChapterSupportingText(activeChapter, copy) : "";
   const isFinalChapter = activeChapterIndex === chapterSequence.length - 1;
   const viewportSectionMinHeight = `calc(100dvh - ${headerOffset}px)`;
+  const basicJourneyPendingLabel =
+    language === "jp"
+      ? "次へ進んでいます…"
+      : language === "kr"
+        ? "다음으로 이동하고 있습니다…"
+        : "Moving to the next step…";
   const chapterOverlayStyle = {
     top: `${headerOffset}px`,
     paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))"
@@ -1002,9 +1021,11 @@ export default function HomePage() {
                         <button
                           type="button"
                           onClick={handleBasicJourneyCta}
-                          className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f0ddb0_0%,#dcc086_56%,#caa160_100%)] px-5 py-2.5 text-sm font-semibold text-[#16202b] shadow-[0_16px_34px_rgba(212,186,117,0.16)] transition hover:brightness-[1.03] max-[680px]:min-h-[44px] max-[680px]:px-4.5 max-[680px]:py-2 sm:min-h-[52px] sm:px-5.5 sm:py-2.5"
+                          disabled={basicJourneyPending}
+                          aria-busy={basicJourneyPending}
+                          className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#f0ddb0_0%,#dcc086_56%,#caa160_100%)] px-5 py-2.5 text-sm font-semibold text-[#16202b] shadow-[0_16px_34px_rgba(212,186,117,0.16)] transition hover:brightness-[1.03] disabled:cursor-not-allowed disabled:opacity-80 max-[680px]:min-h-[44px] max-[680px]:px-4.5 max-[680px]:py-2 sm:min-h-[52px] sm:px-5.5 sm:py-2.5"
                         >
-                          {copy.chapters.doorway.basicCta}
+                          {basicJourneyPending ? basicJourneyPendingLabel : copy.chapters.doorway.basicCta}
                         </button>
                         <Link
                           href="/rhythm-journey"

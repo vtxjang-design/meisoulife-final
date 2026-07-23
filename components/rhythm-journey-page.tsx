@@ -36,6 +36,7 @@ export function RhythmJourneyPage() {
   const [hydrated, setHydrated] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
   const [showNaturePause, setShowNaturePause] = useState(false);
+  const [recoveryRoutePending, setRecoveryRoutePending] = useState(false);
   const completedCount = progress.completedDays.length;
   const isJourneyComplete = completedCount >= RHYTHM_JOURNEY_DAY_COUNT;
   const hasExistingProgress =
@@ -133,9 +134,15 @@ export function RhythmJourneyPage() {
       ? language === "jp"
         ? `Day ${currentDay.day + 1} を続ける`
         : language === "kr"
-          ? `${currentDay.day + 1}일차 계속하기`
-          : `Continue to Day ${currentDay.day + 1}`
+        ? `${currentDay.day + 1}일차 계속하기`
+        : `Continue to Day ${currentDay.day + 1}`
       : "";
+  const routePendingLabel =
+    language === "jp"
+      ? "次へ進んでいます…"
+      : language === "kr"
+        ? "다음으로 이동하고 있습니다…"
+        : "Moving to the next step…";
 
   useEffect(() => {
     const stored = readRhythmJourneyProgress();
@@ -173,6 +180,11 @@ export function RhythmJourneyPage() {
     setShowNaturePause(false);
     setHydrated(true);
   }, []);
+
+  useEffect(() => {
+    router.prefetch("/meditation");
+    router.prefetch(DAILY_RHYTHM_ROUTE);
+  }, [router]);
 
   function updateProgress(next: RhythmJourneyProgress) {
     setProgress(next);
@@ -253,12 +265,18 @@ export function RhythmJourneyPage() {
   }
 
   function startRecoveryMinute() {
+    if (recoveryRoutePending) {
+      return;
+    }
+
     const meditationType = currentDay.day === 7 ? "morning" : currentDay.day === 6 ? "night" : "default";
 
     if (typeof window !== "undefined") {
       window.sessionStorage.setItem(JOURNEY_AUDIO_PENDING_KEY, "true");
       window.sessionStorage.setItem(JOURNEY_AUDIO_DAY_KEY, String(currentDay.day));
     }
+
+    setRecoveryRoutePending(true);
 
     router.push(
       `/meditation?duration=60&type=${meditationType}&journey=1&day=${currentDay.day}&returnTo=${encodeURIComponent(
@@ -547,9 +565,11 @@ export function RhythmJourneyPage() {
                     <button
                       type="button"
                       onClick={startRecoveryMinute}
-                      className="button-nowrap inline-flex min-h-[56px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.2)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_46px_rgba(212,186,117,0.24)]"
+                      disabled={recoveryRoutePending}
+                      aria-busy={recoveryRoutePending}
+                      className="button-nowrap inline-flex min-h-[56px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-4 text-base font-semibold text-ink shadow-[0_18px_40px_rgba(212,186,117,0.2)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_46px_rgba(212,186,117,0.24)] disabled:cursor-not-allowed disabled:opacity-80"
                     >
-                      {journeyCopy.recoveryCta}
+                      {recoveryRoutePending ? routePendingLabel : journeyCopy.recoveryCta}
                     </button>
                   )}
                 </div>
