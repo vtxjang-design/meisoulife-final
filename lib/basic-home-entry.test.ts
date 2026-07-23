@@ -214,9 +214,10 @@ test("garden copy and source do not invent percentages or named growth stages", 
   assert.doesNotMatch(basicHomeSource, /Forest|Tree|Sprout|Seed|Next growth|next level|progress percentage/i);
 });
 
-test("recommended gate has one primary presentation and keeps the same route helper", () => {
-  assert.equal((basicHomeSource.match(/data-basic-recommendation-primary/g) ?? []).length, 1);
-  assert.equal((basicHomeSource.match(/getBasicGateShortcutHref\(currentGate\.key\)/g) ?? []).length, 1);
+test("recommended gate uses the dedicated recommendation marker and keeps the same route helper", () => {
+  assert.match(basicHomeSource, /data-basic-recommendation-primary=\{isRecommended \? "true" : undefined\}/);
+  assert.match(basicHomeSource, /router\.prefetch\(getBasicGateShortcutHref\(gate\.key\)\)/);
+  assert.match(basicHomeSource, /handleGateCardClick\(event, gate\.key, href\)/);
 });
 
 test("daytime gate label no longer uses the sun emoji", () => {

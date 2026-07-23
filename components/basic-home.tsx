@@ -1,11 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState, type MouseEvent } from "react";
 import { useLanguage } from "@/lib/i18n";
 import {
-  getAlternativeBasicGateKeys,
   getBasicGardenCountMessage,
   getBasicGardenMeaningLine,
   getBasicGardenVisualModel,
@@ -47,19 +46,14 @@ const pageCopy = {
     recommendationTitle: "今日、どの扉に入りますか？",
     recommendationBody: "今の時間帯に合う扉へ、そのまま静かに入れます。",
     recommendationSourceFallback: "最初の入口として Morning Gate を表示しています。",
-    alternativeTitle: "ほかの扉も選べます",
+    recommendationBadge: "今のおすすめ",
     gateSummaries: {
       morning: "一日をやわらかく始めたいとき",
       daytime: "集中や緊張を少し戻したいとき",
       evening: "一日を静かに手放したいとき"
     },
-    recommendationCtas: {
-      morning: "Morning Gateへ入る",
-      daytime: "Daytime Gateへ入る",
-      evening: "Evening Gateへ入る"
-    },
     enter: "この扉へ",
-    primaryHint: "急ぐ必要はありません",
+    movingToGate: "次へ進んでいます…",
     membershipTitle: "Membership",
     currentPlan: "Current Plan",
     subscriptionStatus: "Subscription Status",
@@ -86,19 +80,14 @@ const pageCopy = {
     recommendationTitle: "오늘, 어떤 문으로 들어갈까요?",
     recommendationBody: "지금 시간대에 맞는 문으로 바로 조용히 들어갈 수 있습니다.",
     recommendationSourceFallback: "첫 입구로 Morning Gate를 보여주고 있습니다.",
-    alternativeTitle: "다른 문도 선택할 수 있습니다",
+    recommendationBadge: "지금의 추천",
     gateSummaries: {
       morning: "하루를 조금 더 부드럽게 시작하고 싶을 때",
       daytime: "흐트러진 집중과 긴장을 잠시 되돌리고 싶을 때",
       evening: "하루를 조용히 내려놓고 싶을 때"
     },
-    recommendationCtas: {
-      morning: "Morning Gate로 들어가기",
-      daytime: "Daytime Gate로 들어가기",
-      evening: "Evening Gate로 들어가기"
-    },
     enter: "이 문으로",
-    primaryHint: "서두를 필요는 없습니다",
+    movingToGate: "다음으로 이동하고 있습니다…",
     membershipTitle: "멤버십 관리",
     currentPlan: "현재 플랜",
     subscriptionStatus: "구독 상태",
@@ -125,19 +114,14 @@ const pageCopy = {
     recommendationTitle: "Which gate will you enter today?",
     recommendationBody: "Enter the gate that fits this part of your day, without extra steps.",
     recommendationSourceFallback: "Morning Gate is shown as the first steady starting point.",
-    alternativeTitle: "Other gates remain available",
+    recommendationBadge: "Recommended now",
     gateSummaries: {
       morning: "When you want to begin the day more gently",
       daytime: "When you want to restore focus and release tension",
       evening: "When you want to quietly let go of the day"
     },
-    recommendationCtas: {
-      morning: "Enter Morning Gate",
-      daytime: "Enter Daytime Gate",
-      evening: "Enter Evening Gate"
-    },
     enter: "Enter this gate",
-    primaryHint: "There is no rush",
+    movingToGate: "Moving to the next step…",
     membershipTitle: "Membership",
     currentPlan: "Current Plan",
     subscriptionStatus: "Subscription Status",
@@ -160,7 +144,7 @@ function resolveLanguage(language: string) {
 }
 
 function getGateClasses(gate: BasicGateKey, active: boolean) {
-  const activeRing = active ? "border-[rgba(127,255,212,0.16)]" : "border-white/[0.08]";
+  const activeRing = active ? "border-[rgba(216,192,138,0.26)]" : "border-white/[0.08]";
 
   if (gate === "morning") {
     return `${activeRing} bg-[radial-gradient(circle_at_top,rgba(216,192,138,0.16),transparent_38%),radial-gradient(circle_at_22%_18%,rgba(127,255,212,0.10),transparent_44%),linear-gradient(180deg,rgba(16,49,77,0.76),rgba(8,40,69,0.87)_54%,rgba(6,27,51,0.94))]`;
@@ -171,6 +155,25 @@ function getGateClasses(gate: BasicGateKey, active: boolean) {
   }
 
   return `${activeRing} bg-[radial-gradient(circle_at_top,rgba(30,58,95,0.22),transparent_40%),radial-gradient(circle_at_76%_20%,rgba(127,255,212,0.07),transparent_44%),linear-gradient(180deg,rgba(9,34,59,0.85),rgba(7,27,50,0.94)_52%,rgba(5,18,34,0.98))]`;
+}
+
+function getGateCardClasses(gate: BasicGateKey, recommended: boolean, pending: boolean) {
+  const base =
+    "group relative flex h-full min-w-0 flex-col overflow-hidden rounded-[22px] border px-5 py-5 text-left shadow-[0_18px_44px_rgba(0,0,0,0.15)] transition-[transform,border-color,background-color,box-shadow,opacity] duration-150 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(216,192,138,0.68)] active:translate-y-[1px] motion-reduce:transform-none motion-reduce:transition-none";
+  const recommendationClasses = recommended
+    ? "border-[rgba(216,192,138,0.22)] bg-[linear-gradient(180deg,rgba(255,255,255,0.088),rgba(255,255,255,0.04))] shadow-[0_20px_48px_rgba(0,0,0,0.18)] hover:border-[rgba(216,192,138,0.34)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.11),rgba(255,255,255,0.05))]"
+    : "border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.055),rgba(255,255,255,0.026))] hover:border-white/[0.18] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.075),rgba(255,255,255,0.034))]";
+  const motionClasses = pending ? "cursor-wait opacity-[0.92]" : "hover:-translate-y-0.5";
+
+  if (gate === "morning") {
+    return `${base} ${recommendationClasses} ${motionClasses} bg-[radial-gradient(circle_at_top,rgba(216,192,138,0.14),transparent_38%),radial-gradient(circle_at_18%_18%,rgba(127,255,212,0.08),transparent_44%),linear-gradient(180deg,rgba(16,49,77,0.72),rgba(8,40,69,0.86)_54%,rgba(6,27,51,0.94))]`;
+  }
+
+  if (gate === "daytime") {
+    return `${base} ${recommendationClasses} ${motionClasses} bg-[radial-gradient(circle_at_top,rgba(77,182,172,0.16),transparent_40%),radial-gradient(circle_at_80%_24%,rgba(127,255,212,0.07),transparent_44%),linear-gradient(180deg,rgba(11,42,68,0.78),rgba(8,40,69,0.88)_52%,rgba(6,27,51,0.95))]`;
+  }
+
+  return `${base} ${recommendationClasses} ${motionClasses} bg-[radial-gradient(circle_at_top,rgba(96,132,182,0.16),transparent_40%),radial-gradient(circle_at_76%_20%,rgba(216,192,138,0.09),transparent_44%),linear-gradient(180deg,rgba(9,34,59,0.84),rgba(7,27,50,0.94)_52%,rgba(5,18,34,0.98))]`;
 }
 
 function getDoorClasses(gate: BasicGateKey) {
@@ -216,6 +219,8 @@ export function BasicHome({
   defaultRhythm,
   membershipSummary
 }: BasicHomeProps) {
+  const router = useRouter();
+  const pathname = usePathname();
   const { language } = useLanguage();
   const searchParams = useSearchParams();
   const localizedLanguage = resolveLanguage(language);
@@ -231,10 +236,7 @@ export function BasicHome({
     localTimeGate
   });
   const currentGateKey = recommendation.gate;
-  const currentGate = gates.find((gate) => gate.key === currentGateKey) ?? gates[0];
-  const alternativeGates = getAlternativeBasicGateKeys(currentGateKey)
-    .map((gateKey) => gates.find((gate) => gate.key === gateKey))
-    .filter((gate): gate is (typeof gates)[number] => Boolean(gate));
+  const [pendingGateKey, setPendingGateKey] = useState<BasicGateKey | null>(null);
   const fallbackPlan =
     membershipSummary?.currentPlan && membershipSummary.currentPlan !== "free" ? membershipSummary.currentPlan : "basic";
   const visiblePlan =
@@ -248,10 +250,59 @@ export function BasicHome({
   const gardenVisual = getBasicGardenVisualModel(streakCount);
   const gardenMeaningLine = getBasicGardenMeaningLine(localizedLanguage);
   const gardenCountMessage = getBasicGardenCountMessage(localizedLanguage, streakCount);
-
   useEffect(() => {
     setLocalTimeGate(getBasicHomeRecommendedGateForDate());
   }, []);
+
+  useEffect(() => {
+    gates.forEach((gate) => {
+      router.prefetch(getBasicGateShortcutHref(gate.key));
+    });
+  }, [gates, router]);
+
+  useEffect(() => {
+    setPendingGateKey(null);
+  }, [pathname, searchParams]);
+
+  useEffect(() => {
+    if (!pendingGateKey) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => {
+      setPendingGateKey(null);
+    }, 3200);
+
+    return () => {
+      window.clearTimeout(timeout);
+    };
+  }, [pendingGateKey]);
+
+  function handleGateCardClick(
+    event: MouseEvent<HTMLAnchorElement>,
+    gateKey: BasicGateKey,
+    href: string
+  ) {
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+
+    if (pendingGateKey) {
+      event.preventDefault();
+      return;
+    }
+
+    event.preventDefault();
+    setPendingGateKey(gateKey);
+    router.push(href);
+  }
 
   async function handleManageMembership() {
     if (portalLoading) {
@@ -457,40 +508,55 @@ export function BasicHome({
             <p className="mt-1.5 text-[13px] leading-5 text-[rgba(233,242,248,0.58)] sm:text-sm sm:leading-6">{copy.recommendationSourceFallback}</p>
           ) : null}
         </div>
+        <nav aria-label={copy.recommendationTitle} className="mt-4">
+          <div className="grid gap-3 md:grid-cols-3 md:gap-4 lg:gap-5">
+            {gates.map((gate) => {
+              const isRecommended = gate.key === currentGateKey;
+              const href = getBasicGateShortcutHref(gate.key);
+              const isPending = pendingGateKey === gate.key;
+              const mobileOrderClass = isRecommended ? "order-first md:order-none" : "";
+              const sizeClass = isRecommended
+                ? "min-h-[160px] md:min-h-[184px]"
+                : "min-h-[118px] md:min-h-[184px]";
 
-        <Link
-          data-basic-recommendation-primary
-          href={getBasicGateShortcutHref(currentGate.key)}
-          className="group mt-4 block rounded-[22px] border border-[rgba(216,192,138,0.20)] bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.03))] px-3.5 py-3.5 shadow-[0_20px_42px_rgba(0,0,0,0.14)] transition-[border-color,background-color,box-shadow,transform] duration-300 hover:border-[rgba(216,192,138,0.38)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.10),rgba(216,192,138,0.06))] hover:shadow-[0_24px_52px_rgba(0,0,0,0.18)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(216,192,138,0.72)] active:translate-y-px active:border-[rgba(216,192,138,0.44)] active:bg-[linear-gradient(180deg,rgba(255,255,255,0.11),rgba(216,192,138,0.08))] motion-reduce:transform-none sm:px-5 sm:py-5"
-        >
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div className="min-w-0">
-              <p className="text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.68)]">{currentGate.eyebrow}</p>
-              <p className="mt-1.5 text-[1.2rem] font-semibold leading-tight text-[rgba(244,250,255,0.96)] sm:mt-2 sm:text-[1.5rem]">{currentGate.title}</p>
-              <p className="mt-1.5 max-w-md text-[13px] leading-5 text-[rgba(233,242,248,0.72)] sm:mt-2 sm:text-sm sm:leading-6">{copy.gateSummaries[currentGate.key]}</p>
-            </div>
-            <div className="inline-flex min-h-[46px] items-center justify-center rounded-full border border-[rgba(216,192,138,0.34)] bg-[linear-gradient(180deg,rgba(216,192,138,0.32),rgba(216,192,138,0.18))] px-4 py-2.5 text-center text-sm font-medium text-[rgba(255,248,240,0.98)] shadow-[0_14px_28px_rgba(0,0,0,0.18)] transition group-hover:border-[rgba(216,192,138,0.52)] group-hover:text-white sm:min-h-[48px] sm:px-5 sm:py-3">
-              {copy.recommendationCtas[currentGate.key]}
-            </div>
+              return (
+                <Link
+                  key={gate.key}
+                  data-basic-recommendation-primary={isRecommended ? "true" : undefined}
+                  href={href}
+                  onClick={(event) => handleGateCardClick(event, gate.key, href)}
+                  aria-busy={isPending}
+                  className={`${getGateCardClasses(gate.key, isRecommended, isPending)} ${mobileOrderClass} ${sizeClass}`}
+                >
+                  <div className="flex h-full flex-col">
+                    <div className="min-h-[1.75rem]">
+                      {isRecommended ? (
+                        <span className="inline-flex items-center rounded-full border border-[rgba(216,192,138,0.24)] bg-[rgba(216,192,138,0.10)] px-2.5 py-1 text-[10px] font-medium tracking-[0.16em] text-[rgba(244,234,209,0.9)] sm:text-[11px]">
+                          {copy.recommendationBadge}
+                        </span>
+                      ) : null}
+                    </div>
+                    <p className="mt-2 text-[11px] uppercase tracking-[0.28em] text-[rgba(127,255,212,0.68)] sm:text-xs">{gate.eyebrow}</p>
+                    <h3 className={`mt-2 font-semibold leading-tight ${isRecommended ? "text-[1.34rem] text-[rgba(244,250,255,0.97)] sm:text-[1.5rem]" : "text-[1.2rem] text-[rgba(244,250,255,0.94)] sm:text-[1.32rem]"}`}>
+                      {gate.title}
+                    </h3>
+                    <p className="mt-2 max-w-[26ch] text-[13px] leading-5 text-[rgba(233,242,248,0.74)] sm:text-sm sm:leading-6">
+                      {isPending ? copy.movingToGate : copy.gateSummaries[gate.key]}
+                    </p>
+                    <div className="mt-auto flex items-end justify-end pt-5">
+                      <span
+                        aria-hidden="true"
+                        className={`shrink-0 text-[18px] leading-none text-[rgba(244,234,209,0.84)] transition-transform duration-150 ${isPending ? "translate-x-0 opacity-72" : "group-hover:translate-x-1"}`}
+                      >
+                        →
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
-        </Link>
-
-        <p className="mt-2.5 text-[13px] leading-5 text-[rgba(233,242,248,0.58)] sm:text-sm sm:leading-6">{copy.primaryHint}</p>
-
-        <div className="mt-4">
-          <p className="text-[13px] leading-5 text-[rgba(233,242,248,0.68)] sm:text-sm sm:leading-6">{copy.alternativeTitle}</p>
-          <div className="mt-2.5 grid gap-2 sm:grid-cols-2 sm:gap-3 xl:grid-cols-3">
-            {alternativeGates.map((gate) => (
-              <Link
-                key={gate.key}
-                href={getBasicGateShortcutHref(gate.key)}
-                className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/8 bg-white/[0.025] px-3.5 py-2.5 text-[13px] font-medium text-[rgba(233,242,248,0.76)] transition hover:border-white/16 hover:bg-white/[0.06] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(127,255,212,0.64)] sm:px-4 sm:py-3 sm:text-sm"
-              >
-                {gate.title}
-              </Link>
-            ))}
-          </div>
-        </div>
+        </nav>
       </section>
 
       <div data-basic-course className="space-y-4 sm:space-y-5">
