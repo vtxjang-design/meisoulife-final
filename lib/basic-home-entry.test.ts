@@ -48,6 +48,7 @@ const {
 
 const basicHomeSource = readFileSync(new URL("../components/basic-home.tsx", import.meta.url), "utf8");
 const basicProgramPageSource = readFileSync(new URL("../app/program/basic/page.tsx", import.meta.url), "utf8");
+const basicRhythmSourceForAssertions = readFileSync(new URL("./basic-rhythm.ts", import.meta.url), "utf8");
 
 process.on("exit", () => {
   rmSync(tempDir, { recursive: true, force: true });
@@ -143,6 +144,24 @@ test("recovery garden is rendered once and localized for JP KR and EN", () => {
   assert.match(basicHomeSource, /MY RECOVERY GARDEN/);
   assert.match(basicHomeSource, /私のリカバリーガーデン/);
   assert.match(basicHomeSource, /나의 리커버리 가든/);
+});
+
+test("garden statistics use explicit journey and check-in labels in all three languages", () => {
+  assert.match(basicHomeSource, /旅の日/);
+  assert.match(basicHomeSource, /累計チェックイン数/);
+  assert.match(basicHomeSource, /여정의 날/);
+  assert.match(basicHomeSource, /누적 체크인 횟수/);
+  assert.match(basicHomeSource, /Journey Day/);
+  assert.match(basicHomeSource, /Total check-ins/);
+});
+
+test("recommended gate has one primary presentation and keeps the same route helper", () => {
+  assert.equal((basicHomeSource.match(/data-basic-recommendation-primary/g) ?? []).length, 1);
+  assert.equal((basicHomeSource.match(/getBasicGateShortcutHref\(currentGate\.key\)/g) ?? []).length, 1);
+});
+
+test("daytime gate label no longer uses the sun emoji", () => {
+  assert.doesNotMatch(basicRhythmSourceForAssertions, /🌞 Daytime Gate/);
 });
 
 test("basic-only content stays behind the existing basic membership guard", () => {

@@ -120,7 +120,7 @@ const rhythmCatalog = {
       }
     },
     daytime: {
-      title: "🌞 Daytime Gate",
+      title: "Daytime Gate",
       eyebrow: "昼",
       question: "今のあなたに必要なリズムを選んでください。",
       atmosphere: "",
@@ -302,7 +302,7 @@ const rhythmCatalog = {
       }
     },
     daytime: {
-      title: "🌞 Daytime Gate",
+      title: "Daytime Gate",
       eyebrow: "낮",
       question: "지금 나에게 필요한 리듬을 선택하세요.",
       atmosphere: "",
@@ -484,7 +484,7 @@ const rhythmCatalog = {
       }
     },
     daytime: {
-      title: "🌞 Daytime Gate",
+      title: "Daytime Gate",
       eyebrow: "Daytime",
       question: "Choose the gate you need right now.",
       atmosphere: "",

@@ -37,12 +37,12 @@ const pageCopy = {
     gatesBody: "今日の扉を選びます",
     gardenLabel: "私のリカバリーガーデン",
     gardenHeadline: "今日までの回復が、\nここに静かに残っています。",
-    gardenBody: "表示しているのは、すでに記録されている回復だけです。",
-    currentDayLabel: "現在の回復日",
-    sessionCountLabel: "記録された回復回数",
+    gardenBody: "記録されている回復だけを、静かに表示しています。",
+    currentDayLabel: "旅の日",
+    sessionCountLabel: "累計チェックイン数",
     recommendationLabel: "TODAY'S GATE",
     recommendationTitle: "今日、どの扉に入りますか？",
-    recommendationBody: "今の時間帯に合う入口を、静かにひとつ選べます。",
+    recommendationBody: "今の時間帯に合う扉へ、そのまま静かに入れます。",
     recommendationSourceFallback: "最初の入口として Morning Gate を表示しています。",
     alternativeTitle: "ほかの扉も選べます",
     gateSummaries: {
@@ -76,12 +76,12 @@ const pageCopy = {
     gatesBody: "오늘의 문을 선택하세요",
     gardenLabel: "나의 리커버리 가든",
     gardenHeadline: "오늘까지의 회복이,\n여기에 조용히 남아 있습니다.",
-    gardenBody: "이미 기록되어 있는 회복만 차분하게 보여줍니다.",
-    currentDayLabel: "현재 회복 일수",
-    sessionCountLabel: "기록된 회복 횟수",
+    gardenBody: "이미 기록된 회복만 조용히 보여줍니다.",
+    currentDayLabel: "여정의 날",
+    sessionCountLabel: "누적 체크인 횟수",
     recommendationLabel: "TODAY'S GATE",
     recommendationTitle: "오늘, 어떤 문으로 들어갈까요?",
-    recommendationBody: "지금 시간대에 어울리는 입구를 조용히 하나 선택할 수 있습니다.",
+    recommendationBody: "지금 시간대에 맞는 문으로 바로 조용히 들어갈 수 있습니다.",
     recommendationSourceFallback: "첫 입구로 Morning Gate를 보여주고 있습니다.",
     alternativeTitle: "다른 문도 선택할 수 있습니다",
     gateSummaries: {
@@ -115,12 +115,12 @@ const pageCopy = {
     gatesBody: "Choose today’s door",
     gardenLabel: "MY RECOVERY GARDEN",
     gardenHeadline: "Your recorded recovery\nis resting here, quietly.",
-    gardenBody: "This view shows only recovery data that already exists in your record.",
-    currentDayLabel: "Current recovery day",
-    sessionCountLabel: "Recorded recovery sessions",
+    gardenBody: "This view quietly shows only recovery already recorded in your account.",
+    currentDayLabel: "Journey Day",
+    sessionCountLabel: "Total check-ins",
     recommendationLabel: "TODAY'S GATE",
     recommendationTitle: "Which gate will you enter today?",
-    recommendationBody: "Choose one calm entrance that fits this part of your day.",
+    recommendationBody: "Enter the gate that fits this part of your day, without extra steps.",
     recommendationSourceFallback: "Morning Gate is shown as the first steady starting point.",
     alternativeTitle: "Other gates remain available",
     gateSummaries: {
@@ -321,21 +321,30 @@ export function BasicHome({
 
       <section
         data-basic-garden
-        className="rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.09),transparent_36%),radial-gradient(circle_at_78%_16%,rgba(216,192,138,0.12),transparent_32%),linear-gradient(180deg,rgba(9,34,59,0.78),rgba(7,27,50,0.90)_54%,rgba(5,18,34,0.97))] px-5 py-6 shadow-[0_24px_72px_rgba(0,0,0,0.16)] sm:px-6 sm:py-7"
+        className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.09),transparent_36%),radial-gradient(circle_at_78%_16%,rgba(216,192,138,0.12),transparent_32%),linear-gradient(180deg,rgba(9,34,59,0.78),rgba(7,27,50,0.90)_54%,rgba(5,18,34,0.97))] px-5 py-5 shadow-[0_24px_72px_rgba(0,0,0,0.16)] sm:px-6 sm:py-[1.375rem]"
       >
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute right-4 top-4 h-16 w-16 rounded-full bg-[radial-gradient(circle,rgba(127,255,212,0.14),transparent_68%)] blur-2xl motion-reduce:transform-none"
+        />
+        <div aria-hidden="true" className="pointer-events-none absolute bottom-4 right-5 h-14 w-12 opacity-70">
+          <span className="absolute bottom-0 left-1/2 h-9 w-px -translate-x-1/2 rounded-full bg-gradient-to-t from-[rgba(216,192,138,0.08)] via-[rgba(127,255,212,0.38)] to-transparent" />
+          <span className="absolute bottom-5 left-[calc(50%-1px)] h-5 w-4 -translate-x-full rounded-t-full border-l border-t border-[rgba(127,255,212,0.22)]" />
+          <span className="absolute bottom-4 left-1/2 h-6 w-4 rounded-t-full border-r border-t border-[rgba(216,192,138,0.18)]" />
+        </div>
         <p className="text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.64)]">{copy.gardenLabel}</p>
-        <h1 className="mt-3 whitespace-pre-line font-serif text-[1.7rem] leading-[1.2] text-[rgba(244,250,255,0.95)] sm:text-[2.15rem]">
+        <h1 className="mt-2.5 whitespace-pre-line font-serif text-[1.62rem] leading-[1.18] text-[rgba(244,250,255,0.95)] sm:text-[2rem]">
           {copy.gardenHeadline}
         </h1>
-        <p className="mt-3 max-w-2xl text-sm leading-7 text-[rgba(233,242,248,0.74)] sm:text-base">{copy.gardenBody}</p>
-        <div className="mt-5 grid gap-3 sm:grid-cols-2">
-          <div className="rounded-[20px] border border-white/8 bg-white/[0.03] px-4 py-4">
+        <p className="mt-2.5 max-w-xl text-sm leading-6 text-[rgba(233,242,248,0.72)] sm:text-[0.97rem]">{copy.gardenBody}</p>
+        <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
+          <div className="rounded-[18px] border border-white/8 bg-white/[0.03] px-4 py-3.5">
             <p className="text-[0.72rem] uppercase tracking-[0.22em] text-[rgba(233,242,248,0.48)]">{copy.currentDayLabel}</p>
-            <p className="mt-2 text-3xl font-semibold text-[rgba(244,250,255,0.94)]">{currentDay}</p>
+            <p className="mt-1.5 text-[1.8rem] font-semibold leading-none text-[rgba(244,250,255,0.94)]">{currentDay}</p>
           </div>
-          <div className="rounded-[20px] border border-white/8 bg-white/[0.03] px-4 py-4">
+          <div className="rounded-[18px] border border-white/8 bg-white/[0.03] px-4 py-3.5">
             <p className="text-[0.72rem] uppercase tracking-[0.22em] text-[rgba(233,242,248,0.48)]">{copy.sessionCountLabel}</p>
-            <p className="mt-2 text-3xl font-semibold text-[rgba(244,250,255,0.94)]">{streakCount}</p>
+            <p className="mt-1.5 text-[1.8rem] font-semibold leading-none text-[rgba(244,250,255,0.94)]">{streakCount}</p>
           </div>
         </div>
       </section>
@@ -344,33 +353,35 @@ export function BasicHome({
         data-basic-recommendation
         className="rounded-[28px] border border-[rgba(216,192,138,0.16)] bg-[radial-gradient(circle_at_84%_10%,rgba(216,192,138,0.12),transparent_28%),radial-gradient(circle_at_18%_0%,rgba(127,255,212,0.10),transparent_32%),linear-gradient(180deg,rgba(8,40,69,0.80),rgba(6,27,51,0.92)_58%,rgba(5,18,34,0.98))] px-5 py-6 shadow-[0_22px_58px_rgba(0,0,0,0.18)] sm:px-6 sm:py-7"
       >
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-2xl">
-            <p className="text-xs uppercase tracking-[0.28em] text-[rgba(216,192,138,0.74)]">{copy.recommendationLabel}</p>
-            <h2 className="mt-3 font-serif text-[1.55rem] leading-[1.24] text-[rgba(244,250,255,0.95)] sm:text-[2rem]">
-              {copy.recommendationTitle}
-            </h2>
-            <p className="mt-3 text-sm leading-7 text-[rgba(233,242,248,0.76)] sm:text-base">{copy.recommendationBody}</p>
-            {recommendation.usedFallback ? (
-              <p className="mt-2 text-sm leading-6 text-[rgba(233,242,248,0.58)]">{copy.recommendationSourceFallback}</p>
-            ) : null}
-          </div>
-          <div className="min-w-0 rounded-[22px] border border-white/8 bg-white/[0.03] px-4 py-4 sm:px-5">
-            <p className="text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.68)]">{currentGate.eyebrow}</p>
-            <p className="mt-2 text-xl font-semibold text-[rgba(244,250,255,0.96)]">{currentGate.title}</p>
-            <p className="mt-2 max-w-md text-sm leading-6 text-[rgba(233,242,248,0.72)]">{copy.gateSummaries[currentGate.key]}</p>
-          </div>
+        <div className="max-w-2xl">
+          <p className="text-xs uppercase tracking-[0.28em] text-[rgba(216,192,138,0.74)]">{copy.recommendationLabel}</p>
+          <h2 className="mt-3 font-serif text-[1.55rem] leading-[1.24] text-[rgba(244,250,255,0.95)] sm:text-[2rem]">
+            {copy.recommendationTitle}
+          </h2>
+          <p className="mt-3 text-sm leading-7 text-[rgba(233,242,248,0.76)] sm:text-base">{copy.recommendationBody}</p>
+          {recommendation.usedFallback ? (
+            <p className="mt-2 text-sm leading-6 text-[rgba(233,242,248,0.58)]">{copy.recommendationSourceFallback}</p>
+          ) : null}
         </div>
 
-        <div className="mt-5 flex flex-col gap-3">
-          <Link
-            href={getBasicGateShortcutHref(currentGate.key)}
-            className="inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-[rgba(216,192,138,0.34)] bg-[linear-gradient(180deg,rgba(216,192,138,0.22),rgba(216,192,138,0.14))] px-5 py-3 text-center text-sm font-medium text-[rgba(255,248,240,0.95)] shadow-[0_18px_36px_rgba(0,0,0,0.16)] transition hover:border-[rgba(216,192,138,0.48)] hover:bg-[linear-gradient(180deg,rgba(216,192,138,0.28),rgba(216,192,138,0.18))] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(216,192,138,0.70)] sm:w-auto sm:self-start"
-          >
-            {copy.recommendationCtas[currentGate.key]}
-          </Link>
-          <p className="text-sm leading-6 text-[rgba(233,242,248,0.58)]">{copy.primaryHint}</p>
-        </div>
+        <Link
+          data-basic-recommendation-primary
+          href={getBasicGateShortcutHref(currentGate.key)}
+          className="group mt-5 block rounded-[24px] border border-[rgba(216,192,138,0.20)] bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.03))] px-4 py-4 shadow-[0_20px_42px_rgba(0,0,0,0.14)] transition-[border-color,background-color,box-shadow,transform] duration-300 hover:border-[rgba(216,192,138,0.38)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.10),rgba(216,192,138,0.06))] hover:shadow-[0_24px_52px_rgba(0,0,0,0.18)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(216,192,138,0.72)] active:translate-y-px active:border-[rgba(216,192,138,0.44)] active:bg-[linear-gradient(180deg,rgba(255,255,255,0.11),rgba(216,192,138,0.08))] motion-reduce:transform-none sm:px-5 sm:py-5"
+        >
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div className="min-w-0">
+              <p className="text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.68)]">{currentGate.eyebrow}</p>
+              <p className="mt-2 text-[1.32rem] font-semibold leading-tight text-[rgba(244,250,255,0.96)] sm:text-[1.5rem]">{currentGate.title}</p>
+              <p className="mt-2 max-w-md text-sm leading-6 text-[rgba(233,242,248,0.72)]">{copy.gateSummaries[currentGate.key]}</p>
+            </div>
+            <div className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-[rgba(216,192,138,0.34)] bg-[linear-gradient(180deg,rgba(216,192,138,0.32),rgba(216,192,138,0.18))] px-5 py-3 text-center text-sm font-medium text-[rgba(255,248,240,0.98)] shadow-[0_14px_28px_rgba(0,0,0,0.18)] transition group-hover:border-[rgba(216,192,138,0.52)] group-hover:text-white">
+              {copy.recommendationCtas[currentGate.key]}
+            </div>
+          </div>
+        </Link>
+
+        <p className="mt-3 text-sm leading-6 text-[rgba(233,242,248,0.58)]">{copy.primaryHint}</p>
 
         <div className="mt-5">
           <p className="text-sm leading-6 text-[rgba(233,242,248,0.68)]">{copy.alternativeTitle}</p>
