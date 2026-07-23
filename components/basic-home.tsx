@@ -159,10 +159,10 @@ function getGateClasses(gate: BasicGateKey, active: boolean) {
 
 function getGateCardClasses(gate: BasicGateKey, recommended: boolean, pending: boolean) {
   const base =
-    "group relative flex h-full min-w-0 flex-col overflow-hidden rounded-[22px] border px-5 py-5 text-left shadow-[0_18px_44px_rgba(0,0,0,0.15)] transition-[transform,border-color,background-color,box-shadow,opacity] duration-150 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(216,192,138,0.68)] active:translate-y-[1px] motion-reduce:transform-none motion-reduce:transition-none";
+    "group relative flex h-full min-w-0 flex-col overflow-hidden rounded-[17px] border px-4 py-3.5 text-left shadow-[0_16px_36px_rgba(0,0,0,0.14)] transition-[transform,border-color,background-color,box-shadow,opacity] duration-150 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(216,192,138,0.68)] active:translate-y-[1px] motion-reduce:transform-none motion-reduce:transition-none sm:rounded-[19px] sm:px-[22px] sm:py-[22px]";
   const recommendationClasses = recommended
-    ? "border-[rgba(216,192,138,0.22)] bg-[linear-gradient(180deg,rgba(255,255,255,0.088),rgba(255,255,255,0.04))] shadow-[0_20px_48px_rgba(0,0,0,0.18)] hover:border-[rgba(216,192,138,0.34)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.11),rgba(255,255,255,0.05))]"
-    : "border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.055),rgba(255,255,255,0.026))] hover:border-white/[0.18] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.075),rgba(255,255,255,0.034))]";
+    ? "border-[rgba(216,192,138,0.22)] bg-[linear-gradient(180deg,rgba(255,255,255,0.082),rgba(255,255,255,0.038))] shadow-[0_18px_40px_rgba(0,0,0,0.17)] hover:border-[rgba(216,192,138,0.34)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.10),rgba(255,255,255,0.046))]"
+    : "border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.024))] hover:border-white/[0.18] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.068),rgba(255,255,255,0.032))]";
   const motionClasses = pending ? "cursor-wait opacity-[0.92]" : "hover:-translate-y-0.5";
 
   if (gate === "morning") {
@@ -514,28 +514,28 @@ export function BasicHome({
 
       <section
         data-basic-recommendation
-        className="rounded-[28px] border border-[rgba(216,192,138,0.16)] bg-[radial-gradient(circle_at_84%_10%,rgba(216,192,138,0.12),transparent_28%),radial-gradient(circle_at_18%_0%,rgba(127,255,212,0.10),transparent_32%),linear-gradient(180deg,rgba(8,40,69,0.80),rgba(6,27,51,0.92)_58%,rgba(5,18,34,0.98))] px-4 py-4.5 shadow-[0_22px_58px_rgba(0,0,0,0.18)] sm:px-6 sm:py-7"
+        className="rounded-[28px] border border-[rgba(216,192,138,0.16)] bg-[radial-gradient(circle_at_84%_10%,rgba(216,192,138,0.12),transparent_28%),radial-gradient(circle_at_18%_0%,rgba(127,255,212,0.10),transparent_32%),linear-gradient(180deg,rgba(8,40,69,0.80),rgba(6,27,51,0.92)_58%,rgba(5,18,34,0.98))] px-4 py-4 shadow-[0_22px_58px_rgba(0,0,0,0.18)] sm:px-6 sm:py-6"
       >
         <div className="max-w-2xl">
           <p className="text-xs uppercase tracking-[0.28em] text-[rgba(216,192,138,0.74)]">{copy.recommendationLabel}</p>
-          <h2 className="mt-2.5 font-serif text-[1.34rem] leading-[1.18] text-[rgba(244,250,255,0.95)] sm:text-[2rem]">
+          <h2 className="mt-2 font-serif text-[1.28rem] leading-[1.18] text-[rgba(244,250,255,0.95)] sm:text-[1.85rem]">
             {copy.recommendationTitle}
           </h2>
-          <p className="mt-2 text-[13px] leading-5.5 text-[rgba(233,242,248,0.76)] sm:text-base sm:leading-7">{copy.recommendationBody}</p>
+          <p className="mt-2 text-[13px] leading-5.5 text-[rgba(233,242,248,0.76)] sm:text-[15px] sm:leading-6">{copy.recommendationBody}</p>
           {recommendation.usedFallback ? (
             <p className="mt-1.5 text-[13px] leading-5 text-[rgba(233,242,248,0.58)] sm:text-sm sm:leading-6">{copy.recommendationSourceFallback}</p>
           ) : null}
         </div>
-        <nav aria-label={copy.recommendationTitle} className="mt-4">
-          <div className="grid gap-3 md:grid-cols-3 md:gap-4 lg:gap-5">
+        <nav aria-label={copy.recommendationTitle} className="mt-5 sm:mt-6">
+          <div className="grid gap-2.5 md:grid-cols-3 md:gap-3.5 lg:gap-4">
             {gates.map((gate) => {
               const isRecommended = gate.key === currentGateKey;
               const href = getBasicGateShortcutHref(gate.key);
               const isPending = pendingGateKey === gate.key;
               const mobileOrderClass = isRecommended ? "order-first md:order-none" : "";
               const sizeClass = isRecommended
-                ? "min-h-[160px] md:min-h-[184px]"
-                : "min-h-[118px] md:min-h-[184px]";
+                ? "min-h-[126px] md:min-h-[146px]"
+                : "min-h-[96px] md:min-h-[146px]";
 
               return (
                 <Link
@@ -547,28 +547,30 @@ export function BasicHome({
                   className={`${getGateCardClasses(gate.key, isRecommended, isPending)} ${mobileOrderClass} ${sizeClass}`}
                 >
                   <div className="flex h-full flex-col">
-                    <div className="min-h-[1.75rem]">
+                    <div className="min-h-[1.45rem] sm:min-h-[1.65rem]">
                       {isRecommended ? (
-                        <span className="inline-flex items-center rounded-full border border-[rgba(216,192,138,0.24)] bg-[rgba(216,192,138,0.10)] px-2.5 py-1 text-[10px] font-medium tracking-[0.16em] text-[rgba(244,234,209,0.9)] sm:text-[11px]">
+                        <span className="inline-flex min-h-[24px] items-center rounded-full border border-[rgba(216,192,138,0.22)] bg-[rgba(216,192,138,0.09)] px-2 py-0.5 text-[10px] font-medium tracking-[0.12em] text-[rgba(244,234,209,0.88)] sm:min-h-[26px] sm:px-2.5 sm:text-[11px]">
                           {copy.recommendationBadge}
                         </span>
                       ) : null}
                     </div>
-                    <p className="mt-2 text-[11px] uppercase tracking-[0.28em] text-[rgba(127,255,212,0.68)] sm:text-xs">{gate.eyebrow}</p>
-                    <h3 className={`mt-2 font-semibold leading-tight ${isRecommended ? "text-[1.34rem] text-[rgba(244,250,255,0.97)] sm:text-[1.5rem]" : "text-[1.2rem] text-[rgba(244,250,255,0.94)] sm:text-[1.32rem]"}`}>
-                      {gate.title}
-                    </h3>
-                    <p className="mt-2 max-w-[26ch] text-[13px] leading-5 text-[rgba(233,242,248,0.74)] sm:text-sm sm:leading-6">
-                      {isPending ? copy.movingToGate : copy.gateSummaries[gate.key]}
-                    </p>
-                    <div className="mt-auto flex items-end justify-end pt-5">
+                    <div className="mt-1.5 flex items-start justify-between gap-3 sm:mt-2">
+                      <div className="min-w-0">
+                        <p className="text-[10px] uppercase tracking-[0.24em] text-[rgba(127,255,212,0.66)] sm:text-[11px]">{gate.eyebrow}</p>
+                        <h3 className={`mt-1.5 font-semibold leading-tight ${isRecommended ? "text-[1.18rem] text-[rgba(244,250,255,0.97)] sm:text-[1.42rem]" : "text-[1.08rem] text-[rgba(244,250,255,0.94)] sm:text-[1.34rem]"}`}>
+                          {gate.title}
+                        </h3>
+                      </div>
                       <span
                         aria-hidden="true"
-                        className={`shrink-0 text-[18px] leading-none text-[rgba(244,234,209,0.84)] transition-transform duration-150 ${isPending ? "translate-x-0 opacity-72" : "group-hover:translate-x-1"}`}
+                        className={`mt-[2px] shrink-0 text-[15px] leading-none text-[rgba(244,234,209,0.78)] transition-transform duration-150 ${isPending ? "translate-x-0 opacity-72" : "group-hover:translate-x-[3px]"}`}
                       >
                         →
                       </span>
                     </div>
+                    <p className={`mt-2 max-w-[26ch] text-[13px] text-[rgba(233,242,248,0.74)] ${isRecommended ? "leading-5" : "leading-[1.35] md:leading-5"}`}>
+                      {isPending ? copy.movingToGate : copy.gateSummaries[gate.key]}
+                    </p>
                   </div>
                 </Link>
               );
