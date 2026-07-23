@@ -51,6 +51,7 @@ const {
 const basicHomeSource = readFileSync(new URL("../components/basic-home.tsx", import.meta.url), "utf8");
 const basicProgramPageSource = readFileSync(new URL("../app/program/basic/page.tsx", import.meta.url), "utf8");
 const basicRhythmSourceForAssertions = readFileSync(new URL("./basic-rhythm.ts", import.meta.url), "utf8");
+const siteHeaderSource = readFileSync(new URL("../components/site-header.tsx", import.meta.url), "utf8");
 
 process.on("exit", () => {
   rmSync(tempDir, { recursive: true, force: true });
@@ -149,11 +150,11 @@ test("recovery garden is rendered once and localized for JP KR and EN", () => {
 });
 
 test("garden statistics use explicit journey and check-in labels in all three languages", () => {
-  assert.match(basicHomeSource, /旅の日/);
+  assert.match(basicHomeSource, /現在の旅の日/);
   assert.match(basicHomeSource, /累計チェックイン数/);
-  assert.match(basicHomeSource, /여정의 날/);
-  assert.match(basicHomeSource, /누적 체크인 횟수/);
-  assert.match(basicHomeSource, /Journey Day/);
+  assert.match(basicHomeSource, /현재 여정 일차/);
+  assert.match(basicHomeSource, /누적 체크인/);
+  assert.match(basicHomeSource, /Current journey day/);
   assert.match(basicHomeSource, /Total check-ins/);
 });
 
@@ -203,4 +204,10 @@ test("basic-only content stays behind the existing basic membership guard", () =
 test("existing progress values continue to be passed through unchanged", () => {
   assert.match(basicProgramPageSource, /currentDay=\{dashboardState\.challengeDay\}/);
   assert.match(basicProgramPageSource, /streakCount=\{dashboardState\.streakCount\}/);
+});
+
+test("program basic hides the duplicate mobile tab row while preserving the hamburger menu", () => {
+  assert.match(siteHeaderSource, /const hideMobileTabs = pathname === "\/program\/basic"/);
+  assert.match(siteHeaderSource, /<div className=\{cn\("lg:hidden", hideMobileTabs && "hidden"\)\}>/);
+  assert.match(siteHeaderSource, /const mobileDropdownLinks = useMemo/);
 });

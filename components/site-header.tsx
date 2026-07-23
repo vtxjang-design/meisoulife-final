@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 export function SiteHeader() {
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const hideMobileTabs = pathname === "/program/basic";
   const router = useRouter();
   const { language, setLanguage } = useLanguage();
   const { isLoggedIn, authResolved, planResolved, plan, userEmail } = useAuthState();
@@ -348,7 +349,7 @@ export function SiteHeader() {
           )}
         </div>
       </div>
-      <div className="lg:hidden">
+      <div className={cn("lg:hidden", hideMobileTabs && "hidden")}>
         <div className="section-shell overflow-x-auto py-1.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <nav className="flex min-w-max items-center gap-2">
             {mobileTabs.map((tab) => {

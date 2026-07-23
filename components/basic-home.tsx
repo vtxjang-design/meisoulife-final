@@ -39,7 +39,7 @@ const pageCopy = {
     gardenLabel: "私のリカバリーガーデン",
     gardenHeadline: "今日までの回復が、\nここに静かに残っています。",
     gardenBody: "記録されている回復だけを、静かに表示しています。",
-    currentDayLabel: "旅の日",
+    currentDayLabel: "現在の旅の日",
     sessionCountLabel: "累計チェックイン数",
     recommendationLabel: "TODAY'S GATE",
     recommendationTitle: "今日、どの扉に入りますか？",
@@ -78,8 +78,8 @@ const pageCopy = {
     gardenLabel: "나의 리커버리 가든",
     gardenHeadline: "오늘까지의 회복이,\n여기에 조용히 남아 있습니다.",
     gardenBody: "이미 기록된 회복만 조용히 보여줍니다.",
-    currentDayLabel: "여정의 날",
-    sessionCountLabel: "누적 체크인 횟수",
+    currentDayLabel: "현재 여정 일차",
+    sessionCountLabel: "누적 체크인",
     recommendationLabel: "TODAY'S GATE",
     recommendationTitle: "오늘, 어떤 문으로 들어갈까요?",
     recommendationBody: "지금 시간대에 맞는 문으로 바로 조용히 들어갈 수 있습니다.",
@@ -117,7 +117,7 @@ const pageCopy = {
     gardenLabel: "MY RECOVERY GARDEN",
     gardenHeadline: "Your recorded recovery\nis resting here, quietly.",
     gardenBody: "This view quietly shows only recovery already recorded in your account.",
-    currentDayLabel: "Journey Day",
+    currentDayLabel: "Current journey day",
     sessionCountLabel: "Total check-ins",
     recommendationLabel: "TODAY'S GATE",
     recommendationTitle: "Which gate will you enter today?",
@@ -293,21 +293,28 @@ export function BasicHome({
   }
 
   return (
-    <section className="space-y-8 sm:space-y-9">
-      <section className="border-y border-white/8 py-3">
-        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+    <section className="space-y-5 sm:space-y-9">
+      <section className="border-y border-white/8 py-2.5 sm:py-3">
+        <div className="flex flex-col gap-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <div className="min-w-0">
-            <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[rgba(233,242,248,0.66)]">
+            <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-[rgba(233,242,248,0.66)] sm:text-sm">
               <span className="font-medium text-[rgba(244,250,255,0.84)]">{visiblePlan}</span>
               <span className="text-white/18">·</span>
               <span className="text-[rgba(233,242,248,0.6)]">{visibleStatus || copy.unknownStatus}</span>
-              <span className="hidden text-white/18 sm:inline">·</span>
-              <span className="basis-full text-[rgba(233,242,248,0.54)] sm:basis-auto">
-                {copy.nextBillingDate} {visibleBillingDate}
-              </span>
+            </div>
+            <div className="mt-1 flex min-h-[44px] items-center justify-between gap-3 text-[13px] text-[rgba(233,242,248,0.54)] sm:mt-0 sm:min-h-0 sm:block sm:text-sm">
+              <span>{copy.nextBillingDate} {visibleBillingDate}</span>
+              <button
+                type="button"
+                onClick={handleManageMembership}
+                disabled={portalLoading}
+                className="inline-flex min-h-[44px] shrink-0 items-center justify-center px-1 py-2 text-[13px] font-medium text-[rgba(233,242,248,0.68)] underline decoration-white/20 underline-offset-4 transition hover:text-white disabled:cursor-not-allowed disabled:opacity-70 sm:hidden"
+              >
+                {portalLoading ? copy.openingPortal : copy.manageMembership}
+              </button>
             </div>
           </div>
-          <div className="self-start sm:self-auto">
+          <div className="hidden sm:self-auto sm:block">
             <button
               type="button"
               onClick={handleManageMembership}
@@ -323,37 +330,37 @@ export function BasicHome({
 
       <section
         data-basic-garden
-        className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.09),transparent_36%),radial-gradient(circle_at_78%_16%,rgba(216,192,138,0.12),transparent_32%),linear-gradient(180deg,rgba(9,34,59,0.78),rgba(7,27,50,0.90)_54%,rgba(5,18,34,0.97))] px-5 py-5 shadow-[0_24px_72px_rgba(0,0,0,0.16)] sm:px-6 sm:py-[1.375rem]"
+        className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.09),transparent_36%),radial-gradient(circle_at_78%_16%,rgba(216,192,138,0.12),transparent_32%),linear-gradient(180deg,rgba(9,34,59,0.78),rgba(7,27,50,0.90)_54%,rgba(5,18,34,0.97))] px-4 py-4 shadow-[0_24px_72px_rgba(0,0,0,0.16)] sm:px-6 sm:py-[1.375rem]"
       >
-        <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+        <div className="grid gap-3 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-5">
           <div className="order-2 lg:order-1">
             <p className="text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.64)]">{copy.gardenLabel}</p>
-            <h1 className="mt-2.5 whitespace-pre-line font-serif text-[1.62rem] leading-[1.18] text-[rgba(244,250,255,0.95)] sm:text-[2rem]">
+            <h1 className="mt-2 whitespace-pre-line font-serif text-[1.42rem] leading-[1.14] text-[rgba(244,250,255,0.95)] sm:text-[2rem]">
               {copy.gardenHeadline}
             </h1>
-            <p className="mt-2.5 max-w-xl text-sm leading-6 text-[rgba(233,242,248,0.72)] sm:text-[0.97rem]">{copy.gardenBody}</p>
-            <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
-              <div className="rounded-[18px] border border-white/7 bg-white/[0.025] px-4 py-3">
+            <p className="mt-2 max-w-xl text-[13px] leading-5.5 text-[rgba(233,242,248,0.72)] sm:text-[0.97rem] sm:leading-6">{copy.gardenBody}</p>
+            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-2 sm:gap-2.5">
+              <div className="rounded-[16px] border border-white/6 bg-white/[0.02] px-3 py-2.5 sm:rounded-[18px] sm:px-4 sm:py-3">
                 <p className="text-[0.7rem] uppercase tracking-[0.18em] text-[rgba(233,242,248,0.46)]">{copy.currentDayLabel}</p>
-                <p className="mt-1.5 text-[1.65rem] font-semibold leading-none text-[rgba(244,250,255,0.94)]">{currentDay}</p>
+                <p className="mt-1 text-[1.4rem] font-semibold leading-none text-[rgba(244,250,255,0.94)] sm:mt-1.5 sm:text-[1.65rem]">{currentDay}</p>
               </div>
-              <div className="rounded-[18px] border border-white/7 bg-white/[0.025] px-4 py-3">
+              <div className="rounded-[16px] border border-white/6 bg-white/[0.02] px-3 py-2.5 sm:rounded-[18px] sm:px-4 sm:py-3">
                 <p className="text-[0.7rem] uppercase tracking-[0.18em] text-[rgba(233,242,248,0.46)]">{copy.sessionCountLabel}</p>
-                <p className="mt-1.5 text-[1.65rem] font-semibold leading-none text-[rgba(244,250,255,0.94)]">{streakCount}</p>
+                <p className="mt-1 text-[1.4rem] font-semibold leading-none text-[rgba(244,250,255,0.94)] sm:mt-1.5 sm:text-[1.65rem]">{streakCount}</p>
               </div>
             </div>
           </div>
 
           <div className="order-1 lg:order-2">
-            <div className="relative mx-auto flex max-w-[23rem] items-center justify-center lg:max-w-none">
+            <div className="relative mx-auto flex max-w-[18rem] items-center justify-center lg:max-w-none">
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-x-[10%] top-[10%] h-32 rounded-full bg-[radial-gradient(circle,rgba(127,255,212,0.16),transparent_68%)] blur-3xl motion-safe:animate-[gardenGlow_9s_ease-in-out_infinite] motion-reduce:animate-none"
+                className="pointer-events-none absolute inset-x-[14%] top-[14%] h-20 rounded-full bg-[radial-gradient(circle,rgba(127,255,212,0.16),transparent_68%)] blur-2xl motion-safe:animate-[gardenGlow_9s_ease-in-out_infinite] motion-reduce:animate-none sm:inset-x-[10%] sm:top-[10%] sm:h-32 sm:blur-3xl"
               />
               <svg
                 aria-hidden="true"
                 viewBox="0 0 280 220"
-                className="relative h-auto w-full max-w-[22rem] overflow-visible"
+                className="relative h-auto w-full max-w-[15.5rem] overflow-visible sm:max-w-[22rem]"
               >
                 <defs>
                   <linearGradient id="gardenSoil" x1="0%" x2="100%" y1="0%" y2="0%">
@@ -428,46 +435,46 @@ export function BasicHome({
 
       <section
         data-basic-recommendation
-        className="rounded-[28px] border border-[rgba(216,192,138,0.16)] bg-[radial-gradient(circle_at_84%_10%,rgba(216,192,138,0.12),transparent_28%),radial-gradient(circle_at_18%_0%,rgba(127,255,212,0.10),transparent_32%),linear-gradient(180deg,rgba(8,40,69,0.80),rgba(6,27,51,0.92)_58%,rgba(5,18,34,0.98))] px-5 py-6 shadow-[0_22px_58px_rgba(0,0,0,0.18)] sm:px-6 sm:py-7"
+        className="rounded-[28px] border border-[rgba(216,192,138,0.16)] bg-[radial-gradient(circle_at_84%_10%,rgba(216,192,138,0.12),transparent_28%),radial-gradient(circle_at_18%_0%,rgba(127,255,212,0.10),transparent_32%),linear-gradient(180deg,rgba(8,40,69,0.80),rgba(6,27,51,0.92)_58%,rgba(5,18,34,0.98))] px-4 py-4.5 shadow-[0_22px_58px_rgba(0,0,0,0.18)] sm:px-6 sm:py-7"
       >
         <div className="max-w-2xl">
           <p className="text-xs uppercase tracking-[0.28em] text-[rgba(216,192,138,0.74)]">{copy.recommendationLabel}</p>
-          <h2 className="mt-3 font-serif text-[1.55rem] leading-[1.24] text-[rgba(244,250,255,0.95)] sm:text-[2rem]">
+          <h2 className="mt-2.5 font-serif text-[1.34rem] leading-[1.18] text-[rgba(244,250,255,0.95)] sm:text-[2rem]">
             {copy.recommendationTitle}
           </h2>
-          <p className="mt-3 text-sm leading-7 text-[rgba(233,242,248,0.76)] sm:text-base">{copy.recommendationBody}</p>
+          <p className="mt-2 text-[13px] leading-5.5 text-[rgba(233,242,248,0.76)] sm:text-base sm:leading-7">{copy.recommendationBody}</p>
           {recommendation.usedFallback ? (
-            <p className="mt-2 text-sm leading-6 text-[rgba(233,242,248,0.58)]">{copy.recommendationSourceFallback}</p>
+            <p className="mt-1.5 text-[13px] leading-5 text-[rgba(233,242,248,0.58)] sm:text-sm sm:leading-6">{copy.recommendationSourceFallback}</p>
           ) : null}
         </div>
 
         <Link
           data-basic-recommendation-primary
           href={getBasicGateShortcutHref(currentGate.key)}
-          className="group mt-5 block rounded-[24px] border border-[rgba(216,192,138,0.20)] bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.03))] px-4 py-4 shadow-[0_20px_42px_rgba(0,0,0,0.14)] transition-[border-color,background-color,box-shadow,transform] duration-300 hover:border-[rgba(216,192,138,0.38)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.10),rgba(216,192,138,0.06))] hover:shadow-[0_24px_52px_rgba(0,0,0,0.18)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(216,192,138,0.72)] active:translate-y-px active:border-[rgba(216,192,138,0.44)] active:bg-[linear-gradient(180deg,rgba(255,255,255,0.11),rgba(216,192,138,0.08))] motion-reduce:transform-none sm:px-5 sm:py-5"
+          className="group mt-4 block rounded-[22px] border border-[rgba(216,192,138,0.20)] bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.03))] px-3.5 py-3.5 shadow-[0_20px_42px_rgba(0,0,0,0.14)] transition-[border-color,background-color,box-shadow,transform] duration-300 hover:border-[rgba(216,192,138,0.38)] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.10),rgba(216,192,138,0.06))] hover:shadow-[0_24px_52px_rgba(0,0,0,0.18)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(216,192,138,0.72)] active:translate-y-px active:border-[rgba(216,192,138,0.44)] active:bg-[linear-gradient(180deg,rgba(255,255,255,0.11),rgba(216,192,138,0.08))] motion-reduce:transform-none sm:px-5 sm:py-5"
         >
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div className="min-w-0">
               <p className="text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.68)]">{currentGate.eyebrow}</p>
-              <p className="mt-2 text-[1.32rem] font-semibold leading-tight text-[rgba(244,250,255,0.96)] sm:text-[1.5rem]">{currentGate.title}</p>
-              <p className="mt-2 max-w-md text-sm leading-6 text-[rgba(233,242,248,0.72)]">{copy.gateSummaries[currentGate.key]}</p>
+              <p className="mt-1.5 text-[1.2rem] font-semibold leading-tight text-[rgba(244,250,255,0.96)] sm:mt-2 sm:text-[1.5rem]">{currentGate.title}</p>
+              <p className="mt-1.5 max-w-md text-[13px] leading-5 text-[rgba(233,242,248,0.72)] sm:mt-2 sm:text-sm sm:leading-6">{copy.gateSummaries[currentGate.key]}</p>
             </div>
-            <div className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-[rgba(216,192,138,0.34)] bg-[linear-gradient(180deg,rgba(216,192,138,0.32),rgba(216,192,138,0.18))] px-5 py-3 text-center text-sm font-medium text-[rgba(255,248,240,0.98)] shadow-[0_14px_28px_rgba(0,0,0,0.18)] transition group-hover:border-[rgba(216,192,138,0.52)] group-hover:text-white">
+            <div className="inline-flex min-h-[46px] items-center justify-center rounded-full border border-[rgba(216,192,138,0.34)] bg-[linear-gradient(180deg,rgba(216,192,138,0.32),rgba(216,192,138,0.18))] px-4 py-2.5 text-center text-sm font-medium text-[rgba(255,248,240,0.98)] shadow-[0_14px_28px_rgba(0,0,0,0.18)] transition group-hover:border-[rgba(216,192,138,0.52)] group-hover:text-white sm:min-h-[48px] sm:px-5 sm:py-3">
               {copy.recommendationCtas[currentGate.key]}
             </div>
           </div>
         </Link>
 
-        <p className="mt-3 text-sm leading-6 text-[rgba(233,242,248,0.58)]">{copy.primaryHint}</p>
+        <p className="mt-2.5 text-[13px] leading-5 text-[rgba(233,242,248,0.58)] sm:text-sm sm:leading-6">{copy.primaryHint}</p>
 
-        <div className="mt-5">
-          <p className="text-sm leading-6 text-[rgba(233,242,248,0.68)]">{copy.alternativeTitle}</p>
-          <div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-4">
+          <p className="text-[13px] leading-5 text-[rgba(233,242,248,0.68)] sm:text-sm sm:leading-6">{copy.alternativeTitle}</p>
+          <div className="mt-2.5 grid gap-2 sm:grid-cols-2 sm:gap-3 xl:grid-cols-3">
             {alternativeGates.map((gate) => (
               <Link
                 key={gate.key}
                 href={getBasicGateShortcutHref(gate.key)}
-                className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/10 bg-white/[0.03] px-4 py-3 text-sm font-medium text-[rgba(233,242,248,0.78)] transition hover:border-white/16 hover:bg-white/[0.06] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(127,255,212,0.64)]"
+                className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/8 bg-white/[0.025] px-3.5 py-2.5 text-[13px] font-medium text-[rgba(233,242,248,0.76)] transition hover:border-white/16 hover:bg-white/[0.06] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(127,255,212,0.64)] sm:px-4 sm:py-3 sm:text-sm"
               >
                 {gate.title}
               </Link>
@@ -476,17 +483,17 @@ export function BasicHome({
         </div>
       </section>
 
-      <div data-basic-course className="space-y-5">
+      <div data-basic-course className="space-y-4 sm:space-y-5">
         <div className="space-y-2">
-          <div className="overflow-hidden rounded-[30px] border border-white/10 bg-[radial-gradient(circle_at_20%_0%,rgba(216,192,138,0.16),transparent_24%),radial-gradient(circle_at_75%_18%,rgba(127,255,212,0.14),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(8,40,69,0.22),transparent_38%),linear-gradient(180deg,rgba(8,40,69,0.82),rgba(6,27,51,0.92)_58%,rgba(5,18,34,0.98))] px-5 py-5 shadow-[0_24px_72px_rgba(0,0,0,0.20)] sm:px-7 sm:py-6">
+          <div className="overflow-hidden rounded-[30px] border border-white/10 bg-[radial-gradient(circle_at_20%_0%,rgba(216,192,138,0.16),transparent_24%),radial-gradient(circle_at_75%_18%,rgba(127,255,212,0.14),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(8,40,69,0.22),transparent_38%),linear-gradient(180deg,rgba(8,40,69,0.82),rgba(6,27,51,0.92)_58%,rgba(5,18,34,0.98))] px-4 py-4 shadow-[0_24px_72px_rgba(0,0,0,0.20)] sm:px-7 sm:py-6">
             <p className="text-xs uppercase tracking-[0.30em] text-[rgba(127,255,212,0.72)]">{copy.badge}</p>
-            <h2 className="mt-3 whitespace-pre-line font-serif text-[1.8rem] leading-[1.22] text-[rgba(244,250,255,0.96)] sm:text-4xl">
+            <h2 className="mt-2.5 whitespace-pre-line font-serif text-[1.45rem] leading-[1.16] text-[rgba(244,250,255,0.96)] sm:text-4xl">
               {copy.title}
             </h2>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-[rgba(233,242,248,0.74)] sm:text-base">{copy.body}</p>
+            <p className="mt-2 max-w-2xl text-[13px] leading-5.5 text-[rgba(233,242,248,0.74)] sm:text-base sm:leading-7">{copy.body}</p>
           </div>
           <p className="text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.68)]">{copy.gatesTitle}</p>
-          <p className="text-sm leading-7 text-[rgba(233,242,248,0.64)]">{copy.gatesBody}</p>
+          <p className="text-[13px] leading-5.5 text-[rgba(233,242,248,0.64)] sm:text-sm sm:leading-7">{copy.gatesBody}</p>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
