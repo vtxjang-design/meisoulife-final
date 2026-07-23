@@ -37,7 +37,9 @@ writeFileSync(
 const basicHomeEntryModule = await import(pathToFileURL(join(tempDir, "basic-home-entry.mjs")).href);
 const {
   BASIC_HOME_GATE_FALLBACK,
+  BASIC_GARDEN_VISIBLE_MARK_CAP,
   BASIC_HOME_SECTION_ORDER,
+  getBasicGardenVisualModel,
   getAlternativeBasicGateKeys,
   getBasicGateShortcutHref,
   getBasicHomeRecommendedGateForDate,
@@ -153,6 +155,35 @@ test("garden statistics use explicit journey and check-in labels in all three la
   assert.match(basicHomeSource, /누적 체크인 횟수/);
   assert.match(basicHomeSource, /Journey Day/);
   assert.match(basicHomeSource, /Total check-ins/);
+});
+
+test("garden visual model stays truthful for zero one multiple and capped check-ins", () => {
+  assert.deepEqual(getBasicGardenVisualModel(0), {
+    recordedCheckIns: 0,
+    visibleMarkCount: 0,
+    hasRecordedRecovery: false,
+    marks: []
+  });
+
+  const single = getBasicGardenVisualModel(1);
+  assert.equal(single.recordedCheckIns, 1);
+  assert.equal(single.visibleMarkCount, 1);
+  assert.equal(single.hasRecordedRecovery, true);
+  assert.equal(single.marks.length, 1);
+
+  const multiple = getBasicGardenVisualModel(5);
+  assert.equal(multiple.recordedCheckIns, 5);
+  assert.equal(multiple.visibleMarkCount, 5);
+  assert.equal(multiple.marks.length, 5);
+
+  const capped = getBasicGardenVisualModel(99);
+  assert.equal(capped.recordedCheckIns, 99);
+  assert.equal(capped.visibleMarkCount, BASIC_GARDEN_VISIBLE_MARK_CAP);
+  assert.equal(capped.marks.length, BASIC_GARDEN_VISIBLE_MARK_CAP);
+});
+
+test("garden copy and source do not invent percentages or named growth stages", () => {
+  assert.doesNotMatch(basicHomeSource, /Forest|Tree|Sprout|Seed|Next growth|next level|progress percentage/i);
 });
 
 test("recommended gate has one primary presentation and keeps the same route helper", () => {

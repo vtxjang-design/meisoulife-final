@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "@/lib/i18n";
 import {
   getAlternativeBasicGateKeys,
+  getBasicGardenVisualModel,
   getBasicGateShortcutHref,
   getBasicHomeRecommendedGateForDate,
   resolveBasicHomeRecommendedGate
@@ -242,6 +243,7 @@ export function BasicHome({
         dateStyle: "long"
       }).format(new Date(membershipSummary.nextBillingDate))
     : copy.noBillingDate;
+  const gardenVisual = getBasicGardenVisualModel(streakCount);
 
   useEffect(() => {
     setLocalTimeGate(getBasicHomeRecommendedGateForDate());
@@ -323,31 +325,106 @@ export function BasicHome({
         data-basic-garden
         className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.09),transparent_36%),radial-gradient(circle_at_78%_16%,rgba(216,192,138,0.12),transparent_32%),linear-gradient(180deg,rgba(9,34,59,0.78),rgba(7,27,50,0.90)_54%,rgba(5,18,34,0.97))] px-5 py-5 shadow-[0_24px_72px_rgba(0,0,0,0.16)] sm:px-6 sm:py-[1.375rem]"
       >
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute right-4 top-4 h-16 w-16 rounded-full bg-[radial-gradient(circle,rgba(127,255,212,0.14),transparent_68%)] blur-2xl motion-reduce:transform-none"
-        />
-        <div aria-hidden="true" className="pointer-events-none absolute bottom-4 right-5 h-14 w-12 opacity-70">
-          <span className="absolute bottom-0 left-1/2 h-9 w-px -translate-x-1/2 rounded-full bg-gradient-to-t from-[rgba(216,192,138,0.08)] via-[rgba(127,255,212,0.38)] to-transparent" />
-          <span className="absolute bottom-5 left-[calc(50%-1px)] h-5 w-4 -translate-x-full rounded-t-full border-l border-t border-[rgba(127,255,212,0.22)]" />
-          <span className="absolute bottom-4 left-1/2 h-6 w-4 rounded-t-full border-r border-t border-[rgba(216,192,138,0.18)]" />
-        </div>
-        <p className="text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.64)]">{copy.gardenLabel}</p>
-        <h1 className="mt-2.5 whitespace-pre-line font-serif text-[1.62rem] leading-[1.18] text-[rgba(244,250,255,0.95)] sm:text-[2rem]">
-          {copy.gardenHeadline}
-        </h1>
-        <p className="mt-2.5 max-w-xl text-sm leading-6 text-[rgba(233,242,248,0.72)] sm:text-[0.97rem]">{copy.gardenBody}</p>
-        <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
-          <div className="rounded-[18px] border border-white/8 bg-white/[0.03] px-4 py-3.5">
-            <p className="text-[0.72rem] uppercase tracking-[0.22em] text-[rgba(233,242,248,0.48)]">{copy.currentDayLabel}</p>
-            <p className="mt-1.5 text-[1.8rem] font-semibold leading-none text-[rgba(244,250,255,0.94)]">{currentDay}</p>
+        <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          <div className="order-2 lg:order-1">
+            <p className="text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.64)]">{copy.gardenLabel}</p>
+            <h1 className="mt-2.5 whitespace-pre-line font-serif text-[1.62rem] leading-[1.18] text-[rgba(244,250,255,0.95)] sm:text-[2rem]">
+              {copy.gardenHeadline}
+            </h1>
+            <p className="mt-2.5 max-w-xl text-sm leading-6 text-[rgba(233,242,248,0.72)] sm:text-[0.97rem]">{copy.gardenBody}</p>
+            <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
+              <div className="rounded-[18px] border border-white/7 bg-white/[0.025] px-4 py-3">
+                <p className="text-[0.7rem] uppercase tracking-[0.18em] text-[rgba(233,242,248,0.46)]">{copy.currentDayLabel}</p>
+                <p className="mt-1.5 text-[1.65rem] font-semibold leading-none text-[rgba(244,250,255,0.94)]">{currentDay}</p>
+              </div>
+              <div className="rounded-[18px] border border-white/7 bg-white/[0.025] px-4 py-3">
+                <p className="text-[0.7rem] uppercase tracking-[0.18em] text-[rgba(233,242,248,0.46)]">{copy.sessionCountLabel}</p>
+                <p className="mt-1.5 text-[1.65rem] font-semibold leading-none text-[rgba(244,250,255,0.94)]">{streakCount}</p>
+              </div>
+            </div>
           </div>
-          <div className="rounded-[18px] border border-white/8 bg-white/[0.03] px-4 py-3.5">
-            <p className="text-[0.72rem] uppercase tracking-[0.22em] text-[rgba(233,242,248,0.48)]">{copy.sessionCountLabel}</p>
-            <p className="mt-1.5 text-[1.8rem] font-semibold leading-none text-[rgba(244,250,255,0.94)]">{streakCount}</p>
+
+          <div className="order-1 lg:order-2">
+            <div className="relative mx-auto flex max-w-[23rem] items-center justify-center lg:max-w-none">
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-[10%] top-[10%] h-32 rounded-full bg-[radial-gradient(circle,rgba(127,255,212,0.16),transparent_68%)] blur-3xl motion-safe:animate-[gardenGlow_9s_ease-in-out_infinite] motion-reduce:animate-none"
+              />
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 280 220"
+                className="relative h-auto w-full max-w-[22rem] overflow-visible"
+              >
+                <defs>
+                  <linearGradient id="gardenSoil" x1="0%" x2="100%" y1="0%" y2="0%">
+                    <stop offset="0%" stopColor="rgba(33,56,83,0.92)" />
+                    <stop offset="55%" stopColor="rgba(15,39,64,0.98)" />
+                    <stop offset="100%" stopColor="rgba(8,26,44,0.95)" />
+                  </linearGradient>
+                  <linearGradient id="gardenStem" x1="0%" x2="0%" y1="100%" y2="0%">
+                    <stop offset="0%" stopColor="rgba(93,171,152,0.18)" />
+                    <stop offset="100%" stopColor="rgba(154,236,215,0.84)" />
+                  </linearGradient>
+                  <linearGradient id="gardenLeafTeal" x1="0%" x2="100%" y1="100%" y2="0%">
+                    <stop offset="0%" stopColor="rgba(64,124,121,0.78)" />
+                    <stop offset="100%" stopColor="rgba(165,244,225,0.96)" />
+                  </linearGradient>
+                  <linearGradient id="gardenLeafGold" x1="0%" x2="100%" y1="100%" y2="0%">
+                    <stop offset="0%" stopColor="rgba(127,96,55,0.72)" />
+                    <stop offset="100%" stopColor="rgba(224,198,136,0.94)" />
+                  </linearGradient>
+                </defs>
+                <ellipse cx="140" cy="184" rx="96" ry="28" fill="rgba(5,18,34,0.72)" />
+                <ellipse cx="140" cy="178" rx="102" ry="24" fill="url(#gardenSoil)" />
+                <path d="M140 176 C138 164 137 148 140 130" stroke="url(#gardenStem)" strokeWidth="3.2" strokeLinecap="round" fill="none" />
+                <path d="M140 158 C126 154 116 146 110 132" stroke="url(#gardenStem)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+                <path d="M141 149 C157 143 170 132 176 116" stroke="url(#gardenStem)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+                <path d="M138 136 C124 130 114 118 108 104" stroke="url(#gardenStem)" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9" />
+                <path d="M142 128 C155 122 164 112 170 100" stroke="url(#gardenStem)" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9" />
+                <path d="M132 171 C120 160 118 146 126 134 C138 139 141 155 132 171Z" fill="url(#gardenLeafTeal)" opacity={gardenVisual.hasRecordedRecovery ? 0.88 : 0.34} />
+                <path d="M151 160 C163 148 167 132 161 119 C149 124 143 142 151 160Z" fill="url(#gardenLeafGold)" opacity={gardenVisual.recordedCheckIns > 1 ? 0.84 : 0.30} />
+                <path d="M123 141 C112 133 108 121 112 110 C124 114 129 126 123 141Z" fill="url(#gardenLeafGold)" opacity={gardenVisual.recordedCheckIns > 2 ? 0.76 : 0.24} />
+                <path d="M160 132 C170 124 176 112 174 101 C163 104 156 116 160 132Z" fill="url(#gardenLeafTeal)" opacity={gardenVisual.recordedCheckIns > 3 ? 0.78 : 0.24} />
+                {gardenVisual.marks.map((mark, index) => (
+                  <g
+                    key={`${mark.x}-${mark.y}-${index}`}
+                    className="motion-safe:animate-[gardenDrift_11s_ease-in-out_infinite] motion-reduce:animate-none"
+                    style={{ animationDelay: `${index * 0.6}s` }}
+                  >
+                    <circle
+                      cx={mark.x}
+                      cy={mark.y}
+                      r={mark.radius + 3}
+                      fill={mark.color === "gold" ? "rgba(216,192,138,0.16)" : "rgba(127,255,212,0.18)"}
+                    />
+                    <circle
+                      cx={mark.x}
+                      cy={mark.y}
+                      r={mark.radius}
+                      fill={mark.color === "gold" ? "url(#gardenLeafGold)" : "url(#gardenLeafTeal)"}
+                    />
+                  </g>
+                ))}
+              </svg>
+            </div>
           </div>
         </div>
+        <span className="sr-only">
+          {gardenVisual.recordedCheckIns > 0
+            ? `${copy.sessionCountLabel}: ${gardenVisual.recordedCheckIns}`
+            : `${copy.sessionCountLabel}: 0`}
+        </span>
       </section>
+      <style jsx>{`
+        @keyframes gardenGlow {
+          0%, 100% { opacity: 0.55; transform: scale(0.98); }
+          50% { opacity: 0.85; transform: scale(1.02); }
+        }
+        @keyframes gardenDrift {
+          0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.88; }
+          50% { transform: translate3d(0, -3px, 0); opacity: 1; }
+        }
+      `}</style>
 
       <section
         data-basic-recommendation
