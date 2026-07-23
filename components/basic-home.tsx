@@ -250,6 +250,81 @@ export function BasicHome({
   const gardenVisual = getBasicGardenVisualModel(streakCount);
   const gardenMeaningLine = getBasicGardenMeaningLine(localizedLanguage);
   const gardenCountMessage = getBasicGardenCountMessage(localizedLanguage, streakCount);
+
+  function renderGardenSvg(maxWidthClassName: string, glowClassName: string) {
+    return (
+      <div className={`relative mx-auto flex items-center justify-center ${maxWidthClassName}`}>
+        <div
+          aria-hidden="true"
+          className={`pointer-events-none absolute inset-x-[14%] top-[14%] h-20 rounded-full bg-[radial-gradient(circle,rgba(127,255,212,0.16),transparent_68%)] blur-2xl motion-safe:animate-[gardenGlow_9s_ease-in-out_infinite] motion-reduce:animate-none ${glowClassName}`}
+        />
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 280 220"
+          className="relative h-auto w-full overflow-visible"
+        >
+          <defs>
+            <linearGradient id="gardenSoil" x1="0%" x2="100%" y1="0%" y2="0%">
+              <stop offset="0%" stopColor="rgba(33,56,83,0.92)" />
+              <stop offset="55%" stopColor="rgba(15,39,64,0.98)" />
+              <stop offset="100%" stopColor="rgba(8,26,44,0.95)" />
+            </linearGradient>
+            <linearGradient id="gardenStem" x1="0%" x2="0%" y1="100%" y2="0%">
+              <stop offset="0%" stopColor="rgba(93,171,152,0.18)" />
+              <stop offset="100%" stopColor="rgba(154,236,215,0.84)" />
+            </linearGradient>
+            <radialGradient id="gardenLight" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="rgba(251,240,206,0.98)" />
+              <stop offset="38%" stopColor="rgba(184,246,233,0.94)" />
+              <stop offset="100%" stopColor="rgba(127,255,212,0.72)" />
+            </radialGradient>
+            <radialGradient id="gardenLightHalo" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="rgba(214,244,235,0.24)" />
+              <stop offset="100%" stopColor="rgba(214,244,235,0)" />
+            </radialGradient>
+          </defs>
+          <ellipse cx="140" cy="184" rx="96" ry="28" fill="rgba(5,18,34,0.72)" />
+          <ellipse cx="140" cy="178" rx="102" ry="24" fill="url(#gardenSoil)" />
+          <ellipse cx="140" cy="173" rx="10" ry="7" fill="rgba(216,192,138,0.44)" opacity={gardenVisual.hasRecordedRecovery ? 0.28 : 0.7} />
+          <g className="motion-safe:animate-[gardenPlantBreath_12s_ease-in-out_infinite] motion-reduce:animate-none">
+            <path d="M140 176 C138 164 137 148 140 130" stroke="url(#gardenStem)" strokeWidth="3.2" strokeLinecap="round" fill="none" />
+            <path d="M140 158 C126 154 116 146 110 132" stroke="url(#gardenStem)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+            <path d="M141 149 C157 143 170 132 176 116" stroke="url(#gardenStem)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+            <path d="M138 136 C124 130 114 118 108 104" stroke="url(#gardenStem)" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9" />
+            <path d="M142 128 C155 122 164 112 170 100" stroke="url(#gardenStem)" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9" />
+          </g>
+          {gardenVisual.marks.map((mark, index) => (
+            <g
+              key={`${mark.x}-${mark.y}-${index}`}
+              className="motion-safe:animate-[gardenDrift_11s_ease-in-out_infinite] motion-reduce:animate-none"
+              style={{ animationDelay: `${index * 0.6}s` }}
+            >
+              <path
+                d={`M${mark.anchorX} ${mark.anchorY} Q${(mark.anchorX + mark.x) / 2} ${(mark.anchorY + mark.y) / 2 + 3} ${mark.x} ${mark.y + 1}`}
+                stroke="rgba(154,236,215,0.32)"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+                fill="none"
+              />
+              <circle
+                cx={mark.x}
+                cy={mark.y}
+                r={mark.radius + 6}
+                fill="url(#gardenLightHalo)"
+              />
+              <circle
+                cx={mark.x}
+                cy={mark.y}
+                r={mark.radius}
+                fill="url(#gardenLight)"
+              />
+              <circle cx={mark.x} cy={mark.y} r={Math.max(1.8, mark.radius - 2.2)} fill="rgba(250,250,244,0.92)" opacity="0.7" />
+            </g>
+          ))}
+        </svg>
+      </div>
+    );
+  }
   useEffect(() => {
     setLocalTimeGate(getBasicHomeRecommendedGateForDate());
   }, []);
@@ -385,100 +460,39 @@ export function BasicHome({
 
       <section
         data-basic-garden
-        className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.09),transparent_36%),radial-gradient(circle_at_78%_16%,rgba(216,192,138,0.12),transparent_32%),linear-gradient(180deg,rgba(9,34,59,0.78),rgba(7,27,50,0.90)_54%,rgba(5,18,34,0.97))] px-4 py-4 shadow-[0_24px_72px_rgba(0,0,0,0.16)] sm:px-6 sm:py-[1.375rem]"
+        className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.09),transparent_36%),radial-gradient(circle_at_78%_16%,rgba(216,192,138,0.12),transparent_32%),linear-gradient(180deg,rgba(9,34,59,0.78),rgba(7,27,50,0.90)_54%,rgba(5,18,34,0.97))] px-4 py-3.5 shadow-[0_24px_72px_rgba(0,0,0,0.16)] sm:px-6 sm:py-[1.375rem]"
       >
-        <div className="grid gap-3 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-5">
-          <div className="order-2 lg:order-1">
-            <p className="text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.64)]">{copy.gardenLabel}</p>
-            <h1 className="mt-2 whitespace-pre-line font-serif text-[1.42rem] leading-[1.14] text-[rgba(244,250,255,0.95)] sm:text-[2rem]">
+        <div className="flex flex-col gap-3 lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-5">
+          <div className="order-1">
+            <div className="flex items-start justify-between gap-4 lg:hidden">
+              <p className="pt-1 text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.64)]">{copy.gardenLabel}</p>
+              <div className="w-[7.6rem] shrink-0">
+                {renderGardenSvg("max-w-[7.6rem]", "inset-x-[10%] top-[10%] h-16 blur-[22px]")}
+              </div>
+            </div>
+            <p className="hidden text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.64)] lg:block">{copy.gardenLabel}</p>
+            <h1 className="mt-2 whitespace-pre-line font-serif text-[1.3rem] leading-[1.16] text-[rgba(244,250,255,0.95)] sm:text-[1.72rem] lg:text-[2rem]">
               {copy.gardenHeadline}
             </h1>
-            <p className="mt-2 max-w-xl text-[13px] leading-5.5 text-[rgba(233,242,248,0.72)] sm:text-[0.97rem] sm:leading-6">{copy.gardenBody}</p>
-            <div className="mt-2.5 space-y-1.5 sm:mt-3 sm:space-y-2">
+            <p className="mt-2 hidden max-w-xl text-[13px] leading-5.5 text-[rgba(233,242,248,0.72)] lg:block lg:text-[0.97rem] lg:leading-6">{copy.gardenBody}</p>
+            <div className="mt-2 space-y-1.5 sm:space-y-2 lg:mt-3">
               <p className="text-[13px] leading-5 text-[rgba(214,244,235,0.82)] sm:text-sm sm:leading-6">{gardenMeaningLine}</p>
-              <p className="text-[13px] leading-5 text-[rgba(233,242,248,0.56)] sm:text-sm sm:leading-6">{gardenCountMessage}</p>
+              <p className="hidden text-[13px] leading-5 text-[rgba(233,242,248,0.56)] sm:text-sm sm:leading-6 lg:block">{gardenCountMessage}</p>
             </div>
-            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-2 sm:gap-2.5">
-              <div className="rounded-[16px] border border-white/6 bg-white/[0.02] px-3 py-2.5 sm:rounded-[18px] sm:px-4 sm:py-3">
+            <div className="mt-2.5 grid grid-cols-2 gap-2 sm:gap-2.5 lg:mt-3">
+              <div className="rounded-[15px] border border-white/6 bg-white/[0.02] px-3 py-2 sm:rounded-[18px] sm:px-4 sm:py-3">
                 <p className="text-[0.7rem] uppercase tracking-[0.18em] text-[rgba(233,242,248,0.46)]">{copy.currentDayLabel}</p>
-                <p className="mt-1 text-[1.4rem] font-semibold leading-none text-[rgba(244,250,255,0.94)] sm:mt-1.5 sm:text-[1.65rem]">{currentDay}</p>
+                <p className="mt-1 text-[1.2rem] font-semibold leading-none text-[rgba(244,250,255,0.94)] sm:mt-1.5 sm:text-[1.65rem]">{currentDay}</p>
               </div>
-              <div className="rounded-[16px] border border-white/6 bg-white/[0.02] px-3 py-2.5 sm:rounded-[18px] sm:px-4 sm:py-3">
+              <div className="rounded-[15px] border border-white/6 bg-white/[0.02] px-3 py-2 sm:rounded-[18px] sm:px-4 sm:py-3">
                 <p className="text-[0.7rem] uppercase tracking-[0.18em] text-[rgba(233,242,248,0.46)]">{copy.sessionCountLabel}</p>
-                <p className="mt-1 text-[1.4rem] font-semibold leading-none text-[rgba(244,250,255,0.94)] sm:mt-1.5 sm:text-[1.65rem]">{streakCount}</p>
+                <p className="mt-1 text-[1.2rem] font-semibold leading-none text-[rgba(244,250,255,0.94)] sm:mt-1.5 sm:text-[1.65rem]">{streakCount}</p>
               </div>
             </div>
           </div>
 
-          <div className="order-1 lg:order-2">
-            <div className="relative mx-auto flex max-w-[18rem] items-center justify-center lg:max-w-none">
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-x-[14%] top-[14%] h-20 rounded-full bg-[radial-gradient(circle,rgba(127,255,212,0.16),transparent_68%)] blur-2xl motion-safe:animate-[gardenGlow_9s_ease-in-out_infinite] motion-reduce:animate-none sm:inset-x-[10%] sm:top-[10%] sm:h-32 sm:blur-3xl"
-              />
-              <svg
-                aria-hidden="true"
-                viewBox="0 0 280 220"
-                className="relative h-auto w-full max-w-[15.5rem] overflow-visible sm:max-w-[22rem]"
-              >
-                <defs>
-                  <linearGradient id="gardenSoil" x1="0%" x2="100%" y1="0%" y2="0%">
-                    <stop offset="0%" stopColor="rgba(33,56,83,0.92)" />
-                    <stop offset="55%" stopColor="rgba(15,39,64,0.98)" />
-                    <stop offset="100%" stopColor="rgba(8,26,44,0.95)" />
-                  </linearGradient>
-                  <linearGradient id="gardenStem" x1="0%" x2="0%" y1="100%" y2="0%">
-                    <stop offset="0%" stopColor="rgba(93,171,152,0.18)" />
-                    <stop offset="100%" stopColor="rgba(154,236,215,0.84)" />
-                  </linearGradient>
-                  <radialGradient id="gardenLight" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="rgba(251,240,206,0.98)" />
-                    <stop offset="38%" stopColor="rgba(184,246,233,0.94)" />
-                    <stop offset="100%" stopColor="rgba(127,255,212,0.72)" />
-                  </radialGradient>
-                  <radialGradient id="gardenLightHalo" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="rgba(214,244,235,0.24)" />
-                    <stop offset="100%" stopColor="rgba(214,244,235,0)" />
-                  </radialGradient>
-                </defs>
-                <ellipse cx="140" cy="184" rx="96" ry="28" fill="rgba(5,18,34,0.72)" />
-                <ellipse cx="140" cy="178" rx="102" ry="24" fill="url(#gardenSoil)" />
-                <ellipse cx="140" cy="173" rx="10" ry="7" fill="rgba(216,192,138,0.44)" opacity={gardenVisual.hasRecordedRecovery ? 0.28 : 0.7} />
-                <path d="M140 176 C138 164 137 148 140 130" stroke="url(#gardenStem)" strokeWidth="3.2" strokeLinecap="round" fill="none" />
-                <path d="M140 158 C126 154 116 146 110 132" stroke="url(#gardenStem)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
-                <path d="M141 149 C157 143 170 132 176 116" stroke="url(#gardenStem)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
-                <path d="M138 136 C124 130 114 118 108 104" stroke="url(#gardenStem)" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9" />
-                <path d="M142 128 C155 122 164 112 170 100" stroke="url(#gardenStem)" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9" />
-                {gardenVisual.marks.map((mark, index) => (
-                  <g
-                    key={`${mark.x}-${mark.y}-${index}`}
-                    className="motion-safe:animate-[gardenDrift_11s_ease-in-out_infinite] motion-reduce:animate-none"
-                    style={{ animationDelay: `${index * 0.6}s` }}
-                  >
-                    <path
-                      d={`M${mark.anchorX} ${mark.anchorY} Q${(mark.anchorX + mark.x) / 2} ${(mark.anchorY + mark.y) / 2 + 3} ${mark.x} ${mark.y + 1}`}
-                      stroke="rgba(154,236,215,0.32)"
-                      strokeWidth="1.2"
-                      strokeLinecap="round"
-                      fill="none"
-                    />
-                    <circle
-                      cx={mark.x}
-                      cy={mark.y}
-                      r={mark.radius + 6}
-                      fill="url(#gardenLightHalo)"
-                    />
-                    <circle
-                      cx={mark.x}
-                      cy={mark.y}
-                      r={mark.radius}
-                      fill="url(#gardenLight)"
-                    />
-                    <circle cx={mark.x} cy={mark.y} r={Math.max(1.8, mark.radius - 2.2)} fill="rgba(250,250,244,0.92)" opacity="0.7" />
-                  </g>
-                ))}
-              </svg>
-            </div>
+          <div className="order-2 hidden lg:block">
+            {renderGardenSvg("max-w-[18rem] lg:max-w-none", "sm:inset-x-[10%] sm:top-[10%] sm:h-32 sm:blur-3xl")}
           </div>
         </div>
         <span className="sr-only">{`${copy.sessionCountLabel}: ${gardenVisual.recordedCheckIns}. ${gardenCountMessage}`}</span>
@@ -487,6 +501,10 @@ export function BasicHome({
         @keyframes gardenGlow {
           0%, 100% { opacity: 0.55; transform: scale(0.98); }
           50% { opacity: 0.85; transform: scale(1.02); }
+        }
+        @keyframes gardenPlantBreath {
+          0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+          50% { transform: translate3d(0, -1.5px, 0) scale(1.01); }
         }
         @keyframes gardenDrift {
           0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.88; }
