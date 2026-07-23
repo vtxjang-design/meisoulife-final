@@ -6,6 +6,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "@/lib/i18n";
 import {
   getAlternativeBasicGateKeys,
+  getBasicGardenCountMessage,
+  getBasicGardenMeaningLine,
   getBasicGardenVisualModel,
   getBasicGateShortcutHref,
   getBasicHomeRecommendedGateForDate,
@@ -39,7 +41,7 @@ const pageCopy = {
     gardenLabel: "私のリカバリーガーデン",
     gardenHeadline: "今日までの回復が、\nここに静かに残っています。",
     gardenBody: "記録されている回復だけを、静かに表示しています。",
-    currentDayLabel: "現在の旅の日",
+    currentDayLabel: "現在の進行日",
     sessionCountLabel: "累計チェックイン数",
     recommendationLabel: "TODAY'S GATE",
     recommendationTitle: "今日、どの扉に入りますか？",
@@ -78,7 +80,7 @@ const pageCopy = {
     gardenLabel: "나의 리커버리 가든",
     gardenHeadline: "오늘까지의 회복이,\n여기에 조용히 남아 있습니다.",
     gardenBody: "이미 기록된 회복만 조용히 보여줍니다.",
-    currentDayLabel: "현재 여정 일차",
+    currentDayLabel: "현재 진행 일차",
     sessionCountLabel: "누적 체크인",
     recommendationLabel: "TODAY'S GATE",
     recommendationTitle: "오늘, 어떤 문으로 들어갈까요?",
@@ -117,7 +119,7 @@ const pageCopy = {
     gardenLabel: "MY RECOVERY GARDEN",
     gardenHeadline: "Your recorded recovery\nis resting here, quietly.",
     gardenBody: "This view quietly shows only recovery already recorded in your account.",
-    currentDayLabel: "Current journey day",
+    currentDayLabel: "Current program day",
     sessionCountLabel: "Total check-ins",
     recommendationLabel: "TODAY'S GATE",
     recommendationTitle: "Which gate will you enter today?",
@@ -244,6 +246,8 @@ export function BasicHome({
       }).format(new Date(membershipSummary.nextBillingDate))
     : copy.noBillingDate;
   const gardenVisual = getBasicGardenVisualModel(streakCount);
+  const gardenMeaningLine = getBasicGardenMeaningLine(localizedLanguage);
+  const gardenCountMessage = getBasicGardenCountMessage(localizedLanguage, streakCount);
 
   useEffect(() => {
     setLocalTimeGate(getBasicHomeRecommendedGateForDate());
@@ -339,6 +343,10 @@ export function BasicHome({
               {copy.gardenHeadline}
             </h1>
             <p className="mt-2 max-w-xl text-[13px] leading-5.5 text-[rgba(233,242,248,0.72)] sm:text-[0.97rem] sm:leading-6">{copy.gardenBody}</p>
+            <div className="mt-2.5 space-y-1.5 sm:mt-3 sm:space-y-2">
+              <p className="text-[13px] leading-5 text-[rgba(214,244,235,0.82)] sm:text-sm sm:leading-6">{gardenMeaningLine}</p>
+              <p className="text-[13px] leading-5 text-[rgba(233,242,248,0.56)] sm:text-sm sm:leading-6">{gardenCountMessage}</p>
+            </div>
             <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-2 sm:gap-2.5">
               <div className="rounded-[16px] border border-white/6 bg-white/[0.02] px-3 py-2.5 sm:rounded-[18px] sm:px-4 sm:py-3">
                 <p className="text-[0.7rem] uppercase tracking-[0.18em] text-[rgba(233,242,248,0.46)]">{copy.currentDayLabel}</p>
@@ -372,55 +380,57 @@ export function BasicHome({
                     <stop offset="0%" stopColor="rgba(93,171,152,0.18)" />
                     <stop offset="100%" stopColor="rgba(154,236,215,0.84)" />
                   </linearGradient>
-                  <linearGradient id="gardenLeafTeal" x1="0%" x2="100%" y1="100%" y2="0%">
-                    <stop offset="0%" stopColor="rgba(64,124,121,0.78)" />
-                    <stop offset="100%" stopColor="rgba(165,244,225,0.96)" />
-                  </linearGradient>
-                  <linearGradient id="gardenLeafGold" x1="0%" x2="100%" y1="100%" y2="0%">
-                    <stop offset="0%" stopColor="rgba(127,96,55,0.72)" />
-                    <stop offset="100%" stopColor="rgba(224,198,136,0.94)" />
-                  </linearGradient>
+                  <radialGradient id="gardenLight" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="rgba(251,240,206,0.98)" />
+                    <stop offset="38%" stopColor="rgba(184,246,233,0.94)" />
+                    <stop offset="100%" stopColor="rgba(127,255,212,0.72)" />
+                  </radialGradient>
+                  <radialGradient id="gardenLightHalo" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="rgba(214,244,235,0.24)" />
+                    <stop offset="100%" stopColor="rgba(214,244,235,0)" />
+                  </radialGradient>
                 </defs>
                 <ellipse cx="140" cy="184" rx="96" ry="28" fill="rgba(5,18,34,0.72)" />
                 <ellipse cx="140" cy="178" rx="102" ry="24" fill="url(#gardenSoil)" />
+                <ellipse cx="140" cy="173" rx="10" ry="7" fill="rgba(216,192,138,0.44)" opacity={gardenVisual.hasRecordedRecovery ? 0.28 : 0.7} />
                 <path d="M140 176 C138 164 137 148 140 130" stroke="url(#gardenStem)" strokeWidth="3.2" strokeLinecap="round" fill="none" />
                 <path d="M140 158 C126 154 116 146 110 132" stroke="url(#gardenStem)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
                 <path d="M141 149 C157 143 170 132 176 116" stroke="url(#gardenStem)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
                 <path d="M138 136 C124 130 114 118 108 104" stroke="url(#gardenStem)" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9" />
                 <path d="M142 128 C155 122 164 112 170 100" stroke="url(#gardenStem)" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9" />
-                <path d="M132 171 C120 160 118 146 126 134 C138 139 141 155 132 171Z" fill="url(#gardenLeafTeal)" opacity={gardenVisual.hasRecordedRecovery ? 0.88 : 0.34} />
-                <path d="M151 160 C163 148 167 132 161 119 C149 124 143 142 151 160Z" fill="url(#gardenLeafGold)" opacity={gardenVisual.recordedCheckIns > 1 ? 0.84 : 0.30} />
-                <path d="M123 141 C112 133 108 121 112 110 C124 114 129 126 123 141Z" fill="url(#gardenLeafGold)" opacity={gardenVisual.recordedCheckIns > 2 ? 0.76 : 0.24} />
-                <path d="M160 132 C170 124 176 112 174 101 C163 104 156 116 160 132Z" fill="url(#gardenLeafTeal)" opacity={gardenVisual.recordedCheckIns > 3 ? 0.78 : 0.24} />
                 {gardenVisual.marks.map((mark, index) => (
                   <g
                     key={`${mark.x}-${mark.y}-${index}`}
                     className="motion-safe:animate-[gardenDrift_11s_ease-in-out_infinite] motion-reduce:animate-none"
                     style={{ animationDelay: `${index * 0.6}s` }}
                   >
+                    <path
+                      d={`M${mark.anchorX} ${mark.anchorY} Q${(mark.anchorX + mark.x) / 2} ${(mark.anchorY + mark.y) / 2 + 3} ${mark.x} ${mark.y + 1}`}
+                      stroke="rgba(154,236,215,0.32)"
+                      strokeWidth="1.2"
+                      strokeLinecap="round"
+                      fill="none"
+                    />
                     <circle
                       cx={mark.x}
                       cy={mark.y}
-                      r={mark.radius + 3}
-                      fill={mark.color === "gold" ? "rgba(216,192,138,0.16)" : "rgba(127,255,212,0.18)"}
+                      r={mark.radius + 6}
+                      fill="url(#gardenLightHalo)"
                     />
                     <circle
                       cx={mark.x}
                       cy={mark.y}
                       r={mark.radius}
-                      fill={mark.color === "gold" ? "url(#gardenLeafGold)" : "url(#gardenLeafTeal)"}
+                      fill="url(#gardenLight)"
                     />
+                    <circle cx={mark.x} cy={mark.y} r={Math.max(1.8, mark.radius - 2.2)} fill="rgba(250,250,244,0.92)" opacity="0.7" />
                   </g>
                 ))}
               </svg>
             </div>
           </div>
         </div>
-        <span className="sr-only">
-          {gardenVisual.recordedCheckIns > 0
-            ? `${copy.sessionCountLabel}: ${gardenVisual.recordedCheckIns}`
-            : `${copy.sessionCountLabel}: 0`}
-        </span>
+        <span className="sr-only">{`${copy.sessionCountLabel}: ${gardenVisual.recordedCheckIns}. ${gardenCountMessage}`}</span>
       </section>
       <style jsx>{`
         @keyframes gardenGlow {
