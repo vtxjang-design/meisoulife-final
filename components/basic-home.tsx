@@ -258,109 +258,108 @@ export function BasicHome({
           aria-hidden="true"
           className={`garden-glow pointer-events-none absolute inset-x-[14%] top-[14%] h-20 rounded-full bg-[radial-gradient(circle,rgba(127,255,212,0.16),transparent_68%)] blur-2xl ${glowClassName}`}
         />
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 280 220"
-          className="relative h-auto w-full overflow-visible"
-        >
-          <defs>
-            <linearGradient id="gardenSoil" x1="0%" x2="100%" y1="0%" y2="0%">
-              <stop offset="0%" stopColor="rgba(33,56,83,0.92)" />
-              <stop offset="55%" stopColor="rgba(15,39,64,0.98)" />
-              <stop offset="100%" stopColor="rgba(8,26,44,0.95)" />
-            </linearGradient>
-            <linearGradient id="gardenStem" x1="0%" x2="0%" y1="100%" y2="0%">
-              <stop offset="0%" stopColor="rgba(93,171,152,0.18)" />
-              <stop offset="100%" stopColor="rgba(154,236,215,0.84)" />
-            </linearGradient>
-            <radialGradient id="gardenLight" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="rgba(251,240,206,0.98)" />
-              <stop offset="38%" stopColor="rgba(184,246,233,0.94)" />
-              <stop offset="100%" stopColor="rgba(127,255,212,0.72)" />
-            </radialGradient>
-            <radialGradient id="gardenLightHalo" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="rgba(214,244,235,0.24)" />
-              <stop offset="100%" stopColor="rgba(214,244,235,0)" />
-            </radialGradient>
-          </defs>
-          <ellipse
-            cx="140"
-            cy="184"
-            rx="96"
-            ry="28"
-            fill="rgba(5,18,34,0.72)"
-            className="garden-motion-root garden-ground-breathe garden-ground-shadow"
-            style={{ transformOrigin: "140px 184px", transformBox: "fill-box" }}
-          />
-          <ellipse
-            cx="140"
-            cy="178"
-            rx="102"
-            ry="24"
-            fill="url(#gardenSoil)"
-            className="garden-motion-root garden-ground-breathe garden-ground-soil"
-            style={{ transformOrigin: "140px 178px", transformBox: "fill-box", animationDelay: "0.35s" }}
-          />
-          <ellipse cx="140" cy="173" rx="10" ry="7" fill="rgba(216,192,138,0.44)" opacity={gardenVisual.hasRecordedRecovery ? 0.28 : 0.7} />
-          <g
-            className="garden-motion-root garden-plant-dance"
-            style={{ transformOrigin: "140px 178px", transformBox: "fill-box" }}
+        <div className="garden-plant-dance relative h-auto w-full origin-bottom">
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 280 220"
+            className="relative h-auto w-full overflow-visible"
           >
-            <g
-              className="garden-motion-root garden-stem-dance"
-              style={{ transformOrigin: "140px 176px", transformBox: "fill-box", animationDelay: "0.45s" }}
-            >
-              <path d="M140 176 C138 164 137 148 140 130" stroke="url(#gardenStem)" strokeWidth="3.2" strokeLinecap="round" fill="none" />
-            </g>
-            <g
-              className="garden-motion-root garden-branch-left-dance"
-              style={{ transformOrigin: "140px 158px", transformBox: "fill-box", animationDelay: "-0.5s" }}
-            >
-              <path d="M140 158 C126 154 116 146 110 132" stroke="url(#gardenStem)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
-              <path d="M138 136 C124 130 114 118 108 104" stroke="url(#gardenStem)" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9" />
-            </g>
-            <g
-              className="garden-motion-root garden-branch-right-dance"
-              style={{ transformOrigin: "141px 149px", transformBox: "fill-box", animationDelay: "0.9s" }}
-            >
-              <path d="M141 149 C157 143 170 132 176 116" stroke="url(#gardenStem)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
-              <path d="M142 128 C155 122 164 112 170 100" stroke="url(#gardenStem)" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9" />
-            </g>
-            {gardenVisual.marks.map((mark, index) => (
+            <defs>
+              <linearGradient id="gardenSoil" x1="0%" x2="100%" y1="0%" y2="0%">
+                <stop offset="0%" stopColor="rgba(33,56,83,0.92)" />
+                <stop offset="55%" stopColor="rgba(15,39,64,0.98)" />
+                <stop offset="100%" stopColor="rgba(8,26,44,0.95)" />
+              </linearGradient>
+              <linearGradient id="gardenStem" x1="0%" x2="0%" y1="100%" y2="0%">
+                <stop offset="0%" stopColor="rgba(93,171,152,0.18)" />
+                <stop offset="100%" stopColor="rgba(154,236,215,0.84)" />
+              </linearGradient>
+              <radialGradient id="gardenLight" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="rgba(251,240,206,0.98)" />
+                <stop offset="38%" stopColor="rgba(184,246,233,0.94)" />
+                <stop offset="100%" stopColor="rgba(127,255,212,0.72)" />
+              </radialGradient>
+              <radialGradient id="gardenLightHalo" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="rgba(214,244,235,0.24)" />
+                <stop offset="100%" stopColor="rgba(214,244,235,0)" />
+              </radialGradient>
+            </defs>
+            <ellipse
+              cx="140"
+              cy="184"
+              rx="96"
+              ry="28"
+              fill="rgba(5,18,34,0.72)"
+              className="garden-motion-root garden-ground-breathe garden-ground-shadow"
+              style={{ transformOrigin: "140px 184px", transformBox: "fill-box" }}
+            />
+            <ellipse
+              cx="140"
+              cy="178"
+              rx="102"
+              ry="24"
+              fill="url(#gardenSoil)"
+              className="garden-motion-root garden-ground-breathe garden-ground-soil"
+              style={{ transformOrigin: "140px 178px", transformBox: "fill-box", animationDelay: "0.35s" }}
+            />
+            <ellipse cx="140" cy="173" rx="10" ry="7" fill="rgba(216,192,138,0.44)" opacity={gardenVisual.hasRecordedRecovery ? 0.28 : 0.7} />
+            <g className="garden-motion-root" style={{ transformOrigin: "140px 178px", transformBox: "fill-box" }}>
               <g
-                key={`${mark.x}-${mark.y}-${index}`}
-                className="garden-motion-root garden-light-breathe"
-                style={{
-                  animationDelay: `${index * 0.85}s`,
-                  animationDuration: `${4.8 + index * 1.15}s`,
-                  transformOrigin: `${mark.x}px ${mark.y}px`,
-                  transformBox: "fill-box"
-                } as CSSProperties}
+                className="garden-motion-root garden-stem-dance"
+                style={{ transformOrigin: "140px 176px", transformBox: "fill-box", animationDelay: "0.45s" }}
               >
-                <path
-                  d={`M${mark.anchorX} ${mark.anchorY} Q${(mark.anchorX + mark.x) / 2} ${(mark.anchorY + mark.y) / 2 + 3} ${mark.x} ${mark.y + 1}`}
-                  stroke="rgba(154,236,215,0.32)"
-                  strokeWidth="1.2"
-                  strokeLinecap="round"
-                  fill="none"
-                />
-                <circle
-                  cx={mark.x}
-                  cy={mark.y}
-                  r={mark.radius + 6}
-                  fill="url(#gardenLightHalo)"
-                />
-                <circle
-                  cx={mark.x}
-                  cy={mark.y}
-                  r={mark.radius}
-                  fill="url(#gardenLight)"
-                />
-                <circle cx={mark.x} cy={mark.y} r={Math.max(1.8, mark.radius - 2.2)} fill="rgba(250,250,244,0.92)" opacity="0.7" />
+                <path d="M140 176 C138 164 137 148 140 130" stroke="url(#gardenStem)" strokeWidth="3.2" strokeLinecap="round" fill="none" />
               </g>
-            ))}
-          </g>
-        </svg>
+              <g
+                className="garden-motion-root garden-branch-left-dance"
+                style={{ transformOrigin: "140px 158px", transformBox: "fill-box", animationDelay: "-0.5s" }}
+              >
+                <path d="M140 158 C126 154 116 146 110 132" stroke="url(#gardenStem)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+                <path d="M138 136 C124 130 114 118 108 104" stroke="url(#gardenStem)" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9" />
+              </g>
+              <g
+                className="garden-motion-root garden-branch-right-dance"
+                style={{ transformOrigin: "141px 149px", transformBox: "fill-box", animationDelay: "0.9s" }}
+              >
+                <path d="M141 149 C157 143 170 132 176 116" stroke="url(#gardenStem)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+                <path d="M142 128 C155 122 164 112 170 100" stroke="url(#gardenStem)" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9" />
+              </g>
+              {gardenVisual.marks.map((mark, index) => (
+                <g
+                  key={`${mark.x}-${mark.y}-${index}`}
+                  className="garden-motion-root garden-light-breathe"
+                  style={{
+                    animationDelay: `${index * 0.85}s`,
+                    animationDuration: `${4.8 + index * 1.15}s`,
+                    transformOrigin: `${mark.x}px ${mark.y}px`,
+                    transformBox: "fill-box"
+                  } as CSSProperties}
+                >
+                  <path
+                    d={`M${mark.anchorX} ${mark.anchorY} Q${(mark.anchorX + mark.x) / 2} ${(mark.anchorY + mark.y) / 2 + 3} ${mark.x} ${mark.y + 1}`}
+                    stroke="rgba(154,236,215,0.32)"
+                    strokeWidth="1.2"
+                    strokeLinecap="round"
+                    fill="none"
+                  />
+                  <circle
+                    cx={mark.x}
+                    cy={mark.y}
+                    r={mark.radius + 6}
+                    fill="url(#gardenLightHalo)"
+                  />
+                  <circle
+                    cx={mark.x}
+                    cy={mark.y}
+                    r={mark.radius}
+                    fill="url(#gardenLight)"
+                  />
+                  <circle cx={mark.x} cy={mark.y} r={Math.max(1.8, mark.radius - 2.2)} fill="rgba(250,250,244,0.92)" opacity="0.7" />
+                </g>
+              ))}
+            </g>
+          </svg>
+        </div>
       </div>
     );
   }
@@ -536,98 +535,6 @@ export function BasicHome({
         </div>
         <span className="sr-only">{`${copy.sessionCountLabel}: ${gardenVisual.recordedCheckIns}. ${gardenCountMessage}`}</span>
       </section>
-      <style jsx>{`
-        .garden-motion-root {
-          transform-box: fill-box;
-          transform-origin: center;
-          will-change: transform, opacity;
-        }
-
-        .garden-glow {
-          animation: gardenGlow 10.5s ease-in-out infinite;
-          will-change: transform, opacity;
-        }
-
-        .garden-plant-dance {
-          animation: gardenPlantDance 11.2s ease-in-out infinite alternate;
-        }
-
-        .garden-stem-dance {
-          animation: gardenStemDance 6.9s ease-in-out infinite alternate;
-        }
-
-        .garden-branch-left-dance {
-          animation: gardenBranchLeftDance 7.4s ease-in-out infinite alternate;
-        }
-
-        .garden-branch-right-dance {
-          animation: gardenBranchRightDance 8.9s ease-in-out infinite alternate;
-        }
-
-        .garden-light-breathe {
-          animation: gardenLightBreathe 5.8s ease-in-out infinite alternate;
-        }
-
-        .garden-ground-breathe {
-          animation: gardenGroundBreathe 11.2s ease-in-out infinite alternate;
-        }
-
-        .garden-ground-shadow {
-          opacity: 0.92;
-        }
-
-        .garden-ground-soil {
-          opacity: 0.98;
-        }
-
-        @keyframes gardenGlow {
-          0%, 100% { opacity: 0.5; transform: scale(0.97); }
-          50% { opacity: 0.82; transform: scale(1.04); }
-        }
-
-        @keyframes gardenPlantDance {
-          0% { transform: translate3d(-0.7px, 0, 0) rotate(-1.5deg); }
-          100% { transform: translate3d(0.9px, 0, 0) rotate(1.5deg); }
-        }
-
-        @keyframes gardenStemDance {
-          0% { transform: translate3d(-0.5px, 0, 0) rotate(-2deg); }
-          100% { transform: translate3d(0.9px, 0, 0) rotate(2deg); }
-        }
-
-        @keyframes gardenBranchLeftDance {
-          0% { transform: rotate(-3deg) translate3d(0, 0, 0); }
-          100% { transform: rotate(3deg) translate3d(-0.7px, -0.9px, 0); }
-        }
-
-        @keyframes gardenBranchRightDance {
-          0% { transform: rotate(3.5deg) translate3d(0.3px, 0, 0); }
-          100% { transform: rotate(-3.5deg) translate3d(0.95px, -1px, 0); }
-        }
-
-        @keyframes gardenLightBreathe {
-          0% { transform: translate3d(0, 1.2px, 0) scale(0.92); opacity: 0.55; }
-          100% { transform: translate3d(0, -1.2px, 0) scale(1.08); opacity: 1; }
-        }
-
-        @keyframes gardenGroundBreathe {
-          0% { transform: scale(0.98); opacity: 0.88; }
-          100% { transform: scale(1.02); opacity: 1; }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .garden-glow,
-          .garden-plant-dance,
-          .garden-stem-dance,
-          .garden-branch-left-dance,
-          .garden-branch-right-dance,
-          .garden-light-breathe,
-          .garden-ground-breathe {
-            animation: none !important;
-          }
-        }
-      `}</style>
-
       <section
         data-basic-recommendation
         className="rounded-[28px] border border-[rgba(216,192,138,0.16)] bg-[radial-gradient(circle_at_84%_10%,rgba(216,192,138,0.12),transparent_28%),radial-gradient(circle_at_18%_0%,rgba(127,255,212,0.10),transparent_32%),linear-gradient(180deg,rgba(8,40,69,0.80),rgba(6,27,51,0.92)_58%,rgba(5,18,34,0.98))] px-4 py-4 shadow-[0_22px_58px_rgba(0,0,0,0.18)] sm:px-6 sm:py-6"

@@ -253,3 +253,136 @@ img {
 .animate-live-rhythm-pulse {
   animation: live-rhythm-pulse 10s ease-in-out infinite;
 }
+
+.garden-motion-root {
+  transform-box: fill-box;
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+
+.garden-glow {
+  animation: gardenGlow 10.5s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.garden-plant-dance {
+  transform-origin: 50% 100%;
+  animation: gardenPlantDance 11.2s ease-in-out infinite alternate;
+}
+
+.garden-stem-dance {
+  animation: gardenStemDance 6.9s ease-in-out infinite alternate;
+}
+
+.garden-branch-left-dance {
+  animation: gardenBranchLeftDance 7.4s ease-in-out infinite alternate;
+}
+
+.garden-branch-right-dance {
+  animation: gardenBranchRightDance 8.9s ease-in-out infinite alternate;
+}
+
+.garden-light-breathe {
+  animation: gardenLightBreathe 5.8s ease-in-out infinite alternate;
+}
+
+.garden-ground-breathe {
+  animation: gardenGroundBreathe 11.2s ease-in-out infinite alternate;
+}
+
+.garden-ground-shadow {
+  opacity: 0.92;
+}
+
+.garden-ground-soil {
+  opacity: 0.98;
+}
+
+@keyframes gardenGlow {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(0.97);
+  }
+
+  50% {
+    opacity: 0.82;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes gardenPlantDance {
+  0% {
+    transform: translate3d(-0.7px, 0, 0) rotate(-1.5deg);
+  }
+
+  100% {
+    transform: translate3d(0.9px, 0, 0) rotate(1.5deg);
+  }
+}
+
+@keyframes gardenStemDance {
+  0% {
+    transform: translate3d(-0.5px, 0, 0) rotate(-2deg);
+  }
+
+  100% {
+    transform: translate3d(0.9px, 0, 0) rotate(2deg);
+  }
+}
+
+@keyframes gardenBranchLeftDance {
+  0% {
+    transform: rotate(-3deg) translate3d(0, 0, 0);
+  }
+
+  100% {
+    transform: rotate(3deg) translate3d(-0.7px, -0.9px, 0);
+  }
+}
+
+@keyframes gardenBranchRightDance {
+  0% {
+    transform: rotate(3.5deg) translate3d(0.3px, 0, 0);
+  }
+
+  100% {
+    transform: rotate(-3.5deg) translate3d(0.95px, -1px, 0);
+  }
+}
+
+@keyframes gardenLightBreathe {
+  0% {
+    transform: translate3d(0, 1.2px, 0) scale(0.92);
+    opacity: 0.55;
+  }
+
+  100% {
+    transform: translate3d(0, -1.2px, 0) scale(1.08);
+    opacity: 1;
+  }
+}
+
+@keyframes gardenGroundBreathe {
+  0% {
+    transform: scale(0.98);
+    opacity: 0.88;
+  }
+
+  100% {
+    transform: scale(1.02);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .garden-glow,
+  .garden-plant-dance,
+  .garden-stem-dance,
+  .garden-branch-left-dance,
+  .garden-branch-right-dance,
+  .garden-light-breathe,
+  .garden-ground-breathe {
+    animation: none !important;
+  }
+}
