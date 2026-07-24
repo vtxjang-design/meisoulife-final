@@ -239,6 +239,14 @@ test("desktop gate dock preserves chronological order while mobile keeps recomme
   assert.match(basicHomeSource, /alternativeGateKeys\.map\(\(gateKey\) => \{/);
 });
 
+test("mobile alternative gate layout stacks below 400px and avoids truncating official gate names", () => {
+  assert.match(basicHomeSource, /className="grid grid-cols-1 gap-2 min-\[400px\]:grid-cols-2"/);
+  assert.doesNotMatch(
+    basicHomeSource,
+    /<p className="mt-\[[0-9]+px\] text-\[[0-9.]+rem\] font-(?:medium|semibold) leading-tight[^"]*truncate[^"]*">\s*\{isPending \? copy\.movingToGate : gate\.title\}/
+  );
+});
+
 test("compact gate dock removes long descriptions while detailed BASIC Rhythm descriptions remain below", () => {
   const recommendationSection = basicHomeSource.slice(
     basicHomeSource.indexOf('data-basic-recommendation'),

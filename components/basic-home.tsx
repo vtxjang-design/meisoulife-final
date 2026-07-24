@@ -539,25 +539,25 @@ export function BasicHome({
       </section>
       <section
         data-basic-recommendation
-        className="rounded-[28px] border border-[rgba(216,192,138,0.16)] bg-[radial-gradient(circle_at_84%_10%,rgba(216,192,138,0.12),transparent_28%),radial-gradient(circle_at_18%_0%,rgba(127,255,212,0.10),transparent_32%),linear-gradient(180deg,rgba(8,40,69,0.80),rgba(6,27,51,0.92)_58%,rgba(5,18,34,0.98))] px-4 py-4 shadow-[0_22px_58px_rgba(0,0,0,0.18)] sm:px-6 sm:py-5"
+        className="rounded-[28px] border border-[rgba(216,192,138,0.16)] bg-[radial-gradient(circle_at_84%_10%,rgba(216,192,138,0.12),transparent_28%),radial-gradient(circle_at_18%_0%,rgba(127,255,212,0.10),transparent_32%),linear-gradient(180deg,rgba(8,40,69,0.80),rgba(6,27,51,0.92)_58%,rgba(5,18,34,0.98))] px-4 py-[1.35rem] shadow-[0_22px_58px_rgba(0,0,0,0.18)] sm:px-6 sm:py-[1.55rem]"
       >
         <div className="max-w-2xl">
           <p className="text-xs uppercase tracking-[0.28em] text-[rgba(216,192,138,0.74)]">{copy.recommendationLabel}</p>
-          <h2 className="mt-1.5 font-serif text-[1.28rem] leading-[1.18] text-[rgba(244,250,255,0.95)] sm:mt-2 sm:text-[1.85rem]">
+          <h2 className="mt-1.5 font-serif text-[1.28rem] leading-[1.18] text-[rgba(244,250,255,0.95)] sm:mt-[6px] sm:text-[1.82rem]">
             {copy.recommendationTitle}
           </h2>
-          <p className="mt-2 text-[13px] leading-5.5 text-[rgba(233,242,248,0.76)] sm:text-[15px] sm:leading-6">{copy.recommendationBody}</p>
+          <p className="mt-2 text-[13px] leading-5.5 text-[rgba(233,242,248,0.76)] sm:mt-[9px] sm:text-[15px] sm:leading-6">{copy.recommendationBody}</p>
           {recommendation.usedFallback ? (
             <p className="mt-1.5 text-[13px] leading-5 text-[rgba(233,242,248,0.58)] sm:text-sm sm:leading-6">{copy.recommendationSourceFallback}</p>
           ) : null}
         </div>
-        <nav aria-label={copy.recommendationTitle} className="mt-4 sm:mt-5">
+        <nav aria-label={copy.recommendationTitle} className="mt-3.5 sm:mt-[18px]">
           <div className="hidden md:block">
             <div
               data-basic-gate-dock="desktop"
-              className="overflow-hidden rounded-[20px] border border-white/[0.09] bg-[linear-gradient(180deg,rgba(255,255,255,0.038),rgba(255,255,255,0.018))] shadow-[0_18px_46px_rgba(0,0,0,0.16)]"
+              className="overflow-hidden rounded-[19px] border border-white/[0.11] bg-[linear-gradient(180deg,rgba(255,255,255,0.034),rgba(255,255,255,0.016))] shadow-[0_16px_42px_rgba(0,0,0,0.16)]"
             >
-              <div className="grid min-h-[80px] grid-cols-3">
+              <div className="grid min-h-[78px] grid-cols-3">
                 {gates.map((gate, index) => {
                   const isRecommended = gate.key === currentGateKey;
                   const href = getBasicGateShortcutHref(gate.key);
@@ -574,22 +574,22 @@ export function BasicHome({
                       onClick={(event) => handleGateCardClick(event, gate.key, href)}
                       aria-busy={isPending}
                       aria-disabled={anotherPending}
-                      className={`group relative flex min-w-0 items-center gap-3 px-5 py-4 text-left transition-[transform,border-color,background-color,box-shadow,opacity] duration-150 ease-out focus-visible:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[rgba(216,192,138,0.72)] active:translate-y-[1px] motion-reduce:transform-none motion-reduce:transition-none ${index < gates.length - 1 ? "border-r border-white/[0.06]" : ""} ${isRecommended ? "bg-[linear-gradient(180deg,rgba(216,192,138,0.11),rgba(255,255,255,0.035))] shadow-[inset_0_1px_0_rgba(255,245,221,0.16)]" : "bg-[linear-gradient(180deg,rgba(255,255,255,0.025),rgba(255,255,255,0.014))] shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"} ${anotherPending ? "cursor-wait opacity-60" : "hover:-translate-y-px hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.055),rgba(255,255,255,0.024))] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.10)]"}`}
+                      className={`group relative flex min-w-0 items-center gap-3 px-[18px] py-3.5 text-left transition-[transform,border-color,background-color,box-shadow,opacity] duration-150 ease-out focus-visible:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[rgba(216,192,138,0.72)] active:translate-y-[1px] motion-reduce:transform-none motion-reduce:transition-none ${index < gates.length - 1 ? "border-r border-white/[0.09]" : ""} ${isRecommended ? "bg-[linear-gradient(180deg,rgba(216,192,138,0.11),rgba(255,255,255,0.035))] shadow-[inset_0_1px_0_rgba(255,245,221,0.16)]" : "bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"} ${anotherPending ? "cursor-wait opacity-60" : "hover:-translate-y-px hover:border-white/[0.14] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.026))] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"}`}
                     >
                       <div className="min-w-0 flex-1">
                         <div className="flex min-w-0 items-center gap-2">
                           {isRecommended ? <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[rgba(244,234,209,0.82)]" /> : null}
-                          <p className={`truncate text-[10px] uppercase tracking-[0.22em] ${isRecommended ? "text-[rgba(244,234,209,0.8)]" : "text-[rgba(127,255,212,0.66)]"}`}>
+                          <p className={`truncate text-[10px] uppercase tracking-[0.2em] ${isRecommended ? "text-[rgba(244,234,209,0.8)]" : "text-[rgba(170,223,232,0.72)]"}`}>
                             {isRecommended ? `${copy.recommendationBadge} · ${gate.eyebrow}` : gate.eyebrow}
                           </p>
                         </div>
-                        <p className="mt-1.5 truncate text-[1.02rem] font-semibold leading-tight text-[rgba(244,250,255,0.96)]">
+                        <p className="mt-[7px] text-[1rem] font-semibold leading-tight text-[rgba(244,250,255,0.96)]">
                           {isPending ? copy.movingToGate : gate.title}
                         </p>
                       </div>
                       <span
                         aria-hidden="true"
-                        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-sm leading-none transition-[transform,background-color,border-color,color,opacity] duration-150 ${isRecommended ? "border-[rgba(216,192,138,0.28)] bg-[rgba(216,192,138,0.14)] text-[rgba(244,234,209,0.92)]" : "border-white/[0.1] bg-white/[0.04] text-[rgba(225,255,247,0.74)]"} ${anotherPending ? "opacity-55" : "group-hover:translate-x-[2px]"}`}
+                        className={`flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-full border text-[13px] leading-none transition-[transform,background-color,border-color,color,opacity] duration-150 ${isRecommended ? "border-[rgba(216,192,138,0.28)] bg-[rgba(216,192,138,0.14)] text-[rgba(244,234,209,0.92)]" : "border-white/[0.14] bg-white/[0.055] text-[rgba(236,248,252,0.82)]"} ${anotherPending ? "opacity-55" : "group-hover:translate-x-[2px]"}`}
                       >
                         →
                       </span>
@@ -600,7 +600,7 @@ export function BasicHome({
             </div>
           </div>
 
-          <div data-basic-gate-dock="mobile" className="space-y-2.5 md:hidden">
+          <div data-basic-gate-dock="mobile" className="space-y-2 md:hidden">
             {gates
               .filter((gate) => gate.key === currentGateKey)
               .map((gate) => {
@@ -617,20 +617,20 @@ export function BasicHome({
                     onClick={(event) => handleGateCardClick(event, gate.key, href)}
                     aria-busy={isPending}
                     aria-disabled={anotherPending}
-                    className={`group relative flex min-h-[76px] min-w-0 items-center gap-3 overflow-hidden rounded-[16px] border border-[rgba(216,192,138,0.22)] bg-[linear-gradient(180deg,rgba(216,192,138,0.12),rgba(255,255,255,0.036))] px-4 py-3 shadow-[0_18px_42px_rgba(0,0,0,0.16),inset_0_1px_0_rgba(255,245,221,0.16)] transition-[transform,border-color,background-color,box-shadow,opacity] duration-150 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(216,192,138,0.72)] active:translate-y-[1px] motion-reduce:transform-none motion-reduce:transition-none ${anotherPending ? "cursor-wait opacity-60" : "hover:-translate-y-px hover:border-[rgba(216,192,138,0.34)] hover:bg-[linear-gradient(180deg,rgba(216,192,138,0.15),rgba(255,255,255,0.048))]"}`}
+                    className={`group relative flex min-h-[90px] min-w-0 items-center gap-3 overflow-hidden rounded-[16px] border border-[rgba(216,192,138,0.22)] bg-[linear-gradient(180deg,rgba(216,192,138,0.12),rgba(255,255,255,0.036))] px-[15px] py-[11px] shadow-[0_16px_38px_rgba(0,0,0,0.16),inset_0_1px_0_rgba(255,245,221,0.16)] transition-[transform,border-color,background-color,box-shadow,opacity] duration-150 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(216,192,138,0.72)] active:translate-y-[1px] motion-reduce:transform-none motion-reduce:transition-none ${anotherPending ? "cursor-wait opacity-60" : "hover:-translate-y-px hover:border-[rgba(216,192,138,0.34)] hover:bg-[linear-gradient(180deg,rgba(216,192,138,0.15),rgba(255,255,255,0.048))]"}`}
                   >
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 text-[10px] leading-none text-[rgba(244,234,209,0.82)]">
                         <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[rgba(244,234,209,0.86)]" />
                         <span className="truncate">{`${copy.recommendationBadge} · ${gate.eyebrow}`}</span>
                       </div>
-                      <p className="mt-2 truncate text-[1.08rem] font-semibold leading-tight text-[rgba(244,250,255,0.97)]">
+                      <p className="mt-[9px] text-[1.09rem] font-semibold leading-tight text-[rgba(244,250,255,0.97)]">
                         {isPending ? copy.movingToGate : gate.title}
                       </p>
                     </div>
                     <span
                       aria-hidden="true"
-                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[rgba(216,192,138,0.3)] bg-[rgba(216,192,138,0.14)] text-[rgba(244,234,209,0.92)] transition-[transform,opacity] duration-150 ${anotherPending ? "opacity-55" : "group-hover:translate-x-[2px]"}`}
+                      className={`flex h-[35px] w-[35px] shrink-0 items-center justify-center rounded-full border border-[rgba(216,192,138,0.3)] bg-[rgba(216,192,138,0.14)] text-[14px] text-[rgba(244,234,209,0.92)] transition-[transform,opacity] duration-150 ${anotherPending ? "opacity-55" : "group-hover:translate-x-[2px]"}`}
                     >
                       →
                     </span>
@@ -638,7 +638,7 @@ export function BasicHome({
                 );
               })}
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 gap-2 min-[400px]:grid-cols-2">
               {alternativeGateKeys.map((gateKey) => {
                 const gate = gates.find((entry) => entry.key === gateKey);
 
@@ -658,17 +658,17 @@ export function BasicHome({
                     onClick={(event) => handleGateCardClick(event, gate.key, href)}
                     aria-busy={isPending}
                     aria-disabled={anotherPending}
-                    className={`group relative flex min-h-[52px] min-w-0 items-center gap-2.5 rounded-[14px] border px-3 py-2.5 transition-[transform,border-color,background-color,box-shadow,opacity] duration-150 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(216,192,138,0.68)] active:translate-y-[1px] motion-reduce:transform-none motion-reduce:transition-none ${anotherPending ? "cursor-wait border-white/[0.08] bg-white/[0.02] opacity-60" : "border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] hover:-translate-y-px hover:border-white/[0.15] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.058),rgba(255,255,255,0.028))]"}`}
+                    className={`group relative flex min-h-[54px] min-w-0 items-center gap-2 rounded-[14px] border px-[12px] py-[9px] transition-[transform,border-color,background-color,box-shadow,opacity] duration-150 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(216,192,138,0.68)] active:translate-y-[1px] motion-reduce:transform-none motion-reduce:transition-none ${anotherPending ? "cursor-wait border-white/[0.09] bg-white/[0.02] opacity-60" : "border-white/[0.11] bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.022))] shadow-[inset_0_1px_0_rgba(255,255,255,0.045)] hover:-translate-y-px hover:border-white/[0.17] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.062),rgba(255,255,255,0.03))] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.095)]"}`}
                   >
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-[10px] uppercase tracking-[0.18em] text-[rgba(127,255,212,0.62)]">{gate.eyebrow}</p>
-                      <p className="mt-1 truncate text-[0.95rem] font-medium leading-tight text-[rgba(244,250,255,0.94)]">
+                      <p className="text-[10px] uppercase tracking-[0.16em] text-[rgba(161,220,229,0.68)]">{gate.eyebrow}</p>
+                      <p className="mt-[5px] text-[0.94rem] font-medium leading-tight text-[rgba(244,250,255,0.94)] min-[400px]:text-[0.92rem]">
                         {isPending ? copy.movingToGate : gate.title}
                       </p>
                     </div>
                     <span
                       aria-hidden="true"
-                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/[0.1] bg-white/[0.04] text-[13px] text-[rgba(225,255,247,0.74)] transition-[transform,opacity] duration-150 ${anotherPending ? "opacity-55" : "group-hover:translate-x-[2px]"}`}
+                      className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/[0.14] bg-white/[0.05] text-[12px] text-[rgba(236,248,252,0.82)] transition-[transform,opacity] duration-150 ${anotherPending ? "opacity-55" : "group-hover:translate-x-[2px]"}`}
                     >
                       →
                     </span>
