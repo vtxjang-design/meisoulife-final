@@ -250,8 +250,14 @@ test("mobile alternative gate layout stacks below 400px and avoids truncating of
 
 test("gate dock keeps the refined compact height targets on desktop and mobile", () => {
   assert.match(basicHomeSource, /className="grid min-h-\[76px\] grid-cols-3"/);
-  assert.match(basicHomeSource, /className=\{`group relative flex min-h-\[86px\] min-w-0 items-center gap-3 overflow-hidden rounded-\[16px\]/);
+  assert.match(basicHomeSource, /className=\{`group relative flex min-h-\[84px\] min-w-0 items-center gap-3 overflow-hidden rounded-\[16px\]/);
   assert.match(basicHomeSource, /className=\{`group relative flex min-h-\[54px\] min-w-0 items-center gap-2 rounded-\[14px\]/);
+});
+
+test("garden illustration keeps the refined mobile and desktop scale values", () => {
+  assert.match(basicHomeSource, /w-\[clamp\(8\.85rem,40vw,10\.9rem\)\] shrink-0/);
+  assert.match(basicHomeSource, /renderGardenSvg\("w-\[clamp\(8\.85rem,40vw,10\.9rem\)\] max-w-\[10\.9rem\]", "inset-x-\[8%\] top-\[8%\] h-\[4\.8rem\] blur-\[26px\]"\)/);
+  assert.match(basicHomeSource, /renderGardenSvg\("max-w-\[18\.95rem\] lg:max-w-none", "sm:inset-x-\[10%\] sm:top-\[10%\] sm:h-32 sm:blur-3xl"\)/);
 });
 
 test("compact gate dock removes long descriptions while detailed BASIC Rhythm descriptions remain below", () => {

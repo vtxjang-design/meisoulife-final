@@ -502,12 +502,12 @@ export function BasicHome({
         data-basic-garden
         className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.09),transparent_36%),radial-gradient(circle_at_78%_16%,rgba(216,192,138,0.12),transparent_32%),linear-gradient(180deg,rgba(9,34,59,0.78),rgba(7,27,50,0.90)_54%,rgba(5,18,34,0.97))] px-4 py-3.5 shadow-[0_24px_72px_rgba(0,0,0,0.16)] sm:px-6 sm:py-[1.375rem]"
       >
-        <div className="flex flex-col gap-3 lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-5">
+        <div className="flex flex-col gap-2.5 lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-5">
           <div className="order-1">
-            <div className="flex items-start justify-between gap-4 lg:hidden">
+            <div className="flex items-start justify-between gap-3 lg:hidden">
               <p className="pt-1 text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.64)]">{copy.gardenLabel}</p>
-              <div className="w-[clamp(8rem,36vw,9.875rem)] shrink-0">
-                {renderGardenSvg("w-[clamp(8rem,36vw,9.875rem)] max-w-[9.875rem]", "inset-x-[10%] top-[10%] h-[4.5rem] blur-[24px]")}
+              <div className="w-[clamp(8.85rem,40vw,10.9rem)] shrink-0">
+                {renderGardenSvg("w-[clamp(8.85rem,40vw,10.9rem)] max-w-[10.9rem]", "inset-x-[8%] top-[8%] h-[4.8rem] blur-[26px]")}
               </div>
             </div>
             <p className="hidden text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.64)] lg:block">{copy.gardenLabel}</p>
@@ -532,7 +532,7 @@ export function BasicHome({
           </div>
 
           <div className="order-2 hidden lg:block">
-            {renderGardenSvg("max-w-[18rem] lg:max-w-none", "sm:inset-x-[10%] sm:top-[10%] sm:h-32 sm:blur-3xl")}
+            {renderGardenSvg("max-w-[18.95rem] lg:max-w-none", "sm:inset-x-[10%] sm:top-[10%] sm:h-32 sm:blur-3xl")}
           </div>
         </div>
         <span className="sr-only">{`${copy.sessionCountLabel}: ${gardenVisual.recordedCheckIns}. ${gardenCountMessage}`}</span>
@@ -617,7 +617,7 @@ export function BasicHome({
                     onClick={(event) => handleGateCardClick(event, gate.key, href)}
                     aria-busy={isPending}
                     aria-disabled={anotherPending}
-                    className={`group relative flex min-h-[86px] min-w-0 items-center gap-3 overflow-hidden rounded-[16px] border border-[rgba(216,192,138,0.22)] bg-[linear-gradient(180deg,rgba(216,192,138,0.12),rgba(255,255,255,0.036))] px-[15px] py-[10px] shadow-[0_16px_38px_rgba(0,0,0,0.16),inset_0_1px_0_rgba(255,245,221,0.16)] transition-[transform,border-color,background-color,box-shadow,opacity] duration-150 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(216,192,138,0.72)] active:translate-y-[1px] motion-reduce:transform-none motion-reduce:transition-none ${anotherPending ? "cursor-wait opacity-60" : "hover:-translate-y-px hover:border-[rgba(216,192,138,0.34)] hover:bg-[linear-gradient(180deg,rgba(216,192,138,0.15),rgba(255,255,255,0.048))]"}`}
+                    className={`group relative flex min-h-[84px] min-w-0 items-center gap-3 overflow-hidden rounded-[16px] border border-[rgba(216,192,138,0.22)] bg-[linear-gradient(180deg,rgba(216,192,138,0.12),rgba(255,255,255,0.036))] px-[15px] py-[9px] shadow-[0_16px_38px_rgba(0,0,0,0.16),inset_0_1px_0_rgba(255,245,221,0.16)] transition-[transform,border-color,background-color,box-shadow,opacity] duration-150 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(216,192,138,0.72)] active:translate-y-[1px] motion-reduce:transform-none motion-reduce:transition-none ${anotherPending ? "cursor-wait opacity-60" : "hover:-translate-y-px hover:border-[rgba(216,192,138,0.34)] hover:bg-[linear-gradient(180deg,rgba(216,192,138,0.15),rgba(255,255,255,0.048))]"}`}
                   >
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 text-[10px] leading-none text-[rgba(244,234,209,0.82)]">
@@ -630,7 +630,7 @@ export function BasicHome({
                     </div>
                     <span
                       aria-hidden="true"
-                      className={`flex h-[35px] w-[35px] shrink-0 items-center justify-center rounded-full border border-[rgba(216,192,138,0.3)] bg-[rgba(216,192,138,0.14)] text-[14px] text-[rgba(244,234,209,0.92)] transition-[transform,opacity] duration-150 ${anotherPending ? "opacity-55" : "group-hover:translate-x-[2px]"}`}
+                      className={`flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full border border-[rgba(216,192,138,0.3)] bg-[rgba(216,192,138,0.14)] text-[14px] text-[rgba(244,234,209,0.92)] transition-[transform,opacity] duration-150 ${anotherPending ? "opacity-55" : "group-hover:translate-x-[2px]"}`}
                     >
                       →
                     </span>
