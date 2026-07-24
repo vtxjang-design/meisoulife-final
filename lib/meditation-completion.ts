@@ -15,6 +15,21 @@ type MeditationCompletionOptions = {
   playSoundOnComplete?: boolean;
 };
 
+export function shouldPlayMeditationCompletionChime(input: {
+  meditationType: string | null | undefined;
+  meditationDoor: string | null | undefined;
+  playSoundOnComplete?: boolean;
+}) {
+  if (input.playSoundOnComplete === false) {
+    return false;
+  }
+
+  return !(
+    input.meditationType === "night" &&
+    (input.meditationDoor === "release" || input.meditationDoor === "gratitude" || input.meditationDoor === "sleep")
+  );
+}
+
 function getAudioContext(audioContextRef: MutableRefObject<AudioContext | null>) {
   if (typeof window === "undefined" || !("AudioContext" in window || "webkitAudioContext" in window)) {
     return null;

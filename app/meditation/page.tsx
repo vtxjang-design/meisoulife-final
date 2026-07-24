@@ -16,7 +16,11 @@ import {
   STRUCTURED_AMBIENT_PENDING_KEY,
   stopAmbientNatureAudio
 } from "@/lib/meditation-ambient-audio";
-import { handleMeditationComplete as triggerMeditationCompletion, supportsMeditationVibration } from "@/lib/meditation-completion";
+import {
+  handleMeditationComplete as triggerMeditationCompletion,
+  shouldPlayMeditationCompletionChime,
+  supportsMeditationVibration
+} from "@/lib/meditation-completion";
 import { getRhythmJourneyContent, journeyAudioMap } from "@/lib/rhythm-journey";
 import { getBasicPracticeByRouteType, getBasicPracticeBySession } from "@/lib/basic-rhythm";
 import { resolveMeditationRequiredPlan } from "@/lib/membership-access";
@@ -4207,14 +4211,17 @@ function MeditationPageContent() {
     } else {
       await stopAmbientNatureAudio(ambientAudioRef, ambientFadeOutMs);
     }
-    if (!isSleepGate) {
-      await triggerMeditationCompletion({
-        hasUserGesture,
-        soundEnabled,
-        vibrationEnabled,
-        audioContextRef
-      });
-    }
+    await triggerMeditationCompletion({
+      hasUserGesture,
+      soundEnabled,
+      vibrationEnabled,
+      audioContextRef,
+      playSoundOnComplete: shouldPlayMeditationCompletionChime({
+        meditationType,
+        meditationDoor,
+        playSoundOnComplete: true
+      })
+    });
   }
 
   async function handleSoundToggle() {
