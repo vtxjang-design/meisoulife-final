@@ -505,7 +505,7 @@ export function BasicHome({
         <div className="flex flex-col gap-2.5 lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-5">
           <div className="order-1">
             <div className="flex items-start justify-between gap-3 lg:hidden">
-              <p className="pt-1 text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.64)]">{copy.gardenLabel}</p>
+              <p className="min-w-0 flex-1 whitespace-nowrap pt-1 text-[11px] uppercase tracking-[0.22em] text-[rgba(127,255,212,0.64)]">{copy.gardenLabel}</p>
               <div className="w-[clamp(8.85rem,40vw,10.9rem)] shrink-0">
                 {renderGardenSvg("w-[clamp(8.85rem,40vw,10.9rem)] max-w-[10.9rem]", "inset-x-[8%] top-[8%] h-[4.8rem] blur-[26px]")}
               </div>
@@ -519,7 +519,7 @@ export function BasicHome({
               <p className="text-[13px] leading-5 text-[rgba(214,244,235,0.82)] sm:text-sm sm:leading-6">{gardenMeaningLine}</p>
               <p className="hidden text-[13px] leading-5 text-[rgba(233,242,248,0.56)] sm:text-sm sm:leading-6 lg:block">{gardenCountMessage}</p>
             </div>
-            <div className="mt-2.5 grid grid-cols-2 gap-2 sm:gap-2.5 lg:mt-3">
+            <div className="mt-2.5 grid grid-cols-2 gap-2 sm:gap-2.5 lg:mt-3 lg:w-fit lg:grid-cols-[minmax(0,15rem)_minmax(0,15rem)] lg:gap-3">
               <div className="rounded-[14px] border border-white/6 bg-white/[0.02] px-3 py-[9px] sm:rounded-[16px] sm:px-[14px] sm:py-[11px]">
                 <p className="text-[0.67rem] uppercase tracking-[0.17em] text-[rgba(233,242,248,0.44)]">{copy.currentDayLabel}</p>
                 <p className="mt-1 text-[1.08rem] font-semibold leading-none text-[rgba(244,250,255,0.94)] sm:mt-1.5 sm:text-[1.42rem]">{currentDay}</p>

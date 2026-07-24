@@ -260,6 +260,17 @@ test("garden illustration keeps the refined mobile and desktop scale values", ()
   assert.match(basicHomeSource, /renderGardenSvg\("max-w-\[18\.95rem\] lg:max-w-none", "sm:inset-x-\[10%\] sm:top-\[10%\] sm:h-32 sm:blur-3xl"\)/);
 });
 
+test("garden label stays on one line on mobile and desktop stat boxes use a narrower fixed grid", () => {
+  assert.match(
+    basicHomeSource,
+    /<p className="min-w-0 flex-1 whitespace-nowrap pt-1 text-\[11px\] uppercase tracking-\[0\.22em\] text-\[rgba\(127,255,212,0\.64\)\]">\{copy\.gardenLabel\}<\/p>/
+  );
+  assert.match(
+    basicHomeSource,
+    /className="mt-2\.5 grid grid-cols-2 gap-2 sm:gap-2\.5 lg:mt-3 lg:w-fit lg:grid-cols-\[minmax\(0,15rem\)_minmax\(0,15rem\)\] lg:gap-3"/
+  );
+});
+
 test("compact gate dock removes long descriptions while detailed BASIC Rhythm descriptions remain below", () => {
   const recommendationSection = basicHomeSource.slice(
     basicHomeSource.indexOf('data-basic-recommendation'),
