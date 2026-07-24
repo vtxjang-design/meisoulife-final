@@ -289,8 +289,8 @@ export function BasicHome({
             rx="96"
             ry="28"
             fill="rgba(5,18,34,0.72)"
-            className="garden-motion-root garden-ground-shadow"
-            style={{ transformOrigin: "140px 184px" }}
+            className="garden-motion-root garden-ground-breathe garden-ground-shadow"
+            style={{ transformOrigin: "140px 184px", transformBox: "fill-box" }}
           />
           <ellipse
             cx="140"
@@ -298,62 +298,68 @@ export function BasicHome({
             rx="102"
             ry="24"
             fill="url(#gardenSoil)"
-            className="garden-motion-root garden-ground-soil"
-            style={{ transformOrigin: "140px 178px", animationDelay: "0.35s" }}
+            className="garden-motion-root garden-ground-breathe garden-ground-soil"
+            style={{ transformOrigin: "140px 178px", transformBox: "fill-box", animationDelay: "0.35s" }}
           />
           <ellipse cx="140" cy="173" rx="10" ry="7" fill="rgba(216,192,138,0.44)" opacity={gardenVisual.hasRecordedRecovery ? 0.28 : 0.7} />
           <g
-            className="garden-motion-root garden-stem"
-            style={{ transformOrigin: "140px 176px" }}
+            className="garden-motion-root garden-plant-dance"
+            style={{ transformOrigin: "140px 178px", transformBox: "fill-box" }}
           >
-            <path d="M140 176 C138 164 137 148 140 130" stroke="url(#gardenStem)" strokeWidth="3.2" strokeLinecap="round" fill="none" />
-          </g>
-          <g
-            className="garden-motion-root garden-branch-left"
-            style={{ transformOrigin: "140px 158px" }}
-          >
-            <path d="M140 158 C126 154 116 146 110 132" stroke="url(#gardenStem)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
-            <path d="M138 136 C124 130 114 118 108 104" stroke="url(#gardenStem)" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9" />
-          </g>
-          <g
-            className="garden-motion-root garden-branch-right"
-            style={{ transformOrigin: "141px 149px", animationDelay: "0.8s" }}
-          >
-            <path d="M141 149 C157 143 170 132 176 116" stroke="url(#gardenStem)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
-            <path d="M142 128 C155 122 164 112 170 100" stroke="url(#gardenStem)" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9" />
-          </g>
-          {gardenVisual.marks.map((mark, index) => (
             <g
-              key={`${mark.x}-${mark.y}-${index}`}
-              className="garden-motion-root garden-light"
-              style={{
-                animationDelay: `${index * 0.8}s`,
-                animationDuration: `${5.8 + index * 0.9}s`,
-                transformOrigin: `${mark.x}px ${mark.y}px`
-              } as CSSProperties}
+              className="garden-motion-root garden-stem-dance"
+              style={{ transformOrigin: "140px 176px", transformBox: "fill-box", animationDelay: "0.45s" }}
             >
-              <path
-                d={`M${mark.anchorX} ${mark.anchorY} Q${(mark.anchorX + mark.x) / 2} ${(mark.anchorY + mark.y) / 2 + 3} ${mark.x} ${mark.y + 1}`}
-                stroke="rgba(154,236,215,0.32)"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-                fill="none"
-              />
-              <circle
-                cx={mark.x}
-                cy={mark.y}
-                r={mark.radius + 6}
-                fill="url(#gardenLightHalo)"
-              />
-              <circle
-                cx={mark.x}
-                cy={mark.y}
-                r={mark.radius}
-                fill="url(#gardenLight)"
-              />
-              <circle cx={mark.x} cy={mark.y} r={Math.max(1.8, mark.radius - 2.2)} fill="rgba(250,250,244,0.92)" opacity="0.7" />
+              <path d="M140 176 C138 164 137 148 140 130" stroke="url(#gardenStem)" strokeWidth="3.2" strokeLinecap="round" fill="none" />
             </g>
-          ))}
+            <g
+              className="garden-motion-root garden-branch-left-dance"
+              style={{ transformOrigin: "140px 158px", transformBox: "fill-box", animationDelay: "-0.5s" }}
+            >
+              <path d="M140 158 C126 154 116 146 110 132" stroke="url(#gardenStem)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+              <path d="M138 136 C124 130 114 118 108 104" stroke="url(#gardenStem)" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9" />
+            </g>
+            <g
+              className="garden-motion-root garden-branch-right-dance"
+              style={{ transformOrigin: "141px 149px", transformBox: "fill-box", animationDelay: "0.9s" }}
+            >
+              <path d="M141 149 C157 143 170 132 176 116" stroke="url(#gardenStem)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+              <path d="M142 128 C155 122 164 112 170 100" stroke="url(#gardenStem)" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9" />
+            </g>
+            {gardenVisual.marks.map((mark, index) => (
+              <g
+                key={`${mark.x}-${mark.y}-${index}`}
+                className="garden-motion-root garden-light-breathe"
+                style={{
+                  animationDelay: `${index * 0.85}s`,
+                  animationDuration: `${4.8 + index * 1.15}s`,
+                  transformOrigin: `${mark.x}px ${mark.y}px`,
+                  transformBox: "fill-box"
+                } as CSSProperties}
+              >
+                <path
+                  d={`M${mark.anchorX} ${mark.anchorY} Q${(mark.anchorX + mark.x) / 2} ${(mark.anchorY + mark.y) / 2 + 3} ${mark.x} ${mark.y + 1}`}
+                  stroke="rgba(154,236,215,0.32)"
+                  strokeWidth="1.2"
+                  strokeLinecap="round"
+                  fill="none"
+                />
+                <circle
+                  cx={mark.x}
+                  cy={mark.y}
+                  r={mark.radius + 6}
+                  fill="url(#gardenLightHalo)"
+                />
+                <circle
+                  cx={mark.x}
+                  cy={mark.y}
+                  r={mark.radius}
+                  fill="url(#gardenLight)"
+                />
+                <circle cx={mark.x} cy={mark.y} r={Math.max(1.8, mark.radius - 2.2)} fill="rgba(250,250,244,0.92)" opacity="0.7" />
+              </g>
+            ))}
+          </g>
         </svg>
       </div>
     );
@@ -542,28 +548,36 @@ export function BasicHome({
           will-change: transform, opacity;
         }
 
+        .garden-plant-dance {
+          animation: gardenPlantDance 11.2s ease-in-out infinite alternate;
+        }
+
+        .garden-stem-dance {
+          animation: gardenStemDance 6.9s ease-in-out infinite alternate;
+        }
+
+        .garden-branch-left-dance {
+          animation: gardenBranchLeftDance 7.4s ease-in-out infinite alternate;
+        }
+
+        .garden-branch-right-dance {
+          animation: gardenBranchRightDance 8.9s ease-in-out infinite alternate;
+        }
+
+        .garden-light-breathe {
+          animation: gardenLightBreathe 5.8s ease-in-out infinite alternate;
+        }
+
+        .garden-ground-breathe {
+          animation: gardenGroundBreathe 11.2s ease-in-out infinite alternate;
+        }
+
         .garden-ground-shadow {
-          animation: gardenGroundBreath 11.6s ease-in-out infinite alternate;
+          opacity: 0.92;
         }
 
         .garden-ground-soil {
-          animation: gardenGroundBreath 10.8s ease-in-out infinite alternate;
-        }
-
-        .garden-stem {
-          animation: gardenStemSway 6.8s ease-in-out infinite alternate;
-        }
-
-        .garden-branch-left {
-          animation: gardenBranchLeft 7.6s ease-in-out infinite alternate;
-        }
-
-        .garden-branch-right {
-          animation: gardenBranchRight 8.8s ease-in-out infinite alternate;
-        }
-
-        .garden-light {
-          animation: gardenLightPulse 6.4s ease-in-out infinite alternate;
+          opacity: 0.98;
         }
 
         @keyframes gardenGlow {
@@ -571,39 +585,44 @@ export function BasicHome({
           50% { opacity: 0.82; transform: scale(1.04); }
         }
 
-        @keyframes gardenStemSway {
-          0% { transform: translate3d(-0.4px, 0, 0) rotate(-2deg); }
-          100% { transform: translate3d(0.8px, 0, 0) rotate(2deg); }
+        @keyframes gardenPlantDance {
+          0% { transform: translate3d(-0.7px, 0, 0) rotate(-1.5deg); }
+          100% { transform: translate3d(0.9px, 0, 0) rotate(1.5deg); }
         }
 
-        @keyframes gardenBranchLeft {
-          0% { transform: rotate(-2.5deg) translate3d(0, 0, 0); }
-          100% { transform: rotate(2.5deg) translate3d(-0.6px, -0.8px, 0); }
+        @keyframes gardenStemDance {
+          0% { transform: translate3d(-0.5px, 0, 0) rotate(-2deg); }
+          100% { transform: translate3d(0.9px, 0, 0) rotate(2deg); }
         }
 
-        @keyframes gardenBranchRight {
-          0% { transform: rotate(3deg) translate3d(0.2px, 0, 0); }
-          100% { transform: rotate(-3deg) translate3d(0.8px, -1px, 0); }
+        @keyframes gardenBranchLeftDance {
+          0% { transform: rotate(-3deg) translate3d(0, 0, 0); }
+          100% { transform: rotate(3deg) translate3d(-0.7px, -0.9px, 0); }
         }
 
-        @keyframes gardenLightPulse {
-          0% { transform: translate3d(0, 1px, 0) scale(0.92); opacity: 0.55; }
-          100% { transform: translate3d(0, -1px, 0) scale(1.08); opacity: 1; }
+        @keyframes gardenBranchRightDance {
+          0% { transform: rotate(3.5deg) translate3d(0.3px, 0, 0); }
+          100% { transform: rotate(-3.5deg) translate3d(0.95px, -1px, 0); }
         }
 
-        @keyframes gardenGroundBreath {
-          0% { transform: scale(0.985); opacity: 0.9; }
+        @keyframes gardenLightBreathe {
+          0% { transform: translate3d(0, 1.2px, 0) scale(0.92); opacity: 0.55; }
+          100% { transform: translate3d(0, -1.2px, 0) scale(1.08); opacity: 1; }
+        }
+
+        @keyframes gardenGroundBreathe {
+          0% { transform: scale(0.98); opacity: 0.88; }
           100% { transform: scale(1.02); opacity: 1; }
         }
 
         @media (prefers-reduced-motion: reduce) {
           .garden-glow,
-          .garden-ground-shadow,
-          .garden-ground-soil,
-          .garden-stem,
-          .garden-branch-left,
-          .garden-branch-right,
-          .garden-light {
+          .garden-plant-dance,
+          .garden-stem-dance,
+          .garden-branch-left-dance,
+          .garden-branch-right-dance,
+          .garden-light-breathe,
+          .garden-ground-breathe {
             animation: none !important;
           }
         }
