@@ -539,7 +539,7 @@ export function BasicHome({
       </section>
       <section
         data-basic-recommendation
-        className="rounded-[28px] border border-[rgba(216,192,138,0.16)] bg-[radial-gradient(circle_at_84%_10%,rgba(216,192,138,0.12),transparent_28%),radial-gradient(circle_at_18%_0%,rgba(127,255,212,0.10),transparent_32%),linear-gradient(180deg,rgba(8,40,69,0.80),rgba(6,27,51,0.92)_58%,rgba(5,18,34,0.98))] px-4 py-[1.35rem] shadow-[0_22px_58px_rgba(0,0,0,0.18)] sm:px-6 sm:py-[1.55rem]"
+        className="rounded-[28px] border border-[rgba(216,192,138,0.16)] bg-[radial-gradient(circle_at_84%_10%,rgba(216,192,138,0.12),transparent_28%),radial-gradient(circle_at_18%_0%,rgba(127,255,212,0.10),transparent_32%),linear-gradient(180deg,rgba(8,40,69,0.80),rgba(6,27,51,0.92)_58%,rgba(5,18,34,0.98))] px-4 py-5 shadow-[0_22px_58px_rgba(0,0,0,0.18)] sm:px-6 sm:py-[1.45rem]"
       >
         <div className="max-w-2xl">
           <p className="text-xs uppercase tracking-[0.28em] text-[rgba(216,192,138,0.74)]">{copy.recommendationLabel}</p>
@@ -551,13 +551,13 @@ export function BasicHome({
             <p className="mt-1.5 text-[13px] leading-5 text-[rgba(233,242,248,0.58)] sm:text-sm sm:leading-6">{copy.recommendationSourceFallback}</p>
           ) : null}
         </div>
-        <nav aria-label={copy.recommendationTitle} className="mt-3.5 sm:mt-[18px]">
+        <nav aria-label={copy.recommendationTitle} className="mt-3 sm:mt-4">
           <div className="hidden md:block">
             <div
               data-basic-gate-dock="desktop"
               className="overflow-hidden rounded-[19px] border border-white/[0.11] bg-[linear-gradient(180deg,rgba(255,255,255,0.034),rgba(255,255,255,0.016))] shadow-[0_16px_42px_rgba(0,0,0,0.16)]"
             >
-              <div className="grid min-h-[78px] grid-cols-3">
+              <div className="grid min-h-[76px] grid-cols-3">
                 {gates.map((gate, index) => {
                   const isRecommended = gate.key === currentGateKey;
                   const href = getBasicGateShortcutHref(gate.key);
@@ -574,7 +574,7 @@ export function BasicHome({
                       onClick={(event) => handleGateCardClick(event, gate.key, href)}
                       aria-busy={isPending}
                       aria-disabled={anotherPending}
-                      className={`group relative flex min-w-0 items-center gap-3 px-[18px] py-3.5 text-left transition-[transform,border-color,background-color,box-shadow,opacity] duration-150 ease-out focus-visible:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[rgba(216,192,138,0.72)] active:translate-y-[1px] motion-reduce:transform-none motion-reduce:transition-none ${index < gates.length - 1 ? "border-r border-white/[0.09]" : ""} ${isRecommended ? "bg-[linear-gradient(180deg,rgba(216,192,138,0.11),rgba(255,255,255,0.035))] shadow-[inset_0_1px_0_rgba(255,245,221,0.16)]" : "bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"} ${anotherPending ? "cursor-wait opacity-60" : "hover:-translate-y-px hover:border-white/[0.14] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.026))] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"}`}
+                      className={`group relative flex min-w-0 items-center gap-3 px-[18px] py-[13px] text-left transition-[transform,border-color,background-color,box-shadow,opacity] duration-150 ease-out focus-visible:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[rgba(216,192,138,0.72)] active:translate-y-[1px] motion-reduce:transform-none motion-reduce:transition-none ${index < gates.length - 1 ? "border-r border-white/[0.09]" : ""} ${isRecommended ? "bg-[linear-gradient(180deg,rgba(216,192,138,0.11),rgba(255,255,255,0.035))] shadow-[inset_0_1px_0_rgba(255,245,221,0.16)]" : "bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"} ${anotherPending ? "cursor-wait opacity-60" : "hover:-translate-y-px hover:border-white/[0.14] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.026))] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"}`}
                     >
                       <div className="min-w-0 flex-1">
                         <div className="flex min-w-0 items-center gap-2">
@@ -617,7 +617,7 @@ export function BasicHome({
                     onClick={(event) => handleGateCardClick(event, gate.key, href)}
                     aria-busy={isPending}
                     aria-disabled={anotherPending}
-                    className={`group relative flex min-h-[90px] min-w-0 items-center gap-3 overflow-hidden rounded-[16px] border border-[rgba(216,192,138,0.22)] bg-[linear-gradient(180deg,rgba(216,192,138,0.12),rgba(255,255,255,0.036))] px-[15px] py-[11px] shadow-[0_16px_38px_rgba(0,0,0,0.16),inset_0_1px_0_rgba(255,245,221,0.16)] transition-[transform,border-color,background-color,box-shadow,opacity] duration-150 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(216,192,138,0.72)] active:translate-y-[1px] motion-reduce:transform-none motion-reduce:transition-none ${anotherPending ? "cursor-wait opacity-60" : "hover:-translate-y-px hover:border-[rgba(216,192,138,0.34)] hover:bg-[linear-gradient(180deg,rgba(216,192,138,0.15),rgba(255,255,255,0.048))]"}`}
+                    className={`group relative flex min-h-[86px] min-w-0 items-center gap-3 overflow-hidden rounded-[16px] border border-[rgba(216,192,138,0.22)] bg-[linear-gradient(180deg,rgba(216,192,138,0.12),rgba(255,255,255,0.036))] px-[15px] py-[10px] shadow-[0_16px_38px_rgba(0,0,0,0.16),inset_0_1px_0_rgba(255,245,221,0.16)] transition-[transform,border-color,background-color,box-shadow,opacity] duration-150 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(216,192,138,0.72)] active:translate-y-[1px] motion-reduce:transform-none motion-reduce:transition-none ${anotherPending ? "cursor-wait opacity-60" : "hover:-translate-y-px hover:border-[rgba(216,192,138,0.34)] hover:bg-[linear-gradient(180deg,rgba(216,192,138,0.15),rgba(255,255,255,0.048))]"}`}
                   >
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 text-[10px] leading-none text-[rgba(244,234,209,0.82)]">

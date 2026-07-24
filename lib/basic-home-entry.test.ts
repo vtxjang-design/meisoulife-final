@@ -54,6 +54,7 @@ const basicHomeSource = readFileSync(new URL("../components/basic-home.tsx", imp
 const basicProgramPageSource = readFileSync(new URL("../app/program/basic/page.tsx", import.meta.url), "utf8");
 const basicRhythmSourceForAssertions = readFileSync(new URL("./basic-rhythm.ts", import.meta.url), "utf8");
 const siteHeaderSource = readFileSync(new URL("../components/site-header.tsx", import.meta.url), "utf8");
+const globalsCssSource = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
 
 process.on("exit", () => {
   rmSync(tempDir, { recursive: true, force: true });
@@ -247,6 +248,12 @@ test("mobile alternative gate layout stacks below 400px and avoids truncating of
   );
 });
 
+test("gate dock keeps the refined compact height targets on desktop and mobile", () => {
+  assert.match(basicHomeSource, /className="grid min-h-\[76px\] grid-cols-3"/);
+  assert.match(basicHomeSource, /className=\{`group relative flex min-h-\[86px\] min-w-0 items-center gap-3 overflow-hidden rounded-\[16px\]/);
+  assert.match(basicHomeSource, /className=\{`group relative flex min-h-\[54px\] min-w-0 items-center gap-2 rounded-\[14px\]/);
+});
+
 test("compact gate dock removes long descriptions while detailed BASIC Rhythm descriptions remain below", () => {
   const recommendationSection = basicHomeSource.slice(
     basicHomeSource.indexOf('data-basic-recommendation'),
@@ -293,4 +300,15 @@ test("program basic hides the duplicate mobile tab row while preserving the hamb
   assert.match(siteHeaderSource, /const hideMobileTabs = pathname === "\/program\/basic"/);
   assert.match(siteHeaderSource, /<div className=\{cn\("lg:hidden", hideMobileTabs && "hidden"\)\}>/);
   assert.match(siteHeaderSource, /const mobileDropdownLinks = useMemo/);
+});
+
+test("garden motion styles remain present and respect reduced motion", () => {
+  assert.match(globalsCssSource, /\.garden-plant-dance\s*\{/);
+  assert.match(globalsCssSource, /animation:\s*gardenPlantDance 11\.2s ease-in-out infinite alternate;/);
+  assert.match(globalsCssSource, /animation:\s*gardenStemDance 6\.9s ease-in-out infinite alternate;/);
+  assert.match(globalsCssSource, /animation:\s*gardenBranchLeftDance 7\.4s ease-in-out infinite alternate;/);
+  assert.match(globalsCssSource, /animation:\s*gardenBranchRightDance 8\.9s ease-in-out infinite alternate;/);
+  assert.match(globalsCssSource, /animation:\s*gardenLightBreathe 5\.8s ease-in-out infinite alternate;/);
+  assert.match(globalsCssSource, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.match(globalsCssSource, /\.garden-glow,\s*[\s\S]*?\.garden-ground-breathe\s*\{\s*animation:\s*none !important;/);
 });
