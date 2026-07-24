@@ -215,9 +215,56 @@ test("garden copy and source do not invent percentages or named growth stages", 
 });
 
 test("recommended gate uses the dedicated recommendation marker and keeps the same route helper", () => {
-  assert.match(basicHomeSource, /data-basic-recommendation-primary=\{isRecommended \? "true" : undefined\}/);
+  assert.match(basicHomeSource, /data-basic-recommendation-primary="true"/);
   assert.match(basicHomeSource, /router\.prefetch\(getBasicGateShortcutHref\(gate\.key\)\)/);
   assert.match(basicHomeSource, /handleGateCardClick\(event, gate\.key, href\)/);
+});
+
+test("compact gate dock keeps exactly three high-level gate options with the existing routes", () => {
+  assert.match(basicHomeSource, /data-basic-gate-dock="desktop"/);
+  assert.match(basicHomeSource, /data-basic-gate-dock="mobile"/);
+  assert.match(basicHomeSource, /data-basic-gate-dock-segment=\{gate\.key\}/);
+  assert.match(basicHomeSource, /data-basic-gate-dock-primary=\{gate\.key\}/);
+  assert.match(basicHomeSource, /data-basic-gate-dock-alternative=\{gate\.key\}/);
+  assert.match(basicHomeSource, /getBasicGateShortcutHref\(gate\.key\)/);
+  assert.equal(getBasicGateShortcutHref("morning"), "/program/basic?rhythm=morning#gate-morning");
+  assert.equal(getBasicGateShortcutHref("daytime"), "/program/basic?rhythm=daytime#gate-daytime");
+  assert.equal(getBasicGateShortcutHref("evening"), "/program/basic?rhythm=evening#gate-evening");
+});
+
+test("desktop gate dock preserves chronological order while mobile keeps recommendation-first alternatives", () => {
+  assert.match(basicHomeSource, /data-basic-gate-order=\{index\}/);
+  assert.match(basicHomeSource, /const alternativeGateKeys = useMemo\(\(\) => getAlternativeBasicGateKeys\(currentGateKey\), \[currentGateKey\]\)/);
+  assert.match(basicHomeSource, /gates\s*\.filter\(\(gate\) => gate\.key === currentGateKey\)/);
+  assert.match(basicHomeSource, /alternativeGateKeys\.map\(\(gateKey\) => \{/);
+});
+
+test("compact gate dock removes long descriptions while detailed BASIC Rhythm descriptions remain below", () => {
+  const recommendationSection = basicHomeSource.slice(
+    basicHomeSource.indexOf('data-basic-recommendation'),
+    basicHomeSource.indexOf('data-basic-course')
+  );
+
+  assert.doesNotMatch(recommendationSection, /copy\.gateSummaries\[gate\.key\]/);
+  assert.doesNotMatch(recommendationSection, /copy\.gateSummaries\[gateKey\]/);
+  assert.match(basicHomeSource, /<p className="mt-2 text-sm leading-6 text-\[rgba\(242,248,252,0\.78\)\]">\{copy\.gateSummaries\[gate\.key\]\}<\/p>/);
+});
+
+test("compact gate dock keeps one interactive element per option with no nested button", () => {
+  const recommendationSection = basicHomeSource.slice(
+    basicHomeSource.indexOf('data-basic-recommendation'),
+    basicHomeSource.indexOf('data-basic-course')
+  );
+
+  assert.doesNotMatch(recommendationSection, /<button/);
+  assert.match(recommendationSection, /<Link/);
+  assert.match(recommendationSection, /aria-disabled=\{anotherPending\}/);
+});
+
+test("localized recommendation copy remains available in JP KR and EN", () => {
+  assert.match(basicHomeSource, /recommendationBadge: "今のおすすめ"/);
+  assert.match(basicHomeSource, /recommendationBadge: "지금의 추천"/);
+  assert.match(basicHomeSource, /recommendationBadge: "Recommended now"/);
 });
 
 test("daytime gate label no longer uses the sun emoji", () => {

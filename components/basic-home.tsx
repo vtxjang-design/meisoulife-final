@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState, type CSSProperties, type MouseEvent } from "react";
 import { useLanguage } from "@/lib/i18n";
 import {
+  getAlternativeBasicGateKeys,
   getBasicGardenCountMessage,
   getBasicGardenMeaningLine,
   getBasicGardenVisualModel,
@@ -236,6 +237,7 @@ export function BasicHome({
     localTimeGate
   });
   const currentGateKey = recommendation.gate;
+  const alternativeGateKeys = useMemo(() => getAlternativeBasicGateKeys(currentGateKey), [currentGateKey]);
   const [pendingGateKey, setPendingGateKey] = useState<BasicGateKey | null>(null);
   const fallbackPlan =
     membershipSummary?.currentPlan && membershipSummary.currentPlan !== "free" ? membershipSummary.currentPlan : "basic";
@@ -537,11 +539,11 @@ export function BasicHome({
       </section>
       <section
         data-basic-recommendation
-        className="rounded-[28px] border border-[rgba(216,192,138,0.16)] bg-[radial-gradient(circle_at_84%_10%,rgba(216,192,138,0.12),transparent_28%),radial-gradient(circle_at_18%_0%,rgba(127,255,212,0.10),transparent_32%),linear-gradient(180deg,rgba(8,40,69,0.80),rgba(6,27,51,0.92)_58%,rgba(5,18,34,0.98))] px-4 py-4 shadow-[0_22px_58px_rgba(0,0,0,0.18)] sm:px-6 sm:py-6"
+        className="rounded-[28px] border border-[rgba(216,192,138,0.16)] bg-[radial-gradient(circle_at_84%_10%,rgba(216,192,138,0.12),transparent_28%),radial-gradient(circle_at_18%_0%,rgba(127,255,212,0.10),transparent_32%),linear-gradient(180deg,rgba(8,40,69,0.80),rgba(6,27,51,0.92)_58%,rgba(5,18,34,0.98))] px-4 py-4 shadow-[0_22px_58px_rgba(0,0,0,0.18)] sm:px-6 sm:py-5"
       >
         <div className="max-w-2xl">
           <p className="text-xs uppercase tracking-[0.28em] text-[rgba(216,192,138,0.74)]">{copy.recommendationLabel}</p>
-          <h2 className="mt-2 font-serif text-[1.28rem] leading-[1.18] text-[rgba(244,250,255,0.95)] sm:text-[1.85rem]">
+          <h2 className="mt-1.5 font-serif text-[1.28rem] leading-[1.18] text-[rgba(244,250,255,0.95)] sm:mt-2 sm:text-[1.85rem]">
             {copy.recommendationTitle}
           </h2>
           <p className="mt-2 text-[13px] leading-5.5 text-[rgba(233,242,248,0.76)] sm:text-[15px] sm:leading-6">{copy.recommendationBody}</p>
@@ -549,55 +551,131 @@ export function BasicHome({
             <p className="mt-1.5 text-[13px] leading-5 text-[rgba(233,242,248,0.58)] sm:text-sm sm:leading-6">{copy.recommendationSourceFallback}</p>
           ) : null}
         </div>
-        <nav aria-label={copy.recommendationTitle} className="mt-5 sm:mt-6">
-          <div className="grid gap-2.5 md:grid-cols-3 md:gap-3.5 lg:gap-4">
-            {gates.map((gate) => {
-              const isRecommended = gate.key === currentGateKey;
-              const href = getBasicGateShortcutHref(gate.key);
-              const isPending = pendingGateKey === gate.key;
-              const mobileOrderClass = isRecommended ? "order-first md:order-none" : "";
-              const sizeClass = isRecommended
-                ? "min-h-[126px] md:min-h-[146px]"
-                : "min-h-[96px] md:min-h-[146px]";
+        <nav aria-label={copy.recommendationTitle} className="mt-4 sm:mt-5">
+          <div className="hidden md:block">
+            <div
+              data-basic-gate-dock="desktop"
+              className="overflow-hidden rounded-[20px] border border-white/[0.09] bg-[linear-gradient(180deg,rgba(255,255,255,0.038),rgba(255,255,255,0.018))] shadow-[0_18px_46px_rgba(0,0,0,0.16)]"
+            >
+              <div className="grid min-h-[80px] grid-cols-3">
+                {gates.map((gate, index) => {
+                  const isRecommended = gate.key === currentGateKey;
+                  const href = getBasicGateShortcutHref(gate.key);
+                  const isPending = pendingGateKey === gate.key;
+                  const anotherPending = pendingGateKey !== null && !isPending;
 
-              return (
-                <Link
-                  key={gate.key}
-                  data-basic-recommendation-primary={isRecommended ? "true" : undefined}
-                  href={href}
-                  onClick={(event) => handleGateCardClick(event, gate.key, href)}
-                  aria-busy={isPending}
-                  className={`${getGateCardClasses(gate.key, isRecommended, isPending)} ${mobileOrderClass} ${sizeClass}`}
-                >
-                  <div className="flex h-full flex-col">
-                    <div className="min-h-[1.45rem] sm:min-h-[1.65rem]">
-                      {isRecommended ? (
-                        <span className="inline-flex min-h-[24px] items-center rounded-full border border-[rgba(216,192,138,0.22)] bg-[rgba(216,192,138,0.09)] px-2 py-0.5 text-[10px] font-medium tracking-[0.12em] text-[rgba(244,234,209,0.88)] sm:min-h-[26px] sm:px-2.5 sm:text-[11px]">
-                          {copy.recommendationBadge}
-                        </span>
-                      ) : null}
-                    </div>
-                    <div className="mt-1.5 flex items-start justify-between gap-3 sm:mt-2">
-                      <div className="min-w-0">
-                        <p className="text-[10px] uppercase tracking-[0.24em] text-[rgba(127,255,212,0.66)] sm:text-[11px]">{gate.eyebrow}</p>
-                        <h3 className={`mt-1.5 font-semibold leading-tight ${isRecommended ? "text-[1.18rem] text-[rgba(244,250,255,0.97)] sm:text-[1.42rem]" : "text-[1.08rem] text-[rgba(244,250,255,0.94)] sm:text-[1.34rem]"}`}>
-                          {gate.title}
-                        </h3>
+                  return (
+                    <Link
+                      key={gate.key}
+                      data-basic-gate-dock-segment={gate.key}
+                      data-basic-gate-order={index}
+                      data-basic-recommendation-primary={isRecommended ? "true" : undefined}
+                      href={href}
+                      onClick={(event) => handleGateCardClick(event, gate.key, href)}
+                      aria-busy={isPending}
+                      aria-disabled={anotherPending}
+                      className={`group relative flex min-w-0 items-center gap-3 px-5 py-4 text-left transition-[transform,border-color,background-color,box-shadow,opacity] duration-150 ease-out focus-visible:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[rgba(216,192,138,0.72)] active:translate-y-[1px] motion-reduce:transform-none motion-reduce:transition-none ${index < gates.length - 1 ? "border-r border-white/[0.06]" : ""} ${isRecommended ? "bg-[linear-gradient(180deg,rgba(216,192,138,0.11),rgba(255,255,255,0.035))] shadow-[inset_0_1px_0_rgba(255,245,221,0.16)]" : "bg-[linear-gradient(180deg,rgba(255,255,255,0.025),rgba(255,255,255,0.014))] shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"} ${anotherPending ? "cursor-wait opacity-60" : "hover:-translate-y-px hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.055),rgba(255,255,255,0.024))] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.10)]"}`}
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="flex min-w-0 items-center gap-2">
+                          {isRecommended ? <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[rgba(244,234,209,0.82)]" /> : null}
+                          <p className={`truncate text-[10px] uppercase tracking-[0.22em] ${isRecommended ? "text-[rgba(244,234,209,0.8)]" : "text-[rgba(127,255,212,0.66)]"}`}>
+                            {isRecommended ? `${copy.recommendationBadge} · ${gate.eyebrow}` : gate.eyebrow}
+                          </p>
+                        </div>
+                        <p className="mt-1.5 truncate text-[1.02rem] font-semibold leading-tight text-[rgba(244,250,255,0.96)]">
+                          {isPending ? copy.movingToGate : gate.title}
+                        </p>
                       </div>
                       <span
                         aria-hidden="true"
-                        className={`mt-[2px] shrink-0 text-[15px] leading-none text-[rgba(244,234,209,0.78)] transition-transform duration-150 ${isPending ? "translate-x-0 opacity-72" : "group-hover:translate-x-[3px]"}`}
+                        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-sm leading-none transition-[transform,background-color,border-color,color,opacity] duration-150 ${isRecommended ? "border-[rgba(216,192,138,0.28)] bg-[rgba(216,192,138,0.14)] text-[rgba(244,234,209,0.92)]" : "border-white/[0.1] bg-white/[0.04] text-[rgba(225,255,247,0.74)]"} ${anotherPending ? "opacity-55" : "group-hover:translate-x-[2px]"}`}
                       >
                         →
                       </span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          <div data-basic-gate-dock="mobile" className="space-y-2.5 md:hidden">
+            {gates
+              .filter((gate) => gate.key === currentGateKey)
+              .map((gate) => {
+                const href = getBasicGateShortcutHref(gate.key);
+                const isPending = pendingGateKey === gate.key;
+                const anotherPending = pendingGateKey !== null && !isPending;
+
+                return (
+                  <Link
+                    key={gate.key}
+                    data-basic-gate-dock-primary={gate.key}
+                    data-basic-recommendation-primary="true"
+                    href={href}
+                    onClick={(event) => handleGateCardClick(event, gate.key, href)}
+                    aria-busy={isPending}
+                    aria-disabled={anotherPending}
+                    className={`group relative flex min-h-[76px] min-w-0 items-center gap-3 overflow-hidden rounded-[16px] border border-[rgba(216,192,138,0.22)] bg-[linear-gradient(180deg,rgba(216,192,138,0.12),rgba(255,255,255,0.036))] px-4 py-3 shadow-[0_18px_42px_rgba(0,0,0,0.16),inset_0_1px_0_rgba(255,245,221,0.16)] transition-[transform,border-color,background-color,box-shadow,opacity] duration-150 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(216,192,138,0.72)] active:translate-y-[1px] motion-reduce:transform-none motion-reduce:transition-none ${anotherPending ? "cursor-wait opacity-60" : "hover:-translate-y-px hover:border-[rgba(216,192,138,0.34)] hover:bg-[linear-gradient(180deg,rgba(216,192,138,0.15),rgba(255,255,255,0.048))]"}`}
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 text-[10px] leading-none text-[rgba(244,234,209,0.82)]">
+                        <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[rgba(244,234,209,0.86)]" />
+                        <span className="truncate">{`${copy.recommendationBadge} · ${gate.eyebrow}`}</span>
+                      </div>
+                      <p className="mt-2 truncate text-[1.08rem] font-semibold leading-tight text-[rgba(244,250,255,0.97)]">
+                        {isPending ? copy.movingToGate : gate.title}
+                      </p>
                     </div>
-                    <p className={`mt-2 max-w-[26ch] text-[13px] text-[rgba(233,242,248,0.74)] ${isRecommended ? "leading-5" : "leading-[1.35] md:leading-5"}`}>
-                      {isPending ? copy.movingToGate : copy.gateSummaries[gate.key]}
-                    </p>
-                  </div>
-                </Link>
-              );
-            })}
+                    <span
+                      aria-hidden="true"
+                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[rgba(216,192,138,0.3)] bg-[rgba(216,192,138,0.14)] text-[rgba(244,234,209,0.92)] transition-[transform,opacity] duration-150 ${anotherPending ? "opacity-55" : "group-hover:translate-x-[2px]"}`}
+                    >
+                      →
+                    </span>
+                  </Link>
+                );
+              })}
+
+            <div className="grid grid-cols-2 gap-2">
+              {alternativeGateKeys.map((gateKey) => {
+                const gate = gates.find((entry) => entry.key === gateKey);
+
+                if (!gate) {
+                  return null;
+                }
+
+                const href = getBasicGateShortcutHref(gate.key);
+                const isPending = pendingGateKey === gate.key;
+                const anotherPending = pendingGateKey !== null && !isPending;
+
+                return (
+                  <Link
+                    key={gate.key}
+                    data-basic-gate-dock-alternative={gate.key}
+                    href={href}
+                    onClick={(event) => handleGateCardClick(event, gate.key, href)}
+                    aria-busy={isPending}
+                    aria-disabled={anotherPending}
+                    className={`group relative flex min-h-[52px] min-w-0 items-center gap-2.5 rounded-[14px] border px-3 py-2.5 transition-[transform,border-color,background-color,box-shadow,opacity] duration-150 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(216,192,138,0.68)] active:translate-y-[1px] motion-reduce:transform-none motion-reduce:transition-none ${anotherPending ? "cursor-wait border-white/[0.08] bg-white/[0.02] opacity-60" : "border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] hover:-translate-y-px hover:border-white/[0.15] hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.058),rgba(255,255,255,0.028))]"}`}
+                  >
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-[10px] uppercase tracking-[0.18em] text-[rgba(127,255,212,0.62)]">{gate.eyebrow}</p>
+                      <p className="mt-1 truncate text-[0.95rem] font-medium leading-tight text-[rgba(244,250,255,0.94)]">
+                        {isPending ? copy.movingToGate : gate.title}
+                      </p>
+                    </div>
+                    <span
+                      aria-hidden="true"
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/[0.1] bg-white/[0.04] text-[13px] text-[rgba(225,255,247,0.74)] transition-[transform,opacity] duration-150 ${anotherPending ? "opacity-55" : "group-hover:translate-x-[2px]"}`}
+                    >
+                      →
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </nav>
       </section>
