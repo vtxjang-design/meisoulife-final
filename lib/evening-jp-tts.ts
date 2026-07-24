@@ -52,7 +52,7 @@ export const JAPANESE_RELEASE_GATE_NARRATION: JapaneseEveningNarrationLine[] = [
     at: 40,
     key: "release-3",
     text: "今日という 一日は、\nいろいろな時間が\nあったことでしょう",
-    speechText: "きょうという いちにちは、\nいろいろな時間が\nあったことでしょう。",
+    speechText: "きょうという、いちにちは、\nいろいろな時間が\nあったことでしょう。",
     speechDelayMs: 940
   },
   {
@@ -80,14 +80,14 @@ export const JAPANESE_RELEASE_GATE_NARRATION: JapaneseEveningNarrationLine[] = [
     at: 122,
     key: "release-7",
     text: "今日終わらなかったことは、\n明日のあなたに\n任せても大丈夫です",
-    speechText: "きょう終わらなかったことは、\n明日のあなたに、\n任せても大丈夫です。",
+    speechText: "きょう終わらなかったことは、\nあしたのあなたに、\n任せても大丈夫です。",
     speechDelayMs: 1020
   },
   {
     at: 136,
     key: "release-8",
     text: "何も\n頑張らなくて\n大丈夫です",
-    speechText: "何も、\n頑張らなくて\n大丈夫です。",
+    speechText: "なにも、\nがんばらなくて\nだいじょうぶです。",
     speechDelayMs: 1020
   },
   {
@@ -132,18 +132,18 @@ export const JAPANESE_GRATITUDE_GATE_NARRATION: JapaneseEveningNarrationLine[] =
     at: 44,
     key: "gratitude-3",
     text: "近すぎて、\n気づかなかった\nあたたかさが\nあったかもしれません",
-    speechText: "ちかすぎて、\n気づかなかった\nあたたかさが、\nあったかもしれません。",
+    speechText: "ちかすぎて、\n気づかなかった\nあたたかさが、\nあったのかもしれません。",
     speechDelayMs: 1020
   },
   { at: 60, key: "gratitude-4", text: "空気", speechText: "空気。", speechDelayMs: 1060 },
   { at: 68, key: "gratitude-5", text: "日差し", speechText: "ひざし。", speechDelayMs: 1060 },
   { at: 76, key: "gratitude-6", text: "風", speechText: "風。", speechDelayMs: 1060 },
-  { at: 84, key: "gratitude-7", text: "自然の香り", speechText: "自然の香り。", speechDelayMs: 1080 },
+  { at: 84, key: "gratitude-7", text: "自然の香り", speechText: "しぜんのかおり。", speechDelayMs: 1080 },
   {
     at: 100,
     key: "gratitude-8",
     text: "今日、\n当たり前すぎて\n見過ごしていたものは\nありませんでしたか",
-    speechText: "きょう、\n当たり前すぎて、\n見過ごしていたものは\nありませんでしたか。",
+    speechText: "きょう、\nあたりまえすぎて、\nみすごしていたものは\nありませんでしたか。",
     speechDelayMs: 1040
   },
   {
@@ -154,7 +154,7 @@ export const JAPANESE_GRATITUDE_GATE_NARRATION: JapaneseEveningNarrationLine[] =
     speechDelayMs: 1040
   },
   { at: 132, key: "gratitude-10", text: "家族", speechText: "家族。", speechDelayMs: 1080 },
-  { at: 139, key: "gratitude-11", text: "友人", speechText: "友人。", speechDelayMs: 1080 },
+  { at: 139, key: "gratitude-11", text: "友人", speechText: "ゆうじん。", speechDelayMs: 1080 },
   { at: 146, key: "gratitude-12", text: "仲間", speechText: "仲間。", speechDelayMs: 1080 },
   {
     at: 156,
@@ -167,7 +167,7 @@ export const JAPANESE_GRATITUDE_GATE_NARRATION: JapaneseEveningNarrationLine[] =
     at: 170,
     key: "gratitude-14",
     text: "今日も...\nたくさんの贈りものの中で\n生きていました",
-    speechText: "今日も…\nたくさんの贈りものの中で\n生きていました。",
+    speechText: "今日も…\nたくさんの贈りものの中で、\n生きていました。",
     speechDelayMs: 1080
   },
   {
@@ -198,14 +198,14 @@ export const JAPANESE_SLEEP_GATE_NARRATION: JapaneseEveningNarrationLine[] = [
     at: 50,
     key: "sleep-3",
     text: "呼吸は...\nそのままで\n大丈夫です",
-    speechText: "呼吸は…\nそのままで\n大丈夫です。",
+    speechText: "呼吸は…\nそのままで、\n大丈夫です。",
     speechDelayMs: 1080
   },
   {
     at: 72,
     key: "sleep-2",
     text: "もう...\n何もしなくて\n大丈夫です",
-    speechText: "もう…\n何もしなくて\n大丈夫です。",
+    speechText: "もう…\nなにもしなくて\nだいじょうぶです。",
     speechDelayMs: 1100
   }
 ];
@@ -273,7 +273,7 @@ export function getJapaneseEveningSpeechSettings(gate: EveningGateKind): Japanes
     case "release":
       return {
         lang: "ja-JP",
-        rate: 0.8,
+        rate: 0.79,
         pitch: 0.85,
         volume: 0.84,
         preferredNames: JAPANESE_EVENING_PREFERRED_NAMES
@@ -289,7 +289,7 @@ export function getJapaneseEveningSpeechSettings(gate: EveningGateKind): Japanes
     case "sleep":
       return {
         lang: "ja-JP",
-        rate: 0.76,
+        rate: 0.74,
         pitch: 0.82,
         volume: 0.78,
         preferredNames: JAPANESE_EVENING_PREFERRED_NAMES

@@ -5,6 +5,7 @@ import {
   getJapaneseEveningSpeechSettings,
   isJapaneseSpeechLocale,
   JAPANESE_EVENING_PREFERRED_NAMES,
+  JAPANESE_RELEASE_GATE_NARRATION,
   JAPANESE_GRATITUDE_GATE_NARRATION,
   JAPANESE_SLEEP_GATE_NARRATION,
   pickJapaneseEveningVoice,
@@ -101,7 +102,7 @@ test("createJapaneseEveningVoiceSession provides a safe fallback when voices are
 test("Japanese evening settings use conservative natural pacing ranges", () => {
   assert.deepEqual(getJapaneseEveningSpeechSettings("release"), {
     lang: "ja-JP",
-    rate: 0.8,
+    rate: 0.79,
     pitch: 0.85,
     volume: 0.84,
     preferredNames: JAPANESE_EVENING_PREFERRED_NAMES
@@ -115,21 +116,43 @@ test("Japanese evening settings use conservative natural pacing ranges", () => {
   });
   assert.deepEqual(getJapaneseEveningSpeechSettings("sleep"), {
     lang: "ja-JP",
-    rate: 0.76,
+    rate: 0.74,
     pitch: 0.82,
     volume: 0.78,
     preferredNames: JAPANESE_EVENING_PREFERRED_NAMES
   });
 });
 
+test("Japanese Release narration uses safer spoken readings while preserving display text", () => {
+  const dayLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-3");
+  const tomorrowLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-7");
+  const effortLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-8");
+
+  assert.equal(dayLine?.text, "今日という 一日は、\nいろいろな時間が\nあったことでしょう");
+  assert.equal(dayLine?.speechText, "きょうという、いちにちは、\nいろいろな時間が\nあったことでしょう。");
+  assert.equal(tomorrowLine?.text, "今日終わらなかったことは、\n明日のあなたに\n任せても大丈夫です");
+  assert.equal(tomorrowLine?.speechText, "きょう終わらなかったことは、\nあしたのあなたに、\n任せても大丈夫です。");
+  assert.equal(effortLine?.text, "何も\n頑張らなくて\n大丈夫です");
+  assert.equal(effortLine?.speechText, "なにも、\nがんばらなくて\nだいじょうぶです。");
+});
+
 test("Japanese Gratitude narration keeps display text while providing safer spoken readings", () => {
   const warmthLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-3");
   const sunlightLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-5");
+  const scentLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-7");
+  const ordinaryLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-8");
+  const friendLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-11");
 
   assert.equal(warmthLine?.text, "近すぎて、\n気づかなかった\nあたたかさが\nあったかもしれません");
-  assert.equal(warmthLine?.speechText, "ちかすぎて、\n気づかなかった\nあたたかさが、\nあったかもしれません。");
+  assert.equal(warmthLine?.speechText, "ちかすぎて、\n気づかなかった\nあたたかさが、\nあったのかもしれません。");
   assert.equal(sunlightLine?.text, "日差し");
   assert.equal(sunlightLine?.speechText, "ひざし。");
+  assert.equal(scentLine?.text, "自然の香り");
+  assert.equal(scentLine?.speechText, "しぜんのかおり。");
+  assert.equal(ordinaryLine?.text, "今日、\n当たり前すぎて\n見過ごしていたものは\nありませんでしたか");
+  assert.equal(ordinaryLine?.speechText, "きょう、\nあたりまえすぎて、\nみすごしていたものは\nありませんでしたか。");
+  assert.equal(friendLine?.text, "友人");
+  assert.equal(friendLine?.speechText, "ゆうじん。");
 });
 
 test("Japanese Sleep narration is reduced to three cues or fewer", () => {
@@ -138,4 +161,14 @@ test("Japanese Sleep narration is reduced to three cues or fewer", () => {
     JAPANESE_SLEEP_GATE_NARRATION.map((line) => line.key),
     ["sleep-1", "sleep-3", "sleep-2"]
   );
+});
+
+test("Japanese Sleep narration keeps the quietest pacing and safer spoken readings", () => {
+  const breathLine = JAPANESE_SLEEP_GATE_NARRATION.find((line) => line.key === "sleep-3");
+  const releaseLine = JAPANESE_SLEEP_GATE_NARRATION.find((line) => line.key === "sleep-2");
+
+  assert.equal(breathLine?.text, "呼吸は...\nそのままで\n大丈夫です");
+  assert.equal(breathLine?.speechText, "呼吸は…\nそのままで、\n大丈夫です。");
+  assert.equal(releaseLine?.text, "もう...\n何もしなくて\n大丈夫です");
+  assert.equal(releaseLine?.speechText, "もう…\nなにもしなくて\nだいじょうぶです。");
 });
