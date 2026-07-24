@@ -520,13 +520,13 @@ export function BasicHome({
               <p className="hidden text-[13px] leading-5 text-[rgba(233,242,248,0.56)] sm:text-sm sm:leading-6 lg:block">{gardenCountMessage}</p>
             </div>
             <div className="mt-2.5 grid grid-cols-2 gap-2 sm:gap-2.5 lg:mt-3">
-              <div className="rounded-[15px] border border-white/6 bg-white/[0.02] px-3 py-2 sm:rounded-[18px] sm:px-4 sm:py-3">
-                <p className="text-[0.7rem] uppercase tracking-[0.18em] text-[rgba(233,242,248,0.46)]">{copy.currentDayLabel}</p>
-                <p className="mt-1 text-[1.2rem] font-semibold leading-none text-[rgba(244,250,255,0.94)] sm:mt-1.5 sm:text-[1.65rem]">{currentDay}</p>
+              <div className="rounded-[14px] border border-white/6 bg-white/[0.02] px-3 py-[9px] sm:rounded-[16px] sm:px-[14px] sm:py-[11px]">
+                <p className="text-[0.67rem] uppercase tracking-[0.17em] text-[rgba(233,242,248,0.44)]">{copy.currentDayLabel}</p>
+                <p className="mt-1 text-[1.08rem] font-semibold leading-none text-[rgba(244,250,255,0.94)] sm:mt-1.5 sm:text-[1.42rem]">{currentDay}</p>
               </div>
-              <div className="rounded-[15px] border border-white/6 bg-white/[0.02] px-3 py-2 sm:rounded-[18px] sm:px-4 sm:py-3">
-                <p className="text-[0.7rem] uppercase tracking-[0.18em] text-[rgba(233,242,248,0.46)]">{copy.sessionCountLabel}</p>
-                <p className="mt-1 text-[1.2rem] font-semibold leading-none text-[rgba(244,250,255,0.94)] sm:mt-1.5 sm:text-[1.65rem]">{streakCount}</p>
+              <div className="rounded-[14px] border border-white/6 bg-white/[0.02] px-3 py-[9px] sm:rounded-[16px] sm:px-[14px] sm:py-[11px]">
+                <p className="text-[0.67rem] uppercase tracking-[0.17em] text-[rgba(233,242,248,0.44)]">{copy.sessionCountLabel}</p>
+                <p className="mt-1 text-[1.08rem] font-semibold leading-none text-[rgba(244,250,255,0.94)] sm:mt-1.5 sm:text-[1.42rem]">{streakCount}</p>
               </div>
             </div>
           </div>
