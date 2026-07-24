@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState, type MouseEvent } from "react";
+import { useEffect, useMemo, useState, type CSSProperties, type MouseEvent } from "react";
 import { useLanguage } from "@/lib/i18n";
 import {
   getBasicGardenCountMessage,
@@ -256,7 +256,7 @@ export function BasicHome({
       <div className={`relative mx-auto flex items-center justify-center ${maxWidthClassName}`}>
         <div
           aria-hidden="true"
-          className={`pointer-events-none absolute inset-x-[14%] top-[14%] h-20 rounded-full bg-[radial-gradient(circle,rgba(127,255,212,0.16),transparent_68%)] blur-2xl motion-safe:animate-[gardenGlow_9s_ease-in-out_infinite] motion-reduce:animate-none ${glowClassName}`}
+          className={`garden-glow pointer-events-none absolute inset-x-[14%] top-[14%] h-20 rounded-full bg-[radial-gradient(circle,rgba(127,255,212,0.16),transparent_68%)] blur-2xl ${glowClassName}`}
         />
         <svg
           aria-hidden="true"
@@ -289,7 +289,7 @@ export function BasicHome({
             rx="96"
             ry="28"
             fill="rgba(5,18,34,0.72)"
-            className="motion-safe:animate-[gardenGroundBreath_11s_ease-in-out_infinite] motion-reduce:animate-none"
+            className="garden-motion-root garden-ground-shadow"
             style={{ transformOrigin: "140px 184px" }}
           />
           <ellipse
@@ -298,25 +298,25 @@ export function BasicHome({
             rx="102"
             ry="24"
             fill="url(#gardenSoil)"
-            className="motion-safe:animate-[gardenGroundBreath_11s_ease-in-out_infinite] motion-reduce:animate-none"
+            className="garden-motion-root garden-ground-soil"
             style={{ transformOrigin: "140px 178px", animationDelay: "0.35s" }}
           />
           <ellipse cx="140" cy="173" rx="10" ry="7" fill="rgba(216,192,138,0.44)" opacity={gardenVisual.hasRecordedRecovery ? 0.28 : 0.7} />
           <g
-            className="motion-safe:animate-[gardenStemSway_9.2s_ease-in-out_infinite] motion-reduce:animate-none"
+            className="garden-motion-root garden-stem"
             style={{ transformOrigin: "140px 176px" }}
           >
             <path d="M140 176 C138 164 137 148 140 130" stroke="url(#gardenStem)" strokeWidth="3.2" strokeLinecap="round" fill="none" />
           </g>
           <g
-            className="motion-safe:animate-[gardenBranchLeft_8.8s_ease-in-out_infinite] motion-reduce:animate-none"
+            className="garden-motion-root garden-branch-left"
             style={{ transformOrigin: "140px 158px" }}
           >
             <path d="M140 158 C126 154 116 146 110 132" stroke="url(#gardenStem)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
             <path d="M138 136 C124 130 114 118 108 104" stroke="url(#gardenStem)" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9" />
           </g>
           <g
-            className="motion-safe:animate-[gardenBranchRight_10.6s_ease-in-out_infinite] motion-reduce:animate-none"
+            className="garden-motion-root garden-branch-right"
             style={{ transformOrigin: "141px 149px", animationDelay: "0.8s" }}
           >
             <path d="M141 149 C157 143 170 132 176 116" stroke="url(#gardenStem)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
@@ -325,12 +325,12 @@ export function BasicHome({
           {gardenVisual.marks.map((mark, index) => (
             <g
               key={`${mark.x}-${mark.y}-${index}`}
-              className="motion-safe:animate-[gardenLightPulse_7.2s_ease-in-out_infinite] motion-reduce:animate-none"
+              className="garden-motion-root garden-light"
               style={{
-                animationDelay: `${index * 0.7}s`,
-                animationDuration: `${6 + index * 0.55}s`,
+                animationDelay: `${index * 0.8}s`,
+                animationDuration: `${5.8 + index * 0.9}s`,
                 transformOrigin: `${mark.x}px ${mark.y}px`
-              }}
+              } as CSSProperties}
             >
               <path
                 d={`M${mark.anchorX} ${mark.anchorY} Q${(mark.anchorX + mark.x) / 2} ${(mark.anchorY + mark.y) / 2 + 3} ${mark.x} ${mark.y + 1}`}
@@ -499,8 +499,8 @@ export function BasicHome({
           <div className="order-1">
             <div className="flex items-start justify-between gap-4 lg:hidden">
               <p className="pt-1 text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.64)]">{copy.gardenLabel}</p>
-              <div className="w-[7.6rem] shrink-0">
-                {renderGardenSvg("max-w-[7.6rem]", "inset-x-[10%] top-[10%] h-16 blur-[22px]")}
+              <div className="w-[clamp(8rem,36vw,9.875rem)] shrink-0">
+                {renderGardenSvg("w-[clamp(8rem,36vw,9.875rem)] max-w-[9.875rem]", "inset-x-[10%] top-[10%] h-[4.5rem] blur-[24px]")}
               </div>
             </div>
             <p className="hidden text-xs uppercase tracking-[0.28em] text-[rgba(127,255,212,0.64)] lg:block">{copy.gardenLabel}</p>
@@ -531,29 +531,81 @@ export function BasicHome({
         <span className="sr-only">{`${copy.sessionCountLabel}: ${gardenVisual.recordedCheckIns}. ${gardenCountMessage}`}</span>
       </section>
       <style jsx>{`
+        .garden-motion-root {
+          transform-box: fill-box;
+          transform-origin: center;
+          will-change: transform, opacity;
+        }
+
+        .garden-glow {
+          animation: gardenGlow 10.5s ease-in-out infinite;
+          will-change: transform, opacity;
+        }
+
+        .garden-ground-shadow {
+          animation: gardenGroundBreath 11.6s ease-in-out infinite alternate;
+        }
+
+        .garden-ground-soil {
+          animation: gardenGroundBreath 10.8s ease-in-out infinite alternate;
+        }
+
+        .garden-stem {
+          animation: gardenStemSway 6.8s ease-in-out infinite alternate;
+        }
+
+        .garden-branch-left {
+          animation: gardenBranchLeft 7.6s ease-in-out infinite alternate;
+        }
+
+        .garden-branch-right {
+          animation: gardenBranchRight 8.8s ease-in-out infinite alternate;
+        }
+
+        .garden-light {
+          animation: gardenLightPulse 6.4s ease-in-out infinite alternate;
+        }
+
         @keyframes gardenGlow {
-          0%, 100% { opacity: 0.55; transform: scale(0.98); }
-          50% { opacity: 0.85; transform: scale(1.02); }
+          0%, 100% { opacity: 0.5; transform: scale(0.97); }
+          50% { opacity: 0.82; transform: scale(1.04); }
         }
+
         @keyframes gardenStemSway {
-          0%, 100% { transform: translate3d(0, 0, 0) rotate(-0.8deg); }
-          50% { transform: translate3d(1px, 0, 0) rotate(0.95deg); }
+          0% { transform: translate3d(-0.4px, 0, 0) rotate(-2deg); }
+          100% { transform: translate3d(0.8px, 0, 0) rotate(2deg); }
         }
+
         @keyframes gardenBranchLeft {
-          0%, 100% { transform: rotate(-1.15deg) translate3d(0, 0, 0); }
-          50% { transform: rotate(1.25deg) translate3d(-0.5px, -0.5px, 0); }
+          0% { transform: rotate(-2.5deg) translate3d(0, 0, 0); }
+          100% { transform: rotate(2.5deg) translate3d(-0.6px, -0.8px, 0); }
         }
+
         @keyframes gardenBranchRight {
-          0%, 100% { transform: rotate(1deg) translate3d(0, 0, 0); }
-          50% { transform: rotate(-1.35deg) translate3d(0.6px, -0.4px, 0); }
+          0% { transform: rotate(3deg) translate3d(0.2px, 0, 0); }
+          100% { transform: rotate(-3deg) translate3d(0.8px, -1px, 0); }
         }
+
         @keyframes gardenLightPulse {
-          0%, 100% { transform: scale(0.97); opacity: 0.74; }
-          50% { transform: scale(1.04); opacity: 1; }
+          0% { transform: translate3d(0, 1px, 0) scale(0.92); opacity: 0.55; }
+          100% { transform: translate3d(0, -1px, 0) scale(1.08); opacity: 1; }
         }
+
         @keyframes gardenGroundBreath {
-          0%, 100% { transform: scale(0.995); opacity: 0.92; }
-          50% { transform: scale(1.01); opacity: 1; }
+          0% { transform: scale(0.985); opacity: 0.9; }
+          100% { transform: scale(1.02); opacity: 1; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .garden-glow,
+          .garden-ground-shadow,
+          .garden-ground-soil,
+          .garden-stem,
+          .garden-branch-left,
+          .garden-branch-right,
+          .garden-light {
+            animation: none !important;
+          }
         }
       `}</style>
 
