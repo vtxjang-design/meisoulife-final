@@ -260,14 +260,22 @@ test("garden illustration keeps the refined mobile and desktop scale values", ()
   assert.match(basicHomeSource, /renderGardenSvg\("max-w-\[18\.95rem\] lg:max-w-none", "sm:inset-x-\[10%\] sm:top-\[10%\] sm:h-32 sm:blur-3xl"\)/);
 });
 
-test("garden label stays on one line on mobile and desktop stat boxes use a narrower fixed grid", () => {
+test("garden label stays on one line on mobile and garden stats use one shared status panel", () => {
   assert.match(
     basicHomeSource,
     /<p className="min-w-0 flex-1 whitespace-nowrap pt-1 text-\[11px\] uppercase tracking-\[0\.22em\] text-\[rgba\(127,255,212,0\.64\)\]">\{copy\.gardenLabel\}<\/p>/
   );
   assert.match(
     basicHomeSource,
-    /className="mt-2\.5 grid grid-cols-2 gap-2 sm:gap-2\.5 lg:mt-3 lg:w-fit lg:grid-cols-\[minmax\(0,15rem\)_minmax\(0,15rem\)\] lg:gap-3"/
+    /className="mt-2\.5 rounded-\[15px\] border border-white\/\[0\.07\] bg-white\/\[0\.018\] lg:mt-3 lg:w-fit lg:min-w-\[29rem\]"/
+  );
+  assert.match(
+    basicHomeSource,
+    /className="grid min-h-\[66px\] grid-cols-2 md:min-h-\[60px\] lg:min-h-\[58px\] lg:grid-cols-\[minmax\(0,14\.5rem\)_minmax\(0,14\.5rem\)\]"/
+  );
+  assert.match(
+    basicHomeSource,
+    /className="flex min-w-0 flex-col justify-center border-l border-white\/\[0\.05\] px-3 py-\[10px\] sm:px-4 sm:py-\[11px\] lg:px-5 lg:py-3"/
   );
 });
 

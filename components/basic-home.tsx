@@ -519,14 +519,16 @@ export function BasicHome({
               <p className="text-[13px] leading-5 text-[rgba(214,244,235,0.82)] sm:text-sm sm:leading-6">{gardenMeaningLine}</p>
               <p className="hidden text-[13px] leading-5 text-[rgba(233,242,248,0.56)] sm:text-sm sm:leading-6 lg:block">{gardenCountMessage}</p>
             </div>
-            <div className="mt-2.5 grid grid-cols-2 gap-2 sm:gap-2.5 lg:mt-3 lg:w-fit lg:grid-cols-[minmax(0,15rem)_minmax(0,15rem)] lg:gap-3">
-              <div className="rounded-[14px] border border-white/6 bg-white/[0.02] px-3 py-[9px] sm:rounded-[16px] sm:px-[14px] sm:py-[11px]">
-                <p className="text-[0.67rem] uppercase tracking-[0.17em] text-[rgba(233,242,248,0.44)]">{copy.currentDayLabel}</p>
-                <p className="mt-1 text-[1.08rem] font-semibold leading-none text-[rgba(244,250,255,0.94)] sm:mt-1.5 sm:text-[1.42rem]">{currentDay}</p>
-              </div>
-              <div className="rounded-[14px] border border-white/6 bg-white/[0.02] px-3 py-[9px] sm:rounded-[16px] sm:px-[14px] sm:py-[11px]">
-                <p className="text-[0.67rem] uppercase tracking-[0.17em] text-[rgba(233,242,248,0.44)]">{copy.sessionCountLabel}</p>
-                <p className="mt-1 text-[1.08rem] font-semibold leading-none text-[rgba(244,250,255,0.94)] sm:mt-1.5 sm:text-[1.42rem]">{streakCount}</p>
+            <div className="mt-2.5 rounded-[15px] border border-white/[0.07] bg-white/[0.018] lg:mt-3 lg:w-fit lg:min-w-[29rem]">
+              <div className="grid min-h-[66px] grid-cols-2 md:min-h-[60px] lg:min-h-[58px] lg:grid-cols-[minmax(0,14.5rem)_minmax(0,14.5rem)]">
+                <div className="flex min-w-0 flex-col justify-center px-3 py-[10px] sm:px-4 sm:py-[11px] lg:px-5 lg:py-3">
+                  <p className="text-[0.67rem] uppercase tracking-[0.17em] text-[rgba(233,242,248,0.42)]">{copy.currentDayLabel}</p>
+                  <p className="mt-1 text-[1.08rem] font-semibold leading-none text-[rgba(244,250,255,0.94)] sm:mt-1.5 sm:text-[1.42rem] lg:text-[1.3rem]">{currentDay}</p>
+                </div>
+                <div className="flex min-w-0 flex-col justify-center border-l border-white/[0.05] px-3 py-[10px] sm:px-4 sm:py-[11px] lg:px-5 lg:py-3">
+                  <p className="text-[0.67rem] uppercase tracking-[0.17em] text-[rgba(233,242,248,0.42)]">{copy.sessionCountLabel}</p>
+                  <p className="mt-1 text-[1.08rem] font-semibold leading-none text-[rgba(244,250,255,0.94)] sm:mt-1.5 sm:text-[1.42rem] lg:text-[1.3rem]">{streakCount}</p>
+                </div>
               </div>
             </div>
           </div>
