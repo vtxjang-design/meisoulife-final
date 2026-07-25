@@ -6,8 +6,8 @@ import { useAuthState } from "@/components/auth-provider";
 import { BasicHome } from "@/components/basic-home";
 import { MembershipGuard } from "@/components/membership-guard";
 import { recordAuthDiagnostic } from "@/lib/auth-flow-diagnostics";
+import { matchBasicGardenProfile, resolveBasicGardenStats, type BasicGardenProfileRow } from "@/lib/basic-garden-progress";
 import type { MembershipResolutionResult } from "@/lib/membership";
-import { getMockDashboard } from "@/lib/mock-data";
 import { useLanguage } from "@/lib/i18n";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
@@ -25,10 +25,9 @@ function BasicProgramContent() {
   const { plan, planResolved, session, authResolved, isLoggedIn, membershipSummary, hasActiveSubscription } = useAuthState();
   const { language } = useLanguage();
   const searchParams = useSearchParams();
-  const mock = getMockDashboard();
   const [dashboardState, setDashboardState] = useState<DashboardState>({
-    challengeDay: mock.challengeDay,
-    streakCount: mock.streakCount
+    challengeDay: 1,
+    streakCount: 0
   });
   const highlightedRhythm = searchParams.get("rhythm") ?? searchParams.get("gate");
   const defaultRhythm =
@@ -113,11 +112,12 @@ function BasicProgramContent() {
     let active = true;
     const supabase = getSupabaseBrowserClient();
     const userId = session?.user?.id;
+    const userEmail = session?.user?.email ?? null;
 
     if (!supabase || !userId) {
       setDashboardState({
-        challengeDay: mock.challengeDay,
-        streakCount: mock.streakCount
+        challengeDay: 1,
+        streakCount: 0
       });
       return;
     }
@@ -125,9 +125,9 @@ function BasicProgramContent() {
     const safeSupabase = supabase;
 
     async function loadDashboardState() {
-      const { data: profile, error } = await safeSupabase
+      const { data: authProfile, error: authProfileError } = await safeSupabase
         .from("users")
-        .select("check_in_count, challenge_day")
+        .select("id, auth_user_id, email, check_in_count, challenge_day")
         .eq("auth_user_id", userId)
         .maybeSingle();
 
@@ -135,25 +135,48 @@ function BasicProgramContent() {
         return;
       }
 
-      if (error) {
+      if (authProfileError) {
         console.warn("[program-basic] dashboard profile fetch failed", {
           userId,
-          error: error.message
+          error: authProfileError.message
         });
         setDashboardState({
-          challengeDay: mock.challengeDay,
-          streakCount: mock.streakCount
+          challengeDay: 1,
+          streakCount: 0
         });
         return;
       }
 
+      let profiles: BasicGardenProfileRow[] = authProfile ? [authProfile] : [];
+
+      if (!authProfile && userEmail) {
+        const { data: emailProfile, error: emailProfileError } = await safeSupabase
+          .from("users")
+          .select("id, auth_user_id, email, check_in_count, challenge_day")
+          .eq("email", userEmail.trim().toLowerCase())
+          .maybeSingle();
+
+        if (!active) {
+          return;
+        }
+
+        if (emailProfileError) {
+          console.warn("[program-basic] dashboard email fallback fetch failed", {
+            userId,
+            email: userEmail,
+            error: emailProfileError.message
+          });
+        } else if (emailProfile) {
+          profiles = [emailProfile];
+        }
+      }
+
+      const matchedProfile = matchBasicGardenProfile(profiles, userId, userEmail).profile;
+      const stats = resolveBasicGardenStats(matchedProfile);
+
       setDashboardState({
-        challengeDay:
-          typeof profile?.challenge_day === "number" && profile.challenge_day > 0 ? profile.challenge_day : mock.challengeDay,
-        streakCount:
-          typeof profile?.check_in_count === "number" && profile.check_in_count > 0
-            ? profile.check_in_count
-            : mock.streakCount
+        challengeDay: stats.currentDay,
+        streakCount: stats.cumulativeCheckIns
       });
     }
 
@@ -162,7 +185,7 @@ function BasicProgramContent() {
     return () => {
       active = false;
     };
-  }, [mock.challengeDay, mock.streakCount, session?.user?.id]);
+  }, [session?.user?.email, session?.user?.id]);
 
   if (!authResolved || !isLoggedIn) {
     return (

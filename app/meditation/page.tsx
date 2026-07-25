@@ -6,6 +6,7 @@ import { Suspense, useEffect, useMemo, useRef, useState, type MutableRefObject }
 import { useAuthState } from "@/components/auth-provider";
 import { MembershipAccessStateView, useMembershipAccess } from "@/components/membership-guard";
 import { preparePlaybackMediaElement } from "@/lib/basic-experience";
+import { buildBasicGardenCompletionPatch, matchBasicGardenProfile, type BasicGardenProfileRow } from "@/lib/basic-garden-progress";
 import { useLanguage, useSiteCopy } from "@/lib/i18n";
 import {
   getNatureSoundPreference,
@@ -38,6 +39,7 @@ import {
   safeSessionStorageGet,
   safeSessionStorageRemove
 } from "@/lib/safe-browser-storage";
+import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 const CYCLE_SECONDS = 10;
 const INHALE_SECONDS = 4;
@@ -1447,7 +1449,7 @@ function getAwakeningPromptIndex(dayStamp: string, promptCount: number) {
 function MeditationPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { authResolved } = useAuthState();
+  const { authResolved, session } = useAuthState();
   const { language } = useLanguage();
   const copy = useSiteCopy().meditationPage;
   const journeyCopy = useMemo(() => getRhythmJourneyContent(language), [language]);
@@ -1574,6 +1576,7 @@ function MeditationPageContent() {
   const journeySettlingTimeoutRef = useRef<number | null>(null);
   const isPausedRef = useRef(false);
   const isCompleteRef = useRef(false);
+  const basicGardenCompletionPersistedRef = useRef(false);
   const elapsedTotalSeconds = totalSeconds - secondsLeft;
   const phase = useMemo(() => getBreathPhase(elapsedTotalSeconds), [elapsedTotalSeconds]);
   const isComplete = secondsLeft <= 0;
@@ -3465,6 +3468,12 @@ function MeditationPageContent() {
   }, [isComplete, isJourneyCompletionHolding, journeyMode, hasUserGesture, soundEnabled, vibrationEnabled]);
 
   useEffect(() => {
+    if (!isComplete) {
+      basicGardenCompletionPersistedRef.current = false;
+    }
+  }, [isComplete]);
+
+  useEffect(() => {
     if (!isAwakeningGate || !isComplete || typeof window === "undefined") {
       if (!isComplete) {
         awakeningRitualHandledRef.current = false;
@@ -4155,7 +4164,99 @@ function MeditationPageContent() {
     };
   }, [ambientAudioVolume]);
 
+  async function persistBasicGardenCompletion() {
+    if (basicGardenCompletionPersistedRef.current) {
+      return;
+    }
+
+    const authUserId = session?.user?.id ?? null;
+    const email = session?.user?.email ?? null;
+    const supabase = getSupabaseBrowserClient();
+
+    if (!authUserId || !email || !supabase) {
+      return;
+    }
+
+    basicGardenCompletionPersistedRef.current = true;
+
+    try {
+      const { data: authProfile, error: authProfileError } = await supabase
+        .from("users")
+        .select("id, auth_user_id, email, challenge_day, check_in_count")
+        .eq("auth_user_id", authUserId)
+        .maybeSingle();
+
+      if (authProfileError) {
+        throw authProfileError;
+      }
+
+      let profiles: BasicGardenProfileRow[] = authProfile ? [authProfile] : [];
+
+      if (!authProfile) {
+        const { data: emailProfile, error: emailProfileError } = await supabase
+          .from("users")
+          .select("id, auth_user_id, email, challenge_day, check_in_count")
+          .eq("email", email.trim().toLowerCase())
+          .maybeSingle();
+
+        if (emailProfileError) {
+          throw emailProfileError;
+        }
+
+        if (emailProfile) {
+          profiles = [emailProfile];
+        }
+      }
+
+      const { profile, matchedBy } = matchBasicGardenProfile(profiles, authUserId, email);
+      const patch = buildBasicGardenCompletionPatch(profile);
+
+      if (profile?.id) {
+        const { error: updateError } = await supabase
+          .from("users")
+          .update({
+            ...patch,
+            auth_user_id: authUserId
+          })
+          .eq("id", profile.id);
+
+        if (updateError) {
+          throw updateError;
+        }
+
+        return;
+      }
+
+      const { error: insertError } = await supabase.from("users").upsert(
+        {
+          auth_user_id: authUserId,
+          email: email.trim().toLowerCase(),
+          current_plan: "basic",
+          role: "basic",
+          ...patch
+        },
+        {
+          onConflict: matchedBy === "email" ? "email" : "auth_user_id"
+        }
+      );
+
+      if (insertError) {
+        throw insertError;
+      }
+    } catch (error) {
+      basicGardenCompletionPersistedRef.current = false;
+      console.warn("[basic-garden] failed to persist completion", {
+        userId: authUserId,
+        error: error instanceof Error ? error.message : "unknown_error"
+      });
+    }
+  }
+
   async function runMeditationComplete() {
+    if (isBasicGateExperience) {
+      void persistBasicGardenCompletion();
+    }
+
     if (isStructuredMorningGate) {
       await stopStructuredMorningAmbient();
     } else if (isFocusGate) {
