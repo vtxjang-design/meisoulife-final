@@ -282,8 +282,8 @@ export function getJapaneseEveningSpeechSettings(gate: EveningGateKind): Japanes
       return {
         lang: "ja-JP",
         rate: 0.75,
-        pitch: 0.85,
-        volume: 0.82,
+        pitch: 0.86,
+        volume: 0.8,
         preferredNames: JAPANESE_EVENING_PREFERRED_NAMES
       };
     case "sleep":
