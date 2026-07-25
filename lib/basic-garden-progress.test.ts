@@ -147,7 +147,7 @@ test("current progress day semantics are preserved while user matching can fall 
 });
 
 test("basic gate completion flow is wired to persist garden check-ins for the authenticated user", () => {
-  assert.match(meditationPageSource, /void persistBasicGardenCompletion\(\)/);
-  assert.match(meditationPageSource, /from\("users"\)\s*\.select\("id, auth_user_id, email, challenge_day, check_in_count"\)/);
-  assert.match(meditationPageSource, /buildBasicGardenCompletionPatch\(profile\)/);
+  assert.match(meditationPageSource, /void ensureBasicGardenCompletionSynced\(\)/);
+  assert.match(meditationPageSource, /fetch\("\/api\/basic\/garden-completion"/);
+  assert.match(meditationPageSource, /await ensureBasicGardenCompletionSynced\(\)/);
 });

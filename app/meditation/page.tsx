@@ -6,7 +6,7 @@ import { Suspense, useEffect, useMemo, useRef, useState, type MutableRefObject }
 import { useAuthState } from "@/components/auth-provider";
 import { MembershipAccessStateView, useMembershipAccess } from "@/components/membership-guard";
 import { preparePlaybackMediaElement } from "@/lib/basic-experience";
-import { buildBasicGardenCompletionPatch, matchBasicGardenProfile, type BasicGardenProfileRow } from "@/lib/basic-garden-progress";
+import type { BasicGardenSyncResult } from "@/lib/basic-garden-sync";
 import { useLanguage, useSiteCopy } from "@/lib/i18n";
 import {
   getNatureSoundPreference,
@@ -39,7 +39,6 @@ import {
   safeSessionStorageGet,
   safeSessionStorageRemove
 } from "@/lib/safe-browser-storage";
-import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 const CYCLE_SECONDS = 10;
 const INHALE_SECONDS = 4;
@@ -1449,7 +1448,7 @@ function getAwakeningPromptIndex(dayStamp: string, promptCount: number) {
 function MeditationPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { authResolved, session } = useAuthState();
+  const { authResolved } = useAuthState();
   const { language } = useLanguage();
   const copy = useSiteCopy().meditationPage;
   const journeyCopy = useMemo(() => getRhythmJourneyContent(language), [language]);
@@ -1510,6 +1509,8 @@ function MeditationPageContent() {
   const [isJourneySettling, setIsJourneySettling] = useState(false);
   const [returnToHref, setReturnToHref] = useState("/rhythm-journey");
   const [navigationPendingAction, setNavigationPendingAction] = useState<"exit" | "repeat" | "return" | null>(null);
+  const [basicGardenSyncError, setBasicGardenSyncError] = useState<string | null>(null);
+  const [basicGardenSyncStatus, setBasicGardenSyncStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [requestedRouteType, setRequestedRouteType] = useState<string | null>(null);
   const [hasInvalidRoute, setHasInvalidRoute] = useState(false);
   const [awakeningRitualState, setAwakeningRitualState] = useState<AwakeningRitualState | null>(null);
@@ -1576,7 +1577,7 @@ function MeditationPageContent() {
   const journeySettlingTimeoutRef = useRef<number | null>(null);
   const isPausedRef = useRef(false);
   const isCompleteRef = useRef(false);
-  const basicGardenCompletionPersistedRef = useRef(false);
+  const basicGardenSyncPromiseRef = useRef<Promise<boolean> | null>(null);
   const elapsedTotalSeconds = totalSeconds - secondsLeft;
   const phase = useMemo(() => getBreathPhase(elapsedTotalSeconds), [elapsedTotalSeconds]);
   const isComplete = secondsLeft <= 0;
@@ -1926,6 +1927,13 @@ function MeditationPageContent() {
         at: performance.now()
       });
     }
+    const synced = await ensureBasicGardenCompletionSynced();
+
+    if (!synced) {
+      setNavigationPendingAction(null);
+      return;
+    }
+
     void stopCurrentGatePlayback({ immediate: true });
     router.push(returnToHref);
   }
@@ -1943,13 +1951,20 @@ function MeditationPageContent() {
         at: performance.now()
       });
     }
+    const synced = await ensureBasicGardenCompletionSynced();
+
+    if (!synced) {
+      setNavigationPendingAction(null);
+      return;
+    }
+
     void stopCurrentGatePlayback({ immediate: true });
     if (typeof window !== "undefined") {
       window.location.assign(currentSessionUrl);
     }
   }
 
-  function handleReturnNavigation(destination: string) {
+  async function handleReturnNavigation(destination: string) {
     if (navigationPendingAction) {
       return;
     }
@@ -1961,6 +1976,13 @@ function MeditationPageContent() {
         at: performance.now()
       });
     }
+    const synced = await ensureBasicGardenCompletionSynced();
+
+    if (!synced) {
+      setNavigationPendingAction(null);
+      return;
+    }
+
     router.push(destination);
   }
 
@@ -3469,7 +3491,9 @@ function MeditationPageContent() {
 
   useEffect(() => {
     if (!isComplete) {
-      basicGardenCompletionPersistedRef.current = false;
+      basicGardenSyncPromiseRef.current = null;
+      setBasicGardenSyncStatus("idle");
+      setBasicGardenSyncError(null);
     }
   }, [isComplete]);
 
@@ -4164,97 +4188,68 @@ function MeditationPageContent() {
     };
   }, [ambientAudioVolume]);
 
-  async function persistBasicGardenCompletion() {
-    if (basicGardenCompletionPersistedRef.current) {
-      return;
+  function getBasicGardenSyncErrorMessage() {
+    if (localizedLanguage === "kr") {
+      return "회복 기록을 저장하지 못했습니다. 잠시 후 다시 시도해 주세요.";
     }
 
-    const authUserId = session?.user?.id ?? null;
-    const email = session?.user?.email ?? null;
-    const supabase = getSupabaseBrowserClient();
-
-    if (!authUserId || !email || !supabase) {
-      return;
+    if (localizedLanguage === "en") {
+      return "We could not save your recovery record. Please try again in a moment.";
     }
 
-    basicGardenCompletionPersistedRef.current = true;
+    return "回復記録を保存できませんでした。少し置いてからもう一度お試しください。";
+  }
 
-    try {
-      const { data: authProfile, error: authProfileError } = await supabase
-        .from("users")
-        .select("id, auth_user_id, email, challenge_day, check_in_count")
-        .eq("auth_user_id", authUserId)
-        .maybeSingle();
-
-      if (authProfileError) {
-        throw authProfileError;
-      }
-
-      let profiles: BasicGardenProfileRow[] = authProfile ? [authProfile] : [];
-
-      if (!authProfile) {
-        const { data: emailProfile, error: emailProfileError } = await supabase
-          .from("users")
-          .select("id, auth_user_id, email, challenge_day, check_in_count")
-          .eq("email", email.trim().toLowerCase())
-          .maybeSingle();
-
-        if (emailProfileError) {
-          throw emailProfileError;
-        }
-
-        if (emailProfile) {
-          profiles = [emailProfile];
-        }
-      }
-
-      const { profile, matchedBy } = matchBasicGardenProfile(profiles, authUserId, email);
-      const patch = buildBasicGardenCompletionPatch(profile);
-
-      if (profile?.id) {
-        const { error: updateError } = await supabase
-          .from("users")
-          .update({
-            ...patch,
-            auth_user_id: authUserId
-          })
-          .eq("id", profile.id);
-
-        if (updateError) {
-          throw updateError;
-        }
-
-        return;
-      }
-
-      const { error: insertError } = await supabase.from("users").upsert(
-        {
-          auth_user_id: authUserId,
-          email: email.trim().toLowerCase(),
-          current_plan: "basic",
-          role: "basic",
-          ...patch
-        },
-        {
-          onConflict: matchedBy === "email" ? "email" : "auth_user_id"
-        }
-      );
-
-      if (insertError) {
-        throw insertError;
-      }
-    } catch (error) {
-      basicGardenCompletionPersistedRef.current = false;
-      console.warn("[basic-garden] failed to persist completion", {
-        userId: authUserId,
-        error: error instanceof Error ? error.message : "unknown_error"
-      });
+  async function ensureBasicGardenCompletionSynced() {
+    if (!isBasicGateExperience) {
+      return true;
     }
+
+    if (basicGardenSyncStatus === "saved") {
+      return true;
+    }
+
+    if (!basicGardenSyncPromiseRef.current) {
+      setBasicGardenSyncStatus("saving");
+      setBasicGardenSyncError(null);
+
+      basicGardenSyncPromiseRef.current = (async () => {
+        try {
+          const response = await fetch("/api/basic/garden-completion", {
+            method: "POST",
+            credentials: "include",
+            cache: "no-store"
+          });
+          const payload = (await response.json()) as
+            | ({ ok: true } & Pick<BasicGardenSyncResult, "matchedBy" | "writeAction"> & { checkInCount: number; challengeDay: number })
+            | { ok: false; errorMessage?: string };
+
+          if (!response.ok || !payload.ok) {
+            throw new Error(payload.ok ? "Garden sync request failed" : payload.errorMessage || "Garden sync request failed");
+          }
+
+          setBasicGardenSyncStatus("saved");
+          setBasicGardenSyncError(null);
+          return true;
+        } catch (error) {
+          console.warn("[basic-garden] completion sync request failed", {
+            error: error instanceof Error ? error.message : "unknown_error"
+          });
+          setBasicGardenSyncStatus("error");
+          setBasicGardenSyncError(getBasicGardenSyncErrorMessage());
+          return false;
+        } finally {
+          basicGardenSyncPromiseRef.current = null;
+        }
+      })();
+    }
+
+    return await basicGardenSyncPromiseRef.current;
   }
 
   async function runMeditationComplete() {
     if (isBasicGateExperience) {
-      void persistBasicGardenCompletion();
+      void ensureBasicGardenCompletionSynced();
     }
 
     if (isStructuredMorningGate) {
@@ -5436,12 +5431,26 @@ function MeditationPageContent() {
             </p>
             <p className="whitespace-pre-line text-sm leading-7 text-white/54">{completionNoteText}</p>
             {completionBodyText ? <p className="mx-auto max-w-2xl text-base leading-8 text-white/68">{completionBodyText}</p> : null}
+            {isBasicGateExperience && basicGardenSyncStatus === "saving" ? (
+              <p className="text-sm leading-7 text-white/56">
+                {localizedLanguage === "jp"
+                  ? "回復記録を保存しています..."
+                  : localizedLanguage === "kr"
+                    ? "회복 기록을 저장하고 있습니다..."
+                    : "Saving your recovery record..."}
+              </p>
+            ) : null}
+            {isBasicGateExperience && basicGardenSyncError ? (
+              <p className="mx-auto max-w-xl text-sm leading-7 text-[#f3c7b8]">{basicGardenSyncError}</p>
+            ) : null}
             <div className="flex flex-col items-center gap-3">
               {journeyMode ? null : (
                 isBasicGateExperience ? (
                   <button
                     type="button"
-                    onClick={() => handleReturnNavigation(basicCompletionReturnHref)}
+                    onClick={() => {
+                      void handleReturnNavigation(basicCompletionReturnHref);
+                    }}
                     disabled={navigationPendingAction !== null}
                     aria-busy={navigationPendingAction === "return"}
                     className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-72"
@@ -5451,7 +5460,9 @@ function MeditationPageContent() {
                 ) : (
                   <button
                     type="button"
-                    onClick={() => handleReturnNavigation(returnToHref)}
+                    onClick={() => {
+                      void handleReturnNavigation(returnToHref);
+                    }}
                     disabled={navigationPendingAction !== null}
                     aria-busy={navigationPendingAction === "return"}
                     className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-72"
