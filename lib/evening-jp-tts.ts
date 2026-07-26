@@ -275,7 +275,7 @@ export function getJapaneseEveningSpeechSettings(gate: EveningGateKind): Japanes
         lang: "ja-JP",
         rate: 0.79,
         pitch: 0.85,
-        volume: 0.84,
+        volume: 0.78,
         preferredNames: JAPANESE_EVENING_PREFERRED_NAMES
       };
     case "gratitude":
