@@ -22,6 +22,10 @@ function createVoice(overrides: Partial<SpeechSynthesisVoiceLike> = {}): SpeechS
   };
 }
 
+function roundToHundredths(value: number) {
+  return Math.round(value * 100) / 100;
+}
+
 test("isJapaneseSpeechLocale accepts verified Japanese locales only", () => {
   assert.equal(isJapaneseSpeechLocale("ja-JP"), true);
   assert.equal(isJapaneseSpeechLocale("ja"), true);
@@ -134,6 +138,34 @@ test("Japanese Release narration uses safer spoken readings while preserving dis
   assert.equal(tomorrowLine?.speechText, "きょう終わらなかったことは、\nあしたのあなたに、\n任せても大丈夫です。");
   assert.equal(effortLine?.text, "何も\n頑張らなくて\n大丈夫です");
   assert.equal(effortLine?.speechText, "なにも、\nがんばらなくて\nだいじょうぶです。");
+});
+
+test("Japanese Release narration leaves a longer quiet runway before the 3-minute end", () => {
+  const releaseTimeline = Object.fromEntries(
+    JAPANESE_RELEASE_GATE_NARRATION.map((line) => [line.key, line.at])
+  );
+  const finalLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-11");
+  const gratitudeFinalLine = JAPANESE_GRATITUDE_GATE_NARRATION.at(-1);
+  const sleepTimeline = JAPANESE_SLEEP_GATE_NARRATION.map((line) => line.at);
+
+  assert.deepEqual(releaseTimeline, {
+    "release-1": 10,
+    "release-2": 24,
+    "release-3": 40,
+    "release-4": 58,
+    "release-5": 74,
+    "release-6": 98,
+    "release-7": 122,
+    "release-8": 134,
+    "release-9": 145,
+    "release-10": 153,
+    "release-11": 162
+  });
+  assert.equal(finalLine?.speechDelayMs, 1120);
+  assert.equal(roundToHundredths((finalLine?.at ?? 0) + ((finalLine?.speechDelayMs ?? 0) / 1000)), 163.12);
+  assert.equal(roundToHundredths(180 - ((finalLine?.at ?? 0) + ((finalLine?.speechDelayMs ?? 0) / 1000))), 16.88);
+  assert.equal(gratitudeFinalLine?.at, 200);
+  assert.deepEqual(sleepTimeline, [15, 50, 72]);
 });
 
 test("Japanese Gratitude narration keeps display text while providing safer spoken readings", () => {

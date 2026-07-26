@@ -84,28 +84,28 @@ export const JAPANESE_RELEASE_GATE_NARRATION: JapaneseEveningNarrationLine[] = [
     speechDelayMs: 1020
   },
   {
-    at: 136,
+    at: 134,
     key: "release-8",
     text: "何も\n頑張らなくて\n大丈夫です",
     speechText: "なにも、\nがんばらなくて\nだいじょうぶです。",
     speechDelayMs: 1020
   },
   {
-    at: 148,
+    at: 145,
     key: "release-9",
     text: "ただ、\nここに\n静かにいてみましょう",
     speechText: "ただ、\nここに、\n静かにいてみましょう。",
     speechDelayMs: 1080
   },
   {
-    at: 155,
+    at: 153,
     key: "release-10",
     text: "今日も…\n十分でした",
     speechText: "今日も…\n十分でした。",
     speechDelayMs: 1120
   },
   {
-    at: 170,
+    at: 162,
     key: "release-11",
     text: "今日の重さを…\nゆっくり下ろします",
     speechText: "今日の重さを…\nゆっくり下ろします。",
