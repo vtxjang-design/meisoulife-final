@@ -20,6 +20,10 @@ const basicGardenProgressSource = readFileSync(new URL("./basic-garden-progress.
 const basicGardenSyncSource = readFileSync(new URL("./basic-garden-sync.ts", import.meta.url), "utf8")
   .replace('./basic-garden-progress"', './basic-garden-progress.mjs"')
   .replace('./membership"', './membership.mjs"');
+const basicGardenRepairMigrationSource = readFileSync(
+  new URL("../supabase/migrations/20260726_fix_basic_garden_progress_rpc_ambiguity.sql", import.meta.url),
+  "utf8"
+);
 
 for (const [name, source] of [
   ["membership.mjs", membershipSource],
@@ -259,4 +263,15 @@ test("failed basic garden sync still allows Back to BASIC navigation without mar
     meditationPageSource,
     /destination === basicCompletionReturnHref && basicGardenSyncStatus === "error"\) \{\s+router\.push\(destination\);\s+return;/
   );
+});
+
+test("repair migration preserves RPC contract and removes ambiguous auth_user_id references", () => {
+  assert.match(
+    basicGardenRepairMigrationSource,
+    /create or replace function public\.upsert_basic_garden_progress\(\s*p_auth_user_id uuid,\s*p_challenge_day integer default 1/s
+  );
+  assert.match(basicGardenRepairMigrationSource, /returns table \(\s*auth_user_id uuid,/s);
+  assert.match(basicGardenRepairMigrationSource, /on conflict on constraint basic_garden_progress_pkey do update/);
+  assert.match(basicGardenRepairMigrationSource, /insert into public\.basic_garden_progress as bgp/);
+  assert.match(basicGardenRepairMigrationSource, /bgp\.auth_user_id as row_auth_user_id/);
 });
