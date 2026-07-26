@@ -39,6 +39,7 @@ import {
   safeSessionStorageGet,
   safeSessionStorageRemove
 } from "@/lib/safe-browser-storage";
+import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 const CYCLE_SECONDS = 10;
 const INHALE_SECONDS = 4;
@@ -4220,8 +4221,16 @@ function MeditationPageContent() {
 
       basicGardenSyncPromiseRef.current = (async () => {
         try {
+          const supabase = getSupabaseBrowserClient();
+          const sessionResult = supabase ? await supabase.auth.getSession() : { data: { session: null } };
+          const accessToken = sessionResult.data.session?.access_token?.trim();
           const response = await fetch("/api/basic/garden-completion", {
             method: "POST",
+            headers: accessToken
+              ? {
+                  Authorization: `Bearer ${accessToken}`
+                }
+              : undefined,
             credentials: "include",
             cache: "no-store"
           });

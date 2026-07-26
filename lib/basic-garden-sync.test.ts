@@ -224,6 +224,9 @@ test("new users receive an inserted initial state instead of shared fallback val
 test("meditation completion navigation awaits garden sync and surfaces a safe error state", () => {
   assert.match(meditationPageSource, /await ensureBasicGardenCompletionSynced\(\)/);
   assert.match(meditationPageSource, /setBasicGardenSyncError\(/);
+  assert.match(meditationPageSource, /getSupabaseBrowserClient\(\)/);
+  assert.match(meditationPageSource, /auth\.getSession\(\)/);
+  assert.match(meditationPageSource, /Authorization:\s*`Bearer \$\{accessToken\}`/);
   assert.match(meditationPageSource, /fetch\("\/api\/basic\/garden-completion"/);
 });
 
