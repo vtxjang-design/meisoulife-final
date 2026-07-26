@@ -1976,6 +1976,11 @@ function MeditationPageContent() {
         at: performance.now()
       });
     }
+    if (isBasicGateExperience && destination === basicCompletionReturnHref && basicGardenSyncStatus === "error") {
+      router.push(destination);
+      return;
+    }
+
     const synced = await ensureBasicGardenCompletionSynced();
 
     if (!synced) {

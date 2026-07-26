@@ -226,3 +226,11 @@ test("meditation completion navigation awaits garden sync and surfaces a safe er
   assert.match(meditationPageSource, /setBasicGardenSyncError\(/);
   assert.match(meditationPageSource, /fetch\("\/api\/basic\/garden-completion"/);
 });
+
+test("failed basic garden sync still allows Back to BASIC navigation without marking the save as successful", () => {
+  assert.match(meditationPageSource, /destination === basicCompletionReturnHref && basicGardenSyncStatus === "error"/);
+  assert.match(
+    meditationPageSource,
+    /destination === basicCompletionReturnHref && basicGardenSyncStatus === "error"\) \{\s+router\.push\(destination\);\s+return;/
+  );
+});
