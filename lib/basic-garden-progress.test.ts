@@ -131,8 +131,9 @@ test("missing data does not fall back to a fake shared 1/3 garden", () => {
     currentDay: 1,
     cumulativeCheckIns: 0
   });
-  assert.doesNotMatch(basicProgramPageSource, /streakCount:\s*mock\.streakCount/);
-  assert.doesNotMatch(basicProgramPageSource, /challengeDay:\s*mock\.challengeDay/);
+  assert.match(basicProgramPageSource, /from\("basic_garden_progress"\)/);
+  assert.doesNotMatch(basicProgramPageSource, /from\("users"\)\s*\.select\("id, auth_user_id, email, check_in_count, challenge_day"\)/);
+  assert.doesNotMatch(basicProgramPageSource, /\.eq\("email",/);
 });
 
 test("current progress day semantics are preserved while user matching can fall back by normalized email", () => {

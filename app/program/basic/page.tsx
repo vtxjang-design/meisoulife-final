@@ -6,7 +6,7 @@ import { useAuthState } from "@/components/auth-provider";
 import { BasicHome } from "@/components/basic-home";
 import { MembershipGuard } from "@/components/membership-guard";
 import { recordAuthDiagnostic } from "@/lib/auth-flow-diagnostics";
-import { matchBasicGardenProfile, resolveBasicGardenStats, type BasicGardenProfileRow } from "@/lib/basic-garden-progress";
+import { resolveBasicGardenStats, type BasicGardenProfileRow } from "@/lib/basic-garden-progress";
 import type { MembershipResolutionResult } from "@/lib/membership";
 import { useLanguage } from "@/lib/i18n";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -112,8 +112,6 @@ function BasicProgramContent() {
     let active = true;
     const supabase = getSupabaseBrowserClient();
     const userId = session?.user?.id;
-    const userEmail = session?.user?.email ?? null;
-
     if (!supabase || !userId) {
       setDashboardState({
         challengeDay: 1,
@@ -126,8 +124,8 @@ function BasicProgramContent() {
 
     async function loadDashboardState() {
       const { data: authProfile, error: authProfileError } = await safeSupabase
-        .from("users")
-        .select("id, auth_user_id, email, check_in_count, challenge_day")
+        .from("basic_garden_progress")
+        .select("auth_user_id, check_in_count, challenge_day")
         .eq("auth_user_id", userId)
         .maybeSingle();
 
@@ -146,33 +144,7 @@ function BasicProgramContent() {
         });
         return;
       }
-
-      let profiles: BasicGardenProfileRow[] = authProfile ? [authProfile] : [];
-
-      if (!authProfile && userEmail) {
-        const { data: emailProfile, error: emailProfileError } = await safeSupabase
-          .from("users")
-          .select("id, auth_user_id, email, check_in_count, challenge_day")
-          .eq("email", userEmail.trim().toLowerCase())
-          .maybeSingle();
-
-        if (!active) {
-          return;
-        }
-
-        if (emailProfileError) {
-          console.warn("[program-basic] dashboard email fallback fetch failed", {
-            userId,
-            email: userEmail,
-            error: emailProfileError.message
-          });
-        } else if (emailProfile) {
-          profiles = [emailProfile];
-        }
-      }
-
-      const matchedProfile = matchBasicGardenProfile(profiles, userId, userEmail).profile;
-      const stats = resolveBasicGardenStats(matchedProfile);
+      const stats = resolveBasicGardenStats((authProfile as BasicGardenProfileRow | null) ?? null);
 
       setDashboardState({
         challengeDay: stats.currentDay,
@@ -185,7 +157,7 @@ function BasicProgramContent() {
     return () => {
       active = false;
     };
-  }, [session?.user?.email, session?.user?.id]);
+  }, [session?.user?.id]);
 
   if (!authResolved || !isLoggedIn) {
     return (
