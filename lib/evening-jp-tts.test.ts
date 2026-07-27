@@ -106,8 +106,8 @@ test("createJapaneseEveningVoiceSession provides a safe fallback when voices are
 test("Japanese evening settings use conservative natural pacing ranges", () => {
   assert.deepEqual(getJapaneseEveningSpeechSettings("release"), {
     lang: "ja-JP",
-    rate: 0.79,
-    pitch: 0.85,
+    rate: 0.77,
+    pitch: 0.84,
     volume: 0.78,
     preferredNames: JAPANESE_EVENING_PREFERRED_NAMES
   });
@@ -128,16 +128,33 @@ test("Japanese evening settings use conservative natural pacing ranges", () => {
 });
 
 test("Japanese Release narration uses safer spoken readings while preserving display text", () => {
+  const openingLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-1");
   const dayLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-3");
+  const settleLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-4");
+  const bodyLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-5");
+  const heartLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-6");
   const tomorrowLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-7");
   const effortLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-8");
+  const stayLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-9");
+  const enoughLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-10");
+  const closingLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-11");
 
+  assert.equal(openingLine?.text, "今日も…\nお疲れさまでした");
+  assert.equal(openingLine?.speechText, "きょうも…\nお疲れさまでした。");
   assert.equal(dayLine?.text, "今日という 一日は、\nいろいろな時間が\nあったことでしょう");
-  assert.equal(dayLine?.speechText, "きょうという、いちにちは、\nいろいろな時間が\nあったことでしょう。");
+  assert.equal(dayLine?.speechText, "きょうという、\nいちにちは\nいろいろな時間が\nあったことでしょう。");
+  assert.equal(settleLine?.speechText, "いまは、\nそのすべてを\nそっと置いてみましょう。");
+  assert.equal(bodyLine?.speechText, "体の力を\n少しゆるめます。");
+  assert.equal(heartLine?.speechText, "心も\n静かに休ませます。");
   assert.equal(tomorrowLine?.text, "今日終わらなかったことは、\n明日のあなたに\n任せても大丈夫です");
-  assert.equal(tomorrowLine?.speechText, "きょう終わらなかったことは、\nあしたのあなたに、\n任せても大丈夫です。");
+  assert.equal(tomorrowLine?.speechText, "きょう終わらなかったことは、\nあしたのあなたに\n任せても大丈夫です。");
   assert.equal(effortLine?.text, "何も\n頑張らなくて\n大丈夫です");
-  assert.equal(effortLine?.speechText, "なにも、\nがんばらなくて\nだいじょうぶです。");
+  assert.equal(effortLine?.speechText, "なにも\nがんばらなくて\nだいじょうぶです。");
+  assert.equal(stayLine?.speechText, "ただ、\nここに\n静かにいてみましょう。");
+  assert.equal(enoughLine?.speechText, "きょうも…\n十分でした。");
+  assert.equal(closingLine?.speechText, "きょうの重さを…\nゆっくり下ろします。");
+  assert.match(dayLine?.speechText ?? "", /いちにちは/u);
+  assert.doesNotMatch(dayLine?.speechText ?? "", /いちーにち|いち\s+にち/u);
 });
 
 test("Japanese Release narration leaves a longer quiet runway before the 3-minute end", () => {

@@ -38,7 +38,7 @@ export const JAPANESE_RELEASE_GATE_NARRATION: JapaneseEveningNarrationLine[] = [
     at: 10,
     key: "release-1",
     text: "今日も…\nお疲れさまでした",
-    speechText: "今日も…\nお疲れさまでした。",
+    speechText: "きょうも…\nお疲れさまでした。",
     speechDelayMs: 880
   },
   {
@@ -52,63 +52,63 @@ export const JAPANESE_RELEASE_GATE_NARRATION: JapaneseEveningNarrationLine[] = [
     at: 40,
     key: "release-3",
     text: "今日という 一日は、\nいろいろな時間が\nあったことでしょう",
-    speechText: "きょうという、いちにちは、\nいろいろな時間が\nあったことでしょう。",
+    speechText: "きょうという、\nいちにちは\nいろいろな時間が\nあったことでしょう。",
     speechDelayMs: 940
   },
   {
     at: 58,
     key: "release-4",
     text: "今は、\nそのすべてを\nそっと置いてみましょう",
-    speechText: "いまは、\nそのすべてを、\nそっと置いてみましょう。",
+    speechText: "いまは、\nそのすべてを\nそっと置いてみましょう。",
     speechDelayMs: 960
   },
   {
     at: 74,
     key: "release-5",
     text: "体の力を、\n少しゆるめます",
-    speechText: "体の力を、\n少しゆるめます。",
+    speechText: "体の力を\n少しゆるめます。",
     speechDelayMs: 940
   },
   {
     at: 98,
     key: "release-6",
     text: "心も、\n静かに休ませます",
-    speechText: "心も、\n静かに休ませます。",
+    speechText: "心も\n静かに休ませます。",
     speechDelayMs: 1000
   },
   {
     at: 122,
     key: "release-7",
     text: "今日終わらなかったことは、\n明日のあなたに\n任せても大丈夫です",
-    speechText: "きょう終わらなかったことは、\nあしたのあなたに、\n任せても大丈夫です。",
+    speechText: "きょう終わらなかったことは、\nあしたのあなたに\n任せても大丈夫です。",
     speechDelayMs: 1020
   },
   {
     at: 134,
     key: "release-8",
     text: "何も\n頑張らなくて\n大丈夫です",
-    speechText: "なにも、\nがんばらなくて\nだいじょうぶです。",
+    speechText: "なにも\nがんばらなくて\nだいじょうぶです。",
     speechDelayMs: 1020
   },
   {
     at: 145,
     key: "release-9",
     text: "ただ、\nここに\n静かにいてみましょう",
-    speechText: "ただ、\nここに、\n静かにいてみましょう。",
+    speechText: "ただ、\nここに\n静かにいてみましょう。",
     speechDelayMs: 1080
   },
   {
     at: 153,
     key: "release-10",
     text: "今日も…\n十分でした",
-    speechText: "今日も…\n十分でした。",
+    speechText: "きょうも…\n十分でした。",
     speechDelayMs: 1120
   },
   {
     at: 162,
     key: "release-11",
     text: "今日の重さを…\nゆっくり下ろします",
-    speechText: "今日の重さを…\nゆっくり下ろします。",
+    speechText: "きょうの重さを…\nゆっくり下ろします。",
     speechDelayMs: 1120
   }
 ];
@@ -273,8 +273,8 @@ export function getJapaneseEveningSpeechSettings(gate: EveningGateKind): Japanes
     case "release":
       return {
         lang: "ja-JP",
-        rate: 0.79,
-        pitch: 0.85,
+        rate: 0.77,
+        pitch: 0.84,
         volume: 0.78,
         preferredNames: JAPANESE_EVENING_PREFERRED_NAMES
       };
