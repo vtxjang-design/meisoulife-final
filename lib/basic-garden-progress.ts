@@ -29,7 +29,7 @@ function normalizePositiveInteger(value: number | null | undefined, minimum: num
 
 export function resolveBasicGardenStats(profile: BasicGardenProfileRow | null | undefined): BasicGardenStats {
   return {
-    currentDay: normalizePositiveInteger(profile?.challenge_day, 1),
+    currentDay: normalizePositiveInteger(profile?.challenge_day, 0),
     cumulativeCheckIns: normalizePositiveInteger(profile?.check_in_count, 0)
   };
 }

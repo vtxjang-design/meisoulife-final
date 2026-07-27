@@ -153,11 +153,11 @@ test("recovery garden is rendered once and localized for JP KR and EN", () => {
 });
 
 test("garden statistics use explicit journey and check-in labels in all three languages", () => {
-  assert.match(basicHomeSource, /現在の進行日/);
+  assert.match(basicHomeSource, /累計訪問日数/);
   assert.match(basicHomeSource, /累計チェックイン数/);
-  assert.match(basicHomeSource, /현재 진행 일차/);
+  assert.match(basicHomeSource, /누적 방문일/);
   assert.match(basicHomeSource, /누적 체크인/);
-  assert.match(basicHomeSource, /Current program day/);
+  assert.match(basicHomeSource, /Visit days/);
   assert.match(basicHomeSource, /Total check-ins/);
 });
 
@@ -166,7 +166,19 @@ test("garden visual model stays truthful for zero one multiple and capped check-
     recordedCheckIns: 0,
     visibleMarkCount: 0,
     hasRecordedRecovery: false,
-    marks: []
+    marks: [],
+    milestoneStage: "seed",
+    showStemGrowth: false,
+    showBroaderBranches: false,
+    showLeafGlow: false,
+    showGroundAfterglow: false,
+    showMatureGlow: false,
+    showFirstFlower: false,
+    showExtraBranching: false,
+    showSecondFlower: false,
+    showGroundPresence: false,
+    showMatureCanopy: false,
+    showSixMonthDetail: false
   });
 
   const single = getBasicGardenVisualModel(1);
@@ -174,6 +186,7 @@ test("garden visual model stays truthful for zero one multiple and capped check-
   assert.equal(single.visibleMarkCount, 1);
   assert.equal(single.hasRecordedRecovery, true);
   assert.equal(single.marks.length, 1);
+  assert.equal(single.milestoneStage, "lights");
   assert.deepEqual(single.marks[0], {
     x: 152,
     y: 158,
@@ -184,19 +197,21 @@ test("garden visual model stays truthful for zero one multiple and capped check-
 
   const multiple = getBasicGardenVisualModel(5);
   assert.equal(multiple.recordedCheckIns, 5);
-  assert.equal(multiple.visibleMarkCount, 5);
-  assert.equal(multiple.marks.length, 5);
+  assert.equal(multiple.visibleMarkCount, 4);
+  assert.equal(multiple.marks.length, 4);
+  assert.equal(multiple.milestoneStage, "sprout");
 
   const capped = getBasicGardenVisualModel(99);
   assert.equal(capped.recordedCheckIns, 99);
   assert.equal(capped.visibleMarkCount, BASIC_GARDEN_VISIBLE_MARK_CAP);
   assert.equal(capped.marks.length, BASIC_GARDEN_VISIBLE_MARK_CAP);
+  assert.equal(capped.milestoneStage, "ground-presence");
 });
 
 test("garden explanation copy stays calm and localized in all three languages", () => {
-  assert.equal(getBasicGardenMeaningLine("jp"), "ひとつの回復が、ひとつの光として庭に残ります。");
-  assert.equal(getBasicGardenMeaningLine("kr"), "한 번의 회복이, 하나의 빛으로 가든에 남습니다.");
-  assert.equal(getBasicGardenMeaningLine("en"), "Each recovery remains in your Garden as a light.");
+  assert.equal(getBasicGardenMeaningLine("jp"), "一日の中で異なる三つの小さな回復が、ひとつの光として庭に残ります。");
+  assert.equal(getBasicGardenMeaningLine("kr"), "하루에 서로 다른 세 개의 작은 회복이, 하나의 빛으로 가든에 남습니다.");
+  assert.equal(getBasicGardenMeaningLine("en"), "Three different small recoveries in one day settle into one light in your Garden.");
 });
 
 test("garden count message uses the real cumulative recovery count in each language", () => {
@@ -211,8 +226,8 @@ test("garden count message uses the real cumulative recovery count in each langu
   assert.equal(getBasicGardenCountMessage("en", 3), "3 recoveries remain in this Garden.");
 });
 
-test("garden copy and source do not invent percentages or named growth stages", () => {
-  assert.doesNotMatch(basicHomeSource, /Forest|Tree|Sprout|Seed|Next growth|next level|progress percentage/i);
+test("garden copy and source do not invent percentages or noisy leveling language", () => {
+  assert.doesNotMatch(basicHomeSource, /next level|progress percentage/i);
 });
 
 test("recommended gate uses the dedicated recommendation marker and keeps the same route helper", () => {

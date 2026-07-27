@@ -26,7 +26,7 @@ function BasicProgramContent() {
   const { language } = useLanguage();
   const searchParams = useSearchParams();
   const [dashboardState, setDashboardState] = useState<DashboardState>({
-    challengeDay: 1,
+    challengeDay: 0,
     streakCount: 0
   });
   const highlightedRhythm = searchParams.get("rhythm") ?? searchParams.get("gate");
@@ -114,7 +114,7 @@ function BasicProgramContent() {
     const userId = session?.user?.id;
     if (!supabase || !userId) {
       setDashboardState({
-        challengeDay: 1,
+        challengeDay: 0,
         streakCount: 0
       });
       return;
@@ -123,6 +123,44 @@ function BasicProgramContent() {
     const safeSupabase = supabase;
 
     async function loadDashboardState() {
+      try {
+        const sessionResult = await safeSupabase.auth.getSession();
+        const accessToken = sessionResult.data.session?.access_token?.trim();
+        const response = await fetch("/api/basic/garden-visit", {
+          method: "POST",
+          credentials: "include",
+          cache: "no-store",
+          headers: accessToken
+            ? {
+                Authorization: `Bearer ${accessToken}`
+              }
+            : undefined
+        });
+
+        if (response.ok) {
+          const payload = (await response.json()) as {
+            ok: true;
+            challengeDay: number;
+            checkInCount: number;
+          };
+
+          if (!active) {
+            return;
+          }
+
+          setDashboardState({
+            challengeDay: payload.challengeDay,
+            streakCount: payload.checkInCount
+          });
+          return;
+        }
+      } catch (error) {
+        console.warn("[program-basic] garden visit sync failed", {
+          userId,
+          error: error instanceof Error ? error.message : "unknown_error"
+        });
+      }
+
       const { data: authProfile, error: authProfileError } = await safeSupabase
         .from("basic_garden_progress")
         .select("auth_user_id, check_in_count, challenge_day")
@@ -139,7 +177,7 @@ function BasicProgramContent() {
           error: authProfileError.message
         });
         setDashboardState({
-          challengeDay: 1,
+          challengeDay: 0,
           streakCount: 0
         });
         return;

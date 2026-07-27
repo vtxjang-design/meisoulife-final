@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { isEligibleBasicGardenGateKey } from "@/lib/basic-garden";
-import { syncBasicGardenCompletion } from "@/lib/basic-garden-sync";
+import { syncBasicGardenVisit } from "@/lib/basic-garden-sync";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -37,7 +36,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         ok: false,
-        errorMessage: "Garden sync service is unavailable"
+        errorMessage: "Garden visit service is unavailable"
       },
       { status: 503 }
     );
@@ -50,7 +49,7 @@ export async function POST(request: Request) {
   let user = cookieUser;
 
   if (userError) {
-    console.warn("[api-basic-garden-completion] auth lookup failed", {
+    console.warn("[api-basic-garden-visit] auth lookup failed", {
       message: userError.message
     });
   }
@@ -74,7 +73,7 @@ export async function POST(request: Request) {
     } = await supabase.auth.getUser(bearer.token);
 
     if (bearerUserError) {
-      console.warn("[api-basic-garden-completion] bearer session lookup failed", {
+      console.warn("[api-basic-garden-visit] bearer session lookup failed", {
         message: bearerUserError.message
       });
     }
@@ -92,7 +91,7 @@ export async function POST(request: Request) {
     }
   }
 
-  if (!user?.id || !user.email) {
+  if (!user?.id) {
     return NextResponse.json(
       {
         ok: false,
@@ -102,33 +101,13 @@ export async function POST(request: Request) {
     );
   }
 
-  let gateKey: unknown = null;
-
-  try {
-    const body = (await request.json()) as { gateKey?: unknown };
-    gateKey = body.gateKey ?? null;
-  } catch {
-    gateKey = null;
-  }
-
-  if (!isEligibleBasicGardenGateKey(gateKey)) {
-    return NextResponse.json(
-      {
-        ok: false,
-        errorMessage: "Eligible gate key is required"
-      },
-      { status: 400 }
-    );
-  }
-
-  const result = await syncBasicGardenCompletion({
+  const result = await syncBasicGardenVisit({
     client: admin as never,
-    authUserId: user.id,
-    gateKey
+    authUserId: user.id
   });
 
   if (!result.ok) {
-    console.warn("[api-basic-garden-completion] sync failed", {
+    console.warn("[api-basic-garden-visit] sync failed", {
       userAuthenticated: true,
       matchedBy: result.matchedBy,
       writeAction: result.writeAction,
@@ -138,7 +117,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         ok: false,
-        errorMessage: result.errorMessage ?? "Garden completion sync failed"
+        errorMessage: result.errorMessage ?? "Garden visit sync failed"
       },
       { status: 500 }
     );
@@ -148,11 +127,9 @@ export async function POST(request: Request) {
     ok: true,
     matchedBy: result.matchedBy,
     writeAction: result.writeAction,
-    checkInCount: result.stats.checkInCount,
     challengeDay: result.stats.challengeDay,
-    completionRecorded: result.recordedCompletion,
-    rewardGranted: result.rewardGranted,
-    distinctGateCount: result.distinctGateCount,
+    checkInCount: result.stats.checkInCount,
+    visitRecorded: result.recordedVisit,
     activityDate: result.activityDate
   });
 }

@@ -41,7 +41,7 @@ const pageCopy = {
     gardenLabel: "私のリカバリーガーデン",
     gardenHeadline: "今日までの回復が、\nここに静かに残っています。",
     gardenBody: "記録されている回復だけを、静かに表示しています。",
-    currentDayLabel: "現在の進行日",
+    currentDayLabel: "累計訪問日数",
     sessionCountLabel: "累計チェックイン数",
     recommendationLabel: "TODAY'S GATE",
     recommendationTitle: "今日、どの扉に入りますか？",
@@ -75,7 +75,7 @@ const pageCopy = {
     gardenLabel: "나의 리커버리 가든",
     gardenHeadline: "오늘까지의 회복이,\n여기에 조용히 남아 있습니다.",
     gardenBody: "이미 기록된 회복만 조용히 보여줍니다.",
-    currentDayLabel: "현재 진행 일차",
+    currentDayLabel: "누적 방문일",
     sessionCountLabel: "누적 체크인",
     recommendationLabel: "TODAY'S GATE",
     recommendationTitle: "오늘, 어떤 문으로 들어갈까요?",
@@ -109,7 +109,7 @@ const pageCopy = {
     gardenLabel: "MY RECOVERY GARDEN",
     gardenHeadline: "Your recorded recovery\nis resting here, quietly.",
     gardenBody: "This view quietly shows only recovery already recorded in your account.",
-    currentDayLabel: "Current program day",
+    currentDayLabel: "Visit days",
     sessionCountLabel: "Total check-ins",
     recommendationLabel: "TODAY'S GATE",
     recommendationTitle: "Which gate will you enter today?",
@@ -311,6 +311,9 @@ export function BasicHome({
                 style={{ transformOrigin: "140px 176px", transformBox: "fill-box", animationDelay: "0.45s" }}
               >
                 <path d="M140 176 C138 164 137 148 140 130" stroke="url(#gardenStem)" strokeWidth="3.2" strokeLinecap="round" fill="none" />
+                {gardenVisual.showStemGrowth ? (
+                  <path d="M140 130 C142 116 145 102 148 90" stroke="url(#gardenStem)" strokeWidth="2.2" strokeLinecap="round" fill="none" opacity="0.92" />
+                ) : null}
               </g>
               <g
                 className="garden-motion-root garden-branch-left-dance"
@@ -318,6 +321,9 @@ export function BasicHome({
               >
                 <path d="M140 158 C126 154 116 146 110 132" stroke="url(#gardenStem)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
                 <path d="M138 136 C124 130 114 118 108 104" stroke="url(#gardenStem)" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9" />
+                {gardenVisual.showBroaderBranches ? (
+                  <path d="M132 120 C120 112 111 100 108 88" stroke="url(#gardenStem)" strokeWidth="1.6" strokeLinecap="round" fill="none" opacity="0.82" />
+                ) : null}
               </g>
               <g
                 className="garden-motion-root garden-branch-right-dance"
@@ -325,7 +331,67 @@ export function BasicHome({
               >
                 <path d="M141 149 C157 143 170 132 176 116" stroke="url(#gardenStem)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
                 <path d="M142 128 C155 122 164 112 170 100" stroke="url(#gardenStem)" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9" />
+                {gardenVisual.showExtraBranching ? (
+                  <path d="M156 116 C169 110 178 100 182 88" stroke="url(#gardenStem)" strokeWidth="1.6" strokeLinecap="round" fill="none" opacity="0.82" />
+                ) : null}
               </g>
+              {gardenVisual.showLeafGlow ? (
+                <>
+                  <ellipse cx="112" cy="131" rx="8" ry="12" fill="rgba(156,236,214,0.24)" transform="rotate(-24 112 131)" />
+                  <ellipse cx="176" cy="116" rx="8" ry="12" fill="rgba(156,236,214,0.24)" transform="rotate(22 176 116)" />
+                </>
+              ) : null}
+              {gardenVisual.showMatureCanopy ? (
+                <>
+                  <ellipse cx="106" cy="103" rx="9" ry="13" fill="rgba(156,236,214,0.28)" transform="rotate(-30 106 103)" />
+                  <ellipse cx="171" cy="100" rx="9" ry="13" fill="rgba(156,236,214,0.28)" transform="rotate(28 171 100)" />
+                  <ellipse cx="148" cy="88" rx="10" ry="14" fill="rgba(173,244,226,0.24)" transform="rotate(10 148 88)" />
+                </>
+              ) : null}
+              {gardenVisual.showGroundAfterglow ? (
+                <ellipse
+                  cx="140"
+                  cy="178"
+                  rx={gardenVisual.showGroundPresence ? 122 : 110}
+                  ry={gardenVisual.showGroundPresence ? 31 : 27}
+                  fill="rgba(216,192,138,0.09)"
+                  className="garden-motion-root garden-ground-breathe"
+                  style={{ transformOrigin: "140px 178px", transformBox: "fill-box", animationDelay: "0.7s" }}
+                />
+              ) : null}
+              {gardenVisual.showMatureGlow ? (
+                <ellipse
+                  cx="144"
+                  cy="112"
+                  rx="54"
+                  ry="38"
+                  fill="rgba(127,255,212,0.08)"
+                  className="garden-glow"
+                />
+              ) : null}
+              {gardenVisual.showFirstFlower ? (
+                <g className="garden-motion-root garden-light-breathe" style={{ transformOrigin: "149px 86px", transformBox: "fill-box", animationDelay: "0.4s" }}>
+                  <circle cx="149" cy="86" r="5.5" fill="rgba(244,234,209,0.92)" />
+                  <circle cx="143.5" cy="86" r="3.4" fill="rgba(216,192,138,0.72)" />
+                  <circle cx="154.5" cy="86" r="3.4" fill="rgba(216,192,138,0.72)" />
+                  <circle cx="149" cy="80.5" r="3.4" fill="rgba(216,192,138,0.72)" />
+                  <circle cx="149" cy="91.5" r="3.4" fill="rgba(216,192,138,0.72)" />
+                </g>
+              ) : null}
+              {gardenVisual.showSecondFlower ? (
+                <g className="garden-motion-root garden-light-breathe" style={{ transformOrigin: "108px 94px", transformBox: "fill-box", animationDelay: "1.1s" }}>
+                  <circle cx="108" cy="94" r="5" fill="rgba(244,234,209,0.88)" />
+                  <circle cx="103" cy="94" r="3" fill="rgba(127,255,212,0.68)" />
+                  <circle cx="113" cy="94" r="3" fill="rgba(127,255,212,0.68)" />
+                  <circle cx="108" cy="89" r="3" fill="rgba(127,255,212,0.68)" />
+                  <circle cx="108" cy="99" r="3" fill="rgba(127,255,212,0.68)" />
+                </g>
+              ) : null}
+              {gardenVisual.showSixMonthDetail ? (
+                <g className="garden-motion-root garden-light-breathe" style={{ transformOrigin: "186px 76px", transformBox: "fill-box", animationDelay: "1.8s" }}>
+                  <path d="M186 68 L188 74 L194 76 L188 78 L186 84 L184 78 L178 76 L184 74 Z" fill="rgba(244,234,209,0.86)" />
+                </g>
+              ) : null}
               {gardenVisual.marks.map((mark, index) => (
                 <g
                   key={`${mark.x}-${mark.y}-${index}`}

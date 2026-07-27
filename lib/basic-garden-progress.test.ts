@@ -60,7 +60,6 @@ writeFileSync(
 
 const moduleUnderTest = await import(pathToFileURL(join(tempDir, "basic-garden-progress.mjs")).href);
 const {
-  buildBasicGardenCompletionPatch,
   deriveBasicGardenViewModel,
   matchBasicGardenProfile,
   resolveBasicGardenStats
@@ -88,31 +87,21 @@ test("two authenticated users with different completion histories resolve differ
   assert.deepEqual(resolveBasicGardenStats(second.profile), { currentDay: 5, cumulativeCheckIns: 7 });
 });
 
-test("additional valid completion records increase only the matched user's cumulative check-ins", () => {
-  assert.deepEqual(buildBasicGardenCompletionPatch({ challenge_day: 4, check_in_count: 2 }), {
-    challenge_day: 4,
-    check_in_count: 3
-  });
-
-  assert.deepEqual(buildBasicGardenCompletionPatch({ challenge_day: 1, check_in_count: 0 }), {
-    challenge_day: 1,
-    check_in_count: 1
-  });
-});
-
 test("plant and recovery-light state derive from the matched user's own cumulative check-ins", () => {
   const first = deriveBasicGardenViewModel({ challenge_day: 2, check_in_count: 1 });
   const second = deriveBasicGardenViewModel({ challenge_day: 2, check_in_count: 6 });
 
   assert.equal(first.visual.recordedCheckIns, 1);
   assert.equal(first.visual.visibleMarkCount, 1);
+  assert.equal(first.visual.milestoneStage, "lights");
   assert.equal(second.visual.recordedCheckIns, 6);
-  assert.equal(second.visual.visibleMarkCount, 6);
+  assert.equal(second.visual.visibleMarkCount, 4);
+  assert.equal(second.visual.milestoneStage, "sprout");
 });
 
 test("a new user receives the intended empty initial garden state", () => {
   assert.deepEqual(resolveBasicGardenStats(null), {
-    currentDay: 1,
+    currentDay: 0,
     cumulativeCheckIns: 0
   });
 
@@ -128,7 +117,7 @@ test("missing data does not fall back to a fake shared 1/3 garden", () => {
   });
 
   assert.deepEqual(missing, {
-    currentDay: 1,
+    currentDay: 0,
     cumulativeCheckIns: 0
   });
   assert.match(basicProgramPageSource, /from\("basic_garden_progress"\)/);
@@ -145,6 +134,35 @@ test("current progress day semantics are preserved while user matching can fall 
     currentDay: 6,
     cumulativeCheckIns: 4
   });
+});
+
+test("plant milestone stages and visible light cap remain stable through 180 earned check-ins", () => {
+  const checkpoints = [
+    [0, "seed", 0],
+    [1, "lights", 1],
+    [3, "lights", 3],
+    [4, "sprout", 4],
+    [7, "sprout", 4],
+    [8, "branching", 5],
+    [14, "branching", 5],
+    [15, "leaf-glow", 6],
+    [21, "leaf-glow", 6],
+    [22, "mature-glow", 6],
+    [29, "mature-glow", 6],
+    [30, "first-flower", 7],
+    [60, "first-flower", 7],
+    [90, "second-flower", 7],
+    [120, "ground-presence", 7],
+    [150, "mature-companion", 7],
+    [180, "six-month-bloom", 7]
+  ] as const;
+
+  for (const [count, stage, visibleMarks] of checkpoints) {
+    const model = deriveBasicGardenViewModel({ challenge_day: 12, check_in_count: count }).visual;
+    assert.equal(model.milestoneStage, stage);
+    assert.equal(model.visibleMarkCount, visibleMarks);
+    assert.ok(model.marks.length <= 7);
+  }
 });
 
 test("basic gate completion flow is wired to persist garden check-ins for the authenticated user", () => {

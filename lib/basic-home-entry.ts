@@ -3,7 +3,7 @@ import { getBasicGateForCurrentTime, type BasicGateKey } from "./basic-rhythm";
 export type BasicGardenLanguage = "jp" | "kr" | "en";
 export const BASIC_HOME_GATE_FALLBACK: BasicGateKey = "morning";
 export const BASIC_HOME_SECTION_ORDER = ["garden", "recommendation", "course"] as const;
-export const BASIC_GARDEN_VISIBLE_MARK_CAP = 8;
+export const BASIC_GARDEN_VISIBLE_MARK_CAP = 7;
 export const BASIC_GARDEN_MARK_SLOTS = [
   { x: 152, y: 158, radius: 7, anchorX: 146, anchorY: 165 },
   { x: 128, y: 144, radius: 6, anchorX: 122, anchorY: 151 },
@@ -11,9 +11,21 @@ export const BASIC_GARDEN_MARK_SLOTS = [
   { x: 108, y: 122, radius: 5, anchorX: 116, anchorY: 130 },
   { x: 198, y: 118, radius: 5, anchorX: 187, anchorY: 127 },
   { x: 142, y: 104, radius: 5, anchorX: 141, anchorY: 113 },
-  { x: 168, y: 96, radius: 4, anchorX: 163, anchorY: 104 },
-  { x: 120, y: 86, radius: 4, anchorX: 126, anchorY: 95 }
+  { x: 168, y: 96, radius: 4, anchorX: 163, anchorY: 104 }
 ] as const;
+
+export type BasicGardenMilestoneStage =
+  | "seed"
+  | "lights"
+  | "sprout"
+  | "branching"
+  | "leaf-glow"
+  | "mature-glow"
+  | "first-flower"
+  | "second-flower"
+  | "ground-presence"
+  | "mature-companion"
+  | "six-month-bloom";
 
 export function mapRhythmParamToBasicGateKey(value: string | null | undefined): BasicGateKey | null {
   if (value === "morning") {
@@ -101,26 +113,71 @@ export function getBasicHomeRecommendedGateForDate(date = new Date()) {
 
 export function getBasicGardenVisualModel(checkInCount: number) {
   const recordedCheckIns = Number.isFinite(checkInCount) ? Math.max(0, Math.floor(checkInCount)) : 0;
-  const visibleMarkCount = Math.min(recordedCheckIns, BASIC_GARDEN_VISIBLE_MARK_CAP);
+  const visibleMarkCount =
+    recordedCheckIns <= 0
+      ? 0
+      : recordedCheckIns <= 3
+        ? recordedCheckIns
+        : recordedCheckIns <= 7
+          ? 4
+          : recordedCheckIns <= 14
+            ? 5
+            : recordedCheckIns <= 29
+              ? 6
+              : BASIC_GARDEN_VISIBLE_MARK_CAP;
+  const milestoneStage: BasicGardenMilestoneStage =
+    recordedCheckIns === 0
+      ? "seed"
+      : recordedCheckIns <= 3
+        ? "lights"
+        : recordedCheckIns <= 7
+          ? "sprout"
+          : recordedCheckIns <= 14
+            ? "branching"
+            : recordedCheckIns <= 21
+              ? "leaf-glow"
+              : recordedCheckIns <= 29
+                ? "mature-glow"
+                : recordedCheckIns <= 60
+                  ? "first-flower"
+                  : recordedCheckIns <= 90
+                    ? "second-flower"
+                    : recordedCheckIns <= 120
+                      ? "ground-presence"
+                      : recordedCheckIns <= 150
+                        ? "mature-companion"
+                        : "six-month-bloom";
 
   return {
     recordedCheckIns,
     visibleMarkCount,
     hasRecordedRecovery: recordedCheckIns > 0,
-    marks: BASIC_GARDEN_MARK_SLOTS.slice(0, visibleMarkCount)
+    marks: BASIC_GARDEN_MARK_SLOTS.slice(0, visibleMarkCount),
+    milestoneStage,
+    showStemGrowth: recordedCheckIns >= 4,
+    showBroaderBranches: recordedCheckIns >= 8,
+    showLeafGlow: recordedCheckIns >= 8,
+    showGroundAfterglow: recordedCheckIns >= 15,
+    showMatureGlow: recordedCheckIns >= 22,
+    showFirstFlower: recordedCheckIns >= 30,
+    showExtraBranching: recordedCheckIns >= 31,
+    showSecondFlower: recordedCheckIns >= 61,
+    showGroundPresence: recordedCheckIns >= 91,
+    showMatureCanopy: recordedCheckIns >= 121,
+    showSixMonthDetail: recordedCheckIns >= 151
   };
 }
 
 export function getBasicGardenMeaningLine(language: BasicGardenLanguage) {
   if (language === "kr") {
-    return "한 번의 회복이, 하나의 빛으로 가든에 남습니다.";
+    return "하루에 서로 다른 세 개의 작은 회복이, 하나의 빛으로 가든에 남습니다.";
   }
 
   if (language === "en") {
-    return "Each recovery remains in your Garden as a light.";
+    return "Three different small recoveries in one day settle into one light in your Garden.";
   }
 
-  return "ひとつの回復が、ひとつの光として庭に残ります。";
+  return "一日の中で異なる三つの小さな回復が、ひとつの光として庭に残ります。";
 }
 
 export function getBasicGardenCountMessage(language: BasicGardenLanguage, checkInCount: number) {

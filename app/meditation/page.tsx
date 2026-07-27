@@ -7,6 +7,7 @@ import { useAuthState } from "@/components/auth-provider";
 import { MembershipAccessStateView, useMembershipAccess } from "@/components/membership-guard";
 import { preparePlaybackMediaElement } from "@/lib/basic-experience";
 import type { BasicGardenSyncResult } from "@/lib/basic-garden-sync";
+import { isEligibleBasicGardenGateKey } from "@/lib/basic-garden";
 import { useLanguage, useSiteCopy } from "@/lib/i18n";
 import {
   getNatureSoundPreference,
@@ -4218,6 +4219,13 @@ function MeditationPageContent() {
     if (!basicGardenSyncPromiseRef.current) {
       setBasicGardenSyncStatus("saving");
       setBasicGardenSyncError(null);
+      const basicGardenGateKey = isEligibleBasicGardenGateKey(mappedDoor) ? mappedDoor : null;
+
+      if (!basicGardenGateKey) {
+        setBasicGardenSyncStatus("error");
+        setBasicGardenSyncError(getBasicGardenSyncErrorMessage());
+        return false;
+      }
 
       basicGardenSyncPromiseRef.current = (async () => {
         try {
@@ -4226,11 +4234,17 @@ function MeditationPageContent() {
           const accessToken = sessionResult.data.session?.access_token?.trim();
           const response = await fetch("/api/basic/garden-completion", {
             method: "POST",
-            headers: accessToken
-              ? {
-                  Authorization: `Bearer ${accessToken}`
-                }
-              : undefined,
+            headers: {
+              "Content-Type": "application/json",
+              ...(accessToken
+                ? {
+                    Authorization: `Bearer ${accessToken}`
+                  }
+                : {})
+            },
+            body: JSON.stringify({
+              gateKey: basicGardenGateKey
+            }),
             credentials: "include",
             cache: "no-store"
           });

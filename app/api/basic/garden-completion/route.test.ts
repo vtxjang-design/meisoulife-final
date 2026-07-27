@@ -10,6 +10,7 @@ const tempDir = mkdtempSync(join(tmpdir(), "garden-completion-route-test-"));
 
 const routeSource = readFileSync(new URL("./route.ts", import.meta.url), "utf8")
   .replace('from "next/server"', 'from "./next-server.mjs"')
+  .replace('from "@/lib/basic-garden"', 'from "./basic-garden.mjs"')
   .replace('from "@/lib/basic-garden-sync"', 'from "./basic-garden-sync.mjs"')
   .replace('from "@/lib/supabase/admin"', 'from "./supabase-admin.mjs"')
   .replace('from "@/lib/supabase/server"', 'from "./supabase-server.mjs"');
@@ -49,13 +50,16 @@ const basicGardenSyncSource = `
 let currentImpl = async () => ({
   ok: true,
   matchedBy: "auth_user_id",
-  writeAction: "update",
-  profileFound: true,
-  profileId: "profile-1",
+  writeAction: "completion",
+  activityDate: "2026-07-27",
   stats: {
     challengeDay: 1,
     checkInCount: 1
   },
+  recordedVisit: false,
+  recordedCompletion: true,
+  rewardGranted: false,
+  distinctGateCount: 1,
   errorMessage: null
 });
 
@@ -68,12 +72,29 @@ export async function syncBasicGardenCompletion(params) {
 }
 `;
 
+const basicGardenSource = `
+export function isEligibleBasicGardenGateKey(value) {
+  return [
+    "affirmation",
+    "energy",
+    "vision",
+    "focus",
+    "rest",
+    "recharge",
+    "release",
+    "gratitude",
+    "sleep"
+  ].includes(value);
+}
+`;
+
 for (const [name, source] of [
   ["route.mjs", routeSource],
   ["next-server.mjs", nextServerSource],
   ["supabase-server.mjs", supabaseServerSource],
   ["supabase-admin.mjs", supabaseAdminSource],
-  ["basic-garden-sync.mjs", basicGardenSyncSource]
+  ["basic-garden-sync.mjs", basicGardenSyncSource],
+  ["basic-garden.mjs", basicGardenSource]
 ] as const) {
   writeFileSync(
     join(tempDir, name),
@@ -153,18 +174,29 @@ test("cookie-authenticated request continues to work", async () => {
     return {
       ok: true,
       matchedBy: "auth_user_id",
-      writeAction: "update",
-      profileFound: true,
-      profileId: "profile-1",
+      writeAction: "completion",
+      activityDate: "2026-07-27",
       stats: {
         challengeDay: 1,
         checkInCount: 1
       },
+      recordedVisit: false,
+      recordedCompletion: true,
+      rewardGranted: false,
+      distinctGateCount: 1,
       errorMessage: null
     };
   });
 
-  const response = await POST(new Request("https://www.meisoulife.com/api/basic/garden-completion", { method: "POST" }));
+  const response = await POST(
+    new Request("https://www.meisoulife.com/api/basic/garden-completion", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ gateKey: "affirmation" })
+    })
+  );
   const payload = await readJson(response);
 
   assert.equal(response.status, 200);
@@ -172,6 +204,7 @@ test("cookie-authenticated request continues to work", async () => {
   assert.deepEqual(supabase.calls, [undefined]);
   assert.equal(syncCalls.length, 1);
   assert.equal(syncCalls[0].authUserId, "auth-cookie");
+  assert.equal(syncCalls[0].gateKey, "affirmation");
 });
 
 test("missing cookie session plus valid Bearer token authenticates the correct user", async () => {
@@ -189,13 +222,16 @@ test("missing cookie session plus valid Bearer token authenticates the correct u
     return {
       ok: true,
       matchedBy: "auth_user_id",
-      writeAction: "update",
-      profileFound: true,
-      profileId: "profile-2",
+      writeAction: "completion",
+      activityDate: "2026-07-27",
       stats: {
         challengeDay: 1,
         checkInCount: 1
       },
+      recordedVisit: false,
+      recordedCompletion: true,
+      rewardGranted: false,
+      distinctGateCount: 1,
       errorMessage: null
     };
   });
@@ -204,8 +240,10 @@ test("missing cookie session plus valid Bearer token authenticates the correct u
     new Request("https://www.meisoulife.com/api/basic/garden-completion", {
       method: "POST",
       headers: {
-        Authorization: "Bearer valid-access-token"
-      }
+        Authorization: "Bearer valid-access-token",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ gateKey: "affirmation" })
     })
   );
 
@@ -213,7 +251,7 @@ test("missing cookie session plus valid Bearer token authenticates the correct u
   assert.deepEqual(supabase.calls, [undefined, "valid-access-token"]);
   assert.equal(syncCalls.length, 1);
   assert.equal(syncCalls[0].authUserId, "auth-bearer");
-  assert.equal(syncCalls[0].email, "bearer@example.com");
+  assert.equal(syncCalls[0].gateKey, "affirmation");
 });
 
 test("missing both cookie session and Bearer token returns 401 without writing progress", async () => {
@@ -230,18 +268,29 @@ test("missing both cookie session and Bearer token returns 401 without writing p
     return {
       ok: true,
       matchedBy: "auth_user_id",
-      writeAction: "update",
-      profileFound: true,
-      profileId: "profile-1",
+      writeAction: "completion",
+      activityDate: "2026-07-27",
       stats: {
         challengeDay: 1,
         checkInCount: 1
       },
+      recordedVisit: false,
+      recordedCompletion: true,
+      rewardGranted: false,
+      distinctGateCount: 1,
       errorMessage: null
     };
   });
 
-  const response = await POST(new Request("https://www.meisoulife.com/api/basic/garden-completion", { method: "POST" }));
+  const response = await POST(
+    new Request("https://www.meisoulife.com/api/basic/garden-completion", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ gateKey: "affirmation" })
+    })
+  );
   const payload = await readJson(response);
 
   assert.equal(response.status, 401);
@@ -263,13 +312,16 @@ test("malformed Bearer header returns 401 without writing progress", async () =>
     return {
       ok: true,
       matchedBy: "auth_user_id",
-      writeAction: "update",
-      profileFound: true,
-      profileId: "profile-1",
+      writeAction: "completion",
+      activityDate: "2026-07-27",
       stats: {
         challengeDay: 1,
         checkInCount: 1
       },
+      recordedVisit: false,
+      recordedCompletion: true,
+      rewardGranted: false,
+      distinctGateCount: 1,
       errorMessage: null
     };
   });
@@ -278,7 +330,8 @@ test("malformed Bearer header returns 401 without writing progress", async () =>
     new Request("https://www.meisoulife.com/api/basic/garden-completion", {
       method: "POST",
       headers: {
-        Authorization: "Token invalid-format"
+        Authorization: "Token invalid-format",
+        "Content-Type": "application/json"
       }
     })
   );
@@ -306,13 +359,16 @@ test("invalid or expired token returns 401", async () => {
     return {
       ok: true,
       matchedBy: "auth_user_id",
-      writeAction: "update",
-      profileFound: true,
-      profileId: "profile-1",
+      writeAction: "completion",
+      activityDate: "2026-07-27",
       stats: {
         challengeDay: 1,
         checkInCount: 1
       },
+      recordedVisit: false,
+      recordedCompletion: true,
+      rewardGranted: false,
+      distinctGateCount: 1,
       errorMessage: null
     };
   });
@@ -321,8 +377,10 @@ test("invalid or expired token returns 401", async () => {
     new Request("https://www.meisoulife.com/api/basic/garden-completion", {
       method: "POST",
       headers: {
-        Authorization: "Bearer expired-token"
-      }
+        Authorization: "Bearer expired-token",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ gateKey: "affirmation" })
     })
   );
 
@@ -345,13 +403,16 @@ test("a client-provided user ID cannot select or update another user", async () 
     return {
       ok: true,
       matchedBy: "auth_user_id",
-      writeAction: "update",
-      profileFound: true,
-      profileId: "profile-verified",
+      writeAction: "completion",
+      activityDate: "2026-07-27",
       stats: {
         challengeDay: 1,
         checkInCount: 1
       },
+      recordedVisit: false,
+      recordedCompletion: true,
+      rewardGranted: false,
+      distinctGateCount: 1,
       errorMessage: null
     };
   });
@@ -366,7 +427,8 @@ test("a client-provided user ID cannot select or update another user", async () 
       body: JSON.stringify({
         userId: "other-user",
         email: "other@example.com",
-        checkInCount: 999
+        checkInCount: 999,
+        gateKey: "affirmation"
       })
     })
   );
@@ -374,7 +436,7 @@ test("a client-provided user ID cannot select or update another user", async () 
   assert.equal(response.status, 200);
   assert.equal(syncCalls.length, 1);
   assert.equal(syncCalls[0].authUserId, "verified-user");
-  assert.equal(syncCalls[0].email, "verified@example.com");
+  assert.equal(syncCalls[0].gateKey, "affirmation");
 });
 
 test("successful completion returns 200 and persisted check-ins update from 0 to 1", async () => {
@@ -387,21 +449,33 @@ test("successful completion returns 200 and persisted check-ins update from 0 to
   __setSyncImpl(async () => ({
     ok: true,
     matchedBy: "auth_user_id",
-    writeAction: "update",
-    profileFound: true,
-    profileId: "profile-1",
+    writeAction: "completion",
+    activityDate: "2026-07-27",
     stats: {
       challengeDay: 1,
       checkInCount: 1
     },
+    recordedVisit: false,
+    recordedCompletion: true,
+    rewardGranted: true,
+    distinctGateCount: 3,
     errorMessage: null
   }));
 
-  const response = await POST(new Request("https://www.meisoulife.com/api/basic/garden-completion", { method: "POST" }));
+  const response = await POST(
+    new Request("https://www.meisoulife.com/api/basic/garden-completion", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ gateKey: "vision" })
+    })
+  );
   const payload = await readJson(response);
 
   assert.equal(response.status, 200);
   assert.equal(payload.checkInCount, 1);
+  assert.equal(payload.rewardGranted, true);
 });
 
 test("persistence failure remains a safe 500 and does not return ok true", async () => {
@@ -414,21 +488,73 @@ test("persistence failure remains a safe 500 and does not return ok true", async
   __setSyncImpl(async () => ({
     ok: false,
     matchedBy: "auth_user_id",
-    writeAction: "update",
-    profileFound: true,
-    profileId: "profile-1",
+    writeAction: "completion",
+    activityDate: "2026-07-27",
     stats: {
       challengeDay: 1,
       checkInCount: 0
     },
+    recordedVisit: false,
+    recordedCompletion: false,
+    rewardGranted: false,
+    distinctGateCount: 2,
     errorMessage: "write failed"
   }));
 
-  const response = await POST(new Request("https://www.meisoulife.com/api/basic/garden-completion", { method: "POST" }));
+  const response = await POST(
+    new Request("https://www.meisoulife.com/api/basic/garden-completion", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ gateKey: "affirmation" })
+    })
+  );
   const payload = await readJson(response);
 
   assert.equal(response.status, 500);
   assert.equal(payload.ok, false);
+});
+
+test("missing or invalid gate key returns 400 without writing progress", async () => {
+  const supabase = createSupabaseAuthMock({
+    cookieUser: { id: "auth-cookie", email: "member@example.com" }
+  });
+  let syncCallCount = 0;
+
+  __setServerClient(supabase.client);
+  __setAdminClient({ admin: true });
+  __setSyncImpl(async () => {
+    syncCallCount += 1;
+    return {
+      ok: true,
+      matchedBy: "auth_user_id",
+      writeAction: "completion",
+      activityDate: "2026-07-27",
+      stats: {
+        challengeDay: 1,
+        checkInCount: 1
+      },
+      recordedVisit: false,
+      recordedCompletion: true,
+      rewardGranted: false,
+      distinctGateCount: 1,
+      errorMessage: null
+    };
+  });
+
+  const response = await POST(
+    new Request("https://www.meisoulife.com/api/basic/garden-completion", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ gateKey: "invalid-gate" })
+    })
+  );
+
+  assert.equal(response.status, 400);
+  assert.equal(syncCallCount, 0);
 });
 
 test("route source never logs Authorization headers, access tokens, emails, or full user ids", () => {

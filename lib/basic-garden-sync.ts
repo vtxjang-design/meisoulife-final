@@ -1,142 +1,214 @@
-import { type BasicGardenProfileRow } from "./basic-garden-progress";
+import type { BasicGardenEligibleGateKey } from "./basic-garden";
 
 type SupabaseQueryResult<T> = Promise<{
   data: T | null;
   error: { message: string } | null;
 }>;
 
-type BasicGardenProgressQuery = {
-  select: (columns: string) => {
-    eq: (column: string, value: unknown) => {
-      maybeSingle: () => SupabaseQueryResult<BasicGardenProfileRow>;
-    };
-  };
-};
-
-type BasicGardenRpcRow = {
+type BasicGardenVisitRpcRow = {
   auth_user_id: string;
+  visit_date: string;
   challenge_day: number;
   check_in_count: number;
-  created_at: string;
-  updated_at: string;
-  was_created: boolean;
+  visit_recorded: boolean;
+};
+
+type BasicGardenCompletionRpcRow = {
+  auth_user_id: string;
+  activity_date: string;
+  gate_key: BasicGardenEligibleGateKey;
+  challenge_day: number;
+  check_in_count: number;
+  completion_recorded: boolean;
+  reward_granted: boolean;
+  distinct_gate_count: number;
 };
 
 export type BasicGardenSyncClient = {
-  from: (table: "basic_garden_progress") => BasicGardenProgressQuery;
-  rpc: (
-    fn: "upsert_basic_garden_progress",
+  rpc(
+    fn: "record_basic_garden_visit",
     params: {
       p_auth_user_id: string;
-      p_challenge_day: number;
     }
-  ) => SupabaseQueryResult<BasicGardenRpcRow[] | BasicGardenRpcRow>;
+  ): SupabaseQueryResult<BasicGardenVisitRpcRow[] | BasicGardenVisitRpcRow>;
+  rpc(
+    fn: "record_basic_garden_completion",
+    params: {
+      p_auth_user_id: string;
+      p_gate_key: BasicGardenEligibleGateKey;
+    }
+  ): SupabaseQueryResult<BasicGardenCompletionRpcRow[] | BasicGardenCompletionRpcRow>;
 };
 
 export type BasicGardenSyncResult = {
   ok: boolean;
   matchedBy: "auth_user_id" | "none";
-  writeAction: "update" | "insert";
-  profileFound: boolean;
-  profileId: string | null;
+  writeAction: "none" | "visit" | "completion";
+  activityDate: string;
   stats: {
     challengeDay: number;
     checkInCount: number;
   };
+  recordedVisit: boolean;
+  recordedCompletion: boolean;
+  rewardGranted: boolean;
+  distinctGateCount: number;
   errorMessage: string | null;
 };
 
-const PROGRESS_COLUMNS = "auth_user_id, challenge_day, check_in_count";
+function getFallbackStats() {
+  return {
+    challengeDay: 0,
+    checkInCount: 0
+  };
+}
 
-export async function syncBasicGardenCompletion(params: {
+function readRpcRow<T>(data: T[] | T | null) {
+  return Array.isArray(data) ? (data[0] ?? null) : data;
+}
+
+export async function syncBasicGardenVisit(params: {
   client: BasicGardenSyncClient;
   authUserId: string;
-  email?: string;
 }): Promise<BasicGardenSyncResult> {
   if (!params.authUserId) {
     return {
       ok: false,
       matchedBy: "none",
-      writeAction: "insert",
-      profileFound: false,
-      profileId: null,
-      stats: {
-        challengeDay: 1,
-        checkInCount: 0
-      },
+      writeAction: "none",
+      activityDate: "",
+      stats: getFallbackStats(),
+      recordedVisit: false,
+      recordedCompletion: false,
+      rewardGranted: false,
+      distinctGateCount: 0,
       errorMessage: "Authenticated user id is unavailable"
     };
   }
 
-  const existingProgressResult = await params.client
-    .from("basic_garden_progress")
-    .select(PROGRESS_COLUMNS)
-    .eq("auth_user_id", params.authUserId)
-    .maybeSingle();
-
-  if (existingProgressResult.error) {
-    return {
-      ok: false,
-      matchedBy: "none",
-      writeAction: "insert",
-      profileFound: false,
-      profileId: null,
-      stats: {
-        challengeDay: 1,
-        checkInCount: 0
-      },
-      errorMessage: existingProgressResult.error.message
-    };
-  }
-
-  const existingProgress = existingProgressResult.data;
-  const rpcResult = await params.client.rpc("upsert_basic_garden_progress", {
-    p_auth_user_id: params.authUserId,
-    p_challenge_day: typeof existingProgress?.challenge_day === "number" ? existingProgress.challenge_day : 1
+  const rpcResult = await params.client.rpc("record_basic_garden_visit", {
+    p_auth_user_id: params.authUserId
   });
 
   if (rpcResult.error) {
     return {
       ok: false,
-      matchedBy: existingProgress ? "auth_user_id" : "none",
-      writeAction: existingProgress ? "update" : "insert",
-      profileFound: Boolean(existingProgress),
-      profileId: existingProgress?.auth_user_id ?? null,
-      stats: {
-        challengeDay: typeof existingProgress?.challenge_day === "number" ? existingProgress.challenge_day : 1,
-        checkInCount: typeof existingProgress?.check_in_count === "number" ? existingProgress.check_in_count : 0
-      },
+      matchedBy: "none",
+      writeAction: "none",
+      activityDate: "",
+      stats: getFallbackStats(),
+      recordedVisit: false,
+      recordedCompletion: false,
+      rewardGranted: false,
+      distinctGateCount: 0,
       errorMessage: rpcResult.error.message
     };
   }
 
-  const rpcRow = Array.isArray(rpcResult.data) ? (rpcResult.data[0] ?? null) : rpcResult.data;
+  const rpcRow = readRpcRow(rpcResult.data);
 
   if (!rpcRow) {
     return {
       ok: false,
-      matchedBy: existingProgress ? "auth_user_id" : "none",
-      writeAction: existingProgress ? "update" : "insert",
-      profileFound: Boolean(existingProgress),
-      profileId: null,
-      stats: {
-        challengeDay: typeof existingProgress?.challenge_day === "number" ? existingProgress.challenge_day : 1,
-        checkInCount: typeof existingProgress?.check_in_count === "number" ? existingProgress.check_in_count : 0
-      },
-      errorMessage: "Garden progress update returned no data"
+      matchedBy: "none",
+      writeAction: "none",
+      activityDate: "",
+      stats: getFallbackStats(),
+      recordedVisit: false,
+      recordedCompletion: false,
+      rewardGranted: false,
+      distinctGateCount: 0,
+      errorMessage: "Garden visit update returned no data"
     };
   }
 
   return {
     ok: true,
     matchedBy: "auth_user_id",
-    writeAction: rpcRow.was_created ? "insert" : "update",
-    profileFound: !rpcRow.was_created,
-    profileId: rpcRow.auth_user_id,
+    writeAction: "visit",
+    activityDate: rpcRow.visit_date,
     stats: {
       challengeDay: rpcRow.challenge_day,
       checkInCount: rpcRow.check_in_count
     },
+    recordedVisit: rpcRow.visit_recorded,
+    recordedCompletion: false,
+    rewardGranted: false,
+    distinctGateCount: 0,
+    errorMessage: null
+  };
+}
+
+export async function syncBasicGardenCompletion(params: {
+  client: BasicGardenSyncClient;
+  authUserId: string;
+  gateKey: BasicGardenEligibleGateKey;
+}): Promise<BasicGardenSyncResult> {
+  if (!params.authUserId) {
+    return {
+      ok: false,
+      matchedBy: "none",
+      writeAction: "none",
+      activityDate: "",
+      stats: getFallbackStats(),
+      recordedVisit: false,
+      recordedCompletion: false,
+      rewardGranted: false,
+      distinctGateCount: 0,
+      errorMessage: "Authenticated user id is unavailable"
+    };
+  }
+
+  const rpcResult = await params.client.rpc("record_basic_garden_completion", {
+    p_auth_user_id: params.authUserId,
+    p_gate_key: params.gateKey
+  });
+
+  if (rpcResult.error) {
+    return {
+      ok: false,
+      matchedBy: "none",
+      writeAction: "none",
+      activityDate: "",
+      stats: getFallbackStats(),
+      recordedVisit: false,
+      recordedCompletion: false,
+      rewardGranted: false,
+      distinctGateCount: 0,
+      errorMessage: rpcResult.error.message
+    };
+  }
+
+  const rpcRow = readRpcRow(rpcResult.data);
+
+  if (!rpcRow) {
+    return {
+      ok: false,
+      matchedBy: "none",
+      writeAction: "none",
+      activityDate: "",
+      stats: getFallbackStats(),
+      recordedVisit: false,
+      recordedCompletion: false,
+      rewardGranted: false,
+      distinctGateCount: 0,
+      errorMessage: "Garden completion update returned no data"
+    };
+  }
+
+  return {
+    ok: true,
+    matchedBy: "auth_user_id",
+    writeAction: "completion",
+    activityDate: rpcRow.activity_date,
+    stats: {
+      challengeDay: rpcRow.challenge_day,
+      checkInCount: rpcRow.check_in_count
+    },
+    recordedVisit: false,
+    recordedCompletion: rpcRow.completion_recorded,
+    rewardGranted: rpcRow.reward_granted,
+    distinctGateCount: rpcRow.distinct_gate_count,
     errorMessage: null
   };
 }
