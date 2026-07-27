@@ -1,8 +1,12 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { recordAuthDiagnostic } from "@/lib/auth-flow-diagnostics";
+import {
+  shouldPreserveVerifiedMembershipDuringRefresh,
+  shouldResetMembershipResolution
+} from "@/lib/auth-membership-refresh";
 import {
   isActiveMembershipStatus,
   type MembershipPlanKey,
@@ -188,6 +192,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     nextBillingDate: null,
     canManageMembership: false
   });
+  const latestAuthSnapshotRef = useRef<{
+    sessionUserId: string | null;
+    authResolved: boolean;
+    planResolved: boolean;
+  }>({
+    sessionUserId: null,
+    authResolved: false,
+    planResolved: false
+  });
+
+  useEffect(() => {
+    latestAuthSnapshotRef.current = {
+      sessionUserId: session?.user?.id ?? null,
+      authResolved,
+      planResolved
+    };
+  }, [authResolved, planResolved, session?.user?.id]);
 
   useEffect(() => {
     let active = true;
@@ -198,15 +219,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
+      const nextUserId = nextSession?.user?.id ?? null;
+      const canReusePreviousResolution = !shouldResetMembershipResolution(
+        latestAuthSnapshotRef.current,
+        nextUserId
+      );
+
       setSession(nextSession);
       recordAuthDiagnostic("auth_state_sync_started", {
-        authenticatedUserIdExists: Boolean(nextSession?.user?.id),
+        authenticatedUserIdExists: Boolean(nextUserId),
         nextSessionExists: Boolean(nextSession)
       });
       console.log("[auth-provider] loading state", {
         hasSession: Boolean(nextSession?.user),
         authResolved: true,
-        planResolved: nextSession?.user ? false : true
+        planResolved: nextSession?.user ? canReusePreviousResolution : true,
+        reusingResolvedMembership: canReusePreviousResolution
       });
 
       if (!nextSession?.user) {
@@ -236,12 +264,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       setAuthResolved(true);
-      setPlanResolved(false);
       setPlanError(null);
-      setMembershipStatus(null);
+      if (!canReusePreviousResolution) {
+        setPlanResolved(false);
+        setMembershipStatus(null);
+      }
       const membershipState = await resolvePlanForUser(nextSession);
 
       if (!active) {
+        return;
+      }
+
+      if (
+        shouldPreserveVerifiedMembershipDuringRefresh({
+          canReusePreviousResolution,
+          membershipState
+        })
+      ) {
+        recordAuthDiagnostic("membership_resolution_preserved_previous_state", {
+          authenticatedUserIdExists: true,
+          resolvedMembershipState: membershipState.plan,
+          membershipResolved: membershipState.resolved,
+          membershipSource: membershipState.source,
+          hasError: Boolean(membershipState.errorMessage)
+        });
+        console.log("[auth-provider] preserving verified membership during background refresh", {
+          userId: nextUserId,
+          error: membershipState.errorMessage,
+          source: membershipState.source
+        });
         return;
       }
 
