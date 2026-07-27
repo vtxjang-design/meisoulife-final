@@ -5040,8 +5040,10 @@ function MeditationPageContent() {
                   <p
                     className={`mx-auto text-center font-medium text-white ${
                       isJapaneseRechargeLabel
-                        ? "max-w-[90%] whitespace-nowrap break-keep text-[13px] leading-snug [word-break:keep-all] sm:text-[15px]"
-                        : "max-w-[80%] text-sm leading-relaxed [overflow-wrap:anywhere] [word-break:keep-all] sm:text-base"
+                        ? "max-w-[94%] whitespace-nowrap break-keep text-[13px] leading-[1.35] tracking-[0.01em] [word-break:keep-all] sm:text-[15px]"
+                        : localizedLanguage === "kr"
+                          ? "max-w-[16ch] text-[12.5px] leading-[1.45] [overflow-wrap:normal] [word-break:keep-all] sm:max-w-[80%] sm:text-base"
+                          : "max-w-[15ch] text-[12.5px] leading-[1.45] [overflow-wrap:normal] [word-break:normal] sm:max-w-[80%] sm:text-base"
                     }`}
                   >
                     {selectedRechargeExerciseLabel}
@@ -5188,7 +5190,7 @@ function MeditationPageContent() {
                                 onClick={() => setSelectedRechargeExercise(exercise.key)}
                                 className={`flex min-h-[68px] items-center gap-3 rounded-[20px] border px-4 py-3 text-left transition duration-300 ${
                                   isSelected
-                                    ? "border-gold/40 bg-gold/14 text-white shadow-[0_12px_30px_rgba(212,178,106,0.14)]"
+                                    ? "border-gold/44 bg-[linear-gradient(180deg,rgba(212,178,106,0.18),rgba(212,178,106,0.1))] text-white shadow-[0_14px_34px_rgba(212,178,106,0.16)]"
                                     : "border-white/8 bg-white/[0.03] text-white/78 hover:border-white/16 hover:bg-white/[0.05]"
                                 } ${index === rechargeExercises.items.length - 1 ? "sm:col-span-2" : ""}`}
                                 aria-pressed={isSelected}
@@ -5198,7 +5200,17 @@ function MeditationPageContent() {
                                 }`}>
                                   {index + 1}
                                 </span>
-                                <span className="text-sm leading-6 sm:text-[15px]">{exercise.label}</span>
+                                <span
+                                  className={`text-sm leading-[1.45] sm:text-[15px] ${
+                                    localizedLanguage === "jp"
+                                      ? "break-keep [word-break:keep-all]"
+                                      : localizedLanguage === "kr"
+                                        ? "[overflow-wrap:normal] [word-break:keep-all]"
+                                        : "[overflow-wrap:normal] [word-break:normal]"
+                                  }`}
+                                >
+                                  {exercise.label}
+                                </span>
                               </button>
                             );
                           })}

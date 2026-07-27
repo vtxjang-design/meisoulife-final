@@ -28,6 +28,8 @@ const OPENING_QUIET_MS = 2000;
 const OPENING_MESSAGE_MS = 5000;
 const OPENING_FADE_MS = 700;
 const OPENING_POST_FADE_MS = 900;
+const ENDING_AUDIO_FADE_TRIGGER_SECONDS = 3;
+const ENDING_AUDIO_FADE_MS = 3000;
 
 const sanctuaryVisuals: Record<
   MeditationExperienceKey,
@@ -346,6 +348,9 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const pendingAutoStartRef = useRef(false);
   const openingTimerRefs = useRef<number[]>([]);
   const gateTransitionTimerRefs = useRef<number[]>([]);
+  const videoFadeRafRef = useRef<number | null>(null);
+  const videoFadeTokenRef = useRef(0);
+  const endingFadeStartedRef = useRef(false);
 
   const elapsedSeconds = TOTAL_SECONDS - secondsLeft;
   const phase = useMemo(() => getPhase(elapsedSeconds), [elapsedSeconds]);
@@ -370,14 +375,29 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
 
       if (currentVideo) {
         currentVideo.currentTime = Math.min(currentVideo.currentTime, currentVideo.duration || currentVideo.currentTime);
-        void fadeOutVideoAudio(currentVideo).finally(() => {
-          currentVideo.muted = true;
-          currentVideo.volume = 0;
-        });
+        cancelVideoFade();
+        currentVideo.pause();
+        currentVideo.muted = true;
+        currentVideo.volume = 0;
       }
       markDailyRhythmCompleted();
     }
   }, [secondsLeft]);
+
+  useEffect(() => {
+    if (!running || !recoveryStarted || secondsLeft > ENDING_AUDIO_FADE_TRIGGER_SECONDS || secondsLeft <= 0) {
+      return;
+    }
+
+    const currentVideo = videoRef.current;
+
+    if (!currentVideo || currentVideo.muted || currentVideo.volume <= 0 || endingFadeStartedRef.current) {
+      return;
+    }
+
+    endingFadeStartedRef.current = true;
+    void fadeOutVideoAudio(currentVideo, ENDING_AUDIO_FADE_MS);
+  }, [recoveryStarted, running, secondsLeft]);
 
   useEffect(() => {
     if (secondsLeft !== 0 || completionHandledRef.current) {
@@ -399,6 +419,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
       clearGateTransition();
       clearOpeningSequence();
       clearTimer();
+      cancelVideoFade();
       videoRef.current?.pause();
       audioContextRef.current?.close().catch(() => undefined);
       audioContextRef.current = null;
@@ -508,25 +529,48 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     !!videoRef.current &&
     fullscreenAvailable;
 
-  async function fadeOutVideoAudio(video: HTMLVideoElement) {
+  function cancelVideoFade() {
+    videoFadeTokenRef.current += 1;
+
+    if (videoFadeRafRef.current !== null) {
+      window.cancelAnimationFrame(videoFadeRafRef.current);
+      videoFadeRafRef.current = null;
+    }
+  }
+
+  async function fadeOutVideoAudio(video: HTMLVideoElement, durationMs: number) {
     if (video.muted || video.volume <= 0) {
-      video.pause();
       return;
     }
 
+    cancelVideoFade();
+    const fadeToken = videoFadeTokenRef.current + 1;
+    videoFadeTokenRef.current = fadeToken;
     const startVolume = video.volume;
-    const steps = 12;
-    const stepDuration = 100;
 
-    for (let step = 1; step <= steps; step += 1) {
-      await new Promise<void>((resolve) => {
-        window.setTimeout(resolve, stepDuration);
-      });
+    await new Promise<void>((resolve) => {
+      const startedAt = performance.now();
 
-      video.volume = startVolume * (1 - step / steps);
-    }
+      const tick = (now: number) => {
+        if (videoFadeTokenRef.current !== fadeToken) {
+          resolve();
+          return;
+        }
 
-    video.pause();
+        const progress = Math.min((now - startedAt) / durationMs, 1);
+        video.volume = startVolume * (1 - progress);
+
+        if (progress >= 1) {
+          videoFadeRafRef.current = null;
+          resolve();
+          return;
+        }
+
+        videoFadeRafRef.current = window.requestAnimationFrame(tick);
+      };
+
+      videoFadeRafRef.current = window.requestAnimationFrame(tick);
+    });
   }
 
   function clearTimer() {
@@ -628,12 +672,16 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
 
     if (!nextRunning) {
       clearTimer();
+      cancelVideoFade();
+      endingFadeStartedRef.current = false;
       video.pause();
       video.muted = true;
       video.volume = 0;
       return;
     }
 
+    cancelVideoFade();
+    endingFadeStartedRef.current = false;
     video.volume = nextSoundEnabled ? 0.28 : 0;
     video.muted = !nextSoundEnabled;
 
@@ -687,6 +735,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     setSecondsLeft(TOTAL_SECONDS);
     completionHandledRef.current = false;
     pendingAutoStartRef.current = true;
+    endingFadeStartedRef.current = false;
     setRecoveryStarted(false);
 
     setRunning(true);

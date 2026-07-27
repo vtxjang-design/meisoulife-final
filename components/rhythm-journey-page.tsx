@@ -508,13 +508,23 @@ export function RhythmJourneyPage() {
                               key={option.value}
                               type="button"
                               onClick={() => handleSelectOption(option.value)}
-                            className={`button-nowrap rounded-full px-4 py-2.5 text-sm transition duration-200 ${
+                              aria-pressed={selected}
+                              className={`button-nowrap inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f0d79c]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131f] ${
                                 selected
-                                  ? "border border-[#f0d79c]/30 bg-[#f3e0af]/16 text-[#fff8e6]"
+                                  ? "border border-[#f0d79c]/52 bg-[linear-gradient(180deg,rgba(243,224,175,0.2),rgba(243,224,175,0.1))] text-[#fffaf0] shadow-[0_12px_28px_rgba(212,178,106,0.16)]"
                                   : "border border-white/10 bg-white/[0.04] text-white/72 hover:bg-white/[0.07]"
                               }`}
                             >
-                              {option.label}
+                              <span
+                                aria-hidden="true"
+                                className={`h-2.5 w-2.5 rounded-full transition duration-200 ${
+                                  selected ? "bg-[#f0d79c] shadow-[0_0_0_4px_rgba(240,215,156,0.12)]" : "bg-white/24"
+                                }`}
+                              />
+                              <span>{option.label}</span>
+                              {selected ? (
+                                <span className="text-[11px] font-medium tracking-[0.18em] text-[#f6e7bb]/78">ON</span>
+                              ) : null}
                             </button>
                           );
                         })}
