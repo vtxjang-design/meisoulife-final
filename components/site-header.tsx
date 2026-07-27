@@ -2,9 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useAuthState } from "@/components/auth-provider";
-import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { languageButtons, useLanguage, useSiteCopy } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -12,9 +11,8 @@ export function SiteHeader() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const hideMobileTabs = pathname === "/program/basic";
-  const router = useRouter();
   const { language, setLanguage } = useLanguage();
-  const { isLoggedIn, authResolved, planResolved, plan, userEmail } = useAuthState();
+  const { isLoggedIn, authResolved, planResolved, plan, userEmail, signOut } = useAuthState();
   const copy = useSiteCopy();
   const memberCenterLabel = copy.header.myPage;
   const logoutLabel = copy.header.logout;
@@ -176,9 +174,7 @@ export function SiteHeader() {
   }, [authResolved, isLoggedIn, mobileOpen, userEmail]);
 
   async function handleLogout() {
-    const supabase = getSupabaseBrowserClient();
-
-    if (!supabase || loggingOut) {
+    if (loggingOut) {
       return;
     }
 
@@ -186,11 +182,9 @@ export function SiteHeader() {
 
     try {
       console.log("[site-header] logout clicked");
-      await supabase.auth.signOut();
+      await signOut({ redirectTo: "/" });
       console.log("[site-header] logout success");
       setMobileOpen(false);
-      router.push("/");
-      router.refresh();
     } catch (error) {
       console.error("[site-header] logout failed", error);
     } finally {

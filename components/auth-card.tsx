@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { DEFAULT_AUTH_NEXT_PATH, resolveSafeInternalNextPath } from "@/lib/auth-next";
+import { DEFAULT_AUTH_NEXT_PATH, resolveSafeInternalNextPath, resolveSafeReturnPath } from "@/lib/auth-next";
 import { recordAuthDiagnostic } from "@/lib/auth-flow-diagnostics";
 import { useSiteCopy } from "@/lib/i18n";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -29,7 +29,7 @@ export function AuthCard({ mode }: AuthCardProps) {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const requestedNext = params.get("next");
-    const next = resolveSafeInternalNextPath(requestedNext);
+    const next = resolveSafeReturnPath(requestedNext);
     setNextPath(next);
     setIsBasicAccessLogin(mode === "login" && requestedNext !== null && next === DEFAULT_AUTH_NEXT_PATH);
     recordAuthDiagnostic("login_page_loaded", {

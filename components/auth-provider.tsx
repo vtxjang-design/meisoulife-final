@@ -1,18 +1,36 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import type { Session } from "@supabase/supabase-js";
 import { recordAuthDiagnostic } from "@/lib/auth-flow-diagnostics";
+import {
+  AUTH_ACTIVITY_STORAGE_KEY,
+  AUTH_DEFERRED_LOGOUT_STORAGE_KEY,
+  AUTH_LOGOUT_BROADCAST_STORAGE_KEY,
+  parseActivityTimestamp,
+  parseLogoutBroadcast,
+  resolveInactivityAction,
+  serializeDeferredLogout,
+  serializeLogoutBroadcast,
+  shouldRefreshActivityTimestamp
+} from "@/lib/auth-inactivity";
 import {
   shouldPreserveVerifiedMembershipDuringRefresh,
   shouldResetMembershipResolution
 } from "@/lib/auth-membership-refresh";
+import { buildLoginHref, resolveSafeReturnPath } from "@/lib/auth-next";
 import {
   isActiveMembershipStatus,
   type MembershipPlanKey,
   type MembershipResolutionResult,
   type MembershipSummary
 } from "@/lib/membership";
+import {
+  safeLocalStorageGet,
+  safeLocalStorageRemove,
+  safeLocalStorageSet
+} from "@/lib/safe-browser-storage";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 export type AuthPlan = MembershipPlanKey;
@@ -31,6 +49,7 @@ type AuthContextValue = {
   membershipSummary: MembershipSummary;
   userEmail: string;
   planError: string | null;
+  signOut: (options?: { redirectTo?: string }) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -180,6 +199,8 @@ async function resolvePlanForUser(nextSession: Session | null): Promise<Membersh
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const router = useRouter();
   const [session, setSession] = useState<Session | null>(null);
   const [authResolved, setAuthResolved] = useState(false);
   const [plan, setPlan] = useState<AuthPlan>("free");
@@ -201,6 +222,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     authResolved: false,
     planResolved: false
   });
+  const inactivitySignOutInProgressRef = useRef(false);
+  const latestLogoutBroadcastAtRef = useRef(0);
 
   useEffect(() => {
     latestAuthSnapshotRef.current = {
@@ -209,6 +232,133 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       planResolved
     };
   }, [authResolved, planResolved, session?.user?.id]);
+
+  function getCurrentSafePath() {
+    if (typeof window === "undefined") {
+      return resolveSafeReturnPath(pathname, "/");
+    }
+
+    return resolveSafeReturnPath(`${window.location.pathname}${window.location.search}${window.location.hash}`, "/");
+  }
+
+  function clearStoredInactivityState() {
+    safeLocalStorageRemove(AUTH_ACTIVITY_STORAGE_KEY);
+    safeLocalStorageRemove(AUTH_DEFERRED_LOGOUT_STORAGE_KEY);
+  }
+
+  function persistActivityTimestamp(now: number) {
+    safeLocalStorageSet(AUTH_ACTIVITY_STORAGE_KEY, String(now));
+  }
+
+  async function signOut(options?: { redirectTo?: string; reason?: "manual" | "inactivity"; preserveReturnPath?: string }) {
+    const redirectTo = options?.redirectTo ?? "/";
+    const reason = options?.reason ?? "manual";
+    const preserveReturnPath = options?.preserveReturnPath ?? getCurrentSafePath();
+    const safeReturnPath = resolveSafeReturnPath(preserveReturnPath);
+
+    if (inactivitySignOutInProgressRef.current) {
+      return;
+    }
+
+    inactivitySignOutInProgressRef.current = true;
+    clearStoredInactivityState();
+    safeLocalStorageSet(
+      AUTH_LOGOUT_BROADCAST_STORAGE_KEY,
+      serializeLogoutBroadcast({
+        issuedAt: Date.now(),
+        nextPath: safeReturnPath,
+        reason
+      })
+    );
+
+    const supabase = getSupabaseBrowserClient();
+
+    try {
+      await supabase?.auth.signOut();
+    } catch (error) {
+      console.error("[auth-provider] sign out failed", error);
+    } finally {
+      router.replace(redirectTo);
+      router.refresh();
+      inactivitySignOutInProgressRef.current = false;
+    }
+  }
+
+  function evaluateInactivity(args: { refreshActivity: boolean }) {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    if (!authResolved || !session?.user || inactivitySignOutInProgressRef.current) {
+      return;
+    }
+
+    const now = Date.now();
+    const rawActivityTimestamp = safeLocalStorageGet(AUTH_ACTIVITY_STORAGE_KEY);
+    const rawDeferredLogout = safeLocalStorageGet(AUTH_DEFERRED_LOGOUT_STORAGE_KEY);
+    const rawLogoutBroadcast = safeLocalStorageGet(AUTH_LOGOUT_BROADCAST_STORAGE_KEY);
+    const currentPath = getCurrentSafePath();
+    const logoutBroadcast = parseLogoutBroadcast(rawLogoutBroadcast);
+
+    if (logoutBroadcast) {
+      latestLogoutBroadcastAtRef.current = logoutBroadcast.issuedAt;
+    }
+
+    const action = resolveInactivityAction({
+      authResolved,
+      isAuthenticated: true,
+      currentPath,
+      rawActivityTimestamp,
+      rawDeferredLogout,
+      rawLogoutBroadcast,
+      now
+    });
+
+    if (action.type === "initialize") {
+      persistActivityTimestamp(now);
+      return;
+    }
+
+    if (action.type === "deferred-pending") {
+      return;
+    }
+
+    if (action.type === "defer-logout") {
+      safeLocalStorageSet(
+        AUTH_DEFERRED_LOGOUT_STORAGE_KEY,
+        serializeDeferredLogout(action.nextPath, now)
+      );
+      recordAuthDiagnostic("auth_inactivity_deferred", {
+        preservedNextRoute: action.nextPath
+      });
+      return;
+    }
+
+    if (action.type === "logout") {
+      recordAuthDiagnostic("auth_inactivity_logout_requested", {
+        preservedNextRoute: action.nextPath,
+        redirectDestination: buildLoginHref(action.nextPath),
+        reasonCode: "inactive_7_days"
+      });
+      void signOut({
+        redirectTo: buildLoginHref(action.nextPath),
+        preserveReturnPath: action.nextPath,
+        reason: "inactivity"
+      });
+      return;
+    }
+
+    if (!args.refreshActivity) {
+      return;
+    }
+
+    const parsedActivityTimestamp = parseActivityTimestamp(rawActivityTimestamp, now);
+    const lastTimestamp = parsedActivityTimestamp.shouldInitialize ? null : parsedActivityTimestamp.timestampMs;
+
+    if (shouldRefreshActivityTimestamp(lastTimestamp, now)) {
+      persistActivityTimestamp(now);
+    }
+  }
 
   useEffect(() => {
     let active = true;
@@ -379,6 +529,78 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
+  useEffect(() => {
+    if (!authResolved || !session?.user) {
+      clearStoredInactivityState();
+      return;
+    }
+
+    evaluateInactivity({
+      refreshActivity: false
+    });
+  }, [authResolved, session?.user]);
+
+  useEffect(() => {
+    if (!authResolved || !session?.user) {
+      return;
+    }
+
+    evaluateInactivity({
+      refreshActivity: true
+    });
+  }, [authResolved, pathname, session?.user]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    function handleVisibilityChange() {
+      if (document.visibilityState !== "visible") {
+        return;
+      }
+
+      evaluateInactivity({
+        refreshActivity: true
+      });
+    }
+
+    function handleMeaningfulActivity() {
+      evaluateInactivity({
+        refreshActivity: true
+      });
+    }
+
+    function handleStorage(event: StorageEvent) {
+      if (event.key !== AUTH_LOGOUT_BROADCAST_STORAGE_KEY) {
+        return;
+      }
+
+      const broadcast = parseLogoutBroadcast(event.newValue);
+
+      if (!broadcast || broadcast.issuedAt <= latestLogoutBroadcastAtRef.current) {
+        return;
+      }
+
+      latestLogoutBroadcastAtRef.current = broadcast.issuedAt;
+      clearStoredInactivityState();
+    }
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("pointerdown", handleMeaningfulActivity, { passive: true });
+    window.addEventListener("keydown", handleMeaningfulActivity);
+    window.addEventListener("touchstart", handleMeaningfulActivity, { passive: true });
+    window.addEventListener("storage", handleStorage);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("pointerdown", handleMeaningfulActivity);
+      window.removeEventListener("keydown", handleMeaningfulActivity);
+      window.removeEventListener("touchstart", handleMeaningfulActivity);
+      window.removeEventListener("storage", handleStorage);
+    };
+  }, [authResolved, pathname, session?.user]);
+
   const value = useMemo<AuthContextValue>(() => {
     const isLoggedIn = Boolean(session?.user);
     const hasActiveSubscription = isLoggedIn && isActiveMembershipStatus(membershipStatus) && plan !== "free";
@@ -397,9 +619,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       hasActiveSubscription,
       membershipSummary,
       userEmail: session?.user?.email || "",
-      planError
+      planError,
+      signOut
     };
-  }, [session, authResolved, membershipStatus, membershipSummary, plan, planError, planResolved]);
+  }, [session, authResolved, membershipStatus, membershipSummary, plan, planError, planResolved, signOut]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

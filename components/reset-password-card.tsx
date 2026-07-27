@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useAuthState } from "@/components/auth-provider";
 import { buildLoginHref, resolveSafeInternalNextPath } from "@/lib/auth-next";
 import { useSiteCopy } from "@/lib/i18n";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 export function ResetPasswordCard() {
-  const router = useRouter();
   const copy = useSiteCopy();
+  const { signOut } = useAuthState();
   const supabase = getSupabaseBrowserClient();
   const isAvailable = Boolean(supabase);
   const [password, setPassword] = useState("");
@@ -119,11 +119,9 @@ export function ResetPasswordCard() {
         throw error;
       }
 
-      await supabase.auth.signOut();
+      await signOut({ redirectTo: loginHref });
       setMessage(copy.loginPage.resetPageSuccess);
       setReady(false);
-      router.push(loginHref);
-      router.refresh();
     } catch (error) {
       console.error("[reset-password] update password error", error);
       setMessage(

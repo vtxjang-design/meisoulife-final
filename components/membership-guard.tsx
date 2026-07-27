@@ -51,6 +51,7 @@ export function useMembershipAccess(requiredPlan: ProtectedMembershipPlan | null
   const pathname = usePathname();
   const { authResolved, isLoggedIn, planResolved, planError, plan, membershipStatus, hasActiveSubscription, isMembershipLoading } =
     useAuthState();
+  const hasSupabaseClient = Boolean(getSupabaseClient());
   const nextPath = useMemo(() => {
     if (typeof window === "undefined") {
       return pathname;
@@ -58,12 +59,11 @@ export function useMembershipAccess(requiredPlan: ProtectedMembershipPlan | null
 
     return `${window.location.pathname}${window.location.search}${window.location.hash}`;
   }, [pathname]);
-  const supabase = getSupabaseClient();
   const status = useMemo<MembershipAccessState>(() => {
     return resolveMembershipAccessState({
       requiredPlan: Boolean(requiredPlan),
       authResolved,
-      hasSupabaseClient: Boolean(supabase),
+      hasSupabaseClient,
       isLoggedIn,
       planResolved,
       isMembershipLoading,
@@ -82,7 +82,7 @@ export function useMembershipAccess(requiredPlan: ProtectedMembershipPlan | null
     planError,
     planResolved,
     requiredPlan,
-    supabase
+    hasSupabaseClient
   ]);
 
   useEffect(() => {
@@ -136,7 +136,7 @@ export function useMembershipAccess(requiredPlan: ProtectedMembershipPlan | null
       return;
     }
 
-    if (!supabase) {
+    if (!hasSupabaseClient) {
       logMembershipAccess("missing Supabase configuration");
       return;
     }
@@ -182,8 +182,8 @@ export function useMembershipAccess(requiredPlan: ProtectedMembershipPlan | null
     planError,
     planResolved,
     requiredPlan,
+    hasSupabaseClient,
     router,
-    supabase
   ]);
 
   return {
@@ -197,21 +197,12 @@ export function useMembershipAccess(requiredPlan: ProtectedMembershipPlan | null
 export function MembershipAccessStateView({ access, showLogout = false }: { access: MembershipAccessResult; showLogout?: boolean }) {
   const router = useRouter();
   const { language } = useLanguage();
-  const { planError } = useAuthState();
+  const { planError, signOut } = useAuthState();
   const copy = useSiteCopy();
   const guardCopy = getLocaleCopy(membershipGuardCopy, language);
 
   async function handleLogout() {
-    const supabase = getSupabaseClient();
-
-    if (!supabase) {
-      router.push("/");
-      return;
-    }
-
-    await supabase.auth.signOut();
-    router.push("/");
-    router.refresh();
+    await signOut({ redirectTo: "/" });
   }
 
   if (access.status === "checking" || access.status === "redirecting") {
