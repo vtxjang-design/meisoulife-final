@@ -77,6 +77,15 @@ const gateIcons: Record<ZeroGateDestinationKey, LucideIcon> = {
   sleep: Moon
 };
 
+const gateTones: Record<ZeroGateDestinationKey, string> = {
+  overload: "rgba(53, 102, 88, 0.18)",
+  anxiety: "rgba(132, 102, 67, 0.17)",
+  "low-energy": "rgba(137, 79, 48, 0.17)",
+  distracted: "rgba(71, 101, 126, 0.18)",
+  "reset-mood": "rgba(43, 91, 127, 0.18)",
+  sleep: "rgba(91, 100, 139, 0.17)"
+};
+
 export function ZeroGateSection({ onEnterGate }: ZeroGateSectionProps) {
   const copy = useLocaleCopy(zeroGateCopy);
 
@@ -91,7 +100,7 @@ export function ZeroGateSection({ onEnterGate }: ZeroGateSectionProps) {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_68%,rgba(6,23,31,0.2),transparent_24%)]" />
         </div>
         <div className="relative max-w-[24ch] sm:max-w-[32rem]">
-          <p className="text-[0.7rem] uppercase tracking-[0.2em] text-gold/70 sm:text-[0.74rem] sm:tracking-[0.3em]">{copy.eyebrow}</p>
+          <p className="text-[0.7rem] uppercase tracking-[0.2em] text-gold/60 sm:text-[0.74rem] sm:tracking-[0.3em]">{copy.eyebrow}</p>
           {copy.mobilePrompt ? <p className="mt-1 text-[13px] leading-[1.45] text-white/60 sm:hidden">{copy.mobilePrompt}</p> : null}
           <h2 className="hero-measure keep-phrase mt-2 hidden whitespace-pre-line font-serif text-[clamp(1.34rem,5.1vw,2rem)] leading-[1.18] text-white sm:block sm:max-w-[13ch] sm:text-[clamp(1.6rem,3vw,2.12rem)]">
             {copy.title}
@@ -114,6 +123,7 @@ export function ZeroGateSection({ onEnterGate }: ZeroGateSectionProps) {
               worldName={gate.worldName}
               description={gate.description}
               ctaLabel={copy.hoverCta}
+              tone={gateTones[gate.key]}
               onClick={() => onEnterGate(gate.key)}
             />;
           })}

@@ -31,5 +31,20 @@ test("mobile ZERO GATE preserves all six ordered choices with accessible compact
   assert.doesNotMatch(zeroGateSource, /emoji:/);
   assert.match(gateCardSource, /min-h-\[104px\]/);
   assert.match(gateCardSource, /focus-visible:ring-2/);
-  assert.match(gateCardSource, /motion-reduce:transform-none/);
+  assert.match(gateCardSource, /motion-reduce:transition-none/);
+});
+
+test("mobile ZERO GATE gives each recovery entrance a quiet natural tone and keeps the continuation action secondary", () => {
+  assert.match(zeroGateSource, /const gateTones: Record<ZeroGateDestinationKey, string>/);
+  for (const key of ["overload", "anxiety", "low-energy", "distracted", "reset-mood", "sleep"]) {
+    const property = key.includes("-") ? `"${key}"` : key;
+    assert.ok(zeroGateSource.includes(`${property}: "rgba`), `Expected a natural tone for ${key}`);
+  }
+  assert.match(gateCardSource, /border-white\/\[0\.14\]/);
+  assert.match(gateCardSource, /bg-\[linear-gradient\(135deg,var\(--gate-tone/);
+  assert.match(gateCardSource, /text-white\/92/);
+  assert.match(gateCardSource, /text-white\/50/);
+  assert.match(gateCardSource, /group-focus-visible:text-gold\/82/);
+  assert.match(homeSource, /border-t border-white\/\[0\.08\]/);
+  assert.match(homeSource, /min-h-\[44px\]/);
 });

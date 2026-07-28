@@ -73,3 +73,18 @@ test("ZERO GATE completion exits fullscreen before scrolling the reflection brid
   assert.match(instantMeditationSource, /block: "start"/);
   assert.match(instantMeditationSource, /window\.requestAnimationFrame\(\(\) => \{\s*secondLayoutFrame = window\.requestAnimationFrame/s);
 });
+
+test("ZERO GATE selection scrolls the mounted experience once without retaining selection-only constraints", () => {
+  const homeSource = readFileSync(new URL("../app/page.tsx", import.meta.url), "utf8");
+
+  assert.match(homeSource, /zeroGateExperienceActive/);
+  assert.match(homeSource, /\? "overflow-visible"\s*:\s*"max-h-\[calc\(100dvh-var\(--header-offset,0px\)\)\] overflow-y-auto overscroll-contain"/);
+  assert.match(homeSource, /onExperienceActiveChange=\{setZeroGateExperienceActive\}/);
+  assert.doesNotMatch(homeSource, /scrollToOneMinute/);
+  assert.match(instantMeditationSource, /experienceContainerRef/);
+  assert.match(instantMeditationSource, /experienceScrollRequestedRef/);
+  assert.match(instantMeditationSource, /id="one-minute-experience" ref=\{experienceContainerRef\}/);
+  assert.match(instantMeditationSource, /behavior: prefersReducedMotion \? "auto" : "smooth"/);
+  assert.match(instantMeditationSource, /window\.requestAnimationFrame\(\(\) => \{\s*experienceContainerRef\.current\?\.scrollIntoView/);
+  assert.doesNotMatch(instantMeditationSource, /scrollPlayerIntoView/);
+});

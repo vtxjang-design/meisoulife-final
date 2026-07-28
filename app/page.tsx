@@ -530,6 +530,7 @@ export default function HomePage() {
   const copy = useLocaleCopy(homeCopy);
   const [giftDelivered, setGiftDelivered] = useState(false);
   const [activeChapterIndex, setActiveChapterIndex] = useState<number | null>(null);
+  const [zeroGateExperienceActive, setZeroGateExperienceActive] = useState(false);
   const [basicJourneyPending, setBasicJourneyPending] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [headerOffset, setHeaderOffset] = useState(112);
@@ -703,17 +704,6 @@ export default function HomePage() {
     });
   }
 
-  function scrollToOneMinute() {
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    document.querySelector("#one-minute-experience")?.scrollIntoView({
-      behavior: prefersReducedMotion ? "auto" : "smooth",
-      block: "start"
-    });
-  }
-
   function scrollToSection(sectionId: string) {
     if (typeof window === "undefined") {
       return;
@@ -774,7 +764,7 @@ export default function HomePage() {
       window.dispatchEvent(new CustomEvent("meisoulife:zero-gate-change", { detail: payload }));
     }
 
-    scrollToOneMinute();
+    setZeroGateExperienceActive(true);
   }
 
   function handleBasicJourneyCta() {
@@ -918,9 +908,13 @@ export default function HomePage() {
         <div className="section-shell">
           <div
             ref={recoveryScrollRef}
-            className="flex max-h-[calc(100dvh-var(--header-offset,0px))] min-h-0 flex-col overflow-y-auto overscroll-contain pr-0.5 [-webkit-overflow-scrolling:touch] sm:pr-1"
+            className={`flex min-h-0 flex-col pr-0.5 [-webkit-overflow-scrolling:touch] sm:pr-1 ${
+              zeroGateExperienceActive
+                ? "overflow-visible"
+                : "max-h-[calc(100dvh-var(--header-offset,0px))] overflow-y-auto overscroll-contain"
+            }`}
             style={{
-              minHeight: viewportSectionMinHeight,
+              minHeight: zeroGateExperienceActive ? undefined : viewportSectionMinHeight,
               paddingBottom: "max(1rem, calc(env(safe-area-inset-bottom) + 0.5rem))",
               ["--header-offset" as string]: `${headerOffset}px`
             }}
@@ -937,7 +931,7 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={() => openChapterJourney(0)}
-                  className="group inline-flex min-h-[44px] w-full items-center justify-between gap-2 rounded-[14px] border border-white/8 bg-transparent px-3.5 py-2 text-[13px] font-medium text-white/68 transition duration-200 hover:border-gold/22 hover:text-white/84 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d] motion-reduce:transform-none sm:min-h-[44px] sm:w-auto sm:justify-end sm:rounded-full sm:border-white/10 sm:bg-white/[0.03] sm:px-5 sm:py-2.5 sm:text-sm sm:text-white/74"
+                  className="group inline-flex min-h-[44px] w-full items-center justify-between gap-2 border-t border-white/[0.08] bg-transparent px-1 py-2 text-[13px] font-medium text-white/52 transition-colors duration-200 [@media(hover:hover)]:hover:border-gold/22 [@media(hover:hover)]:hover:text-white/78 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09131d] active:text-white/80 motion-reduce:transition-none sm:min-h-[44px] sm:w-auto sm:justify-end sm:rounded-full sm:border sm:border-white/10 sm:bg-white/[0.03] sm:px-5 sm:py-2.5 sm:text-sm sm:text-white/74"
                 >
                   <span>{copy.chapters.continueJourney}</span>
                   <span
@@ -948,7 +942,7 @@ export default function HomePage() {
                   </span>
                 </button>
               </div>
-              <InstantMeditationSection copy={landing.instant} />
+              <InstantMeditationSection copy={landing.instant} onExperienceActiveChange={setZeroGateExperienceActive} />
             </div>
           </div>
         </div>

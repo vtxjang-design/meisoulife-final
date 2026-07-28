@@ -22,6 +22,7 @@ type WebkitFullscreenDocument = Document & {
 
 type InstantMeditationSectionProps = {
   copy: LandingCopy["instant"];
+  onExperienceActiveChange?: (active: boolean) => void;
 };
 
 type ZeroGateKey = "overload" | "anxiety" | "low-energy" | "distracted" | "reset-mood" | "sleep";
@@ -331,7 +332,7 @@ function getFullscreenLabel(language: Language) {
   return "View fullscreen";
 }
 
-export function InstantMeditationSection({ copy }: InstantMeditationSectionProps) {
+export function InstantMeditationSection({ copy, onExperienceActiveChange }: InstantMeditationSectionProps) {
   const { language } = useLanguage();
   const [running, setRunning] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(TOTAL_SECONDS);
@@ -353,12 +354,13 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const [fullscreenAvailable, setFullscreenAvailable] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const playerRef = useRef<HTMLDivElement | null>(null);
+  const experienceContainerRef = useRef<HTMLElement | null>(null);
   const recoveryContainerRef = useRef<HTMLDivElement | null>(null);
   const reflectionBridgeRef = useRef<HTMLDivElement | null>(null);
   const timerRef = useRef<number | null>(null);
   const completionHandledRef = useRef(false);
   const reflectionScrollRequestedRef = useRef(false);
+  const experienceScrollRequestedRef = useRef(false);
   const pendingAutoStartRef = useRef(false);
   const openingTimerRefs = useRef<number[]>([]);
   const gateTransitionTimerRefs = useRef<number[]>([]);
@@ -610,6 +612,28 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const transitionMeta = isZeroGateKey(selectedGate) ? gateTransitionMeta[selectedGate] : null;
   const showTransitionLayer = showGateTransition && transitionMeta;
   const showRecoveryLayer = running || showCompletionState || videoFailed;
+
+  useEffect(() => {
+    onExperienceActiveChange?.(hasSelectedGate);
+  }, [hasSelectedGate, onExperienceActiveChange]);
+
+  useEffect(() => {
+    if (!hasSelectedGate || !showRecoveryLayer || experienceScrollRequestedRef.current || typeof window === "undefined") {
+      return;
+    }
+
+    experienceScrollRequestedRef.current = true;
+    const frame = window.requestAnimationFrame(() => {
+      experienceContainerRef.current?.scrollIntoView({
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+        block: "start"
+      });
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+    };
+  }, [hasSelectedGate, prefersReducedMotion, showRecoveryLayer]);
   const showFullscreenButton =
     running &&
     hasSelectedGate &&
@@ -804,17 +828,6 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     void syncVideoAudio(running, soundEnabled);
   }, [activeVideoSource, running, soundEnabled, videoFailed]);
 
-  function scrollPlayerIntoView() {
-    const node = playerRef.current;
-
-    if (!node || typeof window === "undefined") {
-      return;
-    }
-
-    const top = node.getBoundingClientRect().top + window.scrollY - 88;
-    window.scrollTo({ top: Math.max(top, 0), behavior: "smooth" });
-  }
-
   async function startMeditationExperience(nextExperience: MeditationExperienceKey = selectedGate) {
     setHasUserGesture(true);
     setHasSelectedGate(true);
@@ -846,15 +859,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     setSelectedSupportChoice("");
     setShowReflectionBridge(true);
     reflectionScrollRequestedRef.current = false;
-    scrollPlayerIntoView();
-
-    if (typeof window !== "undefined") {
-      window.requestAnimationFrame(() => {
-        window.setTimeout(() => {
-          scrollPlayerIntoView();
-        }, 120);
-      });
-    }
+    experienceScrollRequestedRef.current = false;
 
     startGateTransition();
 
@@ -961,8 +966,6 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
           object-fit: cover;
         }
       `}</style>
-      <div id="one-minute-experience" ref={playerRef} className="h-0 scroll-mt-24" />
-      <div id="one-minute-meditation" />
       {showTransitionLayer ? (
         <div className="fixed inset-0 z-[80] flex items-center justify-center bg-[linear-gradient(180deg,rgba(2,6,12,0.82),rgba(2,6,12,0.92)_54%,rgba(2,6,12,0.96))] px-6">
           <div
@@ -980,7 +983,8 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
         </div>
       ) : null}
       {showRecoveryLayer ? (
-        <section className="section-shell mt-8 sm:mt-10">
+        <section id="one-minute-experience" ref={experienceContainerRef} className="section-shell mt-8 scroll-mt-24 sm:mt-10">
+          <div id="one-minute-meditation" />
           <div className={showCompletionState ? "grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center" : ""}>
             {showCompletionState ? (
               <div className="order-2 space-y-4.5 lg:order-1">
