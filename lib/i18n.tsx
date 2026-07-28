@@ -1054,9 +1054,9 @@ export const siteCopy = {
         title: "BOS 5法則",
         description: "BOS 5法則は、脳を意識的に活用し、自分の人生の主人になるための五つの実践原則です。",
         items: [
-          { principle: "目を覚まし、意識を向ける", question: "今、私は目覚めて気づいているだろうか？" },
+          { principle: "いつも目覚めている", question: "今、私は目覚めて気づいているだろうか？" },
           { principle: "グッドニュースがグッドブレインをつくる", question: "私はどんな情報を選ぶだろうか？" },
-          { principle: "選択すれば、実現する", question: "選んだことを行動に移しているだろうか？" },
+          { principle: "選択すれば、成し遂げられる", question: "選んだことを行動に移しているだろうか？" },
           { principle: "時間と空間の主人になる", question: "自分の時間と注意を自分で導いているだろうか？" },
           { principle: "すべての環境をデザインする", question: "私はどんな環境をつくっているだろうか？" }
         ],

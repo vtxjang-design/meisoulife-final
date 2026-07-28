@@ -40,7 +40,7 @@ test("Brain Education copy is complete in Japanese, Korean, and English with req
 test("BOS laws use the official ordered wording in Korean, Japanese, and English", () => {
   const lawSets = [
     ["정신 차려라", "굿 뉴스가 굿 브레인을 만든다", "선택하면 이루어진다", "시간과 공간의 주인이 되어라", "모든 환경을 디자인하라"],
-    ["目を覚まし、意識を向ける", "グッドニュースがグッドブレインをつくる", "選択すれば、実現する", "時間と空間の主人になる", "すべての環境をデザインする"],
+    ["いつも目覚めている", "グッドニュースがグッドブレインをつくる", "選択すれば、成し遂げられる", "時間と空間の主人になる", "すべての環境をデザインする"],
     ["Wake up and pay attention.", "Good news makes a good brain.", "Choose. If you choose it, it will happen.", "Become the master of time and space.", "Design all circumstances."],
   ];
 
