@@ -8,6 +8,18 @@ import { markDailyRhythmCompleted } from "@/lib/return-rhythm";
 
 type Phase = "inhale" | "hold" | "exhale";
 
+type WebkitFullscreenVideoElement = HTMLVideoElement & {
+  webkitDisplayingFullscreen?: boolean;
+  webkitEnterFullscreen?: () => void;
+  webkitRequestFullscreen?: () => Promise<void> | void;
+  webkitExitFullscreen?: () => void;
+};
+
+type WebkitFullscreenDocument = Document & {
+  webkitFullscreenElement?: Element | null;
+  webkitExitFullscreen?: () => void;
+};
+
 type InstantMeditationSectionProps = {
   copy: LandingCopy["instant"];
 };
@@ -343,8 +355,10 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const playerRef = useRef<HTMLDivElement | null>(null);
   const recoveryContainerRef = useRef<HTMLDivElement | null>(null);
+  const reflectionBridgeRef = useRef<HTMLDivElement | null>(null);
   const timerRef = useRef<number | null>(null);
   const completionHandledRef = useRef(false);
+  const reflectionScrollRequestedRef = useRef(false);
   const pendingAutoStartRef = useRef(false);
   const openingTimerRefs = useRef<number[]>([]);
   const gateTransitionTimerRefs = useRef<number[]>([]);
@@ -356,6 +370,8 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const phase = useMemo(() => getPhase(elapsedSeconds), [elapsedSeconds]);
   const phaseSecondsLeft = useMemo(() => getPhaseSecondsRemaining(elapsedSeconds), [elapsedSeconds]);
   const progress = elapsedSeconds / TOTAL_SECONDS;
+  const showCompletionState = secondsLeft === 0;
+  const showZeroGateReflection = showCompletionState && isZeroGateKey(selectedGate) && showReflectionBridge;
 
   useEffect(() => {
     if (!running || !recoveryStarted) {
@@ -449,12 +465,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
 
     const video = videoRef.current;
     const container = recoveryContainerRef.current;
-    const videoTarget = video as
-      | (HTMLVideoElement & {
-          webkitEnterFullscreen?: () => void;
-          webkitRequestFullscreen?: () => Promise<void> | void;
-        })
-      | null;
+    const videoTarget = video as WebkitFullscreenVideoElement | null;
     const containerTarget = container as
       | (HTMLDivElement & {
           webkitRequestFullscreen?: () => Promise<void> | void;
@@ -470,6 +481,87 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
       )
     );
   }, [running, secondsLeft, hasSelectedGate, videoLoading, videoFailed]);
+
+  useEffect(() => {
+    if (!showZeroGateReflection || typeof document === "undefined") {
+      return;
+    }
+
+    const fullscreenDocument = document as WebkitFullscreenDocument;
+    const video = videoRef.current as WebkitFullscreenVideoElement | null;
+    let firstLayoutFrame: number | null = null;
+    let secondLayoutFrame: number | null = null;
+    let cancelled = false;
+
+    const scheduleReflectionScroll = () => {
+      if (
+        cancelled ||
+        reflectionScrollRequestedRef.current ||
+        fullscreenDocument.fullscreenElement ||
+        fullscreenDocument.webkitFullscreenElement ||
+        video?.webkitDisplayingFullscreen
+      ) {
+        return;
+      }
+
+      reflectionScrollRequestedRef.current = true;
+      firstLayoutFrame = window.requestAnimationFrame(() => {
+        secondLayoutFrame = window.requestAnimationFrame(() => {
+          reflectionBridgeRef.current?.scrollIntoView({
+            behavior: prefersReducedMotion ? "auto" : "smooth",
+            block: "start"
+          });
+        });
+      });
+    };
+
+    const handleStandardFullscreenChange = () => {
+      scheduleReflectionScroll();
+    };
+
+    const handleNativeVideoFullscreenEnd = () => {
+      scheduleReflectionScroll();
+    };
+
+    document.addEventListener("fullscreenchange", handleStandardFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleStandardFullscreenChange);
+    video?.addEventListener("webkitendfullscreen", handleNativeVideoFullscreenEnd);
+
+    if (fullscreenDocument.fullscreenElement || fullscreenDocument.webkitFullscreenElement) {
+      if (document.exitFullscreen) {
+        void document.exitFullscreen().catch(() => undefined);
+      } else {
+        try {
+          fullscreenDocument.webkitExitFullscreen?.();
+        } catch {
+          // Older WebKit browsers can require the user to exit fullscreen themselves.
+        }
+      }
+    } else if (video?.webkitDisplayingFullscreen) {
+      try {
+        video.webkitExitFullscreen?.();
+      } catch {
+        // iPhone Safari can require the native player to be dismissed by the user.
+      }
+    } else {
+      scheduleReflectionScroll();
+    }
+
+    return () => {
+      cancelled = true;
+      document.removeEventListener("fullscreenchange", handleStandardFullscreenChange);
+      document.removeEventListener("webkitfullscreenchange", handleStandardFullscreenChange);
+      video?.removeEventListener("webkitendfullscreen", handleNativeVideoFullscreenEnd);
+
+      if (firstLayoutFrame !== null) {
+        window.cancelAnimationFrame(firstLayoutFrame);
+      }
+
+      if (secondLayoutFrame !== null) {
+        window.cancelAnimationFrame(secondLayoutFrame);
+      }
+    };
+  }, [prefersReducedMotion, showZeroGateReflection]);
 
   useEffect(() => {
     setSelectedGate(readStoredGate());
@@ -516,8 +608,6 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const openingSequenceActive = showOpeningOverlay && openingMessage;
   const recoveryUiVisible = recoveryStarted && hasSelectedGate && secondsLeft > 0;
   const transitionMeta = isZeroGateKey(selectedGate) ? gateTransitionMeta[selectedGate] : null;
-  const showCompletionState = secondsLeft === 0;
-  const showZeroGateReflection = showCompletionState && isZeroGateKey(selectedGate) && showReflectionBridge;
   const showTransitionLayer = showGateTransition && transitionMeta;
   const showRecoveryLayer = running || showCompletionState || videoFailed;
   const showFullscreenButton =
@@ -739,6 +829,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     setRecoveryStarted(false);
     setSelectedSupportChoice("");
     setShowReflectionBridge(true);
+    reflectionScrollRequestedRef.current = false;
 
     setRunning(true);
     startOpeningSequence(nextExperience);
@@ -754,6 +845,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     setAudioBlocked(false);
     setSelectedSupportChoice("");
     setShowReflectionBridge(true);
+    reflectionScrollRequestedRef.current = false;
     scrollPlayerIntoView();
 
     if (typeof window !== "undefined") {
@@ -788,10 +880,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
       return;
     }
 
-    const videoTarget = video as HTMLVideoElement & {
-      webkitEnterFullscreen?: () => void;
-      webkitRequestFullscreen?: () => Promise<void> | void;
-    };
+    const videoTarget = video as WebkitFullscreenVideoElement | null;
     const containerTarget = container as HTMLDivElement & {
       webkitRequestFullscreen?: () => Promise<void> | void;
     };
@@ -898,7 +987,7 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
                 <div className="rounded-[24px] border border-gold/18 bg-gold/[0.06] p-5">
                   <p className="text-sm leading-[1.8] text-white/82">{copy.completionMessage}</p>
                   {showZeroGateReflection ? (
-                    <div className="mt-5 border-t border-white/10 pt-5">
+                    <div ref={reflectionBridgeRef} className="mt-5 border-t border-white/10 pt-5">
                       <p className="text-sm font-medium leading-6 text-white/82">{copy.reflection.recoveryQuestion}</p>
                       <p className="mt-2 text-sm leading-6 text-white/58">{copy.reflection.awarenessPrompt}</p>
                       <p className="mt-4 text-sm font-medium leading-6 text-white/78">{copy.reflection.choiceQuestion}</p>

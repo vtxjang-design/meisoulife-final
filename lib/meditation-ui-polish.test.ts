@@ -60,3 +60,16 @@ test("ZERO GATE completion offers an optional localized reflection without persi
   assert.match(landingCopySource, /조금 더 편안해진 느낌이 있나요\?/);
   assert.match(landingCopySource, /Do you feel a little more at ease\?/);
 });
+
+test("ZERO GATE completion exits fullscreen before scrolling the reflection bridge once", () => {
+  assert.match(instantMeditationSource, /reflectionBridgeRef/);
+  assert.match(instantMeditationSource, /document\.addEventListener\("fullscreenchange", handleStandardFullscreenChange\)/);
+  assert.match(instantMeditationSource, /document\.addEventListener\("webkitfullscreenchange", handleStandardFullscreenChange\)/);
+  assert.match(instantMeditationSource, /video\?\.addEventListener\("webkitendfullscreen", handleNativeVideoFullscreenEnd\)/);
+  assert.match(instantMeditationSource, /void document\.exitFullscreen\(\)\.catch\(\(\) => undefined\)/);
+  assert.match(instantMeditationSource, /video\.webkitExitFullscreen\?\.\(\)/);
+  assert.match(instantMeditationSource, /reflectionScrollRequestedRef\.current/);
+  assert.match(instantMeditationSource, /behavior: prefersReducedMotion \? "auto" : "smooth"/);
+  assert.match(instantMeditationSource, /block: "start"/);
+  assert.match(instantMeditationSource, /window\.requestAnimationFrame\(\(\) => \{\s*secondLayoutFrame = window\.requestAnimationFrame/s);
+});
