@@ -5,6 +5,7 @@ import test from "node:test";
 const meditationPageSource = readFileSync(new URL("../app/meditation/page.tsx", import.meta.url), "utf8");
 const rhythmJourneyPageSource = readFileSync(new URL("../components/rhythm-journey-page.tsx", import.meta.url), "utf8");
 const instantMeditationSource = readFileSync(new URL("../components/instant-meditation-section.tsx", import.meta.url), "utf8");
+const landingCopySource = readFileSync(new URL("../lib/landing-copy.ts", import.meta.url), "utf8");
 
 test("recharge gate titles avoid awkward mobile wrapping while preserving desktop sizing", () => {
   assert.match(meditationPageSource, /localizedLanguage === "kr"/);
@@ -46,4 +47,16 @@ test("60-second reset replay and cleanup restore the intended audio start state"
   assert.match(instantMeditationSource, /video\.volume = nextSoundEnabled \? 0\.28 : 0;/);
   assert.match(instantMeditationSource, /video\.muted = !nextSoundEnabled;/);
   assert.match(instantMeditationSource, /window\.cancelAnimationFrame\(videoFadeRafRef\.current\)/);
+});
+
+test("ZERO GATE completion offers an optional localized reflection without persistence", () => {
+  assert.match(instantMeditationSource, /showReflectionBridge/);
+  assert.match(instantMeditationSource, /showCompletionState && isZeroGateKey\(selectedGate\) && showReflectionBridge/);
+  assert.match(instantMeditationSource, /aria-pressed=\{selected\}/);
+  assert.match(instantMeditationSource, /setShowReflectionBridge\(false\)/);
+  assert.doesNotMatch(instantMeditationSource, /MEDITATION_MOOD_STORAGE_KEY/);
+  assert.doesNotMatch(instantMeditationSource, /meisoulife_instant_meditation_mood/);
+  assert.match(landingCopySource, /少しだけ、楽になった感じはありますか？/);
+  assert.match(landingCopySource, /조금 더 편안해진 느낌이 있나요\?/);
+  assert.match(landingCopySource, /Do you feel a little more at ease\?/);
 });

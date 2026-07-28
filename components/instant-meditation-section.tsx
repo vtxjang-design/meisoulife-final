@@ -20,7 +20,6 @@ const TOTAL_SECONDS = 60;
 const INHALE_SECONDS = 4;
 const HOLD_SECONDS = 2;
 const EXHALE_SECONDS = 4;
-const MEDITATION_MOOD_STORAGE_KEY = "meisoulife_instant_meditation_mood";
 const ZERO_GATE_STORAGE_KEY = "meisoulife_zero_gate";
 const DEFAULT_SANCTUARY: ZeroGateKey = "overload";
 const PRE_START_TRANSITION_MS = 1000;
@@ -326,7 +325,8 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const [secondsLeft, setSecondsLeft] = useState(TOTAL_SECONDS);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [hasUserGesture, setHasUserGesture] = useState(false);
-  const [selectedMood, setSelectedMood] = useState("");
+  const [selectedSupportChoice, setSelectedSupportChoice] = useState("");
+  const [showReflectionBridge, setShowReflectionBridge] = useState(true);
   const [selectedGate, setSelectedGate] = useState<MeditationExperienceKey>(DEFAULT_SANCTUARY);
   const [hasSelectedGate, setHasSelectedGate] = useState(false);
   const [videoLoading, setVideoLoading] = useState(false);
@@ -512,12 +512,12 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
   const fullscreenLabel = getFullscreenLabel(language);
   const sanctuaryVisual = sanctuaryVisuals[selectedGate];
   const activeVideoSource = hasSelectedGate ? sanctuaryVisual.source : null;
-  const visibleMoods = copy.moods.filter((mood) => mood.key !== "hard");
   const openingMessage = isZeroGateKey(selectedGate) ? openingMessages[selectedGate][language] : null;
   const openingSequenceActive = showOpeningOverlay && openingMessage;
   const recoveryUiVisible = recoveryStarted && hasSelectedGate && secondsLeft > 0;
   const transitionMeta = isZeroGateKey(selectedGate) ? gateTransitionMeta[selectedGate] : null;
   const showCompletionState = secondsLeft === 0;
+  const showZeroGateReflection = showCompletionState && isZeroGateKey(selectedGate) && showReflectionBridge;
   const showTransitionLayer = showGateTransition && transitionMeta;
   const showRecoveryLayer = running || showCompletionState || videoFailed;
   const showFullscreenButton =
@@ -737,6 +737,8 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     pendingAutoStartRef.current = true;
     endingFadeStartedRef.current = false;
     setRecoveryStarted(false);
+    setSelectedSupportChoice("");
+    setShowReflectionBridge(true);
 
     setRunning(true);
     startOpeningSequence(nextExperience);
@@ -750,7 +752,8 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     setVideoLoading(true);
     setVideoFailed(false);
     setAudioBlocked(false);
-    setSelectedMood("");
+    setSelectedSupportChoice("");
+    setShowReflectionBridge(true);
     scrollPlayerIntoView();
 
     if (typeof window !== "undefined") {
@@ -825,20 +828,8 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
     });
   }
 
-  function handleMoodSelect(moodKey: string) {
-    setSelectedMood(moodKey);
-
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    window.localStorage.setItem(
-      MEDITATION_MOOD_STORAGE_KEY,
-      JSON.stringify({
-        moodKey,
-        recordedAt: new Date().toISOString()
-      })
-    );
+  function handleSupportChoice(choiceKey: string) {
+    setSelectedSupportChoice(choiceKey);
   }
 
   function handleVideoError() {
@@ -906,30 +897,43 @@ export function InstantMeditationSection({ copy }: InstantMeditationSectionProps
               <div className="order-2 space-y-4.5 lg:order-1">
                 <div className="rounded-[24px] border border-gold/18 bg-gold/[0.06] p-5">
                   <p className="text-sm leading-[1.8] text-white/82">{copy.completionMessage}</p>
-                  <div className="mt-5">
-                    <p className="text-sm font-medium text-white/78">{copy.moodQuestion}</p>
-                    <div className="mt-3 grid gap-2 sm:grid-cols-3">
-                      {visibleMoods.map((mood) => {
-                        const selected = selectedMood === mood.key;
+                  {showZeroGateReflection ? (
+                    <div className="mt-5 border-t border-white/10 pt-5">
+                      <p className="text-sm font-medium leading-6 text-white/82">{copy.reflection.recoveryQuestion}</p>
+                      <p className="mt-2 text-sm leading-6 text-white/58">{copy.reflection.awarenessPrompt}</p>
+                      <p className="mt-4 text-sm font-medium leading-6 text-white/78">{copy.reflection.choiceQuestion}</p>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {copy.supportChoices.map((choice) => {
+                          const selected = selectedSupportChoice === choice.key;
 
-                        return (
-                          <button
-                            key={mood.key}
-                            type="button"
-                            onClick={() => handleMoodSelect(mood.key)}
-                            className={`min-h-[52px] rounded-[20px] border px-4 py-3 text-sm font-medium transition duration-300 ${
-                              selected
-                                ? "border-gold/35 bg-gold/[0.16] text-white shadow-[0_12px_28px_rgba(212,186,117,0.12)]"
-                                : "border-white/10 bg-white/[0.05] text-white/72 hover:border-white/14 hover:bg-white/[0.07] hover:text-white"
-                            }`}
-                          >
-                            {mood.label}
-                          </button>
-                        );
-                      })}
+                          return (
+                            <button
+                              key={choice.key}
+                              type="button"
+                              aria-pressed={selected}
+                              onClick={() => handleSupportChoice(choice.key)}
+                              className={`min-h-[44px] rounded-full border px-4 py-2 text-sm font-medium transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/65 focus-visible:ring-offset-2 focus-visible:ring-offset-[#08111b] ${
+                                selected
+                                  ? "border-gold/35 bg-gold/[0.16] text-white shadow-[0_12px_28px_rgba(212,186,117,0.12)]"
+                                  : "border-white/10 bg-white/[0.05] text-white/72 hover:border-white/14 hover:bg-white/[0.07] hover:text-white"
+                              }`}
+                            >
+                              {choice.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                      {selectedSupportChoice ? <p className="mt-3 text-sm leading-6 text-white/56">{copy.reflection.choiceAcknowledgement}</p> : null}
+                      <p className="mt-3 text-xs leading-5 text-white/48">{copy.reflection.noChangeNote}</p>
+                      <button
+                        type="button"
+                        onClick={() => setShowReflectionBridge(false)}
+                        className="mt-3 min-h-[44px] text-sm text-white/60 underline decoration-white/25 underline-offset-4 transition hover:text-white/82 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/65 focus-visible:ring-offset-2 focus-visible:ring-offset-[#08111b]"
+                      >
+                        {copy.reflection.skipLabel}
+                      </button>
                     </div>
-                    {selectedMood ? <p className="mt-3 text-sm leading-7 text-white/56">{copy.moodSaved}</p> : null}
-                  </div>
+                  ) : null}
                   <div className="mt-5 rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-4 text-center">
                     <p className="text-sm leading-6 text-white/68">{nextStepText}</p>
                     <a

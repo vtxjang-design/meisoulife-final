@@ -117,9 +117,15 @@ export type LandingCopy = {
     exhale: string;
     sensory: string;
     stages: string[];
-    moodQuestion: string;
-    moodSaved: string;
-    moods: Array<{
+    reflection: {
+      recoveryQuestion: string;
+      awarenessPrompt: string;
+      choiceQuestion: string;
+      noChangeNote: string;
+      choiceAcknowledgement: string;
+      skipLabel: string;
+    };
+    supportChoices: Array<{
       key: string;
       label: string;
     }>;
@@ -510,13 +516,20 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       exhale: "吐いて",
       sensory: "読む前に、まず呼吸へ。目を閉じたままでも、静かなリズムを感じられます。",
       stages: ["10 sec breathing", "20 sec body awareness", "20 sec emotional calming", "10 sec gratitude"],
-      moodQuestion: "少し変わりましたか？",
-      moodSaved: "小さな変化を受け取りました。",
-      moods: [
-        { key: "lighter", label: "🙂 少し軽くなった" },
-        { key: "calm", label: "😌 落ち着いた" },
-        { key: "hard", label: "😢 まだ苦しい" },
-        { key: "again", label: "🌱 また続けたい" }
+      reflection: {
+        recoveryQuestion: "少しだけ、楽になった感じはありますか？",
+        awarenessPrompt: "何も変えようとせず、今の違いに気づいてみてください。",
+        choiceQuestion: "今の自分を支える、小さな選択は？",
+        noChangeNote: "変化がなくても大丈夫です。",
+        choiceAcknowledgement: "そのままで大丈夫です。",
+        skipLabel: "今はこのままにする"
+      },
+      supportChoices: [
+        { key: "water", label: "水を飲む" },
+        { key: "walk", label: "少しゆっくり歩く" },
+        { key: "phone", label: "スマホを置く" },
+        { key: "gentle", label: "今日は無理をしない" },
+        { key: "rest", label: "このまま休む" }
       ]
     },
     coach: {
@@ -997,13 +1010,20 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       exhale: "내쉬기",
       sensory: "읽기보다 먼저 호흡으로. 눈을 감은 채로도 조용한 리듬을 느낄 수 있습니다.",
       stages: ["10초 호흡", "20초 몸 감각", "20초 감정 진정", "10초 감사"],
-      moodQuestion: "조금 달라졌나요?",
-      moodSaved: "작은 변화를 잘 받아두었습니다.",
-      moods: [
-        { key: "lighter", label: "🙂 조금 가벼워졌어요" },
-        { key: "calm", label: "😌 마음이 차분해졌어요" },
-        { key: "hard", label: "😢 아직 힘들어요" },
-        { key: "again", label: "🌱 다시 이어가고 싶어요" }
+      reflection: {
+        recoveryQuestion: "조금 더 편안해진 느낌이 있나요?",
+        awarenessPrompt: "바꾸려 하지 말고, 지금 조금 다른 점을 알아차려 보세요.",
+        choiceQuestion: "지금 나를 돕는 작은 선택은 무엇일까요?",
+        noChangeNote: "달라진 점이 없어도 괜찮습니다.",
+        choiceAcknowledgement: "그 선택이면 충분합니다.",
+        skipLabel: "지금은 이대로 있기"
+      },
+      supportChoices: [
+        { key: "water", label: "물 한 잔 마시기" },
+        { key: "walk", label: "천천히 조금 걷기" },
+        { key: "phone", label: "휴대폰 내려놓기" },
+        { key: "gentle", label: "오늘은 무리하지 않기" },
+        { key: "rest", label: "이대로 쉬기" }
       ]
     },
     coach: {
@@ -1479,13 +1499,20 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       exhale: "Exhale",
       sensory: "Before reading more, return to breath first. The quiet rhythm can be felt even with your eyes closed.",
       stages: ["10 sec breathing", "20 sec body awareness", "20 sec emotional calming", "10 sec gratitude"],
-      moodQuestion: "Do you feel a little different?",
-      moodSaved: "Your small shift has been saved.",
-      moods: [
-        { key: "lighter", label: "🙂 I feel lighter" },
-        { key: "calm", label: "😌 I feel calmer" },
-        { key: "hard", label: "😢 Still struggling" },
-        { key: "again", label: "🌱 I want to continue" }
+      reflection: {
+        recoveryQuestion: "Do you feel a little more at ease?",
+        awarenessPrompt: "Without changing anything, notice what feels a little different.",
+        choiceQuestion: "What is one small choice that would support you now?",
+        noChangeNote: "It is okay if nothing feels different.",
+        choiceAcknowledgement: "That is enough for now.",
+        skipLabel: "Not now"
+      },
+      supportChoices: [
+        { key: "water", label: "Drink some water" },
+        { key: "walk", label: "Walk slowly for a moment" },
+        { key: "phone", label: "Put down the phone" },
+        { key: "gentle", label: "Do not push yourself today" },
+        { key: "rest", label: "Rest as you are" }
       ]
     },
     coach: {
