@@ -25,8 +25,8 @@ const homeCopy = {
     },
     recovery: {
       eyebrow: "Recovery First",
-      title: "まずは、\n今の自分に合う\n入口を選びましょう。",
-      description: "一つ選ぶだけで、\n静かな60秒が始まります。",
+      title: "今の自分に合う入口を。",
+      description: "ひとつ選ぶと、静かな60秒が始まります。",
       meditationLabel: "一つ選ぶだけで、\n静かな60秒が始まります。"
     },
     chapters: {
@@ -85,8 +85,8 @@ const homeCopy = {
     },
     recovery: {
       eyebrow: "Recovery First",
-      title: "먼저,\n지금의 나에게 맞는\n입구를 고르세요.",
-      description: "하나만 고르면,\n조용한 60초가 시작됩니다.",
+      title: "지금의 나에게 맞는 입구를.",
+      description: "하나를 선택하면, 고요한 60초가 시작됩니다.",
       meditationLabel: "하나만 고르면,\n조용한 60초가 시작됩니다."
     },
     chapters: {
@@ -145,8 +145,8 @@ const homeCopy = {
     },
     recovery: {
       eyebrow: "Recovery First",
-      title: "First,\nchoose the entrance\nthat fits you now.",
-      description: "Choose one,\nand your quiet 60 seconds begin.",
+      title: "Choose the entrance that fits you now.",
+      description: "Choose one, and a quiet 60 seconds begins.",
       meditationLabel: "Choose one,\nand your quiet 60 seconds begin."
     },
     chapters: {
@@ -928,7 +928,7 @@ export default function HomePage() {
             <div className="space-y-3 sm:space-y-6">
               <SectionHeader
                 eyebrow={copy.recovery.eyebrow}
-                title={renderRecoveryHeadline(language)}
+                title={copy.recovery.title}
                 description={copy.recovery.description}
                 language={language}
               />
