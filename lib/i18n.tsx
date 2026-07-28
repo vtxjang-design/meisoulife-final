@@ -1021,45 +1021,77 @@ export const siteCopy = {
       secondary: "ホームへ戻る"
     },
     brainEducationPage: {
-      eyebrow: "Brain Education",
-      title: "脳教育について",
-      subtitle: "脳教育は、呼吸・身体感覚・意識を通して、自分の状態に気づき、整え、選び直すための実践的なシステムです。",
-      intro:
-        "瞑想lifeは、この脳教育の考え方を現代の生活リズムに合わせて、より続けやすく、より静かに使える形へ再設計しています。",
-      sections: [
-        {
-          title: "1. What is Brain Education?",
-          body: "Brain Educationは、脳を知識の器ではなく、感覚・感情・意識を調和させる主体としてとらえる実践です。"
-        },
-        {
-          title: "2. 5 Brain Education stages",
-          body: "感覚に気づくことから始まり、感情の調律、意識の選択、行動の一貫性、そして人との共生へと静かに深まっていきます。"
-        },
-        {
-          title: "3. Modern problems & solutions",
-          body: "ストレス、不安、睡眠の乱れ、SNS疲れのような現代的な負荷に対して、まず呼吸と身体感覚から戻る入口をつくります。"
-        },
-        {
-          title: "4. Emotional balance",
-          body: "感情を抑え込むのではなく、感じ、整え、流す力を育てることで、日常の安定感を取り戻していきます。"
-        },
-        {
-          title: "5. Human potential",
-          body: "脳と心の可能性を目覚めさせることは、特別な能力を得ることではなく、本来の自分に戻ることです。"
-        },
-        {
-          title: "6. Coexistence philosophy",
-          body: "脳教育は個人の回復で終わらず、その静けさが関係性や共同体の質を変えていくことを大切にします。"
-        },
-        {
-          title: "7. Founder story",
-          body: "ILCHI LEEは、40年以上にわたり人間の内面の可能性と、日常の中で続く実践の形を探究してきました。"
-        },
-        {
-          title: "8. Global impact",
-          body: "世界各地での実践と教育活動を通して、多くの人が自分に戻る習慣と共生の感覚を育ててきました。"
-        }
-      ],
+      eyebrow: "HROS × BRAIN EDUCATION",
+      title: "AI時代に、脳の主人として生きるために。",
+      subtitle: "脳教育は、身体感覚を目覚めさせ、感情や情報に気づき、自分の人生にとってよい方向を自ら選ぶための、人の成長を支える実践体系です。",
+      intro: "HROSは、この原理を誰もが日常で体験できる、回復のリズムとして形にしています。",
+      relationship: "脳教育が人の回復と成長の原理なら、HROSはその原理をAI時代の暮らしのリズムに実装する運営システムです。",
+      journey: "感覚を目覚めさせる → 柔軟になる → 手放す → 統合する → 人生の主人になる",
+      whatIs: {
+        title: "知識を増やすためではなく、脳の主人になるために",
+        description: "脳教育は、情報・感情・習慣・アルゴリズムに囲まれた時代に、身体感覚へ戻り、今の状態に気づき、選ぶ力を取り戻す実践です。",
+        ideas: [
+          { title: "身体を感じる", body: "呼吸、動き、身体の感覚を通して、考えから今この瞬間へ戻ります。" },
+          { title: "心を観る", body: "感情を抑えたり自分そのものと重ねたりせず、そのまま気づきます。" },
+          { title: "もう一度選ぶ", body: "外からの情報や習慣に流されず、自分と周りにとってよい方向を選びます。" }
+        ],
+        closing: "脳の主人とは、すべてをコントロールする人ではありません。自分の状態に気づき、もう一度選べる人です。"
+      },
+      fiveSteps: {
+        title: "脳教育の5段階",
+        description: "毎日の状態に合わせて、必要な場所へ何度でも戻れる、短く実践的な道筋です。",
+        items: [
+          { name: "脳の感覚を目覚めさせる", english: "Brain Sensitizing", body: "身体、呼吸、感覚を通して今へ戻ります。" },
+          { name: "脳を柔軟にする", english: "Brain Versatilizing", body: "身体・感情・考えの固いパターンをやわらげます。" },
+          { name: "脳を浄化する", english: "Brain Refreshing", body: "不要な緊張や情報を手放します。" },
+          { name: "脳を統合する", english: "Brain Integrating", body: "身体、感情、考え、価値、行動をつなげます。" },
+          { name: "脳の主人になる", english: "Brain Mastering", body: "人生の目的を選び、行動し、よい環境をつくります。" }
+        ],
+        journey: "感じる → 柔軟になる → 手放す → 統合する → 創造する",
+        dignity: "この段階は人の優劣や等級を分けるものではありません。誰もが毎日、自分の状態に合わせて必要な段階へ戻れます。"
+      },
+      bos: {
+        title: "BOS：日常のための5つの問い",
+        description: "抽象的な教えではなく、毎日の選択を見つめ直すための実用的な問いです。",
+        items: [
+          { principle: "目覚め、注意を向ける", question: "今、私は目覚めて気づいているだろうか？" },
+          { principle: "よい情報を選ぶ", question: "私はどんな情報を選ぶだろうか？" },
+          { principle: "選んだら行動する", question: "選んだことを行動に移しているだろうか？" },
+          { principle: "時間と空間の主人になる", question: "自分の時間と注意を自分で導いているだろうか？" },
+          { principle: "環境を設計し、つくる", question: "私はどんな環境をつくっているだろうか？" }
+        ],
+        clarification: "BOSは脳を機械のように制御する方法ではありません。自分の情報・時間・行動を、人生の目的に合わせて選ぶための原則です。"
+      },
+      dailyLife: {
+        title: "日常で体験する脳教育",
+        description: "理論を増やすより、身体・気づき・小さな選択から始めます。",
+        areas: [
+          { title: "身体を目覚めさせる", items: [{ title: "1分運動", body: "長い準備は要りません。1分だけ身体を動かし、考えから感覚へ戻ります。" }, { title: "笑い", body: "笑いは、こわばった表情、呼吸、感情の流れをやわらげる、いちばん身近な方法の一つです。" }] },
+          { title: "気づきを澄ませる", items: [{ title: "ゼロ意識", body: "考えや感情を消すのではなく、それらを見つめる目覚めた気づきへ戻ります。" }, { title: "100%ポジティビティ", body: "困難を否定したり、無理に前向きになったりはしません。今を認めながら、もう一度選べる可能性を手放しません。" }] },
+          { title: "未来を創る", items: [{ title: "イメージ", body: "想像は現実から逃げることではありません。望む方向をはっきり描き、今日の選択を変える始まりです。" }, { title: "クォンタム・ジャンプ", body: "一度の奇跡を意味しません。小さな選択と実践の積み重ねが、人生の質的な転換へつながる成長のたとえです。" }] }
+        ],
+        safeguard: "「100%の脳活用」は、脳の一部しか使っていないという主張ではありません。身体・感情・思考・情報・行動を、人生の目的に合わせて調和的に活かすという意味です。"
+      },
+      productExperience: {
+        title: "Meisou Lifeでの体験",
+        description: "説明だけで学ぶのではなく、1分の体験から始めます。",
+        statement: "小さな回復を、選べる生活のリズムへ。",
+        items: [
+          { title: "ZERO GATE", body: "1分立ち止まり、身体と呼吸へ戻ります。" },
+          { title: "Reflection Bridge", body: "変化を評価せずに気づき、小さな選択を自由にします。" },
+          { title: "7-Day Recovery Journey", body: "小さな毎日の実践を通して、感覚、柔軟さ、手放すこと、選択を体験します。" },
+          { title: "BASIC Rhythm", body: "朝・日中・夜のリズムで、回復を日常の一部にします。" },
+          { title: "Recovery Garden", body: "競争や比較をせず、自分の回復が静かに残る証を見ます。" },
+          { title: "未来の共生体験", body: "個人の回復を、人、地域、自然、地球に役立つ行動へ広げます。" }
+        ]
+      },
+      coexistence: {
+        title: "自分が回復するほど、世界との関係も変わる",
+        description: "脳の主人になることは、自分だけの成功のために力を増やすことではありません。",
+        body: "自分の健康、幸福、平和を育て、その力を人、地域、自然、地球、未来の世代に役立つかたちで使うことです。",
+        expansion: "自分の身体 → 自分の暮らし → 他者との関係 → 共同体 → 自然と地球 → 未来世代",
+        statement: "回復から始め、弘益――自分とより広い世界を生かす選択――へ進み、共生の生活リズムをつくります。"
+      },
       founderMessageTitle: "創始者メッセージ · ILCHI LEE",
       founderMessageSubtitle: "身体を通して、心と意識を目覚めさせる。",
       founderMessageBody:
@@ -1898,45 +1930,77 @@ export const siteCopy = {
       secondary: "홈으로 돌아가기"
     },
     brainEducationPage: {
-      eyebrow: "Brain Education",
-      title: "뇌교육에 대하여",
-      subtitle: "뇌교육은 호흡, 신체 감각, 의식을 통해 자신의 상태를 알아차리고 정돈하며 다시 선택할 수 있게 돕는 실천적 시스템입니다.",
-      intro:
-        "명상life는 이 뇌교육의 관점을 오늘의 생활 리듬에 맞게 다시 설계해, 더 조용하고 더 쉽게 이어갈 수 있는 형태로 풀어내고 있습니다.",
-      sections: [
-        {
-          title: "1. What is Brain Education?",
-          body: "뇌교육은 뇌를 단순한 지식 저장소가 아니라, 감각과 감정, 의식을 조율하는 살아 있는 중심으로 보는 실천입니다."
-        },
-        {
-          title: "2. 5 Brain Education stages",
-          body: "감각 알아차림에서 시작해 감정 조율, 의식의 선택, 행동의 일관성, 그리고 타인과의 공생으로 조용히 깊어집니다."
-        },
-        {
-          title: "3. Modern problems & solutions",
-          body: "스트레스, 불안, 수면 문제, SNS 피로 같은 현대적 과제에 대해 먼저 호흡과 몸감각으로 돌아오는 입구를 만듭니다."
-        },
-        {
-          title: "4. Emotional balance",
-          body: "감정을 억누르기보다 느끼고 정돈하며 흘려보내는 힘을 기르면서 일상의 안정감을 회복합니다."
-        },
-        {
-          title: "5. Human potential",
-          body: "뇌와 마음의 가능성을 깨운다는 것은 특별해지는 것이 아니라, 본래의 자신에게 더 가까이 돌아가는 일입니다."
-        },
-        {
-          title: "6. Coexistence philosophy",
-          body: "뇌교육은 개인의 회복에서 멈추지 않고, 그 고요함이 관계와 공동체의 질을 바꾸는 것을 중요하게 봅니다."
-        },
-        {
-          title: "7. Founder story",
-          body: "ILCHI LEE는 40년이 넘는 시간 동안 인간 내면의 가능성과 일상에서 지속되는 실천의 형태를 탐구해 왔습니다."
-        },
-        {
-          title: "8. Global impact",
-          body: "세계 여러 지역의 교육과 실천을 통해 많은 사람들이 자신에게 돌아오는 습관과 공생 감각을 길러왔습니다."
-        }
-      ],
+      eyebrow: "HROS × BRAIN EDUCATION",
+      title: "AI 시대에, 뇌의 주인으로 살아가기 위해.",
+      subtitle: "뇌교육은 몸의 감각을 깨우고, 감정과 정보를 알아차리며, 자신의 삶에 이로운 방향을 스스로 선택하도록 돕는 인간 성장의 실천 체계입니다.",
+      intro: "HROS는 이 원리를 누구나 일상에서 쉽게 경험할 수 있는 회복의 리듬으로 구현합니다.",
+      relationship: "뇌교육이 인간 회복과 성장의 원리라면, HROS는 그 원리를 AI 시대의 생활 리듬으로 구현한 운영체계입니다.",
+      journey: "감각을 깨우고 → 유연해지고 → 비우고 → 통합하고 → 삶의 주인이 됩니다.",
+      whatIs: {
+        title: "뇌에 지식을 더하는 것이 아니라, 뇌의 주인이 되는 교육",
+        description: "뇌교육은 정보·감정·습관·알고리즘의 영향 속에서 몸의 감각으로 돌아오고, 지금의 상태를 알아차리며, 다시 선택하는 힘을 돕습니다.",
+        ideas: [
+          { title: "몸을 느끼기", body: "호흡과 움직임, 몸의 감각을 통해 생각에서 현재로 돌아옵니다." },
+          { title: "마음을 관찰하기", body: "감정을 억누르거나 나 자신과 동일시하지 않고, 있는 그대로 알아차립니다." },
+          { title: "다시 선택하기", body: "외부 정보와 습관에 끌려가지 않고, 자신과 모두에게 이로운 방향을 선택합니다." }
+        ],
+        closing: "뇌의 주인은 모든 것을 통제하는 사람이 아니라, 자신의 상태를 알아차리고 다시 선택할 수 있는 사람입니다."
+      },
+      fiveSteps: {
+        title: "뇌교육 5단계",
+        description: "매일의 상태에 맞춰 필요한 곳으로 다시 돌아갈 수 있는, 짧고 실용적인 성장의 흐름입니다.",
+        items: [
+          { name: "뇌 감각 깨우기", english: "Brain Sensitizing", body: "몸·호흡·감각을 통해 현재로 돌아옵니다." },
+          { name: "뇌 유연하게 하기", english: "Brain Versatilizing", body: "몸·감정·생각의 굳은 패턴을 유연하게 합니다." },
+          { name: "뇌 정화하기", english: "Brain Refreshing", body: "불필요한 긴장과 정보를 비웁니다." },
+          { name: "뇌 통합하기", english: "Brain Integrating", body: "몸·감정·생각·가치·행동을 하나로 맞춥니다." },
+          { name: "뇌 주인 되기", english: "Brain Mastering", body: "삶의 목적을 선택하고 행동하며 이로운 환경을 만듭니다." }
+        ],
+        journey: "느낀다 → 유연해진다 → 비운다 → 통합한다 → 창조한다",
+        dignity: "이 단계는 사람의 우열이나 등급을 나누지 않습니다. 누구나 매일 자신의 상태에 따라 필요한 단계로 돌아갈 수 있습니다."
+      },
+      bos: {
+        title: "BOS: 일상을 위한 다섯 가지 질문",
+        description: "추상적인 교리가 아니라, 매일의 선택을 다시 살피는 실용적인 질문입니다.",
+        items: [
+          { principle: "깨어서 주의를 기울이기", question: "나는 지금 깨어서 알아차리고 있는가?" },
+          { principle: "좋은 정보를 선택하기", question: "나는 어떤 정보를 선택할 것인가?" },
+          { principle: "선택했다면 행동하기", question: "내가 선택한 것을 행동으로 옮기고 있는가?" },
+          { principle: "시간과 공간의 주인 되기", question: "나는 내 시간과 주의를 이끌고 있는가?" },
+          { principle: "환경을 설계하고 만들기", question: "나는 어떤 환경을 만들고 있는가?" }
+        ],
+        clarification: "BOS는 뇌를 기계처럼 통제하는 방법이 아니라, 자신의 정보·시간·행동을 삶의 목적에 맞게 선택하는 원칙입니다."
+      },
+      dailyLife: {
+        title: "일상에서 경험하는 뇌교육",
+        description: "이론을 더하기보다 몸, 알아차림, 작은 선택에서 시작합니다.",
+        areas: [
+          { title: "몸을 깨우기", items: [{ title: "1분 운동", body: "길게 준비하지 않아도 됩니다. 1분 동안 몸을 움직이며 생각에서 감각으로 돌아옵니다." }, { title: "웃음", body: "웃음은 굳어진 표정과 호흡, 감정의 흐름을 부드럽게 바꾸는 가장 쉬운 방법 중 하나입니다." }] },
+          { title: "알아차림을 맑게 하기", items: [{ title: "제로 의식", body: "생각과 감정을 없애는 것이 아니라, 그것을 바라보는 깨어 있는 의식으로 돌아갑니다." }, { title: "100% 긍정성", body: "어려움을 부정하거나 억지로 좋게 생각하지 않습니다. 현재를 인정하면서도 다시 선택할 가능성을 포기하지 않습니다." }] },
+          { title: "미래를 창조하기", items: [{ title: "상상", body: "상상은 현실을 피하는 일이 아니라, 원하는 방향을 뇌에 분명히 그리고 오늘의 선택을 바꾸는 시작입니다." }, { title: "퀀텀 점프", body: "한 번의 기적을 의미하지 않습니다. 작은 선택과 실천이 축적되어 삶의 질적인 전환으로 이어지는 성장의 비유입니다." }] }
+        ],
+        safeguard: "100% 뇌 활용은 뇌의 일부만 사용한다는 주장이 아닙니다. 몸·감정·생각·정보·행동을 삶의 목적에 맞게 조화롭게 활용한다는 의미입니다."
+      },
+      productExperience: {
+        title: "Meisou Life에서의 경험",
+        description: "설명으로 배우기보다, 1분의 경험에서 시작합니다.",
+        statement: "작은 회복을, 자유롭게 선택하는 생활 리듬으로.",
+        items: [
+          { title: "ZERO GATE", body: "1분 동안 멈추고 몸과 호흡으로 돌아옵니다." },
+          { title: "Reflection Bridge", body: "변화를 판단 없이 알아차리고, 작은 선택을 자유롭게 합니다." },
+          { title: "7-Day Recovery Journey", body: "작은 일상 실천으로 감각, 유연함, 비움, 선택을 경험합니다." },
+          { title: "BASIC Rhythm", body: "Morning, Daytime, Evening 리듬으로 회복을 일상의 일부로 만듭니다." },
+          { title: "Recovery Garden", body: "경쟁이나 비교 없이 자신의 회복이 남긴 조용한 증거를 봅니다." },
+          { title: "미래의 공생 경험", body: "개인의 회복을 사람, 공동체, 자연, 지구에 이로운 행동으로 확장합니다." }
+        ]
+      },
+      coexistence: {
+        title: "내가 회복될수록, 세상과 맺는 관계도 달라집니다.",
+        description: "뇌의 주인이 되는 일은 자기만의 성공을 위해 개인의 힘을 키우는 일이 아닙니다.",
+        body: "자신의 건강·행복·평화를 만들고, 그 역량을 다른 사람, 공동체, 자연, 지구, 미래세대에 이롭게 쓰는 일입니다.",
+        expansion: "나의 몸 → 나의 삶 → 타인과의 관계 → 공동체 → 자연과 지구 → 미래세대",
+        statement: "회복으로 시작해, 홍익—나와 더 넓은 세상 모두에게 이로운 선택—으로 나아가고, 공생 생활 리듬을 만듭니다."
+      },
       founderMessageTitle: "창시자 메시지 · ILCHI LEE",
       founderMessageSubtitle: "몸을 통해, 마음과 의식을 깨워갑니다.",
       founderMessageBody:
@@ -2775,45 +2839,77 @@ export const siteCopy = {
       secondary: "Return home"
     },
     brainEducationPage: {
-      eyebrow: "Brain Education",
-      title: "About Brain Education",
-      subtitle: "Brain Education is a practical system that helps people notice, regulate, and consciously redirect their inner state through breath, body awareness, and attention.",
-      intro:
-        "Meisoulife translates this Brain Education perspective into a modern life rhythm platform that feels quieter, gentler, and easier to continue each day.",
-      sections: [
-        {
-          title: "1. What is Brain Education?",
-          body: "Brain Education sees the brain not only as a place for knowledge, but as a living center for sensing, feeling, and choosing."
-        },
-        {
-          title: "2. 5 Brain Education stages",
-          body: "It deepens from sensing the present moment into emotional regulation, conscious choice, consistent action, and finally coexistence with others."
-        },
-        {
-          title: "3. Modern problems & solutions",
-          body: "For stress, anxiety, sleep disruption, and social media fatigue, it creates a simple entry point: return first through breath and body awareness."
-        },
-        {
-          title: "4. Emotional balance",
-          body: "Rather than suppressing emotion, the practice helps people feel, regulate, and move through it with more steadiness."
-        },
-        {
-          title: "5. Human potential",
-          body: "Awakening human potential is not about becoming extraordinary. It is about returning more fully to one’s original self."
-        },
-        {
-          title: "6. Coexistence philosophy",
-          body: "Brain Education does not stop at personal recovery. It values how inner stillness changes the quality of relationships and community."
-        },
-        {
-          title: "7. Founder story",
-          body: "ILCHI LEE has spent more than four decades exploring human potential and the shape of practices that can truly continue in daily life."
-        },
-        {
-          title: "8. Global impact",
-          body: "Through education and practice around the world, many people have cultivated daily return habits and a deeper sense of coexistence."
-        }
-      ],
+      eyebrow: "HROS × BRAIN EDUCATION",
+      title: "To live as the owner of your brain in the AI era.",
+      subtitle: "Brain Education is a practical human growth system that awakens bodily sensation, helps people notice emotion and information, and supports them in choosing a direction that benefits their lives.",
+      intro: "HROS makes these principles available as a recovery rhythm that anyone can experience in daily life.",
+      relationship: "If Brain Education is a principle of human recovery and growth, HROS is the operating system that brings that principle into the daily rhythm of the AI era.",
+      journey: "Awaken sensation → become flexible → clear → integrate → become the owner of your life",
+      whatIs: {
+        title: "Not education that adds knowledge to the brain, but education for becoming its owner",
+        description: "Amid information, emotion, habit, and algorithmic influence, Brain Education helps people return to bodily sensation, recognize their present state, and regain the ability to choose.",
+        ideas: [
+          { title: "Feel the body", body: "Return from thought to the present through breath, movement, and bodily sensation." },
+          { title: "Observe the mind", body: "Notice emotions as they are, without suppressing them or treating them as your whole self." },
+          { title: "Choose again", body: "Rather than being pulled by information and habit, choose a direction that benefits both yourself and others." }
+        ],
+        closing: "The owner of the brain is not someone who controls everything. It is someone who can notice their state and choose again."
+      },
+      fiveSteps: {
+        title: "The Five Steps of Brain Education",
+        description: "A short, practical path that lets anyone return to the step they need for the state they are in today.",
+        items: [
+          { name: "Awaken brain sensation", english: "Brain Sensitizing", body: "Return to the present through body, breath, and sensation." },
+          { name: "Make the brain flexible", english: "Brain Versatilizing", body: "Soften rigid physical, emotional, and thinking patterns." },
+          { name: "Refresh the brain", english: "Brain Refreshing", body: "Release unnecessary tension and information." },
+          { name: "Integrate the brain", english: "Brain Integrating", body: "Align body, emotion, thought, values, and action." },
+          { name: "Become the owner of the brain", english: "Brain Mastering", body: "Choose a life purpose, act on it, and create a beneficial environment." }
+        ],
+        journey: "Feel → become flexible → clear → integrate → create",
+        dignity: "These steps do not rank people or assign levels. Anyone can return to the step they need, according to their state each day."
+      },
+      bos: {
+        title: "BOS: Five questions for daily life",
+        description: "Not abstract doctrine, but practical questions for meeting each day’s choices with more awareness.",
+        items: [
+          { principle: "Wake up and pay attention", question: "Am I awake and aware right now?" },
+          { principle: "Choose good information", question: "What information will I choose?" },
+          { principle: "Once chosen, act", question: "Am I acting on what I chose?" },
+          { principle: "Become the master of time and space", question: "Am I directing my time and attention?" },
+          { principle: "Design and create your environment", question: "What kind of environment am I creating?" }
+        ],
+        clarification: "BOS is not a way to control the brain like a machine. It is a set of principles for choosing information, time, and action in alignment with one’s life purpose."
+      },
+      dailyLife: {
+        title: "Brain Education in daily life",
+        description: "Rather than adding more theory, begin with the body, awareness, and one small choice.",
+        areas: [
+          { title: "Awaken the body", items: [{ title: "One-minute exercise", body: "No long preparation is needed. Move your body for one minute and return from thought to sensation." }, { title: "Laughter", body: "Laughter is one of the simplest ways to soften a fixed expression, breath, and emotional flow." }] },
+          { title: "Clear awareness", items: [{ title: "Zero consciousness", body: "It is not about erasing thoughts or emotions, but returning to the awake awareness that can observe them." }, { title: "100% positivity", body: "It does not deny difficulty or require forced optimism. It recognizes the present while keeping open the possibility of choosing again." }] },
+          { title: "Create the future", items: [{ title: "Imagination", body: "Imagination is not an escape from reality. It is the beginning of seeing a desired direction clearly and changing today’s choices." }, { title: "Quantum jump", body: "It does not mean a single miracle. It is a metaphor for qualitative change that grows from accumulated small choices and practice." }] }
+        ],
+        safeguard: "“100% brain use” does not claim that people use only part of the brain. It means using body, emotion, thought, information, and action in harmony with one’s life purpose."
+      },
+      productExperience: {
+        title: "How this is experienced in Meisou Life",
+        description: "Rather than learning only through explanation, begin with a one-minute experience.",
+        statement: "From a small recovery to a daily rhythm of free choice.",
+        items: [
+          { title: "ZERO GATE", body: "Pause for one minute and return to the body and breath." },
+          { title: "Reflection Bridge", body: "Notice a difference without judgment and make one small choice freely." },
+          { title: "7-Day Recovery Journey", body: "Experience sensation, flexibility, clearing, and choice through small daily practices." },
+          { title: "BASIC Rhythm", body: "Make recovery part of daily life through Morning, Daytime, and Evening rhythms." },
+          { title: "Recovery Garden", body: "See the quiet evidence of your recovery without competition or comparison." },
+          { title: "Future coexistence experience", body: "Extend personal recovery into beneficial action for people, communities, nature, and Earth." }
+        ]
+      },
+      coexistence: {
+        title: "As you recover, your relationship with the world changes too.",
+        description: "Becoming the owner of one’s brain is not about gaining personal power for selfish success.",
+        body: "It means creating one’s health, happiness, and peace, then using that capacity in ways that benefit other people, communities, nature, Earth, and future generations.",
+        expansion: "My body → My life → Relationships → Community → Nature and Earth → Future generations",
+        statement: "Begin with recovery, choose Hongik—what benefits both yourself and the wider world—and create a coexistence life rhythm."
+      },
       founderMessageTitle: "Founder’s Message · ILCHI LEE",
       founderMessageSubtitle: "Awaken mind and awareness through the body.",
       founderMessageBody:
