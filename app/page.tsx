@@ -35,7 +35,7 @@ const homeCopy = {
       next: "次の章 →",
       close: "回復へ戻る",
       position: "章",
-      exploreHros: "HROSをもっと知る",
+      exploreHros: "HROSと脳教育を知る",
       membership: "BASIC Membershipへ",
       recovery: {
         identity: "RECOVERY",
@@ -68,7 +68,7 @@ const homeCopy = {
         headline: "この旅を、\n毎日のリズムへ。",
         supporting: "必要な深さへ、静かに続けていきましょう。",
         recoveryCta: "7-Day Recoveryへ",
-        libraryCta: "HROSをもっと知る →",
+        libraryCta: "HROSと脳教育を知る →",
         basicCta: "BASICを始める"
       }
     }
@@ -95,7 +95,7 @@ const homeCopy = {
       next: "다음 장 →",
       close: "회복으로 돌아가기",
       position: "장",
-      exploreHros: "HROS 더 알아보기",
+      exploreHros: "HROS와 뇌교육 알아보기",
       membership: "BASIC Membership으로",
       recovery: {
         identity: "RECOVERY",
@@ -128,7 +128,7 @@ const homeCopy = {
         headline: "이 여정을\n매일의 리듬으로.",
         supporting: "필요한 깊이로, 조용히 이어가세요.",
         recoveryCta: "7일 회복 여정으로",
-        libraryCta: "HROS 더 알아보기 →",
+        libraryCta: "HROS와 뇌교육 알아보기 →",
         basicCta: "BASIC 시작하기"
       }
     }
@@ -155,7 +155,7 @@ const homeCopy = {
       next: "Next Chapter →",
       close: "Return to Recovery",
       position: "Chapter",
-      exploreHros: "Explore HROS",
+      exploreHros: "Explore HROS and Brain Education",
       membership: "Enter BASIC Membership",
       recovery: {
         identity: "RECOVERY",
@@ -188,7 +188,7 @@ const homeCopy = {
         headline: "Carry this journey\ninto your daily rhythm.",
         supporting: "Continue quietly, at the depth you need.",
         recoveryCta: "Enter 7-Day Recovery",
-        libraryCta: "Explore HROS →",
+        libraryCta: "Explore HROS and Brain Education →",
         basicCta: "Enter BASIC"
       }
     }
