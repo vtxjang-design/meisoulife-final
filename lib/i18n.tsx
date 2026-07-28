@@ -1051,14 +1051,14 @@ export const siteCopy = {
         dignity: "この段階は人の優劣や等級を分けるものではありません。誰もが毎日、自分の状態に合わせて必要な段階へ戻れます。"
       },
       bos: {
-        title: "BOS：日常のための5つの問い",
-        description: "抽象的な教えではなく、毎日の選択を見つめ直すための実用的な問いです。",
+        title: "BOS 5法則",
+        description: "BOS 5法則は、脳を意識的に活用し、自分の人生の主人になるための五つの実践原則です。",
         items: [
-          { principle: "目覚め、注意を向ける", question: "今、私は目覚めて気づいているだろうか？" },
-          { principle: "よい情報を選ぶ", question: "私はどんな情報を選ぶだろうか？" },
-          { principle: "選んだら行動する", question: "選んだことを行動に移しているだろうか？" },
+          { principle: "目を覚まし、意識を向ける", question: "今、私は目覚めて気づいているだろうか？" },
+          { principle: "グッドニュースがグッドブレインをつくる", question: "私はどんな情報を選ぶだろうか？" },
+          { principle: "選択すれば、実現する", question: "選んだことを行動に移しているだろうか？" },
           { principle: "時間と空間の主人になる", question: "自分の時間と注意を自分で導いているだろうか？" },
-          { principle: "環境を設計し、つくる", question: "私はどんな環境をつくっているだろうか？" }
+          { principle: "すべての環境をデザインする", question: "私はどんな環境をつくっているだろうか？" }
         ],
         clarification: "BOSは脳を機械のように制御する方法ではありません。自分の情報・時間・行動を、人生の目的に合わせて選ぶための原則です。"
       },
@@ -1960,14 +1960,14 @@ export const siteCopy = {
         dignity: "이 단계는 사람의 우열이나 등급을 나누지 않습니다. 누구나 매일 자신의 상태에 따라 필요한 단계로 돌아갈 수 있습니다."
       },
       bos: {
-        title: "BOS: 일상을 위한 다섯 가지 질문",
-        description: "추상적인 교리가 아니라, 매일의 선택을 다시 살피는 실용적인 질문입니다.",
+        title: "BOS 5법칙",
+        description: "BOS 5법칙은 자신의 뇌를 의식적으로 활용하고 삶의 주인이 되기 위한 다섯 가지 실천 원칙입니다.",
         items: [
-          { principle: "깨어서 주의를 기울이기", question: "나는 지금 깨어서 알아차리고 있는가?" },
-          { principle: "좋은 정보를 선택하기", question: "나는 어떤 정보를 선택할 것인가?" },
-          { principle: "선택했다면 행동하기", question: "내가 선택한 것을 행동으로 옮기고 있는가?" },
-          { principle: "시간과 공간의 주인 되기", question: "나는 내 시간과 주의를 이끌고 있는가?" },
-          { principle: "환경을 설계하고 만들기", question: "나는 어떤 환경을 만들고 있는가?" }
+          { principle: "정신 차려라", question: "나는 지금 깨어서 알아차리고 있는가?" },
+          { principle: "굿 뉴스가 굿 브레인을 만든다", question: "나는 어떤 정보를 선택할 것인가?" },
+          { principle: "선택하면 이루어진다", question: "내가 선택한 것을 행동으로 옮기고 있는가?" },
+          { principle: "시간과 공간의 주인이 되어라", question: "나는 내 시간과 주의를 이끌고 있는가?" },
+          { principle: "모든 환경을 디자인하라", question: "나는 어떤 환경을 만들고 있는가?" }
         ],
         clarification: "BOS는 뇌를 기계처럼 통제하는 방법이 아니라, 자신의 정보·시간·행동을 삶의 목적에 맞게 선택하는 원칙입니다."
       },
@@ -2869,14 +2869,14 @@ export const siteCopy = {
         dignity: "These steps do not rank people or assign levels. Anyone can return to the step they need, according to their state each day."
       },
       bos: {
-        title: "BOS: Five questions for daily life",
-        description: "Not abstract doctrine, but practical questions for meeting each day’s choices with more awareness.",
+        title: "The Five BOS Laws",
+        description: "The five BOS laws are practical principles for using the brain consciously and becoming the owner of one’s life.",
         items: [
-          { principle: "Wake up and pay attention", question: "Am I awake and aware right now?" },
-          { principle: "Choose good information", question: "What information will I choose?" },
-          { principle: "Once chosen, act", question: "Am I acting on what I chose?" },
-          { principle: "Become the master of time and space", question: "Am I directing my time and attention?" },
-          { principle: "Design and create your environment", question: "What kind of environment am I creating?" }
+          { principle: "Wake up and pay attention.", question: "Am I awake and aware right now?" },
+          { principle: "Good news makes a good brain.", question: "What information will I choose?" },
+          { principle: "Choose. If you choose it, it will happen.", question: "Am I acting on what I chose?" },
+          { principle: "Become the master of time and space.", question: "Am I directing my time and attention?" },
+          { principle: "Design all circumstances.", question: "What kind of environment am I creating?" }
         ],
         clarification: "BOS is not a way to control the brain like a machine. It is a set of principles for choosing information, time, and action in alignment with one’s life purpose."
       },
