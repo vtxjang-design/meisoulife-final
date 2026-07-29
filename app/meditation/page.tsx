@@ -1510,7 +1510,7 @@ function MeditationPageContent() {
   const [isJourneyCompletionHolding, setIsJourneyCompletionHolding] = useState(false);
   const [isJourneySettling, setIsJourneySettling] = useState(false);
   const [returnToHref, setReturnToHref] = useState("/rhythm-journey");
-  const [navigationPendingAction, setNavigationPendingAction] = useState<"exit" | "repeat" | "return" | null>(null);
+  const [navigationPendingAction, setNavigationPendingAction] = useState<"continue" | "exit" | "repeat" | "return" | null>(null);
   const [basicGardenSyncError, setBasicGardenSyncError] = useState<string | null>(null);
   const [basicGardenSyncStatus, setBasicGardenSyncStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [requestedRouteType, setRequestedRouteType] = useState<string | null>(null);
@@ -1991,6 +1991,17 @@ function MeditationPageContent() {
     }
 
     router.push(destination);
+  }
+
+  function handleContinueToEnergy() {
+    if (navigationPendingAction) {
+      return;
+    }
+
+    completionHandledRef.current = true;
+    setNavigationPendingAction("continue");
+    void stopCurrentGatePlayback({ immediate: true });
+    router.push(continueToEnergyHref);
   }
 
   function logStructuredMorningAmbientState(stage: string) {
@@ -5421,12 +5432,15 @@ function MeditationPageContent() {
             <p className="whitespace-pre-line text-sm leading-7 text-white/56">{awakeningContinuity}</p>
 
             <div className="flex flex-col items-center gap-3">
-              <Link
-                href={continueToEnergyHref}
-                className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
+              <button
+                type="button"
+                onClick={handleContinueToEnergy}
+                disabled={navigationPendingAction !== null}
+                aria-busy={navigationPendingAction === "continue"}
+                className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92] disabled:cursor-not-allowed disabled:opacity-72"
               >
-                {ritualCopy.continueCta}
-              </Link>
+                {navigationPendingAction === "continue" ? navigationPendingCopy.moving : ritualCopy.continueCta}
+              </button>
               <Link
                 href={morningGateReturnHref}
                 className="inline-flex min-h-[52px] min-w-[240px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
