@@ -17,6 +17,7 @@ import {
 import { useLanguage } from "@/lib/i18n";
 
 const DAILY_RHYTHM_ROUTE = "/program/basic";
+const BASIC_ENTRY_ROUTE = "/pricing#basic";
 const JOURNEY_AUDIO_PENDING_KEY = "meisoulife_journey_audio_pending";
 const JOURNEY_AUDIO_DAY_KEY = "meisoulife_journey_day";
 const JOURNEY_OVERVIEW_IMAGE_SRC = "/7day-recovery/7day-recovery-overview.png";
@@ -143,6 +144,18 @@ export function RhythmJourneyPage() {
       : language === "kr"
         ? "다음으로 이동하고 있습니다…"
         : "Moving to the next step…";
+  const basicEntryLabel =
+    language === "jp"
+      ? "BASICで毎日のリズムとメンバーコミュニティを始める"
+      : language === "kr"
+        ? "BASIC으로 일상 리듬과 멤버 커뮤니티 시작하기"
+        : "Begin the daily rhythm and member community with BASIC";
+  const basicEntrySupport =
+    language === "jp"
+      ? "ときどき一人で回復することから、毎日戻れるリズムとコミュニティへ。"
+      : language === "kr"
+        ? "가끔 혼자 회복하는 시간에서, 매일 돌아올 리듬과 커뮤니티로 이어갑니다."
+        : "Move from recovering alone occasionally to a daily rhythm and community you can return to.";
 
   useEffect(() => {
     const stored = readRhythmJourneyProgress();
@@ -648,6 +661,15 @@ export function RhythmJourneyPage() {
                     </button>
                   ) : (
                     <div className="flex flex-col gap-3">
+                      <div className="rounded-[24px] border border-[#d8caa0]/18 bg-[#f3e0af]/[0.08] px-5 py-5 text-center">
+                        <p className="text-sm leading-7 text-[#f4ead1]/86">{basicEntrySupport}</p>
+                        <Link
+                          href={BASIC_ENTRY_ROUTE}
+                          className="button-nowrap mt-4 inline-flex min-h-[54px] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#f3e0af,#d4ba75)] px-6 py-3 text-sm font-semibold text-ink transition duration-300 hover:-translate-y-0.5"
+                        >
+                          {basicEntryLabel}
+                        </Link>
+                      </div>
                       {day7RhythmSelection ? (
                         <Link
                           href={getDailyRhythmRoute(day7RhythmSelection)}

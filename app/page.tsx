@@ -21,7 +21,8 @@ const homeCopy = {
       description: "AI時代に、人間本来のリズムへ還る場所。",
       freeLabel: "FREE RECOVERY",
       primaryCta: "1分リセットを始める",
-      secondaryCta: "7日間の小さな回復"
+      secondaryCta: "7日間の小さな回復",
+      journeyLine: "1分の回復 → 7日間のくり返し → BASICの日々のリズムとメンバーコミュニティ"
     },
     recovery: {
       eyebrow: "Recovery First",
@@ -81,7 +82,8 @@ const homeCopy = {
       description: "AI 시대에,\n인간 본래의 리듬을 되찾는 곳.",
       freeLabel: "FREE RECOVERY",
       primaryCta: "1분 리셋 시작하기",
-      secondaryCta: "7일간의 작은 회복"
+      secondaryCta: "7일간의 작은 회복",
+      journeyLine: "1분 회복 → 7일간의 반복 → BASIC의 일상 리듬과 멤버 커뮤니티"
     },
     recovery: {
       eyebrow: "Recovery First",
@@ -141,7 +143,8 @@ const homeCopy = {
       description: "A place to recover the original human rhythm\nin the AI era.",
       freeLabel: "FREE RECOVERY",
       primaryCta: "Start the 1-Minute Reset",
-      secondaryCta: "7-Day Recovery"
+      secondaryCta: "7-Day Recovery",
+      journeyLine: "1-minute recovery → 7 days of repetition → BASIC daily rhythm and member community"
     },
     recovery: {
       eyebrow: "Recovery First",
@@ -894,6 +897,7 @@ export default function HomePage() {
                   {copy.hero.secondaryCta}
                 </Link>
               </div>
+              <p className="mt-4 max-w-[36rem] text-sm leading-6 text-white/58">{copy.hero.journeyLine}</p>
             </div>
             <div className="hidden lg:block" aria-hidden="true" />
           </div>

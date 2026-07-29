@@ -31,6 +31,7 @@ export default function PricingPage() {
         {pricing.plans.map((plan) => (
           <article
             key={plan.key}
+            id={plan.key === "basic" ? "basic" : undefined}
             className={`${plan.orderClass} flex h-full flex-col rounded-[24px] border p-6 shadow-[0_16px_46px_rgba(8,15,24,0.08)] transition duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_64px_rgba(8,15,24,0.14)] sm:p-7 ${plan.accentClass}`}
           >
             <div className="space-y-4">

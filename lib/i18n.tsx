@@ -253,24 +253,24 @@ export const siteCopy = {
     },
     community: {
       eyebrow: "COMMUNITY",
-      headline: "ここは、がんばる場所ではありません。毎日、共に目覚め直す場所です。",
+      headline: "ここは、がんばる場所ではありません。BASICから、毎日共に戻る場所です。",
       subcopy:
-        "1分の静けさを一人で終わらせず、7日間の小さな回復とコミュニティのリズムへやさしくつなげます。",
-      lineCommunityTitle: "7日間、共に始める入口",
+        "ここでは参加の前に、BASICとメンバーコミュニティのあり方を知ることができます。実際の参加はBASICから始まります。",
+      lineCommunityTitle: "まずは7日間の小さな回復を",
       lineCommunityDescription:
-        "朝のリマインド、夜の声かけ、7日間の小さな回復へつながる案内が届く無料コミュニティです。",
-      lineCommunityCTA: "コミュニティに参加する",
-      rhythmTitle: "無料参加から会員リズムへ",
+        "無料の回復を、自分のペースで繰り返すための7日間です。コミュニティへの参加を急ぐ必要はありません。",
+      lineCommunityCTA: "まずは7日間の回復を体験する",
+      rhythmTitle: "BASICから始まる、毎日のリズムとメンバーコミュニティ",
       rhythmDescription:
-        "ひとりの回復を習慣に変え、共に生きるリズムへ育てる基本会員の入口です。",
-      rhythmCTA: "Basic会員へ進む",
+        "朝・昼・夜の小さな回復を重ねながら、一人で時々回復することから、毎日戻れるリズムとコミュニティへ。",
+      rhythmCTA: "BASIC会員としてコミュニティを始める",
       supportTitle: "共生人材への入口",
       supportDescription:
         "共に目覚めるリズムを支える人へ。リーダー成長の入口につながる案内です。",
       supportCTA: "リーダーフォームを見る",
-      memberCommunityTitle: "共に続けるコミュニティの流れ",
+      memberCommunityTitle: "BASICメンバーのコミュニティの流れ",
       memberCommunityDescription:
-        "毎日のチェックイン、今日の小さな前進、質問、イベント、リーダー成長まで、自然に続く導線を整えています。",
+        "BASICから、毎日のチェックイン、今日の小さな前進、質問やイベントへと、無理のない参加のリズムを育てていきます。",
       channels: ["Daily Check-in", "Wins Today", "Questions", "Events", "Leaders"]
     },
     leaders: {
@@ -711,14 +711,14 @@ export const siteCopy = {
     },
     pricingPage: {
       eyebrow: "Membership",
-      title: "1分の回復から、生活リズム、脳の主人、共生へ",
+      title: "1分の回復から、7日間のくり返し、BASICの毎日のリズムへ",
       description:
-        "瞑想lifeの会員は、瞑想コンテンツを買う人ではありません。1分の回復から始まり、毎日のリズム、脳の主人として生きる力、共生文化へ進んでいく仲間です。",
+        "BASICは、瞑想コンテンツを増やすためのものではありません。無料の回復を、朝・昼・夜に戻れる毎日のリズムと、最初のメンバーコミュニティへつなげる公式の入口です。",
       checkoutNote: "決済後、この画面に戻ると次のステップに進みます",
       basicPaymentEmailNotice: "このメールアドレスが、BASICログインにも使用されます。",
       badges: ["Appleのように静かで明快", "日本のウェルネスらしい余白", "今すぐ始められる導線"],
       supportText:
-        "Freeは、心の過負荷を1分でやさしく戻す入口です。\nBasicは、毎日戻る生活リズムを育てます。\nGrowthは、AIと共に脳の主人として生きる感覚を深めます。\nInner Circleは、共生文化と文明ビジョンを支えるリーダーの場です。",
+        "Freeは、今すぐ回復するための入口です。\n7日間の小さな回復は、戻ることを静かにくり返す時間です。\nBASICは、朝・昼・夜に戻る毎日のリズムと、メンバーコミュニティへの最初の公式な入口です。\n会費は安全で続けられる場を保つためのもので、人の価値や優劣を表すものではありません。",
       voicesEyebrow: "Voices",
       voicesTitle: "入ってよかった、という声",
       voicesButton: "コミュニティを見る",
@@ -729,12 +729,12 @@ export const siteCopy = {
           name: "BASIC",
           price: "¥1,000",
           dailyCost: "約¥33 / day",
-          emotionalCopy: "Life Rhythm",
-          description: "1分の回復と小さな日々の実践で、安定した生活リズムを育てます。",
-          features: ["毎日の1分リカバリー", "夜の3分ガイド", "7日リズム継続", "毎朝の習慣設計"],
-          cta: "月1,000円で続ける",
-          orderClass: "order-2 lg:order-1",
-          accentClass: "border-white/60 bg-white/75"
+          emotionalCopy: "Daily Rhythm & Member Community",
+          description: "1分の回復と7日間のくり返しを、朝・昼・夜に戻る毎日のリズムへ。BASICはメンバーコミュニティの最初の入口です。",
+          features: ["朝・昼・夜のリズム", "毎日の小さな回復の実践", "7日間の回復を生活へ", "最初のメンバーコミュニティ体験"],
+          cta: "BASICで生活リズムを続ける",
+          orderClass: "order-1",
+          accentClass: "border-gold/70 bg-[linear-gradient(180deg,#fffdf6,#f7efd9)] shadow-[0_24px_60px_rgba(212,186,117,0.2)]"
         },
         {
           key: "leader",
@@ -745,8 +745,8 @@ export const siteCopy = {
           description: "AIガイドと脳教育の実践を通して、感情・思考・関係のバランスを回復します。",
           features: ["AIリズムガイドの深い活用", "少人数サークル", "共生生活の実践対話", "実践記録レビュー"],
           cta: "月3,000円で深める",
-          orderClass: "order-1 lg:order-2",
-          accentClass: "border-emerald-300 bg-gradient-to-b from-white to-emerald-50/70 shadow-[0_24px_60px_rgba(5,150,105,0.12)]"
+          orderClass: "order-2",
+          accentClass: "border-zinc-200 bg-white/70"
         },
         {
           key: "premium",
@@ -1162,24 +1162,24 @@ export const siteCopy = {
     },
     community: {
       eyebrow: "COMMUNITY",
-      headline: "여기는 매일 함께 깨어나는 곳입니다.",
+      headline: "여기는 애쓰는 곳이 아닙니다. BASIC부터 매일 함께 돌아오는 곳입니다.",
       subcopy:
-        "1분의 고요를 혼자 끝내지 않고, 7일간의 작은 회복과 커뮤니티 리듬으로 부드럽게 이어갑니다.",
-      lineCommunityTitle: "7일, 함께 시작하는 입구",
+        "이곳에서는 참여하기 전에 BASIC과 멤버 커뮤니티의 모습을 미리 알아볼 수 있습니다. 실제 커뮤니티 참여는 BASIC부터 시작됩니다.",
+      lineCommunityTitle: "먼저 7일간의 작은 회복을",
       lineCommunityDescription:
-        "아침 리마인드, 밤의 돌아보기, 7일간의 작은 회복으로 이어지는 무료 커뮤니티입니다.",
-      lineCommunityCTA: "커뮤니티 참여하기",
-      rhythmTitle: "무료 참여에서 멤버 리듬으로",
+        "무료 회복을 내 속도로 반복해 볼 수 있는 7일입니다. 커뮤니티 참여를 서두를 필요는 없습니다.",
+      lineCommunityCTA: "먼저 7일간의 회복 경험하기",
+      rhythmTitle: "BASIC에서 시작하는 일상 리듬과 멤버 커뮤니티",
       rhythmDescription:
-        "혼자의 회복을 습관으로 바꾸고, 함께 살아가는 리듬으로 이어가는 기본 멤버 입구입니다.",
-      rhythmCTA: "Basic 멤버로 이동",
+        "아침·낮·저녁의 작은 회복을 쌓으며, 가끔 혼자 회복하는 시간에서 매일 돌아올 리듬과 커뮤니티로 이어갑니다.",
+      rhythmCTA: "BASIC 회원으로 커뮤니티 시작하기",
       supportTitle: "공생 리더로 이어지는 입구",
       supportDescription:
         "함께 깨어나는 리듬을 지지하는 사람으로 나아가는 리더 성장 안내입니다.",
       supportCTA: "리더 폼 보기",
-      memberCommunityTitle: "함께 이어가는 커뮤니티 흐름",
+      memberCommunityTitle: "BASIC 멤버 커뮤니티의 흐름",
       memberCommunityDescription:
-        "매일의 체크인, 오늘의 작은 전진, 질문, 이벤트, 리더 성장까지 자연스럽게 이어지도록 구성했습니다.",
+        "BASIC부터 매일의 체크인, 오늘의 작은 전진, 질문과 이벤트로 이어지는 무리 없는 참여의 리듬을 만들어 갑니다.",
       channels: ["Daily Check-in", "Wins Today", "Questions", "Events", "Leaders"]
     },
     leaders: {
@@ -1620,14 +1620,14 @@ export const siteCopy = {
     },
     pricingPage: {
       eyebrow: "Membership",
-      title: "1분 회복에서 일상 리듬, 뇌의 주인, 공생으로",
+      title: "1분 회복에서 7일간의 반복, BASIC의 일상 리듬으로",
       description:
-        "명상life의 회원은 1분 회복에서 시작해 일상의 리듬을 되찾고, 자연지능을 확장하며, 자기 삶의 주인으로 살아가고, 공생으로 성장해가는 사람들입니다.",
+        "BASIC은 명상 콘텐츠를 더하는 상품이 아닙니다. 무료 회복을 아침·낮·저녁에 돌아올 일상 리듬과 첫 멤버 커뮤니티로 이어 주는 공식 입구입니다.",
       checkoutNote: "결제 후 이 화면으로 돌아오면 다음 단계로 이어집니다",
       basicPaymentEmailNotice: "이 이메일은 BASIC 로그인에도 사용됩니다.",
       badges: ["Apple처럼 조용하고 명확하게", "일본 웰니스다운 여백", "지금 바로 시작할 수 있는 흐름"],
       supportText:
-        "Free는 마음의 과부하를 1분 안에 부드럽게 돌려놓는 입구입니다.\nBasic은 매일 돌아오는 생활 리듬을 만듭니다.\nGrowth는 AI와 함께 뇌의 주인으로 살아가는 감각을 깊게 합니다.\nInner Circle은 공생 문화와 문명 비전을 떠받치는 리더의 장입니다.",
+        "Free는 지금 회복하기 위한 입구입니다.\n7일간의 작은 회복은 돌아오는 일을 조용히 반복하는 시간입니다.\nBASIC은 아침·낮·저녁에 돌아올 일상 리듬과 멤버 커뮤니티로 들어가는 첫 공식 입구입니다.\n회비는 안전하고 지속 가능한 공간을 지키기 위한 것이며, 사람의 가치나 우열을 뜻하지 않습니다.",
       voicesEyebrow: "Voices",
       voicesTitle: "들어오길 잘했다는 이야기",
       voicesButton: "커뮤니티 보기",
@@ -1638,12 +1638,12 @@ export const siteCopy = {
           name: "BASIC",
           price: "¥1,000",
           dailyCost: "약 ¥33 / day",
-          emotionalCopy: "Life Rhythm",
-          description: "1분 회복과 작은 일상 실천으로 안정된 생활 리듬을 만들어갑니다.",
-          features: ["매일의 1분 리커버리", "밤 3분 가이드", "7일 리듬 지속", "아침 습관 설계"],
-          cta: "월 1,000엔으로 이어가기",
-          orderClass: "order-2 lg:order-1",
-          accentClass: "border-white/60 bg-white/75"
+          emotionalCopy: "Daily Rhythm & Member Community",
+          description: "1분 회복과 7일간의 반복을 아침·낮·저녁에 돌아오는 일상 리듬으로. BASIC은 멤버 커뮤니티의 첫 입구입니다.",
+          features: ["아침·낮·저녁 리듬", "매일의 작은 회복 실천", "7일간의 회복을 일상으로", "첫 멤버 커뮤니티 경험"],
+          cta: "BASIC으로 생활 리듬 이어가기",
+          orderClass: "order-1",
+          accentClass: "border-gold/70 bg-[linear-gradient(180deg,#fffdf6,#f7efd9)] shadow-[0_24px_60px_rgba(212,186,117,0.2)]"
         },
         {
           key: "leader",
@@ -1654,8 +1654,8 @@ export const siteCopy = {
           description: "AI 가이드와 뇌교육 실천을 통해 감정, 생각, 관계의 균형을 회복합니다.",
           features: ["AI 리듬 가이드 깊이 활용", "소규모 서클", "공생 생활 실천 대화", "실천 기록 리뷰"],
           cta: "월 3,000엔으로 깊게",
-          orderClass: "order-1 lg:order-2",
-          accentClass: "border-emerald-300 bg-gradient-to-b from-white to-emerald-50/70 shadow-[0_24px_60px_rgba(5,150,105,0.12)]"
+          orderClass: "order-2",
+          accentClass: "border-zinc-200 bg-white/70"
         },
         {
           key: "premium",
@@ -2071,24 +2071,24 @@ export const siteCopy = {
     },
     community: {
       eyebrow: "COMMUNITY",
-      headline: "This is not a place to push harder. It is a place to wake up together, every day.",
+      headline: "This is not a place to push harder. With BASIC, it is a place to return together each day.",
       subcopy:
-        "Don’t let one minute of stillness end alone. Continue through the 7-day challenge and a shared community rhythm.",
-      lineCommunityTitle: "A 7-day entrance to begin together",
+        "Here, you can preview and understand BASIC and the member community before joining. Active community participation begins with BASIC.",
+      lineCommunityTitle: "Begin with 7 days of small recovery",
       lineCommunityDescription:
-        "A free community with morning reminders, evening reflection, and 7-day challenge guidance.",
-      lineCommunityCTA: "Join the Community",
-      rhythmTitle: "From free entry into a member rhythm",
+        "A free seven-day space to repeat recovery at your own pace. There is no need to hurry into community participation.",
+      lineCommunityCTA: "Experience the 7-Day Recovery Journey first",
+      rhythmTitle: "Daily rhythm and member community begin with BASIC",
       rhythmDescription:
-        "A gentle entry into Basic membership, where personal recovery becomes a daily rhythm you can continue with others.",
-      rhythmCTA: "Continue with Basic",
+        "Build small recoveries across morning, daytime, and evening—from recovering alone occasionally to a daily rhythm and community you can return to.",
+      rhythmCTA: "Join BASIC and begin the member community",
       supportTitle: "A path into shared leadership",
       supportDescription:
         "A calm path for people who want to support the rhythm of awakening together and grow into leadership.",
       supportCTA: "View the leader form",
-      memberCommunityTitle: "A community flow that helps you continue",
+      memberCommunityTitle: "The BASIC member community rhythm",
       memberCommunityDescription:
-        "Daily check-ins, small wins, questions, events, and leadership growth are connected in one steady community rhythm.",
+        "Beginning with BASIC, daily check-ins, small wins, questions, and events form a calm rhythm of participation.",
       channels: ["Daily Check-in", "Wins Today", "Questions", "Events", "Leaders"]
     },
     leaders: {
@@ -2529,14 +2529,14 @@ export const siteCopy = {
     },
     pricingPage: {
       eyebrow: "Membership",
-      title: "From 1-minute recovery to daily rhythm, brain ownership, and coexistence",
+      title: "From 1-minute recovery, to 7 days of repetition, to BASIC daily rhythm",
       description:
-        "A Meisou Life member is not buying meditation content. They are entering a path that begins with one-minute recovery and grows into daily rhythm, brain ownership, coexistence, and a larger human vision.",
+        "BASIC is not simply more meditation content. It is the official first entry from free recovery into a daily rhythm of morning, daytime, and evening—and into the member community.",
       checkoutNote: "After payment, return to this screen to move to the next step",
       basicPaymentEmailNotice: "This email will also be used to log in to BASIC.",
       badges: ["Quiet and clear like Apple", "Space that feels true to Japanese wellness", "A path you can begin right now"],
       supportText:
-        "Free is the doorway to one-minute recovery when life feels overwhelming.\nBasic builds a daily rhythm you can return to.\nGrowth deepens brain ownership with AI support.\nInner Circle is for leadership in coexistence culture and a wider civilization vision.",
+        "Free is the doorway to recovery now.\nThe 7-Day Recovery Journey is time to repeat that return gently.\nBASIC is the first official entry into a daily rhythm of morning, daytime, and evening, and into the member community.\nThe membership fee supports a safe, sustainable space; it does not measure human worth or status.",
       voicesEyebrow: "Voices",
       voicesTitle: "Why people were glad they stayed",
       voicesButton: "See the community",
@@ -2547,12 +2547,12 @@ export const siteCopy = {
           name: "BASIC",
           price: "¥1,000",
           dailyCost: "About ¥33 / day",
-          emotionalCopy: "Life Rhythm",
-          description: "Build a stable daily rhythm with 1-minute recovery and small daily practices.",
-          features: ["Daily 1-minute recovery", "Night 3-minute guide", "7-day rhythm continuity", "Morning rhythm design"],
-          cta: "Continue for ¥1,000 / month",
-          orderClass: "order-2 lg:order-1",
-          accentClass: "border-white/60 bg-white/75"
+          emotionalCopy: "Daily Rhythm & Member Community",
+          description: "Carry one-minute recovery and seven days of repetition into a daily rhythm of morning, daytime, and evening. BASIC is the first entry into the member community.",
+          features: ["Morning, daytime, and evening rhythm", "Small daily recovery practices", "Carry 7-Day Recovery into life", "First member community experience"],
+          cta: "Continue your daily rhythm with BASIC",
+          orderClass: "order-1",
+          accentClass: "border-gold/70 bg-[linear-gradient(180deg,#fffdf6,#f7efd9)] shadow-[0_24px_60px_rgba(212,186,117,0.2)]"
         },
         {
           key: "leader",
@@ -2563,8 +2563,8 @@ export const siteCopy = {
           description: "Recover emotional, mental, and relational balance with AI guidance and Brain Education practices.",
           features: ["Deeper AI rhythm guidance", "Small circle groups", "Coexistence practice dialogue", "Practice record review"],
           cta: "Deepen for ¥3,000 / month",
-          orderClass: "order-1 lg:order-2",
-          accentClass: "border-emerald-300 bg-gradient-to-b from-white to-emerald-50/70 shadow-[0_24px_60px_rgba(5,150,105,0.12)]"
+          orderClass: "order-2",
+          accentClass: "border-zinc-200 bg-white/70"
         },
         {
           key: "premium",

@@ -3,13 +3,11 @@
 import Link from "next/link";
 import { SectionHeading } from "@/components/section-heading";
 import { useSiteCopy } from "@/lib/i18n";
-import { getBasicMembershipCheckoutUrl, getLeaderFormUrl, getLineInviteLinks } from "@/lib/site";
+import { getLeaderFormUrl } from "@/lib/site";
 
 export default function CommunityPage() {
   const copy = useSiteCopy();
   const community = copy.community;
-  const invites = getLineInviteLinks();
-  const basicUrl = getBasicMembershipCheckoutUrl();
   const leaderFormUrl = getLeaderFormUrl();
 
   return (
@@ -21,25 +19,25 @@ export default function CommunityPage() {
       />
       <div className="mt-10 grid gap-6 lg:grid-cols-3">
         <article className="premium-card rounded-lg p-6">
-          <p className="text-sm uppercase tracking-[0.3em] text-gold">LINE Community</p>
-          <h2 className="mt-3 text-2xl font-semibold text-white">{community.lineCommunityTitle}</h2>
-          <p className="mt-4 text-sm leading-7 text-white/72">{community.lineCommunityDescription}</p>
+          <p className="text-sm uppercase tracking-[0.3em] text-gold">BASIC Membership</p>
+          <h2 className="mt-3 text-2xl font-semibold text-white">{community.rhythmTitle}</h2>
+          <p className="mt-4 text-sm leading-5 text-white/72">{community.rhythmDescription}</p>
           <Link
-            href={invites.free}
-            className="mt-6 inline-flex rounded-md bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92]"
+            href="/pricing#basic"
+            className="mt-2 inline-flex rounded-md bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92]"
           >
-            {community.lineCommunityCTA}
+            {community.rhythmCTA}
           </Link>
         </article>
         <article className="premium-card rounded-lg p-6">
-          <p className="text-sm uppercase tracking-[0.3em] text-gold">Membership</p>
-          <h2 className="mt-3 text-2xl font-semibold text-white">{community.rhythmTitle}</h2>
-          <p className="mt-4 text-sm leading-7 text-white/72">{community.rhythmDescription}</p>
+          <p className="text-sm uppercase tracking-[0.3em] text-gold">Free Recovery</p>
+          <h2 className="mt-3 text-2xl font-semibold text-white">{community.lineCommunityTitle}</h2>
+          <p className="mt-4 text-sm leading-7 text-white/72">{community.lineCommunityDescription}</p>
           <Link
-            href={basicUrl || "/pricing"}
-            className="mt-6 inline-flex rounded-md border border-white/15 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+            href="/rhythm-journey"
+            className="mt-[46px] inline-flex rounded-md border border-white/15 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
           >
-            {community.rhythmCTA}
+            {community.lineCommunityCTA}
           </Link>
         </article>
         <article className="premium-card rounded-lg p-6">
