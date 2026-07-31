@@ -16,6 +16,10 @@ const migrationSource = readFileSync(
   new URL("../supabase/migrations/20260727_add_basic_garden_ledgers.sql", import.meta.url),
   "utf8"
 );
+const rewardUpdateMigrationSource = readFileSync(
+  new URL("../supabase/migrations/20260731_fix_basic_garden_completion_reward_update.sql", import.meta.url),
+  "utf8"
+);
 
 for (const [name, source] of [
   ["basic-garden.mjs", basicGardenSource],
@@ -316,6 +320,20 @@ test("retrying the same completion request remains idempotent", async () => {
   assert.equal(retry.rewardGranted, false);
 });
 
+test("a same-day Vision retry remains idempotent", async () => {
+  const state = createClient({
+    today: "2026-07-27",
+    progressRows: [{ auth_user_id: "auth-1", challenge_day: 5, check_in_count: 2 }]
+  });
+
+  const first = await syncBasicGardenCompletion({ client: state.client, authUserId: "auth-1", gateKey: "vision" });
+  const retry = await syncBasicGardenCompletion({ client: state.client, authUserId: "auth-1", gateKey: "vision" });
+
+  assert.equal(first.recordedCompletion, true);
+  assert.equal(retry.recordedCompletion, false);
+  assert.equal(state.getCompletionRows("auth-1", "2026-07-27").length, 1);
+});
+
 test("the next JST day resets eligibility and can grant another +1", async () => {
   const state = createClient({
     today: "2026-07-27",
@@ -383,4 +401,12 @@ test("migration adds JST-based visit and completion ledgers with unique daily ke
   assert.match(migrationSource, /timezone\('Asia\/Tokyo', now\(\)\)::date/);
   assert.match(migrationSource, /create or replace function public\.record_basic_garden_visit/);
   assert.match(migrationSource, /create or replace function public\.record_basic_garden_completion/);
+});
+
+test("forward-only reward update migration removes the Vision third-Gate RPC ambiguity", () => {
+  assert.match(rewardUpdateMigrationSource, /update public\.basic_garden_gate_completions as bgc/);
+  assert.match(rewardUpdateMigrationSource, /where bgc\.auth_user_id = p_auth_user_id/);
+  assert.match(rewardUpdateMigrationSource, /and bgc\.activity_date = v_activity_date/);
+  assert.match(rewardUpdateMigrationSource, /and bgc\.gate_key = p_gate_key/);
+  assert.match(rewardUpdateMigrationSource, /v_distinct_gate_count >= 3 and not v_reward_exists/);
 });

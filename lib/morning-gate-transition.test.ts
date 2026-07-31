@@ -13,6 +13,21 @@ test("Awakening completion uses one guarded action to continue to the existing E
   assert.doesNotMatch(meditationPageSource, /<Link\s+href=\{continueToEnergyHref\}/);
 });
 
+test("route changes reset the one-time navigation lock and isolate Garden save state for the next Gate", () => {
+  assert.match(meditationPageSource, /const routeSearchKey = searchParams\.toString\(\);/);
+  assert.match(meditationPageSource, /basicGardenSyncSessionRef\.current \+= 1;[\s\S]*setNavigationPendingAction\(null\);[\s\S]*setBasicGardenSyncStatus\("idle"\);/);
+  assert.match(meditationPageSource, /\[localizedLanguage, membershipAccess\.canRender, requiresProtectedMembership, routeSearchKey\]/);
+});
+
+test("a Garden save failure cannot hold the Awakening continuation pending", () => {
+  const continuationHandler = meditationPageSource.slice(
+    meditationPageSource.indexOf("function handleContinueToEnergy"),
+    meditationPageSource.indexOf("function logStructuredMorningAmbientState")
+  );
+  assert.doesNotMatch(continuationHandler, /ensureBasicGardenCompletionSynced/);
+  assert.match(meditationPageSource, /if \(basicGardenSyncSessionRef\.current === syncSession\) \{[\s\S]*setBasicGardenSyncStatus\("error"\)/);
+});
+
 test("Energy Gate keeps the existing morning-energy route and secondary Awakening completion actions", () => {
   assert.match(rhythmSource, /routeType: "morning-energy"/);
   assert.match(meditationPageSource, /isEnergyGate = meditationType === "morning" && meditationDoor === "energy"/);

@@ -1455,6 +1455,7 @@ function MeditationPageContent() {
   const copy = useSiteCopy().meditationPage;
   const journeyCopy = useMemo(() => getRhythmJourneyContent(language), [language]);
   const localizedLanguage = language === "kr" || language === "en" || language === "jp" ? language : "jp";
+  const routeSearchKey = searchParams.toString();
   const routeTypeParam = searchParams.get("type");
   const routeDoorParam = searchParams.get("door");
   const journeyModeParam = searchParams.get("journey") === "1";
@@ -1579,7 +1580,8 @@ function MeditationPageContent() {
   const journeySettlingTimeoutRef = useRef<number | null>(null);
   const isPausedRef = useRef(false);
   const isCompleteRef = useRef(false);
-  const basicGardenSyncPromiseRef = useRef<Promise<boolean> | null>(null);
+  const basicGardenSyncSessionRef = useRef(0);
+  const basicGardenSyncPromiseRef = useRef<{ session: number; promise: Promise<boolean> } | null>(null);
   const elapsedTotalSeconds = totalSeconds - secondsLeft;
   const phase = useMemo(() => getBreathPhase(elapsedTotalSeconds), [elapsedTotalSeconds]);
   const isComplete = secondsLeft <= 0;
@@ -2290,6 +2292,11 @@ function MeditationPageContent() {
       return;
     }
 
+    basicGardenSyncSessionRef.current += 1;
+    basicGardenSyncPromiseRef.current = null;
+    setNavigationPendingAction(null);
+    setBasicGardenSyncStatus("idle");
+    setBasicGardenSyncError(null);
     setHasInvalidRoute(false);
     setTotalSeconds(resolvedRoute.durationSeconds);
     setSecondsLeft(resolvedRoute.durationSeconds);
@@ -2374,7 +2381,7 @@ function MeditationPageContent() {
       console.log("[Journey Audio] pending:", pendingJourneyAudio);
       console.log("[Journey Audio] audio element:", ambientAudioRef.current);
     }
-  }, [localizedLanguage, membershipAccess.canRender, requiresProtectedMembership]);
+  }, [localizedLanguage, membershipAccess.canRender, requiresProtectedMembership, routeSearchKey]);
 
   function logJourneyAudio(event: string, extra?: Record<string, unknown>) {
     if (process.env.NODE_ENV === "production") {
@@ -4227,7 +4234,10 @@ function MeditationPageContent() {
       return true;
     }
 
-    if (!basicGardenSyncPromiseRef.current) {
+    const syncSession = basicGardenSyncSessionRef.current;
+    const currentSync = basicGardenSyncPromiseRef.current;
+
+    if (!currentSync || currentSync.session !== syncSession) {
       setBasicGardenSyncStatus("saving");
       setBasicGardenSyncError(null);
       const basicGardenGateKey = isEligibleBasicGardenGateKey(mappedDoor) ? mappedDoor : null;
@@ -4238,7 +4248,7 @@ function MeditationPageContent() {
         return false;
       }
 
-      basicGardenSyncPromiseRef.current = (async () => {
+      const promise = (async () => {
         try {
           const supabase = getSupabaseBrowserClient();
           const sessionResult = supabase ? await supabase.auth.getSession() : { data: { session: null } };
@@ -4267,23 +4277,31 @@ function MeditationPageContent() {
             throw new Error(payload.ok ? "Garden sync request failed" : payload.errorMessage || "Garden sync request failed");
           }
 
-          setBasicGardenSyncStatus("saved");
-          setBasicGardenSyncError(null);
+          if (basicGardenSyncSessionRef.current === syncSession) {
+            setBasicGardenSyncStatus("saved");
+            setBasicGardenSyncError(null);
+          }
           return true;
         } catch (error) {
           console.warn("[basic-garden] completion sync request failed", {
             error: error instanceof Error ? error.message : "unknown_error"
           });
-          setBasicGardenSyncStatus("error");
-          setBasicGardenSyncError(getBasicGardenSyncErrorMessage());
+          if (basicGardenSyncSessionRef.current === syncSession) {
+            setBasicGardenSyncStatus("error");
+            setBasicGardenSyncError(getBasicGardenSyncErrorMessage());
+          }
           return false;
         } finally {
-          basicGardenSyncPromiseRef.current = null;
+          if (basicGardenSyncPromiseRef.current?.session === syncSession) {
+            basicGardenSyncPromiseRef.current = null;
+          }
         }
       })();
+      basicGardenSyncPromiseRef.current = { session: syncSession, promise };
     }
 
-    return await basicGardenSyncPromiseRef.current;
+    const activeSync = basicGardenSyncPromiseRef.current;
+    return activeSync ? await activeSync.promise : false;
   }
 
   async function runMeditationComplete() {
