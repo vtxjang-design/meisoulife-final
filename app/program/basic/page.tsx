@@ -7,6 +7,12 @@ import { BasicHome } from "@/components/basic-home";
 import { MembershipGuard } from "@/components/membership-guard";
 import { recordAuthDiagnostic } from "@/lib/auth-flow-diagnostics";
 import { resolveBasicGardenStats, type BasicGardenProfileRow } from "@/lib/basic-garden-progress";
+import {
+  BASIC_GARDEN_GROWTH_MOMENT_KEY,
+  readBasicGardenGrowthMoment,
+  type BasicGardenGrowthMoment
+} from "@/lib/basic-garden-v1";
+import { safeSessionStorageGet, safeSessionStorageRemove } from "@/lib/safe-browser-storage";
 import type { MembershipResolutionResult } from "@/lib/membership";
 import { useLanguage } from "@/lib/i18n";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -14,6 +20,8 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 type DashboardState = {
   challengeDay: number;
   streakCount: number;
+  todayDistinctGateCount: number;
+  growthMoment: BasicGardenGrowthMoment | null;
 };
 
 type MembershipDebugState = {
@@ -27,7 +35,9 @@ function BasicProgramContent() {
   const searchParams = useSearchParams();
   const [dashboardState, setDashboardState] = useState<DashboardState>({
     challengeDay: 0,
-    streakCount: 0
+    streakCount: 0,
+    todayDistinctGateCount: 0,
+    growthMoment: null
   });
   const highlightedRhythm = searchParams.get("rhythm") ?? searchParams.get("gate");
   const defaultRhythm =
@@ -115,7 +125,9 @@ function BasicProgramContent() {
     if (!supabase || !userId) {
       setDashboardState({
         challengeDay: 0,
-        streakCount: 0
+        streakCount: 0,
+        todayDistinctGateCount: 0,
+        growthMoment: null
       });
       return;
     }
@@ -142,15 +154,47 @@ function BasicProgramContent() {
             ok: true;
             challengeDay: number;
             checkInCount: number;
+            activityDate: string;
           };
 
           if (!active) {
             return;
           }
 
+          const { data: completions } = await safeSupabase
+            .from("basic_garden_gate_completions")
+            .select("gate_key")
+            .eq("auth_user_id", userId)
+            .eq("activity_date", payload.activityDate);
+
+          if (!active) {
+            return;
+          }
+
+          const pendingGrowthMoment = readBasicGardenGrowthMoment(safeSessionStorageGet(BASIC_GARDEN_GROWTH_MOMENT_KEY));
+          const growthMoment =
+            pendingGrowthMoment?.activityDate === payload.activityDate && pendingGrowthMoment.checkInCount === payload.checkInCount
+              ? pendingGrowthMoment
+              : null;
+
+          if (pendingGrowthMoment) {
+            safeSessionStorageRemove(BASIC_GARDEN_GROWTH_MOMENT_KEY);
+          }
+
+          const ledgerGateCount = new Set(
+            ((completions as Array<{ gate_key?: string | null }> | null) ?? [])
+              .map((completion) => completion.gate_key)
+              .filter((gateKey): gateKey is string => Boolean(gateKey))
+          ).size;
+          // A confirmed reward is issued only for the third distinct Gate, so the
+          // immediate response remains visually complete if the ledger read lags.
+          const todayDistinctGateCount = growthMoment ? Math.max(3, ledgerGateCount) : ledgerGateCount;
+
           setDashboardState({
             challengeDay: payload.challengeDay,
-            streakCount: payload.checkInCount
+            streakCount: payload.checkInCount,
+            todayDistinctGateCount,
+            growthMoment
           });
           return;
         }
@@ -178,7 +222,9 @@ function BasicProgramContent() {
         });
         setDashboardState({
           challengeDay: 0,
-          streakCount: 0
+          streakCount: 0,
+          todayDistinctGateCount: 0,
+          growthMoment: null
         });
         return;
       }
@@ -186,7 +232,9 @@ function BasicProgramContent() {
 
       setDashboardState({
         challengeDay: stats.currentDay,
-        streakCount: stats.cumulativeCheckIns
+        streakCount: stats.cumulativeCheckIns,
+        todayDistinctGateCount: 0,
+        growthMoment: null
       });
     }
 
@@ -245,6 +293,8 @@ function BasicProgramContent() {
         <BasicHome
           currentDay={dashboardState.challengeDay}
           streakCount={dashboardState.streakCount}
+          todayDistinctGateCount={dashboardState.todayDistinctGateCount}
+          gardenGrowthMoment={dashboardState.growthMoment}
           planKey={plan}
           membershipResolved={planResolved}
           defaultRhythm={defaultRhythm}

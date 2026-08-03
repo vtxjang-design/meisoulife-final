@@ -8,6 +8,7 @@ import { MembershipAccessStateView, useMembershipAccess } from "@/components/mem
 import { preparePlaybackMediaElement } from "@/lib/basic-experience";
 import type { BasicGardenSyncResult } from "@/lib/basic-garden-sync";
 import { isEligibleBasicGardenGateKey } from "@/lib/basic-garden";
+import { BASIC_GARDEN_GROWTH_MOMENT_KEY } from "@/lib/basic-garden-v1";
 import { useLanguage, useSiteCopy } from "@/lib/i18n";
 import {
   getNatureSoundPreference,
@@ -38,6 +39,7 @@ import {
   safeLocalStorageGet,
   safeLocalStorageSet,
   safeSessionStorageGet,
+  safeSessionStorageSet,
   safeSessionStorageRemove
 } from "@/lib/safe-browser-storage";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -4270,11 +4272,26 @@ function MeditationPageContent() {
             cache: "no-store"
           });
           const payload = (await response.json()) as
-            | ({ ok: true } & Pick<BasicGardenSyncResult, "matchedBy" | "writeAction"> & { checkInCount: number; challengeDay: number })
+            | ({ ok: true } & Pick<BasicGardenSyncResult, "matchedBy" | "writeAction"> & {
+                checkInCount: number;
+                challengeDay: number;
+                rewardGranted: boolean;
+                activityDate: string;
+              })
             | { ok: false; errorMessage?: string };
 
           if (!response.ok || !payload.ok) {
             throw new Error(payload.ok ? "Garden sync request failed" : payload.errorMessage || "Garden sync request failed");
+          }
+
+          if (payload.rewardGranted) {
+            safeSessionStorageSet(
+              BASIC_GARDEN_GROWTH_MOMENT_KEY,
+              JSON.stringify({
+                activityDate: payload.activityDate,
+                checkInCount: payload.checkInCount
+              })
+            );
           }
 
           if (basicGardenSyncSessionRef.current === syncSession) {

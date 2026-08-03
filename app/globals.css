@@ -260,6 +260,33 @@ img {
   will-change: transform, opacity;
 }
 
+@keyframes garden-growth-rise {
+  0% { transform: scale(1); filter: brightness(1); }
+  35% { transform: scale(1.045); filter: brightness(1.24); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+@keyframes garden-growth-light {
+  0% { box-shadow: 0 0 0 rgba(154,236,215,0); transform: scale(0.72); }
+  40% { box-shadow: 0 0 26px rgba(154,236,215,0.96); transform: scale(1.45); }
+  100% { box-shadow: 0 0 14px rgba(154,236,215,0.8); transform: scale(1); }
+}
+
+.garden-growth-moment .garden-plant-dance {
+  animation: garden-growth-rise 2.4s ease-out both;
+}
+
+.garden-growth-light {
+  animation: garden-growth-light 2.1s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .garden-growth-moment .garden-plant-dance,
+  .garden-growth-light {
+    animation-duration: 420ms;
+  }
+}
+
 .garden-glow {
   animation: gardenGlow 10.5s ease-in-out infinite;
   will-change: transform, opacity;

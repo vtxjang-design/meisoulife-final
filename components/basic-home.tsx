@@ -13,6 +13,11 @@ import {
   getBasicHomeRecommendedGateForDate,
   resolveBasicHomeRecommendedGate
 } from "@/lib/basic-home-entry";
+import {
+  getNextBasicGardenChange,
+  resolveTodayGardenState,
+  type BasicGardenGrowthMoment
+} from "@/lib/basic-garden-v1";
 import { getBasicRhythmGates, type BasicDoorKey, type BasicGateKey } from "@/lib/basic-rhythm";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
@@ -20,6 +25,8 @@ type PlanKey = "free" | "basic" | "growth" | "inner_circle";
 type BasicHomeProps = {
   currentDay?: number;
   streakCount?: number;
+  todayDistinctGateCount?: number;
+  gardenGrowthMoment?: BasicGardenGrowthMoment | null;
   planKey?: PlanKey;
   membershipResolved?: boolean;
   defaultRhythm?: "morning" | "day" | "night";
@@ -31,6 +38,22 @@ type BasicHomeProps = {
   };
 };
 
+function formatEnglishOrdinal(value: number) {
+  const finalTwoDigits = value % 100;
+  if (finalTwoDigits >= 11 && finalTwoDigits <= 13) return `${value}th`;
+
+  switch (value % 10) {
+    case 1:
+      return `${value}st`;
+    case 2:
+      return `${value}nd`;
+    case 3:
+      return `${value}rd`;
+    default:
+      return `${value}th`;
+  }
+}
+
 const pageCopy = {
   jp: {
     badge: "BASIC RHYTHM",
@@ -41,6 +64,14 @@ const pageCopy = {
     gardenLabel: "私のリカバリーガーデン",
     gardenHeadline: "今日までの回復が、\nここに静かに残っています。",
     gardenBody: "記録されている回復だけを、静かに表示しています。",
+    todayResting: "今日の庭は、あなたのリズムを静かに待っています。",
+    todayFirst: "最初の回復の光が、庭に届きました。",
+    todaySecond: "今日、あなたのリズムがゆっくり戻っています。",
+    todayComplete: "今日の回復は、ひとつの光としてここに残っています。",
+    growthMoment: (count: number) => `${count}回目の回復が、あなたの庭に残りました。`,
+    nextChange: (remaining: number) => `次の変化まで、あと${remaining}つの回復。`,
+    finalStage: "この庭は、これまでの回復を静かに抱いています。",
+    todayStateLabel: "今日の回復の光",
     currentDayLabel: "累計訪問日数",
     sessionCountLabel: "累計チェックイン数",
     recommendationLabel: "TODAY'S GATE",
@@ -75,6 +106,14 @@ const pageCopy = {
     gardenLabel: "나의 리커버리 가든",
     gardenHeadline: "오늘까지의 회복이,\n여기에 조용히 남아 있습니다.",
     gardenBody: "이미 기록된 회복만 조용히 보여줍니다.",
+    todayResting: "오늘의 가든은 당신의 리듬을 조용히 기다리고 있습니다.",
+    todayFirst: "첫 번째 회복의 빛이 가든에 닿았습니다.",
+    todaySecond: "오늘 당신의 리듬이 천천히 돌아오고 있습니다.",
+    todayComplete: "오늘의 회복은 하나의 빛으로 여기에 남아 있습니다.",
+    growthMoment: (count: number) => `${count}번째 회복이 당신의 가든에 남았습니다.`,
+    nextChange: (remaining: number) => `다음 변화까지 회복 ${remaining}번이 남아 있습니다.`,
+    finalStage: "이 가든은 지금까지의 회복을 조용히 품고 있습니다.",
+    todayStateLabel: "오늘의 회복 빛",
     currentDayLabel: "누적 방문일",
     sessionCountLabel: "누적 체크인",
     recommendationLabel: "TODAY'S GATE",
@@ -109,6 +148,14 @@ const pageCopy = {
     gardenLabel: "MY RECOVERY GARDEN",
     gardenHeadline: "Your recorded recovery\nis resting here, quietly.",
     gardenBody: "This view quietly shows only recovery already recorded in your account.",
+    todayResting: "Your Garden is quietly waiting for your rhythm today.",
+    todayFirst: "The first light of recovery has reached your Garden.",
+    todaySecond: "Your rhythm is slowly returning today.",
+    todayComplete: "Today’s recovery remains here as a light.",
+    growthMoment: (count: number) => `Your ${formatEnglishOrdinal(count)} recovery now lives in your Garden.`,
+    nextChange: (remaining: number) => `${remaining} more ${remaining === 1 ? "recovery" : "recoveries"} until the next change.`,
+    finalStage: "Your Garden quietly holds the recovery already living here.",
+    todayStateLabel: "Today’s recovery lights",
     currentDayLabel: "Visit days",
     sessionCountLabel: "Total check-ins",
     recommendationLabel: "TODAY'S GATE",
@@ -217,6 +264,8 @@ function getDoorAccentClasses(door: BasicDoorKey) {
 export function BasicHome({
   currentDay = 1,
   streakCount = 0,
+  todayDistinctGateCount = 0,
+  gardenGrowthMoment = null,
   defaultRhythm,
   membershipSummary
 }: BasicHomeProps) {
@@ -252,10 +301,33 @@ export function BasicHome({
   const gardenVisual = getBasicGardenVisualModel(streakCount);
   const gardenMeaningLine = getBasicGardenMeaningLine(localizedLanguage);
   const gardenCountMessage = getBasicGardenCountMessage(localizedLanguage, streakCount);
+  const todayGarden = resolveTodayGardenState(todayDistinctGateCount);
+  const nextGardenChange = getNextBasicGardenChange(streakCount);
+  const [growthMomentActive, setGrowthMomentActive] = useState(Boolean(gardenGrowthMoment));
+
+  useEffect(() => {
+    if (!gardenGrowthMoment) {
+      return;
+    }
+
+    setGrowthMomentActive(true);
+    const timeout = window.setTimeout(() => setGrowthMomentActive(false), 2600);
+
+    return () => window.clearTimeout(timeout);
+  }, [gardenGrowthMoment]);
+
+  const todayGardenMessage =
+    todayGarden.completedGateCount === 0
+      ? copy.todayResting
+      : todayGarden.completedGateCount === 1
+        ? copy.todayFirst
+        : todayGarden.completedGateCount === 2
+          ? copy.todaySecond
+          : copy.todayComplete;
 
   function renderGardenSvg(maxWidthClassName: string, glowClassName: string) {
     return (
-      <div className={`relative mx-auto flex items-center justify-center ${maxWidthClassName}`}>
+      <div className={`relative mx-auto flex items-center justify-center ${maxWidthClassName} ${growthMomentActive ? "garden-growth-moment" : ""}`}>
         <div
           aria-hidden="true"
           className={`garden-glow pointer-events-none absolute inset-x-[14%] top-[14%] h-20 rounded-full bg-[radial-gradient(circle,rgba(127,255,212,0.16),transparent_68%)] blur-2xl ${glowClassName}`}
@@ -428,6 +500,18 @@ export function BasicHome({
             </g>
           </svg>
         </div>
+        <div aria-hidden="true" className="pointer-events-none absolute bottom-[9%] left-1/2 flex -translate-x-1/2 gap-2">
+          {[0, 1, 2].map((light) => (
+            <span
+              key={light}
+              className={`h-2.5 w-2.5 rounded-full border transition duration-500 motion-reduce:transition-none ${
+                light < todayGarden.completedGateCount
+                  ? "border-[rgba(225,249,235,0.72)] bg-[rgba(154,236,215,0.92)] shadow-[0_0_14px_rgba(154,236,215,0.8)]"
+                  : "border-white/15 bg-white/[0.04]"
+              } ${growthMomentActive && light === 2 ? "garden-growth-light" : ""}`}
+            />
+          ))}
+        </div>
       </div>
     );
   }
@@ -582,9 +666,18 @@ export function BasicHome({
             </h1>
             <p className="mt-2 hidden max-w-xl text-[13px] leading-5.5 text-[rgba(233,242,248,0.72)] lg:block lg:text-[0.97rem] lg:leading-6">{copy.gardenBody}</p>
             <div className="mt-2 space-y-1.5 sm:space-y-2 lg:mt-3">
-              <p className="text-[13px] leading-5 text-[rgba(214,244,235,0.82)] sm:text-sm sm:leading-6">{gardenMeaningLine}</p>
+              <p className="text-[13px] leading-5 text-[rgba(214,244,235,0.82)] sm:text-sm sm:leading-6">{todayGardenMessage}</p>
+              <p className="hidden text-[13px] leading-5 text-[rgba(233,242,248,0.56)] sm:text-sm sm:leading-6 lg:block">{gardenMeaningLine}</p>
               <p className="hidden text-[13px] leading-5 text-[rgba(233,242,248,0.56)] sm:text-sm sm:leading-6 lg:block">{gardenCountMessage}</p>
+              <p className="text-[12px] leading-5 text-[rgba(233,242,248,0.52)] sm:text-[13px]">
+                {nextGardenChange ? copy.nextChange(nextGardenChange.remainingCount) : copy.finalStage}
+              </p>
             </div>
+            {growthMomentActive && gardenGrowthMoment ? (
+              <p role="status" aria-live="polite" className="mt-2 text-[13px] leading-5 text-[rgba(244,231,192,0.92)] sm:text-sm">
+                {copy.growthMoment(gardenGrowthMoment.checkInCount)}
+              </p>
+            ) : null}
             <div className="mt-2.5 rounded-[15px] border border-white/[0.07] bg-white/[0.018] lg:mt-3 lg:w-fit lg:min-w-[29rem]">
               <div className="grid min-h-[66px] grid-cols-2 md:min-h-[60px] lg:min-h-[58px] lg:grid-cols-[minmax(0,14.5rem)_minmax(0,14.5rem)]">
                 <div className="flex min-w-0 flex-col justify-center px-3 py-[10px] sm:px-4 sm:py-[11px] lg:px-5 lg:py-3">
@@ -603,7 +696,7 @@ export function BasicHome({
             {renderGardenSvg("max-w-[18.95rem] lg:max-w-none", "sm:inset-x-[10%] sm:top-[10%] sm:h-32 sm:blur-3xl")}
           </div>
         </div>
-        <span className="sr-only">{`${copy.sessionCountLabel}: ${gardenVisual.recordedCheckIns}. ${gardenCountMessage}`}</span>
+        <span className="sr-only">{`${copy.todayStateLabel}: ${todayGarden.completedGateCount} of 3. ${todayGardenMessage} ${copy.sessionCountLabel}: ${gardenVisual.recordedCheckIns}. ${gardenCountMessage}`}</span>
       </section>
       <section
         data-basic-recommendation
