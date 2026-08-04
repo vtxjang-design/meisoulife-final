@@ -8,7 +8,7 @@ import { MembershipAccessStateView, useMembershipAccess } from "@/components/mem
 import { preparePlaybackMediaElement } from "@/lib/basic-experience";
 import type { BasicGardenSyncResult } from "@/lib/basic-garden-sync";
 import { isEligibleBasicGardenGateKey } from "@/lib/basic-garden";
-import { BASIC_GARDEN_GROWTH_MOMENT_KEY } from "@/lib/basic-garden-v1";
+import { BASIC_GARDEN_GROWTH_MOMENT_KEY, isCurrentBasicGardenGrowthMoment } from "@/lib/basic-garden-v1";
 import { useLanguage, useSiteCopy } from "@/lib/i18n";
 import {
   getNatureSoundPreference,
@@ -4284,7 +4284,13 @@ function MeditationPageContent() {
             throw new Error(payload.ok ? "Garden sync request failed" : payload.errorMessage || "Garden sync request failed");
           }
 
-          if (payload.rewardGranted) {
+          if (
+            payload.rewardGranted &&
+            isCurrentBasicGardenGrowthMoment({
+              activityDate: payload.activityDate,
+              checkInCount: payload.checkInCount
+            })
+          ) {
             safeSessionStorageSet(
               BASIC_GARDEN_GROWTH_MOMENT_KEY,
               JSON.stringify({

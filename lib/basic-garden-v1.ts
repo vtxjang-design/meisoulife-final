@@ -7,6 +7,18 @@ export type BasicGardenGrowthMoment = {
   checkInCount: number;
 };
 
+export function getBasicGardenActivityDate(date = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Tokyo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).formatToParts(date);
+  const value = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+
+  return `${value.year}-${value.month}-${value.day}`;
+}
+
 export function resolveTodayGardenState(distinctGateCount: number | null | undefined) {
   const completedGateCount = Number.isFinite(distinctGateCount)
     ? Math.min(3, Math.max(0, Math.floor(distinctGateCount as number)))
@@ -62,4 +74,15 @@ export function readBasicGardenGrowthMoment(value: string | null): BasicGardenGr
   } catch {
     return null;
   }
+}
+
+export function isCurrentBasicGardenGrowthMoment(
+  value: Pick<BasicGardenGrowthMoment, "activityDate" | "checkInCount">,
+  now = new Date()
+) {
+  return (
+    value.activityDate === getBasicGardenActivityDate(now) &&
+    Number.isInteger(value.checkInCount) &&
+    value.checkInCount >= 1
+  );
 }

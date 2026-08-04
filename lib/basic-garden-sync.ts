@@ -1,5 +1,7 @@
 import type { BasicGardenEligibleGateKey } from "./basic-garden";
 
+export type BasicGardenSyncFailureCategory = "missing_auth" | "rpc" | "response_contract";
+
 type SupabaseQueryResult<T> = Promise<{
   data: T | null;
   error: { message: string } | null;
@@ -53,6 +55,7 @@ export type BasicGardenSyncResult = {
   recordedCompletion: boolean;
   rewardGranted: boolean;
   distinctGateCount: number;
+  failureCategory: BasicGardenSyncFailureCategory | null;
   errorMessage: string | null;
 };
 
@@ -65,6 +68,43 @@ function getFallbackStats() {
 
 function readRpcRow<T>(data: T[] | T | null) {
   return Array.isArray(data) ? (data[0] ?? null) : data;
+}
+
+function isValidActivityDate(value: unknown): value is string {
+  return typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);
+}
+
+function isValidCount(value: unknown): value is number {
+  return typeof value === "number" && Number.isInteger(value) && value >= 0;
+}
+
+function isVisitRpcRow(value: unknown): value is BasicGardenVisitRpcRow {
+  if (!value || typeof value !== "object") return false;
+
+  const row = value as Partial<BasicGardenVisitRpcRow>;
+  return (
+    typeof row.auth_user_id === "string" &&
+    isValidActivityDate(row.visit_date) &&
+    isValidCount(row.challenge_day) &&
+    isValidCount(row.check_in_count) &&
+    typeof row.visit_recorded === "boolean"
+  );
+}
+
+function isCompletionRpcRow(value: unknown): value is BasicGardenCompletionRpcRow {
+  if (!value || typeof value !== "object") return false;
+
+  const row = value as Partial<BasicGardenCompletionRpcRow>;
+  return (
+    typeof row.auth_user_id === "string" &&
+    isValidActivityDate(row.activity_date) &&
+    typeof row.gate_key === "string" &&
+    isValidCount(row.challenge_day) &&
+    isValidCount(row.check_in_count) &&
+    typeof row.completion_recorded === "boolean" &&
+    typeof row.reward_granted === "boolean" &&
+    isValidCount(row.distinct_gate_count)
+  );
 }
 
 export async function syncBasicGardenVisit(params: {
@@ -82,6 +122,7 @@ export async function syncBasicGardenVisit(params: {
       recordedCompletion: false,
       rewardGranted: false,
       distinctGateCount: 0,
+      failureCategory: "missing_auth",
       errorMessage: "Authenticated user id is unavailable"
     };
   }
@@ -101,13 +142,14 @@ export async function syncBasicGardenVisit(params: {
       recordedCompletion: false,
       rewardGranted: false,
       distinctGateCount: 0,
+      failureCategory: "rpc",
       errorMessage: rpcResult.error.message
     };
   }
 
   const rpcRow = readRpcRow(rpcResult.data);
 
-  if (!rpcRow) {
+  if (!isVisitRpcRow(rpcRow)) {
     return {
       ok: false,
       matchedBy: "none",
@@ -118,7 +160,8 @@ export async function syncBasicGardenVisit(params: {
       recordedCompletion: false,
       rewardGranted: false,
       distinctGateCount: 0,
-      errorMessage: "Garden visit update returned no data"
+      failureCategory: "response_contract",
+      errorMessage: "Garden visit update returned invalid data"
     };
   }
 
@@ -135,6 +178,7 @@ export async function syncBasicGardenVisit(params: {
     recordedCompletion: false,
     rewardGranted: false,
     distinctGateCount: 0,
+    failureCategory: null,
     errorMessage: null
   };
 }
@@ -155,6 +199,7 @@ export async function syncBasicGardenCompletion(params: {
       recordedCompletion: false,
       rewardGranted: false,
       distinctGateCount: 0,
+      failureCategory: "missing_auth",
       errorMessage: "Authenticated user id is unavailable"
     };
   }
@@ -175,13 +220,14 @@ export async function syncBasicGardenCompletion(params: {
       recordedCompletion: false,
       rewardGranted: false,
       distinctGateCount: 0,
+      failureCategory: "rpc",
       errorMessage: rpcResult.error.message
     };
   }
 
   const rpcRow = readRpcRow(rpcResult.data);
 
-  if (!rpcRow) {
+  if (!isCompletionRpcRow(rpcRow)) {
     return {
       ok: false,
       matchedBy: "none",
@@ -192,7 +238,8 @@ export async function syncBasicGardenCompletion(params: {
       recordedCompletion: false,
       rewardGranted: false,
       distinctGateCount: 0,
-      errorMessage: "Garden completion update returned no data"
+      failureCategory: "response_contract",
+      errorMessage: "Garden completion update returned invalid data"
     };
   }
 
@@ -209,6 +256,7 @@ export async function syncBasicGardenCompletion(params: {
     recordedCompletion: rpcRow.completion_recorded,
     rewardGranted: rpcRow.reward_granted,
     distinctGateCount: rpcRow.distinct_gate_count,
+    failureCategory: null,
     errorMessage: null
   };
 }

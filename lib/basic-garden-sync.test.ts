@@ -276,6 +276,27 @@ test("third distinct Gate completion grants exactly +1", async () => {
   assert.equal(third.stats.checkInCount, 3);
 });
 
+test("a malformed completion RPC return is rejected before the client can report success", async () => {
+  const result = await syncBasicGardenCompletion({
+    client: {
+      async rpc() {
+        return {
+          data: {
+            activity_date: "2026-07-27",
+            check_in_count: "not-a-number"
+          },
+          error: null
+        };
+      }
+    } as never,
+    authUserId: "auth-1",
+    gateKey: "affirmation"
+  });
+
+  assert.equal(result.ok, false);
+  assert.equal(result.failureCategory, "response_contract");
+});
+
 test("repeating the same Gate does not satisfy the three-distinct requirement", async () => {
   const state = createClient({
     today: "2026-07-27",

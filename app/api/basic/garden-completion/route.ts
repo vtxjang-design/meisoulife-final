@@ -4,6 +4,48 @@ import { syncBasicGardenCompletion } from "@/lib/basic-garden-sync";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
+type GardenCompletionFailureCategory =
+  | "service_unavailable"
+  | "authentication"
+  | "validation"
+  | "rpc"
+  | "response_contract";
+
+function createRequestId() {
+  return crypto.randomUUID();
+}
+
+function logGardenCompletionFailure(params: {
+  requestId: string;
+  category: GardenCompletionFailureCategory;
+  status: number;
+}) {
+  console.warn("[api-basic-garden-completion] failure", {
+    requestId: params.requestId,
+    category: params.category,
+    status: params.status
+  });
+}
+
+function gardenCompletionError(params: {
+  requestId: string;
+  category: GardenCompletionFailureCategory;
+  status: number;
+  message: string;
+}) {
+  logGardenCompletionFailure(params);
+
+  return NextResponse.json(
+    {
+      ok: false,
+      error: params.category,
+      errorMessage: params.message,
+      requestId: params.requestId
+    },
+    { status: params.status }
+  );
+}
+
 function resolveBearerToken(request: Request) {
   const authorization = request.headers.get("authorization");
 
@@ -30,17 +72,17 @@ function resolveBearerToken(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const requestId = createRequestId();
   const supabase = await getSupabaseServerClient();
   const admin = getSupabaseAdminClient();
 
   if (!supabase || !admin) {
-    return NextResponse.json(
-      {
-        ok: false,
-        errorMessage: "Garden sync service is unavailable"
-      },
-      { status: 503 }
-    );
+    return gardenCompletionError({
+      requestId,
+      category: "service_unavailable",
+      status: 503,
+      message: "Garden sync service is unavailable"
+    });
   }
 
   const {
@@ -50,21 +92,18 @@ export async function POST(request: Request) {
   let user = cookieUser;
 
   if (userError) {
-    console.warn("[api-basic-garden-completion] auth lookup failed", {
-      message: userError.message
-    });
+    logGardenCompletionFailure({ requestId, category: "authentication", status: 401 });
   }
 
   const bearer = resolveBearerToken(request);
 
   if (!user && bearer.malformed) {
-    return NextResponse.json(
-      {
-        ok: false,
-        errorMessage: "Malformed bearer token"
-      },
-      { status: 401 }
-    );
+    return gardenCompletionError({
+      requestId,
+      category: "authentication",
+      status: 401,
+      message: "Authentication is required"
+    });
   }
 
   if (!user && bearer.token) {
@@ -74,32 +113,28 @@ export async function POST(request: Request) {
     } = await supabase.auth.getUser(bearer.token);
 
     if (bearerUserError) {
-      console.warn("[api-basic-garden-completion] bearer session lookup failed", {
-        message: bearerUserError.message
-      });
+      logGardenCompletionFailure({ requestId, category: "authentication", status: 401 });
     }
 
     if (bearerUser) {
       user = bearerUser;
     } else {
-      return NextResponse.json(
-        {
-          ok: false,
-          errorMessage: "Authenticated user is required"
-        },
-        { status: 401 }
-      );
+      return gardenCompletionError({
+        requestId,
+        category: "authentication",
+        status: 401,
+        message: "Authentication is required"
+      });
     }
   }
 
-  if (!user?.id || !user.email) {
-    return NextResponse.json(
-      {
-        ok: false,
-        errorMessage: "Authenticated user is required"
-      },
-      { status: 401 }
-    );
+  if (!user?.id) {
+    return gardenCompletionError({
+      requestId,
+      category: "authentication",
+      status: 401,
+      message: "Authentication is required"
+    });
   }
 
   let gateKey: unknown = null;
@@ -112,13 +147,12 @@ export async function POST(request: Request) {
   }
 
   if (!isEligibleBasicGardenGateKey(gateKey)) {
-    return NextResponse.json(
-      {
-        ok: false,
-        errorMessage: "Eligible gate key is required"
-      },
-      { status: 400 }
-    );
+    return gardenCompletionError({
+      requestId,
+      category: "validation",
+      status: 400,
+      message: "Eligible gate key is required"
+    });
   }
 
   const result = await syncBasicGardenCompletion({
@@ -128,20 +162,13 @@ export async function POST(request: Request) {
   });
 
   if (!result.ok) {
-    console.warn("[api-basic-garden-completion] sync failed", {
-      userAuthenticated: true,
-      matchedBy: result.matchedBy,
-      writeAction: result.writeAction,
-      error: result.errorMessage
+    const category = result.failureCategory === "response_contract" ? "response_contract" : "rpc";
+    return gardenCompletionError({
+      requestId,
+      category,
+      status: 500,
+      message: "Garden completion could not be saved"
     });
-
-    return NextResponse.json(
-      {
-        ok: false,
-        errorMessage: result.errorMessage ?? "Garden completion sync failed"
-      },
-      { status: 500 }
-    );
   }
 
   return NextResponse.json({

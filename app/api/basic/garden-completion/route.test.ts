@@ -122,9 +122,9 @@ process.on("exit", () => {
 });
 
 function createSupabaseAuthMock(options: {
-  cookieUser?: { id: string; email: string } | null;
+  cookieUser?: { id: string; email?: string } | null;
   cookieErrorMessage?: string | null;
-  bearerUser?: { id: string; email: string } | null;
+  bearerUser?: { id: string; email?: string } | null;
   bearerErrorMessage?: string | null;
 }) {
   const calls: Array<string | undefined> = [];
@@ -205,6 +205,44 @@ test("cookie-authenticated request continues to work", async () => {
   assert.equal(syncCalls.length, 1);
   assert.equal(syncCalls[0].authUserId, "auth-cookie");
   assert.equal(syncCalls[0].gateKey, "affirmation");
+});
+
+test("a verified authenticated user without an email can persist a completion", async () => {
+  const supabase = createSupabaseAuthMock({
+    cookieUser: { id: "auth-without-email" }
+  });
+  const syncCalls: Array<Record<string, unknown>> = [];
+
+  __setServerClient(supabase.client);
+  __setAdminClient({ admin: true });
+  __setSyncImpl(async (params: Record<string, unknown>) => {
+    syncCalls.push(params);
+    return {
+      ok: true,
+      matchedBy: "auth_user_id",
+      writeAction: "completion",
+      activityDate: "2026-07-27",
+      stats: { challengeDay: 1, checkInCount: 0 },
+      recordedVisit: false,
+      recordedCompletion: true,
+      rewardGranted: false,
+      distinctGateCount: 1,
+      failureCategory: null,
+      errorMessage: null
+    };
+  });
+
+  const response = await POST(
+    new Request("https://www.meisoulife.com/api/basic/garden-completion", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ gateKey: "affirmation" })
+    })
+  );
+
+  assert.equal(response.status, 200);
+  assert.equal(syncCalls.length, 1);
+  assert.equal(syncCalls[0].authUserId, "auth-without-email");
 });
 
 test("missing cookie session plus valid Bearer token authenticates the correct user", async () => {
@@ -514,6 +552,8 @@ test("persistence failure remains a safe 500 and does not return ok true", async
 
   assert.equal(response.status, 500);
   assert.equal(payload.ok, false);
+  assert.equal(payload.error, "rpc");
+  assert.equal(typeof payload.requestId, "string");
 });
 
 test("missing or invalid gate key returns 400 without writing progress", async () => {
@@ -563,4 +603,10 @@ test("route source never logs Authorization headers, access tokens, emails, or f
   assert.doesNotMatch(consoleStatements, /access_token/i);
   assert.doesNotMatch(consoleStatements, /userEmail/i);
   assert.doesNotMatch(consoleStatements, /userId:/);
+});
+
+test("route returns a request ID and safe category for each failure response", () => {
+  assert.match(routeSource, /error: params\.category/);
+  assert.match(routeSource, /requestId: params\.requestId/);
+  assert.match(routeSource, /result\.failureCategory === "response_contract" \? "response_contract" : "rpc"/);
 });

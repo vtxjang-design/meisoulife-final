@@ -38,8 +38,26 @@ test("the next change reuses existing plant-stage calculation and has no final-s
 });
 
 test("only a confirmed reward writes the one-time Garden growth handoff", () => {
-  assert.match(meditationSource, /if \(payload\.rewardGranted\) \{[\s\S]*BASIC_GARDEN_GROWTH_MOMENT_KEY/);
+  assert.match(meditationSource, /payload\.rewardGranted &&[\s\S]*isCurrentBasicGardenGrowthMoment[\s\S]*BASIC_GARDEN_GROWTH_MOMENT_KEY/);
   assert.doesNotMatch(meditationSource, /if \(payload\.distinctGateCount === 3\)/);
+});
+
+test("a stale or malformed growth handoff cannot replay", () => {
+  assert.equal(
+    garden.isCurrentBasicGardenGrowthMoment(
+      { activityDate: "2026-08-03", checkInCount: 4 },
+      new Date("2026-08-04T00:00:00.000Z")
+    ),
+    false
+  );
+  assert.equal(
+    garden.isCurrentBasicGardenGrowthMoment(
+      { activityDate: "2026-08-04", checkInCount: 0 },
+      new Date("2026-08-04T00:00:00.000Z")
+    ),
+    false
+  );
+  assert.match(basicProgramSource, /if \(pendingGrowthMoment\) \{[\s\S]*safeSessionStorageRemove\(BASIC_GARDEN_GROWTH_MOMENT_KEY\)/);
 });
 
 test("BASIC reads today's distinct ledger rows and consumes a matching growth handoff once", () => {
