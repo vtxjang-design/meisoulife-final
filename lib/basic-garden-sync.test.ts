@@ -20,6 +20,10 @@ const rewardUpdateMigrationSource = readFileSync(
   new URL("../supabase/migrations/20260731_fix_basic_garden_completion_reward_update.sql", import.meta.url),
   "utf8"
 );
+const independentGateCountMigrationSource = readFileSync(
+  new URL("../supabase/migrations/20260810_count_each_basic_garden_gate_completion.sql", import.meta.url),
+  "utf8"
+);
 
 for (const [name, source] of [
   ["basic-garden.mjs", basicGardenSource],
@@ -164,12 +168,7 @@ function createClient(initial: {
 
           let progress = findProgress(authUserId);
 
-          if (rewardGranted) {
-            const rewardedRow = todayRows.find((row) => row.gate_key === gateKey);
-            if (rewardedRow) {
-              rewardedRow.reward_granted = true;
-            }
-
+          if (completionRecorded) {
             if (!progress) {
               progress = {
                 auth_user_id: authUserId,
@@ -179,6 +178,13 @@ function createClient(initial: {
               progressRows.push(progress);
             } else {
               progress.check_in_count += 1;
+            }
+          }
+
+          if (rewardGranted) {
+            const rewardedRow = todayRows.find((row) => row.gate_key === gateKey);
+            if (rewardedRow) {
+              rewardedRow.reward_granted = true;
             }
           }
 
@@ -247,7 +253,7 @@ test("visit on the next JST day increments again", async () => {
   assert.equal(nextDay.stats.challengeDay, 7);
 });
 
-test("first and second distinct Gate completions do not grant a check-in", async () => {
+test("each distinct Gate completion increments the cumulative check-in count", async () => {
   const state = createClient({
     today: "2026-07-27",
     progressRows: [{ auth_user_id: "auth-1", challenge_day: 5, check_in_count: 2 }]
@@ -259,10 +265,12 @@ test("first and second distinct Gate completions do not grant a check-in", async
   assert.equal(first.rewardGranted, false);
   assert.equal(second.rewardGranted, false);
   assert.equal(second.distinctGateCount, 2);
-  assert.equal(state.getProgress("auth-1")?.check_in_count, 2);
+  assert.equal(first.stats.checkInCount, 3);
+  assert.equal(second.stats.checkInCount, 4);
+  assert.equal(state.getProgress("auth-1")?.check_in_count, 4);
 });
 
-test("third distinct Gate completion grants exactly +1", async () => {
+test("the third distinct Gate is stored and counted independently", async () => {
   const state = createClient({
     today: "2026-07-27",
     progressRows: [{ auth_user_id: "auth-1", challenge_day: 5, check_in_count: 2 }]
@@ -273,7 +281,12 @@ test("third distinct Gate completion grants exactly +1", async () => {
   const third = await syncBasicGardenCompletion({ client: state.client, authUserId: "auth-1", gateKey: "vision" });
 
   assert.equal(third.rewardGranted, true);
-  assert.equal(third.stats.checkInCount, 3);
+  assert.equal(third.recordedCompletion, true);
+  assert.equal(third.stats.checkInCount, 5);
+  assert.deepEqual(
+    state.getCompletionRows("auth-1", "2026-07-27").map((row) => row.gate_key).sort(),
+    ["affirmation", "energy", "vision"]
+  );
 });
 
 test("a malformed completion RPC return is rejected before the client can report success", async () => {
@@ -309,10 +322,10 @@ test("repeating the same Gate does not satisfy the three-distinct requirement", 
 
   assert.equal(third.rewardGranted, false);
   assert.equal(third.distinctGateCount, 2);
-  assert.equal(state.getProgress("auth-1")?.check_in_count, 2);
+  assert.equal(state.getProgress("auth-1")?.check_in_count, 4);
 });
 
-test("fourth or later completion on the same day does not exceed +1", async () => {
+test("a fourth distinct Gate counts once without duplicating a prior Gate", async () => {
   const state = createClient({
     today: "2026-07-27",
     progressRows: [{ auth_user_id: "auth-1", challenge_day: 5, check_in_count: 2 }]
@@ -324,7 +337,7 @@ test("fourth or later completion on the same day does not exceed +1", async () =
   const extra = await syncBasicGardenCompletion({ client: state.client, authUserId: "auth-1", gateKey: "focus" });
 
   assert.equal(extra.rewardGranted, false);
-  assert.equal(extra.stats.checkInCount, 3);
+  assert.equal(extra.stats.checkInCount, 6);
 });
 
 test("retrying the same completion request remains idempotent", async () => {
@@ -339,6 +352,8 @@ test("retrying the same completion request remains idempotent", async () => {
   assert.equal(first.recordedCompletion, true);
   assert.equal(retry.recordedCompletion, false);
   assert.equal(retry.rewardGranted, false);
+  assert.equal(first.stats.checkInCount, 3);
+  assert.equal(retry.stats.checkInCount, 3);
 });
 
 test("a same-day Vision retry remains idempotent", async () => {
@@ -353,6 +368,7 @@ test("a same-day Vision retry remains idempotent", async () => {
   assert.equal(first.recordedCompletion, true);
   assert.equal(retry.recordedCompletion, false);
   assert.equal(state.getCompletionRows("auth-1", "2026-07-27").length, 1);
+  assert.equal(retry.stats.checkInCount, 3);
 });
 
 test("the next JST day resets eligibility and can grant another +1", async () => {
@@ -370,10 +386,10 @@ test("the next JST day resets eligibility and can grant another +1", async () =>
   const thirdNextDay = await syncBasicGardenCompletion({ client: state.client, authUserId: "auth-1", gateKey: "recharge" });
 
   assert.equal(thirdNextDay.rewardGranted, true);
-  assert.equal(thirdNextDay.stats.checkInCount, 4);
+  assert.equal(thirdNextDay.stats.checkInCount, 8);
 });
 
-test("legacy aggregate values are preserved as the baseline for new visit and reward activity", async () => {
+test("legacy aggregate values are preserved as the baseline for independent Gate activity", async () => {
   const state = createClient({
     today: "2026-07-27",
     progressRows: [{ auth_user_id: "auth-legacy", challenge_day: 9, check_in_count: 14 }]
@@ -385,7 +401,7 @@ test("legacy aggregate values are preserved as the baseline for new visit and re
   const completion = await syncBasicGardenCompletion({ client: state.client, authUserId: "auth-legacy", gateKey: "vision" });
 
   assert.equal(visit.stats.challengeDay, 10);
-  assert.equal(completion.stats.checkInCount, 15);
+  assert.equal(completion.stats.checkInCount, 17);
 });
 
 test("different users remain isolated for visits and earned check-ins", async () => {
@@ -402,7 +418,7 @@ test("different users remain isolated for visits and earned check-ins", async ()
   await syncBasicGardenCompletion({ client: state.client, authUserId: "auth-1", gateKey: "energy" });
   await syncBasicGardenCompletion({ client: state.client, authUserId: "auth-1", gateKey: "vision" });
 
-  assert.equal(state.getProgress("auth-1")?.check_in_count, 1);
+  assert.equal(state.getProgress("auth-1")?.check_in_count, 3);
   assert.equal(state.getProgress("auth-2")?.check_in_count, 5);
   assert.equal(state.getProgress("auth-2")?.challenge_day, 7);
 });
@@ -430,4 +446,11 @@ test("forward-only reward update migration removes the Vision third-Gate RPC amb
   assert.match(rewardUpdateMigrationSource, /and bgc\.activity_date = v_activity_date/);
   assert.match(rewardUpdateMigrationSource, /and bgc\.gate_key = p_gate_key/);
   assert.match(rewardUpdateMigrationSource, /v_distinct_gate_count >= 3 and not v_reward_exists/);
+});
+
+test("forward-only migration counts each unique Gate completion and preserves ledger idempotency", () => {
+  assert.match(independentGateCountMigrationSource, /where not bgc\.reward_granted/);
+  assert.match(independentGateCountMigrationSource, /if v_completion_inserted > 0 then/);
+  assert.match(independentGateCountMigrationSource, /set check_in_count = bgp\.check_in_count \+ 1/);
+  assert.match(independentGateCountMigrationSource, /on conflict do nothing/);
 });
