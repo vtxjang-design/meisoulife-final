@@ -6,7 +6,6 @@ import { useAuthState } from "@/components/auth-provider";
 import { BasicHome } from "@/components/basic-home";
 import { MembershipGuard } from "@/components/membership-guard";
 import { recordAuthDiagnostic } from "@/lib/auth-flow-diagnostics";
-import { resolveBasicGardenStats, type BasicGardenProfileRow } from "@/lib/basic-garden-progress";
 import {
   BASIC_GARDEN_GROWTH_MOMENT_KEY,
   readBasicGardenGrowthMoment,
@@ -161,19 +160,29 @@ function BasicProgramContent() {
             return;
           }
 
-          const { data: completions } = await safeSupabase
-            .from("basic_garden_gate_completions")
-            .select("gate_key")
-            .eq("auth_user_id", userId)
-            .eq("activity_date", payload.activityDate);
+          const { data: progressRows, error: progressError } = await safeSupabase.rpc("get_basic_garden_progress", {
+            p_auth_user_id: userId
+          });
 
           if (!active) {
             return;
           }
 
+          const progress = Array.isArray(progressRows) ? progressRows[0] : progressRows;
+
+          if (
+            progressError ||
+            !progress ||
+            !Number.isInteger(progress.challenge_day) ||
+            !Number.isInteger(progress.check_in_count) ||
+            !Number.isInteger(progress.today_distinct_gate_count)
+          ) {
+            throw new Error(progressError?.message || "Canonical garden progress is unavailable");
+          }
+
           const pendingGrowthMoment = readBasicGardenGrowthMoment(safeSessionStorageGet(BASIC_GARDEN_GROWTH_MOMENT_KEY));
           const growthMoment =
-            pendingGrowthMoment?.activityDate === payload.activityDate && pendingGrowthMoment.checkInCount === payload.checkInCount
+            pendingGrowthMoment?.activityDate === payload.activityDate && pendingGrowthMoment.checkInCount === progress.check_in_count
               ? pendingGrowthMoment
               : null;
 
@@ -181,18 +190,13 @@ function BasicProgramContent() {
             safeSessionStorageRemove(BASIC_GARDEN_GROWTH_MOMENT_KEY);
           }
 
-          const ledgerGateCount = new Set(
-            ((completions as Array<{ gate_key?: string | null }> | null) ?? [])
-              .map((completion) => completion.gate_key)
-              .filter((gateKey): gateKey is string => Boolean(gateKey))
-          ).size;
-          // A confirmed reward is issued only for the third distinct Gate, so the
-          // immediate response remains visually complete if the ledger read lags.
-          const todayDistinctGateCount = growthMoment ? Math.max(3, ledgerGateCount) : ledgerGateCount;
+          const todayDistinctGateCount = growthMoment
+            ? Math.max(3, progress.today_distinct_gate_count)
+            : progress.today_distinct_gate_count;
 
           setDashboardState({
-            challengeDay: payload.challengeDay,
-            streakCount: payload.checkInCount,
+            challengeDay: progress.challenge_day,
+            streakCount: progress.check_in_count,
             todayDistinctGateCount,
             growthMoment
           });
@@ -205,37 +209,14 @@ function BasicProgramContent() {
         });
       }
 
-      const { data: authProfile, error: authProfileError } = await safeSupabase
-        .from("basic_garden_progress")
-        .select("auth_user_id, check_in_count, challenge_day")
-        .eq("auth_user_id", userId)
-        .maybeSingle();
-
-      if (!active) {
-        return;
-      }
-
-      if (authProfileError) {
-        console.warn("[program-basic] dashboard profile fetch failed", {
-          userId,
-          error: authProfileError.message
-        });
+      if (active) {
         setDashboardState({
           challengeDay: 0,
           streakCount: 0,
           todayDistinctGateCount: 0,
           growthMoment: null
         });
-        return;
       }
-      const stats = resolveBasicGardenStats((authProfile as BasicGardenProfileRow | null) ?? null);
-
-      setDashboardState({
-        challengeDay: stats.currentDay,
-        streakCount: stats.cumulativeCheckIns,
-        todayDistinctGateCount: 0,
-        growthMoment: null
-      });
     }
 
     void loadDashboardState();

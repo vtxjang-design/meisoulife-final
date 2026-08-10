@@ -24,6 +24,10 @@ const independentGateCountMigrationSource = readFileSync(
   new URL("../supabase/migrations/20260810_count_each_basic_garden_gate_completion.sql", import.meta.url),
   "utf8"
 );
+const ledgerDerivedMigrationSource = readFileSync(
+  new URL("../supabase/migrations/20260810080801_derive_basic_garden_progress_from_ledger.sql", import.meta.url),
+  "utf8"
+);
 
 for (const [name, source] of [
   ["basic-garden.mjs", basicGardenSource],
@@ -63,6 +67,11 @@ type CompletionRow = {
   reward_granted: boolean;
 };
 
+type BaselineRow = {
+  preserved_check_in_count: number;
+  ledger_count_at_baseline: number;
+};
+
 function createClient(initial: {
   today: string;
   progressRows?: ProgressRow[];
@@ -74,10 +83,39 @@ function createClient(initial: {
   const progressRows = [...(initial.progressRows ?? [])];
   const visits = new Set(initial.visitKeys ?? []);
   const completions = [...(initial.completionRows ?? [])];
+  const baselines = new Map<string, BaselineRow>();
   const rpcCalls: Array<{ fn: string; params: Record<string, unknown> }> = [];
 
   function findProgress(authUserId: string) {
     return progressRows.find((row) => row.auth_user_id === authUserId) ?? null;
+  }
+
+  function ledgerCount(authUserId: string) {
+    return completions.filter((row) => row.auth_user_id === authUserId).length;
+  }
+
+  function ensureBaseline(authUserId: string) {
+    const existing = baselines.get(authUserId);
+    if (existing) return existing;
+
+    let progress = findProgress(authUserId);
+    if (!progress) {
+      progress = { auth_user_id: authUserId, challenge_day: 1, check_in_count: 0 };
+      progressRows.push(progress);
+    }
+
+    const snapshot = ledgerCount(authUserId);
+    const baseline = {
+      preserved_check_in_count: Math.max(progress.check_in_count, snapshot),
+      ledger_count_at_baseline: snapshot
+    };
+    baselines.set(authUserId, baseline);
+    return baseline;
+  }
+
+  function canonicalCount(authUserId: string) {
+    const baseline = ensureBaseline(authUserId);
+    return baseline.preserved_check_in_count + Math.max(ledgerCount(authUserId) - baseline.ledger_count_at_baseline, 0);
   }
 
   return {
@@ -87,6 +125,25 @@ function createClient(initial: {
     },
     getProgress(authUserId: string) {
       return findProgress(authUserId);
+    },
+    getCanonicalCount(authUserId: string) {
+      return canonicalCount(authUserId);
+    },
+    getBaseline(authUserId: string) {
+      return ensureBaseline(authUserId);
+    },
+    getCompletedDayCount(authUserId: string) {
+      const dates = new Map<string, Set<string>>();
+      for (const completion of completions) {
+        if (completion.auth_user_id !== authUserId) continue;
+        const gates = dates.get(completion.activity_date) ?? new Set<string>();
+        gates.add(completion.gate_key);
+        dates.set(completion.activity_date, gates);
+      }
+      return [...dates.values()].filter((gates) => gates.size >= 3).length;
+    },
+    rerunBaselineReconciliation(authUserId: string) {
+      return ensureBaseline(authUserId);
     },
     getCompletionRows(authUserId: string, date: string) {
       return completions.filter((row) => row.auth_user_id === authUserId && row.activity_date === date);
@@ -144,6 +201,7 @@ function createClient(initial: {
 
           const authUserId = String(params.p_auth_user_id);
           const gateKey = String(params.p_gate_key);
+          ensureBaseline(authUserId);
           const completionKey = `${authUserId}|${initial.today}|${gateKey}`;
           const completionRecorded = !completions.some(
             (row) =>
@@ -166,20 +224,7 @@ function createClient(initial: {
           const rewardAlreadyGranted = todayRows.some((row) => row.reward_granted);
           const rewardGranted = completionRecorded && distinctGateCount >= 3 && !rewardAlreadyGranted;
 
-          let progress = findProgress(authUserId);
-
-          if (completionRecorded) {
-            if (!progress) {
-              progress = {
-                auth_user_id: authUserId,
-                challenge_day: 1,
-                check_in_count: 1
-              };
-              progressRows.push(progress);
-            } else {
-              progress.check_in_count += 1;
-            }
-          }
+          const progress = findProgress(authUserId);
 
           if (rewardGranted) {
             const rewardedRow = todayRows.find((row) => row.gate_key === gateKey);
@@ -194,7 +239,7 @@ function createClient(initial: {
               activity_date: initial.today,
               gate_key: gateKey,
               challenge_day: progress?.challenge_day ?? 1,
-              check_in_count: progress?.check_in_count ?? 0,
+              check_in_count: canonicalCount(authUserId),
               completion_recorded: completionRecorded,
               reward_granted: rewardGranted,
               distinct_gate_count: distinctGateCount
@@ -267,7 +312,7 @@ test("each distinct Gate completion increments the cumulative check-in count", a
   assert.equal(second.distinctGateCount, 2);
   assert.equal(first.stats.checkInCount, 3);
   assert.equal(second.stats.checkInCount, 4);
-  assert.equal(state.getProgress("auth-1")?.check_in_count, 4);
+  assert.equal(state.getCanonicalCount("auth-1"), 4);
 });
 
 test("the third distinct Gate is stored and counted independently", async () => {
@@ -322,7 +367,7 @@ test("repeating the same Gate does not satisfy the three-distinct requirement", 
 
   assert.equal(third.rewardGranted, false);
   assert.equal(third.distinctGateCount, 2);
-  assert.equal(state.getProgress("auth-1")?.check_in_count, 4);
+  assert.equal(state.getCanonicalCount("auth-1"), 4);
 });
 
 test("a fourth distinct Gate counts once without duplicating a prior Gate", async () => {
@@ -418,9 +463,99 @@ test("different users remain isolated for visits and earned check-ins", async ()
   await syncBasicGardenCompletion({ client: state.client, authUserId: "auth-1", gateKey: "energy" });
   await syncBasicGardenCompletion({ client: state.client, authUserId: "auth-1", gateKey: "vision" });
 
-  assert.equal(state.getProgress("auth-1")?.check_in_count, 3);
-  assert.equal(state.getProgress("auth-2")?.check_in_count, 5);
+  assert.equal(state.getCanonicalCount("auth-1"), 3);
+  assert.equal(state.getCanonicalCount("auth-2"), 5);
   assert.equal(state.getProgress("auth-2")?.challenge_day, 7);
+});
+
+test("concurrent retries create one canonical completion and one count increase", async () => {
+  const state = createClient({
+    today: "2026-07-27",
+    progressRows: [{ auth_user_id: "auth-1", challenge_day: 1, check_in_count: 0 }]
+  });
+
+  const results = await Promise.all(
+    Array.from({ length: 4 }, () =>
+      syncBasicGardenCompletion({ client: state.client, authUserId: "auth-1", gateKey: "affirmation" })
+    )
+  );
+
+  assert.equal(results.filter((result) => result.recordedCompletion).length, 1);
+  assert.equal(state.getCompletionRows("auth-1", "2026-07-27").length, 1);
+  assert.equal(state.getCanonicalCount("auth-1"), 1);
+});
+
+test("out-of-order Gates complete a day only after three distinct records", async () => {
+  const state = createClient({ today: "2026-07-27" });
+
+  await syncBasicGardenCompletion({ client: state.client, authUserId: "auth-1", gateKey: "sleep" });
+  await syncBasicGardenCompletion({ client: state.client, authUserId: "auth-1", gateKey: "vision" });
+  assert.equal(state.getCompletedDayCount("auth-1"), 0);
+  await syncBasicGardenCompletion({ client: state.client, authUserId: "auth-1", gateKey: "focus" });
+
+  assert.equal(state.getCanonicalCount("auth-1"), 3);
+  assert.equal(state.getCompletedDayCount("auth-1"), 1);
+});
+
+test("three Gates on multiple activity dates derive cumulative and completed-day totals", async () => {
+  const state = createClient({ today: "2026-07-27" });
+
+  for (const gateKey of ["affirmation", "energy", "vision"] as const) {
+    await syncBasicGardenCompletion({ client: state.client, authUserId: "auth-1", gateKey });
+  }
+  state.setToday("2026-07-28");
+  for (const gateKey of ["focus", "rest", "recharge"] as const) {
+    await syncBasicGardenCompletion({ client: state.client, authUserId: "auth-1", gateKey });
+  }
+
+  assert.equal(state.getCanonicalCount("auth-1"), 6);
+  assert.equal(state.getCompletedDayCount("auth-1"), 2);
+});
+
+test("baseline preserves stored history without double-counting ledger rows", () => {
+  const equal = createClient({
+    today: "2026-07-27",
+    progressRows: [{ auth_user_id: "equal", challenge_day: 1, check_in_count: 2 }],
+    completionRows: [
+      { auth_user_id: "equal", activity_date: "2026-07-26", gate_key: "affirmation", reward_granted: false },
+      { auth_user_id: "equal", activity_date: "2026-07-26", gate_key: "energy", reward_granted: false }
+    ]
+  });
+  const legacyHigher = createClient({
+    today: "2026-07-27",
+    progressRows: [{ auth_user_id: "higher", challenge_day: 1, check_in_count: 9 }],
+    completionRows: [{ auth_user_id: "higher", activity_date: "2026-07-26", gate_key: "affirmation", reward_granted: false }]
+  });
+  const ledgerHigher = createClient({
+    today: "2026-07-27",
+    progressRows: [{ auth_user_id: "ledger", challenge_day: 1, check_in_count: 1 }],
+    completionRows: [
+      { auth_user_id: "ledger", activity_date: "2026-07-26", gate_key: "affirmation", reward_granted: false },
+      { auth_user_id: "ledger", activity_date: "2026-07-26", gate_key: "energy", reward_granted: false },
+      { auth_user_id: "ledger", activity_date: "2026-07-26", gate_key: "vision", reward_granted: true }
+    ]
+  });
+
+  assert.equal(equal.getCanonicalCount("equal"), 2);
+  assert.deepEqual(equal.getBaseline("equal"), { preserved_check_in_count: 2, ledger_count_at_baseline: 2 });
+  assert.equal(legacyHigher.getCanonicalCount("higher"), 9);
+  assert.deepEqual(legacyHigher.getBaseline("higher"), { preserved_check_in_count: 9, ledger_count_at_baseline: 1 });
+  assert.equal(ledgerHigher.getCanonicalCount("ledger"), 3);
+  assert.deepEqual(ledgerHigher.getBaseline("ledger"), { preserved_check_in_count: 3, ledger_count_at_baseline: 3 });
+});
+
+test("re-running baseline reconciliation does not change a derived total", async () => {
+  const state = createClient({
+    today: "2026-07-27",
+    progressRows: [{ auth_user_id: "auth-1", challenge_day: 1, check_in_count: 5 }]
+  });
+
+  assert.equal(state.getCanonicalCount("auth-1"), 5);
+  assert.deepEqual(state.rerunBaselineReconciliation("auth-1"), state.getBaseline("auth-1"));
+  await syncBasicGardenCompletion({ client: state.client, authUserId: "auth-1", gateKey: "affirmation" });
+  assert.equal(state.getCanonicalCount("auth-1"), 6);
+  assert.deepEqual(state.rerunBaselineReconciliation("auth-1"), state.getBaseline("auth-1"));
+  assert.equal(state.getCanonicalCount("auth-1"), 6);
 });
 
 test("meditation completion sends only the validated gate key to the Garden endpoint", () => {
@@ -453,4 +588,18 @@ test("forward-only migration counts each unique Gate completion and preserves le
   assert.match(independentGateCountMigrationSource, /if v_completion_inserted > 0 then/);
   assert.match(independentGateCountMigrationSource, /set check_in_count = bgp\.check_in_count \+ 1/);
   assert.match(independentGateCountMigrationSource, /on conflict do nothing/);
+});
+
+test("ledger-derived migration freezes a baseline and separates idempotent rewards", () => {
+  assert.match(ledgerDerivedMigrationSource, /create table if not exists public\.basic_garden_progress_baselines/);
+  assert.match(ledgerDerivedMigrationSource, /create table if not exists public\.basic_garden_daily_rewards/);
+  assert.match(ledgerDerivedMigrationSource, /ledger_count_at_baseline/);
+  assert.match(ledgerDerivedMigrationSource, /create or replace function public\.get_basic_garden_progress/);
+  assert.match(ledgerDerivedMigrationSource, /on conflict \(auth_user_id\) do nothing/);
+  assert.match(ledgerDerivedMigrationSource, /on conflict do nothing/);
+  assert.match(ledgerDerivedMigrationSource, /grant execute on function public\.record_basic_garden_completion\(uuid, text\) to service_role/);
+  assert.doesNotMatch(
+    ledgerDerivedMigrationSource,
+    /set check_in_count = bgp\.check_in_count \+ 1/
+  );
 });

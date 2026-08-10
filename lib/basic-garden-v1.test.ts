@@ -60,9 +60,10 @@ test("a stale or malformed growth handoff cannot replay", () => {
   assert.match(basicProgramSource, /if \(pendingGrowthMoment\) \{[\s\S]*safeSessionStorageRemove\(BASIC_GARDEN_GROWTH_MOMENT_KEY\)/);
 });
 
-test("BASIC reads today's distinct ledger rows and consumes a matching growth handoff once", () => {
-  assert.match(basicProgramSource, /from\("basic_garden_gate_completions"\)/);
-  assert.match(basicProgramSource, /eq\("activity_date", payload\.activityDate\)/);
+test("BASIC reads canonical database-derived progress and consumes a matching growth handoff once", () => {
+  assert.match(basicProgramSource, /rpc\("get_basic_garden_progress"/);
+  assert.match(basicProgramSource, /today_distinct_gate_count/);
+  assert.doesNotMatch(basicProgramSource, /from\("basic_garden_gate_completions"\)/);
   assert.match(basicProgramSource, /safeSessionStorageRemove\(BASIC_GARDEN_GROWTH_MOMENT_KEY\)/);
 });
 

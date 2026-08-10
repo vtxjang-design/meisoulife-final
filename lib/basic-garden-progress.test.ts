@@ -120,7 +120,8 @@ test("missing data does not fall back to a fake shared 1/3 garden", () => {
     currentDay: 0,
     cumulativeCheckIns: 0
   });
-  assert.match(basicProgramPageSource, /from\("basic_garden_progress"\)/);
+  assert.match(basicProgramPageSource, /rpc\("get_basic_garden_progress"/);
+  assert.doesNotMatch(basicProgramPageSource, /from\("basic_garden_progress"\)/);
   assert.doesNotMatch(basicProgramPageSource, /from\("users"\)\s*\.select\("id, auth_user_id, email, check_in_count, challenge_day"\)/);
   assert.doesNotMatch(basicProgramPageSource, /\.eq\("email",/);
 });

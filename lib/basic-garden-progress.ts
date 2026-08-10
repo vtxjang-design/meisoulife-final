@@ -70,15 +70,6 @@ export function matchBasicGardenProfile(
   };
 }
 
-export function buildBasicGardenCompletionPatch(profile: BasicGardenProfileRow | null | undefined) {
-  const stats = resolveBasicGardenStats(profile);
-
-  return {
-    challenge_day: stats.currentDay,
-    check_in_count: stats.cumulativeCheckIns + 1
-  };
-}
-
 export function deriveBasicGardenViewModel(profile: BasicGardenProfileRow | null | undefined) {
   const stats = resolveBasicGardenStats(profile);
 
