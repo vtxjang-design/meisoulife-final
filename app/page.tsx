@@ -855,16 +855,15 @@ export default function HomePage() {
       ) : null}
 
       <section className="relative overflow-hidden" style={{ height: viewportSectionMinHeight }}>
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,#061018_0%,#09131d_42%,#08121b_100%)]" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-full md:w-[62%] lg:w-[54%]">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden bg-[#061018]">
           <img
             src={heroWindowVisual}
             alt=""
             aria-hidden="true"
-            className="h-full w-full object-cover object-[66%_center] opacity-[0.92] brightness-[0.9] contrast-[0.95] saturate-[0.9] sepia-[0.04] md:max-lg:object-[70%_center] md:max-lg:opacity-[0.88] md:max-lg:brightness-[0.84] md:max-lg:contrast-[0.93] md:max-lg:saturate-[0.86] lg:object-[70%_center]"
+            className="h-full w-full object-cover object-[64%_center] opacity-[0.9] brightness-[0.84] contrast-[0.96] saturate-[0.86] sepia-[0.04] sm:object-[66%_center] md:object-[68%_center] lg:object-[70%_center]"
           />
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,#061018_0%,rgba(6,16,24,0.97)_12%,rgba(6,16,24,0.84)_26%,rgba(6,16,24,0.42)_48%,rgba(6,16,24,0.16)_68%,rgba(6,16,24,0.12)_100%),linear-gradient(180deg,rgba(4,10,18,0.44)_0%,rgba(4,10,18,0.18)_32%,rgba(4,10,18,0.28)_100%),radial-gradient(circle_at_74%_26%,rgba(237,212,160,0.09),transparent_24%)] md:max-lg:bg-[linear-gradient(90deg,#061018_0%,rgba(6,16,24,0.985)_14%,rgba(6,16,24,0.9)_32%,rgba(6,16,24,0.54)_52%,rgba(6,16,24,0.2)_72%,rgba(6,16,24,0.14)_100%),linear-gradient(180deg,rgba(4,10,18,0.5)_0%,rgba(4,10,18,0.24)_30%,rgba(4,10,18,0.3)_100%),radial-gradient(circle_at_76%_24%,rgba(237,212,160,0.06),transparent_24%)]" />
         </div>
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(4,13,24,0.94)_0%,rgba(5,14,25,0.91)_22%,rgba(6,16,27,0.82)_38%,rgba(7,17,28,0.57)_54%,rgba(7,17,28,0.24)_70%,rgba(7,17,28,0.08)_100%),linear-gradient(180deg,rgba(3,10,19,0.5)_0%,rgba(3,10,19,0.12)_36%,rgba(3,10,19,0.34)_100%),radial-gradient(circle_at_74%_26%,rgba(237,212,160,0.09),transparent_24%)] sm:bg-[linear-gradient(90deg,rgba(4,13,24,0.92)_0%,rgba(5,14,25,0.89)_21%,rgba(6,16,27,0.78)_38%,rgba(7,17,28,0.5)_55%,rgba(7,17,28,0.19)_72%,rgba(7,17,28,0.07)_100%),linear-gradient(180deg,rgba(3,10,19,0.46)_0%,rgba(3,10,19,0.1)_36%,rgba(3,10,19,0.3)_100%),radial-gradient(circle_at_74%_26%,rgba(237,212,160,0.09),transparent_24%)] lg:bg-[linear-gradient(90deg,rgba(4,13,24,0.9)_0%,rgba(5,14,25,0.87)_20%,rgba(6,16,27,0.76)_37%,rgba(7,17,28,0.48)_54%,rgba(7,17,28,0.18)_71%,rgba(7,17,28,0.06)_100%),linear-gradient(180deg,rgba(3,10,19,0.42)_0%,rgba(3,10,19,0.09)_36%,rgba(3,10,19,0.28)_100%),radial-gradient(circle_at_74%_26%,rgba(237,212,160,0.09),transparent_24%)]" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(228,205,154,0.08),transparent_20%),radial-gradient(circle_at_84%_18%,rgba(189,205,220,0.08),transparent_18%)]" />
         <div className="section-shell relative z-10 flex h-full items-center">
           <div className="grid w-full lg:grid-cols-[minmax(0,0.52fr)_minmax(0,0.48fr)] lg:items-center">
