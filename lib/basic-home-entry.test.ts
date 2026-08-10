@@ -152,13 +152,13 @@ test("recovery garden is rendered once and localized for JP KR and EN", () => {
   assert.match(basicHomeSource, /나의 리커버리 가든/);
 });
 
-test("garden statistics use explicit journey and check-in labels in all three languages", () => {
+test("garden statistics use explicit visit-day and recovery-record labels in all three languages", () => {
   assert.match(basicHomeSource, /累計訪問日数/);
-  assert.match(basicHomeSource, /累計チェックイン数/);
+  assert.match(basicHomeSource, /累計回復記録/);
   assert.match(basicHomeSource, /누적 방문일/);
-  assert.match(basicHomeSource, /누적 체크인/);
+  assert.match(basicHomeSource, /누적 회복 기록/);
   assert.match(basicHomeSource, /Visit days/);
-  assert.match(basicHomeSource, /Total check-ins/);
+  assert.match(basicHomeSource, /Cumulative recovery records/);
 });
 
 test("garden visual model stays truthful for zero one multiple and capped check-ins", () => {
@@ -331,9 +331,9 @@ test("basic-only content stays behind the existing basic membership guard", () =
   assert.match(basicProgramPageSource, /<BasicHome/);
 });
 
-test("existing progress values continue to be passed through unchanged", () => {
-  assert.match(basicProgramPageSource, /currentDay=\{dashboardState\.challengeDay\}/);
-  assert.match(basicProgramPageSource, /streakCount=\{dashboardState\.streakCount\}/);
+test("canonical visit and recovery values are passed through unchanged", () => {
+  assert.match(basicProgramPageSource, /cumulativeVisitDays=\{dashboardState\.cumulativeVisitDays\}/);
+  assert.match(basicProgramPageSource, /cumulativeRecoveryRecords=\{dashboardState\.cumulativeRecoveryRecords\}/);
 });
 
 test("program basic hides the duplicate mobile tab row while preserving the hamburger menu", () => {

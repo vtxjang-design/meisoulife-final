@@ -17,8 +17,8 @@ import { useLanguage } from "@/lib/i18n";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 type DashboardState = {
-  challengeDay: number;
-  streakCount: number;
+  cumulativeVisitDays: number;
+  cumulativeRecoveryRecords: number;
   todayDistinctGateCount: number;
   growthMoment: BasicGardenGrowthMoment | null;
 };
@@ -33,8 +33,8 @@ function BasicProgramContent() {
   const { language } = useLanguage();
   const searchParams = useSearchParams();
   const [dashboardState, setDashboardState] = useState<DashboardState>({
-    challengeDay: 0,
-    streakCount: 0,
+    cumulativeVisitDays: 0,
+    cumulativeRecoveryRecords: 0,
     todayDistinctGateCount: 0,
     growthMoment: null
   });
@@ -123,8 +123,8 @@ function BasicProgramContent() {
     const userId = session?.user?.id;
     if (!supabase || !userId) {
       setDashboardState({
-        challengeDay: 0,
-        streakCount: 0,
+        cumulativeVisitDays: 0,
+        cumulativeRecoveryRecords: 0,
         todayDistinctGateCount: 0,
         growthMoment: null
       });
@@ -153,6 +153,8 @@ function BasicProgramContent() {
             ok: true;
             challengeDay: number;
             checkInCount: number;
+            cumulativeVisitDays: number;
+            cumulativeRecoveryRecords: number;
             activityDate: string;
           };
 
@@ -173,8 +175,8 @@ function BasicProgramContent() {
           if (
             progressError ||
             !progress ||
-            !Number.isInteger(progress.challenge_day) ||
-            !Number.isInteger(progress.check_in_count) ||
+            !Number.isInteger(progress.cumulative_visit_days) ||
+            !Number.isInteger(progress.cumulative_recovery_records) ||
             !Number.isInteger(progress.today_distinct_gate_count)
           ) {
             throw new Error(progressError?.message || "Canonical garden progress is unavailable");
@@ -182,7 +184,7 @@ function BasicProgramContent() {
 
           const pendingGrowthMoment = readBasicGardenGrowthMoment(safeSessionStorageGet(BASIC_GARDEN_GROWTH_MOMENT_KEY));
           const growthMoment =
-            pendingGrowthMoment?.activityDate === payload.activityDate && pendingGrowthMoment.checkInCount === progress.check_in_count
+            pendingGrowthMoment?.activityDate === payload.activityDate && pendingGrowthMoment.checkInCount === progress.cumulative_recovery_records
               ? pendingGrowthMoment
               : null;
 
@@ -195,8 +197,8 @@ function BasicProgramContent() {
             : progress.today_distinct_gate_count;
 
           setDashboardState({
-            challengeDay: progress.challenge_day,
-            streakCount: progress.check_in_count,
+            cumulativeVisitDays: progress.cumulative_visit_days,
+            cumulativeRecoveryRecords: progress.cumulative_recovery_records,
             todayDistinctGateCount,
             growthMoment
           });
@@ -211,8 +213,8 @@ function BasicProgramContent() {
 
       if (active) {
         setDashboardState({
-          challengeDay: 0,
-          streakCount: 0,
+          cumulativeVisitDays: 0,
+          cumulativeRecoveryRecords: 0,
           todayDistinctGateCount: 0,
           growthMoment: null
         });
@@ -272,8 +274,8 @@ function BasicProgramContent() {
           </div>
         ) : null}
         <BasicHome
-          currentDay={dashboardState.challengeDay}
-          streakCount={dashboardState.streakCount}
+          cumulativeVisitDays={dashboardState.cumulativeVisitDays}
+          cumulativeRecoveryRecords={dashboardState.cumulativeRecoveryRecords}
           todayDistinctGateCount={dashboardState.todayDistinctGateCount}
           gardenGrowthMoment={dashboardState.growthMoment}
           planKey={plan}

@@ -129,6 +129,8 @@ export async function POST(request: Request) {
     writeAction: result.writeAction,
     challengeDay: result.stats.challengeDay,
     checkInCount: result.stats.checkInCount,
+    cumulativeVisitDays: result.stats.cumulativeVisitDays,
+    cumulativeRecoveryRecords: result.stats.cumulativeRecoveryRecords,
     visitRecorded: result.recordedVisit,
     activityDate: result.activityDate
   });

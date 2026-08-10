@@ -23,8 +23,8 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 type PlanKey = "free" | "basic" | "growth" | "inner_circle";
 type BasicHomeProps = {
-  currentDay?: number;
-  streakCount?: number;
+  cumulativeVisitDays?: number;
+  cumulativeRecoveryRecords?: number;
   todayDistinctGateCount?: number;
   gardenGrowthMoment?: BasicGardenGrowthMoment | null;
   planKey?: PlanKey;
@@ -73,7 +73,7 @@ const pageCopy = {
     finalStage: "この庭は、これまでの回復を静かに抱いています。",
     todayStateLabel: "今日の回復の光",
     currentDayLabel: "累計訪問日数",
-    sessionCountLabel: "累計チェックイン数",
+    sessionCountLabel: "累計回復記録",
     recommendationLabel: "TODAY'S GATE",
     recommendationTitle: "今日、どの扉に入りますか？",
     recommendationBody: "今の時間帯に合う扉へ、そのまま静かに入れます。",
@@ -115,7 +115,7 @@ const pageCopy = {
     finalStage: "이 가든은 지금까지의 회복을 조용히 품고 있습니다.",
     todayStateLabel: "오늘의 회복 빛",
     currentDayLabel: "누적 방문일",
-    sessionCountLabel: "누적 체크인",
+    sessionCountLabel: "누적 회복 기록",
     recommendationLabel: "TODAY'S GATE",
     recommendationTitle: "오늘, 어떤 문으로 들어갈까요?",
     recommendationBody: "지금 시간대에 맞는 문으로 바로 조용히 들어갈 수 있습니다.",
@@ -157,7 +157,7 @@ const pageCopy = {
     finalStage: "Your Garden quietly holds the recovery already living here.",
     todayStateLabel: "Today’s recovery lights",
     currentDayLabel: "Visit days",
-    sessionCountLabel: "Total check-ins",
+    sessionCountLabel: "Cumulative recovery records",
     recommendationLabel: "TODAY'S GATE",
     recommendationTitle: "Which gate will you enter today?",
     recommendationBody: "Enter the gate that fits this part of your day, without extra steps.",
@@ -262,8 +262,8 @@ function getDoorAccentClasses(door: BasicDoorKey) {
 }
 
 export function BasicHome({
-  currentDay = 1,
-  streakCount = 0,
+  cumulativeVisitDays = 0,
+  cumulativeRecoveryRecords = 0,
   todayDistinctGateCount = 0,
   gardenGrowthMoment = null,
   defaultRhythm,
@@ -298,11 +298,11 @@ export function BasicHome({
         dateStyle: "long"
       }).format(new Date(membershipSummary.nextBillingDate))
     : copy.noBillingDate;
-  const gardenVisual = getBasicGardenVisualModel(streakCount);
+  const gardenVisual = getBasicGardenVisualModel(cumulativeRecoveryRecords);
   const gardenMeaningLine = getBasicGardenMeaningLine(localizedLanguage);
-  const gardenCountMessage = getBasicGardenCountMessage(localizedLanguage, streakCount);
+  const gardenCountMessage = getBasicGardenCountMessage(localizedLanguage, cumulativeRecoveryRecords);
   const todayGarden = resolveTodayGardenState(todayDistinctGateCount);
-  const nextGardenChange = getNextBasicGardenChange(streakCount);
+  const nextGardenChange = getNextBasicGardenChange(cumulativeRecoveryRecords);
   const [growthMomentActive, setGrowthMomentActive] = useState(Boolean(gardenGrowthMoment));
 
   useEffect(() => {
@@ -682,11 +682,11 @@ export function BasicHome({
               <div className="grid min-h-[66px] grid-cols-2 md:min-h-[60px] lg:min-h-[58px] lg:grid-cols-[minmax(0,14.5rem)_minmax(0,14.5rem)]">
                 <div className="flex min-w-0 flex-col justify-center px-3 py-[10px] sm:px-4 sm:py-[11px] lg:px-5 lg:py-3">
                   <p className="text-[0.67rem] uppercase tracking-[0.17em] text-[rgba(233,242,248,0.42)]">{copy.currentDayLabel}</p>
-                  <p className="mt-1 text-[1.08rem] font-semibold leading-none text-[rgba(244,250,255,0.94)] sm:mt-1.5 sm:text-[1.42rem] lg:text-[1.3rem]">{currentDay}</p>
+                  <p className="mt-1 text-[1.08rem] font-semibold leading-none text-[rgba(244,250,255,0.94)] sm:mt-1.5 sm:text-[1.42rem] lg:text-[1.3rem]">{cumulativeVisitDays}</p>
                 </div>
                 <div className="flex min-w-0 flex-col justify-center border-l border-white/[0.05] px-3 py-[10px] sm:px-4 sm:py-[11px] lg:px-5 lg:py-3">
                   <p className="text-[0.67rem] uppercase tracking-[0.17em] text-[rgba(233,242,248,0.42)]">{copy.sessionCountLabel}</p>
-                  <p className="mt-1 text-[1.08rem] font-semibold leading-none text-[rgba(244,250,255,0.94)] sm:mt-1.5 sm:text-[1.42rem] lg:text-[1.3rem]">{streakCount}</p>
+                  <p className="mt-1 text-[1.08rem] font-semibold leading-none text-[rgba(244,250,255,0.94)] sm:mt-1.5 sm:text-[1.42rem] lg:text-[1.3rem]">{cumulativeRecoveryRecords}</p>
                 </div>
               </div>
             </div>

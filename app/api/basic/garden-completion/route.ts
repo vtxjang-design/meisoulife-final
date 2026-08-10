@@ -177,6 +177,8 @@ export async function POST(request: Request) {
     writeAction: result.writeAction,
     checkInCount: result.stats.checkInCount,
     challengeDay: result.stats.challengeDay,
+    cumulativeVisitDays: result.stats.cumulativeVisitDays,
+    cumulativeRecoveryRecords: result.stats.cumulativeRecoveryRecords,
     completionRecorded: result.recordedCompletion,
     rewardGranted: result.rewardGranted,
     distinctGateCount: result.distinctGateCount,

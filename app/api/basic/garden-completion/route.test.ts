@@ -54,7 +54,9 @@ let currentImpl = async () => ({
   activityDate: "2026-07-27",
   stats: {
     challengeDay: 1,
-    checkInCount: 1
+    checkInCount: 1,
+    cumulativeVisitDays: 1,
+    cumulativeRecoveryRecords: 1
   },
   recordedVisit: false,
   recordedCompletion: true,
@@ -491,7 +493,9 @@ test("successful completion returns 200 and persisted check-ins update from 0 to
     activityDate: "2026-07-27",
     stats: {
       challengeDay: 1,
-      checkInCount: 1
+      checkInCount: 1,
+      cumulativeVisitDays: 1,
+      cumulativeRecoveryRecords: 1
     },
     recordedVisit: false,
     recordedCompletion: true,
@@ -513,6 +517,8 @@ test("successful completion returns 200 and persisted check-ins update from 0 to
 
   assert.equal(response.status, 200);
   assert.equal(payload.checkInCount, 1);
+  assert.equal(payload.cumulativeVisitDays, 1);
+  assert.equal(payload.cumulativeRecoveryRecords, 1);
   assert.equal(payload.rewardGranted, true);
 });
 

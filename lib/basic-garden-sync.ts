@@ -13,6 +13,8 @@ type BasicGardenVisitRpcRow = {
   challenge_day: number;
   check_in_count: number;
   visit_recorded: boolean;
+  cumulative_visit_days: number;
+  cumulative_recovery_records: number;
 };
 
 type BasicGardenCompletionRpcRow = {
@@ -24,6 +26,8 @@ type BasicGardenCompletionRpcRow = {
   completion_recorded: boolean;
   reward_granted: boolean;
   distinct_gate_count: number;
+  cumulative_visit_days: number;
+  cumulative_recovery_records: number;
 };
 
 export type BasicGardenSyncClient = {
@@ -48,8 +52,12 @@ export type BasicGardenSyncResult = {
   writeAction: "none" | "visit" | "completion";
   activityDate: string;
   stats: {
+    /** Compatibility alias for cumulativeVisitDays. */
     challengeDay: number;
+    /** Compatibility alias for cumulativeRecoveryRecords. */
     checkInCount: number;
+    cumulativeVisitDays: number;
+    cumulativeRecoveryRecords: number;
   };
   recordedVisit: boolean;
   recordedCompletion: boolean;
@@ -62,7 +70,9 @@ export type BasicGardenSyncResult = {
 function getFallbackStats() {
   return {
     challengeDay: 0,
-    checkInCount: 0
+    checkInCount: 0,
+    cumulativeVisitDays: 0,
+    cumulativeRecoveryRecords: 0
   };
 }
 
@@ -87,6 +97,8 @@ function isVisitRpcRow(value: unknown): value is BasicGardenVisitRpcRow {
     isValidActivityDate(row.visit_date) &&
     isValidCount(row.challenge_day) &&
     isValidCount(row.check_in_count) &&
+    isValidCount(row.cumulative_visit_days) &&
+    isValidCount(row.cumulative_recovery_records) &&
     typeof row.visit_recorded === "boolean"
   );
 }
@@ -101,6 +113,8 @@ function isCompletionRpcRow(value: unknown): value is BasicGardenCompletionRpcRo
     typeof row.gate_key === "string" &&
     isValidCount(row.challenge_day) &&
     isValidCount(row.check_in_count) &&
+    isValidCount(row.cumulative_visit_days) &&
+    isValidCount(row.cumulative_recovery_records) &&
     typeof row.completion_recorded === "boolean" &&
     typeof row.reward_granted === "boolean" &&
     isValidCount(row.distinct_gate_count)
@@ -172,7 +186,9 @@ export async function syncBasicGardenVisit(params: {
     activityDate: rpcRow.visit_date,
     stats: {
       challengeDay: rpcRow.challenge_day,
-      checkInCount: rpcRow.check_in_count
+      checkInCount: rpcRow.check_in_count,
+      cumulativeVisitDays: rpcRow.cumulative_visit_days,
+      cumulativeRecoveryRecords: rpcRow.cumulative_recovery_records
     },
     recordedVisit: rpcRow.visit_recorded,
     recordedCompletion: false,
@@ -250,7 +266,9 @@ export async function syncBasicGardenCompletion(params: {
     activityDate: rpcRow.activity_date,
     stats: {
       challengeDay: rpcRow.challenge_day,
-      checkInCount: rpcRow.check_in_count
+      checkInCount: rpcRow.check_in_count,
+      cumulativeVisitDays: rpcRow.cumulative_visit_days,
+      cumulativeRecoveryRecords: rpcRow.cumulative_recovery_records
     },
     recordedVisit: false,
     recordedCompletion: rpcRow.completion_recorded,

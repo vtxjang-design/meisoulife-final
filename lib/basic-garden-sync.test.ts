@@ -28,6 +28,13 @@ const ledgerDerivedMigrationSource = readFileSync(
   new URL("../supabase/migrations/20260810080801_derive_basic_garden_progress_from_ledger.sql", import.meta.url),
   "utf8"
 );
+const separatedMetricsMigrationSource = readFileSync(
+  new URL(
+    "../supabase/migrations/20260810084016_separate_basic_garden_visit_and_recovery_metrics.sql",
+    import.meta.url
+  ),
+  "utf8"
+);
 
 for (const [name, source] of [
   ["basic-garden.mjs", basicGardenSource],
@@ -72,6 +79,11 @@ type BaselineRow = {
   ledger_count_at_baseline: number;
 };
 
+type VisitBaselineRow = {
+  preserved_visit_day_count: number;
+  ledger_count_at_baseline: number;
+};
+
 function createClient(initial: {
   today: string;
   progressRows?: ProgressRow[];
@@ -84,6 +96,7 @@ function createClient(initial: {
   const visits = new Set(initial.visitKeys ?? []);
   const completions = [...(initial.completionRows ?? [])];
   const baselines = new Map<string, BaselineRow>();
+  const visitBaselines = new Map<string, VisitBaselineRow>();
   const rpcCalls: Array<{ fn: string; params: Record<string, unknown> }> = [];
 
   function findProgress(authUserId: string) {
@@ -116,6 +129,27 @@ function createClient(initial: {
   function canonicalCount(authUserId: string) {
     const baseline = ensureBaseline(authUserId);
     return baseline.preserved_check_in_count + Math.max(ledgerCount(authUserId) - baseline.ledger_count_at_baseline, 0);
+  }
+
+  function visitCount(authUserId: string) {
+    return [...visits].filter((key) => key.startsWith(`${authUserId}|`)).length;
+  }
+
+  function ensureVisitBaseline(authUserId: string) {
+    const existing = visitBaselines.get(authUserId);
+    if (existing) return existing;
+
+    const baseline = {
+      preserved_visit_day_count: Math.max(findProgress(authUserId)?.challenge_day ?? 0, visitCount(authUserId)),
+      ledger_count_at_baseline: visitCount(authUserId)
+    };
+    visitBaselines.set(authUserId, baseline);
+    return baseline;
+  }
+
+  function canonicalVisitDays(authUserId: string) {
+    const baseline = ensureVisitBaseline(authUserId);
+    return baseline.preserved_visit_day_count + Math.max(visitCount(authUserId) - baseline.ledger_count_at_baseline, 0);
   }
 
   return {
@@ -161,6 +195,7 @@ function createClient(initial: {
           }
 
           const authUserId = String(params.p_auth_user_id);
+          ensureVisitBaseline(authUserId);
           const visitKey = `${authUserId}|${initial.today}`;
           const visitRecorded = !visits.has(visitKey);
           if (visitRecorded) {
@@ -176,7 +211,7 @@ function createClient(initial: {
             };
             progressRows.push(progress);
           } else if (visitRecorded) {
-            progress.challenge_day += 1;
+            progress.challenge_day = Math.max(canonicalVisitDays(authUserId), 1);
           }
 
           return {
@@ -185,7 +220,9 @@ function createClient(initial: {
               visit_date: initial.today,
               challenge_day: progress.challenge_day,
               check_in_count: progress.check_in_count,
-              visit_recorded: visitRecorded
+              visit_recorded: visitRecorded,
+              cumulative_visit_days: canonicalVisitDays(authUserId),
+              cumulative_recovery_records: canonicalCount(authUserId)
             },
             error: null
           };
@@ -201,6 +238,7 @@ function createClient(initial: {
 
           const authUserId = String(params.p_auth_user_id);
           const gateKey = String(params.p_gate_key);
+          ensureVisitBaseline(authUserId);
           ensureBaseline(authUserId);
           const completionKey = `${authUserId}|${initial.today}|${gateKey}`;
           const completionRecorded = !completions.some(
@@ -242,7 +280,9 @@ function createClient(initial: {
               check_in_count: canonicalCount(authUserId),
               completion_recorded: completionRecorded,
               reward_granted: rewardGranted,
-              distinct_gate_count: distinctGateCount
+              distinct_gate_count: distinctGateCount,
+              cumulative_visit_days: canonicalVisitDays(authUserId),
+              cumulative_recovery_records: canonicalCount(authUserId)
             },
             error: null
           };
@@ -254,7 +294,7 @@ function createClient(initial: {
   };
 }
 
-test("first visit of the day increments challenge day once", async () => {
+test("first authenticated BASIC visit on a JST date increases cumulative visit days once", async () => {
   const { client } = createClient({
     today: "2026-07-27",
     progressRows: [{ auth_user_id: "auth-1", challenge_day: 5, check_in_count: 2 }]
@@ -268,7 +308,9 @@ test("first visit of the day increments challenge day once", async () => {
   assert.equal(result.ok, true);
   assert.equal(result.recordedVisit, true);
   assert.equal(result.stats.challengeDay, 6);
+  assert.equal(result.stats.cumulativeVisitDays, 6);
   assert.equal(result.stats.checkInCount, 2);
+  assert.equal(result.stats.cumulativeRecoveryRecords, 2);
 });
 
 test("repeated visit on the same JST day does not increment again", async () => {
@@ -296,6 +338,35 @@ test("visit on the next JST day increments again", async () => {
 
   assert.equal(nextDay.recordedVisit, true);
   assert.equal(nextDay.stats.challengeDay, 7);
+  assert.equal(nextDay.stats.cumulativeVisitDays, 7);
+});
+
+test("concurrent duplicate visits create one JST visit record and one cumulative increment", async () => {
+  const state = createClient({ today: "2026-07-27" });
+
+  const [first, second] = await Promise.all([
+    syncBasicGardenVisit({ client: state.client, authUserId: "auth-1" }),
+    syncBasicGardenVisit({ client: state.client, authUserId: "auth-1" })
+  ]);
+
+  assert.equal(Number(first.recordedVisit) + Number(second.recordedVisit), 1);
+  assert.equal(first.stats.cumulativeVisitDays, 1);
+  assert.equal(second.stats.cumulativeVisitDays, 1);
+});
+
+test("visit date is supplied by the RPC contract instead of a client clock", async () => {
+  const state = createClient({ today: "2026-07-27" });
+  const result = await syncBasicGardenVisit({ client: state.client, authUserId: "auth-1" });
+
+  assert.equal(result.activityDate, "2026-07-27");
+  assert.match(ledgerDerivedMigrationSource, /timezone\('Asia\/Tokyo', now\(\)\)::date/);
+});
+
+test("anonymous BASIC visits do not fabricate a successful increment", async () => {
+  const result = await syncBasicGardenVisit({ client: createClient({ today: "2026-07-27" }).client, authUserId: "" });
+
+  assert.equal(result.ok, false);
+  assert.equal(result.stats.cumulativeVisitDays, 0);
 });
 
 test("each distinct Gate completion increments the cumulative check-in count", async () => {
@@ -332,6 +403,18 @@ test("the third distinct Gate is stored and counted independently", async () => 
     state.getCompletionRows("auth-1", "2026-07-27").map((row) => row.gate_key).sort(),
     ["affirmation", "energy", "vision"]
   );
+});
+
+test("recovery records do not add visit days, including after three distinct gates", async () => {
+  const state = createClient({ today: "2026-07-27" });
+
+  await syncBasicGardenCompletion({ client: state.client, authUserId: "auth-1", gateKey: "affirmation" });
+  await syncBasicGardenCompletion({ client: state.client, authUserId: "auth-1", gateKey: "energy" });
+  const third = await syncBasicGardenCompletion({ client: state.client, authUserId: "auth-1", gateKey: "vision" });
+
+  assert.equal(third.stats.cumulativeRecoveryRecords, 3);
+  assert.equal(third.stats.cumulativeVisitDays, 0);
+  assert.equal(state.getCompletedDayCount("auth-1"), 1);
 });
 
 test("a malformed completion RPC return is rejected before the client can report success", async () => {
@@ -602,4 +685,15 @@ test("ledger-derived migration freezes a baseline and separates idempotent rewar
     ledgerDerivedMigrationSource,
     /set check_in_count = bgp\.check_in_count \+ 1/
   );
+});
+
+test("separated-metrics migration derives visit days and recovery records from distinct ledgers", () => {
+  assert.match(separatedMetricsMigrationSource, /create table if not exists public\.basic_garden_visit_baselines/);
+  assert.match(separatedMetricsMigrationSource, /insert into public\.basic_garden_visits as bgv \(auth_user_id, visit_date\)/);
+  assert.match(separatedMetricsMigrationSource, /cumulative_visit_days integer/);
+  assert.match(separatedMetricsMigrationSource, /cumulative_recovery_records integer/);
+  assert.match(separatedMetricsMigrationSource, /timezone\('Asia\/Tokyo', now\(\)\)::date/);
+  assert.match(separatedMetricsMigrationSource, /on conflict do nothing/);
+  assert.match(separatedMetricsMigrationSource, /having count\(\*\) >= 3/);
+  assert.doesNotMatch(separatedMetricsMigrationSource, /set\s+check_in_count\s*=\s*.*\+/);
 });
