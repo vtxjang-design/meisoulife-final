@@ -28,6 +28,8 @@ type MembershipDebugState = {
   data: MembershipResolutionResult | null;
 };
 
+type DashboardLoadState = "idle" | "loading" | "ready" | "error";
+
 function BasicProgramContent() {
   const { plan, planResolved, session, authResolved, isLoggedIn, membershipSummary, hasActiveSubscription } = useAuthState();
   const { language } = useLanguage();
@@ -38,6 +40,8 @@ function BasicProgramContent() {
     todayDistinctGateCount: 0,
     growthMoment: null
   });
+  const [dashboardLoadState, setDashboardLoadState] = useState<DashboardLoadState>("idle");
+  const [dashboardRetry, setDashboardRetry] = useState(0);
   const highlightedRhythm = searchParams.get("rhythm") ?? searchParams.get("gate");
   const defaultRhythm =
     highlightedRhythm === "morning" || highlightedRhythm === "day" || highlightedRhythm === "night"
@@ -121,19 +125,31 @@ function BasicProgramContent() {
     let active = true;
     const supabase = getSupabaseBrowserClient();
     const userId = session?.user?.id;
-    if (!supabase || !userId) {
+    if (!authResolved) {
+      return;
+    }
+
+    if (!userId) {
       setDashboardState({
         cumulativeVisitDays: 0,
         cumulativeRecoveryRecords: 0,
         todayDistinctGateCount: 0,
         growthMoment: null
       });
+      setDashboardLoadState("idle");
+      return;
+    }
+
+    if (!supabase) {
+      setDashboardLoadState("error");
       return;
     }
 
     const safeSupabase = supabase;
 
     async function loadDashboardState() {
+      setDashboardLoadState("loading");
+
       try {
         const sessionResult = await safeSupabase.auth.getSession();
         const accessToken = sessionResult.data.session?.access_token?.trim();
@@ -148,62 +164,59 @@ function BasicProgramContent() {
             : undefined
         });
 
-        if (response.ok) {
-          const payload = (await response.json()) as {
-            ok: true;
-            challengeDay: number;
-            checkInCount: number;
-            cumulativeVisitDays: number;
-            cumulativeRecoveryRecords: number;
-            activityDate: string;
-          };
+        const payload = (await response.json()) as {
+          ok?: boolean;
+          errorMessage?: string;
+          cumulativeVisitDays?: unknown;
+          cumulativeRecoveryRecords?: unknown;
+          todayDistinctGateCount?: unknown;
+          activityDate?: unknown;
+        };
 
-          if (!active) {
-            return;
-          }
+        if (!response.ok || !payload.ok) {
+          throw new Error(payload.errorMessage || "Garden progress could not be loaded");
+        }
 
-          const { data: progressRows, error: progressError } = await safeSupabase.rpc("get_basic_garden_progress", {
-            p_auth_user_id: userId
-          });
+        if (
+          !Number.isInteger(payload.cumulativeVisitDays) ||
+          !Number.isInteger(payload.cumulativeRecoveryRecords) ||
+          !Number.isInteger(payload.todayDistinctGateCount) ||
+          typeof payload.activityDate !== "string"
+        ) {
+          throw new Error("Garden progress response was invalid");
+        }
 
-          if (!active) {
-            return;
-          }
-
-          const progress = Array.isArray(progressRows) ? progressRows[0] : progressRows;
-
-          if (
-            progressError ||
-            !progress ||
-            !Number.isInteger(progress.cumulative_visit_days) ||
-            !Number.isInteger(progress.cumulative_recovery_records) ||
-            !Number.isInteger(progress.today_distinct_gate_count)
-          ) {
-            throw new Error(progressError?.message || "Canonical garden progress is unavailable");
-          }
-
-          const pendingGrowthMoment = readBasicGardenGrowthMoment(safeSessionStorageGet(BASIC_GARDEN_GROWTH_MOMENT_KEY));
-          const growthMoment =
-            pendingGrowthMoment?.activityDate === payload.activityDate && pendingGrowthMoment.checkInCount === progress.cumulative_recovery_records
-              ? pendingGrowthMoment
-              : null;
-
-          if (pendingGrowthMoment) {
-            safeSessionStorageRemove(BASIC_GARDEN_GROWTH_MOMENT_KEY);
-          }
-
-          const todayDistinctGateCount = growthMoment
-            ? Math.max(3, progress.today_distinct_gate_count)
-            : progress.today_distinct_gate_count;
-
-          setDashboardState({
-            cumulativeVisitDays: progress.cumulative_visit_days,
-            cumulativeRecoveryRecords: progress.cumulative_recovery_records,
-            todayDistinctGateCount,
-            growthMoment
-          });
+        if (!active) {
           return;
         }
+
+        const cumulativeVisitDays = payload.cumulativeVisitDays as number;
+        const cumulativeRecoveryRecords = payload.cumulativeRecoveryRecords as number;
+        const responseTodayDistinctGateCount = payload.todayDistinctGateCount as number;
+        const activityDate = payload.activityDate as string;
+
+        const pendingGrowthMoment = readBasicGardenGrowthMoment(safeSessionStorageGet(BASIC_GARDEN_GROWTH_MOMENT_KEY));
+        const growthMoment =
+          pendingGrowthMoment?.activityDate === activityDate && pendingGrowthMoment.checkInCount === cumulativeRecoveryRecords
+            ? pendingGrowthMoment
+            : null;
+
+        if (pendingGrowthMoment) {
+          safeSessionStorageRemove(BASIC_GARDEN_GROWTH_MOMENT_KEY);
+        }
+
+        const todayDistinctGateCount = growthMoment
+          ? Math.max(3, responseTodayDistinctGateCount)
+          : responseTodayDistinctGateCount;
+
+        setDashboardState({
+          cumulativeVisitDays,
+          cumulativeRecoveryRecords,
+          todayDistinctGateCount,
+          growthMoment
+        });
+        setDashboardLoadState("ready");
+        return;
       } catch (error) {
         console.warn("[program-basic] garden visit sync failed", {
           userId,
@@ -212,12 +225,7 @@ function BasicProgramContent() {
       }
 
       if (active) {
-        setDashboardState({
-          cumulativeVisitDays: 0,
-          cumulativeRecoveryRecords: 0,
-          todayDistinctGateCount: 0,
-          growthMoment: null
-        });
+        setDashboardLoadState("error");
       }
     }
 
@@ -226,7 +234,7 @@ function BasicProgramContent() {
     return () => {
       active = false;
     };
-  }, [session?.user?.id]);
+  }, [authResolved, dashboardRetry, session?.user?.id]);
 
   if (!authResolved || !isLoggedIn) {
     return (
@@ -283,6 +291,24 @@ function BasicProgramContent() {
           defaultRhythm={defaultRhythm}
           membershipSummary={membershipSummary}
         />
+        {dashboardLoadState === "error" ? (
+          <div role="alert" className="mt-4 rounded-2xl border border-gold/30 bg-[#09131d]/84 px-4 py-3 text-sm text-white/82">
+            <p>
+              {language === "kr"
+                ? "가든 기록을 불러오지 못했습니다. 마지막으로 확인된 기록은 그대로 표시됩니다."
+                : language === "jp"
+                  ? "ガーデンの記録を読み込めませんでした。最後に確認できた記録を表示しています。"
+                  : "We could not load your Garden progress. Your last confirmed record is still shown."}
+            </p>
+            <button
+              type="button"
+              className="mt-2 rounded-full border border-gold/45 px-3 py-1.5 text-xs font-semibold text-gold transition hover:bg-gold/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+              onClick={() => setDashboardRetry((value) => value + 1)}
+            >
+              {language === "kr" ? "다시 시도" : language === "jp" ? "再試行" : "Try again"}
+            </button>
+          </div>
+        ) : null}
       </div>
     </div>
   );

@@ -336,6 +336,14 @@ test("canonical visit and recovery values are passed through unchanged", () => {
   assert.match(basicProgramPageSource, /cumulativeRecoveryRecords=\{dashboardState\.cumulativeRecoveryRecords\}/);
 });
 
+test("BASIC records a visit before rendering server-confirmed progress and keeps errors recoverable", () => {
+  assert.match(basicProgramPageSource, /fetch\("\/api\/basic\/garden-visit"/);
+  assert.doesNotMatch(basicProgramPageSource, /safeSupabase\.rpc\("get_basic_garden_progress"/);
+  assert.match(basicProgramPageSource, /setDashboardLoadState\("error"\)/);
+  assert.match(basicProgramPageSource, /setDashboardRetry\(\(value\) => value \+ 1\)/);
+  assert.match(basicProgramPageSource, /last confirmed record is still shown/);
+});
+
 test("program basic hides the duplicate mobile tab row while preserving the hamburger menu", () => {
   assert.match(siteHeaderSource, /const hideMobileTabs = pathname === "\/program\/basic"/);
   assert.match(siteHeaderSource, /<div className=\{cn\("lg:hidden", hideMobileTabs && "hidden"\)\}>/);

@@ -123,6 +123,36 @@ export async function POST(request: Request) {
     );
   }
 
+  const progressResult = await (admin as unknown as {
+    rpc: (fn: string, params: Record<string, unknown>) => Promise<{
+      data: unknown;
+      error: { message: string } | null;
+    }>;
+  }).rpc("get_basic_garden_progress", {
+    p_auth_user_id: user.id
+  });
+  const progress = Array.isArray(progressResult.data) ? progressResult.data[0] : progressResult.data;
+
+  if (
+    progressResult.error ||
+    !progress ||
+    typeof progress !== "object" ||
+    !Number.isInteger((progress as { today_distinct_gate_count?: unknown }).today_distinct_gate_count)
+  ) {
+    console.warn("[api-basic-garden-visit] progress read failed", {
+      userAuthenticated: true,
+      error: progressResult.error?.message ?? "invalid_progress_response"
+    });
+
+    return NextResponse.json(
+      {
+        ok: false,
+        errorMessage: "Garden progress could not be loaded"
+      },
+      { status: 500 }
+    );
+  }
+
   return NextResponse.json({
     ok: true,
     matchedBy: result.matchedBy,
@@ -131,6 +161,7 @@ export async function POST(request: Request) {
     checkInCount: result.stats.checkInCount,
     cumulativeVisitDays: result.stats.cumulativeVisitDays,
     cumulativeRecoveryRecords: result.stats.cumulativeRecoveryRecords,
+    todayDistinctGateCount: (progress as { today_distinct_gate_count: number }).today_distinct_gate_count,
     visitRecorded: result.recordedVisit,
     activityDate: result.activityDate
   });
