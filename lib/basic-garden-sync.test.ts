@@ -35,6 +35,17 @@ const separatedMetricsMigrationSource = readFileSync(
   ),
   "utf8"
 );
+const reconciliationMigrationSource = readFileSync(
+  new URL(
+    "../supabase/migrations/20260810093000_reconcile_basic_garden_production_drift.sql",
+    import.meta.url
+  ),
+  "utf8"
+);
+const postDeployVerificationSource = readFileSync(
+  new URL("../supabase/verification/basic_garden_reconciliation_post_deploy.sql", import.meta.url),
+  "utf8"
+);
 
 for (const [name, source] of [
   ["basic-garden.mjs", basicGardenSource],
@@ -696,4 +707,39 @@ test("separated-metrics migration derives visit days and recovery records from d
   assert.match(separatedMetricsMigrationSource, /on conflict do nothing/);
   assert.match(separatedMetricsMigrationSource, /having count\(\*\) >= 3/);
   assert.doesNotMatch(separatedMetricsMigrationSource, /set\s+check_in_count\s*=\s*.*\+/);
+});
+
+test("forward-only reconciliation restores ledger-derived RPC contracts without replaying the old backfill", () => {
+  assert.match(reconciliationMigrationSource, /create table if not exists public\.basic_garden_progress_baselines/);
+  assert.match(reconciliationMigrationSource, /create table if not exists public\.basic_garden_visit_baselines/);
+  assert.match(reconciliationMigrationSource, /create table if not exists public\.basic_garden_daily_rewards/);
+  assert.match(reconciliationMigrationSource, /select bgp\.auth_user_id from public\.basic_garden_progress as bgp\s+union\s+select cc\.auth_user_id/s);
+  assert.match(reconciliationMigrationSource, /select bgp\.auth_user_id from public\.basic_garden_progress as bgp\s+union\s+select vc\.auth_user_id/s);
+  assert.doesNotMatch(reconciliationMigrationSource, /where not bgc\.reward_granted/);
+  assert.match(reconciliationMigrationSource, /returns table \(\s*auth_user_id uuid, challenge_day integer, check_in_count integer,\s*today_distinct_gate_count integer, completed_day_count integer,/);
+  assert.match(reconciliationMigrationSource, /returns table \(\s*auth_user_id uuid, visit_date date, challenge_day integer, check_in_count integer,/);
+  assert.match(reconciliationMigrationSource, /returns table \(\s*auth_user_id uuid, activity_date date, gate_key text, challenge_day integer,/);
+  assert.match(reconciliationMigrationSource, /cumulative_visit_days integer, cumulative_recovery_records integer,\s+preserved_visit_day_count integer/);
+  assert.match(reconciliationMigrationSource, /visit_recorded boolean, cumulative_visit_days integer, cumulative_recovery_records integer/);
+  assert.match(reconciliationMigrationSource, /distinct_gate_count integer, cumulative_visit_days integer, cumulative_recovery_records integer/);
+  assert.match(reconciliationMigrationSource, /timezone\('Asia\/Tokyo', now\(\)\)::date/g);
+  assert.match(reconciliationMigrationSource, /update public\.basic_garden_gate_completions as bgc set reward_granted = true\s+where bgc\.auth_user_id = p_auth_user_id and bgc\.activity_date = v_activity_date and bgc\.gate_key = p_gate_key/);
+  assert.match(reconciliationMigrationSource, /insert into public\.basic_garden_daily_rewards as bgdr[\s\S]*on conflict do nothing/);
+});
+
+test("forward-only reconciliation restricts writable RPCs and ships aggregate-only verification", () => {
+  assert.match(reconciliationMigrationSource, /revoke all on function public\.record_basic_garden_visit\(uuid\) from public/);
+  assert.match(reconciliationMigrationSource, /revoke all on function public\.record_basic_garden_completion\(uuid, text\) from public/);
+  assert.match(reconciliationMigrationSource, /revoke all on function public\.upsert_basic_garden_progress\(uuid, integer\) from public/);
+  assert.match(reconciliationMigrationSource, /revoke all on function public\.get_basic_garden_progress\(uuid\) from public/);
+  assert.match(reconciliationMigrationSource, /grant execute on function public\.record_basic_garden_visit\(uuid\) to service_role/);
+  assert.match(reconciliationMigrationSource, /grant execute on function public\.record_basic_garden_completion\(uuid, text\) to service_role/);
+  assert.match(reconciliationMigrationSource, /grant execute on function public\.upsert_basic_garden_progress\(uuid, integer\) to service_role/);
+  assert.match(reconciliationMigrationSource, /grant execute on function public\.get_basic_garden_progress\(uuid\) to authenticated, service_role/);
+  assert.match(reconciliationMigrationSource, /security invoker/g);
+  assert.match(reconciliationMigrationSource, /auth\.uid\(\) is distinct from p_auth_user_id/);
+  assert.match(postDeployVerificationSource, /aggregate_cumulative_recovery_records/);
+  assert.match(postDeployVerificationSource, /aggregate_cumulative_visit_days/);
+  assert.match(postDeployVerificationSource, /eligible_jst_user_days_without_daily_reward/);
+  assert.doesNotMatch(postDeployVerificationSource, /SELECT\s+auth_user_id\s+FROM\s+public\.basic_garden_\w+\s*;/i);
 });
