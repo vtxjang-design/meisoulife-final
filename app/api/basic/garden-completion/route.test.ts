@@ -3,24 +3,27 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
-import test from "node:test";
+import { afterEach, beforeEach, test } from "node:test";
 import ts from "typescript";
 
 const tempDir = mkdtempSync(join(tmpdir(), "garden-completion-route-test-"));
+const originalBasicGardenWritesPaused = process.env.BASIC_GARDEN_WRITES_PAUSED;
 
 const routeSource = readFileSync(new URL("./route.ts", import.meta.url), "utf8")
   .replace('from "next/server"', 'from "./next-server.mjs"')
   .replace('from "@/lib/basic-garden"', 'from "./basic-garden.mjs"')
+  .replace('from "@/lib/basic-garden-maintenance"', 'from "./basic-garden-maintenance.mjs"')
   .replace('from "@/lib/basic-garden-sync"', 'from "./basic-garden-sync.mjs"')
   .replace('from "@/lib/supabase/admin"', 'from "./supabase-admin.mjs"')
   .replace('from "@/lib/supabase/server"', 'from "./supabase-server.mjs"');
+const maintenanceSource = readFileSync(new URL("../../../../lib/basic-garden-maintenance.ts", import.meta.url), "utf8");
 
 const nextServerSource = `
 export const NextResponse = {
   json(body, init = {}) {
     return new Response(JSON.stringify(body), {
       status: init.status ?? 200,
-      headers: { "content-type": "application/json" }
+      headers: { "content-type": "application/json", ...(init.headers ?? {}) }
     });
   }
 };
@@ -95,6 +98,7 @@ for (const [name, source] of [
   ["next-server.mjs", nextServerSource],
   ["supabase-server.mjs", supabaseServerSource],
   ["supabase-admin.mjs", supabaseAdminSource],
+  ["basic-garden-maintenance.mjs", maintenanceSource],
   ["basic-garden-sync.mjs", basicGardenSyncSource],
   ["basic-garden.mjs", basicGardenSource]
 ] as const) {
@@ -121,6 +125,18 @@ const { __setSyncImpl } = basicGardenSyncModule;
 
 process.on("exit", () => {
   rmSync(tempDir, { recursive: true, force: true });
+});
+
+beforeEach(() => {
+  delete process.env.BASIC_GARDEN_WRITES_PAUSED;
+});
+
+afterEach(() => {
+  if (originalBasicGardenWritesPaused === undefined) {
+    delete process.env.BASIC_GARDEN_WRITES_PAUSED;
+  } else {
+    process.env.BASIC_GARDEN_WRITES_PAUSED = originalBasicGardenWritesPaused;
+  }
 });
 
 function createSupabaseAuthMock(options: {
@@ -162,6 +178,104 @@ function createSupabaseAuthMock(options: {
 async function readJson(response: Response) {
   return JSON.parse(await response.text()) as Record<string, unknown>;
 }
+
+test("paused authenticated completion returns the maintenance contract without invoking sync", async () => {
+  process.env.BASIC_GARDEN_WRITES_PAUSED = "true";
+  const supabase = createSupabaseAuthMock({ cookieUser: { id: "auth-cookie" } });
+  let syncCallCount = 0;
+
+  __setServerClient(supabase.client);
+  __setAdminClient({ admin: true });
+  __setSyncImpl(async () => {
+    syncCallCount += 1;
+    throw new Error("completion sync must not run while paused");
+  });
+
+  const response = await POST(
+    new Request("https://www.meisoulife.com/api/basic/garden-completion", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ gateKey: "affirmation" })
+    })
+  );
+  const payload = await readJson(response);
+
+  assert.equal(response.status, 503);
+  assert.equal(payload.ok, false);
+  assert.equal(payload.error, "BASIC_GARDEN_MAINTENANCE");
+  assert.equal(payload.errorMessage, "Garden updates are temporarily unavailable.");
+  assert.equal(response.headers.get("Retry-After"), "120");
+  assert.equal(response.headers.get("Cache-Control"), "no-store");
+  assert.equal(syncCallCount, 0);
+});
+
+test("only the exact true maintenance value pauses an authenticated completion", async () => {
+  const supabase = createSupabaseAuthMock({ cookieUser: { id: "auth-cookie" } });
+  let syncCallCount = 0;
+
+  __setServerClient(supabase.client);
+  __setAdminClient({ admin: true });
+  __setSyncImpl(async () => {
+    syncCallCount += 1;
+    return {
+      ok: true,
+      matchedBy: "auth_user_id",
+      writeAction: "completion",
+      activityDate: "2026-07-27",
+      stats: { challengeDay: 1, checkInCount: 1, cumulativeVisitDays: 1, cumulativeRecoveryRecords: 1 },
+      recordedVisit: false,
+      recordedCompletion: true,
+      rewardGranted: false,
+      distinctGateCount: 1,
+      errorMessage: null
+    };
+  });
+
+  for (const value of [undefined, "false", "TRUE", "1"]) {
+    if (value === undefined) {
+      delete process.env.BASIC_GARDEN_WRITES_PAUSED;
+    } else {
+      process.env.BASIC_GARDEN_WRITES_PAUSED = value;
+    }
+
+    const response = await POST(
+      new Request("https://www.meisoulife.com/api/basic/garden-completion", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ gateKey: "affirmation" })
+      })
+    );
+    assert.equal(response.status, 200);
+  }
+
+  assert.equal(syncCallCount, 4);
+});
+
+test("unauthenticated completion remains rejected before the maintenance guard", async () => {
+  process.env.BASIC_GARDEN_WRITES_PAUSED = "true";
+  const supabase = createSupabaseAuthMock({ cookieUser: null });
+  let syncCallCount = 0;
+
+  __setServerClient(supabase.client);
+  __setAdminClient({ admin: true });
+  __setSyncImpl(async () => {
+    syncCallCount += 1;
+    throw new Error("completion sync must not run for an unauthenticated request");
+  });
+
+  const response = await POST(
+    new Request("https://www.meisoulife.com/api/basic/garden-completion", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ gateKey: "affirmation" })
+    })
+  );
+  const payload = await readJson(response);
+
+  assert.equal(response.status, 401);
+  assert.equal(payload.error, "authentication");
+  assert.equal(syncCallCount, 0);
+});
 
 test("cookie-authenticated request continues to work", async () => {
   const supabase = createSupabaseAuthMock({

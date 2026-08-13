@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
 import { isEligibleBasicGardenGateKey } from "@/lib/basic-garden";
+import {
+  BASIC_GARDEN_MAINTENANCE_ERROR,
+  BASIC_GARDEN_MAINTENANCE_MESSAGE,
+  getBasicGardenMaintenanceHeaders,
+  isBasicGardenWritesPaused
+} from "@/lib/basic-garden-maintenance";
 import { syncBasicGardenCompletion } from "@/lib/basic-garden-sync";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
@@ -135,6 +141,21 @@ export async function POST(request: Request) {
       status: 401,
       message: "Authentication is required"
     });
+  }
+
+  if (isBasicGardenWritesPaused()) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: BASIC_GARDEN_MAINTENANCE_ERROR,
+        errorMessage: BASIC_GARDEN_MAINTENANCE_MESSAGE,
+        requestId
+      },
+      {
+        status: 503,
+        headers: getBasicGardenMaintenanceHeaders()
+      }
+    );
   }
 
   let gateKey: unknown = null;

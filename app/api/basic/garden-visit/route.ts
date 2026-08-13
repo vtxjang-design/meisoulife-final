@@ -1,4 +1,10 @@
 import { NextResponse } from "next/server";
+import {
+  BASIC_GARDEN_MAINTENANCE_ERROR,
+  BASIC_GARDEN_MAINTENANCE_MESSAGE,
+  getBasicGardenMaintenanceHeaders,
+  isBasicGardenWritesPaused
+} from "@/lib/basic-garden-maintenance";
 import { syncBasicGardenVisit } from "@/lib/basic-garden-sync";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
@@ -98,6 +104,20 @@ export async function POST(request: Request) {
         errorMessage: "Authenticated user is required"
       },
       { status: 401 }
+    );
+  }
+
+  if (isBasicGardenWritesPaused()) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: BASIC_GARDEN_MAINTENANCE_ERROR,
+        errorMessage: BASIC_GARDEN_MAINTENANCE_MESSAGE
+      },
+      {
+        status: 503,
+        headers: getBasicGardenMaintenanceHeaders()
+      }
     );
   }
 
