@@ -36,9 +36,8 @@ function resolveBearerToken(request: Request) {
 
 export async function POST(request: Request) {
   const supabase = await getSupabaseServerClient();
-  const admin = getSupabaseAdminClient();
 
-  if (!supabase || !admin) {
+  if (!supabase) {
     return NextResponse.json(
       {
         ok: false,
@@ -118,6 +117,18 @@ export async function POST(request: Request) {
         status: 503,
         headers: getBasicGardenMaintenanceHeaders()
       }
+    );
+  }
+
+  const admin = getSupabaseAdminClient();
+
+  if (!admin) {
+    return NextResponse.json(
+      {
+        ok: false,
+        errorMessage: "Garden visit service is unavailable"
+      },
+      { status: 503 }
     );
   }
 

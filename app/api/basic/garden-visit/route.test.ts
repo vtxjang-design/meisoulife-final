@@ -36,8 +36,10 @@ export async function getSupabaseServerClient() { return currentClient; }
 
 const supabaseAdminSource = `
 let currentClient = null;
-export function __setAdminClient(client) { currentClient = client; }
-export function getSupabaseAdminClient() { return currentClient; }
+let callCount = 0;
+export function __setAdminClient(client) { currentClient = client; callCount = 0; }
+export function __getAdminClientCallCount() { return callCount; }
+export function getSupabaseAdminClient() { callCount += 1; return currentClient; }
 `;
 
 const basicGardenSyncSource = `
@@ -63,7 +65,7 @@ const adminModule = await import(pathToFileURL(join(tempDir, "supabase-admin.mjs
 const syncModule = await import(pathToFileURL(join(tempDir, "basic-garden-sync.mjs")).href);
 const { POST } = routeModule;
 const { __setServerClient } = serverModule;
-const { __setAdminClient } = adminModule;
+const { __getAdminClientCallCount, __setAdminClient } = adminModule;
 const { __setSyncImpl } = syncModule;
 
 process.on("exit", () => rmSync(tempDir, { recursive: true, force: true }));
@@ -85,25 +87,29 @@ async function readJson(response: Response) {
   return JSON.parse(await response.text()) as Record<string, unknown>;
 }
 
-test("paused authenticated visit returns the maintenance contract without invoking a write or progress RPC", async () => {
-  process.env.BASIC_GARDEN_WRITES_PAUSED = "true";
+test("normalized true maintenance values reject authenticated visits before admin or RPC use", async () => {
   let syncCallCount = 0;
   let rpcCallCount = 0;
   __setServerClient(createSupabaseAuthMock({ id: "auth-cookie" }));
   __setAdminClient({ rpc: async () => { rpcCallCount += 1; throw new Error("admin RPC must not run while paused"); } });
   __setSyncImpl(async () => { syncCallCount += 1; throw new Error("visit sync must not run while paused"); });
 
-  const response = await POST(new Request("https://www.meisoulife.com/api/basic/garden-visit", { method: "POST" }));
-  const payload = await readJson(response);
+  for (const value of ["true", " TRUE ", "\tTrUe\n"]) {
+    process.env.BASIC_GARDEN_WRITES_PAUSED = value;
+    const response = await POST(new Request("https://www.meisoulife.com/api/basic/garden-visit", { method: "POST" }));
+    const payload = await readJson(response);
 
-  assert.equal(response.status, 503);
-  assert.equal(payload.ok, false);
-  assert.equal(payload.error, "BASIC_GARDEN_MAINTENANCE");
-  assert.equal(payload.errorMessage, "Garden updates are temporarily unavailable.");
-  assert.equal(response.headers.get("Retry-After"), "120");
-  assert.equal(response.headers.get("Cache-Control"), "no-store");
+    assert.equal(response.status, 503);
+    assert.equal(payload.ok, false);
+    assert.equal(payload.error, "BASIC_GARDEN_MAINTENANCE");
+    assert.equal(payload.errorMessage, "Garden updates are temporarily unavailable.");
+    assert.equal(response.headers.get("Retry-After"), "120");
+    assert.equal(response.headers.get("Cache-Control"), "no-store");
+  }
+
   assert.equal(syncCallCount, 0);
   assert.equal(rpcCallCount, 0);
+  assert.equal(__getAdminClientCallCount(), 0);
 });
 
 test("unset and non-true maintenance values preserve successful visit behavior", async () => {
@@ -116,15 +122,15 @@ test("unset and non-true maintenance values preserve successful visit behavior",
     return { ok: true, matchedBy: "auth_user_id", writeAction: "visit", activityDate: "2026-07-27", stats: { challengeDay: 1, checkInCount: 1, cumulativeVisitDays: 1, cumulativeRecoveryRecords: 1 }, recordedVisit: true, recordedCompletion: false, rewardGranted: false, distinctGateCount: 0, errorMessage: null };
   });
 
-  for (const value of [undefined, "false", "TRUE", "1"]) {
+  for (const value of [undefined, "false", "FALSE", "0", "yes"]) {
     if (value === undefined) delete process.env.BASIC_GARDEN_WRITES_PAUSED;
     else process.env.BASIC_GARDEN_WRITES_PAUSED = value;
     const response = await POST(new Request("https://www.meisoulife.com/api/basic/garden-visit", { method: "POST" }));
     assert.equal(response.status, 200);
   }
 
-  assert.equal(syncCallCount, 4);
-  assert.equal(progressRpcCallCount, 4);
+  assert.equal(syncCallCount, 5);
+  assert.equal(progressRpcCallCount, 5);
 });
 
 test("unauthenticated visit remains rejected before the maintenance guard", async () => {

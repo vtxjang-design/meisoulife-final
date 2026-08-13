@@ -41,10 +41,16 @@ export async function getSupabaseServerClient() {
 
 const supabaseAdminSource = `
 let currentClient = null;
+let callCount = 0;
 export function __setAdminClient(client) {
   currentClient = client;
+  callCount = 0;
+}
+export function __getAdminClientCallCount() {
+  return callCount;
 }
 export function getSupabaseAdminClient() {
+  callCount += 1;
   return currentClient;
 }
 `;
@@ -120,7 +126,7 @@ const basicGardenSyncModule = await import(pathToFileURL(join(tempDir, "basic-ga
 
 const { POST } = routeModule;
 const { __setServerClient } = supabaseServerModule;
-const { __setAdminClient } = supabaseAdminModule;
+const { __getAdminClientCallCount, __setAdminClient } = supabaseAdminModule;
 const { __setSyncImpl } = basicGardenSyncModule;
 
 process.on("exit", () => {
@@ -179,8 +185,7 @@ async function readJson(response: Response) {
   return JSON.parse(await response.text()) as Record<string, unknown>;
 }
 
-test("paused authenticated completion returns the maintenance contract without invoking sync", async () => {
-  process.env.BASIC_GARDEN_WRITES_PAUSED = "true";
+test("normalized true maintenance values reject authenticated completions before admin or RPC use", async () => {
   const supabase = createSupabaseAuthMock({ cookieUser: { id: "auth-cookie" } });
   let syncCallCount = 0;
 
@@ -191,25 +196,30 @@ test("paused authenticated completion returns the maintenance contract without i
     throw new Error("completion sync must not run while paused");
   });
 
-  const response = await POST(
-    new Request("https://www.meisoulife.com/api/basic/garden-completion", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ gateKey: "affirmation" })
-    })
-  );
-  const payload = await readJson(response);
+  for (const value of ["true", " TRUE ", "\tTrUe\n"]) {
+    process.env.BASIC_GARDEN_WRITES_PAUSED = value;
+    const response = await POST(
+      new Request("https://www.meisoulife.com/api/basic/garden-completion", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ gateKey: "affirmation" })
+      })
+    );
+    const payload = await readJson(response);
 
-  assert.equal(response.status, 503);
-  assert.equal(payload.ok, false);
-  assert.equal(payload.error, "BASIC_GARDEN_MAINTENANCE");
-  assert.equal(payload.errorMessage, "Garden updates are temporarily unavailable.");
-  assert.equal(response.headers.get("Retry-After"), "120");
-  assert.equal(response.headers.get("Cache-Control"), "no-store");
+    assert.equal(response.status, 503);
+    assert.equal(payload.ok, false);
+    assert.equal(payload.error, "BASIC_GARDEN_MAINTENANCE");
+    assert.equal(payload.errorMessage, "Garden updates are temporarily unavailable.");
+    assert.equal(response.headers.get("Retry-After"), "120");
+    assert.equal(response.headers.get("Cache-Control"), "no-store");
+  }
+
   assert.equal(syncCallCount, 0);
+  assert.equal(__getAdminClientCallCount(), 0);
 });
 
-test("only the exact true maintenance value pauses an authenticated completion", async () => {
+test("values not normalized to true preserve authenticated completion behavior", async () => {
   const supabase = createSupabaseAuthMock({ cookieUser: { id: "auth-cookie" } });
   let syncCallCount = 0;
 
@@ -231,7 +241,7 @@ test("only the exact true maintenance value pauses an authenticated completion",
     };
   });
 
-  for (const value of [undefined, "false", "TRUE", "1"]) {
+  for (const value of [undefined, "false", "FALSE", "0", "yes"]) {
     if (value === undefined) {
       delete process.env.BASIC_GARDEN_WRITES_PAUSED;
     } else {
@@ -248,7 +258,7 @@ test("only the exact true maintenance value pauses an authenticated completion",
     assert.equal(response.status, 200);
   }
 
-  assert.equal(syncCallCount, 4);
+  assert.equal(syncCallCount, 5);
 });
 
 test("unauthenticated completion remains rejected before the maintenance guard", async () => {

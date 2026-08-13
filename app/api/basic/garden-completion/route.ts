@@ -80,9 +80,8 @@ function resolveBearerToken(request: Request) {
 export async function POST(request: Request) {
   const requestId = createRequestId();
   const supabase = await getSupabaseServerClient();
-  const admin = getSupabaseAdminClient();
 
-  if (!supabase || !admin) {
+  if (!supabase) {
     return gardenCompletionError({
       requestId,
       category: "service_unavailable",
@@ -156,6 +155,17 @@ export async function POST(request: Request) {
         headers: getBasicGardenMaintenanceHeaders()
       }
     );
+  }
+
+  const admin = getSupabaseAdminClient();
+
+  if (!admin) {
+    return gardenCompletionError({
+      requestId,
+      category: "service_unavailable",
+      status: 503,
+      message: "Garden sync service is unavailable"
+    });
   }
 
   let gateKey: unknown = null;
