@@ -32,11 +32,24 @@ export const NextResponse = {
 
 const supabaseServerSource = `
 let currentClient = null;
+let currentBearerClient = { scope: "bearer" };
+let bearerTokens = [];
 export function __setServerClient(client) {
   currentClient = client;
 }
+export function __setBearerServerClient(client) {
+  currentBearerClient = client;
+  bearerTokens = [];
+}
+export function __getBearerTokens() {
+  return bearerTokens;
+}
 export async function getSupabaseServerClient() {
   return currentClient;
+}
+export function getSupabaseBearerServerClient(token) {
+  bearerTokens.push(token);
+  return currentBearerClient;
 }
 `;
 
@@ -134,7 +147,7 @@ const basicGardenSyncModule = await import(pathToFileURL(join(tempDir, "basic-ga
 const basicGardenEntitlementModule = await import(pathToFileURL(join(tempDir, "basic-garden-entitlement.mjs")).href);
 
 const { POST } = routeModule;
-const { __setServerClient } = supabaseServerModule;
+const { __getBearerTokens, __setBearerServerClient, __setServerClient } = supabaseServerModule;
 const { __getAdminClientCallCount, __setAdminClient } = supabaseAdminModule;
 const { __setSyncImpl } = basicGardenSyncModule;
 const { __setEntitlementImpl } = basicGardenEntitlementModule;
@@ -145,6 +158,7 @@ process.on("exit", () => {
 
 beforeEach(() => {
   delete process.env.BASIC_GARDEN_WRITES_PAUSED;
+  __setBearerServerClient({ scope: "bearer" });
   __setEntitlementImpl(async () => ({ status: "entitled" }));
 });
 
@@ -473,7 +487,7 @@ test("a verified authenticated user without an email can persist a completion", 
   assert.equal(syncCalls[0].authUserId, "auth-without-email");
 });
 
-test("missing cookie session plus valid Bearer token authenticates the correct user", async () => {
+test("missing cookie session plus valid Bearer token uses the bearer-scoped client for membership authorization", async () => {
   const supabase = createSupabaseAuthMock({
     cookieUser: null,
     cookieErrorMessage: "Auth session missing!",
@@ -482,6 +496,12 @@ test("missing cookie session plus valid Bearer token authenticates the correct u
   const syncCalls: Array<Record<string, unknown>> = [];
 
   __setServerClient(supabase.client);
+  const bearerScopedClient = { scope: "bearer-membership-visible" };
+  __setBearerServerClient(bearerScopedClient);
+  __setEntitlementImpl(async (params: { client: unknown }) => {
+    assert.equal(params.client, bearerScopedClient);
+    return { status: "entitled" };
+  });
   __setAdminClient({ admin: true });
   __setSyncImpl(async (params: Record<string, unknown>) => {
     syncCalls.push(params);
@@ -515,6 +535,7 @@ test("missing cookie session plus valid Bearer token authenticates the correct u
 
   assert.equal(response.status, 200);
   assert.deepEqual(supabase.calls, [undefined, "valid-access-token"]);
+  assert.deepEqual(__getBearerTokens(), ["valid-access-token"]);
   assert.equal(syncCalls.length, 1);
   assert.equal(syncCalls[0].authUserId, "auth-bearer");
   assert.equal(syncCalls[0].gateKey, "affirmation");

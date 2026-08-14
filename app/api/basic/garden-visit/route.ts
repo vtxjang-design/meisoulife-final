@@ -8,7 +8,7 @@ import {
 import { resolveBasicGardenEntitlement } from "@/lib/basic-garden-entitlement";
 import { syncBasicGardenVisit } from "@/lib/basic-garden-sync";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
-import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { getSupabaseBearerServerClient, getSupabaseServerClient } from "@/lib/supabase/server";
 
 function resolveBearerToken(request: Request) {
   const authorization = request.headers.get("authorization");
@@ -53,6 +53,7 @@ export async function POST(request: Request) {
     error: userError
   } = await supabase.auth.getUser();
   let user = cookieUser;
+  let entitlementClient = supabase;
 
   if (userError) {
     console.warn("[api-basic-garden-visit] auth lookup failed", {
@@ -86,6 +87,20 @@ export async function POST(request: Request) {
 
     if (bearerUser) {
       user = bearerUser;
+      const bearerSupabase = getSupabaseBearerServerClient(bearer.token);
+
+      if (!bearerSupabase) {
+        return NextResponse.json(
+          {
+            ok: false,
+            error: "service_unavailable",
+            errorMessage: "Garden access is temporarily unavailable"
+          },
+          { status: 503 }
+        );
+      }
+
+      entitlementClient = bearerSupabase;
     } else {
       return NextResponse.json(
         {
@@ -108,7 +123,7 @@ export async function POST(request: Request) {
   }
 
   const entitlement = await resolveBasicGardenEntitlement({
-    client: supabase as never,
+    client: entitlementClient as never,
     authUserId: user.id,
     authUserEmail: user.email ?? null
   });

@@ -31,8 +31,13 @@ export const NextResponse = {
 
 const supabaseServerSource = `
 let currentClient = null;
+let currentBearerClient = { scope: "bearer" };
+let bearerTokens = [];
 export function __setServerClient(client) { currentClient = client; }
+export function __setBearerServerClient(client) { currentBearerClient = client; bearerTokens = []; }
+export function __getBearerTokens() { return bearerTokens; }
 export async function getSupabaseServerClient() { return currentClient; }
+export function getSupabaseBearerServerClient(token) { bearerTokens.push(token); return currentBearerClient; }
 `;
 
 const supabaseAdminSource = `
@@ -73,7 +78,7 @@ const adminModule = await import(pathToFileURL(join(tempDir, "supabase-admin.mjs
 const syncModule = await import(pathToFileURL(join(tempDir, "basic-garden-sync.mjs")).href);
 const entitlementModule = await import(pathToFileURL(join(tempDir, "basic-garden-entitlement.mjs")).href);
 const { POST } = routeModule;
-const { __setServerClient } = serverModule;
+const { __getBearerTokens, __setBearerServerClient, __setServerClient } = serverModule;
 const { __getAdminClientCallCount, __setAdminClient } = adminModule;
 const { __setSyncImpl } = syncModule;
 const { __setEntitlementImpl } = entitlementModule;
@@ -82,6 +87,7 @@ process.on("exit", () => rmSync(tempDir, { recursive: true, force: true }));
 
 beforeEach(() => {
   delete process.env.BASIC_GARDEN_WRITES_PAUSED;
+  __setBearerServerClient({ scope: "bearer" });
   __setEntitlementImpl(async () => ({ status: "entitled" }));
 });
 
@@ -90,8 +96,31 @@ afterEach(() => {
   else process.env.BASIC_GARDEN_WRITES_PAUSED = originalBasicGardenWritesPaused;
 });
 
-function createSupabaseAuthMock(user: { id: string } | null) {
-  return { auth: { async getUser() { return { data: { user }, error: null }; } } };
+function createSupabaseAuthMock(options: {
+  cookieUser?: { id: string; email?: string } | null;
+  bearerUser?: { id: string; email?: string } | null;
+  cookieErrorMessage?: string | null;
+  bearerErrorMessage?: string | null;
+}) {
+  const calls: Array<string | undefined> = [];
+  return {
+    auth: {
+      async getUser(token?: string) {
+        calls.push(token);
+        if (token) {
+          return {
+            data: { user: options.bearerUser ?? null },
+            error: options.bearerErrorMessage ? { message: options.bearerErrorMessage } : null
+          };
+        }
+        return {
+          data: { user: options.cookieUser ?? null },
+          error: options.cookieErrorMessage ? { message: options.cookieErrorMessage } : null
+        };
+      }
+    },
+    calls
+  };
 }
 
 async function readJson(response: Response) {
@@ -101,7 +130,7 @@ async function readJson(response: Response) {
 test("normalized true maintenance values reject authenticated visits before admin or RPC use", async () => {
   let syncCallCount = 0;
   let rpcCallCount = 0;
-  __setServerClient(createSupabaseAuthMock({ id: "auth-cookie" }));
+  __setServerClient(createSupabaseAuthMock({ cookieUser: { id: "auth-cookie" } }));
   __setAdminClient({ rpc: async () => { rpcCallCount += 1; throw new Error("admin RPC must not run while paused"); } });
   __setSyncImpl(async () => { syncCallCount += 1; throw new Error("visit sync must not run while paused"); });
 
@@ -126,7 +155,7 @@ test("normalized true maintenance values reject authenticated visits before admi
 test("unset and non-true maintenance values preserve successful visit behavior", async () => {
   let syncCallCount = 0;
   let progressRpcCallCount = 0;
-  __setServerClient(createSupabaseAuthMock({ id: "auth-cookie" }));
+  __setServerClient(createSupabaseAuthMock({ cookieUser: { id: "auth-cookie" } }));
   __setAdminClient({ rpc: async () => { progressRpcCallCount += 1; return { data: { today_distinct_gate_count: 0 }, error: null }; } });
   __setSyncImpl(async () => {
     syncCallCount += 1;
@@ -147,7 +176,7 @@ test("unset and non-true maintenance values preserve successful visit behavior",
 test("unauthenticated visit remains rejected before the maintenance guard", async () => {
   process.env.BASIC_GARDEN_WRITES_PAUSED = "true";
   let syncCallCount = 0;
-  __setServerClient(createSupabaseAuthMock(null));
+  __setServerClient(createSupabaseAuthMock({ cookieUser: null }));
   __setAdminClient({ rpc: async () => { throw new Error("admin RPC must not run"); } });
   __setSyncImpl(async () => { syncCallCount += 1; throw new Error("visit sync must not run"); });
 
@@ -163,7 +192,7 @@ test("membership-denied visits return a generic 403 before admin or Garden RPC u
   const deniedCases = ["no membership", "free plan", "non-BASIC plan", "inactive membership", "expired membership"];
   let syncCallCount = 0;
   let progressRpcCallCount = 0;
-  __setServerClient(createSupabaseAuthMock({ id: "authenticated-user" }));
+  __setServerClient(createSupabaseAuthMock({ cookieUser: { id: "authenticated-user" } }));
   __setAdminClient({ rpc: async () => { progressRpcCallCount += 1; throw new Error("admin RPC must not run"); } });
   __setSyncImpl(async () => { syncCallCount += 1; throw new Error("visit sync must not run"); });
 
@@ -183,9 +212,43 @@ test("membership-denied visits return a generic 403 before admin or Garden RPC u
   assert.equal(__getAdminClientCallCount(), 0);
 });
 
+test("missing cookie session plus a valid Bearer token uses the bearer-scoped client for membership authorization", async () => {
+  const supabase = createSupabaseAuthMock({
+    cookieUser: null,
+    cookieErrorMessage: "Auth session missing!",
+    bearerUser: { id: "auth-bearer", email: "bearer@example.com" }
+  });
+  const bearerScopedClient = { scope: "bearer-membership-visible" };
+  let syncCallCount = 0;
+
+  __setServerClient(supabase);
+  __setBearerServerClient(bearerScopedClient);
+  __setEntitlementImpl(async (params: { client: unknown }) => {
+    assert.equal(params.client, bearerScopedClient);
+    return { status: "entitled" };
+  });
+  __setAdminClient({ rpc: async () => ({ data: { today_distinct_gate_count: 0 }, error: null }) });
+  __setSyncImpl(async () => {
+    syncCallCount += 1;
+    return { ok: true, matchedBy: "auth_user_id", writeAction: "visit", activityDate: "2026-07-27", stats: { challengeDay: 1, checkInCount: 1, cumulativeVisitDays: 1, cumulativeRecoveryRecords: 1 }, recordedVisit: true, recordedCompletion: false, rewardGranted: false, distinctGateCount: 0, errorMessage: null };
+  });
+
+  const response = await POST(
+    new Request("https://www.meisoulife.com/api/basic/garden-visit", {
+      method: "POST",
+      headers: { Authorization: "Bearer valid-access-token" }
+    })
+  );
+
+  assert.equal(response.status, 200);
+  assert.deepEqual(supabase.calls, [undefined, "valid-access-token"]);
+  assert.deepEqual(__getBearerTokens(), ["valid-access-token"]);
+  assert.equal(syncCallCount, 1);
+});
+
 test("active and trialing BASIC entitlement permits visits", async () => {
   let syncCallCount = 0;
-  __setServerClient(createSupabaseAuthMock({ id: "authenticated-user" }));
+  __setServerClient(createSupabaseAuthMock({ cookieUser: { id: "authenticated-user" } }));
   __setAdminClient({ rpc: async () => ({ data: { today_distinct_gate_count: 0 }, error: null }) });
   __setSyncImpl(async () => {
     syncCallCount += 1;
@@ -204,7 +267,7 @@ test("active and trialing BASIC entitlement permits visits", async () => {
 test("unavailable membership lookups return 503 before admin or Garden RPC use", async () => {
   let syncCallCount = 0;
   let progressRpcCallCount = 0;
-  __setServerClient(createSupabaseAuthMock({ id: "authenticated-user" }));
+  __setServerClient(createSupabaseAuthMock({ cookieUser: { id: "authenticated-user" } }));
   __setAdminClient({ rpc: async () => { progressRpcCallCount += 1; throw new Error("admin RPC must not run"); } });
   __setSyncImpl(async () => { syncCallCount += 1; throw new Error("visit sync must not run"); });
   __setEntitlementImpl(async () => ({ status: "unavailable" }));
