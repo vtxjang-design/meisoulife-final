@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 import { hasProtectedMembershipAccess } from "./membership-access.ts";
-import { resolveMembershipEntitlement } from "./membership-resolver.ts";
+import {
+  resolveMembershipEntitlement,
+  resolveMembershipEntitlementReadOnly
+} from "./membership-resolver.ts";
 
 type TableRows = Record<string, Record<string, unknown>[]>;
 
@@ -286,4 +290,39 @@ test("missing Stripe reconciliation service returns unresolved error instead of 
   assert.equal(result.hasActiveSubscription, false);
   assert.equal(result.resolved, false);
   assert.equal(result.errorMessage, "Stripe reconciliation is unavailable");
+});
+
+test("read-only canonical resolution authorizes Stripe BASIC-or-higher without repair", async () => {
+  process.env.STRIPE_PRICE_ID_BASIC = "price_basic";
+  process.env.STRIPE_PRICE_ID_GROWTH = "price_growth";
+  process.env.STRIPE_PRICE_ID_INNER_CIRCLE = "price_inner";
+
+  for (const plan of ["basic", "growth", "inner_circle"] as const) {
+    const supabase = createSupabase({
+      users: [{ id: "profile_1", auth_user_id: "auth_1", email: "member@example.com", current_plan: "free" }],
+      memberships: [],
+      subscriptions: []
+    });
+    const stripe = createStripe(
+      [{ id: "cus_1", email: "member@example.com" }],
+      { cus_1: [createSubscription({ id: "sub_1", customerId: "cus_1", plan, status: "active" })] }
+    );
+
+    const result = await resolveMembershipEntitlementReadOnly({
+      supabase,
+      userId: "auth_1",
+      email: "member@example.com",
+      stripe: stripe as never
+    });
+
+    assert.equal(result.plan, plan);
+    assert.equal(result.hasActiveSubscription, true);
+    assert.equal(result.repaired, false);
+  }
+});
+
+test("read-only canonical resolution structurally excludes admin repair and writes", () => {
+  const source = readFileSync(new URL("./membership-resolver.ts", import.meta.url), "utf8");
+  assert.match(source, /resolveMembershipEntitlementReadOnly[\s\S]*resolveMembershipEntitlementInternal\(params, "read_only"\)/);
+  assert.match(source, /if \(mode === "reconciling"\) \{\s+repaired = await repairMembershipRecords/s);
 });

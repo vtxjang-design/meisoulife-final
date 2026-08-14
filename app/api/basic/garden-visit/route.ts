@@ -109,7 +109,8 @@ export async function POST(request: Request) {
 
   const entitlement = await resolveBasicGardenEntitlement({
     client: supabase as never,
-    authUserId: user.id
+    authUserId: user.id,
+    authUserEmail: user.email ?? null
   });
 
   if (entitlement.status === "unavailable") {

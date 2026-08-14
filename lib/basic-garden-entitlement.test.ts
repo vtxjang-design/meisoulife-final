@@ -6,26 +6,34 @@ import { pathToFileURL } from "node:url";
 import test from "node:test";
 import ts from "typescript";
 
-type MembershipRow = {
-  user_id: string;
-  plan: string | null;
-  status: string | null;
-  created_at: string;
+type CanonicalResolution = {
+  plan: string;
+  membershipStatus: string | null;
+  resolved: boolean;
+  errorMessage: string | null;
+  source: string;
 };
 
 const tempDir = mkdtempSync(join(tmpdir(), "basic-garden-entitlement-test-"));
 const entitlementSource = readFileSync(new URL("./basic-garden-entitlement.ts", import.meta.url), "utf8")
   .replace('from "./membership-access"', 'from "./membership-access.mjs"')
-  .replace('from "./membership"', 'from "./membership.mjs"');
+  .replace('from "./membership"', 'from "./membership.mjs"')
+  .replace('from "./membership-resolver"', 'from "./membership-resolver.mjs"');
 const membershipSource = readFileSync(new URL("./membership.ts", import.meta.url), "utf8");
 const membershipAccessSource = readFileSync(new URL("./membership-access.ts", import.meta.url), "utf8")
   .replace('from "@/lib/basic-rhythm"', 'from "./basic-rhythm.mjs"')
   .replace('from "@/lib/membership"', 'from "./membership.mjs"');
+const resolverSource = `
+let currentImpl = async () => ({ plan: "free", membershipStatus: null, resolved: true, errorMessage: null, source: "local" });
+export function __setResolverImpl(fn) { currentImpl = fn; }
+export async function resolveMembershipEntitlementReadOnly(params) { return currentImpl(params); }
+`;
 
 for (const [name, source] of [
   ["basic-garden-entitlement.mjs", entitlementSource],
   ["membership.mjs", membershipSource],
   ["membership-access.mjs", membershipAccessSource],
+  ["membership-resolver.mjs", resolverSource],
   ["basic-rhythm.mjs", "export function getBasicPracticeByRouteType() { return null; }"]
 ] as const) {
   writeFileSync(
@@ -36,95 +44,63 @@ for (const [name, source] of [
   );
 }
 
-const { resolveBasicGardenEntitlement } = await import(
-  pathToFileURL(join(tempDir, "basic-garden-entitlement.mjs")).href
-);
+const entitlementModule = await import(pathToFileURL(join(tempDir, "basic-garden-entitlement.mjs")).href);
+const resolverModule = await import(pathToFileURL(join(tempDir, "membership-resolver.mjs")).href);
+const { resolveBasicGardenEntitlement } = entitlementModule;
+const { __setResolverImpl } = resolverModule;
 
 process.on("exit", () => rmSync(tempDir, { recursive: true, force: true }));
 
-function createMembershipClient(
-  rows: MembershipRow[],
-  options: { error?: { message: string } | null; throwError?: boolean } = {}
-) {
-  return {
-    from(table: string) {
-      assert.equal(table, "memberships");
-      return {
-        select() {
-          return this;
-        },
-        eq(column: string, userId: string) {
-          assert.equal(column, "user_id");
-          const matchingUser = rows
-            .filter((row) => row.user_id === userId)
-            .sort((left, right) => right.created_at.localeCompare(left.created_at));
-          return {
-            async order(orderColumn: string, orderOptions: { ascending: boolean }) {
-              assert.equal(orderColumn, "created_at");
-              assert.deepEqual(orderOptions, { ascending: false });
-              if (options.throwError) throw new Error("database unavailable");
-              return { data: matchingUser, error: options.error ?? null };
-            }
-          };
-        }
-      };
-    }
-  };
-}
-
-async function check(rows: MembershipRow[], options?: { error?: { message: string } | null; throwError?: boolean }) {
+async function check(resolution: CanonicalResolution) {
+  __setResolverImpl(async () => resolution);
   return resolveBasicGardenEntitlement({
-    client: createMembershipClient(rows, options),
-    authUserId: "authenticated-user"
+    client: { from: () => { throw new Error("the client is owned by the trusted resolver"); } },
+    authUserId: "authenticated-user",
+    authUserEmail: "member@example.com"
   });
 }
 
-test("BASIC Garden entitlement accepts status casing and BASIC-or-higher plans", async () => {
-  for (const [plan, status] of [
-    ["basic", "active"],
-    ["basic", "ACTIVE"],
-    ["basic", "Active"],
-    ["basic_annual", "trialing"],
-    ["growth", "TRIALING"],
-    ["inner circle", "Trialing"]
-  ] as const) {
+test("BASIC Garden entitlement accepts canonical Stripe-backed BASIC-or-higher access", async () => {
+  for (const plan of ["basic", "growth", "inner_circle"]) {
     assert.deepEqual(
-      await check([{ user_id: "authenticated-user", plan, status, created_at: "2026-08-14T00:00:00Z" }]),
-      { status: "entitled" }
+      await check({ plan, membershipStatus: "ACTIVE", resolved: true, errorMessage: null, source: "stripe" }),
+      { status: "entitled" },
+      plan
     );
   }
 });
 
-test("BASIC Garden entitlement rejects missing, free, inactive, canceled, and expired memberships", async () => {
-  assert.deepEqual(await check([]), { status: "not_entitled" });
-
-  for (const [plan, status] of [
-    ["free", "active"],
-    ["unknown", "active"],
-    ["basic", "expired"],
-    ["basic", "canceled"],
-    ["basic", "inactive"]
-  ] as const) {
-    assert.deepEqual(
-      await check([{ user_id: "authenticated-user", plan, status, created_at: "2026-08-14T00:00:00Z" }]),
-      { status: "not_entitled" }
-    );
-  }
-});
-
-test("BASIC Garden entitlement preserves latest-valid membership selection without maybeSingle", async () => {
+test("BASIC Garden entitlement preserves memberships-backed active BASIC access", async () => {
   assert.deepEqual(
-    await check([
-      { user_id: "other-user", plan: "basic", status: "active", created_at: "2026-08-15T00:00:00Z" },
-      { user_id: "authenticated-user", plan: "free", status: "canceled", created_at: "2026-08-15T00:00:00Z" },
-      { user_id: "authenticated-user", plan: "basic", status: "ACTIVE", created_at: "2026-08-14T00:00:00Z" },
-      { user_id: "authenticated-user", plan: "growth", status: "trialing", created_at: "2026-08-01T00:00:00Z" }
-    ]),
+    await check({ plan: "basic", membershipStatus: "trialing", resolved: true, errorMessage: null, source: "local" }),
     { status: "entitled" }
   );
 });
 
-test("BASIC Garden entitlement reports membership query failures as unavailable", async () => {
-  assert.deepEqual(await check([], { error: { message: "permission denied" } }), { status: "unavailable" });
-  assert.deepEqual(await check([], { throwError: true }), { status: "unavailable" });
+test("BASIC Garden entitlement rejects canonical free, inactive, canceled, and missing access", async () => {
+  for (const resolution of [
+    { plan: "free", membershipStatus: "active", resolved: true, errorMessage: null, source: "local" },
+    { plan: "basic", membershipStatus: "inactive", resolved: true, errorMessage: null, source: "stripe" },
+    { plan: "growth", membershipStatus: "canceled", resolved: true, errorMessage: null, source: "stripe" },
+    { plan: "free", membershipStatus: null, resolved: true, errorMessage: null, source: "local" }
+  ]) {
+    assert.deepEqual(await check(resolution), { status: "not_entitled" });
+  }
+});
+
+test("BASIC Garden entitlement maps resolver and operational failures to unavailable", async () => {
+  assert.deepEqual(
+    await check({ plan: "free", membershipStatus: null, resolved: false, errorMessage: "database unavailable", source: "unavailable" }),
+    { status: "unavailable" }
+  );
+
+  __setResolverImpl(async () => { throw new Error("Stripe unavailable"); });
+  assert.deepEqual(
+    await resolveBasicGardenEntitlement({
+      client: { from: () => null },
+      authUserId: "authenticated-user",
+      authUserEmail: "member@example.com"
+    }),
+    { status: "unavailable" }
+  );
 });

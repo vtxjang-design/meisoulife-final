@@ -122,15 +122,22 @@ async function queryLatestMembership(
 export async function fetchLatestMembershipPlan(
   supabase: MembershipClient,
   userId: string,
-  logPrefix = "[membership]"
+  logPrefix = "[membership]",
+  options: { suppressSensitiveLogs?: boolean } = {}
 ): Promise<MembershipFetchResult> {
-  console.log(`${logPrefix} current user id`, userId);
+  const suppressSensitiveLogs = options.suppressSensitiveLogs === true;
+
+  if (!suppressSensitiveLogs) {
+    console.log(`${logPrefix} current user id`, userId);
+  }
 
   for (let attempt = 1; attempt <= 2; attempt += 1) {
     const { data: activeMembership, error: activeError } = await queryLatestMembership(supabase, userId, true);
 
     if (activeError) {
-      console.error(`${logPrefix} active membership fetch failed`, { attempt, error: activeError });
+      if (!suppressSensitiveLogs) {
+        console.error(`${logPrefix} active membership fetch failed`, { attempt, error: activeError });
+      }
 
       if (attempt === 2) {
         return {
@@ -147,12 +154,14 @@ export async function fetchLatestMembershipPlan(
 
     if (activeMembership) {
       const selectedPlan = normalizeMembershipPlan(activeMembership.plan);
-      console.log(`${logPrefix} membership query result`, {
-        rawMembership: activeMembership,
-        rawPlan: activeMembership.plan ?? null,
-        normalizedPlan: selectedPlan,
-        membershipStatus: activeMembership.status ?? null
-      });
+      if (!suppressSensitiveLogs) {
+        console.log(`${logPrefix} membership query result`, {
+          rawMembership: activeMembership,
+          rawPlan: activeMembership.plan ?? null,
+          normalizedPlan: selectedPlan,
+          membershipStatus: activeMembership.status ?? null
+        });
+      }
 
       return {
         plan: selectedPlan,
@@ -166,7 +175,9 @@ export async function fetchLatestMembershipPlan(
     const { data: fallbackMembership, error: fallbackError } = await queryLatestMembership(supabase, userId, false);
 
     if (fallbackError) {
-      console.error(`${logPrefix} fallback membership fetch failed`, { attempt, error: fallbackError });
+      if (!suppressSensitiveLogs) {
+        console.error(`${logPrefix} fallback membership fetch failed`, { attempt, error: fallbackError });
+      }
 
       if (attempt === 2) {
         return {
@@ -182,12 +193,14 @@ export async function fetchLatestMembershipPlan(
     }
 
     const selectedPlan = normalizeMembershipPlan(fallbackMembership?.plan);
-    console.log(`${logPrefix} membership query result`, {
-      rawMembership: fallbackMembership,
-      rawPlan: fallbackMembership?.plan ?? null,
-      normalizedPlan: selectedPlan,
-      membershipStatus: fallbackMembership?.status ?? null
-    });
+    if (!suppressSensitiveLogs) {
+      console.log(`${logPrefix} membership query result`, {
+        rawMembership: fallbackMembership,
+        rawPlan: fallbackMembership?.plan ?? null,
+        normalizedPlan: selectedPlan,
+        membershipStatus: fallbackMembership?.status ?? null
+      });
+    }
 
     return {
       plan: selectedPlan,
