@@ -170,11 +170,6 @@ async function loadLocalMembershipSnapshot(
 
   return {
     membershipState,
-    operationalFailure:
-      Boolean(profileError) ||
-      Boolean(membershipError) ||
-      Boolean(subscriptionError) ||
-      !membershipState.resolved,
     snapshot: {
       profile: profile ?? null,
       membership: membership ?? null,
@@ -207,16 +202,14 @@ async function loadEmailMatchedMembership(params: {
     }
     return {
       membership: null,
-      ambiguous: false,
-      operationalFailure: true
+      ambiguous: false
     };
   }
 
   if (!data || data.length === 0) {
     return {
       membership: null,
-      ambiguous: false,
-      operationalFailure: false
+      ambiguous: false
     };
   }
 
@@ -229,15 +222,13 @@ async function loadEmailMatchedMembership(params: {
     }
     return {
       membership: null,
-      ambiguous: true,
-      operationalFailure: false
+      ambiguous: true
     };
   }
 
   return {
     membership: data[0] ?? null,
-    ambiguous: false,
-    operationalFailure: false
+    ambiguous: false
   };
 }
 
@@ -465,7 +456,7 @@ async function resolveMembershipEntitlementInternal(
     return emptyResolution("unavailable", "Supabase client is unavailable");
   }
 
-  let { membershipState, operationalFailure, snapshot } = await loadLocalMembershipSnapshot(
+  let { membershipState, snapshot } = await loadLocalMembershipSnapshot(
     supabase,
     userId,
     logPrefix,
@@ -473,8 +464,7 @@ async function resolveMembershipEntitlementInternal(
   );
   let matchedBy: MembershipMatchSource = snapshot.membership ? "user_id" : "none";
   let stripeCustomerSource: string | null = null;
-  let resolverErrorMessage: string | null =
-    membershipState.errorMessage ?? (operationalFailure ? "Membership data is unavailable" : null);
+  let resolverErrorMessage: string | null = membershipState.errorMessage ?? null;
   let emailMembershipAmbiguous = false;
 
   if (!snapshot.profile && normalizedEmail) {
@@ -485,7 +475,6 @@ async function resolveMembershipEntitlementInternal(
       .maybeSingle();
 
     if (emailProfileError) {
-      operationalFailure = true;
       if (!suppressSensitiveLogs) {
         console.error(`${logPrefix} profile fallback by email failed`, {
           userId,
@@ -512,7 +501,6 @@ async function resolveMembershipEntitlementInternal(
         .maybeSingle();
 
       if (emailSubscriptionError) {
-        operationalFailure = true;
         if (!suppressSensitiveLogs) {
           console.error(`${logPrefix} subscription fallback by email profile failed`, {
             userId,
@@ -554,10 +542,6 @@ async function resolveMembershipEntitlementInternal(
     } else if (emailMembershipResult.ambiguous) {
       emailMembershipAmbiguous = true;
     }
-    operationalFailure ||= emailMembershipResult.operationalFailure;
-  }
-  if (operationalFailure) {
-    resolverErrorMessage ??= "Membership data is unavailable";
   }
   const local = resolveLocalMembership(snapshot, membershipState);
   const stripe = params.stripe ?? getStripeClient();
@@ -633,6 +617,12 @@ async function resolveMembershipEntitlementInternal(
       finalStripeCustomerId = stripeBilling.customerId ?? local.stripeCustomerId;
       finalStripeSubscriptionId = stripeBilling.subscriptionId ?? local.stripeSubscriptionId;
       finalCanManageMembership = Boolean(finalStripeCustomerId);
+
+      // A verified active paid Stripe subscription is authoritative for this
+      // resolution. Supporting local read failures must not hide it.
+      if (isActiveMembershipStatus(finalStatus) && finalPlan !== "free") {
+        resolverErrorMessage = null;
+      }
 
       if (mode === "reconciling") {
         repaired = await repairMembershipRecords({

@@ -16,25 +16,16 @@ type CanonicalResolution = {
 
 const tempDir = mkdtempSync(join(tmpdir(), "basic-garden-entitlement-test-"));
 const entitlementSource = readFileSync(new URL("./basic-garden-entitlement.ts", import.meta.url), "utf8")
-  .replace('from "./membership-access"', 'from "./membership-access.mjs"')
-  .replace('from "./membership"', 'from "./membership.mjs"')
-  .replace('from "./membership-resolver"', 'from "./membership-resolver.mjs"');
-const membershipSource = readFileSync(new URL("./membership.ts", import.meta.url), "utf8");
-const membershipAccessSource = readFileSync(new URL("./membership-access.ts", import.meta.url), "utf8")
-  .replace('from "@/lib/basic-rhythm"', 'from "./basic-rhythm.mjs"')
-  .replace('from "@/lib/membership"', 'from "./membership.mjs"');
-const resolverSource = `
-let currentImpl = async () => ({ plan: "free", membershipStatus: null, resolved: true, errorMessage: null, source: "local" });
-export function __setResolverImpl(fn) { currentImpl = fn; }
-export async function resolveMembershipEntitlementReadOnly(params) { return currentImpl(params); }
+  .replace('from "./basic-garden-membership-authorization"', 'from "./basic-garden-membership-authorization.mjs"');
+const authorizationSource = `
+let currentImpl = async () => ({ status: "not_entitled" });
+export function __setAuthorizationImpl(fn) { currentImpl = fn; }
+export async function resolveBasicGardenMembershipAuthorization(params) { return currentImpl(params); }
 `;
 
 for (const [name, source] of [
   ["basic-garden-entitlement.mjs", entitlementSource],
-  ["membership.mjs", membershipSource],
-  ["membership-access.mjs", membershipAccessSource],
-  ["membership-resolver.mjs", resolverSource],
-  ["basic-rhythm.mjs", "export function getBasicPracticeByRouteType() { return null; }"]
+  ["basic-garden-membership-authorization.mjs", authorizationSource]
 ] as const) {
   writeFileSync(
     join(tempDir, name),
@@ -45,14 +36,20 @@ for (const [name, source] of [
 }
 
 const entitlementModule = await import(pathToFileURL(join(tempDir, "basic-garden-entitlement.mjs")).href);
-const resolverModule = await import(pathToFileURL(join(tempDir, "membership-resolver.mjs")).href);
+const authorizationModule = await import(pathToFileURL(join(tempDir, "basic-garden-membership-authorization.mjs")).href);
 const { resolveBasicGardenEntitlement } = entitlementModule;
-const { __setResolverImpl } = resolverModule;
+const { __setAuthorizationImpl } = authorizationModule;
 
 process.on("exit", () => rmSync(tempDir, { recursive: true, force: true }));
 
 async function check(resolution: CanonicalResolution) {
-  __setResolverImpl(async () => resolution);
+  __setAuthorizationImpl(async () => {
+    if (!resolution.resolved || resolution.errorMessage) return { status: "unavailable" };
+    if (resolution.plan === "free" || !["active", "trialing", "ACTIVE", "TRIALING"].includes(resolution.membershipStatus ?? "")) {
+      return { status: "not_entitled" };
+    }
+    return { status: "entitled" };
+  });
   return resolveBasicGardenEntitlement({
     client: { from: () => { throw new Error("the client is owned by the trusted resolver"); } },
     authUserId: "authenticated-user",
@@ -94,7 +91,7 @@ test("BASIC Garden entitlement maps resolver and operational failures to unavail
     { status: "unavailable" }
   );
 
-  __setResolverImpl(async () => { throw new Error("Stripe unavailable"); });
+  __setAuthorizationImpl(async () => { throw new Error("Stripe unavailable"); });
   assert.deepEqual(
     await resolveBasicGardenEntitlement({
       client: { from: () => null },
