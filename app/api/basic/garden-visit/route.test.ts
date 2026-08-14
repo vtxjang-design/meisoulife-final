@@ -50,9 +50,9 @@ export async function syncBasicGardenVisit(params) { return currentImpl(params);
 `;
 
 const basicGardenEntitlementSource = `
-let currentImpl = async () => true;
+let currentImpl = async () => ({ status: "entitled" });
 export function __setEntitlementImpl(fn) { currentImpl = fn; }
-export async function hasBasicGardenEntitlement(params) { return currentImpl(params); }
+export async function resolveBasicGardenEntitlement(params) { return currentImpl(params); }
 `;
 
 for (const [name, source] of [
@@ -82,7 +82,7 @@ process.on("exit", () => rmSync(tempDir, { recursive: true, force: true }));
 
 beforeEach(() => {
   delete process.env.BASIC_GARDEN_WRITES_PAUSED;
-  __setEntitlementImpl(async () => true);
+  __setEntitlementImpl(async () => ({ status: "entitled" }));
 });
 
 afterEach(() => {
@@ -168,7 +168,7 @@ test("membership-denied visits return a generic 403 before admin or Garden RPC u
   __setSyncImpl(async () => { syncCallCount += 1; throw new Error("visit sync must not run"); });
 
   for (const deniedCase of deniedCases) {
-    __setEntitlementImpl(async () => false);
+    __setEntitlementImpl(async () => ({ status: "not_entitled" }));
     const response = await POST(new Request("https://www.meisoulife.com/api/basic/garden-visit", { method: "POST" }));
     const payload = await readJson(response);
 
@@ -193,10 +193,29 @@ test("active and trialing BASIC entitlement permits visits", async () => {
   });
 
   for (const status of ["active", "trialing"]) {
-    __setEntitlementImpl(async () => true);
+    __setEntitlementImpl(async () => ({ status: "entitled" }));
     const response = await POST(new Request("https://www.meisoulife.com/api/basic/garden-visit", { method: "POST" }));
     assert.equal(response.status, 200, status);
   }
 
   assert.equal(syncCallCount, 2);
+});
+
+test("unavailable membership lookups return 503 before admin or Garden RPC use", async () => {
+  let syncCallCount = 0;
+  let progressRpcCallCount = 0;
+  __setServerClient(createSupabaseAuthMock({ id: "authenticated-user" }));
+  __setAdminClient({ rpc: async () => { progressRpcCallCount += 1; throw new Error("admin RPC must not run"); } });
+  __setSyncImpl(async () => { syncCallCount += 1; throw new Error("visit sync must not run"); });
+  __setEntitlementImpl(async () => ({ status: "unavailable" }));
+
+  const response = await POST(new Request("https://www.meisoulife.com/api/basic/garden-visit", { method: "POST" }));
+  const payload = await readJson(response);
+
+  assert.equal(response.status, 503);
+  assert.equal(payload.ok, false);
+  assert.equal(payload.error, "service_unavailable");
+  assert.equal(syncCallCount, 0);
+  assert.equal(progressRpcCallCount, 0);
+  assert.equal(__getAdminClientCallCount(), 0);
 });

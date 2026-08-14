@@ -101,9 +101,9 @@ export function isEligibleBasicGardenGateKey(value) {
 `;
 
 const basicGardenEntitlementSource = `
-let currentImpl = async () => true;
+let currentImpl = async () => ({ status: "entitled" });
 export function __setEntitlementImpl(fn) { currentImpl = fn; }
-export async function hasBasicGardenEntitlement(params) { return currentImpl(params); }
+export async function resolveBasicGardenEntitlement(params) { return currentImpl(params); }
 `;
 
 for (const [name, source] of [
@@ -145,7 +145,7 @@ process.on("exit", () => {
 
 beforeEach(() => {
   delete process.env.BASIC_GARDEN_WRITES_PAUSED;
-  __setEntitlementImpl(async () => true);
+  __setEntitlementImpl(async () => ({ status: "entitled" }));
 });
 
 afterEach(() => {
@@ -308,7 +308,7 @@ test("membership-denied completions return a generic 403 before admin or Garden 
   __setSyncImpl(async () => { syncCallCount += 1; throw new Error("completion sync must not run"); });
 
   for (const deniedCase of deniedCases) {
-    __setEntitlementImpl(async () => false);
+    __setEntitlementImpl(async () => ({ status: "not_entitled" }));
     const response = await POST(
       new Request("https://www.meisoulife.com/api/basic/garden-completion", {
         method: "POST",
@@ -350,7 +350,7 @@ test("active and trialing BASIC entitlement permits completions", async () => {
   });
 
   for (const status of ["active", "trialing"]) {
-    __setEntitlementImpl(async () => true);
+    __setEntitlementImpl(async () => ({ status: "entitled" }));
     const response = await POST(
       new Request("https://www.meisoulife.com/api/basic/garden-completion", {
         method: "POST",
@@ -362,6 +362,31 @@ test("active and trialing BASIC entitlement permits completions", async () => {
   }
 
   assert.equal(syncCallCount, 2);
+});
+
+test("unavailable membership lookups return 503 before admin or Garden RPC use", async () => {
+  const supabase = createSupabaseAuthMock({ cookieUser: { id: "authenticated-user" } });
+  let syncCallCount = 0;
+
+  __setServerClient(supabase.client);
+  __setAdminClient({ admin: true });
+  __setSyncImpl(async () => { syncCallCount += 1; throw new Error("completion sync must not run"); });
+  __setEntitlementImpl(async () => ({ status: "unavailable" }));
+
+  const response = await POST(
+    new Request("https://www.meisoulife.com/api/basic/garden-completion", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ gateKey: "affirmation" })
+    })
+  );
+  const payload = await readJson(response);
+
+  assert.equal(response.status, 503);
+  assert.equal(payload.ok, false);
+  assert.equal(payload.error, "service_unavailable");
+  assert.equal(syncCallCount, 0);
+  assert.equal(__getAdminClientCallCount(), 0);
 });
 
 test("cookie-authenticated request continues to work", async () => {
@@ -812,8 +837,8 @@ test("route source never logs Authorization headers, access tokens, emails, or f
   assert.doesNotMatch(consoleStatements, /userId:/);
 });
 
-test("route returns a request ID and safe category for each failure response", () => {
-  assert.match(routeSource, /error: params\.category/);
+test("route returns a request ID and safe generic category for each failure response", () => {
+  assert.match(routeSource, /error: params\.clientError \?\? params\.category/);
   assert.match(routeSource, /requestId: params\.requestId/);
   assert.match(routeSource, /result\.failureCategory === "response_contract" \? "response_contract" : "rpc"/);
 });

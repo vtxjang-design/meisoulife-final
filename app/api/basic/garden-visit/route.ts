@@ -5,7 +5,7 @@ import {
   getBasicGardenMaintenanceHeaders,
   isBasicGardenWritesPaused
 } from "@/lib/basic-garden-maintenance";
-import { hasBasicGardenEntitlement } from "@/lib/basic-garden-entitlement";
+import { resolveBasicGardenEntitlement } from "@/lib/basic-garden-entitlement";
 import { syncBasicGardenVisit } from "@/lib/basic-garden-sync";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
@@ -107,12 +107,27 @@ export async function POST(request: Request) {
     );
   }
 
-  const hasEntitlement = await hasBasicGardenEntitlement({
+  const entitlement = await resolveBasicGardenEntitlement({
     client: supabase as never,
     authUserId: user.id
   });
 
-  if (!hasEntitlement) {
+  if (entitlement.status === "unavailable") {
+    console.warn("[api-basic-garden-visit] membership entitlement unavailable", {
+      category: "membership_lookup_unavailable"
+    });
+
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "service_unavailable",
+        errorMessage: "Garden access is temporarily unavailable"
+      },
+      { status: 503 }
+    );
+  }
+
+  if (entitlement.status === "not_entitled") {
     return NextResponse.json(
       {
         ok: false,

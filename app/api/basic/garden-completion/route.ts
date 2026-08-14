@@ -6,13 +6,14 @@ import {
   getBasicGardenMaintenanceHeaders,
   isBasicGardenWritesPaused
 } from "@/lib/basic-garden-maintenance";
-import { hasBasicGardenEntitlement } from "@/lib/basic-garden-entitlement";
+import { resolveBasicGardenEntitlement } from "@/lib/basic-garden-entitlement";
 import { syncBasicGardenCompletion } from "@/lib/basic-garden-sync";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 type GardenCompletionFailureCategory =
   | "service_unavailable"
+  | "membership_unavailable"
   | "authentication"
   | "authorization"
   | "validation"
@@ -40,13 +41,14 @@ function gardenCompletionError(params: {
   category: GardenCompletionFailureCategory;
   status: number;
   message: string;
+  clientError?: "service_unavailable";
 }) {
   logGardenCompletionFailure(params);
 
   return NextResponse.json(
     {
       ok: false,
-      error: params.category,
+      error: params.clientError ?? params.category,
       errorMessage: params.message,
       requestId: params.requestId
     },
@@ -144,12 +146,22 @@ export async function POST(request: Request) {
     });
   }
 
-  const hasEntitlement = await hasBasicGardenEntitlement({
+  const entitlement = await resolveBasicGardenEntitlement({
     client: supabase as never,
     authUserId: user.id
   });
 
-  if (!hasEntitlement) {
+  if (entitlement.status === "unavailable") {
+    return gardenCompletionError({
+      requestId,
+      category: "membership_unavailable",
+      status: 503,
+      message: "Garden access is temporarily unavailable",
+      clientError: "service_unavailable"
+    });
+  }
+
+  if (entitlement.status === "not_entitled") {
     return gardenCompletionError({
       requestId,
       category: "authorization",
