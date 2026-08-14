@@ -6,6 +6,7 @@ import {
   getBasicGardenMaintenanceHeaders,
   isBasicGardenWritesPaused
 } from "@/lib/basic-garden-maintenance";
+import { hasBasicGardenEntitlement } from "@/lib/basic-garden-entitlement";
 import { syncBasicGardenCompletion } from "@/lib/basic-garden-sync";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
@@ -13,6 +14,7 @@ import { getSupabaseServerClient } from "@/lib/supabase/server";
 type GardenCompletionFailureCategory =
   | "service_unavailable"
   | "authentication"
+  | "authorization"
   | "validation"
   | "rpc"
   | "response_contract";
@@ -139,6 +141,20 @@ export async function POST(request: Request) {
       category: "authentication",
       status: 401,
       message: "Authentication is required"
+    });
+  }
+
+  const hasEntitlement = await hasBasicGardenEntitlement({
+    client: supabase as never,
+    authUserId: user.id
+  });
+
+  if (!hasEntitlement) {
+    return gardenCompletionError({
+      requestId,
+      category: "authorization",
+      status: 403,
+      message: "Access to this Garden is unavailable"
     });
   }
 

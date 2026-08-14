@@ -13,6 +13,7 @@ const routeSource = readFileSync(new URL("./route.ts", import.meta.url), "utf8")
   .replace('from "next/server"', 'from "./next-server.mjs"')
   .replace('from "@/lib/basic-garden"', 'from "./basic-garden.mjs"')
   .replace('from "@/lib/basic-garden-maintenance"', 'from "./basic-garden-maintenance.mjs"')
+  .replace('from "@/lib/basic-garden-entitlement"', 'from "./basic-garden-entitlement.mjs"')
   .replace('from "@/lib/basic-garden-sync"', 'from "./basic-garden-sync.mjs"')
   .replace('from "@/lib/supabase/admin"', 'from "./supabase-admin.mjs"')
   .replace('from "@/lib/supabase/server"', 'from "./supabase-server.mjs"');
@@ -99,12 +100,19 @@ export function isEligibleBasicGardenGateKey(value) {
 }
 `;
 
+const basicGardenEntitlementSource = `
+let currentImpl = async () => true;
+export function __setEntitlementImpl(fn) { currentImpl = fn; }
+export async function hasBasicGardenEntitlement(params) { return currentImpl(params); }
+`;
+
 for (const [name, source] of [
   ["route.mjs", routeSource],
   ["next-server.mjs", nextServerSource],
   ["supabase-server.mjs", supabaseServerSource],
   ["supabase-admin.mjs", supabaseAdminSource],
   ["basic-garden-maintenance.mjs", maintenanceSource],
+  ["basic-garden-entitlement.mjs", basicGardenEntitlementSource],
   ["basic-garden-sync.mjs", basicGardenSyncSource],
   ["basic-garden.mjs", basicGardenSource]
 ] as const) {
@@ -123,11 +131,13 @@ const routeModule = await import(pathToFileURL(join(tempDir, "route.mjs")).href)
 const supabaseServerModule = await import(pathToFileURL(join(tempDir, "supabase-server.mjs")).href);
 const supabaseAdminModule = await import(pathToFileURL(join(tempDir, "supabase-admin.mjs")).href);
 const basicGardenSyncModule = await import(pathToFileURL(join(tempDir, "basic-garden-sync.mjs")).href);
+const basicGardenEntitlementModule = await import(pathToFileURL(join(tempDir, "basic-garden-entitlement.mjs")).href);
 
 const { POST } = routeModule;
 const { __setServerClient } = supabaseServerModule;
 const { __getAdminClientCallCount, __setAdminClient } = supabaseAdminModule;
 const { __setSyncImpl } = basicGardenSyncModule;
+const { __setEntitlementImpl } = basicGardenEntitlementModule;
 
 process.on("exit", () => {
   rmSync(tempDir, { recursive: true, force: true });
@@ -135,6 +145,7 @@ process.on("exit", () => {
 
 beforeEach(() => {
   delete process.env.BASIC_GARDEN_WRITES_PAUSED;
+  __setEntitlementImpl(async () => true);
 });
 
 afterEach(() => {
@@ -285,6 +296,72 @@ test("unauthenticated completion remains rejected before the maintenance guard",
   assert.equal(response.status, 401);
   assert.equal(payload.error, "authentication");
   assert.equal(syncCallCount, 0);
+});
+
+test("membership-denied completions return a generic 403 before admin or Garden RPC use", async () => {
+  const deniedCases = ["no membership", "free plan", "non-BASIC plan", "inactive membership", "expired membership"];
+  const supabase = createSupabaseAuthMock({ cookieUser: { id: "authenticated-user" } });
+  let syncCallCount = 0;
+
+  __setServerClient(supabase.client);
+  __setAdminClient({ admin: true });
+  __setSyncImpl(async () => { syncCallCount += 1; throw new Error("completion sync must not run"); });
+
+  for (const deniedCase of deniedCases) {
+    __setEntitlementImpl(async () => false);
+    const response = await POST(
+      new Request("https://www.meisoulife.com/api/basic/garden-completion", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ gateKey: "affirmation" })
+      })
+    );
+    const payload = await readJson(response);
+
+    assert.equal(response.status, 403, deniedCase);
+    assert.equal(payload.ok, false, deniedCase);
+    assert.equal(payload.error, "authorization", deniedCase);
+    assert.equal(payload.errorMessage, "Access to this Garden is unavailable", deniedCase);
+  }
+
+  assert.equal(syncCallCount, 0);
+  assert.equal(__getAdminClientCallCount(), 0);
+});
+
+test("active and trialing BASIC entitlement permits completions", async () => {
+  const supabase = createSupabaseAuthMock({ cookieUser: { id: "authenticated-user" } });
+  let syncCallCount = 0;
+  __setServerClient(supabase.client);
+  __setAdminClient({ admin: true });
+  __setSyncImpl(async () => {
+    syncCallCount += 1;
+    return {
+      ok: true,
+      matchedBy: "auth_user_id",
+      writeAction: "completion",
+      activityDate: "2026-07-27",
+      stats: { challengeDay: 1, checkInCount: 1, cumulativeVisitDays: 1, cumulativeRecoveryRecords: 1 },
+      recordedVisit: false,
+      recordedCompletion: true,
+      rewardGranted: false,
+      distinctGateCount: 1,
+      errorMessage: null
+    };
+  });
+
+  for (const status of ["active", "trialing"]) {
+    __setEntitlementImpl(async () => true);
+    const response = await POST(
+      new Request("https://www.meisoulife.com/api/basic/garden-completion", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ gateKey: "affirmation" })
+      })
+    );
+    assert.equal(response.status, 200, status);
+  }
+
+  assert.equal(syncCallCount, 2);
 });
 
 test("cookie-authenticated request continues to work", async () => {

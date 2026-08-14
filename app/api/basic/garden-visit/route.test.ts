@@ -12,6 +12,7 @@ const originalBasicGardenWritesPaused = process.env.BASIC_GARDEN_WRITES_PAUSED;
 const routeSource = readFileSync(new URL("./route.ts", import.meta.url), "utf8")
   .replace('from "next/server"', 'from "./next-server.mjs"')
   .replace('from "@/lib/basic-garden-maintenance"', 'from "./basic-garden-maintenance.mjs"')
+  .replace('from "@/lib/basic-garden-entitlement"', 'from "./basic-garden-entitlement.mjs"')
   .replace('from "@/lib/basic-garden-sync"', 'from "./basic-garden-sync.mjs"')
   .replace('from "@/lib/supabase/admin"', 'from "./supabase-admin.mjs"')
   .replace('from "@/lib/supabase/server"', 'from "./supabase-server.mjs"');
@@ -48,12 +49,19 @@ export function __setSyncImpl(fn) { currentImpl = fn; }
 export async function syncBasicGardenVisit(params) { return currentImpl(params); }
 `;
 
+const basicGardenEntitlementSource = `
+let currentImpl = async () => true;
+export function __setEntitlementImpl(fn) { currentImpl = fn; }
+export async function hasBasicGardenEntitlement(params) { return currentImpl(params); }
+`;
+
 for (const [name, source] of [
   ["route.mjs", routeSource],
   ["next-server.mjs", nextServerSource],
   ["supabase-server.mjs", supabaseServerSource],
   ["supabase-admin.mjs", supabaseAdminSource],
   ["basic-garden-maintenance.mjs", maintenanceSource],
+  ["basic-garden-entitlement.mjs", basicGardenEntitlementSource],
   ["basic-garden-sync.mjs", basicGardenSyncSource]
 ] as const) {
   writeFileSync(join(tempDir, name), ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ES2022, target: ts.ScriptTarget.ES2022 } }).outputText);
@@ -63,15 +71,18 @@ const routeModule = await import(pathToFileURL(join(tempDir, "route.mjs")).href)
 const serverModule = await import(pathToFileURL(join(tempDir, "supabase-server.mjs")).href);
 const adminModule = await import(pathToFileURL(join(tempDir, "supabase-admin.mjs")).href);
 const syncModule = await import(pathToFileURL(join(tempDir, "basic-garden-sync.mjs")).href);
+const entitlementModule = await import(pathToFileURL(join(tempDir, "basic-garden-entitlement.mjs")).href);
 const { POST } = routeModule;
 const { __setServerClient } = serverModule;
 const { __getAdminClientCallCount, __setAdminClient } = adminModule;
 const { __setSyncImpl } = syncModule;
+const { __setEntitlementImpl } = entitlementModule;
 
 process.on("exit", () => rmSync(tempDir, { recursive: true, force: true }));
 
 beforeEach(() => {
   delete process.env.BASIC_GARDEN_WRITES_PAUSED;
+  __setEntitlementImpl(async () => true);
 });
 
 afterEach(() => {
@@ -146,4 +157,46 @@ test("unauthenticated visit remains rejected before the maintenance guard", asyn
   assert.equal(response.status, 401);
   assert.equal(payload.errorMessage, "Authenticated user is required");
   assert.equal(syncCallCount, 0);
+});
+
+test("membership-denied visits return a generic 403 before admin or Garden RPC use", async () => {
+  const deniedCases = ["no membership", "free plan", "non-BASIC plan", "inactive membership", "expired membership"];
+  let syncCallCount = 0;
+  let progressRpcCallCount = 0;
+  __setServerClient(createSupabaseAuthMock({ id: "authenticated-user" }));
+  __setAdminClient({ rpc: async () => { progressRpcCallCount += 1; throw new Error("admin RPC must not run"); } });
+  __setSyncImpl(async () => { syncCallCount += 1; throw new Error("visit sync must not run"); });
+
+  for (const deniedCase of deniedCases) {
+    __setEntitlementImpl(async () => false);
+    const response = await POST(new Request("https://www.meisoulife.com/api/basic/garden-visit", { method: "POST" }));
+    const payload = await readJson(response);
+
+    assert.equal(response.status, 403, deniedCase);
+    assert.equal(payload.ok, false, deniedCase);
+    assert.equal(payload.error, "forbidden", deniedCase);
+    assert.equal(payload.errorMessage, "Access to this Garden is unavailable", deniedCase);
+  }
+
+  assert.equal(syncCallCount, 0);
+  assert.equal(progressRpcCallCount, 0);
+  assert.equal(__getAdminClientCallCount(), 0);
+});
+
+test("active and trialing BASIC entitlement permits visits", async () => {
+  let syncCallCount = 0;
+  __setServerClient(createSupabaseAuthMock({ id: "authenticated-user" }));
+  __setAdminClient({ rpc: async () => ({ data: { today_distinct_gate_count: 0 }, error: null }) });
+  __setSyncImpl(async () => {
+    syncCallCount += 1;
+    return { ok: true, matchedBy: "auth_user_id", writeAction: "visit", activityDate: "2026-07-27", stats: { challengeDay: 1, checkInCount: 0, cumulativeVisitDays: 1, cumulativeRecoveryRecords: 0 }, recordedVisit: true, recordedCompletion: false, rewardGranted: false, distinctGateCount: 0, errorMessage: null };
+  });
+
+  for (const status of ["active", "trialing"]) {
+    __setEntitlementImpl(async () => true);
+    const response = await POST(new Request("https://www.meisoulife.com/api/basic/garden-visit", { method: "POST" }));
+    assert.equal(response.status, 200, status);
+  }
+
+  assert.equal(syncCallCount, 2);
 });

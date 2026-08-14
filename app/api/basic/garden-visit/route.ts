@@ -5,6 +5,7 @@ import {
   getBasicGardenMaintenanceHeaders,
   isBasicGardenWritesPaused
 } from "@/lib/basic-garden-maintenance";
+import { hasBasicGardenEntitlement } from "@/lib/basic-garden-entitlement";
 import { syncBasicGardenVisit } from "@/lib/basic-garden-sync";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
@@ -103,6 +104,22 @@ export async function POST(request: Request) {
         errorMessage: "Authenticated user is required"
       },
       { status: 401 }
+    );
+  }
+
+  const hasEntitlement = await hasBasicGardenEntitlement({
+    client: supabase as never,
+    authUserId: user.id
+  });
+
+  if (!hasEntitlement) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "forbidden",
+        errorMessage: "Access to this Garden is unavailable"
+      },
+      { status: 403 }
     );
   }
 
