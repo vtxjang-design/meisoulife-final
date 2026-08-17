@@ -344,6 +344,13 @@ test("BASIC records a visit before rendering server-confirmed progress and keeps
   assert.match(basicProgramPageSource, /last confirmed record is still shown/);
 });
 
+test("a failed initial Garden request renders an explicit unavailable state instead of fabricated zero counters", () => {
+  assert.match(basicProgramPageSource, /useState<DashboardState \| null>\(null\)/);
+  assert.match(basicProgramPageSource, /dashboardLoadState === "error" && dashboardState/);
+  assert.match(basicProgramPageSource, /We could not load your Garden progress\. It will appear here once confirmed\./);
+  assert.match(basicProgramPageSource, /\{dashboardState \? \(/);
+});
+
 test("program basic hides the duplicate mobile tab row while preserving the hamburger menu", () => {
   assert.match(siteHeaderSource, /const hideMobileTabs = pathname === "\/program\/basic"/);
   assert.match(siteHeaderSource, /<div className=\{cn\("lg:hidden", hideMobileTabs && "hidden"\)\}>/);

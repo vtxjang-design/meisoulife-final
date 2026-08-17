@@ -159,3 +159,30 @@ test("read-only resolver reports database or RLS failures as unresolved without 
   assert.equal(supabase.writes.count, 0);
   assert.equal(__getAdminCallCount(), adminCallsBefore);
 });
+
+test("canonical resolver returns resolved Stripe BASIC despite supporting local read failures", async () => {
+  const supabase = createSupabase({ databaseError: "permission denied" });
+  __setStripeBillingImpl(async () => ({
+    customerId: "cus_test",
+    subscriptionId: "sub_test",
+    plan: "basic",
+    status: "active",
+    currentPeriodEnd: null,
+    customerSource: "stripe_email",
+    lookupStatus: "found",
+    matchedCustomerCount: 1
+  }));
+
+  const result = await resolveMembershipEntitlement({
+    supabase: supabase.client,
+    userId: "auth_1",
+    email: "member@example.com",
+    stripe: {}
+  });
+
+  assert.equal(result.source, "stripe");
+  assert.equal(result.plan, "basic");
+  assert.equal(result.resolved, true);
+  assert.equal(result.errorMessage, null);
+  assert.equal(supabase.writes.count, 0);
+});
