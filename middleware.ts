@@ -47,6 +47,7 @@ export const config = {
     "/premium",
     "/pricing",
     "/membership",
+    "/account/:path*",
     "/login",
     "/signup",
     "/api/stripe/checkout"

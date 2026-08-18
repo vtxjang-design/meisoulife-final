@@ -1,0 +1,72 @@
+import assert from "node:assert/strict";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
+import test from "node:test";
+import ts from "typescript";
+
+const tempDir = mkdtempSync(join(tmpdir(), "account-security-test-"));
+const callbackSource = readFileSync(new URL("./account-security.ts", import.meta.url), "utf8").replace(
+  'from "@/lib/env"',
+  'from "./env.mjs"'
+);
+
+writeFileSync(
+  join(tempDir, "account-security.mjs"),
+  ts.transpileModule(callbackSource, {
+    compilerOptions: { module: ts.ModuleKind.ES2022, target: ts.ScriptTarget.ES2022 }
+  }).outputText
+);
+writeFileSync(join(tempDir, "env.mjs"), 'export function getSiteUrl() { return "https://www.meisoulife.com"; }');
+
+const { buildOfficialPasswordChangeCallbackUrl } = await import(pathToFileURL(join(tempDir, "account-security.mjs")).href);
+const pageSource = readFileSync(new URL("../app/account/security/page.tsx", import.meta.url), "utf8");
+const cardSource = readFileSync(new URL("../components/account-security-card.tsx", import.meta.url), "utf8");
+const headerSource = readFileSync(new URL("../components/site-header.tsx", import.meta.url), "utf8");
+const middlewareSource = readFileSync(new URL("../middleware.ts", import.meta.url), "utf8");
+const sitemapSource = readFileSync(new URL("../app/sitemap.ts", import.meta.url), "utf8");
+const copySource = readFileSync(new URL("./i18n.tsx", import.meta.url), "utf8");
+
+process.on("exit", () => rmSync(tempDir, { recursive: true, force: true }));
+
+test("account security requires a server-verified user and redirects guests through the safe login-next flow", () => {
+  assert.match(pageSource, /await supabase\.auth\.getUser\(\)/);
+  assert.match(pageSource, /redirect\(buildLoginHref\(ACCOUNT_SECURITY_PATH\)\)/);
+  assert.match(callbackSource, /ACCOUNT_SECURITY_PATH = "\/account\/security"/);
+});
+
+test("password-change emails target the registered email through Supabase and the official callback", () => {
+  assert.match(cardSource, /resetPasswordForEmail\(email,/);
+  assert.match(cardSource, /redirectTo: buildOfficialPasswordChangeCallbackUrl\(\)/);
+  assert.doesNotMatch(cardSource, /window\.location\.origin/);
+  assert.doesNotMatch(cardSource, /<input/);
+  assert.equal(
+    buildOfficialPasswordChangeCallbackUrl(),
+    "https://www.meisoulife.com/auth/callback?next=%2Fauth%2Fupdate-password"
+  );
+});
+
+test("the password-change link is discoverable for signed-in desktop and mobile navigation", () => {
+  assert.match(headerSource, /href: "\/account\/security", label: copy\.header\.changePassword/);
+  assert.match(headerSource, /href="\/account\/security"/);
+  assert.match(headerSource, /copy\.header\.changePassword/);
+});
+
+test("account routes refresh authentication cookies and remain outside the sitemap", () => {
+  assert.match(middlewareSource, /"\/account\/:path\*"/);
+  assert.doesNotMatch(sitemapSource, /account\/security/);
+});
+
+test("account-security copy is available in Japanese, Korean, and English", () => {
+  assert.equal((copySource.match(/accountSecurity: \{/g) ?? []).length, 3);
+  assert.match(copySource, /changePassword: "パスワードを変更"/);
+  assert.match(copySource, /changePassword: "비밀번호 변경"/);
+  assert.match(copySource, /changePassword: "Change Password"/);
+});
+
+test("account-security has no direct membership, table, or RPC persistence path", () => {
+  for (const source of [pageSource, cardSource, callbackSource]) {
+    assert.doesNotMatch(source, /\.from\(|\.rpc\(|memberships|service_role/i);
+  }
+});

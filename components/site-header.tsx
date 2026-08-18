@@ -57,6 +57,7 @@ export function SiteHeader() {
     if (isLoggedIn) {
       const links: Array<{ href: string; label: string }> = [
         { href: programHref, label: copy.header.myProgram },
+        { href: "/account/security", label: copy.header.changePassword },
         { href: "/", label: homeLabel }
       ];
 
@@ -321,6 +322,12 @@ export function SiteHeader() {
                 title={userEmail || memberCenterLabel}
               >
                 {memberCenterLabel}
+              </Link>
+              <Link
+                href="/account/security"
+                className="hidden rounded-md border border-white/12 px-4 py-2 text-sm text-white/88 transition hover:border-gold/50 hover:text-white lg:inline-flex"
+              >
+                {copy.header.changePassword}
               </Link>
               <button
                 type="button"
