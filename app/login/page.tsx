@@ -1,14 +1,38 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { AuthCard } from "@/components/auth-card";
+import { useAuthState } from "@/components/auth-provider";
 import { SectionHeading } from "@/components/section-heading";
+import { DEFAULT_AUTH_NEXT_PATH, resolveSafeReturnPath } from "@/lib/auth-next";
 import { languageButtons, useLanguage, useSiteCopy } from "@/lib/i18n";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const { authResolved, isLoggedIn } = useAuthState();
   const { language, setLanguage } = useLanguage();
   const copy = useSiteCopy();
   const t = copy.loginPage;
+  const [nextPath, setNextPath] = useState(DEFAULT_AUTH_NEXT_PATH);
+  const [nextPathResolved, setNextPathResolved] = useState(false);
+
+  useEffect(() => {
+    const requestedNext = new URLSearchParams(window.location.search).get("next");
+    setNextPath(resolveSafeReturnPath(requestedNext));
+    setNextPathResolved(true);
+  }, []);
+
+  useEffect(() => {
+    if (authResolved && isLoggedIn && nextPathResolved) {
+      router.replace(nextPath);
+    }
+  }, [authResolved, isLoggedIn, nextPath, nextPathResolved, router]);
+
+  if (authResolved && isLoggedIn) {
+    return <div className="section-shell py-16 sm:py-24" aria-busy="true" />;
+  }
 
   return (
     <div className="section-shell py-16 sm:py-24">

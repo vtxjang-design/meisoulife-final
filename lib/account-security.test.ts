@@ -21,7 +21,8 @@ writeFileSync(
 writeFileSync(join(tempDir, "env.mjs"), 'export function getSiteUrl() { return "https://www.meisoulife.com"; }');
 
 const { buildOfficialPasswordChangeCallbackUrl } = await import(pathToFileURL(join(tempDir, "account-security.mjs")).href);
-const pageSource = readFileSync(new URL("../app/account/security/page.tsx", import.meta.url), "utf8");
+const accountPageSource = readFileSync(new URL("../app/account/security/page.tsx", import.meta.url), "utf8");
+const loginPageSource = readFileSync(new URL("../app/login/page.tsx", import.meta.url), "utf8");
 const cardSource = readFileSync(new URL("../components/account-security-card.tsx", import.meta.url), "utf8");
 const headerSource = readFileSync(new URL("../components/site-header.tsx", import.meta.url), "utf8");
 const middlewareSource = readFileSync(new URL("../middleware.ts", import.meta.url), "utf8");
@@ -30,10 +31,20 @@ const copySource = readFileSync(new URL("./i18n.tsx", import.meta.url), "utf8");
 
 process.on("exit", () => rmSync(tempDir, { recursive: true, force: true }));
 
-test("account security requires a server-verified user and redirects guests through the safe login-next flow", () => {
-  assert.match(pageSource, /await supabase\.auth\.getUser\(\)/);
-  assert.match(pageSource, /redirect\(buildLoginHref\(ACCOUNT_SECURITY_PATH\)\)/);
+test("account security validates the browser session and redirects guests through the safe login-next flow", () => {
+  assert.match(accountPageSource, /await supabase\.auth\.getUser\(\)/);
+  assert.match(accountPageSource, /router\.replace\(buildLoginHref\(ACCOUNT_SECURITY_PATH\)\)/);
+  assert.match(accountPageSource, /getSupabaseBrowserClient\(\)/);
+  assert.doesNotMatch(accountPageSource, /getSupabaseServerClient|service_role|\.from\(|\.rpc\(/i);
   assert.match(callbackSource, /ACCOUNT_SECURITY_PATH = "\/account\/security"/);
+});
+
+test("a verified browser session supplies the account email and the login page honors a safe next path", () => {
+  assert.match(accountPageSource, /setState\(\{ status: "authenticated", email: user\.email \?\? null \}\)/);
+  assert.match(accountPageSource, /<AccountSecurityCard email=\{state\.email\}/);
+  assert.match(loginPageSource, /new URLSearchParams\(window\.location\.search\)\.get\("next"\)/);
+  assert.match(loginPageSource, /setNextPath\(resolveSafeReturnPath\(requestedNext\)\)/);
+  assert.match(loginPageSource, /router\.replace\(nextPath\)/);
 });
 
 test("password-change emails target the registered email through Supabase and the official callback", () => {
@@ -66,7 +77,7 @@ test("account-security copy is available in Japanese, Korean, and English", () =
 });
 
 test("account-security has no direct membership, table, or RPC persistence path", () => {
-  for (const source of [pageSource, cardSource, callbackSource]) {
+  for (const source of [accountPageSource, cardSource, callbackSource]) {
     assert.doesNotMatch(source, /\.from\(|\.rpc\(|memberships|service_role/i);
   }
 });

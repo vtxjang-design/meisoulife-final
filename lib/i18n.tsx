@@ -255,6 +255,7 @@ export const siteCopy = {
     accountSecurity: {
       title: "パスワードを変更する",
       description: "登録メールアドレスに、安全なパスワード変更リンクを送信します。",
+      checking: "アカウントを確認しています…",
       registeredEmail: "登録メールアドレス",
       sendButton: "パスワード変更メールを送る",
       sending: "送信中...",
@@ -1178,6 +1179,7 @@ export const siteCopy = {
     accountSecurity: {
       title: "비밀번호 변경",
       description: "등록된 이메일 주소로 안전한 비밀번호 변경 링크를 보냅니다.",
+      checking: "계정을 확인하고 있습니다...",
       registeredEmail: "등록 이메일",
       sendButton: "비밀번호 변경 이메일 보내기",
       sending: "보내는 중...",
@@ -2101,6 +2103,7 @@ export const siteCopy = {
     accountSecurity: {
       title: "Change password",
       description: "We will send a secure password-change link to your registered email address.",
+      checking: "Checking your account...",
       registeredEmail: "Registered email",
       sendButton: "Send password-change email",
       sending: "Sending...",
