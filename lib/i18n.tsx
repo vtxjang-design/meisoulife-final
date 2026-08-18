@@ -202,6 +202,7 @@ export const siteCopy = {
       freeJoin: "無料参加",
       myPage: "マイページ",
       myProgram: "マイプログラム",
+      changePassword: "パスワードを変更",
       logout: "ログアウト",
       languageSettings: "言語設定",
       customerSupport: "サポート",
@@ -250,6 +251,19 @@ export const siteCopy = {
         { href: "/community", label: "コミュニティ" },
         { href: "/rhythm-journey", label: "7日間の小さな回復へ" }
       ]
+    },
+    accountSecurity: {
+      title: "パスワードを変更する",
+      description: "登録メールアドレスに、安全なパスワード変更リンクを送信します。",
+      registeredEmail: "登録メールアドレス",
+      sendButton: "パスワード変更メールを送る",
+      sending: "送信中...",
+      sentButton: "メールを送信しました",
+      sent: "パスワード変更リンクを送信しました。受信箱と迷惑メールフォルダをご確認ください。",
+      error: "パスワード変更メールを送信できませんでした。しばらくしてからもう一度お試しください。",
+      unavailable: "現在、パスワード変更を準備できません。しばらくしてからもう一度お試しください。",
+      emailUnavailable: "登録メールアドレスを確認できませんでした",
+      uniquePasswordAdvice: "他のサービスで使っていない、固有のパスワードをお使いください。"
     },
     community: {
       eyebrow: "COMMUNITY",
@@ -1111,6 +1125,7 @@ export const siteCopy = {
       freeJoin: "무료 참여",
       myPage: "마이페이지",
       myProgram: "나의 프로그램",
+      changePassword: "비밀번호 변경",
       logout: "로그아웃",
       languageSettings: "언어 설정",
       customerSupport: "고객센터",
@@ -1159,6 +1174,19 @@ export const siteCopy = {
         { href: "/community", label: "커뮤니티" },
         { href: "/rhythm-journey", label: "7일간의 작은 회복으로" }
       ]
+    },
+    accountSecurity: {
+      title: "비밀번호 변경",
+      description: "등록된 이메일 주소로 안전한 비밀번호 변경 링크를 보냅니다.",
+      registeredEmail: "등록 이메일",
+      sendButton: "비밀번호 변경 이메일 보내기",
+      sending: "보내는 중...",
+      sentButton: "이메일을 보냈습니다",
+      sent: "비밀번호 변경 링크를 보냈습니다. 받은편지함과 스팸함을 확인해 주세요.",
+      error: "비밀번호 변경 이메일을 보내지 못했습니다. 잠시 후 다시 시도해 주세요.",
+      unavailable: "현재 비밀번호 변경을 준비할 수 없습니다. 잠시 후 다시 시도해 주세요.",
+      emailUnavailable: "등록 이메일 주소를 확인할 수 없습니다",
+      uniquePasswordAdvice: "다른 서비스에서 사용하지 않는 고유한 비밀번호를 사용해 주세요."
     },
     community: {
       eyebrow: "COMMUNITY",
@@ -2020,6 +2048,7 @@ export const siteCopy = {
       freeJoin: "Free Join",
       myPage: "My Page",
       myProgram: "My Program",
+      changePassword: "Change Password",
       logout: "Logout",
       languageSettings: "Language",
       customerSupport: "Support",
@@ -2068,6 +2097,19 @@ export const siteCopy = {
         { href: "/community", label: "Community" },
         { href: "/rhythm-journey", label: "Begin Gently" }
       ]
+    },
+    accountSecurity: {
+      title: "Change password",
+      description: "We will send a secure password-change link to your registered email address.",
+      registeredEmail: "Registered email",
+      sendButton: "Send password-change email",
+      sending: "Sending...",
+      sentButton: "Email sent",
+      sent: "We sent a password-change link. Please check your inbox and spam folder.",
+      error: "We could not send the password-change email. Please try again shortly.",
+      unavailable: "Password change is temporarily unavailable. Please try again shortly.",
+      emailUnavailable: "We could not confirm your registered email address",
+      uniquePasswordAdvice: "Use a unique password that you do not reuse on other services."
     },
     community: {
       eyebrow: "COMMUNITY",
