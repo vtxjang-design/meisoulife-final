@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { buildOfficialPasswordChangeCallbackUrl } from "@/lib/account-security";
+import { buildOfficialPasswordRecoveryUrl } from "@/lib/account-security";
 import { useSiteCopy } from "@/lib/i18n";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
@@ -19,7 +19,7 @@ export function AccountSecurityCard({ email }: { email: string | null }) {
 
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: buildOfficialPasswordChangeCallbackUrl()
+        redirectTo: buildOfficialPasswordRecoveryUrl()
       });
 
       if (error) {

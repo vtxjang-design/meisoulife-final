@@ -67,8 +67,10 @@ export function ResetPasswordCard() {
             throw error;
           }
         }
-      } catch (error) {
-        console.error("[reset-password] failed to prepare recovery session", error);
+      } catch {
+        console.error("[reset-password] recovery session preparation failed", {
+          category: "recovery_session_preparation_failed"
+        });
       }
 
       const { data, error } = await supabase.auth.getSession();
@@ -78,7 +80,9 @@ export function ResetPasswordCard() {
       }
 
       if (error || !data.session) {
-        console.error("[reset-password] recovery session not available", error);
+        console.error("[reset-password] recovery session unavailable", {
+          category: "recovery_session_unavailable"
+        });
         setMessage(copy.loginPage.resetPageInvalid);
         setReady(false);
         return;
@@ -122,13 +126,11 @@ export function ResetPasswordCard() {
       await signOut({ redirectTo: loginHref });
       setMessage(copy.loginPage.resetPageSuccess);
       setReady(false);
-    } catch (error) {
-      console.error("[reset-password] update password error", error);
-      setMessage(
-        error instanceof Error && error.message
-          ? `${copy.loginPage.resetPageError} (${error.message})`
-          : copy.loginPage.resetPageError
-      );
+    } catch {
+      console.error("[reset-password] password update failed", {
+        category: "password_update_failed"
+      });
+      setMessage(copy.loginPage.resetPageError);
     } finally {
       setLoading(false);
     }
