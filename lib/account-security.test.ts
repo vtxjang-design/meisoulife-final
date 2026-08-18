@@ -20,10 +20,12 @@ writeFileSync(
 );
 writeFileSync(join(tempDir, "env.mjs"), 'export function getSiteUrl() { return "https://www.meisoulife.com"; }');
 
-const { buildOfficialPasswordChangeCallbackUrl } = await import(pathToFileURL(join(tempDir, "account-security.mjs")).href);
+const { buildOfficialPasswordRecoveryUrl } = await import(pathToFileURL(join(tempDir, "account-security.mjs")).href);
 const accountPageSource = readFileSync(new URL("../app/account/security/page.tsx", import.meta.url), "utf8");
 const loginPageSource = readFileSync(new URL("../app/login/page.tsx", import.meta.url), "utf8");
 const cardSource = readFileSync(new URL("../components/account-security-card.tsx", import.meta.url), "utf8");
+const resetPasswordCardSource = readFileSync(new URL("../components/reset-password-card.tsx", import.meta.url), "utf8");
+const authCallbackSource = readFileSync(new URL("../app/auth/callback/route.ts", import.meta.url), "utf8");
 const headerSource = readFileSync(new URL("../components/site-header.tsx", import.meta.url), "utf8");
 const middlewareSource = readFileSync(new URL("../middleware.ts", import.meta.url), "utf8");
 const sitemapSource = readFileSync(new URL("../app/sitemap.ts", import.meta.url), "utf8");
@@ -49,13 +51,30 @@ test("a verified browser session supplies the account email and the login page h
 
 test("password-change emails target the registered email through Supabase and the official callback", () => {
   assert.match(cardSource, /resetPasswordForEmail\(email,/);
-  assert.match(cardSource, /redirectTo: buildOfficialPasswordChangeCallbackUrl\(\)/);
+  assert.match(cardSource, /redirectTo: buildOfficialPasswordRecoveryUrl\(\)/);
   assert.doesNotMatch(cardSource, /window\.location\.origin/);
   assert.doesNotMatch(cardSource, /<input/);
   assert.equal(
-    buildOfficialPasswordChangeCallbackUrl(),
-    "https://www.meisoulife.com/auth/callback?next=%2Fauth%2Fupdate-password"
+    buildOfficialPasswordRecoveryUrl(),
+    "https://www.meisoulife.com/auth/update-password"
   );
+});
+
+test("direct recovery links stay on the update-password route and support every configured Supabase recovery form", () => {
+  assert.match(authCallbackSource, /resolveSafeInternalNextPath/);
+  assert.match(resetPasswordCardSource, /exchangeCodeForSession\(code\)/);
+  assert.match(resetPasswordCardSource, /verifyOtp\(\{[\s\S]*token_hash: tokenHash,[\s\S]*type: "recovery"/);
+  assert.match(resetPasswordCardSource, /setSession\(\{[\s\S]*access_token: accessToken/);
+  assert.doesNotMatch(resetPasswordCardSource, /router\.(push|replace)\([^)]*program\/basic/);
+});
+
+test("recovery failures keep tokens and internal errors out of the member UI and logs", () => {
+  assert.match(resetPasswordCardSource, /category: "recovery_session_preparation_failed"/);
+  assert.match(resetPasswordCardSource, /category: "recovery_session_unavailable"/);
+  assert.match(resetPasswordCardSource, /category: "password_update_failed"/);
+  assert.doesNotMatch(resetPasswordCardSource, /\$\{copy\.loginPage\.resetPageError\} \(\$\{error\.message\}\)/);
+  assert.match(resetPasswordCardSource, /setMessage\(copy\.loginPage\.resetPageInvalid\)/);
+  assert.match(resetPasswordCardSource, /await signOut\(\{ redirectTo: loginHref \}\)/);
 });
 
 test("the password-change link is discoverable for signed-in desktop and mobile navigation", () => {
