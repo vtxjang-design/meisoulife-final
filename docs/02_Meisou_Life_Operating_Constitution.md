@@ -9,6 +9,19 @@ This Constitution establishes the decision-making principles for Meisou Life. It
 
 It applies to founders, leaders, employees, contractors, advisors, partners, moderators, and AI-enabled operations. Commercial success is necessary for continuity, but it is never a justification for violating this Constitution.
 
+The governance relationship is:
+
+```text
+Philosophical source — Ilchi Lee's Earth Management and Brain Education
+→ Civilization design and final human approval — Master Jang
+→ advisory and execution support — AI Chief of Staff and AI Executive Council
+→ technical implementation — Codex and approved development systems
+→ user experience — recovery, rhythm, agency, and coexistence
+→ real-world direction — Earth Citizenship, Earth Management, and Coexistence Civilization
+```
+
+The canonical Korean source expression is **일지 이승헌 스승님의 철학적 원류(지구경영과 뇌교육)**. External attribution must remain within documented permission and must not imply endorsement or official participation that has not been confirmed.
+
 ## 2. Constitutional Order
 
 When priorities conflict, decisions follow this order:
@@ -53,7 +66,11 @@ Before a material release, the responsible owner documents: intended benefit, af
 
 ## 6. AI Governance
 
-AI systems are subject to the AI Oath and AI Board review. High-impact uses—including emotionally sensitive guidance, personalization based on sensitive data, automated restrictions, or material user decisions—require documented human oversight and a clear escalation path.
+AI systems are subject to the AI Oath and human governance review. High-impact uses—including emotionally sensitive guidance, personalization based on sensitive data, automated restrictions, or material user decisions—require documented human oversight and a clear escalation path.
+
+The **AI Executive Council** is an AI-assisted advisory and execution structure. It may analyze, draft, coordinate, implement, test, and monitor within delegated limits, but it cannot grant itself approval or replace accountable human judgment.
+
+The **Human AI Governance Review** function provides safety, privacy, legal, product, practitioner, and affected-community oversight. It may require safeguards or pause an unsafe deployment within delegated responsibility. Master Jang remains the final human approver for material philosophical, constitutional, platform, product, economic, and community-architecture decisions, subject to law, professional duties, participant rights, and this Constitution.
 
 ## 7. Data and Privacy
 
@@ -82,7 +99,7 @@ Exceptions are rare, written, narrowly scoped, and time-bound. They must name th
 
 ## 11. Amendment and Review
 
-The Constitution is reviewed at least annually and after a material incident, major AI capability change, or substantial change in organizational scope. Amendments require documented rationale, input from affected stewards, and explicit approval by the AI Board or designated governance body.
+The Constitution is reviewed at least annually and after a material incident, major AI capability change, or substantial change in organizational scope. Amendments require documented rationale, input from affected stewards, Human AI Governance Review appropriate to the risk, and explicit final approval by Master Jang or a human delegate whose authority has been documented in advance.
 
 ## 12. Living Standard
 

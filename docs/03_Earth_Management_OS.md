@@ -91,7 +91,7 @@ Measurement should be proportionate, honest, and useful. Track relevant signals 
 
 ## 9. Governance
 
-The accountable owner for a material decision records the Earth Management assessment. The AI Board or designated governance body reviews high-impact decisions and may request a smaller pilot, stronger safeguards, an alternative supplier, or a decision not to proceed.
+The accountable owner for a material decision records the Earth Management assessment. Human AI Governance Review or another documented human governance body reviews high-impact decisions and may require a smaller pilot, stronger safeguards, an alternative supplier, or a decision not to proceed. The AI Executive Council may support analysis but cannot approve its own proposal.
 
 ## 10. Commitment
 

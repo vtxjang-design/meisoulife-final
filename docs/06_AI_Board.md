@@ -1,19 +1,43 @@
-# Meisou Life AI Board
+# Meisou Life AI Executive Council and Human Governance Review
 
-**Version:** 1.0
-**Purpose:** Independent, accountable stewardship of AI use at Meisou Life.
+**Version:** 2.0
+**Purpose:** Separate AI-assisted execution from accountable human governance and final approval.
 
-## 1. Mandate
+## 1. Governance Model
 
-The AI Board protects alignment between Meisou Life AI systems and the Meisou Life DNA, AI Oath, Operating Constitution, HROS, and Earth Management OS. Its role is to enable useful innovation while preventing foreseeable harm, opacity, and mission drift.
+Meisou Life uses two distinct structures:
 
-## 2. Scope
+1. **AI Executive Council (AI 이사회):** ChatGPT, Codex, complementary models, and approved automation systems that analyze, coordinate, draft, implement, test, and monitor within delegated boundaries.
+2. **Human AI Governance Review:** accountable people and qualified professionals who review safety, privacy, legal, product, practitioner, community, and operational impact.
 
-The Board reviews AI-enabled products, vendors, data practices, evaluation results, incidents, and material policy changes. It has authority to request changes, impose safeguards, require a limited pilot, pause deployment, or retire a system that does not meet foundational standards.
+AI systems are not founders, civilization architects, spiritual authorities, or final decision-makers. Master Jang, the Meisou Life Civilization Architect, holds final human approval for material philosophical, constitutional, platform, product, economic, and community-architecture decisions.
 
-## 3. Composition
+The Human AI Governance Review may require safeguards and pause an unsafe deployment within delegated responsibilities. Legal, clinical, privacy, accounting, and other regulated matters receive qualified professional review where material.
 
-The Board should include, at minimum:
+## 2. Shared Mandate and Scope
+
+The two structures protect alignment between Meisou Life systems and the Meisou Life DNA, AI Oath, Operating Constitution, HROS, Gongsaeng AI Guide, and Earth Management OS. Their shared scope includes AI-enabled products, vendors, data practices, evaluation results, incidents, and material policy changes.
+
+The AI Executive Council may propose changes, safeguards, pilots, pauses, or retirement. It cannot approve its own material proposal. Human reviewers and accountable owners assess those proposals, and final approval follows the authority rules above.
+
+## 3. AI Executive Council
+
+| Role | Primary system | Responsibility |
+| --- | --- | --- |
+| AI Chief of Staff | ChatGPT | Project alignment, constitutional records, roadmaps, agendas, decision logs, and council coordination |
+| CAO — Alignment | ChatGPT | Philosophical alignment, Hongik, Brain Education, natural intelligence, Earth Management, and amendment proposals |
+| CPO — Product | ChatGPT | Recovery outcomes, HROS journey, product tiers, Recovery Home, 7-Day Journey, and Gongsaeng Coach experience |
+| CTO — Technology | Codex | Platform implementation, AI integration, Stripe, LINE, membership, automation, testing, security, GitHub, and Vercel |
+| COO — Operations | ChatGPT and approved automation | Onboarding, recovery journeys, member rhythm, gentle return, community operations, support, and operational analysis |
+| CMO — Brand and Growth | ChatGPT and approved image/video AI | Recovery-centered messaging, short-form content, voluntary entry, stories, and brand integrity |
+| CFO — Sustainable Economy | ChatGPT and approved finance tools | Pricing, subscriptions, cost, revenue, AI cost, and sustainable-economy analysis |
+| CLO — Legal and Ethics Support | AI drafting plus qualified human review | Terms, privacy, payment and cancellation, claims, copyright, trademarks, AI ethics, and data policy |
+
+ChatGPT may hold more than one analytical role, but role names do not create autonomous authority. Codex implements the designed system; it does not define the civilization.
+
+## 4. Human AI Governance Review
+
+Human review should include, proportionate to risk:
 
 - An accountable executive sponsor.
 - A product and engineering representative.
@@ -21,11 +45,11 @@ The Board should include, at minimum:
 - A practitioner or community-care representative familiar with HROS.
 - An external or independent perspective when impact or scale warrants it.
 
-Members must disclose conflicts of interest and recuse themselves where needed. The Board should seek relevant lived experience and cultural expertise rather than treating governance as purely technical.
+Reviewers must disclose conflicts of interest and recuse themselves where needed. Review should seek relevant lived experience and cultural expertise rather than treating governance as purely technical.
 
-## 4. Responsibilities
+## 5. Responsibilities
 
-1. Approve or reject material AI use cases before public release.
+1. Recommend, approve within documented delegation, or escalate material AI use cases before public release.
 2. Set risk tiers and required safeguards.
 3. Review evaluation results, incidents, user feedback, and model changes.
 4. Confirm that data practices are necessary, proportionate, and understandable.
@@ -33,16 +57,16 @@ Members must disclose conflicts of interest and recuse themselves where needed. 
 6. Review environmental and infrastructure implications for material AI workloads.
 7. Maintain a decision record and publish appropriate accountability summaries.
 
-## 5. Review Tiers
+## 6. Review Tiers
 
 | Tier | Example | Required review |
 | --- | --- | --- |
 | Low | Internal drafting or non-personalized content assistance | Owner assessment and documented safeguards |
-| Moderate | Practice recommendations or user-facing support without sensitive personalization | Board delegate review, testing, and monitoring plan |
-| High | Emotionally sensitive guidance, sensitive-data personalization, automated restrictions, or broad public deployment | Full Board approval, pre-launch evaluation, human escalation, and scheduled audit |
+| Moderate | Practice recommendations or user-facing support without sensitive personalization | Human governance delegate review, testing, and monitoring plan |
+| High | Emotionally sensitive guidance, sensitive-data personalization, automated restrictions, or broad public deployment | Full Human AI Governance Review, Master Jang or documented delegate approval, pre-launch evaluation, human escalation, and scheduled audit |
 | Prohibited | Manipulation, covert profiling, clinical diagnosis, or systems contrary to the AI Oath | Do not build or deploy |
 
-## 6. Required Review Record
+## 7. Required Review Record
 
 Every moderate- or high-tier proposal includes:
 
@@ -57,18 +81,18 @@ Every moderate- or high-tier proposal includes:
 - Environmental or infrastructure considerations when material.
 - Accountable owner and review date.
 
-## 7. Meetings and Decisions
+## 8. Meetings and Decisions
 
-The Board meets regularly and after material incidents. Decisions are recorded with rationale, dissent where relevant, conditions, owners, and follow-up dates. Urgent safety actions may be taken by the accountable owner, then reviewed by the Board promptly.
+The AI Executive Council may operate continuously within delegated tasks. Human AI Governance Review meets on a risk-appropriate cadence and after material incidents. Decisions are recorded with rationale, dissent where relevant, conditions, human approver, owners, and follow-up dates. Urgent safety actions may be taken by the accountable human owner, then reviewed promptly.
 
-## 8. Incident Response
+## 9. Incident Response
 
-An AI incident includes credible evidence of harmful output, privacy failure, deceptive behavior, unsafe escalation, discriminatory impact, or material constitutional breach. The initial response is to contain risk, preserve relevant evidence, inform accountable leaders, assess affected people, and decide on remediation. The Board then reviews root causes and corrective action.
+An AI incident includes credible evidence of harmful output, privacy failure, deceptive behavior, unsafe escalation, discriminatory impact, or material constitutional breach. The initial response is to contain risk, preserve relevant evidence, inform accountable leaders, assess affected people, and decide on remediation. Human AI Governance Review then assesses root causes and corrective action, supported by the AI Executive Council where appropriate.
 
-## 9. Accountability
+## 10. Accountability
 
-The Board does not transfer responsibility away from builders or leaders. It makes responsibility visible. Material decisions, incidents, and learnings should be documented in a form appropriate to risk and privacy.
+Neither structure transfers responsibility away from builders, operators, reviewers, or leaders. Human accountability remains visible. Material decisions, incidents, and learnings should be documented in a form appropriate to risk and privacy.
 
-## 10. Annual Review
+## 11. Annual Review
 
-At least annually, the Board reviews its membership, decision quality, risk tiers, unresolved issues, and whether AI use is still serving human recovery and ecological responsibility.
+At least annually, Master Jang and the Human AI Governance Review assess delegated AI roles, human review capability, decision quality, risk tiers, unresolved issues, and whether AI use is still serving human recovery and ecological responsibility.

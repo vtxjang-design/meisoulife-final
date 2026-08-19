@@ -5,7 +5,7 @@
 
 ## 1. Product Promise
 
-Meisou Life is a calm, multilingual meditation membership platform that supports repeatable daily practice, community connection, and AI-assisted reflection. The experience is designed around HROS: help a person arrive, regulate, choose, and return to life.
+Meisou Life is a coexistence platform that integrates meditation, rhythm, AI, membership, community, sustainable economics, and Earth Management. It supports repeatable daily practice, community connection, and AI-assisted reflection. The experience is designed around HROS: help a person arrive, regulate, choose, and return to life.
 
 The primary user experience flow is:
 
@@ -14,6 +14,26 @@ The primary user experience flow is:
 Korean user-facing reference: `멈춤 → 알아차림 → 회복 → 생활 리듬 → 의식 주권 → 공생 실천 → 지구시민`
 
 This is a supportive orientation, not a compulsory path, spiritual hierarchy, score, or membership gate.
+
+### Platform and Gongsaeng AI boundary
+
+- **Meisou Life:** the complete coexistence platform and user experience.
+- **Gongsaeng AI:** the coordinated operating system of approved platform, content, coaching, development, economic, automation, and community tools.
+- **Gongsaeng Coach:** the user-facing ChatGPT/Gemini coaching module within Gongsaeng AI.
+
+The current seven-tool map is:
+
+| Tool or layer | Platform function |
+| --- | --- |
+| Vercel | Application delivery and global platform operation |
+| YouTube / Instagram / TikTok | Short-form recovery discovery and voluntary entry |
+| ChatGPT | Chief-of-staff analysis, alignment, product and operational support, and Gongsaeng Coach |
+| Gemini | Complementary analysis and Gongsaeng Coach support |
+| Codex | Technical implementation, integration, automation, testing, security, GitHub, and Vercel operations |
+| Stripe | Transparent subscription, cancellation, and sustainable-economy infrastructure |
+| LINE | User-controlled reminders and community connection |
+
+Tools do not operate as independent growth silos. They must support one voluntary journey from discovery to recovery, daily life, informed membership, and coexistence.
 
 ## 2. First Experience: One-Minute Recovery
 
@@ -39,7 +59,7 @@ The experience must make stopping, skipping, or choosing another practice easy. 
 | --- | --- | --- |
 | Entry | Make beginning safe and simple | Home, language choice, clear value and access information |
 | Practice | Provide small, repeatable recovery experiences | Daily meditation, breathing, themed gates, audio guidance |
-| Reflection | Help users notice and choose | AI coach, journaling prompts, progress reflection |
+| Reflection | Help users notice and choose | Gongsaeng Coach, journaling prompts, progress reflection |
 | Belonging | Support respectful shared practice | Community, retreats, member spaces |
 | Membership | Sustain reliable access and trust | Pricing, checkout, account, entitlement, support |
 | Stewardship | Govern safety and learning | Moderation, analytics, AI review, feedback, incident response |
@@ -51,7 +71,8 @@ The product must recognize and clearly serve:
 - Guest: can discover Meisou Life and access designated free experiences.
 - Registered free user: can retain progress and receive the free-tier experience.
 - Paid member: receives entitled member content and community access.
-- Leader or premium member: receives the additional experiences defined by their plan.
+- LSC Facilitator / Field Keeper: supports a voluntary living field within time-bounded, reviewable, non-ranking responsibilities.
+- Higher-plan member: receives only the additional experiences transparently defined by their plan; plan level does not create spiritual or community authority.
 - Administrator or steward: operates with least-privilege access and auditability.
 
 Authentication is the identity source of truth. Membership state is the entitlement source of truth. Product surfaces must handle loading, error, expired, and changed-plan states clearly without exposing unauthorized content.
@@ -66,7 +87,7 @@ Delivers guided experiences with calming pacing, accessible controls, language c
 
 Manages sign-up, login, account recovery, billing, subscriptions, and entitlement. It must be transparent about price, renewal, cancellation, and access changes.
 
-### AI guidance domain
+### Gongsaeng Coach domain
 
 Provides bounded, disclosed, non-clinical support under the AI Oath. It must use the least personal data necessary and offer escalation where needed.
 
@@ -115,7 +136,7 @@ All such content must distinguish contemplative philosophy from medical and psyc
 Member experience
   ├─ Practice and content
   ├─ Account and membership UI
-  ├─ AI coach and reflection
+  ├─ Gongsaeng Coach and reflection
   └─ Community pathways
 
 Platform services
@@ -128,7 +149,7 @@ Platform services
 Governance layer
   ├─ HROS and content standards
   ├─ Privacy and security controls
-  ├─ AI Board oversight
+  ├─ AI Executive Council support and Human AI Governance Review
   └─ Earth Management assessment
 ```
 
@@ -138,4 +159,4 @@ Measure reliability, accessibility, successful access, completion without pressu
 
 ## 9. Change Control
 
-Changes affecting identity, payment, membership, sensitive data, AI behavior, safety messaging, or access require risk assessment, testing, owner approval, and a rollback plan. Material AI changes also require the appropriate AI Board review.
+Changes affecting identity, payment, membership, sensitive data, AI behavior, safety messaging, or access require risk assessment, testing, owner approval, and a rollback plan. Material AI changes also require the appropriate Human AI Governance Review and human approval.

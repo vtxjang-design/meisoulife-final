@@ -50,7 +50,7 @@ If any answer is unsatisfactory, the experience is changed, constrained, or not 
 
 ## Accountability
 
-This oath is operational, not ceremonial. It informs product requirements, data handling, model evaluation, moderation, incident response, vendor selection, and Board review. A known breach must be documented, contained, remedied, and used to improve the system.
+This oath is operational, not ceremonial. It informs product requirements, data handling, model evaluation, moderation, incident response, vendor selection, AI Executive Council support, and Human AI Governance Review. A known breach must be documented, contained, remedied, and used to improve the system.
 
 ## Closing Commitment
 

@@ -10,11 +10,19 @@ Use Codex to improve clarity, safety, and delivery—not to bypass understanding
 
 ## 3. Before Making Changes
 
-1. Read the relevant product and technical documentation.
-2. Inspect the affected code path and current tests before proposing a change.
-3. Identify user impact, especially for authentication, payments, membership, AI, privacy, and community safety.
-4. State the smallest safe scope and the validation plan.
-5. Preserve unrelated user changes in the working tree.
+1. Read `AGENTS.md`, `CONSTITUTION.md`, and the relevant Foundation Pack and product documents.
+2. Apply and record the Mandatory Decision Test before implementation.
+3. Flag philosophical or governance conflicts before changing code; pause if they remain unresolved.
+4. Inspect the affected code path and current tests before proposing a change.
+5. Identify user impact, especially for authentication, payments, membership, AI, privacy, and community safety.
+6. State the smallest safe scope and the validation plan.
+7. Preserve unrelated user changes in the working tree.
+
+Korean development gate:
+
+- 구현을 시작하기 전에 `AGENTS.md`, `CONSTITUTION.md`, 관련 Foundation Pack 문서를 먼저 읽는다.
+- 구현 전에 Mandatory Decision Test(필수 의사결정 검증)를 적용하고 결과를 기록한다.
+- 코드를 변경하기 전에 철학적 또는 거버넌스상의 충돌을 식별하고 명확히 보고한다.
 
 ## 4. Protected Product Areas
 
@@ -37,11 +45,13 @@ Ask Codex to locate relevant files, trace data flow, summarize existing behavior
 
 ### Plan
 
-Write an implementation plan that names files, behavior changes, rollback strategy, and tests. For material AI or user-safety changes, route through AI Board review.
+Write an implementation plan that names files, behavior changes, rollback strategy, and tests. For material AI or user-safety changes, route through Human AI Governance Review and the required human approval.
 
 ### Implement
 
 Keep edits narrow. Follow project conventions. Use secure defaults, explicit types, accessible UI, and calm user-facing language. Do not place secrets in source, documentation, logs, or prompts.
+
+Codex serves the delegated CTO function for technical implementation, integration, automation, testing, security, GitHub, and Vercel operations. It is not the philosophical founder, Civilization Architect, spiritual authority, or final decision-maker. Material philosophical, constitutional, platform, product, economic, and community-architecture decisions require Master Jang's final human approval.
 
 ### Verify
 

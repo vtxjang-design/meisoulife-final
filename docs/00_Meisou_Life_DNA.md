@@ -16,6 +16,14 @@ Meisou Life is an AI-era coexistence platform that helps people return to Zero C
 
 Meisou Life helps people pause, recover their natural rhythm, regain direction in their lives, and practice coexistence with people, society, and the Earth.
 
+### Philosophical source and design authority
+
+The canonical source expression is **일지 이승헌 스승님의 철학적 원류(지구경영과 뇌교육)**. Meisou Life draws on Ilchi Lee's Earth Management and Brain Education while distinguishing philosophical attribution from unverified claims of endorsement, official participation, title, or permission.
+
+Master Jang is the Meisou Life Civilization Architect and final human approver for material philosophical, constitutional, platform, product, economic, and community-architecture decisions. AI systems advise, analyze, implement, test, and operate within delegated boundaries; they are not founders, civilization architects, spiritual authorities, or final decision-makers.
+
+Meisou Life is the coexistence platform. Gongsaeng AI is its coordinated seven-tool operating system. Gongsaeng Coach is the user-facing ChatGPT/Gemini coaching module within Gongsaeng AI.
+
 ## 2. Our Core View of Life
 
 ### 2.1 Every person is already worthy
