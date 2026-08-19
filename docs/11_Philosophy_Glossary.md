@@ -17,6 +17,39 @@ This glossary is the canonical source for core philosophical terms in Meisou Lif
 
 ## 2. Core Terms
 
+### Philosophical Source
+
+- **Canonical Korean expression:** 일지 이승헌 스승님의 철학적 원류(지구경영과 뇌교육)
+- **English expression:** The philosophical source of Ilchi Lee's Earth Management and Brain Education
+- **Meaning:** The philosophical direction from which Meisou Life draws its understanding of Hongik, Brain Education, natural intelligence, Earth Citizenship, Earth Management, and coexistence.
+- **Governance use:** Distinguish philosophical attribution from claims of endorsement, official participation, platform-founding status, or permission to use names and works.
+- **Do not mean:** Personality worship, doctrinal authority over users, or an unverified public claim of official affiliation.
+
+### Civilization Architect
+
+- **Korean:** 문명설계자
+- **English:** Civilization Architect
+- **Current role:** Master Jang
+- **Meaning:** The human role that translates the philosophical source into HROS, platform structure, product, technology, sustainable economics, community, and long-horizon Coexistence Civilization architecture.
+- **Authority:** Final human approval for material philosophical, constitutional, platform, product, economic, and community-architecture decisions, bounded by law, professional duties, participant rights, safety, dignity, agency, and this Constitution.
+- **Do not mean:** Spiritual rank, unrestricted personal authority, or exemption from governance safeguards.
+
+### Gongsaeng AI
+
+- **Korean:** 공생AI
+- **English:** Gongsaeng AI
+- **Concise definition:** The coordinated operating system of approved platform, content, coaching, development, economic, automation, and community tools that supports Meisou Life.
+- **Current tool map:** Vercel; YouTube / Instagram / TikTok as one discovery layer; ChatGPT; Gemini; Codex; Stripe; LINE.
+- **Do not mean:** A single chatbot, autonomous civilization designer, spiritual authority, or final decision-maker.
+
+### Gongsaeng Coach
+
+- **Korean:** 공생 코치
+- **English:** Gongsaeng Coach
+- **Concise definition:** The user-facing ChatGPT/Gemini module within Gongsaeng AI that supports awareness, recovery, self-directed choice, and daily practice.
+- **Internal-system expression:** Follow HROS, the AI Oath, safety escalation, data minimization, truthful disclosure, and return-to-life principles.
+- **Do not mean:** The whole Gongsaeng AI operating system, clinical care, spiritual diagnosis, or human authority.
+
 ### Recovery
 
 - **Korean:** 회복

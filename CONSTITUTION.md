@@ -6,7 +6,11 @@ Meisou Life remains a **Human Recovery Ecosystem** and a **Human Recovery Operat
 
 ## 1. Philosophical Origin
 
-Meisou Life is rooted in **Ilchi Lee’s philosophy**, including:
+The canonical philosophical-source expression is:
+
+> **일지 이승헌 스승님의 철학적 원류(지구경영과 뇌교육)**
+
+Meisou Life draws on the philosophical source of **Ilchi Lee's Earth Management and Brain Education**, including:
 
 - **Hongik philosophy:** live and act for the wider benefit of life.
 - **Brain Education:** practical training through breath, body awareness, attention, choice, and daily action.
@@ -14,6 +18,16 @@ Meisou Life is rooted in **Ilchi Lee’s philosophy**, including:
 - **Earth Management:** accept shared responsibility for caring for the conditions of life, with humility and practical stewardship.
 
 This root is a source of direction, not personality worship. The platform must express these values through useful, voluntary, grounded experiences rather than through reverence, doctrine, or claims of special authority.
+
+Internal philosophical attribution and external claims of endorsement, official participation, title, or platform-founding status are not the same. External communication must use only the relationship and wording supported by documented permission. Unless broader permission is confirmed, use the clear expression that Ilchi Lee's Earth Management and Brain Education are the philosophical source of Meisou Life.
+
+## 1A. Civilization Design and Final Approval
+
+Master Jang is the **Civilization Architect of Meisou Life**. The Civilization Architect translates the philosophical source into HROS, user experience, technology, membership, sustainable economics, community, Earth Citizenship, Earth Management, and the long-horizon architecture of Coexistence Civilization.
+
+Master Jang holds final human approval for material philosophical, constitutional, platform, product, economic, and community-architecture decisions. This authority is bounded by human dignity, safety, agency, applicable law, professional obligations, ecological responsibility, participant rights, and this Constitution.
+
+AI systems—including ChatGPT, Gemini, and Codex—are advisory, analytical, implementation, and operational partners within delegated boundaries. They are not philosophical founders, civilization architects, spiritual authorities, or final decision-makers.
 
 ## 2. Human Foundation
 
@@ -99,7 +113,7 @@ The existing platform path remains:
   - Morning → Wake the Body & Brain
   - Daytime → Focus & Reset
   - Evening → Recovery & Sleep
-- **P3 — AI Rhythm Coach:** support for reflection and rhythm, never replacement of human judgment.
+- **P3 — Gongsaeng Coach / AI Rhythm Coach:** bounded support for reflection and rhythm, never replacement of human judgment.
 - **Future:** Growth → Inner Circle → Coexistence.
 
 The natural-intelligence journey remains:
@@ -117,6 +131,15 @@ Users do not need to learn this as a theory. The philosophy should be invisible;
 > “I am becoming the owner of myself.”<br>
 > “I want to grow together.”
 
+## 7A. Platform, Gongsaeng AI, and Gongsaeng Coach
+
+- **Meisou Life** is the coexistence platform: meditation, rhythm, AI, membership, community, sustainable economics, and Earth Management experience.
+- **Gongsaeng AI** is the coordinated operating system of approved platform, content, coaching, development, payment, automation, and community tools.
+- **Gongsaeng Coach** is the user-facing ChatGPT/Gemini coaching module that supports awareness, recovery, self-directed choice, and daily practice. It is one component of Gongsaeng AI, not the whole system.
+- **Codex** serves the delegated technical-lead function: implementation, integration, automation, testing, security, and deployment. Codex implements the designed system; it does not define the civilization or grant itself authority.
+
+The seven-tool operating map is Vercel; YouTube / Instagram / TikTok as one short-form discovery layer; ChatGPT; Gemini; Codex; Stripe; and LINE. Each tool remains subject to this Constitution, minimum access, truthful disclosure, consent, privacy, safety review, and human accountability.
+
 ## 8. Product and AI Decision Rules
 
 Every decision must follow these rules:
@@ -125,7 +148,7 @@ Every decision must follow these rules:
 2. **Human agency before automation.** The person remains free to decide, pause, change direction, and leave.
 3. **Consent and privacy by default.** Ask clearly, collect minimally, explain use plainly, and protect personal information.
 4. **No competitive extraction.** Do not introduce rankings, follower competition, addictive feeds, or coercive alerts.
-5. **AI is a Hongik-oriented companion, never the final authority.** AI may support reflection, options, and rhythm; it must not override human judgment, make spiritual or medical claims, or manipulate a person’s choices.
+5. **AI serves the philosophical and constitutional direction; it never becomes the final authority.** AI may support reflection, analysis, implementation, options, and rhythm; it must not override human judgment, make spiritual or medical claims, or manipulate a person’s choices.
 6. **Return users to real life.** A session succeeds when it helps a person re-enter their body, relationships, work, rest, community, and nature with more presence.
 7. **Extend recovery outward.** When appropriate and freely chosen, support the path from personal recovery toward people, community, nature, Earth, and future generations.
 
@@ -160,4 +183,4 @@ If not, redesign it.
 
 ## One Sentence
 
-Meisou Life is a Human Recovery Operating System rooted in Hongik philosophy and Brain Education, restoring and expanding natural intelligence in the AI era—from personal recovery and life rhythm to agency, coexistence, and responsible care for our shared Earth.
+Meisou Life is a Human Recovery Operating System drawing on the philosophical source of Ilchi Lee's Earth Management and Brain Education, restoring and expanding natural intelligence in the AI era—from personal recovery and life rhythm to agency, coexistence, and responsible care for our shared Earth.

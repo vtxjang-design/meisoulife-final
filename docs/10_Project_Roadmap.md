@@ -36,7 +36,7 @@ The roadmap is ordered by trust: first make the core experience safe and reliabl
 
 **Objective:** Introduce bounded AI support and strengthen belonging responsibly.
 
-- Establish the AI Board, risk tiers, evaluation suite, and incident process.
+- Establish the AI Executive Council, Human AI Governance Review, risk tiers, evaluation suite, and incident process.
 - Release AI guidance only within the AI Oath, HROS, and Gongsaeng AI Guide.
 - Implement clear AI disclosure, privacy controls, and human escalation pathways.
 - Strengthen community standards, moderator support, reporting, and repair practices.
