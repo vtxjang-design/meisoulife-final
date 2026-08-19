@@ -9,7 +9,7 @@ type MembershipSuccessContentProps = {
   sessionId: string;
   tier: StoredMembershipTier;
   lineUrl: string;
-  coachUrl: string;
+  recoveryUrl: string;
 };
 
 const PROGRAM_ROUTES: Record<StoredMembershipTier, string> = {
@@ -18,8 +18,10 @@ const PROGRAM_ROUTES: Record<StoredMembershipTier, string> = {
   inner_circle: "/program/inner"
 };
 
-export function MembershipSuccessContent({ sessionId, tier, lineUrl, coachUrl }: MembershipSuccessContentProps) {
-  const copy = useSiteCopy().membershipSuccessPage;
+export function MembershipSuccessContent({ sessionId, tier, lineUrl, recoveryUrl }: MembershipSuccessContentProps) {
+  const siteCopy = useSiteCopy();
+  const copy = siteCopy.membershipSuccessPage;
+  const recoveryLabel = siteCopy.header.mobileMenu.find((item) => item.href === "/#one-minute-experience")?.label ?? "1-Minute Recovery";
 
   useEffect(() => {
     setMembershipStatus({
@@ -70,14 +72,12 @@ export function MembershipSuccessContent({ sessionId, tier, lineUrl, coachUrl }:
             >
               {copy.lineButton}
             </a>
-            <a
-              href={coachUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href={recoveryUrl}
               className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
             >
-              {copy.coachButton}
-            </a>
+              {recoveryLabel}
+            </Link>
             <Link
               href="/meditation"
               className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"

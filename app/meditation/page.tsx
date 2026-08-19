@@ -47,9 +47,6 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 const CYCLE_SECONDS = 10;
 const INHALE_SECONDS = 4;
 const HOLD_SECONDS = 2;
-const AI_COACH_URL =
-  process.env.NEXT_PUBLIC_AI_COACH_URL ||
-  "https://chatgpt.com/g/g-69f968bc9a408191a3e5f943912666c0-quiet-rhythm-guide";
 const JOURNEY_AUDIO_PENDING_KEY = "meisoulife_journey_audio_pending";
 const JOURNEY_AUDIO_DAY_KEY = "meisoulife_journey_day";
 const JOURNEY_DAY_IMAGE_MAP: Record<number, string> = {
@@ -1454,7 +1451,9 @@ function MeditationPageContent() {
   const searchParams = useSearchParams();
   const { authResolved } = useAuthState();
   const { language } = useLanguage();
-  const copy = useSiteCopy().meditationPage;
+  const siteCopy = useSiteCopy();
+  const copy = siteCopy.meditationPage;
+  const recoveryLabel = siteCopy.header.mobileMenu.find((item) => item.href === "/#one-minute-experience")?.label ?? "1-Minute Recovery";
   const journeyCopy = useMemo(() => getRhythmJourneyContent(language), [language]);
   const localizedLanguage = language === "kr" || language === "en" || language === "jp" ? language : "jp";
   const routeSearchKey = searchParams.toString();
@@ -5597,14 +5596,12 @@ function MeditationPageContent() {
               <div className="mx-auto max-w-2xl border-t border-white/10 pt-8">
                 <p className="text-base leading-8 text-white/68">{copy.coachPrompt}</p>
                 <div className="mt-5">
-                  <a
-                    href={AI_COACH_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <Link
+                    href="/#one-minute-experience"
                     className="inline-flex min-h-[52px] min-w-[220px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
                   >
-                    {copy.coachButton}
-                  </a>
+                    {recoveryLabel}
+                  </Link>
                 </div>
               </div>
             ) : null}

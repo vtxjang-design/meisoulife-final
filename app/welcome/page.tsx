@@ -6,9 +6,6 @@ import { useEffect, useState } from "react";
 import { useSiteCopy } from "@/lib/i18n";
 
 const LINE_URL = process.env.NEXT_PUBLIC_LINE_URL || "";
-const AI_COACH_URL =
-  process.env.NEXT_PUBLIC_AI_COACH_URL ||
-  "https://chatgpt.com/g/g-69f968bc9a408191a3e5f943912666c0-quiet-rhythm-guide";
 
 function ExternalActionButton({
   href,
@@ -40,6 +37,8 @@ function ExternalActionButton({
 export default function WelcomePage() {
   const siteCopy = useSiteCopy();
   const copy = siteCopy.welcomePage;
+  const recoveryLabel = siteCopy.header.mobileMenu.find((item) => item.href === "/#one-minute-experience")?.label ?? "1-Minute Recovery";
+  const recoverySteps = copy.steps.map((step, index) => (index === 1 ? recoveryLabel : step));
   const router = useRouter();
   const [plan, setPlan] = useState<string | null>(null);
 
@@ -85,19 +84,19 @@ export default function WelcomePage() {
             </div>
           </div>
           <div className="mx-auto mt-8 max-w-2xl rounded-[24px] border border-white/10 bg-white/[0.03] px-6 py-6">
-            <p className="text-xl font-semibold text-white">{copy.coachTitle}</p>
-            <p className="mt-3 text-sm leading-7 text-white/68">{copy.coachDescription}</p>
+            <p className="text-xl font-semibold text-white">{recoveryLabel}</p>
+            <p className="mt-3 text-sm leading-7 text-white/68">{siteCopy.modal.completeBody}</p>
             <div className="mt-5">
-              <ExternalActionButton
-                href={AI_COACH_URL}
-                label={copy.coachButton}
-                fallback={copy.fallback}
+              <Link
+                href="/#one-minute-experience"
                 className="inline-flex min-h-[52px] min-w-[220px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
-              />
+              >
+                {recoveryLabel}
+              </Link>
             </div>
           </div>
           <div className="mx-auto mt-8 max-w-2xl space-y-3">
-            {copy.steps.map((step, index) => (
+            {recoverySteps.map((step, index) => (
               <p key={step} className="text-base leading-8 text-white/72 sm:text-lg">
                 {index + 1}. {step}
               </p>
@@ -112,12 +111,12 @@ export default function WelcomePage() {
               className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-4 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
             />
 
-            <ExternalActionButton
-              href={AI_COACH_URL}
-              label={copy.coachButton}
-              fallback={copy.fallback}
+            <Link
+              href="/#one-minute-experience"
               className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-4 text-sm font-semibold text-white/82 transition duration-300 hover:bg-white/[0.06]"
-            />
+            >
+              {recoveryLabel}
+            </Link>
 
             <Link
               href="/meditation"

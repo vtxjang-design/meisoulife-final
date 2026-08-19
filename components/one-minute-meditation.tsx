@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { getNatureSoundPreference, setNatureSoundPreference, startAmbientNatureAudio, stopAmbientNatureAudio } from "@/lib/meditation-ambient-audio";
 import { handleMeditationComplete as triggerMeditationCompletion, supportsMeditationVibration } from "@/lib/meditation-completion";
 import { markDailyRhythmCompleted } from "@/lib/return-rhythm";
@@ -11,10 +12,6 @@ const INHALE_SECONDS = 4;
 const HOLD_SECONDS = 2;
 const EXHALE_SECONDS = 4;
 const BREATH_CYCLE_SECONDS = INHALE_SECONDS + HOLD_SECONDS + EXHALE_SECONDS;
-const AI_COACH_URL =
-  process.env.NEXT_PUBLIC_AI_COACH_URL ||
-  "https://chatgpt.com/g/g-69f968bc9a408191a3e5f943912666c0-quiet-rhythm-guide";
-
 type BreathPhase = "inhale" | "hold" | "exhale";
 
 type OneMinuteMeditationProps = {
@@ -74,6 +71,7 @@ function requiresMobileAudioGesture() {
 export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditationProps) {
   const copy = useSiteCopy();
   const modalCopy = copy.modal;
+  const recoveryLabel = copy.header.mobileMenu.find((item) => item.href === "/#one-minute-experience")?.label ?? "1-Minute Recovery";
   const [secondsLeft, setSecondsLeft] = useState(TOTAL_SECONDS);
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [vibrationEnabled, setVibrationEnabled] = useState(true);
@@ -582,14 +580,12 @@ export default function OneMinuteMeditation({ open, onClose }: OneMinuteMeditati
                   {modalCopy.breatheAgain}
                 </button>
 
-                <a
-                  href={AI_COACH_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href="/#one-minute-experience"
                   className="inline-flex min-h-[52px] w-full items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white/84 transition hover:bg-white/[0.07]"
                 >
-                  {modalCopy.tellAi}
-                </a>
+                  {recoveryLabel}
+                </Link>
               </div>
             </div>
           )}

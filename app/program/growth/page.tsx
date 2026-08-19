@@ -6,7 +6,6 @@ import { SectionHeading } from "@/components/section-heading";
 import { useSiteCopy } from "@/lib/i18n";
 
 const LINE_URL = process.env.NEXT_PUBLIC_LINE_URL || "";
-const AI_COACH_URL = process.env.NEXT_PUBLIC_AI_COACH_URL || "";
 
 function ExternalSupportButton({
   href,
@@ -41,7 +40,9 @@ function ExternalSupportButton({
 }
 
 export default function GrowthProgramPage() {
-  const program = useSiteCopy().programPages.growth;
+  const siteCopy = useSiteCopy();
+  const program = siteCopy.programPages.growth;
+  const recoveryLabel = siteCopy.header.mobileMenu.find((item) => item.href === "/#one-minute-experience")?.label ?? "1-Minute Recovery";
 
   return (
     <ProgramAccessGuard requiredPlan="growth">
@@ -88,7 +89,12 @@ export default function GrowthProgramPage() {
           <p className="mt-4 max-w-3xl text-base leading-8 text-white/72">{program.communityDescription}</p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <ExternalSupportButton href={LINE_URL} label={program.lineButton} fallback={program.fallback} />
-            <ExternalSupportButton href={AI_COACH_URL} label={program.coachButton} fallback={program.fallback} />
+            <Link
+              href="/#one-minute-experience"
+              className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
+            >
+              {recoveryLabel}
+            </Link>
             <Link
               href="/meditation"
               className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
