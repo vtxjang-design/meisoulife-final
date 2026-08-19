@@ -3,9 +3,6 @@ import { MembershipSuccessContent } from "@/components/membership-success-conten
 import { getStripeClient } from "@/lib/stripe";
 
 const LINE_URL = process.env.NEXT_PUBLIC_LINE_URL || process.env.NEXT_PUBLIC_LINE_FREE_URL || "https://lin.ee/z8Lzvvs";
-const AI_COACH_URL =
-  process.env.NEXT_PUBLIC_AI_COACH_URL ||
-  "https://chatgpt.com/g/g-69f968bc9a408191a3e5f943912666c0-quiet-rhythm-guide";
 
 type MembershipSuccessPageProps = {
   searchParams?: Promise<{
@@ -90,5 +87,5 @@ export default async function MembershipSuccessPage({ searchParams }: Membership
     );
   }
 
-  return <MembershipSuccessContent sessionId={session.id} tier={tier} lineUrl={LINE_URL} coachUrl={AI_COACH_URL} />;
+  return <MembershipSuccessContent sessionId={session.id} tier={tier} lineUrl={LINE_URL} recoveryUrl="/#one-minute-experience" />;
 }

@@ -6,7 +6,6 @@ import { SectionHeading } from "@/components/section-heading";
 import { useSiteCopy } from "@/lib/i18n";
 
 const LINE_URL = process.env.NEXT_PUBLIC_LINE_URL || "";
-const AI_COACH_URL = process.env.NEXT_PUBLIC_AI_COACH_URL || "";
 
 function ExternalSupportButton({
   href,
@@ -41,7 +40,9 @@ function ExternalSupportButton({
 }
 
 export default function InnerProgramPage() {
-  const program = useSiteCopy().programPages.inner;
+  const siteCopy = useSiteCopy();
+  const program = siteCopy.programPages.inner;
+  const recoveryLabel = siteCopy.header.mobileMenu.find((item) => item.href === "/#one-minute-experience")?.label ?? "1-Minute Recovery";
 
   return (
     <ProgramAccessGuard requiredPlan="inner_circle">
@@ -109,7 +110,12 @@ export default function InnerProgramPage() {
             >
               {program.meditationButton}
             </Link>
-            <ExternalSupportButton href={AI_COACH_URL} label={program.coachButton} fallback={program.fallback} />
+            <Link
+              href="/#one-minute-experience"
+              className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.08]"
+            >
+              {recoveryLabel}
+            </Link>
             <ExternalSupportButton href={LINE_URL} label={program.lineButton} fallback={program.fallback} />
             <Link
               href="/program/growth"
