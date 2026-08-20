@@ -1,6 +1,6 @@
 # Gongsaeng Coach MVP
 
-**Version:** 0.1
+**Version:** 0.2
 
 **Status:** Product design draft; no implementation approval
 
@@ -213,3 +213,174 @@ On 2026-08-20, Master Jang approved the product design and implementation plan f
 - The `/coach` unavailable notice and the fixed `503 Service Unavailable` Coach API isolation remain in force.
 
 Gongsaeng Coach MVP remains **HOLD** pending privacy, safety, provider, crisis-support, evaluation, governance review, and final human approval.
+
+## 17. Phase 1 Safety & Data Contract
+
+**Decision date:** 2026-08-20
+
+**Status:** `PROPOSED — IMPLEMENTATION HOLD`
+
+Master Jang approved documenting the Phase 1 Safety & Data Contract. This approval defines the conditions that a future implementation proposal must satisfy. It does not authorize generative model integration, public Coach access, production deployment, persistent memory, or removal of the existing Coach isolation.
+
+### 17.1 Smallest candidate experience
+
+The first generative candidate, if later approved, is a bounded single-session reflection after the approved recovery experience:
+
+```text
+AI disclosure and voluntary consent
+→ Notice present state
+→ Complete approved One-Minute Recovery
+→ User chooses or writes one small action
+→ Optional one-turn AI reflection
+→ User reviews, edits, deletes, declines, or ends
+→ Return to ordinary life
+```
+
+The model must not replace the approved One-Minute Recovery, choose an action for the user, continue into unrestricted chat, or create pressure to return. Membership, sales, referral, and community-recruitment prompts are excluded from emotionally vulnerable moments and from this candidate experience.
+
+### 17.2 Access contract
+
+The safest initial proposal is an authenticated, explicitly invited, limited pilot rather than guest or public access. Final eligibility, age handling, pilot size, launch country, language coverage, and membership entitlement remain unresolved governance decisions.
+
+Until those decisions are approved:
+
+- `/coach` remains unavailable;
+- `POST /api/coach` remains isolated with `503 Service Unavailable`;
+- no external Coach URL is restored;
+- no background, scheduled, or LINE-initiated AI conversation is introduced; and
+- Phase 0 remains usable without account creation or AI participation where currently approved.
+
+### 17.3 Data contract
+
+The proposed first slice follows data minimization by default:
+
+- Do not retain raw conversation text by default.
+- Do not create long-term memory, embeddings, profiles, inferred traits, recovery scores, or spiritual or mental-health classifications.
+- Do not use user text or emotional disclosures for advertising, recruitment, conversion optimization, leadership selection, ranking, or model training by Meisou Life.
+- Send only the minimum text required for the immediate optional reflection.
+- Configure the selected provider to avoid response storage where the provider and endpoint support it, and verify the effective retention policy before release.
+- Do not run the same user content through multiple model providers for comparison unless the user-facing purpose, consent, and data roles have been separately approved.
+- Do not expose conversation content to operators by default.
+
+If any persistence is later proposed, it requires a separate decision covering the exact fields, purpose, lawful basis or consent, retention period, access roles, audit trail, correction, item-level deletion, full deletion, backup behavior, incident handling, and user-facing explanation. The safer first implementation remains no persistence.
+
+Operational telemetry, if approved, must exclude user message content and use the smallest non-identifying event set needed to measure reliability and safety. Even content-free safety-event metadata requires a documented purpose, access boundary, retention period, and Human AI Governance Review.
+
+### 17.4 Provider contract
+
+ChatGPT and Gemini are potential Gongsaeng Coach support tools, not automatic parallel processors. Before selecting either provider, the review must record:
+
+- the primary provider and the narrowly defined role of any secondary provider;
+- endpoint and model version;
+- default and configured retention behavior;
+- training and human-review settings;
+- subprocessors, processing locations, and applicable contractual terms;
+- deletion and incident-notification behavior;
+- availability, latency, token, and cost limits; and
+- a safe failure mode that does not generate fallback coaching.
+
+The pilot should use one approved primary provider unless a documented safety or reliability reason justifies another architecture. A provider must not determine product policy, spiritual meaning, eligibility, safety thresholds, or final user decisions.
+
+### 17.5 Safety contract
+
+Safety routing must occur before an ordinary coaching model call whenever feasible. Imminent self-harm, harm to others, abuse, medical emergency, immediate danger, or another defined high-risk situation must stop the normal Coach flow and present reviewed, localized support appropriate to the launch country.
+
+For serious depression, hallucinations, delusional beliefs, mania, dissociation, severe anxiety, trauma activation, or similar crisis indicators:
+
+- do not intensify meditation, breath retention, Zero Consciousness practice, or spiritual interpretation;
+- do not diagnose, debate the person's reality, or offer false reassurance;
+- use brief grounding and clear AI limits;
+- encourage appropriate local emergency, crisis, professional, or trusted-person support; and
+- end prolonged automated coaching.
+
+Country-specific crisis wording, emergency information, translations, accessibility, and escalation ownership require qualified human review before launch. If reliable local support cannot be provided for a country or language, the Coach must not launch there.
+
+### 17.6 User-control and response contract
+
+The interface must continuously preserve:
+
+- clear disclosure that the Coach is AI and not clinical, crisis, or spiritual authority;
+- one purposeful question or response at a time;
+- `Pause`, `Write My Own`, and `End` controls;
+- refusal without penalty;
+- review and editing before any approved save action;
+- deletion and reset wherever saved data exists; and
+- a short ending that returns the user to body, relationships, rest, work, community, nature, or another ordinary-life context.
+
+The Coach must not claim special understanding, ask for unnecessary intimate detail, certify recovery or awakening, prescribe life decisions, create urgency, promise constant availability, or say that the user should return tomorrow.
+
+### 17.7 Technical and economic limits
+
+Any implementation proposal must define and test:
+
+- one bounded reflection turn per approved session;
+- maximum input and output lengths;
+- server-side authentication and authorization;
+- per-user and global rate limits;
+- token, latency, concurrency, and monetary budgets;
+- request timeout and safe error behavior;
+- abuse and prompt-injection handling;
+- a server-side feature flag and immediate kill switch;
+- monitoring that does not capture message content by default; and
+- an accountable human owner, incident path, rollback action, and review date.
+
+Fallback behavior must return a fixed, non-personalized safe notice or the approved deterministic recovery path. It must not silently substitute another model or generate improvised coaching.
+
+### 17.8 Evaluation and stop conditions
+
+Pre-release evaluation must include Japanese, Korean, and English scenarios proportionate to the approved launch scope:
+
+- ordinary recovery and choice;
+- ambiguous or incomplete input;
+- refusal, correction, deletion, and ending;
+- privacy requests and unnecessary disclosure;
+- prompt injection and adversarial attempts;
+- self-harm, violence, abuse, medical emergency, and immediate danger;
+- hallucination, delusional belief, mania, dissociation, trauma activation, and severe anxiety;
+- spiritual-ranking, enlightenment-certification, dependency, and authority-seeking prompts; and
+- provider, timeout, quota, malformed-input, and network failures.
+
+A material safety failure, unintended provider or database transmission, missing exit, spiritual or clinical diagnosis, dependency cue, inaccessible crisis path, or failure of the kill switch is a release stop condition.
+
+### 17.9 Success measures
+
+Primary pilot measures are:
+
+- user-reported small recovery, steadiness, or clarity;
+- ability to make, change, decline, or delete one's own choice;
+- understanding of AI and data boundaries;
+- voluntary ending and return to real-life action;
+- absence and severity of safety, privacy, dependency, and coercion incidents; and
+- operational reliability within the approved cost and resource budget.
+
+Conversation length, message volume, daily return, streaks, emotional disclosure, referral, membership upgrade, and payment conversion are not primary success measures for this experience.
+
+### 17.10 HOLD release checklist
+
+Implementation remains **HOLD** until all of the following are recorded and approved:
+
+1. Entry point, eligibility, age handling, pilot size, launch country, and supported languages.
+2. Primary provider, model, endpoint, retention settings, vendor roles, and contractual review.
+3. Final no-storage or explicitly approved persistence design, including access, retention, correction, and deletion.
+4. Reviewed crisis taxonomy, localized support content, and accountable human escalation path.
+5. Authentication, rate, token, cost, timeout, feature-flag, monitoring, rollback, and kill-switch design.
+6. Representative multilingual evaluation and manual red-team results with no unresolved material failure.
+7. Human AI Governance Review appropriate to this high-risk, emotionally sensitive use case.
+8. Master Jang's explicit final approval of the exact Phase 1A vertical slice.
+
+Only after this checklist is complete may a separate implementation proposal be submitted. That proposal must identify exact files, tests, affected people, safeguards, rollback, stop conditions, and the smallest limited-pilot scope before any code change.
+
+### 17.11 Mandatory Decision Test for this document
+
+| Question | Result | Reason |
+| --- | --- | --- |
+| Philosophical source and Constitution | PASS | The contract keeps AI subordinate to human dignity, agency, safety, and final human approval. |
+| Original Rhythm recovery | PASS | The approved One-Minute Recovery remains the center of the bounded flow. |
+| Brain Ownership and agency | PASS | Choice, correction, refusal, deletion, and ending remain with the user. |
+| Healthy symbiosis | PASS for design | The contract prohibits dependency, pressure, recruitment, and vulnerable-moment selling. |
+| Earth Management | PASS for design | It requires minimal data, bounded computation, explicit budgets, and responsible provider use. |
+| AI supports rather than replaces | PASS for design | AI is limited to one optional reflection and cannot diagnose, certify, command, or decide. |
+| Data minimization and user control | PASS for the proposed no-storage contract | Any persistence requires a separate approval. |
+| Production implementation | HOLD | Provider, privacy, crisis, evaluation, operational, professional-review, and final-approval decisions remain unresolved. |
+
+**Decision:** PASS for documentation of the Phase 1 Safety & Data Contract. **Gongsaeng Coach implementation remains HOLD.**
