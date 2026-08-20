@@ -5,7 +5,10 @@ import test from "node:test";
 const meditationPageSource = readFileSync(new URL("../app/meditation/page.tsx", import.meta.url), "utf8");
 const rhythmJourneyPageSource = readFileSync(new URL("../components/rhythm-journey-page.tsx", import.meta.url), "utf8");
 const instantMeditationSource = readFileSync(new URL("../components/instant-meditation-section.tsx", import.meta.url), "utf8");
+const recoveryChoiceBridgeSource = readFileSync(new URL("../components/recovery-choice-bridge.tsx", import.meta.url), "utf8");
 const landingCopySource = readFileSync(new URL("../lib/landing-copy.ts", import.meta.url), "utf8");
+const coachPageSource = readFileSync(new URL("../app/coach/page.tsx", import.meta.url), "utf8");
+const coachApiSource = readFileSync(new URL("../app/api/coach/route.ts", import.meta.url), "utf8");
 
 test("recharge gate titles avoid awkward mobile wrapping while preserving desktop sizing", () => {
   assert.match(meditationPageSource, /localizedLanguage === "kr"/);
@@ -49,16 +52,42 @@ test("60-second reset replay and cleanup restore the intended audio start state"
   assert.match(instantMeditationSource, /window\.cancelAnimationFrame\(videoFadeRafRef\.current\)/);
 });
 
-test("ZERO GATE completion offers an optional localized reflection without persistence", () => {
+test("ZERO GATE completion offers the optional local Recovery Choice Bridge without an upgrade", () => {
   assert.match(instantMeditationSource, /showReflectionBridge/);
   assert.match(instantMeditationSource, /showCompletionState && isZeroGateKey\(selectedGate\) && showReflectionBridge/);
-  assert.match(instantMeditationSource, /aria-pressed=\{selected\}/);
-  assert.match(instantMeditationSource, /setShowReflectionBridge\(false\)/);
-  assert.doesNotMatch(instantMeditationSource, /MEDITATION_MOOD_STORAGE_KEY/);
-  assert.doesNotMatch(instantMeditationSource, /meisoulife_instant_meditation_mood/);
-  assert.match(landingCopySource, /少しだけ、楽になった感じはありますか？/);
-  assert.match(landingCopySource, /조금 더 편안해진 느낌이 있나요\?/);
-  assert.match(landingCopySource, /Do you feel a little more at ease\?/);
+  assert.match(instantMeditationSource, /<RecoveryChoiceBridge copy=\{copy\.recoveryChoiceBridge\} supportChoices=\{copy\.supportChoices\} \/>/);
+  assert.doesNotMatch(instantMeditationSource, /\/program\/basic/);
+  assert.match(landingCopySource, /今、ほんの少しでも変わったことはありますか？/);
+  assert.match(landingCopySource, /지금, 아주 조금이라도 달라진 것이 있나요\?/);
+  assert.match(landingCopySource, /Does anything feel even slightly different right now\?/);
+});
+
+test("Recovery Choice Bridge is optional, localized, editable, and client-only", () => {
+  assert.match(recoveryChoiceBridgeSource, /MAX_CUSTOM_CHOICE_LENGTH = 120/);
+  assert.match(recoveryChoiceBridgeSource, /maxLength=\{MAX_CUSTOM_CHOICE_LENGTH\}/);
+  assert.match(recoveryChoiceBridgeSource, /aria-pressed=\{selected\}/);
+  assert.match(recoveryChoiceBridgeSource, /aria-pressed=\{selectedChoice === choice\.label\}/);
+  assert.match(recoveryChoiceBridgeSource, /copy\.skipOutcome/);
+  assert.match(recoveryChoiceBridgeSource, /copy\.noChoice/);
+  assert.match(recoveryChoiceBridgeSource, /copy\.changeChoice/);
+  assert.match(recoveryChoiceBridgeSource, /copy\.deleteChoice/);
+  assert.match(recoveryChoiceBridgeSource, /copy\.endForToday/);
+  assert.doesNotMatch(recoveryChoiceBridgeSource, /\b(fetch|localStorage|sessionStorage|cookies|supabase|openai|gemini|analytics)\b/i);
+  assert.doesNotMatch(recoveryChoiceBridgeSource, /AI Coach|Gongsaeng Coach|chatbot/i);
+  assert.match(landingCopySource, /この案内では生成AIを使用していません。あなたの選択は送信・保存されません。/);
+  assert.match(landingCopySource, /이 안내에서는 생성형 AI를 사용하지 않습니다. 당신의 선택은 전송되거나 저장되지 않습니다\./);
+  assert.match(landingCopySource, /This guided step does not use generative AI\. Your choice is not sent or saved\./);
+});
+
+test("Coach emergency isolation remains independent from the Recovery Choice Bridge", () => {
+  assert.match(coachPageSource, /useLanguage/);
+  assert.match(coachPageSource, /isolationCopy/);
+  assert.match(coachPageSource, /\/#one-minute-experience/);
+  assert.doesNotMatch(coachPageSource, /CoachConsole|textarea|input/);
+  assert.match(coachApiSource, /status:\s*503/);
+  assert.match(coachApiSource, /"Cache-Control":\s*"no-store"/);
+  assert.doesNotMatch(coachApiSource, /request\.(json|text|arrayBuffer|formData)/);
+  assert.doesNotMatch(coachApiSource, /openai|supabase|fallback|prompt/i);
 });
 
 test("ZERO GATE completion exits fullscreen before scrolling the reflection bridge once", () => {

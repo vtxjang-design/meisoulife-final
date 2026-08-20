@@ -202,3 +202,14 @@ Evaluation must include normal, ambiguous, adversarial, privacy, distress, and c
 4. Obtain Human AI Governance Review appropriate to risk.
 5. Obtain Master Jang's final approval for the first vertical slice.
 6. Implement the smallest safe path with tests, monitoring, rollback, and stop conditions.
+
+## 16. Recovery Choice Bridge Phase 0 Decision Record
+
+On 2026-08-20, Master Jang approved the product design and implementation plan for Recovery Choice Bridge Phase 0. This approval is limited to a deterministic, non-generative continuation after the approved One-Minute Recovery experience.
+
+- It offers an optional notice of outcome, one self-directed small action, review, edit, deletion, refusal, and an ending that returns the person to ordinary life.
+- It makes no Coach API, model-provider, database, or persistent-memory call. The choice exists only in client React state and is not sent or saved.
+- It validates only this bounded interaction. It does not launch, enable, or re-enable Gongsaeng Coach.
+- The `/coach` unavailable notice and the fixed `503 Service Unavailable` Coach API isolation remain in force.
+
+Gongsaeng Coach MVP remains **HOLD** pending privacy, safety, provider, crisis-support, evaluation, governance review, and final human approval.

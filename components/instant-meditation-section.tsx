@@ -5,6 +5,7 @@ import { useLanguage, type Language } from "@/lib/i18n";
 import type { LandingCopy } from "@/lib/landing-copy";
 import { handleMeditationComplete as playMeditationCompletion } from "@/lib/meditation-completion";
 import { markDailyRhythmCompleted } from "@/lib/return-rhythm";
+import { RecoveryChoiceBridge } from "@/components/recovery-choice-bridge";
 
 type Phase = "inhale" | "hold" | "exhale";
 
@@ -296,30 +297,6 @@ function getBottomBreathGuidance(startLabel: string) {
   return "Let your breath be natural.";
 }
 
-function getNextStepText(startLabel: string) {
-  if (/[가-힣]/.test(startLabel)) {
-    return "아침의 리듬을 깨우는 3분으로.";
-  }
-
-  if (/[ぁ-んァ-ン一-龯]/.test(startLabel)) {
-    return "朝のリズムを整える、3分へ。";
-  }
-
-  return "Continue with a 3-minute morning rhythm.";
-}
-
-function getNextStepCta(startLabel: string) {
-  if (/[가-힣]/.test(startLabel)) {
-    return "Morning Gate 체험하기";
-  }
-
-  if (/[ぁ-んァ-ン一-龯]/.test(startLabel)) {
-    return "Morning Gateを見る";
-  }
-
-  return "Explore Morning Gate";
-}
-
 function getFullscreenLabel(language: Language) {
   if (language === "jp") {
     return "全画面で表示";
@@ -338,7 +315,6 @@ export function InstantMeditationSection({ copy, onExperienceActiveChange }: Ins
   const [secondsLeft, setSecondsLeft] = useState(TOTAL_SECONDS);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [hasUserGesture, setHasUserGesture] = useState(false);
-  const [selectedSupportChoice, setSelectedSupportChoice] = useState("");
   const [showReflectionBridge, setShowReflectionBridge] = useState(true);
   const [selectedGate, setSelectedGate] = useState<MeditationExperienceKey>(DEFAULT_SANCTUARY);
   const [hasSelectedGate, setHasSelectedGate] = useState(false);
@@ -601,8 +577,6 @@ export function InstantMeditationSection({ copy, onExperienceActiveChange }: Ins
 
   const centerFocusText = getCenterFocusText(copy.start);
   const bottomBreathGuidance = getBottomBreathGuidance(copy.start);
-  const nextStepText = getNextStepText(copy.start);
-  const nextStepCta = getNextStepCta(copy.start);
   const fullscreenLabel = getFullscreenLabel(language);
   const sanctuaryVisual = sanctuaryVisuals[selectedGate];
   const activeVideoSource = hasSelectedGate ? sanctuaryVisual.source : null;
@@ -840,7 +814,6 @@ export function InstantMeditationSection({ copy, onExperienceActiveChange }: Ins
     pendingAutoStartRef.current = true;
     endingFadeStartedRef.current = false;
     setRecoveryStarted(false);
-    setSelectedSupportChoice("");
     setShowReflectionBridge(true);
     reflectionScrollRequestedRef.current = false;
 
@@ -856,7 +829,6 @@ export function InstantMeditationSection({ copy, onExperienceActiveChange }: Ins
     setVideoLoading(true);
     setVideoFailed(false);
     setAudioBlocked(false);
-    setSelectedSupportChoice("");
     setShowReflectionBridge(true);
     reflectionScrollRequestedRef.current = false;
     experienceScrollRequestedRef.current = false;
@@ -920,10 +892,6 @@ export function InstantMeditationSection({ copy, onExperienceActiveChange }: Ins
       audioContextRef,
       playSoundOnComplete: false
     });
-  }
-
-  function handleSupportChoice(choiceKey: string) {
-    setSelectedSupportChoice(choiceKey);
   }
 
   function handleVideoError() {
@@ -991,51 +959,10 @@ export function InstantMeditationSection({ copy, onExperienceActiveChange }: Ins
                 <div className="rounded-[24px] border border-gold/18 bg-gold/[0.06] p-5">
                   <p className="text-sm leading-[1.8] text-white/82">{copy.completionMessage}</p>
                   {showZeroGateReflection ? (
-                    <div ref={reflectionBridgeRef} className="mt-5 border-t border-white/10 pt-5">
-                      <p className="text-sm font-medium leading-6 text-white/82">{copy.reflection.recoveryQuestion}</p>
-                      <p className="mt-2 text-sm leading-6 text-white/58">{copy.reflection.awarenessPrompt}</p>
-                      <p className="mt-4 text-sm font-medium leading-6 text-white/78">{copy.reflection.choiceQuestion}</p>
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        {copy.supportChoices.map((choice) => {
-                          const selected = selectedSupportChoice === choice.key;
-
-                          return (
-                            <button
-                              key={choice.key}
-                              type="button"
-                              aria-pressed={selected}
-                              onClick={() => handleSupportChoice(choice.key)}
-                              className={`min-h-[44px] rounded-full border px-4 py-2 text-sm font-medium transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/65 focus-visible:ring-offset-2 focus-visible:ring-offset-[#08111b] ${
-                                selected
-                                  ? "border-gold/35 bg-gold/[0.16] text-white shadow-[0_12px_28px_rgba(212,186,117,0.12)]"
-                                  : "border-white/10 bg-white/[0.05] text-white/72 hover:border-white/14 hover:bg-white/[0.07] hover:text-white"
-                              }`}
-                            >
-                              {choice.label}
-                            </button>
-                          );
-                        })}
-                      </div>
-                      {selectedSupportChoice ? <p className="mt-3 text-sm leading-6 text-white/56">{copy.reflection.choiceAcknowledgement}</p> : null}
-                      <p className="mt-3 text-xs leading-5 text-white/48">{copy.reflection.noChangeNote}</p>
-                      <button
-                        type="button"
-                        onClick={() => setShowReflectionBridge(false)}
-                        className="mt-3 min-h-[44px] text-sm text-white/60 underline decoration-white/25 underline-offset-4 transition hover:text-white/82 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/65 focus-visible:ring-offset-2 focus-visible:ring-offset-[#08111b]"
-                      >
-                        {copy.reflection.skipLabel}
-                      </button>
+                    <div ref={reflectionBridgeRef} className="mt-5">
+                      <RecoveryChoiceBridge copy={copy.recoveryChoiceBridge} supportChoices={copy.supportChoices} />
                     </div>
                   ) : null}
-                  <div className="mt-5 rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-4 text-center">
-                    <p className="text-sm leading-6 text-white/68">{nextStepText}</p>
-                    <a
-                      href="/program/basic"
-                      className="mt-3 inline-flex min-h-[46px] items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-5 py-2.5 text-sm font-medium text-white/86 transition duration-300 hover:bg-white/[0.08]"
-                    >
-                      {nextStepCta}
-                    </a>
-                  </div>
                 </div>
               </div>
             ) : null}

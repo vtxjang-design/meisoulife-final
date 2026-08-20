@@ -117,13 +117,21 @@ export type LandingCopy = {
     exhale: string;
     sensory: string;
     stages: string[];
-    reflection: {
-      recoveryQuestion: string;
-      awarenessPrompt: string;
+    recoveryChoiceBridge: {
+      outcomeQuestion: string;
+      outcomes: string[];
+      skipOutcome: string;
       choiceQuestion: string;
-      noChangeNote: string;
-      choiceAcknowledgement: string;
-      skipLabel: string;
+      writeOwn: string;
+      customChoiceLabel: string;
+      chooseCustomChoice: string;
+      noChoice: string;
+      privacyNote: string;
+      reviewMessage: string;
+      changeChoice: string;
+      deleteChoice: string;
+      endForToday: string;
+      endingMessage: string;
     };
     supportChoices: Array<{
       key: string;
@@ -516,13 +524,21 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       exhale: "吐いて",
       sensory: "読む前に、まず呼吸へ。目を閉じたままでも、静かなリズムを感じられます。",
       stages: ["10 sec breathing", "20 sec body awareness", "20 sec emotional calming", "10 sec gratitude"],
-      reflection: {
-        recoveryQuestion: "少しだけ、楽になった感じはありますか？",
-        awarenessPrompt: "何も変えようとせず、今の違いに気づいてみてください。",
+      recoveryChoiceBridge: {
+        outcomeQuestion: "今、ほんの少しでも変わったことはありますか？",
+        outcomes: ["少し楽になった", "まだよくわからない", "特に変化はない"],
+        skipOutcome: "今は答えない",
         choiceQuestion: "今の自分を支える、小さな選択は？",
-        noChangeNote: "変化がなくても大丈夫です。",
-        choiceAcknowledgement: "そのままで大丈夫です。",
-        skipLabel: "今はこのままにする"
+        writeOwn: "自分で書く",
+        customChoiceLabel: "自分で選ぶ小さな一歩",
+        chooseCustomChoice: "この選択にする",
+        noChoice: "今日は選ばない",
+        privacyNote: "この案内では生成AIを使用していません。あなたの選択は送信・保存されません。",
+        reviewMessage: "これはあなた自身が選んだ、小さな一歩です。\n今は日常に戻って大丈夫です。",
+        changeChoice: "選択を変える",
+        deleteChoice: "選択を削除する",
+        endForToday: "今日はここまで",
+        endingMessage: "今日はここまでで十分です。"
       },
       supportChoices: [
         { key: "water", label: "水を飲む" },
@@ -1010,13 +1026,21 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       exhale: "내쉬기",
       sensory: "읽기보다 먼저 호흡으로. 눈을 감은 채로도 조용한 리듬을 느낄 수 있습니다.",
       stages: ["10초 호흡", "20초 몸 감각", "20초 감정 진정", "10초 감사"],
-      reflection: {
-        recoveryQuestion: "조금 더 편안해진 느낌이 있나요?",
-        awarenessPrompt: "바꾸려 하지 말고, 지금 조금 다른 점을 알아차려 보세요.",
+      recoveryChoiceBridge: {
+        outcomeQuestion: "지금, 아주 조금이라도 달라진 것이 있나요?",
+        outcomes: ["조금 편안해졌어요", "아직 잘 모르겠어요", "특별한 변화가 없어요"],
+        skipOutcome: "지금은 답하지 않을래요",
         choiceQuestion: "지금 나를 돕는 작은 선택은 무엇일까요?",
-        noChangeNote: "달라진 점이 없어도 괜찮습니다.",
-        choiceAcknowledgement: "그 선택이면 충분합니다.",
-        skipLabel: "지금은 이대로 있기"
+        writeOwn: "내가 직접 쓰기",
+        customChoiceLabel: "내가 고르는 작은 한 걸음",
+        chooseCustomChoice: "이 선택으로 하기",
+        noChoice: "오늘은 선택하지 않기",
+        privacyNote: "이 안내에서는 생성형 AI를 사용하지 않습니다. 당신의 선택은 전송되거나 저장되지 않습니다.",
+        reviewMessage: "이것은 당신이 직접 선택한 작은 한 걸음입니다.\n지금은 일상으로 돌아가도 충분합니다.",
+        changeChoice: "선택 수정하기",
+        deleteChoice: "선택 지우기",
+        endForToday: "오늘은 여기까지",
+        endingMessage: "오늘은 여기까지면 충분합니다."
       },
       supportChoices: [
         { key: "water", label: "물 한 잔 마시기" },
@@ -1499,13 +1523,21 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       exhale: "Exhale",
       sensory: "Before reading more, return to breath first. The quiet rhythm can be felt even with your eyes closed.",
       stages: ["10 sec breathing", "20 sec body awareness", "20 sec emotional calming", "10 sec gratitude"],
-      reflection: {
-        recoveryQuestion: "Do you feel a little more at ease?",
-        awarenessPrompt: "Without changing anything, notice what feels a little different.",
+      recoveryChoiceBridge: {
+        outcomeQuestion: "Does anything feel even slightly different right now?",
+        outcomes: ["I feel a little more at ease", "I’m not sure yet", "Nothing feels different"],
+        skipOutcome: "I’d rather not answer",
         choiceQuestion: "What is one small choice that would support you now?",
-        noChangeNote: "It is okay if nothing feels different.",
-        choiceAcknowledgement: "That is enough for now.",
-        skipLabel: "Not now"
+        writeOwn: "Write my own",
+        customChoiceLabel: "One small step I choose",
+        chooseCustomChoice: "Choose this step",
+        noChoice: "Make no choice today",
+        privacyNote: "This guided step does not use generative AI. Your choice is not sent or saved.",
+        reviewMessage: "This is one small step you chose for yourself.\nIt is enough to return to your day now.",
+        changeChoice: "Change my choice",
+        deleteChoice: "Delete my choice",
+        endForToday: "End for today",
+        endingMessage: "That is enough for today."
       },
       supportChoices: [
         { key: "water", label: "Drink some water" },
