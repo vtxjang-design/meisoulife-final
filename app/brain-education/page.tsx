@@ -120,7 +120,7 @@ export default function BrainEducationPage() {
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <Link
-            href="/meditation"
+            href="/#one-minute-experience"
             className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
           >
             {copy.primary}

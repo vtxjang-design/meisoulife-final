@@ -55,7 +55,7 @@ export function MobileCTA({ copy }: MobileCTAProps) {
               {copy.meditate}
             </Link>
             <Link
-              href="#ai-rhythm-coach"
+              href="#one-minute-experience"
               onClick={() => setOpen(false)}
               className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-4 text-sm font-semibold text-white"
             >

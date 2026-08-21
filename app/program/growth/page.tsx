@@ -96,7 +96,7 @@ export default function GrowthProgramPage() {
               {recoveryLabel}
             </Link>
             <Link
-              href="/meditation"
+              href="/#one-minute-experience"
               className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition duration-300 hover:bg-[#e7cd92]"
             >
               {program.meditationButton}
