@@ -114,7 +114,7 @@ export function TodayRhythmCheckin({ copy }: TodayRhythmCheckinProps) {
                   {current.recommendation.cta}
                 </a>
                 <a
-                  href="#ai-rhythm-coach"
+                  href="#one-minute-experience"
                   className="inline-flex min-h-[54px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-6 py-4 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
                 >
                   {copy.secondaryCta}

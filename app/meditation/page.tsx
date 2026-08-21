@@ -1696,21 +1696,21 @@ function MeditationPageContent() {
   const invalidRouteCopy =
     localizedLanguage === "kr"
       ? {
-          title: "명상을 여는 경로를 확인할 수 없습니다",
-          body: "다시 시도하거나 BASIC으로 돌아가 주세요.",
-          button: "BASIC으로 돌아가기"
+          title: "1분 회복부터 시작해 주세요",
+          body: "이 링크에는 시작할 회복 경험이 지정되어 있지 않습니다. 홈의 1분 회복으로 안전하게 돌아갈 수 있습니다.",
+          button: "1분 회복으로 돌아가기"
         }
       : localizedLanguage === "en"
         ? {
-            title: "This meditation link could not be opened",
-            body: "Please try again or return to BASIC.",
-            button: "Return to BASIC"
+            title: "Begin with 1-Minute Recovery",
+            body: "This link does not specify a recovery experience. You can safely return to 1-Minute Recovery on the home page.",
+            button: "Return to 1-Minute Recovery"
           }
         : {
-            title: "この瞑想のリンクを開けませんでした",
-            body: "もう一度試すか、BASICへ戻ってください。",
-          button: "BASICへ戻る"
-        };
+            title: "1分リカバリーから始めてください",
+            body: "このリンクには、開始する回復体験が指定されていません。ホームの1分リカバリーへ安全に戻ることができます。",
+            button: "1分リカバリーへ戻る"
+          };
   const basicGateUi = basicGateUiCopy[localizedLanguage];
   const navigationPendingCopy =
     localizedLanguage === "kr"
@@ -4829,7 +4829,7 @@ function MeditationPageContent() {
               <h1 className="font-serif text-3xl text-white sm:text-4xl">{invalidRouteCopy.title}</h1>
               <p className="text-sm leading-7 text-white/68 sm:text-base">{invalidRouteCopy.body}</p>
               <Link
-                href="/program/basic"
+                href="/#one-minute-experience"
                 className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold px-6 py-3 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
               >
                 {invalidRouteCopy.button}

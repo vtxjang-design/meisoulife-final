@@ -31,14 +31,14 @@ export function SiteHeader() {
     if (isHome) {
       if (isLoggedIn) {
         return [
-          { href: "/meditation", label: oneMinuteLabel },
+          { href: "/#one-minute-experience", label: oneMinuteLabel },
           { href: "/rhythm-journey", label: rhythmLabel },
           { href: programHref, label: copy.header.myPage }
         ];
       }
 
       return [
-        { href: "/meditation", label: oneMinuteLabel },
+        { href: "/#one-minute-experience", label: oneMinuteLabel },
         { href: "/rhythm-journey", label: rhythmLabel },
         { href: "/login", label: copy.header.login }
       ];

@@ -63,7 +63,7 @@ export function PremiumPageContent({ plan, success }: PremiumPageContentProps) {
                 {copy.primary}
               </Link>
               <Link
-                href="/meditation"
+                href="/#one-minute-experience"
                 className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-white/[0.06]"
               >
                 {copy.secondary}

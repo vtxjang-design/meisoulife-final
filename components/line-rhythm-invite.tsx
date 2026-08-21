@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useSiteCopy } from "@/lib/i18n";
-import { markLineRhythmConnected } from "@/lib/return-rhythm";
 
 type LineRhythmInviteProps = {
   className?: string;
@@ -28,7 +27,6 @@ export function LineRhythmInvite({ className = "" }: LineRhythmInviteProps) {
   }, [showToast]);
 
   function handleLineClick() {
-    markLineRhythmConnected();
     setShowToast(true);
     setShowAfterMessage(true);
     window.open(LINE_RHYTHM_URL, "_blank", "noopener,noreferrer");

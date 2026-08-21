@@ -119,7 +119,7 @@ export default function WelcomePage() {
             </Link>
 
             <Link
-              href="/meditation"
+              href="/#one-minute-experience"
               className="inline-flex min-h-[56px] min-w-[240px] items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-semibold text-ink transition duration-300 hover:scale-[1.02] hover:bg-[#e7cd92]"
             >
               {copy.meditationButton}
