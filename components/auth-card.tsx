@@ -110,8 +110,7 @@ export function AuthCard({ mode }: AuthCardProps) {
           destination: redirectTarget,
           reasonCode: "auth_success"
         });
-        router.push(redirectTarget);
-        router.refresh();
+        window.location.assign(redirectTarget);
       }
     } catch (error) {
       recordAuthDiagnostic("login_error", {

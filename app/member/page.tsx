@@ -1,7 +1,7 @@
 import { MemberEntryContent } from "@/components/member-entry-content";
 import { resolveSafeReturnPath } from "@/lib/auth-next";
 import type { MembershipResolutionResult, MembershipSummary } from "@/lib/membership";
-import { resolveMembershipEntitlement } from "@/lib/membership-resolver";
+import { resolveMembershipEntitlementReadOnly } from "@/lib/membership-resolver";
 import { getSupabaseConfigStatus } from "@/lib/supabase-config";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
@@ -64,7 +64,7 @@ export default async function MemberPage({ searchParams }: MemberPageProps) {
   } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
 
   if (supabase && user) {
-    const entitlement = await resolveMembershipEntitlement({
+    const entitlement = await resolveMembershipEntitlementReadOnly({
       supabase,
       userId: user.id,
       email: user.email ?? null,
