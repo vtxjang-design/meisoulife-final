@@ -1,4 +1,5 @@
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { createBrowserClient } from "@supabase/ssr";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 let browserClient: SupabaseClient | null = null;
 let browserClientKey = "";
@@ -28,13 +29,7 @@ export function getSupabaseClient(config?: SupabaseBrowserConfig) {
   }
 
   if (!browserClient || browserClientKey !== nextClientKey) {
-    browserClient = createClient(url, anonKey, {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true
-      }
-    });
+    browserClient = createBrowserClient(url, anonKey);
     browserClientKey = nextClientKey;
   }
 

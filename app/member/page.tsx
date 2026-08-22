@@ -1,5 +1,5 @@
 import { MemberEntryContent } from "@/components/member-entry-content";
-import { resolveSafeInternalNextPath } from "@/lib/auth-next";
+import { resolveSafeReturnPath } from "@/lib/auth-next";
 import type { MembershipResolutionResult, MembershipSummary } from "@/lib/membership";
 import { resolveMembershipEntitlement } from "@/lib/membership-resolver";
 import { getSupabaseConfigStatus } from "@/lib/supabase-config";
@@ -47,7 +47,7 @@ function MembershipDebugPanel({ result }: { result: MembershipResolutionResult |
 
 export default async function MemberPage({ searchParams }: MemberPageProps) {
   const params = searchParams ? await searchParams : undefined;
-  const safeNext = resolveSafeInternalNextPath(params?.next);
+  const safeNext = resolveSafeReturnPath(params?.next);
   const supabaseConfig = getSupabaseConfigStatus();
   const supabase = await getSupabaseServerClient();
   let initialPlan: "free" | "basic" | "growth" | "inner_circle" = "free";

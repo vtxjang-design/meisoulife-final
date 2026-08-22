@@ -47,6 +47,7 @@ export const config = {
     "/premium",
     "/pricing",
     "/membership",
+    "/member",
     "/account/:path*",
     "/login",
     "/signup",
