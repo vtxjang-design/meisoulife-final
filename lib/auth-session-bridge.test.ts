@@ -10,6 +10,7 @@ const memberContentSource = readFileSync(
 );
 const authCardSource = readFileSync(new URL("../components/auth-card.tsx", import.meta.url), "utf8");
 const middlewareSource = readFileSync(new URL("../middleware.ts", import.meta.url), "utf8");
+const serverLoginRouteSource = readFileSync(new URL("../app/auth/login/route.ts", import.meta.url), "utf8");
 
 test("browser authentication uses the SSR cookie bridge", () => {
   assert.match(browserClientSource, /createBrowserClient/);
@@ -22,8 +23,21 @@ test("member routes refresh cookie-backed authentication", () => {
   assert.match(middlewareSource, /response = NextResponse\.next\(\{\s*request\s*\}\)/);
 });
 
-test("password login starts a fresh server request after cookie persistence", () => {
-  assert.match(authCardSource, /window\.location\.assign\(redirectTarget\)/);
+test("password login is submitted to the server instead of creating a browser-only session", () => {
+  assert.match(authCardSource, /action=\{mode === "login" \? "\/auth\/login" : undefined\}/);
+  assert.match(authCardSource, /method=\{mode === "login" \? "post" : undefined\}/);
+  assert.doesNotMatch(authCardSource, /auth\.signInWithPassword/);
+});
+
+test("server password login validates origin and next before setting cookies and redirecting", () => {
+  assert.match(serverLoginRouteSource, /function isSameOriginPost/);
+  assert.match(serverLoginRouteSource, /originUrl\.host === host/);
+  assert.match(serverLoginRouteSource, /originUrl\.protocol === requestUrl\.protocol/);
+  assert.match(serverLoginRouteSource, /resolveSafeReturnPath/);
+  assert.match(serverLoginRouteSource, /response\.cookies\.set\(name, value, options as never\)/);
+  assert.match(serverLoginRouteSource, /await supabase\.auth\.signInWithPassword\(\{ email, password \}\)/);
+  assert.match(serverLoginRouteSource, /auth_error", "invalid_credentials"/);
+  assert.doesNotMatch(serverLoginRouteSource, /console\.(log|warn|error)/);
 });
 
 test("member entry resolves entitlement without repairing membership records", () => {
