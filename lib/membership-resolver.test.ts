@@ -12,8 +12,7 @@ type TableRows = Record<string, Record<string, unknown>[]>;
 class MockQuery {
   private readonly rows: Record<string, unknown>[];
   private filters: Array<(row: Record<string, unknown>) => boolean> = [];
-  private orderKey: string | null = null;
-  private ascending = true;
+  private orderRules: Array<{ key: string; ascending: boolean }> = [];
   private limitCount: number | null = null;
 
   constructor(rows: Record<string, unknown>[]) {
@@ -35,8 +34,7 @@ class MockQuery {
   }
 
   order(column: string, options?: { ascending?: boolean }) {
-    this.orderKey = column;
-    this.ascending = options?.ascending !== false;
+    this.orderRules.push({ key: column, ascending: options?.ascending !== false });
     return this;
   }
 
@@ -48,28 +46,30 @@ class MockQuery {
   private execute() {
     let result = [...this.rows].filter((row) => this.filters.every((filter) => filter(row)));
 
-    if (this.orderKey) {
-      const key = this.orderKey;
-      const ascending = this.ascending;
+    if (this.orderRules.length > 0) {
       result.sort((left, right) => {
-        const leftValue = left[key];
-        const rightValue = right[key];
+        for (const { key, ascending } of this.orderRules) {
+          const leftValue = left[key];
+          const rightValue = right[key];
 
-        if (leftValue === rightValue) {
-          return 0;
+          if (leftValue === rightValue) {
+            continue;
+          }
+
+          if (leftValue == null) {
+            return ascending ? -1 : 1;
+          }
+
+          if (rightValue == null) {
+            return ascending ? 1 : -1;
+          }
+
+          return ascending
+            ? String(leftValue).localeCompare(String(rightValue))
+            : String(rightValue).localeCompare(String(leftValue));
         }
 
-        if (leftValue == null) {
-          return ascending ? -1 : 1;
-        }
-
-        if (rightValue == null) {
-          return ascending ? 1 : -1;
-        }
-
-        return ascending
-          ? String(leftValue).localeCompare(String(rightValue))
-          : String(rightValue).localeCompare(String(leftValue));
+        return 0;
       });
     }
 
@@ -194,6 +194,42 @@ test("existing authenticated customer with stored active subscription resolves p
     }),
     true
   );
+});
+
+test("canonical user_id lookup prefers the active newest membership over canceled history", async () => {
+  const supabase = createSupabase({
+    users: [],
+    memberships: [
+      {
+        id: "2",
+        user_id: "auth_1",
+        plan: "basic",
+        status: "active",
+        created_at: "2026-05-19T08:28:11.906369Z"
+      },
+      {
+        id: "1",
+        user_id: "auth_1",
+        plan: "basic",
+        status: "canceled",
+        created_at: "2026-05-19T08:28:11.410963Z"
+      }
+    ],
+    subscriptions: []
+  });
+
+  const result = await resolveMembershipEntitlementReadOnly({
+    supabase,
+    userId: "auth_1",
+    email: "member@example.com",
+    stripe: null,
+    debug: true
+  });
+
+  assert.equal(result.plan, "basic");
+  assert.equal(result.membershipStatus, "active");
+  assert.equal(result.debug?.matchedBy, "user_id");
+  assert.equal(result.debug?.membershipRowFound, true);
 });
 
 test("existing authenticated customer with missing local mapping reconciles from one verified Stripe customer", async () => {

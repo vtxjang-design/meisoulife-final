@@ -110,25 +110,44 @@ async function loadLocalMembershipSnapshot(
   const membershipState = await fetchLatestMembershipPlan(supabase, userId, logPrefix, {
     suppressSensitiveLogs
   });
-  let membershipQuery = await supabase
+  const queryMembership = async (activeOnly: boolean, extendedSchema: boolean) => {
+    let query = supabase
     .from("memberships")
-    .select("id, user_id, email, stripe_customer_id, stripe_subscription_id, plan, status, current_period_end, created_at")
-    .eq("user_id", userId)
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+    .select(
+      extendedSchema
+        ? "id, user_id, email, stripe_customer_id, stripe_subscription_id, plan, status, current_period_end, created_at"
+        : "id, user_id, plan, status, created_at"
+    )
+    .eq("user_id", userId);
+
+    if (activeOnly) {
+      query = query.in("status", ["active", "trialing"]);
+    }
+
+    return query
+      .order("created_at", { ascending: false })
+      .order("id", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+  };
+
+  // A user can retain canceled historical rows. Select an active entitlement
+  // deterministically before considering the newest historical row.
+  let membershipQuery = await queryMembership(true, true);
 
   // Deployments created before the billing enrichment migration contain only
   // id, created_at, user_id, plan, and status. Keep authorization user_id-first
   // and safe while the additive migration rolls out.
   if (membershipQuery.error) {
-    membershipQuery = await supabase
-      .from("memberships")
-      .select("id, user_id, plan, status, created_at")
-      .eq("user_id", userId)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
+    membershipQuery = await queryMembership(true, false);
+  }
+
+  if (!membershipQuery.error && !membershipQuery.data) {
+    membershipQuery = await queryMembership(false, true);
+
+    if (membershipQuery.error) {
+      membershipQuery = await queryMembership(false, false);
+    }
   }
 
   const membership = membershipQuery.data ?? null;

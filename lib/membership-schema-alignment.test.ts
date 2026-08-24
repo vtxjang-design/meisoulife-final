@@ -19,8 +19,15 @@ test("membership schema alignment is additive and preserves existing rows", () =
 test("resolver falls back to the production five-column membership schema", () => {
   assert.match(
     resolverSource,
-    /if \(membershipQuery\.error\) \{[\s\S]*?\.select\("id, user_id, plan, status, created_at"\)[\s\S]*?\.eq\("user_id", userId\)/
+    /extendedSchema[\s\S]*?"id, user_id, plan, status, created_at"[\s\S]*?\.eq\("user_id", userId\)/
   );
+});
+
+test("resolver selects active user_id membership before deterministic historical fallback", () => {
+  assert.match(resolverSource, /queryMembership\(true, true\)/);
+  assert.match(resolverSource, /query\.in\("status", \["active", "trialing"\]\)/);
+  assert.match(resolverSource, /\.order\("created_at", \{ ascending: false \}\)[\s\S]*?\.order\("id", \{ ascending: false \}\)/);
+  assert.match(resolverSource, /queryMembership\(false, true\)/);
 });
 
 test("resolver does not consult legacy profile mirrors after a canonical user_id match", () => {
