@@ -50,6 +50,10 @@ test("member diagnostics derive their labels from the same guard decision", () =
   assert.match(memberPageSource, /final guard decision: \{guard\.decision\}/);
   assert.match(memberPageSource, /redirect reason: \{guard\.redirectReason\}/);
   assert.doesNotMatch(memberPageSource, /final guard decision: blocked_to_member/);
+  assert.match(
+    memberPageSource,
+    /if \(params\?\.membershipDebug === "1"\) \{\s+return <MembershipDebugPanel authenticated=\{Boolean\(user\)\} result=\{membershipDebugResult\} \/>;\s+\}/
+  );
 });
 
 test("member return destinations reject authentication loops", () => {

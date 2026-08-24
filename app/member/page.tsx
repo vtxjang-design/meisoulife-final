@@ -89,21 +89,20 @@ export default async function MemberPage({ searchParams }: MemberPageProps) {
     }
   }
 
+  if (params?.membershipDebug === "1") {
+    return <MembershipDebugPanel authenticated={Boolean(user)} result={membershipDebugResult} />;
+  }
+
   return (
-    <>
-      {params?.membershipDebug === "1" ? (
-        <MembershipDebugPanel authenticated={Boolean(user)} result={membershipDebugResult} />
-      ) : null}
-      <MemberEntryContent
-        lineUrl={LINE_URL}
-        debug={params?.debug === "1"}
-        hasSupabaseUrl={supabaseConfig.supabaseUrlExists}
-        hasSupabaseAnonKey={supabaseConfig.supabaseKeyExists}
-        isLoggedInInitially={Boolean(user)}
-        initialPlan={initialPlan}
-        initialEmail={initialEmail}
-        membershipSummary={membershipSummary}
-      />
-    </>
+    <MemberEntryContent
+      lineUrl={LINE_URL}
+      debug={params?.debug === "1"}
+      hasSupabaseUrl={supabaseConfig.supabaseUrlExists}
+      hasSupabaseAnonKey={supabaseConfig.supabaseKeyExists}
+      isLoggedInInitially={Boolean(user)}
+      initialPlan={initialPlan}
+      initialEmail={initialEmail}
+      membershipSummary={membershipSummary}
+    />
   );
 }
