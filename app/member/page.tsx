@@ -1,6 +1,7 @@
 import { MemberEntryContent } from "@/components/member-entry-content";
 import { resolveSafeReturnPath } from "@/lib/auth-next";
 import type { MembershipResolutionResult, MembershipSummary } from "@/lib/membership";
+import { resolveMemberGuardDecision } from "@/lib/member-guard-decision";
 import { resolveMembershipEntitlementReadOnly } from "@/lib/membership-resolver";
 import { getSupabaseConfigStatus } from "@/lib/supabase-config";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
@@ -19,8 +20,14 @@ type MemberPageProps = {
   }>;
 };
 
-function MembershipDebugPanel({ result }: { result: MembershipResolutionResult | null }) {
-  const redirectReason = !result?.membershipStatus ? "no_membership_record" : "inactive_membership";
+function MembershipDebugPanel({
+  authenticated,
+  result
+}: {
+  authenticated: boolean;
+  result: MembershipResolutionResult | null;
+}) {
+  const guard = resolveMemberGuardDecision(authenticated, result);
 
   return (
     <div className="section-shell pt-6">
@@ -37,8 +44,8 @@ function MembershipDebugPanel({ result }: { result: MembershipResolutionResult |
           <p>membership row found: {result?.debug?.membershipRowFound ? "yes" : "no"}</p>
           <p>Stripe customer ID present: {result?.debug?.stripeCustomerIdPresent ? "yes" : "no"}</p>
           <p>subscription/payment state: {result?.debug?.paymentState ?? "none"}</p>
-          <p>final guard decision: blocked_to_member</p>
-          <p>redirect reason: {redirectReason}</p>
+          <p>final guard decision: {guard.decision}</p>
+          <p>redirect reason: {guard.redirectReason}</p>
         </div>
       </div>
     </div>
@@ -84,7 +91,9 @@ export default async function MemberPage({ searchParams }: MemberPageProps) {
 
   return (
     <>
-      {params?.membershipDebug === "1" ? <MembershipDebugPanel result={membershipDebugResult} /> : null}
+      {params?.membershipDebug === "1" ? (
+        <MembershipDebugPanel authenticated={Boolean(user)} result={membershipDebugResult} />
+      ) : null}
       <MemberEntryContent
         lineUrl={LINE_URL}
         debug={params?.debug === "1"}

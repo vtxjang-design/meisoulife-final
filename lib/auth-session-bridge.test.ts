@@ -45,6 +45,13 @@ test("member entry resolves entitlement without repairing membership records", (
   assert.doesNotMatch(memberPageSource, /resolveMembershipEntitlement\(/);
 });
 
+test("member diagnostics derive their labels from the same guard decision", () => {
+  assert.match(memberPageSource, /resolveMemberGuardDecision\(authenticated, result\)/);
+  assert.match(memberPageSource, /final guard decision: \{guard\.decision\}/);
+  assert.match(memberPageSource, /redirect reason: \{guard\.redirectReason\}/);
+  assert.doesNotMatch(memberPageSource, /final guard decision: blocked_to_member/);
+});
+
 test("member return destinations reject authentication loops", () => {
   assert.match(memberPageSource, /resolveSafeReturnPath\(params\?\.next\)/);
   assert.match(memberContentSource, /resolveSafeReturnPath\(nextParam\)/);
