@@ -110,39 +110,29 @@ async function loadLocalMembershipSnapshot(
   const membershipState = await fetchLatestMembershipPlan(supabase, userId, logPrefix, {
     suppressSensitiveLogs
   });
-  let primaryProfileQuery = await supabase
-    .from("users")
-    .select("id, email, current_plan, stripe_customer_id")
-    .eq("auth_user_id", userId)
-    .maybeSingle();
-
-  // Some older deployments do not have users.stripe_customer_id. Keep the
-  // entitlement resolver compatible with those schemas while using this
-  // authenticated mapping whenever it is available.
-  if (primaryProfileQuery.error?.message?.includes("stripe_customer_id")) {
-    primaryProfileQuery = await supabase
-      .from("users")
-      .select("id, email, current_plan")
-      .eq("auth_user_id", userId)
-      .maybeSingle();
-  }
-  let profile = primaryProfileQuery.data ?? null;
-  const profileError = primaryProfileQuery.error;
-
-  if (profileError && !suppressSensitiveLogs) {
-    console.error(`${logPrefix} profile fetch failed`, {
-      userId,
-      error: profileError.message
-    });
-  }
-
-  const { data: membership, error: membershipError } = await supabase
+  let membershipQuery = await supabase
     .from("memberships")
     .select("id, user_id, email, stripe_customer_id, stripe_subscription_id, plan, status, current_period_end, created_at")
     .eq("user_id", userId)
     .order("created_at", { ascending: false })
     .limit(1)
     .maybeSingle();
+
+  // Deployments created before the billing enrichment migration contain only
+  // id, created_at, user_id, plan, and status. Keep authorization user_id-first
+  // and safe while the additive migration rolls out.
+  if (membershipQuery.error) {
+    membershipQuery = await supabase
+      .from("memberships")
+      .select("id, user_id, plan, status, created_at")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+  }
+
+  const membership = membershipQuery.data ?? null;
+  const membershipError = membershipQuery.error;
 
   if (membershipError && !suppressSensitiveLogs) {
     console.error(`${logPrefix} membership row fetch failed`, {
@@ -151,7 +141,37 @@ async function loadLocalMembershipSnapshot(
     });
   }
 
-  const { data: subscription, error: subscriptionError } = profile?.id
+  // A canonical membership row already establishes entitlement identity. Only
+  // consult legacy profile mirrors when that user_id row is absent.
+  let profile: LocalProfileRow | null = null;
+  let subscription: LocalSubscriptionRow | null = null;
+
+  if (!membership) {
+    let primaryProfileQuery = await supabase
+      .from("users")
+      .select("id, email, current_plan, stripe_customer_id")
+      .eq("auth_user_id", userId)
+      .maybeSingle();
+
+    if (primaryProfileQuery.error?.message?.includes("stripe_customer_id")) {
+      primaryProfileQuery = await supabase
+        .from("users")
+        .select("id, email, current_plan")
+        .eq("auth_user_id", userId)
+        .maybeSingle();
+    }
+
+    profile = primaryProfileQuery.data ?? null;
+
+    if (primaryProfileQuery.error && !suppressSensitiveLogs) {
+      console.error(`${logPrefix} profile fetch failed`, {
+        userId,
+        error: primaryProfileQuery.error.message
+      });
+    }
+  }
+
+  const { data: subscriptionData, error: subscriptionError } = profile?.id
     ? await supabase
         .from("subscriptions")
         .select("id, stripe_customer_id, stripe_subscription_id, plan_key, status, current_period_end, created_at")
@@ -160,6 +180,8 @@ async function loadLocalMembershipSnapshot(
         .limit(1)
         .maybeSingle()
     : { data: null, error: null };
+
+  subscription = subscriptionData ?? null;
 
   if (subscriptionError && !suppressSensitiveLogs) {
     console.error(`${logPrefix} subscription row fetch failed`, {
