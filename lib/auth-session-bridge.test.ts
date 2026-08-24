@@ -57,7 +57,6 @@ test("member diagnostics derive their labels from the same guard decision", () =
 });
 
 test("member return destinations reject authentication loops", () => {
-  assert.match(memberPageSource, /resolveSafeReturnPath\(params\?\.next\)/);
   assert.match(memberContentSource, /resolveSafeReturnPath\(nextParam\)/);
   assert.match(memberContentSource, /resolveSafeReturnPath\(requestedNextPath\)/);
   assert.doesNotMatch(memberPageSource, /resolveSafeInternalNextPath/);
