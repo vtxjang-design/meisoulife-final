@@ -12,7 +12,7 @@ export function SiteHeader() {
   const isHome = pathname === "/";
   const hideMobileTabs = pathname === "/program/basic";
   const { language, setLanguage } = useLanguage();
-  const { isLoggedIn, authResolved, planResolved, plan, userEmail, signOut } = useAuthState();
+  const { isLoggedIn, authResolved, planResolved, plan, signOut } = useAuthState();
   const copy = useSiteCopy();
   const memberCenterLabel = copy.header.myPage;
   const logoutLabel = copy.header.logout;
@@ -56,8 +56,8 @@ export function SiteHeader() {
   const mobileDropdownLinks = useMemo(() => {
     if (isLoggedIn) {
       const links: Array<{ href: string; label: string }> = [
+        { href: "/member", label: copy.header.myPage },
         { href: programHref, label: copy.header.myProgram },
-        { href: "/account/security", label: copy.header.changePassword },
         { href: "/", label: homeLabel }
       ];
 
@@ -76,7 +76,7 @@ export function SiteHeader() {
     }
 
     return guestLinks;
-  }, [copy.header.login, copy.header.myProgram, homeLabel, isHome, isLoggedIn, programHref, rhythmLabel]);
+  }, [copy.header.login, copy.header.myPage, copy.header.myProgram, homeLabel, isHome, isLoggedIn, programHref, rhythmLabel]);
   const memberBadgeLabel = useMemo(() => {
     if (!isLoggedIn) {
       return "";
@@ -151,29 +151,6 @@ export function SiteHeader() {
     };
   }, [mobileOpen]);
 
-  useEffect(() => {
-    console.log("[site-header] header auth state", {
-      isLoggedIn,
-      authResolved,
-      planResolved,
-      plan,
-      userEmail
-    });
-  }, [authResolved, isLoggedIn, plan, planResolved, userEmail]);
-
-  useEffect(() => {
-    if (!mobileOpen) {
-      return;
-    }
-
-    console.log("[site-header] mobile drawer isLoggedIn", isLoggedIn);
-    console.log("[site-header] mobile drawer userEmail", userEmail || null);
-
-    if (authResolved && isLoggedIn) {
-      console.log("[site-header] rendering logged-in menu");
-    }
-  }, [authResolved, isLoggedIn, mobileOpen, userEmail]);
-
   async function handleLogout() {
     if (loggingOut) {
       return;
@@ -182,9 +159,7 @@ export function SiteHeader() {
     setLoggingOut(true);
 
     try {
-      console.log("[site-header] logout clicked");
       await signOut({ redirectTo: "/" });
-      console.log("[site-header] logout success");
       setMobileOpen(false);
     } catch (error) {
       console.error("[site-header] logout failed", error);
@@ -317,26 +292,11 @@ export function SiteHeader() {
                 {memberBadgeLabel}
               </span>
               <Link
-                href={programHref}
+                href="/member"
                 className="hidden rounded-md border border-white/12 px-4 py-2 text-sm text-white/88 transition hover:border-gold/50 hover:text-white sm:inline-flex"
-                title={userEmail || memberCenterLabel}
               >
                 {memberCenterLabel}
               </Link>
-              <Link
-                href="/account/security"
-                className="hidden rounded-md border border-white/12 px-4 py-2 text-sm text-white/88 transition hover:border-gold/50 hover:text-white lg:inline-flex"
-              >
-                {copy.header.changePassword}
-              </Link>
-              <button
-                type="button"
-                onClick={handleLogout}
-                disabled={loggingOut}
-                className="hidden rounded-md border border-white/12 px-4 py-2 text-sm text-white/88 transition hover:border-white/28 hover:text-white disabled:cursor-not-allowed disabled:opacity-60 sm:inline-flex"
-              >
-                {loggingOut ? "..." : logoutLabel}
-              </button>
             </>
           ) : authResolved ? (
             <Link
