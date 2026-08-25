@@ -14,9 +14,11 @@ test("authenticated desktop navigation stays calm and routes account work throug
 
 test("My Page groups program, membership, password security, and logout", () => {
   assert.match(memberPageSource, /<MemberAccountCenter email=\{initialEmail \|\| null\} membership=\{membershipSummary\}/);
-  assert.match(centerSource, /<AccountSecurityCard email=\{email\}/);
+  assert.match(centerSource, /<AccountSecurityCard[\s\S]*email=\{email\}/);
   assert.match(centerSource, /fetch\("\/api\/stripe\/customer-portal"/);
   assert.match(centerSource, /await signOut\(\{ redirectTo: "\/" \}\)/);
+  assert.match(centerSource, /footer=\{\(/);
+  assert.match(centerSource, /formatBillingDate\(membership\.nextBillingDate, language\)/);
 });
 
 test("My Page remains read-only with respect to membership and payment records", () => {
