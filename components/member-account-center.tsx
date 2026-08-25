@@ -71,6 +71,14 @@ function programHref(plan: MembershipSummary["currentPlan"]) {
   return "/program/basic";
 }
 
+function formatBillingDate(value: string | null, language: keyof typeof accountCopy) {
+  if (!value) return "—";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  const locale = language === "jp" ? "ja-JP" : language === "kr" ? "ko-KR" : "en-US";
+  return new Intl.DateTimeFormat(locale, { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" }).format(date);
+}
+
 export function MemberAccountCenter({ email, membership }: { email: string | null; membership: MembershipSummary }) {
   const { language } = useLanguage();
   const { signOut } = useAuthState();
@@ -118,13 +126,21 @@ export function MemberAccountCenter({ email, membership }: { email: string | nul
         <h1 className="mt-4 max-w-3xl font-serif text-3xl leading-tight text-white sm:text-5xl">{copy.title}</h1>
         <p className="mt-5 max-w-2xl text-sm leading-7 text-white/64 sm:text-base">{copy.description}</p>
 
-        <div className="mt-10 grid gap-6 lg:grid-cols-2">
-          <section className="premium-card rounded-lg p-6 sm:p-8">
-            <h2 className="text-xl font-semibold text-white">{copy.program}</h2>
-            <p className="mt-3 text-sm leading-7 text-white/66">{copy.programBody}</p>
-            <Link href={programHref(membership.currentPlan)} className="mt-6 inline-flex rounded-md bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92]">
-              {copy.openProgram}
-            </Link>
+        <Link href={programHref(membership.currentPlan)} className="mt-7 inline-flex rounded-md bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92]">
+          {copy.openProgram}
+        </Link>
+
+        <div className="mt-8 grid items-start gap-6 lg:grid-cols-2">
+          <section aria-labelledby="account-security-heading">
+            <h2 id="account-security-heading" className="sr-only">{copy.security}</h2>
+            <AccountSecurityCard
+              email={email}
+              footer={(
+                <button type="button" onClick={handleSignOut} disabled={loggingOut} className="inline-flex w-full items-center justify-center rounded-md border border-white/14 px-5 py-3 text-sm font-semibold text-white/76 transition hover:border-white/28 hover:bg-white/[0.04] hover:text-white disabled:opacity-60">
+                  {loggingOut ? copy.signingOut : copy.signOut}
+                </button>
+              )}
+            />
           </section>
 
           <section className="premium-card rounded-lg p-6 sm:p-8">
@@ -132,7 +148,7 @@ export function MemberAccountCenter({ email, membership }: { email: string | nul
             <dl className="mt-5 grid gap-3 text-sm">
               <div className="flex justify-between gap-4"><dt className="text-white/56">{copy.currentPlan}</dt><dd className="font-semibold capitalize text-white/88">{membership.currentPlan}</dd></div>
               <div className="flex justify-between gap-4"><dt className="text-white/56">{copy.status}</dt><dd className="text-white/78">{membership.subscriptionStatus ?? "—"}</dd></div>
-              <div className="flex justify-between gap-4"><dt className="text-white/56">{copy.nextBilling}</dt><dd className="text-white/78">{membership.nextBillingDate ?? "—"}</dd></div>
+              <div className="flex justify-between gap-4"><dt className="text-white/56">{copy.nextBilling}</dt><dd className="text-right text-white/78">{formatBillingDate(membership.nextBillingDate, language)}</dd></div>
             </dl>
             {membership.canManageMembership ? (
               <button type="button" onClick={handleManageMembership} disabled={portalLoading} className="mt-6 inline-flex w-full items-center justify-center rounded-md border border-white/14 px-5 py-3 text-sm font-semibold text-white/86 transition hover:border-gold/45 hover:text-white disabled:opacity-60">
@@ -143,16 +159,6 @@ export function MemberAccountCenter({ email, membership }: { email: string | nul
           </section>
         </div>
 
-        <section className="mt-6" aria-labelledby="account-security-heading">
-          <h2 id="account-security-heading" className="sr-only">{copy.security}</h2>
-          <AccountSecurityCard email={email} />
-        </section>
-
-        <div className="mt-8 border-t border-white/10 pt-6 text-right">
-          <button type="button" onClick={handleSignOut} disabled={loggingOut} className="rounded-md px-4 py-2 text-sm text-white/60 transition hover:bg-white/[0.04] hover:text-white disabled:opacity-60">
-            {loggingOut ? copy.signingOut : copy.signOut}
-          </button>
-        </div>
       </div>
     </main>
   );
