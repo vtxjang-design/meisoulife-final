@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import type { ReactNode } from "react";
 import { buildOfficialPasswordRecoveryUrl } from "@/lib/account-security";
 import { useSiteCopy } from "@/lib/i18n";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
-export function AccountSecurityCard({ email }: { email: string | null }) {
+export function AccountSecurityCard({ email, footer }: { email: string | null; footer?: ReactNode }) {
   const copy = useSiteCopy().accountSecurity;
   const supabase = getSupabaseBrowserClient();
   const [status, setStatus] = useState<"idle" | "loading" | "sent" | "error">("idle");
@@ -63,6 +64,7 @@ export function AccountSecurityCard({ email }: { email: string | null }) {
       {status === "sent" ? <p className="mt-4 text-sm leading-7 text-white/72">{copy.sent}</p> : null}
       {status === "error" ? <p role="alert" className="mt-4 text-sm leading-7 text-white/72">{copy.error}</p> : null}
       {unavailable ? <p role="alert" className="mt-4 text-sm leading-7 text-white/72">{copy.unavailable}</p> : null}
+      {footer ? <div className="mt-6 border-t border-white/10 pt-5">{footer}</div> : null}
     </div>
   );
 }

@@ -27,6 +27,7 @@ const cardSource = readFileSync(new URL("../components/account-security-card.tsx
 const resetPasswordCardSource = readFileSync(new URL("../components/reset-password-card.tsx", import.meta.url), "utf8");
 const authCallbackSource = readFileSync(new URL("../app/auth/callback/route.ts", import.meta.url), "utf8");
 const headerSource = readFileSync(new URL("../components/site-header.tsx", import.meta.url), "utf8");
+const memberCenterSource = readFileSync(new URL("../components/member-account-center.tsx", import.meta.url), "utf8");
 const middlewareSource = readFileSync(new URL("../middleware.ts", import.meta.url), "utf8");
 const sitemapSource = readFileSync(new URL("../app/sitemap.ts", import.meta.url), "utf8");
 const copySource = readFileSync(new URL("./i18n.tsx", import.meta.url), "utf8");
@@ -77,10 +78,10 @@ test("recovery failures keep tokens and internal errors out of the member UI and
   assert.match(resetPasswordCardSource, /await signOut\(\{ redirectTo: loginHref \}\)/);
 });
 
-test("the password-change link is discoverable for signed-in desktop and mobile navigation", () => {
-  assert.match(headerSource, /href: "\/account\/security", label: copy\.header\.changePassword/);
-  assert.match(headerSource, /href="\/account\/security"/);
-  assert.match(headerSource, /copy\.header\.changePassword/);
+test("password change is progressively disclosed inside My Page", () => {
+  assert.match(headerSource, /href="\/member"/);
+  assert.doesNotMatch(headerSource, /href="\/account\/security"/);
+  assert.match(memberCenterSource, /<AccountSecurityCard email=\{email\}/);
 });
 
 test("account routes refresh authentication cookies and remain outside the sitemap", () => {
