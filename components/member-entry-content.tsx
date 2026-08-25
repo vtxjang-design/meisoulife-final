@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useAuthState } from "@/components/auth-provider";
-import { buildLoginHref, resolveSafeInternalNextPath } from "@/lib/auth-next";
+import { buildLoginHref, resolveSafeReturnPath } from "@/lib/auth-next";
 import { recordAuthDiagnostic } from "@/lib/auth-flow-diagnostics";
 import { useLanguage, useLocaleCopy } from "@/lib/i18n";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -1017,7 +1017,7 @@ export function MemberEntryContent({
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const nextParam = params.get("next");
-    const next = resolveSafeInternalNextPath(nextParam);
+    const next = resolveSafeReturnPath(nextParam);
     setCurrentOrigin(window.location.origin);
     setRequestedNextPath(next);
     setMemberLoginHref(buildLoginHref(next));
@@ -1032,7 +1032,7 @@ export function MemberEntryContent({
       return;
     }
 
-    const destination = resolveSafeInternalNextPath(requestedNextPath);
+    const destination = resolveSafeReturnPath(requestedNextPath);
     router.replace(destination);
   }, [authResolved, hasActiveSubscription, isMembershipLoading, planResolved, requestedNextPath, resolvedIsLoggedIn, router]);
 

@@ -1,7 +1,8 @@
 import { MemberEntryContent } from "@/components/member-entry-content";
-import { resolveSafeInternalNextPath } from "@/lib/auth-next";
+import { resolveSafeReturnPath } from "@/lib/auth-next";
 import type { MembershipResolutionResult, MembershipSummary } from "@/lib/membership";
-import { resolveMembershipEntitlement } from "@/lib/membership-resolver";
+import { resolveMemberGuardDecision } from "@/lib/member-guard-decision";
+import { resolveMembershipEntitlementReadOnly } from "@/lib/membership-resolver";
 import { getSupabaseConfigStatus } from "@/lib/supabase-config";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
@@ -19,8 +20,14 @@ type MemberPageProps = {
   }>;
 };
 
-function MembershipDebugPanel({ result }: { result: MembershipResolutionResult | null }) {
-  const redirectReason = !result?.membershipStatus ? "no_membership_record" : "inactive_membership";
+function MembershipDebugPanel({
+  authenticated,
+  result
+}: {
+  authenticated: boolean;
+  result: MembershipResolutionResult | null;
+}) {
+  const guard = resolveMemberGuardDecision(authenticated, result);
 
   return (
     <div className="section-shell pt-6">
@@ -37,8 +44,8 @@ function MembershipDebugPanel({ result }: { result: MembershipResolutionResult |
           <p>membership row found: {result?.debug?.membershipRowFound ? "yes" : "no"}</p>
           <p>Stripe customer ID present: {result?.debug?.stripeCustomerIdPresent ? "yes" : "no"}</p>
           <p>subscription/payment state: {result?.debug?.paymentState ?? "none"}</p>
-          <p>final guard decision: blocked_to_member</p>
-          <p>redirect reason: {redirectReason}</p>
+          <p>final guard decision: {guard.decision}</p>
+          <p>redirect reason: {guard.redirectReason}</p>
         </div>
       </div>
     </div>
@@ -47,7 +54,7 @@ function MembershipDebugPanel({ result }: { result: MembershipResolutionResult |
 
 export default async function MemberPage({ searchParams }: MemberPageProps) {
   const params = searchParams ? await searchParams : undefined;
-  const safeNext = resolveSafeInternalNextPath(params?.next);
+  const safeNext = resolveSafeReturnPath(params?.next);
   const supabaseConfig = getSupabaseConfigStatus();
   const supabase = await getSupabaseServerClient();
   let initialPlan: "free" | "basic" | "growth" | "inner_circle" = "free";
@@ -64,7 +71,7 @@ export default async function MemberPage({ searchParams }: MemberPageProps) {
   } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
 
   if (supabase && user) {
-    const entitlement = await resolveMembershipEntitlement({
+    const entitlement = await resolveMembershipEntitlementReadOnly({
       supabase,
       userId: user.id,
       email: user.email ?? null,
@@ -82,19 +89,20 @@ export default async function MemberPage({ searchParams }: MemberPageProps) {
     }
   }
 
+  if (params?.membershipDebug === "1") {
+    return <MembershipDebugPanel authenticated={Boolean(user)} result={membershipDebugResult} />;
+  }
+
   return (
-    <>
-      {params?.membershipDebug === "1" ? <MembershipDebugPanel result={membershipDebugResult} /> : null}
-      <MemberEntryContent
-        lineUrl={LINE_URL}
-        debug={params?.debug === "1"}
-        hasSupabaseUrl={supabaseConfig.supabaseUrlExists}
-        hasSupabaseAnonKey={supabaseConfig.supabaseKeyExists}
-        isLoggedInInitially={Boolean(user)}
-        initialPlan={initialPlan}
-        initialEmail={initialEmail}
-        membershipSummary={membershipSummary}
-      />
-    </>
+    <MemberEntryContent
+      lineUrl={LINE_URL}
+      debug={params?.debug === "1"}
+      hasSupabaseUrl={supabaseConfig.supabaseUrlExists}
+      hasSupabaseAnonKey={supabaseConfig.supabaseKeyExists}
+      isLoggedInInitially={Boolean(user)}
+      initialPlan={initialPlan}
+      initialEmail={initialEmail}
+      membershipSummary={membershipSummary}
+    />
   );
 }

@@ -245,7 +245,6 @@ export const siteCopy = {
       mobileMenu: [
         { href: "/", label: "ホーム" },
         { href: "/#one-minute-experience", label: "1分リカバリー" },
-        { href: "/#ai-rhythm-coach", label: "AIコーチ" },
         { href: "/pricing", label: "メンバーシップ" },
         { href: "/program/basic", label: "プログラム" },
         { href: "/community", label: "コミュニティ" },
@@ -343,14 +342,14 @@ export const siteCopy = {
       ]
     },
     lineInvite: {
-      title: "このリズムを、ひとりで終わらせない。",
+      title: "このリズムを、必要なときに共に続ける。",
       subtitle: "毎日の小さな実践を、共に続けるためのLINEコミュニティです。",
       morning: "Morning — 1分だけ呼吸に戻る",
       evening: "Evening — 一日を静かに振り返る",
-      button: "LINEで共に続ける",
+      button: "LINEを開く",
       note: "通知はいつでもオフにできます。静かに参加できます。",
-      afterMessage: "明日も、この1分から始めましょう。",
-      toast: "LINEでつながりました。明日もここに戻ってきてください。"
+      afterMessage: "参加するかどうかは、LINEで自由に選べます。",
+      toast: "LINEを開きました。参加するかどうかは、そこで選べます。"
     },
     modal: {
       eyebrow: "1分瞑想",
@@ -757,8 +756,8 @@ export const siteCopy = {
           price: "¥3,000",
           dailyCost: "約¥100 / day",
           emotionalCopy: "Brain Owner",
-          description: "AIガイドと脳教育の実践を通して、感情・思考・関係のバランスを回復します。",
-          features: ["AIリズムガイドの深い活用", "少人数サークル", "共生生活の実践対話", "実践記録レビュー"],
+          description: "脳教育の実践と少人数の対話を通して、感情・思考・関係のバランスを整えます。",
+          features: ["脳教育を生活で実践", "少人数サークル", "共生生活の実践対話", "実践記録レビュー"],
           cta: "月3,000円で深める",
           orderClass: "order-2",
           accentClass: "border-zinc-200 bg-white/70"
@@ -1169,7 +1168,6 @@ export const siteCopy = {
       mobileMenu: [
         { href: "/", label: "홈" },
         { href: "/#one-minute-experience", label: "1분 리커버리" },
-        { href: "/#ai-rhythm-coach", label: "AI 코치" },
         { href: "/pricing", label: "멤버십" },
         { href: "/program/basic", label: "프로그램" },
         { href: "/community", label: "커뮤니티" },
@@ -1267,14 +1265,14 @@ export const siteCopy = {
       ]
     },
     lineInvite: {
-      title: "이 리듬을 혼자서 끝내지 마세요.",
+      title: "이 리듬을, 필요할 때 함께 이어갑니다.",
       subtitle: "매일의 작은 실천을 함께 이어가기 위한 LINE 커뮤니티입니다.",
       morning: "Morning — 1분만 호흡으로 돌아오기",
       evening: "Evening — 하루를 조용히 돌아보기",
-      button: "LINE으로 함께 이어가기",
+      button: "LINE 열기",
       note: "알림은 언제든 끌 수 있습니다. 조용히 참여할 수 있습니다.",
-      afterMessage: "내일도 이 1분부터 다시 시작해봅시다.",
-      toast: "LINE으로 연결되었습니다. 내일도 이곳으로 돌아와 주세요."
+      afterMessage: "참여 여부는 LINE에서 자유롭게 선택할 수 있습니다.",
+      toast: "LINE을 열었습니다. 참여 여부는 LINE에서 자유롭게 선택할 수 있습니다."
     },
     modal: {
       eyebrow: "1분 명상",
@@ -1681,8 +1679,8 @@ export const siteCopy = {
           price: "¥3,000",
           dailyCost: "약 ¥100 / day",
           emotionalCopy: "Brain Owner",
-          description: "AI 가이드와 뇌교육 실천을 통해 감정, 생각, 관계의 균형을 회복합니다.",
-          features: ["AI 리듬 가이드 깊이 활용", "소규모 서클", "공생 생활 실천 대화", "실천 기록 리뷰"],
+          description: "뇌교육 실천과 소규모 대화를 통해 감정, 생각, 관계의 균형을 정돈합니다.",
+          features: ["뇌교육을 생활에서 실천", "소규모 서클", "공생 생활 실천 대화", "실천 기록 리뷰"],
           cta: "월 3,000엔으로 깊게",
           orderClass: "order-2",
           accentClass: "border-zinc-200 bg-white/70"
@@ -2093,7 +2091,6 @@ export const siteCopy = {
       mobileMenu: [
         { href: "/", label: "Home" },
         { href: "/#one-minute-experience", label: "1-Minute Recovery" },
-        { href: "/#ai-rhythm-coach", label: "AI Coach" },
         { href: "/pricing", label: "Membership" },
         { href: "/program/basic", label: "Programs" },
         { href: "/community", label: "Community" },
@@ -2191,14 +2188,14 @@ export const siteCopy = {
       ]
     },
     lineInvite: {
-      title: "Do not let this rhythm end alone.",
+      title: "Continue this rhythm together, when it feels right.",
       subtitle: "This LINE community helps you continue small daily practice together.",
       morning: "Morning — Take 1 minute to breathe",
       evening: "Evening — Check your day",
-      button: "Continue together on LINE",
+      button: "Open LINE",
       note: "You can turn notifications off anytime. You can join quietly.",
-      afterMessage: "Let’s begin again with this one minute tomorrow.",
-      toast: "You are connected on LINE. Please come back here tomorrow too."
+      afterMessage: "You can freely choose whether to join in LINE.",
+      toast: "LINE opened. You can choose whether to join there."
     },
     modal: {
       eyebrow: "1-Minute Meditation",
@@ -2605,8 +2602,8 @@ export const siteCopy = {
           price: "¥3,000",
           dailyCost: "About ¥100 / day",
           emotionalCopy: "Brain Owner",
-          description: "Recover emotional, mental, and relational balance with AI guidance and Brain Education practices.",
-          features: ["Deeper AI rhythm guidance", "Small circle groups", "Coexistence practice dialogue", "Practice record review"],
+          description: "Support emotional, mental, and relational balance through Brain Education practice and small-group dialogue.",
+          features: ["Brain Education in daily life", "Small circle groups", "Coexistence practice dialogue", "Practice record review"],
           cta: "Deepen for ¥3,000 / month",
           orderClass: "order-2",
           accentClass: "border-zinc-200 bg-white/70"

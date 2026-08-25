@@ -425,7 +425,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       breathLabel: "呼吸リズム",
       meditationLabel: "1分瞑想",
       supportLabel: "静かなサポート",
-      secondaryCta: "AIコーチを見る",
+      secondaryCta: "1分の回復へ戻る",
       options: [
         {
           key: "heavy",
@@ -746,7 +746,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
     mobile: {
       trigger: "1分入口",
       meditate: "ZERO開始",
-      askAi: "AIに聞く"
+      askAi: "1分の回復"
     }
   },
   kr: {
@@ -927,7 +927,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       breathLabel: "호흡 리듬",
       meditationLabel: "1분 명상",
       supportLabel: "조용한 지원",
-      secondaryCta: "AI 코치 보기",
+      secondaryCta: "1분 회복으로 돌아가기",
       options: [
         {
           key: "heavy",
@@ -1243,7 +1243,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
     mobile: {
       trigger: "1분 입구",
       meditate: "ZERO 시작",
-      askAi: "AI에게 묻기"
+      askAi: "1분 회복"
     }
   },
   en: {
@@ -1424,7 +1424,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       breathLabel: "Breathing rhythm",
       meditationLabel: "1-minute meditation",
       supportLabel: "Quiet support",
-      secondaryCta: "See the AI coach",
+      secondaryCta: "Return to 1-Minute Recovery",
       options: [
         {
           key: "heavy",
@@ -1740,7 +1740,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
     mobile: {
       trigger: "Minute Gate",
       meditate: "Start ZERO",
-      askAi: "Ask AI"
+      askAi: "1-Minute Recovery"
     }
   }
 };

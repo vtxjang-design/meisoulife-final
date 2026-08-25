@@ -24,7 +24,7 @@ export function AuthCard({ mode }: AuthCardProps) {
   const [loading, setLoading] = useState(false);
   const [nextPath, setNextPath] = useState(DEFAULT_AUTH_NEXT_PATH);
   const [isBasicAccessLogin, setIsBasicAccessLogin] = useState(false);
-  const redirectTarget = resolveSafeInternalNextPath(nextPath);
+  const redirectTarget = resolveSafeReturnPath(nextPath);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -32,18 +32,23 @@ export function AuthCard({ mode }: AuthCardProps) {
     const next = resolveSafeReturnPath(requestedNext);
     setNextPath(next);
     setIsBasicAccessLogin(mode === "login" && requestedNext !== null && next === DEFAULT_AUTH_NEXT_PATH);
+
+    if (mode === "login" && params.get("auth_error") === "invalid_credentials") {
+      setMessage(copy.loginPage.error);
+    }
+
     recordAuthDiagnostic("login_page_loaded", {
       mode,
       preservedNextRoute: next
     });
-  }, []);
+  }, [copy.loginPage.error, mode]);
 
   function buildResetRedirectTarget() {
     const next = resolveSafeInternalNextPath(nextPath);
     return `${window.location.origin}/auth/callback?next=${encodeURIComponent(`/auth/update-password?next=${next}`)}`;
   }
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSignupSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
     setMessage("");
@@ -53,77 +58,49 @@ export function AuthCard({ mode }: AuthCardProps) {
         throw new Error("supabase unavailable");
       }
 
-      if (mode === "signup") {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              full_name: name
-            }
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: name
           }
-        });
-
-        if (error) {
-          throw error;
         }
+      });
 
-        if (data.session?.user) {
-          try {
-            const { error: profileError } = await supabase.from("profiles").upsert(
-              {
-                id: data.session.user.id,
-                email,
-                full_name: name || null
-              },
-              { onConflict: "id" }
-            );
+      if (error) {
+        throw error;
+      }
 
-            if (profileError) {
-              console.warn("[auth-card] profiles upsert skipped", profileError.message);
-            }
-          } catch (profileError) {
-            console.warn("[auth-card] profiles table unavailable", profileError);
+      if (data.session?.user) {
+        try {
+          const { error: profileError } = await supabase.from("profiles").upsert(
+            {
+              id: data.session.user.id,
+              email,
+              full_name: name || null
+            },
+            { onConflict: "id" }
+          );
+
+          if (profileError) {
+            console.warn("[auth-card] profiles upsert skipped", profileError.message);
           }
-
-          router.push(redirectTarget);
-          router.refresh();
-          return;
+        } catch (profileError) {
+          console.warn("[auth-card] profiles table unavailable", profileError);
         }
 
-        setMessage(copy.loginPage.signupSuccess);
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password
-        });
-
-        if (error) {
-          throw error;
-        }
-
-        recordAuthDiagnostic("login_success", {
-          preservedNextRoute: redirectTarget,
-          authenticatedUserIdExists: true
-        });
-        recordAuthDiagnostic("post_login_redirect_requested", {
-          destination: redirectTarget,
-          reasonCode: "auth_success"
-        });
         router.push(redirectTarget);
         router.refresh();
+        return;
       }
+
+      setMessage(copy.loginPage.signupSuccess);
     } catch (error) {
-      recordAuthDiagnostic("login_error", {
-        preservedNextRoute: redirectTarget,
-        message: error instanceof Error ? error.message : "unknown_error"
-      });
       setMessage(
         error instanceof Error && error.message
-          ? `${mode === "signup" ? copy.loginPage.signupError : copy.loginPage.error} (${error.message})`
-          : mode === "signup"
-            ? copy.loginPage.signupError
-            : copy.loginPage.error
+          ? `${copy.loginPage.signupError} (${error.message})`
+          : copy.loginPage.signupError
       );
     } finally {
       setLoading(false);
@@ -210,7 +187,12 @@ export function AuthCard({ mode }: AuthCardProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="premium-card rounded-lg p-6 sm:p-8">
+    <form
+      action={mode === "login" ? "/auth/login" : undefined}
+      method={mode === "login" ? "post" : undefined}
+      onSubmit={mode === "signup" ? handleSignupSubmit : undefined}
+      className="premium-card rounded-lg p-6 sm:p-8"
+    >
       <div className="grid gap-5">
         {mode === "signup" ? (
           <label className="grid gap-2 text-sm text-white/76">
@@ -228,6 +210,7 @@ export function AuthCard({ mode }: AuthCardProps) {
           <span>{copy.loginPage.email}</span>
           <input
             required
+            name="email"
             type="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
@@ -241,16 +224,18 @@ export function AuthCard({ mode }: AuthCardProps) {
           <span>{copy.loginPage.password}</span>
           <input
             required
+            name="password"
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             className="rounded-md border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition focus:border-gold/60"
           />
         </label>
+        {mode === "login" ? <input type="hidden" name="next" value={redirectTarget} /> : null}
       </div>
       <button
         type="submit"
-        disabled={loading || !isAvailable}
+        disabled={mode === "signup" && (loading || !isAvailable)}
         className="button-nowrap mt-6 inline-flex w-full items-center justify-center rounded-md bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-[#e7cd92] disabled:opacity-60"
       >
         {loading ? copy.loginPage.loading : mode === "signup" ? copy.loginPage.signupButton : copy.loginPage.button}
