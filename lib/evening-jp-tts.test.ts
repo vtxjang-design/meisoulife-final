@@ -106,9 +106,9 @@ test("createJapaneseEveningVoiceSession provides a safe fallback when voices are
 test("Japanese evening settings use conservative natural pacing ranges", () => {
   assert.deepEqual(getJapaneseEveningSpeechSettings("release"), {
     lang: "ja-JP",
-    rate: 0.77,
-    pitch: 0.84,
-    volume: 0.78,
+    rate: 0.82,
+    pitch: 0.88,
+    volume: 0.82,
     preferredNames: JAPANESE_EVENING_PREFERRED_NAMES
   });
   assert.deepEqual(getJapaneseEveningSpeechSettings("gratitude"), {
@@ -127,60 +127,45 @@ test("Japanese evening settings use conservative natural pacing ranges", () => {
   });
 });
 
-test("Japanese Release narration uses safer spoken readings while preserving display text", () => {
+test("Japanese Release narration uses natural premium phrasing while preserving concise captions", () => {
   const openingLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-1");
-  const dayLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-3");
-  const settleLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-4");
-  const bodyLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-5");
-  const heartLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-6");
-  const tomorrowLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-7");
-  const effortLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-8");
-  const stayLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-9");
-  const enoughLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-10");
-  const closingLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-11");
+  const permissionLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-2");
+  const breathLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-5");
+  const tomorrowLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-6");
+  const closingLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-8");
 
-  assert.equal(openingLine?.text, "今日も…\nお疲れさまでした");
-  assert.equal(openingLine?.speechText, "きょうも…\nお疲れさまでした。");
-  assert.equal(dayLine?.text, "今日という 一日は、\nいろいろな時間が\nあったことでしょう");
-  assert.equal(dayLine?.speechText, "きょうという、\nいちにちは\nいろいろな時間が\nあったことでしょう。");
-  assert.equal(settleLine?.speechText, "いまは、\nそのすべてを\nそっと置いてみましょう。");
-  assert.equal(bodyLine?.speechText, "体の力を\n少しゆるめます。");
-  assert.equal(heartLine?.speechText, "心も\n静かに休ませます。");
-  assert.equal(tomorrowLine?.text, "今日終わらなかったことは、\n明日のあなたに\n任せても大丈夫です");
-  assert.equal(tomorrowLine?.speechText, "きょう終わらなかったことは、\nあしたのあなたに\n任せても大丈夫です。");
-  assert.equal(effortLine?.text, "何も\n頑張らなくて\n大丈夫です");
-  assert.equal(effortLine?.speechText, "なにも\nがんばらなくて\nだいじょうぶです。");
-  assert.equal(stayLine?.speechText, "ただ、\nここに\n静かにいてみましょう。");
-  assert.equal(enoughLine?.speechText, "きょうも…\n十分でした。");
-  assert.equal(closingLine?.speechText, "きょうの重さを…\nゆっくり下ろします。");
-  assert.match(dayLine?.speechText ?? "", /いちにちは/u);
-  assert.doesNotMatch(dayLine?.speechText ?? "", /いちーにち|いち\s+にち/u);
+  assert.equal(JAPANESE_RELEASE_GATE_NARRATION.length, 8);
+  assert.equal(openingLine?.text, "今日も一日\nお疲れさまでした");
+  assert.equal(openingLine?.speechText, "今日も一日、お疲れさまでした。");
+  assert.equal(permissionLine?.speechText, "ここからは、何かを終わらせなくても、大丈夫です。");
+  assert.equal(breathLine?.speechText, "呼吸は、そのままで、大丈夫です。");
+  assert.equal(tomorrowLine?.speechText, "今日、終わらなかったことは、明日に預けておきましょう。");
+  assert.equal(closingLine?.speechText, "今日の重さを、ここに、そっと置いていきます。");
+  assert.ok(JAPANESE_RELEASE_GATE_NARRATION.every((line) => line.text.split("\n").length <= 3));
+  assert.ok(JAPANESE_RELEASE_GATE_NARRATION.every((line) => !/\.\.\.|\s{2,}/u.test(line.text)));
 });
 
 test("Japanese Release narration leaves a longer quiet runway before the 3-minute end", () => {
   const releaseTimeline = Object.fromEntries(
     JAPANESE_RELEASE_GATE_NARRATION.map((line) => [line.key, line.at])
   );
-  const finalLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-11");
+  const finalLine = JAPANESE_RELEASE_GATE_NARRATION.find((line) => line.key === "release-8");
   const gratitudeFinalLine = JAPANESE_GRATITUDE_GATE_NARRATION.at(-1);
   const sleepTimeline = JAPANESE_SLEEP_GATE_NARRATION.map((line) => line.at);
 
   assert.deepEqual(releaseTimeline, {
-    "release-1": 10,
-    "release-2": 24,
-    "release-3": 40,
-    "release-4": 58,
-    "release-5": 74,
-    "release-6": 98,
-    "release-7": 122,
-    "release-8": 134,
-    "release-9": 145,
-    "release-10": 153,
-    "release-11": 162
+    "release-1": 12,
+    "release-2": 30,
+    "release-3": 52,
+    "release-4": 76,
+    "release-5": 98,
+    "release-6": 120,
+    "release-7": 144,
+    "release-8": 162
   });
-  assert.equal(finalLine?.speechDelayMs, 1120);
-  assert.equal(roundToHundredths((finalLine?.at ?? 0) + ((finalLine?.speechDelayMs ?? 0) / 1000)), 163.12);
-  assert.equal(roundToHundredths(180 - ((finalLine?.at ?? 0) + ((finalLine?.speechDelayMs ?? 0) / 1000))), 16.88);
+  assert.equal(finalLine?.speechDelayMs, 1180);
+  assert.equal(roundToHundredths((finalLine?.at ?? 0) + ((finalLine?.speechDelayMs ?? 0) / 1000)), 163.18);
+  assert.equal(roundToHundredths(180 - ((finalLine?.at ?? 0) + ((finalLine?.speechDelayMs ?? 0) / 1000))), 16.82);
   assert.equal(gratitudeFinalLine?.at, 200);
   assert.deepEqual(sleepTimeline, [15, 50, 72]);
 });
