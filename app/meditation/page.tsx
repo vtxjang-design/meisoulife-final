@@ -565,41 +565,41 @@ const affirmationGateCopy = {
         at: 20,
         key: "open-2",
         text: "今日も\n新しい朝を\n迎えました",
-        speechText: "きょうも、\nあたらしい あさを、\nむかえました。",
+        speechText: "きょうも、\nあたらしいあさを、\nむかえました。",
         speechDelayMs: 460
       },
       {
         at: 38,
         key: "open-3",
         text: "ほんの少し\n立ち止まってみましょう",
-        speechText: "ほんの すこし、\nたちどまってみましょう。",
+        speechText: "ほんのすこし、\nたちどまってみましょう。",
         speechDelayMs: 480
       },
       { at: 54, key: "open-4", text: "ゆっくり\n息を吸います", speechText: "ゆっくり、\n息を吸います", speechDelayMs: 520 },
-      { at: 70, key: "open-5", text: "そして\n静かに吐きます", speechText: "そして、\n静かに吐きます", speechDelayMs: 520 },
-      { at: 88, key: "open-6", text: "もう一度\nゆっくり息を吸います", speechText: "もう一度、\nゆっくり息を吸います", speechDelayMs: 540 },
-      { at: 104, key: "open-7", text: "ゆっくり吐きます", speechText: "ゆっくり、\n吐きます", speechDelayMs: 560 }
+      { at: 64, key: "open-5", text: "そして\nゆっくり吐きます", speechText: "そして、\nゆっくり吐きます。", speechDelayMs: 520 },
+      { at: 80, key: "open-6", text: "もう一度\nゆっくり息を吸います", speechText: "もう一度、\nゆっくり息を吸います。", speechDelayMs: 540 },
+      { at: 90, key: "open-7", text: "ゆっくり吐きます", speechText: "ゆっくり、\n吐きます。", speechDelayMs: 560 }
     ],
     affirmationLines: [
       {
-        at: 120,
+        at: 108,
         key: "affirm-1",
         text: "呼吸とともに\n身体が少しずつ\n目覚めていきます",
-        speechText: "こきゅうと ともに、\nからだが すこしずつ、\nめざめていきます。",
+        speechText: "こきゅうとともに、\nからだがすこしずつ、\nめざめていきます。",
         speechDelayMs: 460
       },
       {
-        at: 138,
+        at: 128,
         key: "affirm-2",
         text: "今は\n何も変えなくても\n大丈夫です",
         speechText: "今は、\n何も変えなくても、\n大丈夫です",
         speechDelayMs: 520
       },
       {
-        at: 154,
+        at: 146,
         key: "affirm-3",
         text: "ただ\n今、ここにいる自分を\n感じてみましょう",
-        speechText: "ただ、\nいま ここにいる じぶんを、\nかんじてみましょう。",
+        speechText: "ただ、\nいまここにいるじぶんを、\nかんじてみましょう。",
         speechDelayMs: 520
       }
     ],
@@ -608,10 +608,10 @@ const affirmationGateCopy = {
         at: 166,
         key: "close-1",
         text: "今日という一日が\n今、ここから始まります",
-        speechText: "きょうという いちにちが、\nいま ここから、はじまります。",
+        speechText: "きょうといういちにちが、\nいま、ここからはじまります。",
         speechDelayMs: 700
       },
-      { at: 176, key: "close-2", text: "あなた本来のリズムとともに", speechText: "あなた ほんらいの リズムと ともに。", speechDelayMs: 760 },
+      { at: 176, key: "close-2", text: "あなた本来のリズムとともに", speechText: "あなたほんらいのリズムとともに。", speechDelayMs: 760 },
       { at: 179, key: "close-3", text: "いってらっしゃい", speechDelayMs: 820 }
     ]
   },
@@ -708,9 +708,9 @@ const energyGateCopy = {
     integration: "丹田を感じます\n今を感じます",
     openingLines: [
       { at: 5, key: "open-1", text: "ようこそ", speechDelayMs: 620 },
-      { at: 10, key: "open-2", text: "今日は\n体の中心に意識を向けます", speechText: "きょうは、\nからだの ちゅうしんに、\nいしきを むけます。", speechDelayMs: 420 },
-      { at: 26, key: "open-4", text: "おへその下にある\n丹田へ", speechText: "おへその したにある、\nたんでんへ。", speechDelayMs: 480 },
-      { at: 34, key: "open-5", text: "丹田に意識を向けます", speechText: "たんでんに、\nいしきを むけます。", speechDelayMs: 500 }
+      { at: 10, key: "open-2", text: "今日は\n体の中心に意識を向けます", speechText: "きょうは、\nからだのちゅうしんに、\nいしきをむけます。", speechDelayMs: 420 },
+      { at: 26, key: "open-4", text: "おへその下へ", speechText: "おへそのしたへ。", speechDelayMs: 480 },
+      { at: 34, key: "open-5", text: "そこにある丹田に\n意識を向けます", speechText: "そこにある、たんでんに、\nいしきをむけます。", speechDelayMs: 500 }
     ],
     awarenessLines: [
       { at: 46, key: "body-1", text: "丹田", speechText: "たんでん。", speechDelayMs: 520 },
@@ -725,10 +725,10 @@ const energyGateCopy = {
       { at: 128, key: "energy-4", text: "丹田", speechText: "たんでん。", speechDelayMs: 580 },
       { at: 140, key: "energy-5", text: "温かさを感じます", speechText: "あたたかさを、\nかんじます。", speechDelayMs: 560 },
       { at: 152, key: "energy-6", text: "生命力を感じます", speechText: "せいめいりょくを、\nかんじます。", speechDelayMs: 580 },
-      { at: 164, key: "energy-7", text: "今日を支える力は\nすでにあなたの中にあります", speechText: "今日を支える力は、\nすでにあなたの中にあります", speechDelayMs: 640 }
+      { at: 164, key: "energy-7", text: "今日を支える力は\nすでにあなたの中にあります", speechText: "きょうをささえるちからは、\nすでにあなたのなかにあります。", speechDelayMs: 640 }
     ],
     closingLines: [
-      { at: 178, key: "close-1", text: "今日を始める準備が整いました", speechText: "きょうを はじめる、\nじゅんびが ととのいました。", speechDelayMs: 760 }
+      { at: 178, key: "close-1", text: "今日を始める準備が整いました", speechText: "きょうをはじめる、\nじゅんびがととのいました。", speechDelayMs: 760 }
     ]
   },
   kr: {
@@ -834,16 +834,16 @@ const visionGateCopy = {
       { at: 6, key: "open-1", text: "おはようございます", speechDelayMs: 640 },
       { at: 20, key: "open-2", text: "少しだけ\n呼吸に戻ります", speechText: "少しだけ、\n呼吸に戻ります", speechDelayMs: 480 },
       { at: 34, key: "open-3", text: "ゆっくり\n息を吸います", speechText: "ゆっくり、\n息を吸います", speechDelayMs: 540 },
-      { at: 48, key: "open-4", text: "静かに\n吐きます", speechText: "静かに、\n吐きます", speechDelayMs: 560 }
+      { at: 44, key: "open-4", text: "静かに\n吐きます", speechText: "静かに、\n吐きます。", speechDelayMs: 560 }
     ],
     visionLines: [
-      { at: 62, key: "vision-1", text: "今日は\n遠い先まで見通そうとせず", speechText: "きょうは、\nとおい さきまで、\nみとおそうと せず。", speechDelayMs: 520 },
-      { at: 78, key: "vision-2", text: "大切にしたい方向を\n静かに確かめます", speechText: "たいせつに したい ほうこうを、\nしずかに たしかめます。", speechDelayMs: 560 },
+      { at: 60, key: "vision-1", text: "今日は\n遠い先まで見通そうとせず", speechText: "きょうは、\nとおいさきまで、\nみとおそうとせず。", speechDelayMs: 520 },
+      { at: 70, key: "vision-2", text: "大切にしたい方向を\n静かに確かめます", speechText: "たいせつにしたいほうこうを、\nしずかにたしかめます。", speechDelayMs: 560 },
       { at: 96, key: "vision-3", text: "昨日は\nもう過ぎました", speechText: "昨日は、\nもう過ぎました", speechDelayMs: 540 },
       { at: 112, key: "vision-4", text: "明日は\nまだ来ていません", speechText: "明日は、\nまだ来ていません", speechDelayMs: 540 },
       { at: 128, key: "vision-5", text: "今\nここにあるのは\nこの瞬間です", speechText: "今、\nここにあるのは、\nこの瞬間です", speechDelayMs: 560 },
       { at: 146, key: "vision-6", text: "朝の光を\n心の中に\nそっと浮かべます", speechText: "朝の光を、\n心の中に、\nそっと浮かべます", speechDelayMs: 580 },
-      { at: 164, key: "vision-7", text: "進む道は\n静かに続いています", speechText: "すすむ みちは、\nしずかに つづいています。", speechDelayMs: 620 }
+      { at: 164, key: "vision-7", text: "進む道は\n静かに続いています", speechText: "すすむみちは、\nしずかにつづいています。", speechDelayMs: 620 }
     ],
     closingLines: [
       { at: 174, key: "close-1", text: "今日は\n一歩で十分です", speechText: "今日は、\n一歩で十分です", speechDelayMs: 760 }
