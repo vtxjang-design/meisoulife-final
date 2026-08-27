@@ -24,6 +24,7 @@ import {
   shouldPlayMeditationCompletionChime,
   supportsMeditationVibration
 } from "@/lib/meditation-completion";
+import { getStructuredMorningSpeechSettings } from "@/lib/morning-gate-voice";
 import { getRhythmJourneyContent, journeyAudioMap } from "@/lib/rhythm-journey";
 import { getBasicPracticeByRouteType, getBasicPracticeBySession } from "@/lib/basic-rhythm";
 import { resolveMeditationRequiredPlan } from "@/lib/membership-access";
@@ -73,8 +74,6 @@ const AFFIRMATION_TOTAL_SECONDS = 180;
 const JOURNEY_SETTLING_MS = 2000;
 const MORNING_GATE_FADE_IN_MS = 2000;
 const MORNING_GATE_FADE_OUT_MS = 3000;
-const MORNING_GATE_NARRATION_VOLUME = 0.9;
-const VISION_GATE_SPEECH_RATE_RATIO = 0.9;
 const MORNING_GATE_AUDIO = {
   energy: {
     src: "/audio/morning/energy%20gate.mp3",
@@ -1150,36 +1149,6 @@ function getMorningGateStage(door: MeditationDoor, elapsedSeconds: number): Stru
   return "closing";
 }
 
-function getStructuredMorningSpeechSettings(language: "jp" | "kr" | "en") {
-  if (language === "kr") {
-    return {
-      lang: "ko-KR",
-      rate: 0.75,
-      pitch: 1,
-      volume: MORNING_GATE_NARRATION_VOLUME,
-      preferredNames: ["Yuna", "Sora", "Google 한국어", "Siri"]
-    };
-  }
-
-  if (language === "en") {
-    return {
-      lang: "en-US",
-      rate: 0.76,
-      pitch: 1,
-      volume: MORNING_GATE_NARRATION_VOLUME,
-      preferredNames: ["Samantha", "Ava", "Victoria", "Google US English", "Siri"]
-    };
-  }
-
-  return {
-    lang: "ja-JP",
-    rate: 0.69,
-    pitch: 0.95,
-    volume: MORNING_GATE_NARRATION_VOLUME,
-    preferredNames: ["Kyoko", "Otoya", "Google 日本語", "Siri"]
-  };
-}
-
 function getFocusGateSpeechSettings(language: "jp" | "kr" | "en") {
   if (language === "kr") {
     return {
@@ -1594,6 +1563,7 @@ function MeditationPageContent() {
   const isSleepGate = meditationType === "night" && mappedDoor === "sleep";
   const isGuidedEveningGate = isReleaseGate || isGratitudeGate || isSleepGate;
   const isStructuredMorningGate = isAffirmationGate || isEnergyGate || isVisionGate;
+  const structuredMorningDoor = isEnergyGate ? "energy" : isVisionGate ? "vision" : "affirmation";
   const isBasicGateExperience = isStructuredMorningGate || isFocusGate || isCalmGate || isRechargeGate || isGuidedEveningGate;
   const ritualCopy = awakeningRitualCopy[localizedLanguage];
   const structuredMorningAudio =
@@ -2923,7 +2893,7 @@ function MeditationPageContent() {
 
     try {
       const synth = window.speechSynthesis;
-      const settings = getStructuredMorningSpeechSettings(language);
+      const settings = getStructuredMorningSpeechSettings(language, structuredMorningDoor);
       synth.getVoices();
 
       if (structuredSpeechUnlockedRef.current) {
@@ -3585,7 +3555,7 @@ function MeditationPageContent() {
 
     if ("speechSynthesis" in window) {
       try {
-        const settings = getStructuredMorningSpeechSettings(language);
+        const settings = getStructuredMorningSpeechSettings(language, structuredMorningDoor);
         const synth = window.speechSynthesis;
         structuredSpeechSequenceRef.current += 1;
         const speechSequence = structuredSpeechSequenceRef.current;
@@ -3618,7 +3588,7 @@ function MeditationPageContent() {
 
           const utterance = new SpeechSynthesisUtterance(nextLine.speechText ?? nextLine.text);
           utterance.lang = settings.lang;
-          utterance.rate = isVisionGate ? settings.rate * VISION_GATE_SPEECH_RATE_RATIO : settings.rate;
+          utterance.rate = settings.rate;
           utterance.pitch = settings.pitch;
           utterance.volume = settings.volume;
 
