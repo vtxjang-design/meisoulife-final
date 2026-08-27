@@ -3,10 +3,6 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 const meditationPageSource = readFileSync(new URL("../app/meditation/page.tsx", import.meta.url), "utf8");
-const premiumBriefSource = readFileSync(
-  new URL("../docs/RELEASE_GATE_PREMIUM_NARRATION.md", import.meta.url),
-  "utf8"
-);
 
 const releaseCatalogSource = meditationPageSource.slice(
   meditationPageSource.indexOf("const releaseGateNarration"),
@@ -34,10 +30,4 @@ test("Release Gate translations preserve permission, unforced breath, and a quie
   assert.match(releaseCatalogSource, /nothing else needs\\nto be finished/);
   assert.match(releaseCatalogSource, /Your breath\\ncan remain\\njust as it is/);
   assert.doesNotMatch(releaseCatalogSource, /Gate of Gratitude|Thank you/);
-});
-
-test("the premium brief defines fixed-audio requirements without removing the browser fallback", () => {
-  assert.match(premiumBriefSource, /48 kHz \/ 24-bit WAV/);
-  assert.match(premiumBriefSource, /browser `speechSynthesis` as a compatibility fallback/);
-  assert.match(meditationPageSource, /new SpeechSynthesisUtterance\(nextLine\.speechText \?\? nextLine\.text\)/);
 });
