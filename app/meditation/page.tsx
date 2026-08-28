@@ -395,24 +395,29 @@ const calmGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
 const releaseGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
   jp: JAPANESE_RELEASE_GATE_NARRATION,
   kr: [
-    { at: 12, key: "release-1", text: "오늘도 하루를\n잘 지나오셨습니다", speechDelayMs: 980 },
-    { at: 30, key: "release-2", text: "이제는\n무언가를 끝내지 않아도\n괜찮습니다", speechDelayMs: 1040 },
-    { at: 52, key: "release-3", text: "오늘 있었던 일을\n하나씩 정리하지 않아도 되는\n그런 시간입니다", speechDelayMs: 1080 },
-    { at: 76, key: "release-4", text: "어깨의 힘이 풀리는 것을\n그저\n느껴봅니다", speechDelayMs: 1100 },
-    { at: 98, key: "release-5", text: "호흡은\n그대로여도\n괜찮습니다", speechDelayMs: 1120 },
-    { at: 120, key: "release-6", text: "오늘 끝나지 않은 일은\n내일에\n맡겨두어도 좋습니다", speechDelayMs: 1140 },
-    { at: 144, key: "release-7", text: "지금은\n그저 조용히\n여기에 머뭅니다", speechDelayMs: 1160 },
-    { at: 162, key: "release-8", text: "오늘의 무게를\n이곳에\n가만히 내려놓습니다", speechDelayMs: 1180 }
+    { at: 10, key: "release-1", text: "오늘도…\n수고하셨습니다", speechDelayMs: 880 },
+    { at: 24, key: "release-2", text: "지금은\n잠시 쉬어도\n괜찮습니다", speechDelayMs: 920 },
+    { at: 40, key: "release-3", text: "오늘 하루,\n많은 순간이\n있었을 것입니다", speechDelayMs: 940 },
+    { at: 58, key: "release-4", text: "이제,\n그 모든 것을\n잠시 내려놓습니다", speechDelayMs: 960 },
+    { at: 74, key: "release-5", text: "몸의 힘을\n조금 풀어봅니다", speechDelayMs: 940 },
+    { at: 98, key: "release-6", text: "마음도\n조용히 쉬어갑니다", speechDelayMs: 1000 },
+    { at: 122, key: "release-7", text: "오늘 끝내지 못한 일은\n내일의 당신에게\n맡겨도 됩니다", speechDelayMs: 1020 },
+    { at: 136, key: "release-8", text: "아무것도\n애쓰지 않아도 됩니다", speechDelayMs: 1020 },
+    { at: 148, key: "release-9", text: "그저,\n여기에\n조용히 머물러 봅니다", speechDelayMs: 1080 },
+    { at: 155, key: "release-10", text: "오늘도...\n충분했습니다", speechDelayMs: 1120 },
+    { at: 170, key: "release-11", text: "오늘의 무게를...\n천천히 내려놓습니다", speechDelayMs: 1120 }
   ],
   en: [
-    { at: 12, key: "release-1", text: "You have made it\nthrough another day", speechDelayMs: 980 },
-    { at: 30, key: "release-2", text: "From here\nnothing else needs\nto be finished", speechDelayMs: 1040 },
-    { at: 52, key: "release-3", text: "This is a time\nwhen the day does not need\nto be sorted out", speechDelayMs: 1080 },
-    { at: 76, key: "release-4", text: "Simply notice\nyour shoulders\nsoftening", speechDelayMs: 1100 },
-    { at: 98, key: "release-5", text: "Your breath\ncan remain\njust as it is", speechDelayMs: 1120 },
-    { at: 120, key: "release-6", text: "What remains unfinished today\ncan be left\nfor tomorrow", speechDelayMs: 1140 },
-    { at: 144, key: "release-7", text: "For now\nsimply be here\nin the quiet", speechDelayMs: 1160 },
-    { at: 162, key: "release-8", text: "Set down\nthe weight of today\nhere", speechDelayMs: 1180 }
+    { at: 10, key: "release-1", text: "Today...\nThank you", speechDelayMs: 860 },
+    { at: 24, key: "release-2", text: "Now,\nyou may simply\nrest", speechDelayMs: 900 },
+    { at: 40, key: "release-3", text: "Today\nheld many moments", speechDelayMs: 920 },
+    { at: 58, key: "release-4", text: "For now,\ngently set them\ndown", speechDelayMs: 940 },
+    { at: 74, key: "release-5", text: "Let your body\nsoften", speechDelayMs: 920 },
+    { at: 98, key: "release-6", text: "Let your heart\nrest quietly", speechDelayMs: 980 },
+    { at: 122, key: "release-7", text: "Whatever remains unfinished today\ncan wait for tomorrow", speechDelayMs: 980 },
+    { at: 136, key: "release-8", text: "You do not need\nto try anymore", speechDelayMs: 980 },
+    { at: 148, key: "release-9", text: "Simply\nbe here\nfor a little while", speechDelayMs: 1040 },
+    { at: 168, key: "release-10", text: "Today\nwas enough\nGently place\ntoday's weight down", speechText: "Today\nwas enough\nGently place\ntoday's weight down\nNow,\nlet us quietly walk\ntoward the Gate of Gratitude", speechDelayMs: 1100 }
   ]
 };
 
