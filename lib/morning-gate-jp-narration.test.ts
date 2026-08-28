@@ -15,7 +15,7 @@ test("Japanese Morning Gate cues keep connected phrases and comfortable breath t
   assert.match(meditationPageSource, /speechText: "きょうといういちにちが、\\nいま、ここからはじまります。"/);
   assert.match(meditationPageSource, /at: 54, key: "open-4"[\s\S]*?at: 64, key: "open-5"/);
   assert.match(meditationPageSource, /at: 80, key: "open-6"[\s\S]*?at: 90, key: "open-7"/);
-  assert.match(meditationPageSource, /at: 60, key: "vision-1"[\s\S]*?at: 70, key: "vision-2"/);
+  assert.match(meditationPageSource, /at: 60, key: "vision-1"[\s\S]*?at: 66, key: "vision-2"/);
 });
 
 test("Japanese Energy Gate avoids back-to-back Danjeon wording", () => {
