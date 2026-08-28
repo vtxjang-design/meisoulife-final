@@ -838,7 +838,7 @@ const visionGateCopy = {
     ],
     visionLines: [
       { at: 60, key: "vision-1", text: "今日は\n遠い先まで見通そうとせず", speechText: "きょうは、\nとおいさきまで、\nみとおそうとせず。", speechDelayMs: 520 },
-      { at: 70, key: "vision-2", text: "大切にしたい方向を\n静かに確かめます", speechText: "たいせつにしたいほうこうを、\nしずかにたしかめます。", speechDelayMs: 560 },
+      { at: 66, key: "vision-2", text: "大切にしたい方向を\n静かに確かめます", speechText: "たいせつにしたいほうこうを、\nしずかにたしかめます。", speechDelayMs: 560 },
       { at: 96, key: "vision-3", text: "昨日は\nもう過ぎました", speechText: "昨日は、\nもう過ぎました", speechDelayMs: 540 },
       { at: 112, key: "vision-4", text: "明日は\nまだ来ていません", speechText: "明日は、\nまだ来ていません", speechDelayMs: 540 },
       { at: 128, key: "vision-5", text: "今\nここにあるのは\nこの瞬間です", speechText: "今、\nここにあるのは、\nこの瞬間です", speechDelayMs: 560 },
