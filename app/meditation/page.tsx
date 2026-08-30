@@ -4136,15 +4136,10 @@ function MeditationPageContent() {
       return;
     }
 
-    if (isAffirmationGate && (affirmationStage === "breathing" || affirmationStage === "bodyAwareness")) {
-      setAffirmationMessage(null);
-      return;
-    }
-
-    if (affirmationStage === "integration") {
+    if (affirmationStage === "integration" && morningGateCopy.integration) {
       setAffirmationMessage(morningGateCopy.integration);
     }
-  }, [affirmationStage, isStructuredMorningGate, morningGateCopy, phase]);
+  }, [affirmationStage, isStructuredMorningGate, morningGateCopy]);
 
   useEffect(() => {
     return () => {
