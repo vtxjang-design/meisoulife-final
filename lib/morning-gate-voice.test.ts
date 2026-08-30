@@ -4,7 +4,7 @@ import { getStructuredMorningSpeechSettings } from "./morning-gate-voice.ts";
 
 test("Morning Gate uses a stable lower voice profile across all three doors", () => {
   for (const door of ["affirmation", "energy", "vision"] as const) {
-    assert.equal(getStructuredMorningSpeechSettings("jp", door).pitch, 0.9);
+    assert.equal(getStructuredMorningSpeechSettings("jp", door).pitch, 0.87);
     assert.equal(getStructuredMorningSpeechSettings("kr", door).pitch, 0.9);
     assert.equal(getStructuredMorningSpeechSettings("en", door).pitch, 0.93);
   }

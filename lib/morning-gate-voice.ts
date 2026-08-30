@@ -34,7 +34,7 @@ export function getStructuredMorningSpeechSettings(
   return {
     lang: "ja-JP",
     rate: MORNING_GATE_RATE.jp[door],
-    pitch: 0.9,
+    pitch: 0.87,
     volume: 0.9,
     preferredNames: ["Otoya", "Kyoko", "Google 日本語", "Siri"] as const
   };
