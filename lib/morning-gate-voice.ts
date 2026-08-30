@@ -15,7 +15,7 @@ export function getStructuredMorningSpeechSettings(
     return {
       lang: "ko-KR",
       rate: MORNING_GATE_RATE.kr[door],
-      pitch: 0.93,
+      pitch: 0.9,
       volume: 0.9,
       preferredNames: ["InJoon", "MinJoon", "Yuna", "Sora", "Google 한국어", "Siri"] as const
     };
