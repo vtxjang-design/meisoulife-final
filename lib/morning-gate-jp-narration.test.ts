@@ -31,3 +31,16 @@ test("Japanese Morning Gate copy avoids the previous translated phrasing", () =>
   assert.doesNotMatch(meditationPageSource, /静かに\\n方向を思い出します/);
   assert.doesNotMatch(meditationPageSource, /今日という 一日/);
 });
+
+test("Morning Gate captions remain visible between scheduled cues", () => {
+  const captionEffectSource = meditationPageSource.slice(
+    meditationPageSource.indexOf('if (affirmationStage === "openingFade")'),
+    meditationPageSource.indexOf('}, [affirmationStage, isStructuredMorningGate, morningGateCopy]);')
+  );
+
+  assert.doesNotMatch(captionEffectSource, /setAffirmationMessage\(null\)/);
+  assert.match(
+    captionEffectSource,
+    /affirmationStage === "integration" && morningGateCopy\.integration/
+  );
+});
