@@ -6,7 +6,7 @@ const meditationPageSource = readFileSync(new URL("../app/meditation/page.tsx", 
 
 test("Japanese Morning Gate narration keeps display copy and TTS readings separate", () => {
   assert.match(meditationPageSource, /text: "呼吸とともに\\n身体が少しずつ\\n目覚めていきます"/);
-  assert.match(meditationPageSource, /speechText: "こきゅうとともに、\\nからだがすこしずつ、\\nめざめていきます。"/);
+  assert.match(meditationPageSource, /speechText: "こきゅう、とともに、\\nからだがすこしずつ、\\nめざめていきます。"/);
   assert.match(meditationPageSource, /text: "生命力を感じます", speechText: "せいめいりょくを、\\nかんじます。"/);
   assert.match(meditationPageSource, /text: "丹田", speechText: "たんでん。"/);
 });
