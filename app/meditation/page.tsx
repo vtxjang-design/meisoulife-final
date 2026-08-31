@@ -1603,6 +1603,7 @@ function MeditationPageContent() {
     : meditationType === "morning" || meditationType === "night"
       ? content.topText
       : durationTextSet?.topText || content.topText;
+  const sessionEyebrow = isSixtySecondGate ? "DAYTIME" : basicPracticeCopy?.title;
   const introText = journeyMode ? journeyCopy.timerSubText : basicPracticeCopy?.sessionGuidance ?? content.intro;
   const completionTitle =
     basicPracticeCopy
@@ -5126,14 +5127,16 @@ function MeditationPageContent() {
                 {basicPracticeCopy ? (
                   <div className="mx-auto max-w-xl space-y-3 rounded-[24px] border border-white/10 bg-white/[0.04] px-4 py-4 backdrop-blur">
                     <p className="text-xs uppercase tracking-[0.24em] text-gold/74">
-                      {basicPracticeCopy.title} · {Math.floor(totalSeconds / 60)} min
+                      {sessionEyebrow} · {Math.floor(totalSeconds / 60)} min
                     </p>
                     <h1 className="font-serif text-3xl text-white sm:text-4xl">{basicPracticeCopy.sessionTitle}</h1>
                     <p className="text-sm leading-7 text-white/70">{basicPracticeCopy.sessionSubtitle}</p>
                     <p className="text-sm leading-7 text-white/56">“{basicPracticeCopy.state}”</p>
                   </div>
                 ) : null}
-                <p className="keep-phrase text-sm uppercase tracking-[0.32em] text-gold/80">{topText}</p>
+                {!isSixtySecondGate ? (
+                  <p className="keep-phrase text-sm uppercase tracking-[0.32em] text-gold/80">{topText}</p>
+                ) : null}
                 <p className="body-measure keep-phrase mx-auto text-sm leading-7 text-white/60 sm:text-base">{introText}</p>
               </div>
             )}
