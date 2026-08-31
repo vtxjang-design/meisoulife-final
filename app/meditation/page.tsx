@@ -1178,7 +1178,7 @@ function getFocusGateSpeechSettings(language: "jp" | "kr" | "en") {
   return {
     lang: "ja-JP",
     rate: 0.72,
-    pitch: 0.96,
+    pitch: 0.9,
     volume: 0.9,
     preferredNames: ["Kyoko", "Otoya", "Google 日本語", "Siri"]
   };
@@ -1208,7 +1208,7 @@ function getCalmGateSpeechSettings(language: "jp" | "kr" | "en") {
   return {
     lang: "ja-JP",
     rate: 0.64,
-    pitch: 0.94,
+    pitch: 0.9,
     volume: 1,
     preferredNames: ["Kyoko", "Otoya", "Google 日本語", "Siri"]
   };
