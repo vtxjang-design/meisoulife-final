@@ -368,7 +368,7 @@ const calmGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
     { at: 31, key: "calm-5", text: "肩も\n表情も\nやわらいでいきます", speechText: "肩も、\n表情も、\nやわらいでいきます", speechDelayMs: 720 },
     { at: 40, key: "calm-6", text: "今この瞬間を\nそのまま感じます", speechText: "今この瞬間を、\nそのまま感じます", speechDelayMs: 700 },
     { at: 48, key: "calm-7", text: "何もしなくても\n大丈夫です", speechText: "何もしなくても、\n大丈夫です", speechDelayMs: 760 },
-    { at: 54, key: "calm-8", text: "このやわらかさとともに\n一日へ戻ります", speechText: "このやわらかさとともに、\n一日へ戻ります", speechDelayMs: 760 }
+    { at: 54, key: "calm-8", text: "このやわらかさとともに\n一日へ戻ります", speechText: "このやわらかさとともに、\nいちにちへ戻ります", speechDelayMs: 760 }
   ],
   kr: [
     { at: 0, key: "calm-1", text: "몸의 힘을 내려놓습니다", speechDelayMs: 560 },
