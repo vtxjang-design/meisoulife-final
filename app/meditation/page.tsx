@@ -4298,6 +4298,8 @@ function MeditationPageContent() {
       void ensureBasicGardenCompletionSynced();
     }
 
+    cancelGuidedSpeech();
+
     if (isStructuredMorningGate) {
       await stopStructuredMorningAmbient();
     } else if (isFocusGate) {
@@ -4355,7 +4357,6 @@ function MeditationPageContent() {
     }
     await triggerMeditationCompletion({
       hasUserGesture,
-      soundEnabled,
       vibrationEnabled,
       audioContextRef,
       playSoundOnComplete: shouldPlayMeditationCompletionChime({
@@ -4519,7 +4520,27 @@ function MeditationPageContent() {
     }, 1000);
   }
 
+  async function unlockCompletionChime() {
+    if (!isStructuredMorningGate && !isDaytimeGate) {
+      return;
+    }
+
+    const context = getOrCreateAudioContext(audioContextRef);
+
+    if (!context || context.state === "running") {
+      return;
+    }
+
+    try {
+      await context.resume();
+    } catch (error) {
+      console.warn("[meditation-completion] failed to unlock completion chime", error);
+    }
+  }
+
   async function handleProgramAudioStart() {
+    await unlockCompletionChime();
+
     if (isRechargeGate) {
       const video = rechargeVideoRef.current;
 
