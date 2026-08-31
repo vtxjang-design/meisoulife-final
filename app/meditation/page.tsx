@@ -713,7 +713,7 @@ const energyGateCopy = {
     integration: "丹田を感じます\n今を感じます",
     openingLines: [
       { at: 5, key: "open-1", text: "ようこそ", speechDelayMs: 620 },
-      { at: 10, key: "open-2", text: "今日は\nエネルギーの中心、下腹部の丹田を\n軽くたたきながら\n体と脳を目覚めさせます", speechText: "きょうは、エネルギーのちゅうしん、かふくぶのたんでんを、かるくたたきながら、からだとのうを、めざめさせます。", speechDelayMs: 420 },
+      { at: 10, key: "open-2", text: "今日は丹田を軽くたたきながら\n体と脳を目覚めさせます", speechText: "きょうは、たんでんをかるくたたきながら、からだとのうを、めざめさせます。", speechDelayMs: 420 },
       { at: 26, key: "open-4", text: "おへその下へ", speechText: "おへそのしたへ。", speechDelayMs: 480 },
       { at: 34, key: "open-5", text: "そこにある丹田に\n意識を向けます", speechText: "そこにある、たんでんに、\nいしきをむけます。", speechDelayMs: 500 }
     ],
@@ -754,7 +754,7 @@ const energyGateCopy = {
     integration: "단전을 느껴봅니다\n지금을 느껴봅니다",
     openingLines: [
       { at: 5, key: "open-1", text: "어서 오세요", speechDelayMs: 620 },
-      { at: 10, key: "open-2", text: "오늘은 에너지 중심 아랫배, 단전을\n가볍게 두드리며 몸과 뇌를 깨웁니다", speechText: "오늘은 에너지 중심 아랫배, 단전을 가볍게 두드리며 몸과 뇌를 깨웁니다.", speechDelayMs: 420 },
+      { at: 10, key: "open-2", text: "오늘은 단전을 가볍게 두드리며\n몸과 뇌를 깨웁니다", speechText: "오늘은 단전을 가볍게 두드리며 몸과 뇌를 깨웁니다.", speechDelayMs: 420 },
       { at: 26, key: "open-4", text: "배꼽 아래", speechDelayMs: 480 },
       { at: 34, key: "open-5", text: "단전에 의식을 향해봅니다", speechDelayMs: 500 }
     ],
@@ -793,7 +793,7 @@ const energyGateCopy = {
     integration: "Feel your center\nFeel this moment",
     openingLines: [
       { at: 5, key: "open-1", text: "Welcome", speechDelayMs: 620 },
-      { at: 10, key: "open-2", text: "Today, gently tap your lower abdomen—\nthe Dantian, your energy center—\nto awaken your body and brain", speechText: "Today, gently tap your lower abdomen, the Dantian, your energy center, to awaken your body and brain.", speechDelayMs: 420 },
+      { at: 10, key: "open-2", text: "Today, gently tap your Dantian\nto awaken your body and brain", speechText: "Today, gently tap your Dantian to awaken your body and brain.", speechDelayMs: 420 },
       { at: 26, key: "open-4", text: "Below the navel", speechDelayMs: 480 },
       { at: 34, key: "open-5", text: "feel your Danjeon", speechDelayMs: 500 }
     ],
