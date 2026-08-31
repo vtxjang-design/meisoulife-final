@@ -18,6 +18,17 @@ test("Japanese Morning Gate cues keep connected phrases and comfortable breath t
   assert.match(meditationPageSource, /at: 60, key: "vision-1"[\s\S]*?at: 66, key: "vision-2"/);
 });
 
+test("Korean and English Vision Gate cues keep a four-second connection", () => {
+  assert.match(
+    meditationPageSource,
+    /at: 62, key: "vision-1", text: "오늘은\\n멀리 내다보기보다"[\s\S]*?at: 66, key: "vision-2", text: "조용히\\n방향을 떠올립니다"/
+  );
+  assert.match(
+    meditationPageSource,
+    /at: 62, key: "vision-1", text: "Today\\nyou do not need\\nto look too far ahead"[\s\S]*?at: 66, key: "vision-2", text: "Just remember\\nyour direction"/
+  );
+});
+
 test("Japanese Energy Gate avoids back-to-back Danjeon wording", () => {
   assert.match(meditationPageSource, /text: "おへその下へ"/);
   assert.match(meditationPageSource, /text: "そこにある丹田に\\n意識を向けます"/);
