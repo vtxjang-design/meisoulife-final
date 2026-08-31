@@ -589,8 +589,8 @@ const affirmationGateCopy = {
       {
         at: 108,
         key: "affirm-1",
-        text: "呼吸とともに\n身体が少しずつ\n目覚めていきます",
-        speechText: "こきゅう、とともに、\nからだがすこしずつ、\nめざめていきます。",
+        text: "息とともに\n体が少しずつ\n目覚めていきます",
+        speechText: "いきとともに、\nからだがすこしずつ、\nめざめていきます。",
         speechDelayMs: 460
       },
       {
