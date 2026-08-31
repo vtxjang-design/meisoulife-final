@@ -793,21 +793,21 @@ const energyGateCopy = {
     integration: "Feel your center\nFeel this moment",
     openingLines: [
       { at: 5, key: "open-1", text: "Welcome", speechDelayMs: 620 },
-      { at: 10, key: "open-2", text: "Today, gently tap your Dantian\nto awaken your body and brain", speechText: "Today, gently tap your Dantian to awaken your body and brain.", speechDelayMs: 420 },
+      { at: 10, key: "open-2", text: "Today, gently tap your Dahnjeon\nto awaken your body and brain", speechText: "Today, gently tap your Dahnjeon to awaken your body and brain.", speechDelayMs: 420 },
       { at: 26, key: "open-4", text: "Below the navel", speechDelayMs: 480 },
-      { at: 34, key: "open-5", text: "feel your Danjeon", speechDelayMs: 500 }
+      { at: 34, key: "open-5", text: "feel your Dahnjeon", speechDelayMs: 500 }
     ],
     awarenessLines: [
-      { at: 46, key: "body-1", text: "Danjeon", speechDelayMs: 520 },
-      { at: 56, key: "body-2", text: "Danjeon", speechDelayMs: 560 },
+      { at: 46, key: "body-1", text: "Dahnjeon", speechDelayMs: 520 },
+      { at: 56, key: "body-2", text: "Dahnjeon", speechDelayMs: 560 },
       { at: 68, key: "body-3", text: "Let the breath be natural", speechDelayMs: 520 },
-      { at: 80, key: "body-4", text: "Feel your Danjeon", speechDelayMs: 560 }
+      { at: 80, key: "body-4", text: "Feel your Dahnjeon", speechDelayMs: 560 }
     ],
     energyLines: [
       { at: 94, key: "energy-1", text: "The body awakens", speechDelayMs: 520 },
       { at: 106, key: "energy-2", text: "The brain awakens", speechDelayMs: 560 },
-      { at: 118, key: "energy-3", text: "Danjeon", speechDelayMs: 560 },
-      { at: 128, key: "energy-4", text: "Danjeon", speechDelayMs: 580 },
+      { at: 118, key: "energy-3", text: "Dahnjeon", speechDelayMs: 560 },
+      { at: 128, key: "energy-4", text: "Dahnjeon", speechDelayMs: 580 },
       { at: 140, key: "energy-5", text: "Feel the warmth", speechDelayMs: 560 },
       { at: 152, key: "energy-6", text: "Feel the life energy", speechDelayMs: 580 },
       { at: 164, key: "energy-7", text: "The strength for today\nis already within you", speechDelayMs: 640 }

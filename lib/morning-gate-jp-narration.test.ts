@@ -31,7 +31,7 @@ test("Korean and English Vision Gate cues keep a four-second connection", () => 
   );
 });
 
-test("Japanese Energy Gate avoids back-to-back Danjeon wording", () => {
+test("Japanese Energy Gate avoids back-to-back Dahnjeon wording", () => {
   assert.match(meditationPageSource, /text: "おへその下へ"/);
   assert.match(meditationPageSource, /text: "そこにある丹田に\\n意識を向けます"/);
   assert.doesNotMatch(meditationPageSource, /おへその下にある\\n丹田へ/);
