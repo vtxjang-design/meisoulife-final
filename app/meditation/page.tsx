@@ -878,7 +878,7 @@ const visionGateCopy = {
     ],
     visionLines: [
       { at: 62, key: "vision-1", text: "오늘은\n멀리 내다보기보다", speechDelayMs: 520 },
-      { at: 78, key: "vision-2", text: "조용히\n방향을 떠올립니다", speechDelayMs: 560 },
+      { at: 66, key: "vision-2", text: "조용히\n방향을 떠올립니다", speechDelayMs: 560 },
       { at: 96, key: "vision-3", text: "어제는\n이미 지나갔습니다", speechDelayMs: 540 },
       { at: 112, key: "vision-4", text: "내일은\n아직 오지 않았습니다", speechDelayMs: 540 },
       { at: 128, key: "vision-5", text: "지금\n여기에 있는 것은\n이 순간입니다", speechDelayMs: 560 },
@@ -913,7 +913,7 @@ const visionGateCopy = {
     ],
     visionLines: [
       { at: 62, key: "vision-1", text: "Today\nyou do not need\nto look too far ahead", speechDelayMs: 520 },
-      { at: 78, key: "vision-2", text: "Just remember\nyour direction", speechDelayMs: 560 },
+      { at: 66, key: "vision-2", text: "Just remember\nyour direction", speechDelayMs: 560 },
       { at: 96, key: "vision-3", text: "Yesterday\nhas already passed", speechDelayMs: 540 },
       { at: 112, key: "vision-4", text: "Tomorrow\nhas not yet arrived", speechDelayMs: 540 },
       { at: 128, key: "vision-5", text: "What is here now\nis this moment", speechDelayMs: 560 },
