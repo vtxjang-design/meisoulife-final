@@ -4,6 +4,7 @@ import type { MutableRefObject } from "react";
 
 type MeditationCompletionOptions = {
   hasUserGesture: boolean;
+  soundEnabled?: boolean;
   vibrationEnabled: boolean;
   audioContextRef: MutableRefObject<AudioContext | null>;
   playSoundOnComplete?: boolean;
