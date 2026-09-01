@@ -3,6 +3,12 @@ import Stripe from "stripe";
 import { normalizeLookupEmail, normalizeMembershipPlan } from "@/lib/membership";
 import { sendAdminPaymentNotification, sendPaymentConfirmationEmail } from "@/lib/resend";
 import { getStripeClient } from "@/lib/stripe";
+import {
+  claimStripeWebhookEvent,
+  completeStripeWebhookEvent,
+  failStripeWebhookEvent,
+  WebhookLedgerError
+} from "@/lib/stripe-webhook-ledger";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 
 type MembershipSyncInput = {
@@ -16,10 +22,24 @@ type MembershipSyncInput = {
   current_period_end?: string | null;
 };
 
-const processedWebhookEventsFallback = new Set<string>();
+type CheckoutNotification = {
+  customerEmail: string;
+  customerName: string | null;
+  language: string | null;
+  plan: string | null;
+  amountTotal: number | null;
+  currency: string | null;
+  subscriptionId: string | null;
+};
 
-async function logWithoutDatabase(message: string, payload: Record<string, unknown>) {
-  console.warn(`[stripe-webhook] ${message}`, payload);
+class WebhookSyncError extends Error {
+  readonly category: string;
+
+  constructor(category: string) {
+    super(`Stripe webhook sync failed: ${category}`);
+    this.name = "WebhookSyncError";
+    this.category = category;
+  }
 }
 
 function toIsoDate(value?: number | null) {
@@ -62,18 +82,21 @@ function getMembershipPlan(record: MembershipSyncInput) {
 }
 
 async function resolveMembershipUserId(email?: string | null, explicitUserId?: string | null) {
-  const supabase = getSupabaseAdminClient();
   const normalizedEmail = normalizeLookupEmail(email);
 
   if (explicitUserId) {
     return explicitUserId;
   }
 
-  if (!supabase || !normalizedEmail) {
+  if (!normalizedEmail) {
     return null;
   }
 
-  console.log("[stripe-webhook] Stripe email", { email: normalizedEmail });
+  const supabase = getSupabaseAdminClient();
+
+  if (!supabase) {
+    throw new WebhookSyncError("missing_supabase_admin");
+  }
 
   const { data, error } = await supabase.auth.admin.listUsers({
     page: 1,
@@ -82,17 +105,15 @@ async function resolveMembershipUserId(email?: string | null, explicitUserId?: s
 
   if (error) {
     console.error("[stripe-webhook] failed to lookup auth user by email", {
-      email: normalizedEmail,
-      message: error.message
+      category: "auth_user_lookup"
     });
-    return null;
+    throw new WebhookSyncError("auth_user_lookup");
   }
 
   const matchedUser = data.users.find((user) => normalizeLookupEmail(user.email) === normalizedEmail);
 
-  console.log("[stripe-webhook] matched user id", {
-    email: normalizedEmail,
-    userId: matchedUser?.id || null
+  console.log("[stripe-webhook] auth user lookup completed", {
+    matched: Boolean(matchedUser?.id)
   });
 
   return matchedUser?.id || null;
@@ -102,10 +123,7 @@ async function upsertMembership(record: MembershipSyncInput) {
   const supabase = getSupabaseAdminClient();
 
   if (!supabase) {
-    await logWithoutDatabase("memberships sync skipped", {
-      reason: "missing_supabase_admin"
-    });
-    return;
+    throw new WebhookSyncError("missing_supabase_admin");
   }
 
   const resolvedUserId = await resolveMembershipUserId(record.email, record.user_id);
@@ -150,10 +168,9 @@ async function upsertMembership(record: MembershipSyncInput) {
 
   if (existingMembership.error) {
     console.error("[stripe-webhook] existing membership lookup failed", {
-      userId: resolvedUserId,
-      message: existingMembership.error.message
+      category: "membership_lookup"
     });
-    return;
+    throw new WebhookSyncError("membership_lookup");
   }
 
   const existingMembershipId = existingMembership.data?.id ?? null;
@@ -164,20 +181,27 @@ async function upsertMembership(record: MembershipSyncInput) {
 
   if (error) {
     console.error("[stripe-webhook] membership upsert failed", {
-      userId: resolvedUserId,
-      message: error.message
+      category: "membership_upsert"
     });
-    return;
+    throw new WebhookSyncError("membership_upsert");
   }
 
-  console.log("[stripe-webhook] Membership synced", data);
+  console.log("[stripe-webhook] membership synced", {
+    plan: data?.plan ?? resolvedPlan,
+    status: data?.status ?? resolvedStatus,
+    authenticated: Boolean(data?.user_id ?? resolvedUserId)
+  });
 }
 
 async function syncSubscriptionRecord(record: MembershipSyncInput) {
   const supabase = getSupabaseAdminClient();
 
-  if (!supabase || !record.email) {
+  if (!record.email) {
     return;
+  }
+
+  if (!supabase) {
+    throw new WebhookSyncError("missing_supabase_admin");
   }
 
   const normalizedEmail = normalizeLookupEmail(record.email);
@@ -189,11 +213,10 @@ async function syncSubscriptionRecord(record: MembershipSyncInput) {
     : { data: null, error: null };
 
   if (profileError) {
-    console.warn("[stripe-webhook] subscription mirror profile lookup failed", {
-      email: normalizedEmail,
-      message: profileError.message
+    console.error("[stripe-webhook] subscription mirror profile lookup failed", {
+      category: "subscription_profile_lookup"
     });
-    return;
+    throw new WebhookSyncError("subscription_profile_lookup");
   }
 
   if (!profile?.id) {
@@ -207,10 +230,10 @@ async function syncSubscriptionRecord(record: MembershipSyncInput) {
       .eq("id", profile.id);
 
     if (authUserUpdateError) {
-      console.warn("[stripe-webhook] failed to attach auth user id to profile", {
-        profileId: profile.id,
-        message: authUserUpdateError.message
+      console.error("[stripe-webhook] failed to attach auth user id to profile", {
+        category: "profile_auth_link"
       });
+      throw new WebhookSyncError("profile_auth_link");
     }
   }
 
@@ -240,11 +263,10 @@ async function syncSubscriptionRecord(record: MembershipSyncInput) {
           .maybeSingle();
 
   if (existingSubscription.error) {
-    console.warn("[stripe-webhook] subscription mirror lookup failed", {
-      profileId: profile.id,
-      message: existingSubscription.error.message
+    console.error("[stripe-webhook] subscription mirror lookup failed", {
+      category: "subscription_lookup"
     });
-    return;
+    throw new WebhookSyncError("subscription_lookup");
   }
 
   const { error } = existingSubscription.data?.id
@@ -252,10 +274,10 @@ async function syncSubscriptionRecord(record: MembershipSyncInput) {
     : await supabase.from("subscriptions").insert(payload);
 
   if (error) {
-    console.warn("[stripe-webhook] subscription mirror sync failed", {
-      profileId: profile.id,
-      message: error.message
+    console.error("[stripe-webhook] subscription mirror sync failed", {
+      category: "subscription_upsert"
     });
+    throw new WebhookSyncError("subscription_upsert");
   }
 }
 
@@ -267,8 +289,12 @@ async function syncUserPlan(record: {
 }) {
   const supabase = getSupabaseAdminClient();
 
-  if (!supabase || !record.email) {
+  if (!record.email) {
     return;
+  }
+
+  if (!supabase) {
+    throw new WebhookSyncError("missing_supabase_admin");
   }
 
   const resolvedUserId = await resolveMembershipUserId(record.email, record.userId);
@@ -286,64 +312,10 @@ async function syncUserPlan(record: {
   );
 
   if (error) {
-    console.warn("[stripe-webhook] user plan sync failed", {
-      email: record.email,
-      message: error.message
+    console.error("[stripe-webhook] user plan sync failed", {
+      category: "user_plan_upsert"
     });
-  }
-}
-
-async function hasProcessedWebhookEvent(eventId: string) {
-  const supabase = getSupabaseAdminClient();
-
-  if (!supabase) {
-    const processed = processedWebhookEventsFallback.has(eventId);
-    await logWithoutDatabase("webhook idempotency using in-memory fallback", {
-      reason: "missing_supabase_admin",
-      eventId,
-      processed
-    });
-    return processed;
-  }
-
-  const { data, error } = await supabase
-    .from("stripe_webhook_events")
-    .select("event_id")
-    .eq("event_id", eventId)
-    .maybeSingle();
-
-  if (error) {
-    console.warn("[stripe-webhook] idempotency lookup failed", {
-      eventId,
-      message: error.message
-    });
-    return false;
-  }
-
-  return Boolean(data?.event_id);
-}
-
-async function markWebhookEventProcessed(eventId: string) {
-  const supabase = getSupabaseAdminClient();
-
-  if (!supabase) {
-    processedWebhookEventsFallback.add(eventId);
-    await logWithoutDatabase("webhook processed event stored in-memory fallback", {
-      reason: "missing_supabase_admin",
-      eventId
-    });
-    return;
-  }
-
-  const { error } = await supabase.from("stripe_webhook_events").insert({
-    event_id: eventId
-  });
-
-  if (error) {
-    console.warn("[stripe-webhook] failed to persist processed event", {
-      eventId,
-      message: error.message
-    });
+    throw new WebhookSyncError("user_plan_upsert");
   }
 }
 
@@ -362,10 +334,31 @@ async function getSubscription(
   return subscription;
 }
 
+async function getAuthoritativeSubscription(
+  stripe: Stripe,
+  eventSubscription: Stripe.Subscription
+) {
+  try {
+    return await stripe.subscriptions.retrieve(eventSubscription.id);
+  } catch (error) {
+    if (
+      error instanceof Stripe.errors.StripeInvalidRequestError &&
+      error.code === "resource_missing"
+    ) {
+      return {
+        ...eventSubscription,
+        status: "canceled"
+      } as Stripe.Subscription;
+    }
+
+    throw error;
+  }
+}
+
 async function handleCheckoutCompleted(stripe: Stripe, session: Stripe.Checkout.Session) {
   console.log("[stripe-webhook] checkout.session.completed received", {
-    sessionId: session.id,
-    customerId: typeof session.customer === "string" ? session.customer : session.customer?.id || null
+    customerPresent: Boolean(session.customer),
+    subscriptionPresent: Boolean(session.subscription)
   });
 
   const subscription = await getSubscription(stripe, session.subscription);
@@ -374,6 +367,7 @@ async function handleCheckoutCompleted(stripe: Stripe, session: Stripe.Checkout.
   const language = session.metadata?.language || null;
   const plan = session.metadata?.plan || subscription?.metadata?.plan || resolvePlanFromAmount(session.amount_total) || null;
   const userId = session.metadata?.user_id || session.metadata?.userId || null;
+  const subscriptionStatus = subscription?.status || "active";
 
   await upsertMembership({
     user_id: userId,
@@ -381,7 +375,7 @@ async function handleCheckoutCompleted(stripe: Stripe, session: Stripe.Checkout.
     stripe_customer_id: stripeCustomerId,
     stripe_subscription_id: stripeSubscriptionId,
     plan,
-    status: "active",
+    status: subscriptionStatus,
     amount_total: session.amount_total ?? null,
     current_period_end: toIsoDate(getCurrentPeriodEnd(subscription))
   });
@@ -391,7 +385,7 @@ async function handleCheckoutCompleted(stripe: Stripe, session: Stripe.Checkout.
     stripe_customer_id: stripeCustomerId,
     stripe_subscription_id: stripeSubscriptionId,
     plan,
-    status: "active",
+    status: subscriptionStatus,
     amount_total: session.amount_total ?? null,
     current_period_end: toIsoDate(getCurrentPeriodEnd(subscription))
   });
@@ -399,59 +393,73 @@ async function handleCheckoutCompleted(stripe: Stripe, session: Stripe.Checkout.
     userId,
     email: session.customer_details?.email || session.customer_email || null,
     plan,
-    status: "active"
+    status: subscriptionStatus
   });
 
   const customerEmail = session.customer_details?.email || session.customer_email || null;
 
   if (!customerEmail) {
     console.warn("[stripe-webhook] customer email missing", {
-      sessionId: session.id,
       plan
     });
-    return;
+    return null;
   }
 
   console.log("[stripe-webhook] customer email found", {
-    sessionId: session.id,
-    email: customerEmail
+    emailPresent: true
   });
 
+  return {
+    customerEmail,
+    customerName: session.customer_details?.name || null,
+    language,
+    plan,
+    amountTotal: session.amount_total ?? null,
+    currency: session.currency ?? null,
+    subscriptionId: stripeSubscriptionId
+  } satisfies CheckoutNotification;
+}
+
+async function sendCheckoutNotifications(notification: CheckoutNotification) {
   try {
     await sendPaymentConfirmationEmail({
-      email: customerEmail,
-      name: session.customer_details?.name || null,
-      language,
-      plan,
-      amountTotal: session.amount_total ?? null,
-      currency: session.currency ?? null,
-      subscriptionId: stripeSubscriptionId
+      email: notification.customerEmail,
+      name: notification.customerName,
+      language: notification.language,
+      plan: notification.plan,
+      amountTotal: notification.amountTotal,
+      currency: notification.currency,
+      subscriptionId: notification.subscriptionId
     });
-  } catch (error) {
+  } catch {
     console.error("[stripe-webhook] resend email failed with error", {
-      sessionId: session.id,
-      email: customerEmail,
-      error: error instanceof Error ? error.message : error
+      category: "customer_notification"
     });
   }
 
   if (process.env.ADMIN_EMAIL) {
     try {
       await sendAdminPaymentNotification({
-        customerEmail,
-        customerName: session.customer_details?.name || null,
-        plan,
-        amountTotal: session.amount_total ?? null,
-        currency: session.currency ?? null
+        customerEmail: notification.customerEmail,
+        customerName: notification.customerName,
+        plan: notification.plan,
+        amountTotal: notification.amountTotal,
+        currency: notification.currency
       });
-    } catch (error) {
+    } catch {
       console.error("[stripe-webhook] admin email failed with error", {
-        sessionId: session.id,
-        email: customerEmail,
-        error: error instanceof Error ? error.message : error
+        category: "admin_notification"
       });
     }
   }
+}
+
+function getWebhookFailureCategory(error: unknown) {
+  if (error instanceof WebhookLedgerError || error instanceof WebhookSyncError) {
+    return error.category;
+  }
+
+  return "event_processing";
 }
 
 async function handleInvoicePaid(stripe: Stripe, invoice: Stripe.Invoice) {
@@ -460,6 +468,7 @@ async function handleInvoicePaid(stripe: Stripe, invoice: Stripe.Invoice) {
     stripe,
     typeof invoiceSubscription === "string" ? invoiceSubscription : invoiceSubscription?.id || null
   );
+  const subscriptionStatus = subscription?.status || "active";
 
   await upsertMembership({
     user_id: subscription?.metadata?.user_id || null,
@@ -467,7 +476,7 @@ async function handleInvoicePaid(stripe: Stripe, invoice: Stripe.Invoice) {
     stripe_customer_id: typeof invoice.customer === "string" ? invoice.customer : invoice.customer?.id || null,
     stripe_subscription_id: subscription?.id || null,
     plan: subscription?.metadata?.plan || resolvePlanFromAmount(invoice.amount_paid || invoice.amount_due || null) || null,
-    status: "active",
+    status: subscriptionStatus,
     amount_total: invoice.amount_paid || invoice.amount_due || null,
     current_period_end: toIsoDate(getCurrentPeriodEnd(subscription))
   });
@@ -477,7 +486,7 @@ async function handleInvoicePaid(stripe: Stripe, invoice: Stripe.Invoice) {
     stripe_customer_id: typeof invoice.customer === "string" ? invoice.customer : invoice.customer?.id || null,
     stripe_subscription_id: subscription?.id || null,
     plan: subscription?.metadata?.plan || resolvePlanFromAmount(invoice.amount_paid || invoice.amount_due || null) || null,
-    status: "active",
+    status: subscriptionStatus,
     amount_total: invoice.amount_paid || invoice.amount_due || null,
     current_period_end: toIsoDate(getCurrentPeriodEnd(subscription))
   });
@@ -485,7 +494,7 @@ async function handleInvoicePaid(stripe: Stripe, invoice: Stripe.Invoice) {
     userId: subscription?.metadata?.user_id || null,
     email: invoice.customer_email || null,
     plan: subscription?.metadata?.plan || null,
-    status: "active"
+    status: subscriptionStatus
   });
 }
 
@@ -520,39 +529,13 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   });
 }
 
-async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
-  await upsertMembership({
-    user_id: subscription.metadata?.user_id || null,
-    email: subscription.metadata?.email || null,
-    stripe_customer_id: typeof subscription.customer === "string" ? subscription.customer : subscription.customer?.id || null,
-    stripe_subscription_id: subscription.id,
-    plan: subscription.metadata?.plan || null,
-    status: "canceled",
-    current_period_end: toIsoDate(getCurrentPeriodEnd(subscription))
-  });
-  await syncSubscriptionRecord({
-    user_id: subscription.metadata?.user_id || null,
-    email: subscription.metadata?.email || null,
-    stripe_customer_id: typeof subscription.customer === "string" ? subscription.customer : subscription.customer?.id || null,
-    stripe_subscription_id: subscription.id,
-    plan: subscription.metadata?.plan || null,
-    status: "canceled",
-    current_period_end: toIsoDate(getCurrentPeriodEnd(subscription))
-  });
-  await syncUserPlan({
-    userId: subscription.metadata?.user_id || null,
-    email: subscription.metadata?.email || null,
-    plan: subscription.metadata?.plan || null,
-    status: "canceled"
-  });
-}
-
 async function handleInvoiceFailed(stripe: Stripe, invoice: Stripe.Invoice) {
   const invoiceSubscription = invoice.parent?.subscription_details?.subscription || null;
   const subscription = await getSubscription(
     stripe,
     typeof invoiceSubscription === "string" ? invoiceSubscription : invoiceSubscription?.id || null
   );
+  const subscriptionStatus = subscription?.status || "past_due";
 
   await upsertMembership({
     user_id: subscription?.metadata?.user_id || null,
@@ -560,7 +543,7 @@ async function handleInvoiceFailed(stripe: Stripe, invoice: Stripe.Invoice) {
     stripe_customer_id: typeof invoice.customer === "string" ? invoice.customer : invoice.customer?.id || null,
     stripe_subscription_id: subscription?.id || null,
     plan: subscription?.metadata?.plan || resolvePlanFromAmount(invoice.amount_due || null) || null,
-    status: "past_due",
+    status: subscriptionStatus,
     amount_total: invoice.amount_due || null,
     current_period_end: toIsoDate(getCurrentPeriodEnd(subscription))
   });
@@ -570,7 +553,7 @@ async function handleInvoiceFailed(stripe: Stripe, invoice: Stripe.Invoice) {
     stripe_customer_id: typeof invoice.customer === "string" ? invoice.customer : invoice.customer?.id || null,
     stripe_subscription_id: subscription?.id || null,
     plan: subscription?.metadata?.plan || resolvePlanFromAmount(invoice.amount_due || null) || null,
-    status: "past_due",
+    status: subscriptionStatus,
     amount_total: invoice.amount_due || null,
     current_period_end: toIsoDate(getCurrentPeriodEnd(subscription))
   });
@@ -578,7 +561,7 @@ async function handleInvoiceFailed(stripe: Stripe, invoice: Stripe.Invoice) {
     userId: subscription?.metadata?.user_id || null,
     email: invoice.customer_email || null,
     plan: subscription?.metadata?.plan || null,
-    status: "past_due"
+    status: subscriptionStatus
   });
 }
 
@@ -600,55 +583,103 @@ export async function POST(request: Request) {
     const body = await request.text();
     console.log("[stripe-webhook] Stripe webhook received");
     const event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
-    console.log("[stripe-webhook] event type received", { type: event.type, id: event.id });
+    console.log("[stripe-webhook] event type received", { type: event.type });
+    const ledgerClient = getSupabaseAdminClient();
+    const claim = await claimStripeWebhookEvent(ledgerClient, event.id, event.type);
 
-    const alreadyProcessed = await hasProcessedWebhookEvent(event.id);
-
-    if (alreadyProcessed) {
-      console.log("[stripe-webhook] duplicate event ignored", { id: event.id, type: event.type });
+    if (claim.outcome === "completed") {
+      console.log("[stripe-webhook] completed duplicate ignored", { type: event.type });
       return NextResponse.json({ received: true, duplicate: true });
     }
 
-    switch (event.type) {
-      case "checkout.session.completed":
-        await handleCheckoutCompleted(stripe, event.data.object as Stripe.Checkout.Session);
-        break;
-      case "customer.subscription.created":
-        await handleSubscriptionCreated(event.data.object as Stripe.Subscription);
-        break;
-      case "invoice.paid":
-      case "invoice.payment_succeeded":
-        await handleInvoicePaid(stripe, event.data.object as Stripe.Invoice);
-        break;
-      case "customer.subscription.updated":
-        await handleSubscriptionUpdated(event.data.object as Stripe.Subscription);
-        break;
-      case "customer.subscription.deleted":
-        await handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
-        break;
-      case "invoice.payment_failed":
-        await handleInvoiceFailed(stripe, event.data.object as Stripe.Invoice);
-        break;
-      default:
-        console.log("[stripe-webhook] unhandled", { type: event.type });
-        break;
+    if (claim.outcome === "processing") {
+      console.log("[stripe-webhook] concurrent duplicate ignored", { type: event.type });
+      return NextResponse.json({ received: true, duplicate: true, processing: true });
     }
 
-    await markWebhookEventProcessed(event.id);
+    const claimToken = claim.claimToken;
+
+    if (!claimToken) {
+      throw new WebhookLedgerError("missing_claim_token");
+    }
+
+    let checkoutNotification: CheckoutNotification | null = null;
+
+    try {
+      switch (event.type) {
+        case "checkout.session.completed":
+          checkoutNotification = await handleCheckoutCompleted(
+            stripe,
+            event.data.object as Stripe.Checkout.Session
+          );
+          break;
+        case "customer.subscription.created":
+          await handleSubscriptionCreated(
+            await getAuthoritativeSubscription(
+              stripe,
+              event.data.object as Stripe.Subscription
+            )
+          );
+          break;
+        case "invoice.paid":
+        case "invoice.payment_succeeded":
+          await handleInvoicePaid(stripe, event.data.object as Stripe.Invoice);
+          break;
+        case "customer.subscription.updated":
+        case "customer.subscription.deleted":
+          await handleSubscriptionUpdated(
+            await getAuthoritativeSubscription(
+              stripe,
+              event.data.object as Stripe.Subscription
+            )
+          );
+          break;
+        case "invoice.payment_failed":
+          await handleInvoiceFailed(stripe, event.data.object as Stripe.Invoice);
+          break;
+        default:
+          console.log("[stripe-webhook] unhandled", { type: event.type });
+          break;
+      }
+
+      await completeStripeWebhookEvent(ledgerClient, event.id, claimToken);
+    } catch (error) {
+      const category = getWebhookFailureCategory(error);
+
+      try {
+        await failStripeWebhookEvent(ledgerClient, event.id, claimToken, category);
+      } catch {
+        console.error("[stripe-webhook] failed to persist event failure", {
+          category: "failure_record"
+        });
+      }
+
+      throw error;
+    }
+
+    if (checkoutNotification) {
+      await sendCheckoutNotifications(checkoutNotification);
+    }
 
     return NextResponse.json({ received: true });
   } catch (error) {
-    console.error("[stripe-webhook] failed", error);
     const isSignatureError =
       error instanceof Stripe.errors.StripeSignatureVerificationError ||
       (error instanceof Error && error.message.toLowerCase().includes("signature"));
+    const isLedgerError = error instanceof WebhookLedgerError;
+    const category = isSignatureError ? "signature" : getWebhookFailureCategory(error);
+
+    console.error("[stripe-webhook] failed", { category });
 
     return NextResponse.json(
       {
-        error: error instanceof Error ? error.message : "Webhook failed"
+        error: isSignatureError ? "Invalid webhook signature" : "Webhook processing failed"
       },
       {
-        status: isSignatureError ? 400 : 500
+        status: isSignatureError ? 400 : isLedgerError ? 503 : 500,
+        headers: isSignatureError
+          ? { "Cache-Control": "no-store" }
+          : { "Cache-Control": "no-store", "Retry-After": "60" }
       }
     );
   }

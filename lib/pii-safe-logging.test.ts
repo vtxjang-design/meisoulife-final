@@ -8,6 +8,7 @@ const sourceFiles = [
   "../app/api/membership/resolve/route.ts",
   "../app/api/stripe/customer-portal/route.ts",
   "../app/api/stripe/checkout/route.ts",
+  "../app/api/stripe/webhook/route.ts",
   "../components/auth-provider.tsx",
   "./membership-resolver.ts",
   "./membership.ts",
