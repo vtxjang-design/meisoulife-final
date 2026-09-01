@@ -1,10 +1,22 @@
 import { NextResponse } from "next/server";
+import { resolveCronAuthorization } from "@/lib/cron-authorization";
 
 export async function GET(request: Request) {
-  const secret = request.headers.get("authorization");
+  const authorization = resolveCronAuthorization({
+    configuredSecret: process.env.CRON_SECRET,
+    authorizationHeader: request.headers.get("authorization")
+  });
 
-  if (process.env.CRON_SECRET && secret !== `Bearer ${process.env.CRON_SECRET}`) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!authorization.ok) {
+    return NextResponse.json(
+      { error: authorization.error },
+      {
+        status: authorization.status,
+        headers: {
+          "Cache-Control": "no-store"
+        }
+      }
+    );
   }
 
   return NextResponse.json({
