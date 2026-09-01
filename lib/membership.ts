@@ -128,7 +128,9 @@ export async function fetchLatestMembershipPlan(
   const suppressSensitiveLogs = options.suppressSensitiveLogs === true;
 
   if (!suppressSensitiveLogs) {
-    console.log(`${logPrefix} current user id`, userId);
+    console.log(`${logPrefix} membership lookup started`, {
+      authenticated: Boolean(userId)
+    });
   }
 
   for (let attempt = 1; attempt <= 2; attempt += 1) {
@@ -136,7 +138,10 @@ export async function fetchLatestMembershipPlan(
 
     if (activeError) {
       if (!suppressSensitiveLogs) {
-        console.error(`${logPrefix} active membership fetch failed`, { attempt, error: activeError });
+        console.error(`${logPrefix} active membership fetch failed`, {
+          attempt,
+          category: "membership_read"
+        });
       }
 
       if (attempt === 2) {
@@ -156,8 +161,6 @@ export async function fetchLatestMembershipPlan(
       const selectedPlan = normalizeMembershipPlan(activeMembership.plan);
       if (!suppressSensitiveLogs) {
         console.log(`${logPrefix} membership query result`, {
-          rawMembership: activeMembership,
-          rawPlan: activeMembership.plan ?? null,
           normalizedPlan: selectedPlan,
           membershipStatus: activeMembership.status ?? null
         });
@@ -176,7 +179,10 @@ export async function fetchLatestMembershipPlan(
 
     if (fallbackError) {
       if (!suppressSensitiveLogs) {
-        console.error(`${logPrefix} fallback membership fetch failed`, { attempt, error: fallbackError });
+        console.error(`${logPrefix} fallback membership fetch failed`, {
+          attempt,
+          category: "membership_fallback_read"
+        });
       }
 
       if (attempt === 2) {
@@ -195,8 +201,6 @@ export async function fetchLatestMembershipPlan(
     const selectedPlan = normalizeMembershipPlan(fallbackMembership?.plan);
     if (!suppressSensitiveLogs) {
       console.log(`${logPrefix} membership query result`, {
-        rawMembership: fallbackMembership,
-        rawPlan: fallbackMembership?.plan ?? null,
         normalizedPlan: selectedPlan,
         membershipStatus: fallbackMembership?.status ?? null
       });

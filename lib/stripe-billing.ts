@@ -142,8 +142,9 @@ async function buildCandidateCustomers(
     });
 
     console.log("[stripe-billing] stripe email lookup", {
-      email: normalizedEmail,
-      customerCount: customerList.data.length
+      emailPresent: true,
+      customerFound: customerList.data.length > 0,
+      multipleMatches: customerList.data.length > 1
     });
 
     for (const customer of customerList.data) {
@@ -184,9 +185,9 @@ export async function resolveStripeBillingDetails(params: {
     });
 
     console.log("[stripe-billing] customer subscriptions", {
-      customerId: maskStripeCustomerId(candidate.customerId),
       source: candidate.source,
-      subscriptionCount: subscriptions.data.length
+      subscriptionFound: subscriptions.data.length > 0,
+      multipleMatches: subscriptions.data.length > 1
     });
 
     if (subscriptions.data.length === 0) {
@@ -227,14 +228,11 @@ export async function resolveStripeBillingDetails(params: {
         activePaidCustomers.add(candidate.customerId);
       }
 
-      console.log({
-        customerId: maskStripeCustomerId(candidate.customerId),
-        subscriptionId: subscription.id,
+      console.log("[stripe-billing] subscription candidate", {
         plan: resolvedPlan,
         status: subscription.status,
-        currentPeriodStart,
-        currentPeriodEnd,
-        billingCycleAnchor
+        source: candidate.source,
+        entitled
       });
 
       if (!best || score + sourceScore > best.score) {

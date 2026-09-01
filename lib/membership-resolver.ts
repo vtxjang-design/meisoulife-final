@@ -12,7 +12,7 @@ import {
 } from "@/lib/membership";
 import { getStripeClient } from "@/lib/stripe";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
-import { maskStripeCustomerId, resolveStripeBillingDetails } from "@/lib/stripe-billing";
+import { resolveStripeBillingDetails } from "@/lib/stripe-billing";
 
 type MembershipClient = {
   from: (table: string) => any;
@@ -155,8 +155,7 @@ async function loadLocalMembershipSnapshot(
 
   if (membershipError && !suppressSensitiveLogs) {
     console.error(`${logPrefix} membership row fetch failed`, {
-      userId,
-      error: membershipError.message
+      category: "membership_read"
     });
   }
 
@@ -184,8 +183,7 @@ async function loadLocalMembershipSnapshot(
 
     if (primaryProfileQuery.error && !suppressSensitiveLogs) {
       console.error(`${logPrefix} profile fetch failed`, {
-        userId,
-        error: primaryProfileQuery.error.message
+        category: "profile_read"
       });
     }
   }
@@ -204,8 +202,7 @@ async function loadLocalMembershipSnapshot(
 
   if (subscriptionError && !suppressSensitiveLogs) {
     console.error(`${logPrefix} subscription row fetch failed`, {
-      userId,
-      error: subscriptionError.message
+      category: "subscription_read"
     });
   }
 
@@ -237,8 +234,7 @@ async function loadEmailMatchedMembership(params: {
   if (error) {
     if (!suppressSensitiveLogs) {
       console.error(`${logPrefix} membership fallback by email failed`, {
-        email,
-        error: error.message
+        category: "membership_email_fallback"
       });
     }
     return {
@@ -257,8 +253,8 @@ async function loadEmailMatchedMembership(params: {
   if (data.length > 1) {
     if (!suppressSensitiveLogs) {
       console.warn(`${logPrefix} membership fallback by email ambiguous`, {
-        email,
-        count: data.length
+        category: "ambiguous_match",
+        multipleMatches: true
       });
     }
     return {
@@ -368,7 +364,6 @@ async function repairMembershipRecords(params: {
 
   if (!admin) {
     console.warn(`${params.logPrefix} repair skipped`, {
-      userId: params.userId,
       reason: "missing_supabase_admin"
     });
     return false;
@@ -428,8 +423,7 @@ async function repairMembershipRecords(params: {
 
     if (error) {
       console.error(`${params.logPrefix} membership repair failed`, {
-        userId: params.userId,
-        error: error.message
+        category: "membership_repair"
       });
     } else {
       repaired = true;
@@ -444,8 +438,7 @@ async function repairMembershipRecords(params: {
 
     if (error) {
       console.error(`${params.logPrefix} profile repair failed`, {
-        userId: params.userId,
-        error: error.message
+        category: "profile_repair"
       });
     } else {
       repaired = true;
@@ -469,9 +462,7 @@ async function repairMembershipRecords(params: {
 
     if (error) {
       console.error(`${params.logPrefix} subscription repair failed`, {
-        userId: params.userId,
-        profileId: params.profileId,
-        error: error.message
+        category: "subscription_repair"
       });
     } else {
       repaired = true;
@@ -518,19 +509,15 @@ async function resolveMembershipEntitlementInternal(
     if (emailProfileError) {
       if (!suppressSensitiveLogs) {
         console.error(`${logPrefix} profile fallback by email failed`, {
-          userId,
-          email: normalizedEmail,
-          error: emailProfileError.message
+          category: "profile_email_fallback"
         });
       }
     } else if (emailProfile) {
       if (!suppressSensitiveLogs) {
-      console.log(`${logPrefix} profile recovered by email fallback`, {
-        userId,
-        email: normalizedEmail,
-        profileId: emailProfile.id ?? null,
-        authUserId: emailProfile.auth_user_id ?? null
-      });
+        console.log(`${logPrefix} profile recovered by email fallback`, {
+          profileFound: true,
+          authIdentityPresent: Boolean(emailProfile.auth_user_id)
+        });
       }
 
       const { data: emailSubscription, error: emailSubscriptionError } = await supabase
@@ -544,9 +531,7 @@ async function resolveMembershipEntitlementInternal(
       if (emailSubscriptionError) {
         if (!suppressSensitiveLogs) {
           console.error(`${logPrefix} subscription fallback by email profile failed`, {
-            userId,
-            email: normalizedEmail,
-            error: emailSubscriptionError.message
+            category: "subscription_email_fallback"
           });
         }
       }
@@ -630,16 +615,13 @@ async function resolveMembershipEntitlementInternal(
 
     if (!suppressSensitiveLogs) {
       console.log(`${logPrefix} stripe reconciliation`, {
-      userId,
-      email,
-      customerId: maskStripeCustomerId(stripeBilling.customerId),
-      subscriptionId: stripeBilling.subscriptionId,
-      plan: stripeBilling.plan,
-      status: stripeBilling.status,
-      currentPeriodEnd: stripeBilling.currentPeriodEnd,
-      customerSource: stripeBilling.customerSource,
-      lookupStatus: stripeBilling.lookupStatus,
-      matchedCustomerCount: stripeBilling.matchedCustomerCount
+        plan: stripeBilling.plan,
+        status: stripeBilling.status,
+        customerSource: stripeBilling.customerSource,
+        lookupStatus: stripeBilling.lookupStatus,
+        customerFound: Boolean(stripeBilling.customerId),
+        subscriptionFound: Boolean(stripeBilling.subscriptionId),
+        multipleMatches: stripeBilling.matchedCustomerCount > 1
       });
     }
     stripeCustomerSource = stripeBilling.customerSource;
@@ -714,8 +696,6 @@ async function resolveMembershipEntitlementInternal(
 
   if (!hasActiveSubscription && !suppressSensitiveLogs) {
     console.warn(`${logPrefix} returning free membership state`, {
-      userId,
-      email: normalizedEmail,
       localPlan: local.currentPlan,
       localStatus: local.membershipStatus,
       stripePlan: finalPlan,
@@ -726,8 +706,6 @@ async function resolveMembershipEntitlementInternal(
     });
   } else if (!suppressSensitiveLogs) {
     console.log(`${logPrefix} paid membership confirmed`, {
-      userId,
-      email: normalizedEmail,
       plan: finalPlan,
       status: finalStatus,
       source,
