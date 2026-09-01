@@ -1,16 +1,7 @@
 import { NextResponse } from "next/server";
 import { resolveMembershipEntitlement } from "@/lib/membership-resolver";
-import { getSupabaseServerClient } from "@/lib/supabase/server";
-
-function resolveBearerToken(request: Request) {
-  const authorization = request.headers.get("authorization") || "";
-
-  if (!authorization.toLowerCase().startsWith("bearer ")) {
-    return "";
-  }
-
-  return authorization.slice(7).trim();
-}
+import { resolveRequestAuthContext } from "@/lib/request-auth";
+import { getSupabaseBearerServerClient, getSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
@@ -57,49 +48,59 @@ export async function GET(request: Request) {
     );
   }
 
-  const {
-    data: { user: cookieUser },
-    error: cookieUserError
-  } = await supabase.auth.getUser();
-
-  if (cookieUserError) {
-    console.warn("[api-membership-resolve] cookie session lookup failed", {
-      message: cookieUserError.message
-    });
-  }
-
-  const bearerToken = resolveBearerToken(request);
-
-  let user = cookieUser;
-  let userSource: "cookie" | "bearer" | "none" = cookieUser ? "cookie" : "none";
-
-  if (!user && bearerToken) {
-    const {
-      data: { user: bearerUser },
-      error: bearerUserError
-    } = await supabase.auth.getUser(bearerToken);
-
-    if (bearerUserError) {
-      console.warn("[api-membership-resolve] bearer session lookup failed", {
-        message: bearerUserError.message
-      });
-    }
-
-    if (bearerUser) {
-      user = bearerUser;
-      userSource = "bearer";
-    }
-  }
-
-  console.log("[api-membership-resolve] auth resolution", {
-    hasBearerToken: Boolean(bearerToken),
-    userFound: Boolean(user),
-    userSource,
-    userId: user?.id || null,
-    userEmail: user?.email || null
+  const auth = await resolveRequestAuthContext({
+    cookieClient: supabase,
+    authorizationHeader: request.headers.get("authorization"),
+    createBearerClient: getSupabaseBearerServerClient
   });
 
-  if (!user) {
+  if (auth.status === "unavailable") {
+    return NextResponse.json(
+      {
+        plan: "free",
+        resolved: false,
+        membershipStatus: null,
+        hasActiveSubscription: false,
+        errorMessage: "Authenticated database client is unavailable",
+        source: "unavailable",
+        repaired: false,
+        stripeCustomerId: null,
+        stripeSubscriptionId: null,
+        membershipSummary: {
+          currentPlan: "free",
+          subscriptionStatus: null,
+          nextBillingDate: null,
+          canManageMembership: false
+        }
+      },
+      { status: 503 }
+    );
+  }
+
+  if (auth.status === "invalid") {
+    return NextResponse.json(
+      {
+        plan: "free",
+        resolved: false,
+        membershipStatus: null,
+        hasActiveSubscription: false,
+        errorMessage: "Authentication is invalid",
+        source: "unavailable",
+        repaired: false,
+        stripeCustomerId: null,
+        stripeSubscriptionId: null,
+        membershipSummary: {
+          currentPlan: "free",
+          subscriptionStatus: null,
+          nextBillingDate: null,
+          canManageMembership: false
+        }
+      },
+      { status: 401 }
+    );
+  }
+
+  if (auth.status === "anonymous") {
     return NextResponse.json(
       {
         plan: "free",
@@ -139,10 +140,15 @@ export async function GET(request: Request) {
     );
   }
 
+  console.log("[api-membership-resolve] auth resolution", {
+    userFound: true,
+    userSource: auth.source
+  });
+
   const entitlement = await resolveMembershipEntitlement({
-    supabase,
-    userId: user.id,
-    email: user.email ?? null,
+    supabase: auth.rlsClient,
+    userId: auth.user.id,
+    email: auth.user.email ?? null,
     logPrefix: "[api-membership-resolve]",
     debug
   });

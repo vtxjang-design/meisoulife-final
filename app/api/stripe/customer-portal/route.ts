@@ -1,28 +1,19 @@
 import { NextResponse } from "next/server";
 import { getSiteUrl } from "@/lib/env";
+import { resolveRequestAuthContext } from "@/lib/request-auth";
 import { getStripeClient } from "@/lib/stripe";
-import { resolveStripeBillingDetails, maskStripeCustomerId } from "@/lib/stripe-billing";
-import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { resolveStripeBillingDetails } from "@/lib/stripe-billing";
+import { getSupabaseBearerServerClient, getSupabaseServerClient } from "@/lib/supabase/server";
 
 const FRIENDLY_PORTAL_ERROR = "メンバーシップ管理ページを開けませんでした。しばらくしてからもう一度お試しください";
 const LOGIN_REQUIRED_ERROR = "ログイン後にもう一度お試しください";
 const MEMBERSHIP_NOT_FOUND_ERROR = "メンバーシップ情報が見つかりません";
 const PORTAL_NOT_CONFIGURED_ERROR = "Stripe Customer Portal is not configured";
 
-function resolveBearerToken(request: Request) {
-  const authorization = request.headers.get("authorization") || "";
-
-  if (!authorization.toLowerCase().startsWith("bearer ")) {
-    return "";
-  }
-
-  return authorization.slice(7).trim();
-}
-
 export async function POST(request: Request) {
   try {
     const stripe = getStripeClient();
-    const supabase = await getSupabaseServerClient();
+    const cookieSupabase = await getSupabaseServerClient();
 
     if (!stripe) {
       console.error("[stripe-customer-portal] missing Stripe client");
@@ -36,64 +27,36 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!supabase) {
+    if (!cookieSupabase) {
       console.error("[stripe-customer-portal] missing Supabase server client");
       return NextResponse.json(
         {
-          error: LOGIN_REQUIRED_ERROR
+          error: FRIENDLY_PORTAL_ERROR
         },
         {
-          status: 401
+          status: 503
         }
       );
     }
 
-    const bearerToken = resolveBearerToken(request);
-
-    let user = null;
-    let userSource: "cookie" | "bearer" | "none" = "none";
-
-    const {
-      data: { user: cookieUser },
-      error: cookieUserError
-    } = await supabase.auth.getUser();
-
-    if (cookieUserError) {
-      console.warn("[stripe-customer-portal] cookie session lookup failed", {
-        message: cookieUserError.message
-      });
-    }
-
-    if (cookieUser) {
-      user = cookieUser;
-      userSource = "cookie";
-    } else if (bearerToken) {
-      const {
-        data: { user: bearerUser },
-        error: bearerUserError
-      } = await supabase.auth.getUser(bearerToken);
-
-      if (bearerUserError) {
-        console.warn("[stripe-customer-portal] bearer session lookup failed", {
-          message: bearerUserError.message
-        });
-      }
-
-      if (bearerUser) {
-        user = bearerUser;
-        userSource = "bearer";
-      }
-    }
-
-    console.log("[stripe-customer-portal] auth resolution", {
-      hasBearerToken: Boolean(bearerToken),
-      userFound: Boolean(user),
-      userSource,
-      userId: user?.id || null,
-      userEmail: user?.email || null
+    const auth = await resolveRequestAuthContext({
+      cookieClient: cookieSupabase,
+      authorizationHeader: request.headers.get("authorization"),
+      createBearerClient: getSupabaseBearerServerClient
     });
 
-    if (!user) {
+    if (auth.status === "unavailable") {
+      return NextResponse.json(
+        {
+          error: FRIENDLY_PORTAL_ERROR
+        },
+        {
+          status: 503
+        }
+      );
+    }
+
+    if (auth.status !== "authenticated") {
       return NextResponse.json(
         {
           error: LOGIN_REQUIRED_ERROR
@@ -103,6 +66,14 @@ export async function POST(request: Request) {
         }
       );
     }
+
+    console.log("[stripe-customer-portal] auth resolution", {
+      userFound: true,
+      userSource: auth.source
+    });
+
+    const user = auth.user;
+    const supabase = auth.rlsClient;
 
     const { data: membership, error: membershipError } = await supabase
       .from("memberships")
@@ -113,7 +84,6 @@ export async function POST(request: Request) {
       .maybeSingle();
 
     console.log("[stripe-customer-portal] membership lookup", {
-      userId: user.id,
       found: Boolean(membership),
       hasStripeCustomerId: Boolean(membership?.stripe_customer_id),
       status: membership?.status || null,
@@ -149,10 +119,7 @@ export async function POST(request: Request) {
       profileEmail = profile?.email ?? profileEmail;
 
       console.log("[stripe-customer-portal] user profile lookup", {
-        authUserId: user.id,
         profileFound: Boolean(profile),
-        profileId,
-        profileEmail,
         hasStripeCustomerId: Boolean(profile?.stripe_customer_id),
         error: profileResult.error?.message || null
       });
@@ -173,7 +140,6 @@ export async function POST(request: Request) {
         .maybeSingle();
 
       console.log("[stripe-customer-portal] subscription lookup", {
-        profileId,
         found: Boolean(subscription),
         hasStripeCustomerId: Boolean(subscription?.stripe_customer_id),
         status: subscription?.status || null,
@@ -188,7 +154,6 @@ export async function POST(request: Request) {
       }
     } else {
       console.log("[stripe-customer-portal] subscription lookup skipped", {
-        profileId,
         reason: profileId ? "stripe_customer_id_already_found" : "profile_id_missing"
       });
     }
@@ -201,9 +166,7 @@ export async function POST(request: Request) {
         .maybeSingle();
 
       console.log("[stripe-customer-portal] email fallback profile lookup", {
-        email: user.email,
         found: Boolean(emailProfile),
-        profileId: emailProfile?.id || null,
         error: emailProfileError?.message || null
       });
 
@@ -217,7 +180,6 @@ export async function POST(request: Request) {
           .maybeSingle();
 
         console.log("[stripe-customer-portal] email fallback subscription lookup", {
-          profileId: emailProfile.id,
           found: Boolean(emailSubscription),
           hasStripeCustomerId: Boolean(emailSubscription?.stripe_customer_id),
           status: emailSubscription?.status || null,
@@ -255,14 +217,7 @@ export async function POST(request: Request) {
     });
 
     console.log("[stripe-customer-portal] resolved stripe billing", {
-      userId: user.id,
-      userEmail: user.email || null,
-      customerId: maskStripeCustomerId(stripeBilling.customerId),
-      subscriptionId: stripeBilling.subscriptionId,
       status: stripeBilling.status,
-      currentPeriodStart: stripeBilling.currentPeriodStart,
-      currentPeriodEnd: stripeBilling.currentPeriodEnd,
-      billingCycleAnchor: stripeBilling.billingCycleAnchor,
       customerSource: stripeBilling.customerSource
     });
 
@@ -272,11 +227,8 @@ export async function POST(request: Request) {
     }
 
     console.log("[stripe-customer-portal] stripe customer resolution", {
-      userId: user.id,
-      userEmail: user.email || null,
       stripeCustomerFound: Boolean(stripeCustomerId),
-      stripeCustomerSource,
-      stripeCustomerId: maskStripeCustomerId(stripeCustomerId)
+      stripeCustomerSource
     });
 
     if (!stripeCustomerId) {
@@ -296,7 +248,6 @@ export async function POST(request: Request) {
     });
 
     console.log("[stripe-customer-portal] portal session created", {
-      userId: user.id,
       stripeCustomerSource,
       hasUrl: Boolean(portalSession.url)
     });
@@ -306,13 +257,15 @@ export async function POST(request: Request) {
       url: portalSession.url
     });
   } catch (error) {
-    console.error("[stripe-customer-portal] failed", error);
-
     const message = error instanceof Error ? error.message : "";
     const portalConfigMissing =
       message.includes("billing portal") ||
       message.includes("No configuration provided") ||
       message.includes("portal configuration");
+
+    console.error("[stripe-customer-portal] failed", {
+      category: portalConfigMissing ? "portal_configuration" : "unknown"
+    });
 
     return NextResponse.json(
       {
