@@ -774,8 +774,9 @@ async function resolveMembershipEntitlementInternal(
 }
 
 /**
- * Canonical membership resolution used by the membership API. Its Stripe path
- * may reconcile stale local records to preserve existing behavior.
+ * Explicit membership reconciliation entrypoint. Its Stripe path may repair
+ * stale local records and must not be used by ordinary GET or page-render
+ * authorization paths.
  */
 export async function resolveMembershipEntitlement(
   params: ResolveMembershipEntitlementParams

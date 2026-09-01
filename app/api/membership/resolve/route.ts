@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { resolveMembershipEntitlement } from "@/lib/membership-resolver";
+import { resolveMembershipEntitlementReadOnly } from "@/lib/membership-resolver";
 import { resolveRequestAuthContext } from "@/lib/request-auth";
 import { getSupabaseBearerServerClient, getSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -145,7 +145,7 @@ export async function GET(request: Request) {
     userSource: auth.source
   });
 
-  const entitlement = await resolveMembershipEntitlement({
+  const entitlement = await resolveMembershipEntitlementReadOnly({
     supabase: auth.rlsClient,
     userId: auth.user.id,
     email: auth.user.email ?? null,
