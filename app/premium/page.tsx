@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { PremiumPageContent } from "@/components/premium-page-content";
 import { normalizeMembershipPlan } from "@/lib/membership";
-import { resolveMembershipEntitlement } from "@/lib/membership-resolver";
+import { resolveMembershipEntitlementReadOnly } from "@/lib/membership-resolver";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 type PremiumPageProps = {
@@ -26,7 +26,7 @@ export default async function PremiumPage({ searchParams }: PremiumPageProps) {
     redirect("/login?next=/premium");
   }
 
-  const membership = await resolveMembershipEntitlement({
+  const membership = await resolveMembershipEntitlementReadOnly({
     supabase,
     userId: user.id,
     email: user.email ?? null,
