@@ -87,7 +87,7 @@ export async function POST(request: Request) {
       found: Boolean(membership),
       hasStripeCustomerId: Boolean(membership?.stripe_customer_id),
       status: membership?.status || null,
-      error: membershipError?.message || null
+      hasError: Boolean(membershipError)
     });
 
     let stripeCustomerId = membership?.stripe_customer_id ?? null;
@@ -121,7 +121,7 @@ export async function POST(request: Request) {
       console.log("[stripe-customer-portal] user profile lookup", {
         profileFound: Boolean(profile),
         hasStripeCustomerId: Boolean(profile?.stripe_customer_id),
-        error: profileResult.error?.message || null
+        hasError: Boolean(profileResult.error)
       });
 
       if (profile?.stripe_customer_id) {
@@ -144,7 +144,7 @@ export async function POST(request: Request) {
         hasStripeCustomerId: Boolean(subscription?.stripe_customer_id),
         status: subscription?.status || null,
         planKey: subscription?.plan_key || null,
-        error: subscriptionError?.message || null
+        hasError: Boolean(subscriptionError)
       });
 
       if (subscription?.stripe_customer_id) {
@@ -167,7 +167,7 @@ export async function POST(request: Request) {
 
       console.log("[stripe-customer-portal] email fallback profile lookup", {
         found: Boolean(emailProfile),
-        error: emailProfileError?.message || null
+        hasError: Boolean(emailProfileError)
       });
 
       if (emailProfile?.id) {
@@ -184,7 +184,7 @@ export async function POST(request: Request) {
           hasStripeCustomerId: Boolean(emailSubscription?.stripe_customer_id),
           status: emailSubscription?.status || null,
           planKey: emailSubscription?.plan_key || null,
-          error: emailSubscriptionError?.message || null
+          hasError: Boolean(emailSubscriptionError)
         });
 
         if (emailSubscription?.stripe_customer_id) {

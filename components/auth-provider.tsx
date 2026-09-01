@@ -275,8 +275,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     try {
       await supabase?.auth.signOut();
-    } catch (error) {
-      console.error("[auth-provider] sign out failed", error);
+    } catch {
+      console.error("[auth-provider] sign out failed", {
+        category: "sign_out"
+      });
     } finally {
       router.replace(redirectTo);
       router.refresh();
@@ -439,8 +441,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           hasError: Boolean(membershipState.errorMessage)
         });
         console.log("[auth-provider] preserving verified membership during background refresh", {
-          userId: nextUserId,
-          error: membershipState.errorMessage,
+          authenticated: Boolean(nextUserId),
+          hasError: Boolean(membershipState.errorMessage),
           source: membershipState.source
         });
         return;
@@ -460,7 +462,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         plan: membershipState.plan,
         resolved: membershipState.resolved,
         membershipStatus: membershipState.membershipStatus,
-        error: membershipState.errorMessage,
+        hasError: Boolean(membershipState.errorMessage),
         source: membershipState.source,
         repaired: membershipState.repaired
       });
@@ -485,7 +487,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         plan: membershipState.plan,
         membershipStatus: membershipState.membershipStatus,
         planResolved: true,
-        error: membershipState.errorMessage
+        hasError: Boolean(membershipState.errorMessage)
       });
     }
 
@@ -518,7 +520,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const subscription = supabase?.auth.onAuthStateChange((_event, nextSession) => {
       console.log("[auth-provider] auth state changed", {
         event: _event,
-        userId: nextSession?.user?.id ?? null
+        authenticated: Boolean(nextSession?.user)
       });
       void syncAuthState(nextSession);
     });

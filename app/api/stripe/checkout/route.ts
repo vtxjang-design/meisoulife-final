@@ -63,14 +63,16 @@ export async function POST(request: Request) {
           userId = user.id;
           userEmail = user.email || "";
         }
-      } catch (error) {
-        console.warn("[stripe-checkout] unable to load Supabase session", error);
+      } catch {
+        console.warn("[stripe-checkout] unable to load Supabase session", {
+          category: "session_lookup"
+        });
       }
     }
 
     console.log("[stripe-checkout] authenticated user", {
-      userId: userId || null,
-      email: userEmail || null,
+      authenticated: Boolean(userId),
+      emailPresent: Boolean(userEmail),
       plan: checkoutPlan
     });
 
@@ -120,10 +122,9 @@ export async function POST(request: Request) {
     });
 
     console.log("[stripe-checkout] Stripe checkout session created", {
-      userId: userId || null,
-      metadata,
-      sessionId: session.id,
-      priceEnvKey: priceConfig.envKey,
+      authenticated: Boolean(userId),
+      plan: membershipPlan,
+      language,
       hasUrl: Boolean(session.url)
     });
 
@@ -144,7 +145,9 @@ export async function POST(request: Request) {
       checkoutUrl: session.url
     });
   } catch (error) {
-    console.error("[stripe-checkout] failed", error);
+    console.error("[stripe-checkout] failed", {
+      category: error instanceof z.ZodError ? "validation" : "checkout"
+    });
     return NextResponse.json(
       {
         error: FRIENDLY_CHECKOUT_ERROR
