@@ -219,3 +219,106 @@ Before changes: read this file, `CONSTITUTION.md`, and Foundation Pack documents
 For authentication, payments, membership, personal data, analytics, AI prompts, safety behavior, community systems, or meaning-changing localization: treat the work as high risk. Use small backward-compatible changes, explicit safeguards, a rollback plan, and proportionate validation. Material AI or user-safety changes require the appropriate Human AI Governance Review and human approval.
 
 After implementation: report the decision-test result, validation performed, known limitations, and how the change advances Meisou Life V2 philosophy—recovery, agency, Gongshim, living symbiosis, and responsible care for the Earth.
+
+## Technical Execution Rules
+
+These rules define the engineering boundary for AI-assisted changes. They do not authorize a product, governance, production-data, provider-setting, or architectural decision. When a requested change needs authority beyond the task, pause and obtain explicit human approval.
+
+### Change Scope and Architecture
+
+- Use one task, one purpose, a small diff, proportionate verification, and a reversible commit.
+- Explain the current behavior and identify evidence for the root cause before editing. Do not make multi-file speculative fixes.
+- Preserve established patterns and working behavior. Do not redesign the architecture, replace a source of truth, or perform a broad cleanup unless that work is separately approved and scoped.
+- Do not modify unrelated files, user-owned working-tree changes, generated media, or content while completing a technical fix.
+- Keep authentication, database migration, provider configuration, and product UX changes in separate PRs unless their safe deployment is demonstrably inseparable.
+
+### Next.js and React
+
+- Default to Server Components. Add `"use client"` only when browser state, effects, event handlers, or browser-only APIs are required.
+- Keep secrets, privileged clients, payment operations, and trusted authorization decisions in server-only modules, Server Actions, or Route Handlers.
+- Client Components may display an entitlement result, but must not be the only enforcement point for protected data or operations.
+- Validate request input at the server boundary. Treat route parameters, query strings, headers, cookies, form data, and client state as untrusted.
+- Preserve App Router conventions. Do not add a parallel Pages Router or legacy serverless implementation for a route that already has a canonical App Router implementation.
+
+### Supabase SSR, Authentication, and Authorization
+
+- Use the repository's canonical browser, cookie-backed server, bearer-scoped, or service-role client for its intended purpose; do not create ad hoc clients when an approved helper exists.
+- Authentication establishes who the requester is. Authorization decides what that identity may do. RLS constrains which database rows the authenticated identity may access. Do not collapse these responsibilities.
+- Use the Supabase-validated `auth.users.id` as the canonical user identity. Never trust a client-supplied user ID, email, membership status, or role as proof of identity or entitlement.
+- When bearer authentication is accepted, database reads subject to RLS must use the same validated bearer identity. Do not validate one identity and query with an unrelated cookie identity.
+- Do not use a service-role client for ordinary user authorization reads. Elevated writes are limited to verified webhooks and explicitly approved maintenance or reconciliation paths.
+- Do not repair or mutate membership, subscription, or profile state as a hidden side effect of an authorization read.
+- UI guards are presentation aids, not security boundaries. Protect sensitive data and paid operations in the server path and with appropriate RLS.
+
+### API Errors and External-Service Failure
+
+- Fail closed at authentication and authorization boundaries. Missing configuration must not silently disable protection.
+- Distinguish unauthenticated (`401`), forbidden (`403`), invalid input or signature (`400`), conflict when applicable (`409`), and temporary dependency or configuration failure (`503`). Use retryable `5xx` responses when an external provider must retry.
+- Return calm, truthful, minimally revealing user messages. Do not expose stack traces, internal SQL, secrets, provider payloads, or sensitive identifiers.
+- Log stable error categories and safe operational context instead of raw request bodies or personal data.
+- Design graceful degradation so an OpenAI, Stripe, Supabase, email, or notification failure does not falsely report success or unnecessarily break unrelated recovery experiences.
+
+### RLS and Database Migrations
+
+- Every schema, function, index, grant, or RLS-policy change must be represented by a new forward-only file under `supabase/migrations/`.
+- Never edit an already-applied migration to change Production behavior. Dashboard SQL must be reconciled into source control using the same reviewed SQL.
+- Prefer additive, backward-compatible changes. Dropping or renaming tables, columns, policies, functions, or historical data requires a separate approved migration, impact analysis, backup or recovery plan, and explicit rollback strategy.
+- Define the intended roles for every new table and function. Revoke default access when necessary and grant only the minimum required privileges.
+- RLS policies must use the canonical authenticated identity and be verified for owner access, cross-user denial, anonymous denial, and service-role behavior where relevant.
+- Provide a post-deploy verification query for high-risk migrations. Do not include Production row data or secrets in verification evidence.
+
+### Stripe and Membership
+
+- Verify Stripe webhook signatures before performing a database read, claim, or write related to the event.
+- Preserve durable, atomic event claiming. Never replace the Production idempotency ledger with process memory, a check-then-insert race, or an in-memory `Set`.
+- A core membership, subscription, or entitlement synchronization failure must not be marked completed or acknowledged as successful. Return a retryable failure so Stripe can resend the event.
+- Keep non-core notification failure separate from successful entitlement synchronization.
+- Test duplicate delivery, concurrent duplicate delivery, partial failure, retry, and out-of-order events for webhook behavior changes.
+- Do not change prices, products, currencies, billing periods, Checkout behavior, Customer Portal behavior, or Stripe Dashboard endpoints without explicit human approval and Test Mode verification.
+- Do not delete or rewrite membership, subscription, or Stripe event history as part of a code rollback.
+
+### OpenAI API and Gongsaeng Coach
+
+- Keep OpenAI credentials and calls server-side. Send only the minimum consented data required for the approved experience.
+- Preserve the current Gongsaeng Coach HOLD and unavailable/fallback behavior until the documented safety, privacy, fallback, testing, and human-review conditions are satisfied.
+- Never imply that analysis is occurring when no model call is running or that a model reached a conclusion it did not produce.
+- Provide transparent timeout, rate-limit, provider-error, and unavailable states that return the user to an approved Recovery Core option.
+- Do not implement diagnosis, crisis substitution, spiritual-status assessment, manipulative engagement, or open-ended dependency patterns.
+- A provider or model change that materially affects safety behavior requires representative normal, ambiguous, adversarial, and distress-scenario evaluation and human approval.
+
+### Privacy, Secrets, and Logging
+
+- Never commit or disclose passwords, one-time codes, backup codes, private keys, service-role keys, API secrets, signing secrets, JWTs, access or refresh tokens, session cookies, identity documents, or biometric data.
+- Do not place secrets in `NEXT_PUBLIC_*`, client bundles, URLs, analytics events, screenshots, fixtures, logs, PR descriptions, or chat messages.
+- Treat full email addresses, user IDs, Stripe customer, subscription, and event IDs, raw provider metadata, recovery reflections, and practice records as sensitive. Remove them from logs or use an approved irreversible redaction when correlation is essential.
+- Use synthetic, non-identifying fixtures. Never copy Production personal or payment data into tests.
+- Add a new environment variable to the example or operations documentation by name and purpose only; never record its value.
+
+### Dependencies and Prohibited Patterns
+
+- Do not add or upgrade a dependency unless the task requires it, existing platform capability is insufficient, its maintenance and security implications are reviewed, and the change is explicitly documented.
+- Do not introduce parallel auth systems, billing sources of truth, database access layers, state-management frameworks, analytics trackers, or AI orchestration frameworks without an approved architecture decision.
+- Do not bypass TypeScript with broad `any`, `@ts-ignore`, disabled lint rules, or unchecked casts at a trust boundary to make a check pass.
+- Do not weaken authentication, RLS, webhook signature verification, idempotency, Coach HOLD, consent, or privacy protections to resolve a development or Preview failure.
+- Do not perform repository-wide renames, formatting, path normalization, dead-code deletion, or generated-media replacement inside an unrelated task.
+
+### Required Validation for Protected Logic
+
+- Auth, authorization, RLS, migration, Stripe, membership, personal-data, and AI-safety behavior changes require focused automated tests. If the necessary test harness does not exist, add the smallest appropriate harness or pause and document the unverified risk; do not silently merge untested core logic.
+- Verify success, denial, invalid input, missing configuration, dependency failure, and retry or duplicate behavior that is relevant to the change.
+- Run the repository's available focused tests, full test command, standalone typecheck, lint, and Production build when those commands exist. A build alone does not prove authorization, payment, data integrity, or safety behavior.
+- Review the final diff for accidental files, secrets, generated artifacts, and scope expansion. Preserve and report unrelated pre-existing changes.
+- Use Preview and a minimal production smoke check when risk warrants it. Never treat Vercel deployment success as proof that all tests or business flows passed.
+
+### PR, Deployment, and Rollback Contract
+
+Each protected-area PR must record:
+
+- the Baseline or audit item and one-sentence purpose;
+- evidence and affected code path;
+- files changed and explicit exclusions;
+- affected users, security, privacy, payment, data, and operational risks;
+- validation performed and any remaining limitation;
+- deployment order, post-deploy checks, and a concrete rollback method.
+
+Keep each change independently revertible. Obtain human approval before merging material auth, payment, membership, database, privacy, AI-safety, or provider-setting changes. After deployment, verify the intended behavior without exposing Production secrets or personal data. Prefer reverting the application commit over destructive database rollback; schema or data removal requires a separately reviewed migration.
