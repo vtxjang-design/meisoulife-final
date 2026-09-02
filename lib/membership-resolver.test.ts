@@ -1,11 +1,64 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 import test from "node:test";
-import { hasProtectedMembershipAccess } from "./membership-access.ts";
-import {
-  resolveMembershipEntitlement,
-  resolveMembershipEntitlementReadOnly
-} from "./membership-resolver.ts";
+import ts from "typescript";
+
+const tempDir = mkdtempSync(join(tmpdir(), "membership-resolver-test-"));
+const resolverSource = readFileSync(new URL("./membership-resolver.ts", import.meta.url), "utf8")
+  .replace('import "server-only";\n\n', "")
+  .replace('import type Stripe from "stripe";\n', "")
+  .replace('from "@/lib/membership"', 'from "./membership.mjs"')
+  .replace('from "@/lib/stripe"', 'from "./stripe.mjs"')
+  .replace('from "@/lib/supabase/admin"', 'from "./supabase-admin.mjs"')
+  .replace('from "@/lib/stripe-billing"', 'from "./stripe-billing.mjs"');
+const membershipAccessSource = readFileSync(new URL("./membership-access.ts", import.meta.url), "utf8")
+  .replace('from "@/lib/basic-rhythm"', 'from "./basic-rhythm.mjs"')
+  .replace('from "@/lib/membership"', 'from "./membership.mjs"');
+const stripeBillingSource = readFileSync(new URL("./stripe-billing.ts", import.meta.url), "utf8")
+  .replace('import Stripe from "stripe";\n', "")
+  .replace('from "@/lib/stripe"', 'from "./stripe.mjs"')
+  .replace('from "@/lib/membership"', 'from "./membership.mjs"');
+const stripeSource = `
+const priceIds = {
+  basic: "STRIPE_PRICE_ID_BASIC",
+  growth: "STRIPE_PRICE_ID_GROWTH",
+  "inner-circle": "STRIPE_PRICE_ID_INNER_CIRCLE",
+  inner_circle: "STRIPE_PRICE_ID_INNER_CIRCLE"
+};
+export function getStripeClient() { return null; }
+export function getPlanPriceId(plan) {
+  const envKey = priceIds[plan];
+  const priceId = envKey ? process.env[envKey] : null;
+  return priceId ? { envKey, priceId } : null;
+}
+`;
+
+for (const [name, source] of [
+  ["membership-resolver.mjs", resolverSource],
+  ["membership-access.mjs", membershipAccessSource],
+  ["membership.mjs", readFileSync(new URL("./membership.ts", import.meta.url), "utf8")],
+  ["basic-rhythm.mjs", readFileSync(new URL("./basic-rhythm.ts", import.meta.url), "utf8")],
+  ["stripe-billing.mjs", stripeBillingSource],
+  ["stripe.mjs", stripeSource],
+  ["supabase-admin.mjs", "export function getSupabaseAdminClient() { return null; }"]
+] as const) {
+  writeFileSync(
+    join(tempDir, name),
+    ts.transpileModule(source, {
+      compilerOptions: { module: ts.ModuleKind.ES2022, target: ts.ScriptTarget.ES2022 }
+    }).outputText
+  );
+}
+
+const membershipAccessModule = await import(pathToFileURL(join(tempDir, "membership-access.mjs")).href);
+const resolverModule = await import(pathToFileURL(join(tempDir, "membership-resolver.mjs")).href);
+const { hasProtectedMembershipAccess } = membershipAccessModule;
+const { resolveMembershipEntitlement, resolveMembershipEntitlementReadOnly } = resolverModule;
+
+process.on("exit", () => rmSync(tempDir, { recursive: true, force: true }));
 
 type TableRows = Record<string, Record<string, unknown>[]>;
 

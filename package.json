@@ -10,7 +10,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "check": "next build"
+    "check": "npm run typecheck && npm run lint && npm run test && npm run test:integration && npm run build",
+    "typecheck": "tsc -p tsconfig.typecheck.json --pretty false",
+    "lint": "next lint",
+    "test": "TZ=Asia/Tokyo node --test lib/*.test.ts",
+    "test:integration": "TZ=Asia/Tokyo node --test app/api/basic/garden-completion/route.test.ts app/api/basic/garden-visit/route.test.ts app/api/stripe/webhook/route.test.ts supabase/tests/*.test.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.2",
@@ -30,6 +34,8 @@
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "autoprefixer": "^10.4.21",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^15.3.1",
     "postcss": "^8.5.3",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.3"

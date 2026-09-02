@@ -43,11 +43,15 @@ npm run dev
 http://YOUR_LOCAL_DEV_URL:3000
 ```
 
-## 빌드 확인
+## 자동 검증
 
 ```bash
-npm run build
+npm run check
 ```
+
+`check`는 제품 코드 타입 검사, Lint, 단위·계약 테스트, API 통합 테스트, 프로덕션 빌드를 순서대로 실행합니다. 각 단계는 `npm run typecheck`, `npm run lint`, `npm run test`, `npm run test:integration`, `npm run build`로 따로 실행할 수도 있습니다.
+
+GitHub Actions는 모든 Pull Request와 `main` push에서 같은 검증을 Node.js 22와 일본 표준시 기준으로 실행합니다. 이 명령은 실제 Production DB에 SQL을 적용하거나 Stripe 실결제를 발생시키지 않으며, Playwright E2E는 별도 Golden Path 작업에서 추가합니다.
 
 ## 환경변수
 

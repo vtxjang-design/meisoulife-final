@@ -81,7 +81,7 @@ test("recovery failures keep tokens and internal errors out of the member UI and
 test("password change is progressively disclosed inside My Page", () => {
   assert.match(headerSource, /href="\/member"/);
   assert.doesNotMatch(headerSource, /href="\/account\/security"/);
-  assert.match(memberCenterSource, /<AccountSecurityCard email=\{email\}/);
+  assert.match(memberCenterSource, /<AccountSecurityCard[\s\S]*?email=\{email\}/);
 });
 
 test("account routes refresh authentication cookies and remain outside the sitemap", () => {
