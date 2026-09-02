@@ -15,12 +15,13 @@ test("Brain Education page presents the progressive HROS experience without gene
   assert.match(pageSource, /copy\.coexistence\.statement/);
 });
 
-test("Brain Education page preserves founder message presentation and existing CTA destinations", () => {
+test("Brain Education page preserves founder message presentation and approved recovery CTA destinations", () => {
   assert.match(pageSource, /id="founder-message"/);
   assert.match(pageSource, /\{copy\.founderMessageTitle\}/);
   assert.match(pageSource, /\{copy\.founderMessageSubtitle\}/);
   assert.match(pageSource, /\{copy\.founderMessageBody\}/);
-  assert.match(pageSource, /href="\/meditation"/);
+  assert.match(pageSource, /href="\/#one-minute-experience"/);
+  assert.doesNotMatch(pageSource, /href="\/meditation"/);
   assert.match(pageSource, /href="\/"/);
 });
 
