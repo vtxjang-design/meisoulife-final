@@ -43,7 +43,16 @@ create table if not exists public.memberships (
 
 create table if not exists public.stripe_webhook_events (
   event_id text primary key,
-  created_at timestamptz default now()
+  event_type text,
+  status text not null default 'completed' check (status in ('processing', 'completed', 'failed')),
+  claim_token uuid,
+  attempt_count integer not null default 1 check (attempt_count >= 1),
+  processing_started_at timestamptz,
+  completed_at timestamptz,
+  failed_at timestamptz,
+  last_error_category text,
+  created_at timestamptz default now(),
+  updated_at timestamptz not null default now()
 );
 
 create table if not exists public.challenge_progress (
@@ -95,11 +104,15 @@ create table if not exists public.leader_candidates (
 alter table public.users enable row level security;
 alter table public.subscriptions enable row level security;
 alter table public.memberships enable row level security;
+alter table public.stripe_webhook_events enable row level security;
 alter table public.challenge_progress enable row level security;
 alter table public.coach_messages enable row level security;
 alter table public.events enable row level security;
 alter table public.community_activity enable row level security;
 alter table public.leader_candidates enable row level security;
+
+revoke all on table public.stripe_webhook_events from anon, authenticated;
+grant select, insert, update on table public.stripe_webhook_events to service_role;
 
 create policy if not exists "Public challenge signup"
 on public.users for insert
