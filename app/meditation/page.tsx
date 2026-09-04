@@ -71,6 +71,7 @@ function resolveJourneyAudioSource(source: string | undefined) {
   return source;
 }
 const AFFIRMATION_TOTAL_SECONDS = 180;
+const MORNING_NARRATION_END_SECONDS = 175;
 const JOURNEY_SETTLING_MS = 2000;
 const MORNING_GATE_FADE_IN_MS = 2000;
 const MORNING_GATE_FADE_OUT_MS = 3000;
@@ -610,14 +611,19 @@ const affirmationGateCopy = {
     ],
     closingLines: [
       {
-        at: 166,
+        at: 156,
         key: "close-1",
-        text: "今日という一日が\n今、ここから始まります",
-        speechText: "きょうといういちにちが、\nいま、ここからはじまります。",
-        speechDelayMs: 700
+        text: "今日という一日は\n今ここから始まります",
+        speechText: "きょうといういちにちは、\nいまここから、はじまります。",
+        speechDelayMs: 420
       },
-      { at: 176, key: "close-2", text: "あなた本来のリズムとともに", speechText: "あなたほんらいのリズムとともに。", speechDelayMs: 760 },
-      { at: 179, key: "close-3", text: "いってらっしゃい", speechDelayMs: 820 }
+      {
+        at: 165,
+        key: "close-2",
+        text: "あなたのリズムで\nいってらっしゃい",
+        speechText: "あなたのリズムで。\nいってらっしゃい。",
+        speechDelayMs: 300
+      }
     ]
   },
   kr: {
@@ -648,12 +654,23 @@ const affirmationGateCopy = {
     affirmationLines: [
       { at: 120, key: "affirm-1", text: "숨결을 따라\n몸이 조금씩\n깨어납니다", speechDelayMs: 460 },
       { at: 138, key: "affirm-2", text: "지금은\n아무것도 바꾸지 않아도\n괜찮습니다", speechDelayMs: 520 },
-      { at: 154, key: "affirm-3", text: "그저\n여기 있는 나를\n가만히 느껴봅니다", speechDelayMs: 520 }
+      { at: 146, key: "affirm-3", text: "그저\n지금 여기의 나를\n느껴봅니다", speechDelayMs: 420 }
     ],
     closingLines: [
-      { at: 166, key: "close-1", text: "오늘이라는 하루는\n지금 여기에서 시작됩니다", speechDelayMs: 700 },
-      { at: 176, key: "close-2", text: "당신 본래의 리듬으로", speechDelayMs: 760 },
-      { at: 179, key: "close-3", text: "다녀오세요", speechDelayMs: 820 }
+      {
+        at: 156,
+        key: "close-1",
+        text: "오늘 하루는\n지금 여기서 시작됩니다",
+        speechText: "오늘 하루는, 지금 여기서 시작됩니다.",
+        speechDelayMs: 420
+      },
+      {
+        at: 165,
+        key: "close-2",
+        text: "당신의 리듬으로\n다녀오세요",
+        speechText: "당신의 리듬으로, 다녀오세요.",
+        speechDelayMs: 300
+      }
     ]
   },
   en: {
@@ -684,12 +701,17 @@ const affirmationGateCopy = {
     affirmationLines: [
       { at: 120, key: "affirm-1", text: "With the breath\nyour body begins to wake", speechDelayMs: 460 },
       { at: 138, key: "affirm-2", text: "Nothing needs to change\nright now", speechDelayMs: 520 },
-      { at: 154, key: "affirm-3", text: "Just feel yourself here", speechDelayMs: 520 }
+      { at: 146, key: "affirm-3", text: "Just feel yourself here", speechDelayMs: 420 }
     ],
     closingLines: [
-      { at: 166, key: "close-1", text: "This day begins\nhere", speechDelayMs: 700 },
-      { at: 176, key: "close-2", text: "In your own natural rhythm", speechDelayMs: 760 },
-      { at: 179, key: "close-3", text: "Go gently", speechDelayMs: 820 }
+      { at: 156, key: "close-1", text: "Your day begins\nhere", speechDelayMs: 420 },
+      {
+        at: 165,
+        key: "close-2",
+        text: "In your natural rhythm\ngo gently",
+        speechText: "In your natural rhythm, go gently.",
+        speechDelayMs: 300
+      }
     ]
   }
 } as const;
@@ -730,10 +752,10 @@ const energyGateCopy = {
       { at: 128, key: "energy-4", text: "丹田", speechText: "たんでん。", speechDelayMs: 580 },
       { at: 140, key: "energy-5", text: "温かさを感じます", speechText: "あたたかさを、\nかんじます。", speechDelayMs: 560 },
       { at: 152, key: "energy-6", text: "生命力を感じます", speechText: "せいめいりょくを、\nかんじます。", speechDelayMs: 580 },
-      { at: 164, key: "energy-7", text: "今日を支える力は\nすでにあなたの中にあります", speechText: "きょうをささえるちからは、\nすでにあなたのなかにあります。", speechDelayMs: 640 }
+      { at: 158, key: "energy-7", text: "今日を支える力は\nすでにあなたの中にあります", speechText: "きょうをささえるちからは、\nすでに、あなたのなかにあります。", speechDelayMs: 420 }
     ],
     closingLines: [
-      { at: 178, key: "close-1", text: "今日を始める準備が整いました", speechText: "きょうをはじめる、\nじゅんびがととのいました。", speechDelayMs: 760 }
+      { at: 168, key: "close-1", text: "準備が整いました", speechText: "じゅんびが、ととのいました。", speechDelayMs: 420 }
     ]
   },
   kr: {
@@ -769,10 +791,10 @@ const energyGateCopy = {
       { at: 120, key: "energy-3", text: "따뜻함을 느낍니다", speechDelayMs: 560 },
       { at: 136, key: "energy-4", text: "생명력을 느낍니다", speechDelayMs: 580 },
       { at: 152, key: "energy-5", text: "에너지가 돌아옵니다", speechDelayMs: 580 },
-      { at: 166, key: "energy-6", text: "오늘을 움직이는 힘은\n이미 내 안에 있습니다", speechDelayMs: 640 }
+      { at: 158, key: "energy-6", text: "오늘을 움직이는 힘은\n이미 내 안에 있습니다", speechText: "오늘을 움직이는 힘은, 이미 내 안에 있습니다.", speechDelayMs: 420 }
     ],
     closingLines: [
-      { at: 178, key: "close-1", text: "준비되었습니다", speechDelayMs: 760 }
+      { at: 168, key: "close-1", text: "준비되었습니다", speechDelayMs: 420 }
     ]
   },
   en: {
@@ -810,10 +832,10 @@ const energyGateCopy = {
       { at: 128, key: "energy-4", text: "Dahnjeon", speechDelayMs: 580 },
       { at: 140, key: "energy-5", text: "Feel the warmth", speechDelayMs: 560 },
       { at: 152, key: "energy-6", text: "Feel the life energy", speechDelayMs: 580 },
-      { at: 164, key: "energy-7", text: "The strength for today\nis already within you", speechDelayMs: 640 }
+      { at: 158, key: "energy-7", text: "The strength for today\nis already within you", speechText: "The strength for today is already within you.", speechDelayMs: 420 }
     ],
     closingLines: [
-      { at: 178, key: "close-1", text: "You are ready", speechDelayMs: 760 }
+      { at: 168, key: "close-1", text: "You are ready", speechDelayMs: 420 }
     ]
   }
 } as const;
@@ -1133,8 +1155,8 @@ function getMorningGateStage(door: MeditationDoor, elapsedSeconds: number): Stru
     if (elapsedSeconds < 15) return "openingFade";
     if (elapsedSeconds < 60) return "openingNarration";
     if (elapsedSeconds < 120) return "bodyAwareness";
-    if (elapsedSeconds < 170) return "energy";
-    if (elapsedSeconds < 178) return "integration";
+    if (elapsedSeconds < 160) return "energy";
+    if (elapsedSeconds < 168) return "integration";
     return "closing";
   }
 
@@ -3652,6 +3674,24 @@ function MeditationPageContent() {
     language,
     morningGateCopy
   ]);
+
+  useEffect(() => {
+    if (
+      (!isAwakeningGate && !isEnergyGate) ||
+      elapsedTotalSeconds < MORNING_NARRATION_END_SECONDS ||
+      typeof window === "undefined" ||
+      !("speechSynthesis" in window)
+    ) {
+      return;
+    }
+
+    if (structuredSpeechTimeoutRef.current) {
+      window.clearTimeout(structuredSpeechTimeoutRef.current);
+      structuredSpeechTimeoutRef.current = null;
+    }
+    structuredSpeechSequenceRef.current += 1;
+    window.speechSynthesis.cancel();
+  }, [elapsedTotalSeconds, isAwakeningGate, isEnergyGate]);
 
   useEffect(() => {
     if (!isFocusGate || typeof window === "undefined") {

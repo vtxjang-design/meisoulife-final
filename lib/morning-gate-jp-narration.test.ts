@@ -14,10 +14,36 @@ test("Japanese Morning Gate narration keeps display copy and TTS readings separa
 });
 
 test("Japanese Morning Gate cues keep connected phrases and comfortable breath timing", () => {
-  assert.match(meditationPageSource, /speechText: "きょうといういちにちが、\\nいま、ここからはじまります。"/);
+  assert.match(meditationPageSource, /speechText: "きょうといういちにちは、\\nいまここから、はじまります。"/);
   assert.match(meditationPageSource, /at: 54, key: "open-4"[\s\S]*?at: 64, key: "open-5"/);
   assert.match(meditationPageSource, /at: 80, key: "open-6"[\s\S]*?at: 90, key: "open-7"/);
   assert.match(meditationPageSource, /at: 60, key: "vision-1"[\s\S]*?at: 66, key: "vision-2"/);
+});
+
+test("Awakening and Energy schedule their final narration with room to finish by 2:55", () => {
+  const awakeningSource = meditationPageSource.slice(
+    meditationPageSource.indexOf("const affirmationGateCopy"),
+    meditationPageSource.indexOf("const energyGateCopy")
+  );
+  const energySource = meditationPageSource.slice(
+    meditationPageSource.indexOf("const energyGateCopy"),
+    meditationPageSource.indexOf("const visionGateCopy")
+  );
+
+  const latestCueAt = (source: string) =>
+    Math.max(...Array.from(source.matchAll(/\bat: (\d+),/g), (match) => Number(match[1])));
+
+  assert.equal(latestCueAt(awakeningSource), 165);
+  assert.equal(latestCueAt(energySource), 168);
+  assert.match(awakeningSource, /at: 165,[\s\S]*?speechDelayMs: 300/);
+  assert.match(energySource, /at: 168,[\s\S]*?speechDelayMs: 420/);
+
+  assert.match(meditationPageSource, /const MORNING_NARRATION_END_SECONDS = 175;/);
+  assert.match(meditationPageSource, /const AFFIRMATION_TOTAL_SECONDS = 180;/);
+  assert.match(
+    meditationPageSource,
+    /elapsedTotalSeconds < MORNING_NARRATION_END_SECONDS[\s\S]*?window\.speechSynthesis\.cancel\(\);/
+  );
 });
 
 test("Korean and English Vision Gate cues keep a four-second connection", () => {
