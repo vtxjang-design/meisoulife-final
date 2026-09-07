@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { getSiteUrl } from "@/lib/env";
 import { getPlanConfig, getPlanPriceId, getStripeClient, normalizeCheckoutPlan } from "@/lib/stripe";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -76,7 +75,7 @@ export async function POST(request: Request) {
       plan: checkoutPlan
     });
 
-    const siteUrl = getSiteUrl();
+    const siteUrl = new URL(request.url).origin;
     const membershipPlan = config.membershipPlan;
     const language = resolveCheckoutLanguage(request);
     const nextDestination = payload.next || "";
@@ -92,11 +91,13 @@ export async function POST(request: Request) {
       flow: "membership"
     };
     const successUrl = new URL("/success", siteUrl);
-    successUrl.searchParams.set("session_id", "{CHECKOUT_SESSION_ID}");
-
     if (nextDestination) {
       successUrl.searchParams.set("next", nextDestination);
     }
+
+    // Stripe replaces this literal placeholder after checkout. URLSearchParams would
+    // percent-encode the braces and prevent the replacement.
+    const successUrlWithSessionId = `${successUrl.toString()}${successUrl.search ? "&" : "?"}session_id={CHECKOUT_SESSION_ID}`;
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
@@ -108,7 +109,7 @@ export async function POST(request: Request) {
           quantity: 1
         }
       ],
-      success_url: successUrl.toString(),
+      success_url: successUrlWithSessionId,
       cancel_url: `${siteUrl}/pricing`,
       metadata,
       subscription_data: {
