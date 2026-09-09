@@ -5193,7 +5193,9 @@ function MeditationPageContent() {
                     </p>
                     <h1 className="font-serif text-3xl text-white sm:text-4xl">{basicPracticeCopy.sessionTitle}</h1>
                     <p className="text-sm leading-7 text-white/70">{basicPracticeCopy.sessionSubtitle}</p>
-                    <p className="text-sm leading-7 text-white/56">“{basicPracticeCopy.state}”</p>
+                    {!isGuidedEveningGate ? (
+                      <p className="text-sm leading-7 text-white/56">“{basicPracticeCopy.state}”</p>
+                    ) : null}
                   </div>
                 ) : null}
                 {!isDaytimeGate ? (

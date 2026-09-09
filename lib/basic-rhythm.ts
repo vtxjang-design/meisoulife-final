@@ -203,7 +203,7 @@ const rhythmCatalog = {
           state: "今日はもう、静かに休みたい。",
           description: "今日の重さを静かに下ろします。",
           sessionTitle: "Release Gate",
-          sessionSubtitle: "今日を静かに下ろしたいとき",
+          sessionSubtitle: "今日の重さを手放す時間",
           sessionGuidance: "声よりも 音楽よりも 静けさに身をゆだねる夜です。",
           entryLabel: "静かな夜へ戻る",
           completionTitle: "今日、また戻ることができました"
@@ -218,7 +218,7 @@ const rhythmCatalog = {
           state: "今日よかったものを思い出したい。",
           description: "今日のよさを思い出す。",
           sessionTitle: "Gratitude Gate",
-          sessionSubtitle: "今日のよさを思い出したいとき",
+          sessionSubtitle: "今日のぬくもりを見つめる時間",
           sessionGuidance: "今の自分に合う方法で、静かな温かさへ戻ります。",
           entryLabel: "今の自分に合う方法で戻る",
           completionTitle: "リズムを思い出す力が育っています"
@@ -233,7 +233,7 @@ const rhythmCatalog = {
           state: "安心して眠りたい。",
           description: "眠りを準備する。",
           sessionTitle: "Sleep Gate",
-          sessionSubtitle: "深く静かに眠りたいとき",
+          sessionSubtitle: "深い休息へ向かう時間",
           sessionGuidance: "今の自分に合う方法で、眠りの静けさへ戻ります。",
           entryLabel: "今の自分に合う方法で戻る",
           completionTitle: "回復は少しずつ、馴染みのある道になっています"
@@ -385,7 +385,7 @@ const rhythmCatalog = {
           state: "오늘은 이제, 조용히 쉬고 싶다.",
           description: "오늘의 무게를 조용히 내려놓습니다.",
           sessionTitle: "Release Gate",
-          sessionSubtitle: "오늘을 조용히 내려놓고 싶을 때",
+          sessionSubtitle: "오늘의 무게를 내려놓는 시간",
           sessionGuidance: "목소리보다 음악보다 고요함에 머무는 밤입니다.",
           entryLabel: "고요한 밤으로 돌아가기",
           completionTitle: "오늘, 다시 돌아올 수 있었습니다"
@@ -400,7 +400,7 @@ const rhythmCatalog = {
           state: "오늘 좋았던 것을 떠올리고 싶다.",
           description: "좋았던 것을 떠올린다.",
           sessionTitle: "감사로 닫기",
-          sessionSubtitle: "오늘의 좋은 것을 떠올리고 싶을 때",
+          sessionSubtitle: "오늘의 온기를 돌아보는 시간",
           sessionGuidance: "지금의 나에게 맞는 방식으로, 남아 있는 따뜻함으로 돌아갑니다.",
           entryLabel: "지금의 나에게 맞는 방식으로 돌아가기",
           completionTitle: "리듬을 기억하는 힘이 자라고 있습니다"
@@ -415,7 +415,7 @@ const rhythmCatalog = {
           state: "평화롭게 잠들고 싶다.",
           description: "잠을 준비한다.",
           sessionTitle: "잠을 준비하기",
-          sessionSubtitle: "깊고 고요하게 잠들고 싶을 때",
+          sessionSubtitle: "깊은 쉼으로 향하는 시간",
           sessionGuidance: "지금의 나에게 맞는 방식으로, 잠의 고요로 돌아갑니다.",
           entryLabel: "지금의 나에게 맞는 방식으로 돌아가기",
           completionTitle: "회복은 우연이 아니라 익숙한 길이 되고 있습니다"
@@ -567,7 +567,7 @@ const rhythmCatalog = {
           state: "I want to let today rest.",
           description: "Set the weight of today down quietly.",
           sessionTitle: "Release Gate",
-          sessionSubtitle: "When you want to set today down gently",
+          sessionSubtitle: "A moment to release the day",
           sessionGuidance: "Tonight is for resting inside silence more than words.",
           entryLabel: "Return to a quiet night",
           completionTitle: "Today, you returned again"
@@ -582,7 +582,7 @@ const rhythmCatalog = {
           state: "I want to remember what was good.",
           description: "End with appreciation.",
           sessionTitle: "Gratitude Gate",
-          sessionSubtitle: "When you want to remember what was good",
+          sessionSubtitle: "A moment to remember today’s warmth",
           sessionGuidance: "Return in the way that fits you today and let one warm thing come closer.",
           entryLabel: "Return in the way that fits you today",
           completionTitle: "Your rhythm is remembering itself"
@@ -597,7 +597,7 @@ const rhythmCatalog = {
           state: "I want to sleep peacefully.",
           description: "Prepare for deep sleep.",
           sessionTitle: "Sleep Gate",
-          sessionSubtitle: "When you want to sleep peacefully",
+          sessionSubtitle: "A passage into deep rest",
           sessionGuidance: "Return in the way that fits you today until sleep feels safe again.",
           entryLabel: "Return in the way that fits you today",
           completionTitle: "Recovery is becoming familiar"
