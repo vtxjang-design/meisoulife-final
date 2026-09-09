@@ -1240,7 +1240,7 @@ function getReleaseGateSpeechSettings(language: "jp" | "kr" | "en") {
   if (language === "kr") {
     return {
       lang: "ko-KR",
-      rate: 0.68,
+      rate: 0.65,
       pitch: 0.94,
       volume: 0.82,
       preferredNames: ["Yuna", "Sora", "Google 한국어", "Siri"]
@@ -1250,7 +1250,7 @@ function getReleaseGateSpeechSettings(language: "jp" | "kr" | "en") {
   if (language === "en") {
     return {
       lang: "en-US",
-      rate: 0.7,
+      rate: 0.67,
       pitch: 0.96,
       volume: 0.8,
       preferredNames: ["Samantha", "Ava", "Victoria", "Google US English", "Siri"]
@@ -1264,7 +1264,7 @@ function getGratitudeGateSpeechSettings(language: "jp" | "kr" | "en") {
   if (language === "kr") {
     return {
       lang: "ko-KR",
-      rate: 0.66,
+      rate: 0.63,
       pitch: 0.95,
       volume: 0.8,
       preferredNames: ["Yuna", "Sora", "Google 한국어", "Siri"]
@@ -1274,7 +1274,7 @@ function getGratitudeGateSpeechSettings(language: "jp" | "kr" | "en") {
   if (language === "en") {
     return {
       lang: "en-US",
-      rate: 0.68,
+      rate: 0.65,
       pitch: 0.97,
       volume: 0.78,
       preferredNames: ["Samantha", "Ava", "Victoria", "Google US English", "Siri"]
@@ -1288,7 +1288,7 @@ function getSleepGateSpeechSettings(language: "jp" | "kr" | "en") {
   if (language === "kr") {
     return {
       lang: "ko-KR",
-      rate: 0.62,
+      rate: 0.6,
       pitch: 0.82,
       volume: 0.76,
       preferredNames: ["InJoon", "MinJoon", "Google 한국어", "Siri"]
@@ -1298,7 +1298,7 @@ function getSleepGateSpeechSettings(language: "jp" | "kr" | "en") {
   if (language === "en") {
     return {
       lang: "en-US",
-      rate: 0.64,
+      rate: 0.62,
       pitch: 0.82,
       volume: 0.74,
       preferredNames: ["Daniel", "Alex", "Google US English", "Siri"]

@@ -273,7 +273,7 @@ export function getJapaneseEveningSpeechSettings(gate: EveningGateKind): Japanes
     case "release":
       return {
         lang: "ja-JP",
-        rate: 0.77,
+        rate: 0.74,
         pitch: 0.84,
         volume: 0.78,
         preferredNames: JAPANESE_EVENING_PREFERRED_NAMES
@@ -281,7 +281,7 @@ export function getJapaneseEveningSpeechSettings(gate: EveningGateKind): Japanes
     case "gratitude":
       return {
         lang: "ja-JP",
-        rate: 0.75,
+        rate: 0.72,
         pitch: 0.86,
         volume: 0.8,
         preferredNames: JAPANESE_EVENING_PREFERRED_NAMES
@@ -289,7 +289,7 @@ export function getJapaneseEveningSpeechSettings(gate: EveningGateKind): Japanes
     case "sleep":
       return {
         lang: "ja-JP",
-        rate: 0.72,
+        rate: 0.7,
         pitch: 0.77,
         volume: 0.76,
         preferredNames: JAPANESE_EVENING_PREFERRED_NAMES
