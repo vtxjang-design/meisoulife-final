@@ -29,3 +29,14 @@ test("Evening Gate session cards omit the repeated quoted state", () => {
     /!isGuidedEveningGate \? \(\s*<p[^>]*>“\{basicPracticeCopy\.state\}”<\/p>\s*\) : null/
   );
 });
+
+test("Evening Gate session cards show one Gate title with an Evening eyebrow", () => {
+  assert.match(
+    meditationPageSource,
+    /const sessionEyebrow = isDaytimeGate \? "DAYTIME" : isGuidedEveningGate \? "EVENING" : basicPracticeCopy\?\.title/
+  );
+  assert.match(
+    meditationPageSource,
+    /!isDaytimeGate && !isGuidedEveningGate \? \(\s*<p[^>]*>\{topText\}<\/p>/
+  );
+});

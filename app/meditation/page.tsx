@@ -1626,7 +1626,7 @@ function MeditationPageContent() {
     : meditationType === "morning" || meditationType === "night"
       ? content.topText
       : durationTextSet?.topText || content.topText;
-  const sessionEyebrow = isDaytimeGate ? "DAYTIME" : basicPracticeCopy?.title;
+  const sessionEyebrow = isDaytimeGate ? "DAYTIME" : isGuidedEveningGate ? "EVENING" : basicPracticeCopy?.title;
   const introText = journeyMode ? journeyCopy.timerSubText : basicPracticeCopy?.sessionGuidance ?? content.intro;
   const completionTitle =
     basicPracticeCopy
@@ -5198,7 +5198,7 @@ function MeditationPageContent() {
                     ) : null}
                   </div>
                 ) : null}
-                {!isDaytimeGate ? (
+                {!isDaytimeGate && !isGuidedEveningGate ? (
                   <p className="keep-phrase text-sm uppercase tracking-[0.32em] text-gold/80">{topText}</p>
                 ) : null}
                 <p className="body-measure keep-phrase mx-auto text-sm leading-7 text-white/60 sm:text-base">{introText}</p>
