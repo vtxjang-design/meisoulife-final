@@ -21,6 +21,19 @@ export type JapaneseEveningSpeechSettings = {
   preferredNames: readonly string[];
 };
 
+export function splitJapaneseEveningSpeechSentences(text: string) {
+  const normalizedText = text.replace(/\s+/gu, " ").trim();
+
+  if (!normalizedText) {
+    return [];
+  }
+
+  return (
+    normalizedText.match(/[^。！？]+[。！？]?/gu)?.map((sentence) => sentence.trim()).filter(Boolean) ??
+    [normalizedText]
+  );
+}
+
 const WARMER_JAPANESE_PREFERRED_NAMES = [
   "Otoya",
   "Sakura",

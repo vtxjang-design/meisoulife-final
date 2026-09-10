@@ -34,6 +34,7 @@ import {
   JAPANESE_GRATITUDE_GATE_NARRATION,
   JAPANESE_RELEASE_GATE_NARRATION,
   JAPANESE_SLEEP_GATE_NARRATION,
+  splitJapaneseEveningSpeechSentences,
   type EveningGateKind
 } from "@/lib/evening-jp-tts";
 import {
@@ -75,6 +76,7 @@ const MORNING_NARRATION_END_SECONDS = 175;
 const JOURNEY_SETTLING_MS = 2000;
 const MORNING_GATE_FADE_IN_MS = 2000;
 const MORNING_GATE_FADE_OUT_MS = 3000;
+const GRATITUDE_SENTENCE_PAUSE_MS = 2000;
 const MORNING_GATE_AUDIO = {
   energy: {
     src: "/audio/morning/energy%20gate.mp3",
@@ -4010,8 +4012,12 @@ function MeditationPageContent() {
       }
 
       const speechDelayMs = nextLine.speechDelayMs ?? 980;
+      const speechSegments =
+        localizedLanguage === "jp"
+          ? splitJapaneseEveningSpeechSentences(nextLine.speechText ?? nextLine.text)
+          : [nextLine.speechText ?? nextLine.text];
 
-      const queueSpeak = (attempt: number) => {
+      const queueSpeak = (segmentIndex: number, attempt: number) => {
         if (
           gratitudeSpeechSequenceRef.current !== speechSequence ||
           isPausedRef.current ||
@@ -4024,12 +4030,22 @@ function MeditationPageContent() {
           if (attempt >= 16) {
             synth.cancel();
           } else {
-            gratitudeSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(attempt + 1), 180);
+            gratitudeSpeechTimeoutRef.current = window.setTimeout(
+              () => queueSpeak(segmentIndex, attempt + 1),
+              180
+            );
             return;
           }
         }
 
-        const utterance = new SpeechSynthesisUtterance(nextLine.speechText ?? nextLine.text);
+        const speechSegment = speechSegments[segmentIndex];
+
+        if (!speechSegment) {
+          gratitudeSpeechTimeoutRef.current = null;
+          return;
+        }
+
+        const utterance = new SpeechSynthesisUtterance(speechSegment);
         utterance.lang = settings.lang;
         utterance.rate = settings.rate;
         utterance.pitch = settings.pitch;
@@ -4049,7 +4065,21 @@ function MeditationPageContent() {
         }
 
         utterance.onend = () => {
-          gratitudeSpeechTimeoutRef.current = null;
+          const nextSegmentIndex = segmentIndex + 1;
+
+          if (
+            nextSegmentIndex < speechSegments.length &&
+            gratitudeSpeechSequenceRef.current === speechSequence &&
+            !isPausedRef.current &&
+            !isCompleteRef.current
+          ) {
+            gratitudeSpeechTimeoutRef.current = window.setTimeout(
+              () => queueSpeak(nextSegmentIndex, 0),
+              GRATITUDE_SENTENCE_PAUSE_MS
+            );
+          } else {
+            gratitudeSpeechTimeoutRef.current = null;
+          }
         };
 
         utterance.onerror = (event) => {
@@ -4065,7 +4095,7 @@ function MeditationPageContent() {
         synth.speak(utterance);
       };
 
-      gratitudeSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(0), speechDelayMs);
+      gratitudeSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(0, 0), speechDelayMs);
     } catch (error) {
       console.warn("[gratitude-gate] speech synthesis unavailable", error);
     }

@@ -9,6 +9,7 @@ import {
   JAPANESE_GRATITUDE_GATE_NARRATION,
   JAPANESE_SLEEP_GATE_NARRATION,
   pickJapaneseEveningVoice,
+  splitJapaneseEveningSpeechSentences,
   type SpeechSynthesisVoiceLike
 } from "./evening-jp-tts.ts";
 
@@ -246,6 +247,22 @@ test("Japanese Gratitude narration follows the approved compassionate arc with s
     JAPANESE_GRATITUDE_GATE_NARRATION.map((line) => line.speechText).join("\n"),
     /ここまで、よく|いまここで、息|そっと、声|静かに、手放/u
   );
+});
+
+test("Japanese Gratitude narration can pause between complete sentences", () => {
+  const dailyWarmthLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-5");
+  const closingLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-9");
+
+  assert.deepEqual(splitJapaneseEveningSpeechSentences(dailyWarmthLine?.speechText ?? ""), [
+    "そばにいてくれた人。",
+    "ふと触れた優しさ。",
+    "ひとすじの日差しでも、かまいません。"
+  ]);
+  assert.deepEqual(splitJapaneseEveningSpeechSentences(closingLine?.speechText ?? ""), [
+    "そのぬくもりを心に、きょうを静かに手放します。",
+    "きょうもありがとう。",
+    "ゆっくり休みましょう。"
+  ]);
 });
 
 test("Japanese Sleep narration is reduced to three cues or fewer", () => {
