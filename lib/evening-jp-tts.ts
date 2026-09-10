@@ -118,63 +118,63 @@ export const JAPANESE_GRATITUDE_GATE_NARRATION: JapaneseEveningNarrationLine[] =
     at: 12,
     key: "gratitude-1",
     text: "今日も、\nここまでよく歩いてきました",
-    speechText: "きょうも、\nここまで、よく歩いてきました。",
+    speechText: "きょうも、ここまでよく歩いてきました。",
     speechDelayMs: 980
   },
   {
     at: 28,
     key: "gratitude-2",
     text: "少しだけ、\n今日を振り返ってみましょう",
-    speechText: "すこしだけ、\nきょうを振り返ってみましょう。",
+    speechText: "すこしだけ、きょうを振り返ってみましょう。",
     speechDelayMs: 980
   },
   {
     at: 45,
     key: "gratitude-3",
     text: "うれしかった時も、\n心が重かった時も、\nすべて今日の一部でした",
-    speechText: "うれしかったときも、\n心が重かったときも、\nすべて、きょうの一部でした。",
+    speechText: "うれしかったときも、心が重かったときも、すべてきょうの一部でした。",
     speechDelayMs: 1020
   },
   {
     at: 64,
     key: "gratitude-4",
     text: "その一日の中で、\n自分を支えてくれた\n小さなぬくもりを\nひとつ思い出してみます",
-    speechText: "そのいちにちのなかで、\n自分を支えてくれた、\n小さなぬくもりを、\nひとつ思い出してみます。",
+    speechText: "そのいちにちのなかで、自分を支えてくれた小さなぬくもりを、ひとつ思い出してみます。",
     speechDelayMs: 1060
   },
   {
     at: 84,
     key: "gratitude-5",
     text: "そばにいてくれた人、\nふと触れた優しさ、\nひとすじの日差しでも\nかまいません",
-    speechText: "そばにいてくれた人。\nふと触れた優しさ。\nひとすじの日差しでも、\nかまいません。",
+    speechText: "そばにいてくれた人。ふと触れた優しさ。ひとすじの日差しでも、かまいません。",
     speechDelayMs: 1080
   },
   {
     at: 105,
     key: "gratitude-6",
     text: "何も浮かばないなら、\n今ここで息をしている自分、\nそれだけで十分です",
-    speechText: "なにも浮かばないなら、\nいまここで、息をしている自分。\nそれだけで、十分です。",
+    speechText: "なにも浮かばないなら、いまここで息をしている自分。それだけで、十分です。",
     speechDelayMs: 1100
   },
   {
     at: 121,
     key: "gratitude-7",
     text: "今日を生きた自分に、\nそっと声をかけてみます",
-    speechText: "きょうを生きた自分に、\nそっと、声をかけてみます。",
+    speechText: "きょうを生きた自分に、そっと声をかけてみます。",
     speechDelayMs: 1120
   },
   {
     at: 135,
     key: "gratitude-8",
     text: "よく頑張ったね。\n本当にありがとう。\n完璧でなくても、\n今日のあなたは十分でした",
-    speechText: "よく頑張ったね。\n本当に、ありがとう。\n完璧でなくても、\nきょうのあなたは、十分でした。",
+    speechText: "よく頑張ったね。本当にありがとう。完璧でなくても、きょうのあなたは十分でした。",
     speechDelayMs: 1140
   },
   {
     at: 154,
     key: "gratitude-9",
     text: "そのぬくもりを心に抱き、\n今日を静かに手放します。\n今日も、ありがとう。\n今夜は、ゆっくり休みましょう",
-    speechText: "そのぬくもりを、心に抱き、\nきょうを静かに、手放します。\nきょうも、ありがとう。\n今夜は、ゆっくり休みましょう。",
+    speechText: "そのぬくもりを心に抱き、きょうを静かに手放します。きょうも、ありがとう。今夜は、ゆっくり休みましょう。",
     speechDelayMs: 1120
   }
 ];
@@ -286,8 +286,8 @@ export function getJapaneseEveningSpeechSettings(gate: EveningGateKind): Japanes
     case "gratitude":
       return {
         lang: "ja-JP",
-        rate: 0.72,
-        pitch: 0.83,
+        rate: 0.7,
+        pitch: 0.81,
         volume: 0.8,
         preferredNames: JAPANESE_EVENING_PREFERRED_NAMES
       };
