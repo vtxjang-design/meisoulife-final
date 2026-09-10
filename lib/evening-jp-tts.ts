@@ -251,11 +251,23 @@ function scoreJapaneseEveningVoice(voice: SpeechSynthesisVoiceLike) {
   return score;
 }
 
-export function pickJapaneseEveningVoice<T extends SpeechSynthesisVoiceLike>(voices: readonly T[]) {
+export function pickJapaneseEveningVoice<T extends SpeechSynthesisVoiceLike>(
+  voices: readonly T[],
+  preferredVoiceName?: string
+) {
   const japaneseVoices = voices.filter((voice) => isJapaneseSpeechLocale(voice.lang));
 
   if (japaneseVoices.length === 0) {
     return undefined;
+  }
+
+  const normalizedPreferredVoiceName = preferredVoiceName?.trim().toLowerCase();
+  const explicitlyPreferredVoice = normalizedPreferredVoiceName
+    ? japaneseVoices.find((voice) => voice.name.trim().toLowerCase().includes(normalizedPreferredVoiceName))
+    : undefined;
+
+  if (explicitlyPreferredVoice) {
+    return explicitlyPreferredVoice;
   }
 
   return [...japaneseVoices].sort((left, right) => scoreJapaneseEveningVoice(right) - scoreJapaneseEveningVoice(left))[0];
@@ -290,7 +302,7 @@ export function getJapaneseEveningSpeechSettings(gate: EveningGateKind): Japanes
   }
 }
 
-export function createJapaneseEveningVoiceSession<T extends SpeechSynthesisVoiceLike>() {
+export function createJapaneseEveningVoiceSession<T extends SpeechSynthesisVoiceLike>(preferredVoiceName?: string) {
   let locked = false;
   let selectedVoice: T | null | undefined;
 
@@ -300,13 +312,13 @@ export function createJapaneseEveningVoiceSession<T extends SpeechSynthesisVoice
         return selectedVoice ?? undefined;
       }
 
-      selectedVoice = pickJapaneseEveningVoice(voices) ?? null;
+      selectedVoice = pickJapaneseEveningVoice(voices, preferredVoiceName) ?? null;
       return selectedVoice ?? undefined;
     },
     lock(voices: readonly T[]) {
       if (!locked) {
         if (voices.length > 0) {
-          selectedVoice = pickJapaneseEveningVoice(voices) ?? null;
+          selectedVoice = pickJapaneseEveningVoice(voices, preferredVoiceName) ?? null;
         } else if (selectedVoice === undefined) {
           selectedVoice = null;
         }

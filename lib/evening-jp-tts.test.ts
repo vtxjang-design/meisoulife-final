@@ -45,6 +45,19 @@ test("pickJapaneseEveningVoice prefers a warmer/lower Japanese candidate over Ky
   assert.equal(selected?.name, "Otoya");
 });
 
+test("pickJapaneseEveningVoice restores Kyoko when a Gate explicitly prefers the original voice", () => {
+  const selected = pickJapaneseEveningVoice(
+    [
+      createVoice({ name: "Otoya", localService: true }),
+      createVoice({ name: "Kyoko", localService: true }),
+      createVoice({ name: "Google 日本語" })
+    ],
+    "Kyoko"
+  );
+
+  assert.equal(selected?.name, "Kyoko");
+});
+
 test("pickJapaneseEveningVoice falls back to another native Japanese voice when preferred names are absent", () => {
   const selected = pickJapaneseEveningVoice([
     createVoice({ name: "Generic Japanese Voice", lang: "ja-JP", localService: true }),
@@ -93,6 +106,18 @@ test("createJapaneseEveningVoiceSession keeps one stable voice for a session aft
   assert.equal(firstSelected?.name, "Otoya");
   assert.equal(secondSelected?.name, "Otoya");
   assert.equal(session.isLocked(), true);
+});
+
+test("createJapaneseEveningVoiceSession keeps the original Gratitude voice when Kyoko is available", () => {
+  const session = createJapaneseEveningVoiceSession<SpeechSynthesisVoiceLike>("Kyoko");
+
+  const selected = session.lock([
+    createVoice({ name: "Otoya", localService: true }),
+    createVoice({ name: "Kyoko", localService: true })
+  ]);
+
+  assert.equal(selected?.name, "Kyoko");
+  assert.equal(session.getVoice()?.name, "Kyoko");
 });
 
 test("createJapaneseEveningVoiceSession provides a safe fallback when voices are unavailable at lock time", () => {

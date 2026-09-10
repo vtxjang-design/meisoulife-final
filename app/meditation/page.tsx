@@ -1555,7 +1555,7 @@ function MeditationPageContent() {
   const gratitudeSpeechUnlockedRef = useRef(false);
   const sleepSpeechUnlockedRef = useRef(false);
   const releaseJapaneseVoiceSessionRef = useRef(createJapaneseEveningVoiceSession<SpeechSynthesisVoice>());
-  const gratitudeJapaneseVoiceSessionRef = useRef(createJapaneseEveningVoiceSession<SpeechSynthesisVoice>());
+  const gratitudeJapaneseVoiceSessionRef = useRef(createJapaneseEveningVoiceSession<SpeechSynthesisVoice>("Kyoko"));
   const sleepJapaneseVoiceSessionRef = useRef(createJapaneseEveningVoiceSession<SpeechSynthesisVoice>());
   const releaseJapaneseVoiceWatcherCleanupRef = useRef<(() => void) | null>(null);
   const gratitudeJapaneseVoiceWatcherCleanupRef = useRef<(() => void) | null>(null);
