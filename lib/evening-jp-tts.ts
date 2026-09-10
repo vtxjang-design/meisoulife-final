@@ -117,71 +117,64 @@ export const JAPANESE_GRATITUDE_GATE_NARRATION: JapaneseEveningNarrationLine[] =
   {
     at: 12,
     key: "gratitude-1",
-    text: "今日も...\nありがとうございます",
-    speechText: "今日も…\nありがとうございます。",
+    text: "今日も、\nここまでよく歩いてきました",
+    speechText: "きょうも、\nここまで、よく歩いてきました。",
     speechDelayMs: 980
   },
   {
-    at: 26,
+    at: 28,
     key: "gratitude-2",
-    text: "今日は、\n少しだけ\n一日を\n思い返してみます",
-    speechText: "きょうは、\n少しだけ、\nいちにちを\n思い返してみます。",
+    text: "少しだけ、\n今日を振り返ってみましょう",
+    speechText: "すこしだけ、\nきょうを振り返ってみましょう。",
     speechDelayMs: 980
   },
   {
-    at: 44,
+    at: 45,
     key: "gratitude-3",
-    text: "近すぎて、\n気づかなかった\nあたたかさが\nあったかもしれません",
-    speechText: "ちかすぎて、\n気づかなかった\nあたたかさが、\nあったのかもしれません。",
+    text: "うれしかった時も、\n心が重かった時も、\nすべて今日の一部でした",
+    speechText: "うれしかったときも、\n心が重かったときも、\nすべて、きょうの一部でした。",
     speechDelayMs: 1020
   },
-  { at: 60, key: "gratitude-4", text: "空気", speechText: "空気。", speechDelayMs: 1060 },
-  { at: 68, key: "gratitude-5", text: "日差し", speechText: "ひざし。", speechDelayMs: 1060 },
-  { at: 76, key: "gratitude-6", text: "風", speechText: "風。", speechDelayMs: 1060 },
-  { at: 84, key: "gratitude-7", text: "自然の香り", speechText: "しぜんのかおり。", speechDelayMs: 1080 },
   {
-    at: 100,
-    key: "gratitude-8",
-    text: "今日、\n当たり前すぎて\n見過ごしていたものは\nありませんでしたか",
-    speechText: "きょう、\nあたりまえすぎて、\nみすごしていたものは\nありませんでしたか。",
-    speechDelayMs: 1040
+    at: 64,
+    key: "gratitude-4",
+    text: "その一日の中で、\n自分を支えてくれた\n小さなぬくもりを\nひとつ思い出してみます",
+    speechText: "そのいちにちのなかで、\n自分を支えてくれた、\n小さなぬくもりを、\nひとつ思い出してみます。",
+    speechDelayMs: 1060
   },
   {
-    at: 118,
-    key: "gratitude-9",
-    text: "いつも\nそばにいてくれた\n大切な人たち",
-    speechText: "いつも、\nそばにいてくれた\n大切な人たち。",
-    speechDelayMs: 1040
-  },
-  { at: 132, key: "gratitude-10", text: "家族", speechText: "家族。", speechDelayMs: 1080 },
-  { at: 139, key: "gratitude-11", text: "友人", speechText: "ゆうじん。", speechDelayMs: 1080 },
-  { at: 146, key: "gratitude-12", text: "仲間", speechText: "仲間。", speechDelayMs: 1080 },
-  {
-    at: 156,
-    key: "gratitude-13",
-    text: "今日も\n頑張ってくれた\n自分自身",
-    speechText: "きょうも、\n頑張ってくれた\n自分自身。",
-    speechDelayMs: 1180
-  },
-  {
-    at: 170,
-    key: "gratitude-14",
-    text: "今日も...\nたくさんの贈りものの中で\n生きていました",
-    speechText: "今日も…\nたくさんの贈りものの中で、\n生きていました。",
+    at: 84,
+    key: "gratitude-5",
+    text: "そばにいてくれた人、\nふと触れた優しさ、\nひとすじの日差しでも\nかまいません",
+    speechText: "そばにいてくれた人。\nふと触れた優しさ。\nひとすじの日差しでも、\nかまいません。",
     speechDelayMs: 1080
   },
   {
-    at: 184,
-    key: "gratitude-15",
-    text: "その温もりを\n静かに\n心にしまいます",
-    speechText: "その温もりを、\n静かに、\n心にしまいます。",
+    at: 105,
+    key: "gratitude-6",
+    text: "何も浮かばないなら、\n今ここで息をしている自分、\nそれだけで十分です",
+    speechText: "なにも浮かばないなら、\nいまここで、息をしている自分。\nそれだけで、十分です。",
+    speechDelayMs: 1100
+  },
+  {
+    at: 121,
+    key: "gratitude-7",
+    text: "今日を生きた自分に、\nそっと声をかけてみます",
+    speechText: "きょうを生きた自分に、\nそっと、声をかけてみます。",
     speechDelayMs: 1120
   },
   {
-    at: 200,
-    key: "gratitude-16",
-    text: "今日も...\nありがとうございます",
-    speechText: "今日も…\nありがとうございます。",
+    at: 135,
+    key: "gratitude-8",
+    text: "よく頑張ったね。\n本当にありがとう。\n完璧でなくても、\n今日のあなたは十分でした",
+    speechText: "よく頑張ったね。\n本当に、ありがとう。\n完璧でなくても、\nきょうのあなたは、十分でした。",
+    speechDelayMs: 1140
+  },
+  {
+    at: 154,
+    key: "gratitude-9",
+    text: "そのぬくもりを心に抱き、\n今日を静かに手放します。\n今日も、ありがとう。\n今夜は、ゆっくり休みましょう",
+    speechText: "そのぬくもりを、心に抱き、\nきょうを静かに、手放します。\nきょうも、ありがとう。\n今夜は、ゆっくり休みましょう。",
     speechDelayMs: 1120
   }
 ];

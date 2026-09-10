@@ -181,27 +181,41 @@ test("Japanese Release narration leaves a longer quiet runway before the 3-minut
   assert.equal(finalLine?.speechDelayMs, 1120);
   assert.equal(roundToHundredths((finalLine?.at ?? 0) + ((finalLine?.speechDelayMs ?? 0) / 1000)), 163.12);
   assert.equal(roundToHundredths(180 - ((finalLine?.at ?? 0) + ((finalLine?.speechDelayMs ?? 0) / 1000))), 16.88);
-  assert.equal(gratitudeFinalLine?.at, 200);
+  assert.equal(gratitudeFinalLine?.at, 154);
+  assert.equal(
+    roundToHundredths((gratitudeFinalLine?.at ?? 0) + ((gratitudeFinalLine?.speechDelayMs ?? 0) / 1000)),
+    155.12
+  );
+  assert.equal(
+    roundToHundredths(170 - ((gratitudeFinalLine?.at ?? 0) + ((gratitudeFinalLine?.speechDelayMs ?? 0) / 1000))),
+    14.88
+  );
   assert.deepEqual(sleepTimeline, [15, 50, 72]);
 });
 
-test("Japanese Gratitude narration keeps display text while providing safer spoken readings", () => {
-  const warmthLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-3");
-  const sunlightLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-5");
-  const scentLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-7");
-  const ordinaryLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-8");
-  const friendLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-11");
+test("Japanese Gratitude narration follows the approved compassionate arc with safer spoken readings", () => {
+  const timeline = JAPANESE_GRATITUDE_GATE_NARRATION.map((line) => line.at);
+  const dailyWarmthLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-5");
+  const enoughLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-6");
+  const selfCompassionLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-8");
+  const closingLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-9");
 
-  assert.equal(warmthLine?.text, "近すぎて、\n気づかなかった\nあたたかさが\nあったかもしれません");
-  assert.equal(warmthLine?.speechText, "ちかすぎて、\n気づかなかった\nあたたかさが、\nあったのかもしれません。");
-  assert.equal(sunlightLine?.text, "日差し");
-  assert.equal(sunlightLine?.speechText, "ひざし。");
-  assert.equal(scentLine?.text, "自然の香り");
-  assert.equal(scentLine?.speechText, "しぜんのかおり。");
-  assert.equal(ordinaryLine?.text, "今日、\n当たり前すぎて\n見過ごしていたものは\nありませんでしたか");
-  assert.equal(ordinaryLine?.speechText, "きょう、\nあたりまえすぎて、\nみすごしていたものは\nありませんでしたか。");
-  assert.equal(friendLine?.text, "友人");
-  assert.equal(friendLine?.speechText, "ゆうじん。");
+  assert.equal(JAPANESE_GRATITUDE_GATE_NARRATION.length, 9);
+  assert.deepEqual(timeline, [12, 28, 45, 64, 84, 105, 121, 135, 154]);
+  assert.equal(
+    dailyWarmthLine?.text,
+    "そばにいてくれた人、\nふと触れた優しさ、\nひとすじの日差しでも\nかまいません"
+  );
+  assert.match(dailyWarmthLine?.speechText ?? "", /ひとすじの日差し/u);
+  assert.equal(
+    enoughLine?.text,
+    "何も浮かばないなら、\n今ここで息をしている自分、\nそれだけで十分です"
+  );
+  assert.match(enoughLine?.speechText ?? "", /それだけで、十分です/u);
+  assert.match(selfCompassionLine?.text ?? "", /完璧でなくても/u);
+  assert.match(selfCompassionLine?.speechText ?? "", /きょうのあなたは、十分でした/u);
+  assert.match(closingLine?.text ?? "", /今夜は、ゆっくり休みましょう/u);
+  assert.match(closingLine?.speechText ?? "", /きょうも、ありがとう/u);
 });
 
 test("Japanese Sleep narration is reduced to three cues or fewer", () => {

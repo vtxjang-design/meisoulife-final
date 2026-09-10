@@ -41,8 +41,10 @@ This document tracks the current Japanese narration foundation for BASIC Gates s
 | Release | `release-2` | 今は、少し休んでも大丈夫です | いまは、すこし やすんでも だいじょうぶです | Avoid dragging `大丈夫` on older iOS voices | 920ms | Evening release | tuned |
 | Release | `release-3` | 今日という 一日は、いろいろな時間があったことでしょう | きょうという いちにちは、いろいろな じかんが あったことでしょう | Keep `今日という一日` connected | 940ms | Evening release | tuned |
 | Release | `release-7` | 今日終わらなかったことは、明日のあなたに任せても大丈夫です | きょう おわらなかったことは、あしたの あなたに まかせても だいじょうぶです | Long line; candidate for future shortening | 1020ms | Evening release | needs-review |
-| Gratitude | `gratitude-2` | 今日は、少しだけ一日を思い返してみます | きょうは、すこしだけ いちにちを おもいかえしてみます | Keep `思い返して` distinct | 980ms | Evening release | tuned |
-| Gratitude | `gratitude-13` | 今日も頑張ってくれた自分自身 | きょうも がんばってくれた じぶんじしん | Warm self-address; avoid sharp stress | 1180ms | Evening release | tuned |
+| Gratitude | `gratitude-2` | 少しだけ、今日を振り返ってみましょう | すこしだけ、きょうを振り返ってみましょう。 | Keep the invitation reflective and unforced | 980ms | Evening release | tuned |
+| Gratitude | `gratitude-6` | 何も浮かばないなら、今ここで息をしている自分、それだけで十分です | なにも浮かばないなら、いまここで、息をしている自分。それだけで、十分です。 | Preserve permission when gratitude does not arise | 1100ms | Evening release | needs-review |
+| Gratitude | `gratitude-8` | よく頑張ったね。本当にありがとう。完璧でなくても、今日のあなたは十分でした | よく頑張ったね。本当に、ありがとう。完璧でなくても、きょうのあなたは、十分でした。 | Warm self-address without sharp stress | 1140ms | Evening release | needs-review |
+| Gratitude | `gratitude-9` | そのぬくもりを心に抱き、今日を静かに手放します。今日も、ありがとう。今夜は、ゆっくり休みましょう | そのぬくもりを、心に抱き、きょうを静かに、手放します。きょうも、ありがとう。今夜は、ゆっくり休みましょう。 | Final cue begins at 154s to leave a quiet close before the 3-minute chime | 1120ms | Evening release | needs-review |
 | Sleep | `sleep-1` | 今日も...お疲れさまでした | 今日も...お疲れさまでした | Opening line should feel complete on its own | 1040ms | Evening release | needs-review |
 | Sleep | `sleep-2` | もう...何もしなくて大丈夫です | もう...なにもしなくて だいじょうぶです | Reduce pace drift on older Safari voices | 1080ms | Evening release | tuned |
 | Sleep | `sleep-3` | 呼吸は...そのままで大丈夫です | こきゅうは...そのままで だいじょうぶです | Keep breath cue gentle, not directive | 1080ms | Evening release | tuned |
