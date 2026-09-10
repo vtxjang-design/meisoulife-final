@@ -234,14 +234,14 @@ test("Japanese Gratitude narration follows the approved compassionate arc with s
   assert.match(dailyWarmthLine?.speechText ?? "", /ひとすじの日差し/u);
   assert.equal(
     enoughLine?.text,
-    "何も浮かばないなら、\n今ここで息をしている自分、\nそれだけで十分です"
+    "何も浮かばないなら、\n今ここにいる自分。\nそれだけで十分です"
   );
-  assert.match(enoughLine?.speechText ?? "", /いまここで息をしている自分/u);
+  assert.match(enoughLine?.speechText ?? "", /いまここにいる自分/u);
   assert.match(enoughLine?.speechText ?? "", /それだけで、十分です/u);
-  assert.match(selfCompassionLine?.text ?? "", /完璧でなくても/u);
+  assert.doesNotMatch(selfCompassionLine?.text ?? "", /完璧でなくても/u);
   assert.match(selfCompassionLine?.speechText ?? "", /きょうのあなたは十分でした/u);
-  assert.match(closingLine?.text ?? "", /今夜は、ゆっくり休みましょう/u);
-  assert.match(closingLine?.speechText ?? "", /きょうも、ありがとう/u);
+  assert.match(closingLine?.text ?? "", /ゆっくり休みましょう/u);
+  assert.match(closingLine?.speechText ?? "", /きょうもありがとう/u);
   assert.doesNotMatch(
     JAPANESE_GRATITUDE_GATE_NARRATION.map((line) => line.speechText).join("\n"),
     /ここまで、よく|いまここで、息|そっと、声|静かに、手放/u
