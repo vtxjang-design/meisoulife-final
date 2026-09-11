@@ -130,50 +130,57 @@ export const JAPANESE_GRATITUDE_GATE_NARRATION: JapaneseEveningNarrationLine[] =
   {
     at: 12,
     key: "gratitude-1",
-    text: "今日も、\nここまでよく歩いてきました",
-    speechText: "きょうも、ここまでよく歩いてきました。",
+    text: "今日も、ここまでよく\n頑張ってきましたね",
+    speechText: "きょうも、ここまでよく頑張ってきましたね。",
     speechDelayMs: 980
   },
   {
     at: 34,
     key: "gratitude-2",
-    text: "少しだけ、\n今日を振り返ってみましょう",
-    speechText: "すこしだけ、きょうを振り返ってみましょう。",
+    text: "静かに、\n息をひとつ整えます",
+    speechText: "静かに、息をひとつ整えます。",
     speechDelayMs: 980
   },
   {
-    at: 58,
+    at: 56,
     key: "gratitude-3",
-    text: "うれしさも、心の重さも、\nすべて今日の一部です",
-    speechText: "うれしさも、心の重さも、すべてきょうの一部です。",
+    text: "今日、心に残った\n小さなぬくもりを思い出します",
+    speechText: "きょう、心に残った小さなぬくもりを思い出します。",
     speechDelayMs: 1020
   },
   {
-    at: 84,
+    at: 78,
     key: "gratitude-4",
-    text: "今日、自分を支えた\n小さなぬくもりを\nひとつ思い出します",
-    speechText: "きょう、自分を支えた小さなぬくもりを、ひとつ思い出します。",
+    text: "誰かの優しさでも、\nひとすじの光でもかまいません",
+    speechText: "誰かの優しさでも、ひとすじの光でも、かまいません。",
     speechDelayMs: 1060
   },
   {
-    at: 110,
+    at: 100,
     key: "gratitude-5",
-    text: "何も浮かばないなら、\n今ここにいる自分。\nそれだけで十分です",
-    speechText: "なにも浮かばないなら、いまここにいる自分。それだけで、十分です。",
+    text: "そのぬくもりに、\n心の中でありがとうを伝えます",
+    speechText: "そのぬくもりに、心の中でありがとうを伝えます。",
     speechDelayMs: 1100
   },
   {
-    at: 135,
+    at: 122,
     key: "gratitude-6",
-    text: "よく頑張ったね。\n本当にありがとう。\n今日のあなたは十分でした",
-    speechText: "よく頑張ったね。本当にありがとう。きょうのあなたは十分でした。",
+    text: "今日を生きた自分にも、\nありがとう",
+    speechText: "きょうを生きた自分にも、ありがとう。",
     speechDelayMs: 1140
   },
   {
-    at: 158,
+    at: 144,
     key: "gratitude-7",
-    text: "そのぬくもりを心に、\n今日を静かに手放します。\nゆっくり休みましょう",
-    speechText: "そのぬくもりを心に、きょうを静かに手放します。ゆっくり休みましょう。",
+    text: "今日も、\n十分でした",
+    speechText: "きょうも、十分でした。",
+    speechDelayMs: 1120
+  },
+  {
+    at: 162,
+    key: "gratitude-8",
+    text: "このあたたかさとともに、\nゆっくり休みましょう",
+    speechText: "このあたたかさとともに、ゆっくり休みましょう。",
     speechDelayMs: 1120
   }
 ];

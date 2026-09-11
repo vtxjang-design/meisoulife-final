@@ -207,41 +207,37 @@ test("Japanese Release narration leaves a longer quiet runway before the 3-minut
   assert.equal(finalLine?.speechDelayMs, 1120);
   assert.equal(roundToHundredths((finalLine?.at ?? 0) + ((finalLine?.speechDelayMs ?? 0) / 1000)), 163.12);
   assert.equal(roundToHundredths(180 - ((finalLine?.at ?? 0) + ((finalLine?.speechDelayMs ?? 0) / 1000))), 16.88);
-  assert.equal(gratitudeFinalLine?.at, 158);
+  assert.equal(gratitudeFinalLine?.at, 162);
   assert.equal(
     roundToHundredths((gratitudeFinalLine?.at ?? 0) + ((gratitudeFinalLine?.speechDelayMs ?? 0) / 1000)),
-    159.12
+    163.12
   );
   assert.equal(
     roundToHundredths(170 - ((gratitudeFinalLine?.at ?? 0) + ((gratitudeFinalLine?.speechDelayMs ?? 0) / 1000))),
-    10.88
+    6.88
   );
   assert.deepEqual(sleepTimeline, [15, 50, 72]);
 });
 
 test("Japanese Gratitude narration follows the approved compassionate arc with safer spoken readings", () => {
   const timeline = JAPANESE_GRATITUDE_GATE_NARRATION.map((line) => line.at);
-  const warmthLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-4");
-  const enoughLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-5");
+  const openingLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-1");
+  const warmthLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-3");
+  const thanksLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-5");
   const selfCompassionLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-6");
-  const closingLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-7");
-  const displayCharacterCount = JAPANESE_GRATITUDE_GATE_NARRATION.reduce(
-    (total, line) => total + line.text.replace(/\s/gu, "").length,
-    0
+  const closingLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-8");
+  const maximumDisplayLines = Math.max(
+    ...JAPANESE_GRATITUDE_GATE_NARRATION.map((line) => line.text.split("\n").length)
   );
 
-  assert.equal(JAPANESE_GRATITUDE_GATE_NARRATION.length, 7);
-  assert.deepEqual(timeline, [12, 34, 58, 84, 110, 135, 158]);
-  assert.ok(displayCharacterCount <= 173);
+  assert.equal(JAPANESE_GRATITUDE_GATE_NARRATION.length, 8);
+  assert.deepEqual(timeline, [12, 34, 56, 78, 100, 122, 144, 162]);
+  assert.equal(maximumDisplayLines, 2);
+  assert.equal(openingLine?.text, "今日も、ここまでよく\n頑張ってきましたね");
+  assert.equal(openingLine?.speechText, "きょうも、ここまでよく頑張ってきましたね。");
   assert.match(warmthLine?.text ?? "", /小さなぬくもり/u);
-  assert.equal(
-    enoughLine?.text,
-    "何も浮かばないなら、\n今ここにいる自分。\nそれだけで十分です"
-  );
-  assert.match(enoughLine?.speechText ?? "", /いまここにいる自分/u);
-  assert.match(enoughLine?.speechText ?? "", /それだけで、十分です/u);
-  assert.doesNotMatch(selfCompassionLine?.text ?? "", /完璧でなくても/u);
-  assert.match(selfCompassionLine?.speechText ?? "", /きょうのあなたは十分でした/u);
+  assert.match(thanksLine?.text ?? "", /ありがとう/u);
+  assert.match(selfCompassionLine?.speechText ?? "", /きょうを生きた自分にも、ありがとう/u);
   assert.match(closingLine?.text ?? "", /ゆっくり休みましょう/u);
   assert.doesNotMatch(
     JAPANESE_GRATITUDE_GATE_NARRATION.map((line) => line.speechText).join("\n"),
@@ -249,18 +245,10 @@ test("Japanese Gratitude narration follows the approved compassionate arc with s
   );
 });
 
-test("Japanese Gratitude narration can pause between complete sentences", () => {
-  const enoughLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-5");
-  const closingLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-7");
-
-  assert.deepEqual(splitJapaneseEveningSpeechSentences(enoughLine?.speechText ?? ""), [
-    "なにも浮かばないなら、いまここにいる自分。",
-    "それだけで、十分です。"
-  ]);
-  assert.deepEqual(splitJapaneseEveningSpeechSentences(closingLine?.speechText ?? ""), [
-    "そのぬくもりを心に、きょうを静かに手放します。",
-    "ゆっくり休みましょう。"
-  ]);
+test("Japanese Gratitude narration uses one spoken sentence per cue", () => {
+  for (const line of JAPANESE_GRATITUDE_GATE_NARRATION) {
+    assert.equal(splitJapaneseEveningSpeechSentences(line.speechText ?? "").length, 1, line.key);
+  }
 });
 
 test("Japanese Sleep narration is reduced to three cues or fewer", () => {
