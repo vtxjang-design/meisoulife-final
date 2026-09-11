@@ -207,32 +207,33 @@ test("Japanese Release narration leaves a longer quiet runway before the 3-minut
   assert.equal(finalLine?.speechDelayMs, 1120);
   assert.equal(roundToHundredths((finalLine?.at ?? 0) + ((finalLine?.speechDelayMs ?? 0) / 1000)), 163.12);
   assert.equal(roundToHundredths(180 - ((finalLine?.at ?? 0) + ((finalLine?.speechDelayMs ?? 0) / 1000))), 16.88);
-  assert.equal(gratitudeFinalLine?.at, 154);
+  assert.equal(gratitudeFinalLine?.at, 158);
   assert.equal(
     roundToHundredths((gratitudeFinalLine?.at ?? 0) + ((gratitudeFinalLine?.speechDelayMs ?? 0) / 1000)),
-    155.12
+    159.12
   );
   assert.equal(
     roundToHundredths(170 - ((gratitudeFinalLine?.at ?? 0) + ((gratitudeFinalLine?.speechDelayMs ?? 0) / 1000))),
-    14.88
+    10.88
   );
   assert.deepEqual(sleepTimeline, [15, 50, 72]);
 });
 
 test("Japanese Gratitude narration follows the approved compassionate arc with safer spoken readings", () => {
   const timeline = JAPANESE_GRATITUDE_GATE_NARRATION.map((line) => line.at);
-  const dailyWarmthLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-5");
-  const enoughLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-6");
-  const selfCompassionLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-8");
-  const closingLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-9");
-
-  assert.equal(JAPANESE_GRATITUDE_GATE_NARRATION.length, 9);
-  assert.deepEqual(timeline, [12, 28, 45, 64, 84, 105, 121, 135, 154]);
-  assert.equal(
-    dailyWarmthLine?.text,
-    "そばにいてくれた人、\nふと触れた優しさ、\nひとすじの日差しでも\nかまいません"
+  const warmthLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-4");
+  const enoughLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-5");
+  const selfCompassionLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-6");
+  const closingLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-7");
+  const displayCharacterCount = JAPANESE_GRATITUDE_GATE_NARRATION.reduce(
+    (total, line) => total + line.text.replace(/\s/gu, "").length,
+    0
   );
-  assert.match(dailyWarmthLine?.speechText ?? "", /ひとすじの日差し/u);
+
+  assert.equal(JAPANESE_GRATITUDE_GATE_NARRATION.length, 7);
+  assert.deepEqual(timeline, [12, 34, 58, 84, 110, 135, 158]);
+  assert.ok(displayCharacterCount <= 173);
+  assert.match(warmthLine?.text ?? "", /小さなぬくもり/u);
   assert.equal(
     enoughLine?.text,
     "何も浮かばないなら、\n今ここにいる自分。\nそれだけで十分です"
@@ -242,7 +243,6 @@ test("Japanese Gratitude narration follows the approved compassionate arc with s
   assert.doesNotMatch(selfCompassionLine?.text ?? "", /完璧でなくても/u);
   assert.match(selfCompassionLine?.speechText ?? "", /きょうのあなたは十分でした/u);
   assert.match(closingLine?.text ?? "", /ゆっくり休みましょう/u);
-  assert.match(closingLine?.speechText ?? "", /きょうもありがとう/u);
   assert.doesNotMatch(
     JAPANESE_GRATITUDE_GATE_NARRATION.map((line) => line.speechText).join("\n"),
     /ここまで、よく|いまここで、息|そっと、声|静かに、手放/u
@@ -250,17 +250,15 @@ test("Japanese Gratitude narration follows the approved compassionate arc with s
 });
 
 test("Japanese Gratitude narration can pause between complete sentences", () => {
-  const dailyWarmthLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-5");
-  const closingLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-9");
+  const enoughLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-5");
+  const closingLine = JAPANESE_GRATITUDE_GATE_NARRATION.find((line) => line.key === "gratitude-7");
 
-  assert.deepEqual(splitJapaneseEveningSpeechSentences(dailyWarmthLine?.speechText ?? ""), [
-    "そばにいてくれた人。",
-    "ふと触れた優しさ。",
-    "ひとすじの日差しでも、かまいません。"
+  assert.deepEqual(splitJapaneseEveningSpeechSentences(enoughLine?.speechText ?? ""), [
+    "なにも浮かばないなら、いまここにいる自分。",
+    "それだけで、十分です。"
   ]);
   assert.deepEqual(splitJapaneseEveningSpeechSentences(closingLine?.speechText ?? ""), [
     "そのぬくもりを心に、きょうを静かに手放します。",
-    "きょうもありがとう。",
     "ゆっくり休みましょう。"
   ]);
 });
