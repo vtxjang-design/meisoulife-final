@@ -41,7 +41,7 @@ export function CheckoutButton({ plan, label, children, className, messageClassN
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ plan, next: nextDestination || undefined })
+        body: JSON.stringify({ plan, next: nextDestination || undefined, language })
       });
 
       const data = (await response.json()) as {

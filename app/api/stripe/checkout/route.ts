@@ -5,14 +5,27 @@ import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 const checkoutSchema = z.object({
   plan: z.enum(["basic", "leader", "premium", "growth", "inner_circle", "inner-circle"]),
-  next: z.string().trim().startsWith("/").max(2048).optional()
+  next: z.string().trim().startsWith("/").max(2048).optional(),
+  language: z.enum(["jp", "kr", "en"]).optional()
 });
 
 const FRIENDLY_CHECKOUT_ERROR = "決済設定を確認中です。しばらくして再度お試しください。";
 
-function resolveCheckoutLanguage(request: Request) {
+const STRIPE_LOCALE_BY_SITE_LANGUAGE = {
+  jp: "ja",
+  kr: "ko",
+  en: "en"
+} as const;
+
+function resolveCheckoutLanguage(request: Request, siteLanguage?: keyof typeof STRIPE_LOCALE_BY_SITE_LANGUAGE) {
+  if (siteLanguage) {
+    return STRIPE_LOCALE_BY_SITE_LANGUAGE[siteLanguage];
+  }
+
   const acceptLanguage = request.headers.get("accept-language")?.toLowerCase() || "";
-  return acceptLanguage.startsWith("ko") ? "ko" : "ja";
+  if (acceptLanguage.startsWith("ko")) return "ko";
+  if (acceptLanguage.startsWith("en")) return "en";
+  return "ja";
 }
 
 export async function POST(request: Request) {
@@ -77,7 +90,7 @@ export async function POST(request: Request) {
 
     const siteUrl = new URL(request.url).origin;
     const membershipPlan = config.membershipPlan;
-    const language = resolveCheckoutLanguage(request);
+    const language = resolveCheckoutLanguage(request, payload.language);
     const nextDestination = payload.next || "";
     const metadata = {
       user_id: userId,
@@ -101,6 +114,7 @@ export async function POST(request: Request) {
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
+      locale: language,
       payment_method_types: ["card"],
       customer_email: userEmail || undefined,
       line_items: [

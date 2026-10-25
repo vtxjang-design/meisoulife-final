@@ -7,6 +7,7 @@ const communitySource = readFileSync(new URL("../app/community/page.tsx", import
 const pricingSource = readFileSync(new URL("../app/pricing/page.tsx", import.meta.url), "utf8");
 const journeySource = readFileSync(new URL("../components/rhythm-journey-page.tsx", import.meta.url), "utf8");
 const checkoutSource = readFileSync(new URL("../components/checkout-button.tsx", import.meta.url), "utf8");
+const checkoutRouteSource = readFileSync(new URL("../app/api/stripe/checkout/route.ts", import.meta.url), "utf8");
 const localeSource = readFileSync(new URL("./i18n.tsx", import.meta.url), "utf8");
 
 test("free recovery CTAs describe and preserve the existing 7-Day Recovery destination", () => {
@@ -32,7 +33,7 @@ test("community entry accurately routes new visitors to BASIC pricing", () => {
   assert.equal(communitySource.indexOf('href="/pricing#basic"') < communitySource.indexOf('href="/rhythm-journey"'), true);
 });
 
-test("BASIC is primary in each locale while checkout implementation remains unchanged", () => {
+test("BASIC is primary in each locale and checkout preserves the selected language", () => {
   assert.equal((localeSource.match(/key: "basic"/g) ?? []).length >= 3, true);
   assert.equal((localeSource.match(/orderClass: "order-1"/g) ?? []).length >= 3, true);
   assert.match(localeSource, /Daily Rhythm & Member Community/);
@@ -40,7 +41,12 @@ test("BASIC is primary in each locale while checkout implementation remains unch
   assert.match(localeSource, /朝・昼・夜のリズム/);
   assert.match(pricingSource, /<CheckoutButton\s+plan="basic"/);
   assert.match(checkoutSource, /fetch\("\/api\/stripe\/checkout"/);
-  assert.match(checkoutSource, /body: JSON\.stringify\(\{ plan, next:/);
+  assert.match(checkoutSource, /body: JSON\.stringify\(\{ plan, next: nextDestination \|\| undefined, language \}\)/);
+  assert.match(checkoutRouteSource, /language: z\.enum\(\["jp", "kr", "en"\]\)\.optional\(\)/);
+  assert.match(checkoutRouteSource, /jp: "ja"/);
+  assert.match(checkoutRouteSource, /kr: "ko"/);
+  assert.match(checkoutRouteSource, /en: "en"/);
+  assert.match(checkoutRouteSource, /locale: language/);
 });
 
 test("the public journey has the same product meaning in Japanese, Korean, and English", () => {
