@@ -152,6 +152,15 @@ test("recovery garden is rendered once and localized for JP KR and EN", () => {
   assert.match(basicHomeSource, /나의 리커버리 가든/);
 });
 
+test("BASIC presents the optional Komei course without making it a required path", () => {
+  assert.equal((basicHomeSource.match(/data-basic-komei-course/g) ?? []).length, 1);
+  assert.match(basicHomeSource, /光明チャクラコース/);
+  assert.match(basicHomeSource, /133,000円/);
+  assert.match(basicHomeSource, /MeisoLife BASICとは別料金の特別プログラムです/);
+  assert.match(basicHomeSource, /MeisoLife・ILCHI Brain Yoga/);
+  assert.doesNotMatch(basicHomeSource, /光ブコトレーニング/);
+});
+
 test("garden statistics use explicit visit-day and recovery-record labels in all three languages", () => {
   assert.match(basicHomeSource, /累計訪問日数/);
   assert.match(basicHomeSource, /累計回復記録/);
