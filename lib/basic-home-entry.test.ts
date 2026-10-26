@@ -146,7 +146,7 @@ test("section order keeps garden and recommendation ahead of the existing BASIC 
 });
 
 test("recovery garden is rendered once and localized for JP KR and EN", () => {
-  assert.equal((basicHomeSource.match(/data-basic-garden/g) ?? []).length, 1);
+  assert.equal((basicHomeSource.match(/data-basic-garden\n/g) ?? []).length, 1);
   assert.match(basicHomeSource, /MY RECOVERY GARDEN/);
   assert.match(basicHomeSource, /私のリカバリーガーデン/);
   assert.match(basicHomeSource, /나의 리커버리 가든/);
@@ -159,6 +159,13 @@ test("BASIC presents the optional Komei course without making it a required path
   assert.match(basicHomeSource, /MeisoLife BASICとは別料金の特別プログラムです/);
   assert.match(basicHomeSource, /MeisoLife・ILCHI Brain Yoga/);
   assert.doesNotMatch(basicHomeSource, /光ブコトレーニング/);
+});
+
+test("a Garden load failure keeps the rest of BASIC available after login", () => {
+  assert.match(basicProgramPageSource, /gardenStatus=\{dashboardState \? "ready" : dashboardLoadState === "error" \? "error" : "loading"\}/);
+  assert.match(basicHomeSource, /data-basic-garden-unavailable=\{gardenStatus\}/);
+  assert.match(basicHomeSource, /The rest of BASIC remains available/);
+  assert.match(basicHomeSource, /data-basic-komei-course/);
 });
 
 test("garden statistics use explicit visit-day and recovery-record labels in all three languages", () => {
@@ -341,8 +348,8 @@ test("basic-only content stays behind the existing basic membership guard", () =
 });
 
 test("canonical visit and recovery values are passed through unchanged", () => {
-  assert.match(basicProgramPageSource, /cumulativeVisitDays=\{dashboardState\.cumulativeVisitDays\}/);
-  assert.match(basicProgramPageSource, /cumulativeRecoveryRecords=\{dashboardState\.cumulativeRecoveryRecords\}/);
+  assert.match(basicProgramPageSource, /cumulativeVisitDays=\{dashboardState\?\.cumulativeVisitDays\}/);
+  assert.match(basicProgramPageSource, /cumulativeRecoveryRecords=\{dashboardState\?\.cumulativeRecoveryRecords\}/);
 });
 
 test("BASIC records a visit before rendering server-confirmed progress and keeps errors recoverable", () => {
@@ -356,8 +363,8 @@ test("BASIC records a visit before rendering server-confirmed progress and keeps
 test("a failed initial Garden request renders an explicit unavailable state instead of fabricated zero counters", () => {
   assert.match(basicProgramPageSource, /useState<DashboardState \| null>\(null\)/);
   assert.match(basicProgramPageSource, /dashboardLoadState === "error" && dashboardState/);
-  assert.match(basicProgramPageSource, /We could not load your Garden progress\. It will appear here once confirmed\./);
-  assert.match(basicProgramPageSource, /\{dashboardState \? \(/);
+  assert.match(basicHomeSource, /We could not load your Garden progress\. The rest of BASIC remains available\./);
+  assert.match(basicHomeSource, /gardenStatus !== "ready"/);
 });
 
 test("program basic hides the duplicate mobile tab row while preserving the hamburger menu", () => {
