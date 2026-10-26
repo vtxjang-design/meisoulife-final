@@ -95,7 +95,23 @@ const pageCopy = {
     openingPortal: "Opening...",
     noBillingDate: "--",
     unknownStatus: "Unknown",
-    membershipError: "メンバーシップ管理ページを開けませんでした"
+    membershipError: "メンバーシップ管理ページを開けませんでした",
+    komeiEyebrow: "OPTIONAL DEEPENING PROGRAM",
+    komeiTitle: "光明チャクラコース",
+    komeiLead: "自分自身と、より深く向き合うための3か月プログラムです。",
+    komeiBody: "マインドフリー瞑想と光明セッションを通して、自分の内面を見つめる時間をつくります。",
+    komeiDurationLabel: "期間",
+    komeiDuration: "3か月",
+    komeiMethodLabel: "方法",
+    komeiMethod: "オンライン・対面",
+    komeiPriceLabel: "料金",
+    komeiPrice: "133,000円",
+    komeiContentLabel: "内容",
+    komeiContent: "マインドフリー・光明セッション",
+    komeiOperator: "共同運営：MeisoLife・ILCHI Brain Yoga",
+    komeiOptional: "参加は自由です。MeisoLife BASICとは別料金の特別プログラムです。",
+    komeiConsultation: "内容や日程について知りたい方には、無料個別相談で詳しくご案内します。",
+    komeiDisclaimer: "特定の健康改善や心理的変化を保証するものではありません。支払方法、キャンセル・返金条件は、お申し込み前にご確認ください。"
   },
   kr: {
     badge: "BASIC RHYTHM",
@@ -137,7 +153,23 @@ const pageCopy = {
     openingPortal: "여는 중...",
     noBillingDate: "--",
     unknownStatus: "Unknown",
-    membershipError: "멤버십 관리 페이지를 열 수 없습니다"
+    membershipError: "멤버십 관리 페이지를 열 수 없습니다",
+    komeiEyebrow: "선택형 심화 프로그램",
+    komeiTitle: "광명 차크라 코스",
+    komeiLead: "자신과 더 깊이 마주하기 위한 3개월 프로그램입니다.",
+    komeiBody: "마인드프리 명상과 광명 세션을 통해 자신의 내면을 바라보는 시간을 만듭니다.",
+    komeiDurationLabel: "기간",
+    komeiDuration: "3개월",
+    komeiMethodLabel: "방식",
+    komeiMethod: "온라인·대면",
+    komeiPriceLabel: "비용",
+    komeiPrice: "133,000엔",
+    komeiContentLabel: "내용",
+    komeiContent: "마인드프리·광명 세션",
+    komeiOperator: "공동 운영: MeisoLife·ILCHI Brain Yoga",
+    komeiOptional: "참여는 자유이며 MeisoLife BASIC과 별도 비용의 특별 프로그램입니다.",
+    komeiConsultation: "내용과 일정은 무료 개별상담에서 자세히 안내합니다.",
+    komeiDisclaimer: "특정한 건강 개선이나 심리적 변화를 보장하지 않습니다. 결제, 취소 및 환불 조건은 신청 전에 확인해 주세요."
   },
   en: {
     badge: "BASIC RHYTHM",
@@ -179,7 +211,23 @@ const pageCopy = {
     openingPortal: "Opening...",
     noBillingDate: "--",
     unknownStatus: "Unknown",
-    membershipError: "We could not open the membership management page"
+    membershipError: "We could not open the membership management page",
+    komeiEyebrow: "OPTIONAL DEEPENING PROGRAM",
+    komeiTitle: "Komei Chakra Course",
+    komeiLead: "A three-month program for meeting yourself more deeply.",
+    komeiBody: "Mind Free meditation and Komei sessions create space to gently explore your inner life.",
+    komeiDurationLabel: "Duration",
+    komeiDuration: "3 months",
+    komeiMethodLabel: "Format",
+    komeiMethod: "Online and in person",
+    komeiPriceLabel: "Fee",
+    komeiPrice: "¥133,000",
+    komeiContentLabel: "Includes",
+    komeiContent: "Mind Free and Komei sessions",
+    komeiOperator: "Jointly offered by MeisoLife and ILCHI Brain Yoga",
+    komeiOptional: "Participation is optional. This program is separate from the MeisoLife BASIC membership fee.",
+    komeiConsultation: "A free individual consultation is available for details about the program and schedule.",
+    komeiDisclaimer: "This program does not guarantee specific health or psychological outcomes. Please confirm payment, cancellation, and refund terms before applying."
   }
 } as const;
 
@@ -897,6 +945,39 @@ export function BasicHome({
           })}
         </div>
       </div>
+
+      <section
+        data-basic-komei-course
+        className="relative overflow-hidden rounded-[28px] border border-[rgba(216,192,138,0.18)] bg-[radial-gradient(circle_at_82%_10%,rgba(216,192,138,0.14),transparent_30%),radial-gradient(circle_at_18%_0%,rgba(127,255,212,0.08),transparent_34%),linear-gradient(180deg,rgba(10,37,61,0.88),rgba(6,25,46,0.97))] px-5 py-6 shadow-[0_22px_58px_rgba(0,0,0,0.18)] sm:px-7 sm:py-7"
+      >
+        <div className="max-w-3xl">
+          <p className="text-xs uppercase tracking-[0.28em] text-[rgba(216,192,138,0.76)]">{copy.komeiEyebrow}</p>
+          <h2 className="mt-2 font-serif text-[1.55rem] leading-tight text-[rgba(244,250,255,0.97)] sm:text-[2rem]">{copy.komeiTitle}</h2>
+          <p className="mt-3 text-[15px] font-medium leading-6 text-[rgba(244,250,255,0.88)] sm:text-base">{copy.komeiLead}</p>
+          <p className="mt-2 text-sm leading-6 text-[rgba(233,242,248,0.7)] sm:text-[15px]">{copy.komeiBody}</p>
+        </div>
+
+        <dl className="mt-5 grid grid-cols-2 gap-px overflow-hidden rounded-[18px] border border-white/[0.08] bg-white/[0.08] sm:grid-cols-4">
+          {[
+            [copy.komeiDurationLabel, copy.komeiDuration],
+            [copy.komeiMethodLabel, copy.komeiMethod],
+            [copy.komeiPriceLabel, copy.komeiPrice],
+            [copy.komeiContentLabel, copy.komeiContent]
+          ].map(([label, value]) => (
+            <div key={label} className="min-w-0 bg-[rgba(7,29,51,0.94)] px-4 py-4">
+              <dt className="text-[10px] uppercase tracking-[0.18em] text-[rgba(233,242,248,0.46)]">{label}</dt>
+              <dd className="mt-1.5 text-sm leading-5 text-[rgba(244,250,255,0.9)]">{value}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <div className="mt-5 space-y-2 text-sm leading-6 text-[rgba(233,242,248,0.72)]">
+          <p>{copy.komeiOperator}</p>
+          <p>{copy.komeiOptional}</p>
+          <p className="text-[rgba(244,231,192,0.84)]">{copy.komeiConsultation}</p>
+          <p className="pt-1 text-xs leading-5 text-[rgba(233,242,248,0.48)]">{copy.komeiDisclaimer}</p>
+        </div>
+      </section>
     </section>
   );
 }
