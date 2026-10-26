@@ -3,8 +3,11 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import {
   getGuidedSpeechQueueAction,
+  GUIDED_SPEECH_START_TIMEOUT_MS,
   GUIDED_SPEECH_UNLOCK_TEXT,
-  GUIDED_SPEECH_UNLOCK_VOLUME
+  GUIDED_SPEECH_UNLOCK_VOLUME,
+  IOS_GUIDED_SPEECH_HANDOFF_MS,
+  usesIOSSpeechAudioSession
 } from "./guided-speech.ts";
 
 const meditationPageSource = readFileSync(new URL("../app/meditation/page.tsx", import.meta.url), "utf8");
@@ -82,4 +85,25 @@ test("guided media resumes after narration without changing the session timer", 
   );
   assert.match(meditationPageSource, /utterance\.onstart = markGuidedNarrationStarted;/);
   assert.match(meditationPageSource, /markGuidedNarrationFinished\(\);/);
+});
+
+test("iPhone and touch iPad receive an explicit speech audio-session handoff", () => {
+  assert.equal(usesIOSSpeechAudioSession("Mozilla/5.0 (iPhone; CPU iPhone OS 18_0)", "iPhone", 5), true);
+  assert.equal(usesIOSSpeechAudioSession("Mozilla/5.0 (Macintosh)", "MacIntel", 5), true);
+  assert.equal(usesIOSSpeechAudioSession("Mozilla/5.0 (Linux; Android 15)", "Linux armv8l", 5), false);
+  assert.equal(usesIOSSpeechAudioSession("Mozilla/5.0 (Macintosh)", "MacIntel", 0), false);
+  assert.equal(IOS_GUIDED_SPEECH_HANDOFF_MS, 180);
+  assert.equal(GUIDED_SPEECH_START_TIMEOUT_MS, 2500);
+});
+
+test("iOS pauses active media before speech and recovers if speech never starts", () => {
+  assert.match(
+    meditationPageSource,
+    /yieldActiveGateMediaForNarration\(\);[\s\S]*?IOS_GUIDED_SPEECH_HANDOFF_MS/
+  );
+  assert.match(
+    meditationPageSource,
+    /if \(!guidedNarrationStartedRef\.current\) \{\s*synth\.cancel\(\);\s*markGuidedNarrationFinished\(\);/
+  );
+  assert.equal((meditationPageSource.match(/speakGuidedUtterance\(/g) ?? []).length, 7);
 });
