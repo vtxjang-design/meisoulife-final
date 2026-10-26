@@ -82,7 +82,7 @@ test("Morning and Daytime start gestures unlock the completion audio context", (
   assert.match(meditationPageSource, /async function unlockCompletionChime\(\)/);
   assert.match(
     meditationPageSource,
-    /async function handleProgramAudioStart\(\)\s*\{\s*await unlockCompletionChime\(\);/
+    /async function handleProgramAudioStart\(\)[\s\S]*?await unlockCompletionChime\(\);/
   );
 });
 

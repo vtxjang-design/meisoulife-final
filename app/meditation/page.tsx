@@ -25,6 +25,11 @@ import {
   supportsMeditationVibration
 } from "@/lib/meditation-completion";
 import { getStructuredMorningSpeechSettings } from "@/lib/morning-gate-voice";
+import {
+  getGuidedSpeechQueueAction,
+  GUIDED_SPEECH_UNLOCK_TEXT,
+  GUIDED_SPEECH_UNLOCK_VOLUME
+} from "@/lib/guided-speech";
 import { getRhythmJourneyContent, journeyAudioMap } from "@/lib/rhythm-journey";
 import { getBasicPracticeByRouteType, getBasicPracticeBySession } from "@/lib/basic-rhythm";
 import { resolveMeditationRequiredPlan } from "@/lib/membership-access";
@@ -1344,6 +1349,30 @@ function requiresMobileAudioGesture() {
   const isTouchViewport = navigator.maxTouchPoints > 0 && window.matchMedia("(max-width: 768px)").matches;
 
   return isMobileUserAgent || isTouchViewport;
+}
+
+function primeSpeechSynthesisFromUserGesture(
+  synth: SpeechSynthesis,
+  settings: { lang: string; rate: number; pitch: number },
+  selectedVoice?: SpeechSynthesisVoice
+) {
+  synth.getVoices();
+
+  if (synth.paused) {
+    synth.resume();
+  }
+
+  const unlockUtterance = new SpeechSynthesisUtterance(GUIDED_SPEECH_UNLOCK_TEXT);
+  unlockUtterance.lang = settings.lang;
+  unlockUtterance.volume = GUIDED_SPEECH_UNLOCK_VOLUME;
+  unlockUtterance.rate = settings.rate;
+  unlockUtterance.pitch = settings.pitch;
+
+  if (selectedVoice) {
+    unlockUtterance.voice = selectedVoice;
+  }
+
+  synth.speak(unlockUtterance);
 }
 
 function getOrCreateAudioContext(audioContextRef: MutableRefObject<AudioContext | null>) {
@@ -2929,14 +2958,8 @@ function MeditationPageContent() {
         return;
       }
 
-      const unlockUtterance = new SpeechSynthesisUtterance("\u00A0");
-      unlockUtterance.lang = settings.lang;
-      unlockUtterance.volume = 0;
-      unlockUtterance.rate = settings.rate;
-      unlockUtterance.pitch = settings.pitch;
       structuredSpeechUnlockedRef.current = true;
-      synth.cancel();
-      synth.speak(unlockUtterance);
+      primeSpeechSynthesisFromUserGesture(synth, settings);
     } catch (error) {
       console.warn("[morning-gate] failed to unlock speech synthesis", error);
     }
@@ -2956,14 +2979,8 @@ function MeditationPageContent() {
         return;
       }
 
-      const unlockUtterance = new SpeechSynthesisUtterance("\u00A0");
-      unlockUtterance.lang = settings.lang;
-      unlockUtterance.volume = 0;
-      unlockUtterance.rate = settings.rate;
-      unlockUtterance.pitch = settings.pitch;
       focusSpeechUnlockedRef.current = true;
-      synth.cancel();
-      synth.speak(unlockUtterance);
+      primeSpeechSynthesisFromUserGesture(synth, settings);
     } catch (error) {
       console.warn("[focus-gate] failed to unlock speech synthesis", error);
     }
@@ -2997,14 +3014,8 @@ function MeditationPageContent() {
         return;
       }
 
-      const unlockUtterance = new SpeechSynthesisUtterance("\u00A0");
-      unlockUtterance.lang = settings.lang;
-      unlockUtterance.volume = 0;
-      unlockUtterance.rate = settings.rate;
-      unlockUtterance.pitch = settings.pitch;
       calmSpeechUnlockedRef.current = true;
-      synth.cancel();
-      synth.speak(unlockUtterance);
+      primeSpeechSynthesisFromUserGesture(synth, settings);
     } catch (error) {
       console.warn("[calm-gate] failed to unlock speech synthesis", error);
     }
@@ -3025,17 +3036,8 @@ function MeditationPageContent() {
         return;
       }
 
-      const unlockUtterance = new SpeechSynthesisUtterance("\u00A0");
-      unlockUtterance.lang = settings.lang;
-      unlockUtterance.volume = 0;
-      unlockUtterance.rate = settings.rate;
-      unlockUtterance.pitch = settings.pitch;
-      if (selectedVoice) {
-        unlockUtterance.voice = selectedVoice;
-      }
       releaseSpeechUnlockedRef.current = true;
-      synth.cancel();
-      synth.speak(unlockUtterance);
+      primeSpeechSynthesisFromUserGesture(synth, settings, selectedVoice);
     } catch (error) {
       console.warn("[release-gate] failed to unlock speech synthesis", error);
     }
@@ -3056,17 +3058,8 @@ function MeditationPageContent() {
         return;
       }
 
-      const unlockUtterance = new SpeechSynthesisUtterance("\u00A0");
-      unlockUtterance.lang = settings.lang;
-      unlockUtterance.volume = 0;
-      unlockUtterance.rate = settings.rate;
-      unlockUtterance.pitch = settings.pitch;
-      if (selectedVoice) {
-        unlockUtterance.voice = selectedVoice;
-      }
       gratitudeSpeechUnlockedRef.current = true;
-      synth.cancel();
-      synth.speak(unlockUtterance);
+      primeSpeechSynthesisFromUserGesture(synth, settings, selectedVoice);
     } catch (error) {
       console.warn("[gratitude-gate] failed to unlock speech synthesis", error);
     }
@@ -3087,17 +3080,8 @@ function MeditationPageContent() {
         return;
       }
 
-      const unlockUtterance = new SpeechSynthesisUtterance("\u00A0");
-      unlockUtterance.lang = settings.lang;
-      unlockUtterance.volume = 0;
-      unlockUtterance.rate = settings.rate;
-      unlockUtterance.pitch = settings.pitch;
-      if (selectedVoice) {
-        unlockUtterance.voice = selectedVoice;
-      }
       sleepSpeechUnlockedRef.current = true;
-      synth.cancel();
-      synth.speak(unlockUtterance);
+      primeSpeechSynthesisFromUserGesture(synth, settings, selectedVoice);
     } catch (error) {
       console.warn("[sleep-gate] failed to unlock speech synthesis", error);
     }
@@ -3606,13 +3590,18 @@ function MeditationPageContent() {
             return;
           }
 
-          if (synth.speaking || synth.pending) {
-            if (attempt >= 12) {
+          const queueAction = getGuidedSpeechQueueAction(synth, attempt, 12);
+          if (queueAction !== "speak") {
+            if (queueAction === "cancel-and-retry") {
               synth.cancel();
-            } else {
-              structuredSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(attempt + 1), 140);
-              return;
             }
+            if (queueAction !== "stop") {
+              structuredSpeechTimeoutRef.current = window.setTimeout(
+                () => queueSpeak(attempt + 1),
+                queueAction === "retry" ? 140 : 120
+              );
+            }
+            return;
           }
 
           const utterance = new SpeechSynthesisUtterance(nextLine.speechText ?? nextLine.text);
@@ -3652,7 +3641,9 @@ function MeditationPageContent() {
             structuredSpeechTimeoutRef.current = null;
           };
 
-          synth.cancel();
+          if (synth.paused) {
+            synth.resume();
+          }
           synth.speak(utterance);
         };
 
@@ -3746,13 +3737,18 @@ function MeditationPageContent() {
           return;
         }
 
-        if (synth.speaking || synth.pending) {
-          if (attempt >= 16) {
+        const queueAction = getGuidedSpeechQueueAction(synth, attempt, 16);
+        if (queueAction !== "speak") {
+          if (queueAction === "cancel-and-retry") {
             synth.cancel();
-          } else {
-            focusSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(attempt + 1), 180);
-            return;
           }
+          if (queueAction !== "stop") {
+            focusSpeechTimeoutRef.current = window.setTimeout(
+              () => queueSpeak(attempt + 1),
+              queueAction === "retry" ? 180 : 120
+            );
+          }
+          return;
         }
 
         const utterance = new SpeechSynthesisUtterance(nextLine.speechText ?? nextLine.text);
@@ -3787,6 +3783,9 @@ function MeditationPageContent() {
           focusSpeechTimeoutRef.current = null;
         };
 
+        if (synth.paused) {
+          synth.resume();
+        }
         synth.speak(utterance);
       };
 
@@ -3838,13 +3837,18 @@ function MeditationPageContent() {
           return;
         }
 
-        if (synth.speaking || synth.pending) {
-          if (attempt >= 12) {
+        const queueAction = getGuidedSpeechQueueAction(synth, attempt, 12);
+        if (queueAction !== "speak") {
+          if (queueAction === "cancel-and-retry") {
             synth.cancel();
-          } else {
-            calmSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(attempt + 1), 160);
-            return;
           }
+          if (queueAction !== "stop") {
+            calmSpeechTimeoutRef.current = window.setTimeout(
+              () => queueSpeak(attempt + 1),
+              queueAction === "retry" ? 160 : 120
+            );
+          }
+          return;
         }
 
         const utterance = new SpeechSynthesisUtterance(nextLine.speechText ?? nextLine.text);
@@ -3879,7 +3883,9 @@ function MeditationPageContent() {
           calmSpeechTimeoutRef.current = null;
         };
 
-        synth.cancel();
+        if (synth.paused) {
+          synth.resume();
+        }
         synth.speak(utterance);
       };
 
@@ -3931,13 +3937,18 @@ function MeditationPageContent() {
           return;
         }
 
-        if (synth.speaking || synth.pending) {
-          if (attempt >= 16) {
+        const queueAction = getGuidedSpeechQueueAction(synth, attempt, 16);
+        if (queueAction !== "speak") {
+          if (queueAction === "cancel-and-retry") {
             synth.cancel();
-          } else {
-            releaseSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(attempt + 1), 180);
-            return;
           }
+          if (queueAction !== "stop") {
+            releaseSpeechTimeoutRef.current = window.setTimeout(
+              () => queueSpeak(attempt + 1),
+              queueAction === "retry" ? 180 : 120
+            );
+          }
+          return;
         }
 
         const utterance = new SpeechSynthesisUtterance(nextLine.speechText ?? nextLine.text);
@@ -3972,7 +3983,9 @@ function MeditationPageContent() {
           releaseSpeechTimeoutRef.current = null;
         };
 
-        synth.cancel();
+        if (synth.paused) {
+          synth.resume();
+        }
         synth.speak(utterance);
       };
 
@@ -4024,13 +4037,18 @@ function MeditationPageContent() {
           return;
         }
 
-        if (synth.speaking || synth.pending) {
-          if (attempt >= 16) {
+        const queueAction = getGuidedSpeechQueueAction(synth, attempt, 16);
+        if (queueAction !== "speak") {
+          if (queueAction === "cancel-and-retry") {
             synth.cancel();
-          } else {
-            gratitudeSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(attempt + 1), 180);
-            return;
           }
+          if (queueAction !== "stop") {
+            gratitudeSpeechTimeoutRef.current = window.setTimeout(
+              () => queueSpeak(attempt + 1),
+              queueAction === "retry" ? 180 : 120
+            );
+          }
+          return;
         }
 
         const utterance = new SpeechSynthesisUtterance(nextLine.speechText ?? nextLine.text);
@@ -4065,7 +4083,9 @@ function MeditationPageContent() {
           gratitudeSpeechTimeoutRef.current = null;
         };
 
-        synth.cancel();
+        if (synth.paused) {
+          synth.resume();
+        }
         synth.speak(utterance);
       };
 
@@ -4117,13 +4137,18 @@ function MeditationPageContent() {
           return;
         }
 
-        if (synth.speaking || synth.pending) {
-          if (attempt >= 18) {
+        const queueAction = getGuidedSpeechQueueAction(synth, attempt, 18);
+        if (queueAction !== "speak") {
+          if (queueAction === "cancel-and-retry") {
             synth.cancel();
-          } else {
-            sleepSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(attempt + 1), 220);
-            return;
           }
+          if (queueAction !== "stop") {
+            sleepSpeechTimeoutRef.current = window.setTimeout(
+              () => queueSpeak(attempt + 1),
+              queueAction === "retry" ? 220 : 120
+            );
+          }
+          return;
         }
 
         const utterance = new SpeechSynthesisUtterance(nextLine.speechText ?? nextLine.text);
@@ -4158,7 +4183,9 @@ function MeditationPageContent() {
           sleepSpeechTimeoutRef.current = null;
         };
 
-        synth.cancel();
+        if (synth.paused) {
+          synth.resume();
+        }
         synth.speak(utterance);
       };
 
@@ -4579,6 +4606,19 @@ function MeditationPageContent() {
   }
 
   async function handleProgramAudioStart() {
+    if (!isRechargeGate) {
+      setHasUserGesture(true);
+      setRequiresExplicitAudioStart(false);
+      setNeedsUserStart(false);
+      setIsPaused(false);
+      unlockStructuredMorningSpeech();
+      unlockFocusGateSpeech();
+      unlockCalmGateSpeech();
+      unlockReleaseGateSpeech();
+      unlockGratitudeGateSpeech();
+      unlockSleepGateSpeech();
+    }
+
     await unlockCompletionChime();
 
     if (isRechargeGate) {
@@ -4658,16 +4698,6 @@ function MeditationPageContent() {
       return;
     }
 
-    setHasUserGesture(true);
-    setRequiresExplicitAudioStart(false);
-    setNeedsUserStart(false);
-    setIsPaused(false);
-    unlockStructuredMorningSpeech();
-    unlockFocusGateSpeech();
-    unlockCalmGateSpeech();
-    unlockReleaseGateSpeech();
-    unlockGratitudeGateSpeech();
-    unlockSleepGateSpeech();
     logStructuredMorningAmbientState("program-start-tap");
 
     if (isFocusGate) {
