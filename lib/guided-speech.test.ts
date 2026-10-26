@@ -60,3 +60,26 @@ test("guided narration never speaks immediately after canceling the mobile queue
   assert.doesNotMatch(meditationPageSource, /synth\.cancel\(\);\s*synth\.speak\(/);
   assert.match(meditationPageSource, /if \(synth\.paused\) \{\s*synth\.resume\(\);/);
 });
+
+test("mobile media interruptions do not become user pause actions", () => {
+  for (const gate of ["release", "gratitude", "sleep"]) {
+    assert.match(
+      meditationPageSource,
+      new RegExp(`\\[${gate}-gate\\] media yielded to narration`)
+    );
+  }
+
+  assert.doesNotMatch(
+    meditationPageSource,
+    /onPause=\{\(\) => \{\s*if \(!isCompleteRef\.current\) \{\s*setIsPaused\(true\);/
+  );
+});
+
+test("guided media resumes after narration without changing the session timer", () => {
+  assert.match(
+    meditationPageSource,
+    /function markGuidedNarrationFinished\(\)[\s\S]*?resumeActiveGateMediaAfterNarration\(\);/
+  );
+  assert.match(meditationPageSource, /utterance\.onstart = markGuidedNarrationStarted;/);
+  assert.match(meditationPageSource, /markGuidedNarrationFinished\(\);/);
+});

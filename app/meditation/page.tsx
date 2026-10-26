@@ -1587,6 +1587,7 @@ function MeditationPageContent() {
   const releaseSpeechUnlockedRef = useRef(false);
   const gratitudeSpeechUnlockedRef = useRef(false);
   const sleepSpeechUnlockedRef = useRef(false);
+  const guidedNarrationActiveRef = useRef(false);
   const releaseJapaneseVoiceSessionRef = useRef(createJapaneseEveningVoiceSession<SpeechSynthesisVoice>());
   const gratitudeJapaneseVoiceSessionRef = useRef(createJapaneseEveningVoiceSession<SpeechSynthesisVoice>());
   const sleepJapaneseVoiceSessionRef = useRef(createJapaneseEveningVoiceSession<SpeechSynthesisVoice>());
@@ -1837,6 +1838,8 @@ function MeditationPageContent() {
     if (typeof window === "undefined") {
       return;
     }
+
+    guidedNarrationActiveRef.current = false;
 
     if (structuredSpeechTimeoutRef.current) {
       window.clearTimeout(structuredSpeechTimeoutRef.current);
@@ -2888,6 +2891,38 @@ function MeditationPageContent() {
     }
   }
 
+  function resumeActiveGateMediaAfterNarration() {
+    if (isPausedRef.current || isCompleteRef.current) {
+      return;
+    }
+
+    if (isStructuredMorningGate) {
+      void resumeStructuredMorningAmbient();
+    } else if (isFocusGate) {
+      void playFocusGateVideo();
+    } else if (isCalmGate) {
+      void playCalmGateVideo();
+    } else if (isReleaseGate) {
+      void playReleaseGateVideo();
+    } else if (isGratitudeGate) {
+      void playGratitudeGateVideo();
+    } else if (isSleepGate) {
+      void playSleepGateVideo();
+    }
+  }
+
+  function markGuidedNarrationStarted() {
+    guidedNarrationActiveRef.current = true;
+  }
+
+  function markGuidedNarrationFinished() {
+    guidedNarrationActiveRef.current = false;
+
+    window.setTimeout(() => {
+      resumeActiveGateMediaAfterNarration();
+    }, 80);
+  }
+
   async function playEnergyGateVideo() {
     if (!isEnergyGate || typeof window === "undefined") {
       return;
@@ -3621,6 +3656,7 @@ function MeditationPageContent() {
           }
 
           utterance.onstart = () => {
+            markGuidedNarrationStarted();
             console.log("[Morning Gate Narration] started", {
               gate: meditationDoor,
               language,
@@ -3629,6 +3665,7 @@ function MeditationPageContent() {
             });
           };
           utterance.onerror = (event) => {
+            markGuidedNarrationFinished();
             console.error("[Morning Gate Narration] failed", {
               gate: meditationDoor,
               language,
@@ -3638,6 +3675,7 @@ function MeditationPageContent() {
             structuredSpeechTimeoutRef.current = null;
           };
           utterance.onend = () => {
+            markGuidedNarrationFinished();
             structuredSpeechTimeoutRef.current = null;
           };
 
@@ -3770,11 +3808,14 @@ function MeditationPageContent() {
           utterance.voice = selectedVoice;
         }
 
+        utterance.onstart = markGuidedNarrationStarted;
         utterance.onend = () => {
+          markGuidedNarrationFinished();
           focusSpeechTimeoutRef.current = null;
         };
 
         utterance.onerror = (event) => {
+          markGuidedNarrationFinished();
           console.error("[focus-gate] narration failed", {
             language: localizedLanguage,
             key: nextLine.key,
@@ -3870,11 +3911,14 @@ function MeditationPageContent() {
           utterance.voice = selectedVoice;
         }
 
+        utterance.onstart = markGuidedNarrationStarted;
         utterance.onend = () => {
+          markGuidedNarrationFinished();
           calmSpeechTimeoutRef.current = null;
         };
 
         utterance.onerror = (event) => {
+          markGuidedNarrationFinished();
           console.error("[calm-gate] narration failed", {
             language: localizedLanguage,
             key: nextLine.key,
@@ -3970,11 +4014,14 @@ function MeditationPageContent() {
           utterance.voice = selectedVoice;
         }
 
+        utterance.onstart = markGuidedNarrationStarted;
         utterance.onend = () => {
+          markGuidedNarrationFinished();
           releaseSpeechTimeoutRef.current = null;
         };
 
         utterance.onerror = (event) => {
+          markGuidedNarrationFinished();
           console.error("[release-gate] narration failed", {
             language: localizedLanguage,
             key: nextLine.key,
@@ -4070,11 +4117,14 @@ function MeditationPageContent() {
           utterance.voice = selectedVoice;
         }
 
+        utterance.onstart = markGuidedNarrationStarted;
         utterance.onend = () => {
+          markGuidedNarrationFinished();
           gratitudeSpeechTimeoutRef.current = null;
         };
 
         utterance.onerror = (event) => {
+          markGuidedNarrationFinished();
           console.error("[gratitude-gate] narration failed", {
             language: localizedLanguage,
             key: nextLine.key,
@@ -4170,11 +4220,14 @@ function MeditationPageContent() {
           utterance.voice = selectedVoice;
         }
 
+        utterance.onstart = markGuidedNarrationStarted;
         utterance.onend = () => {
+          markGuidedNarrationFinished();
           sleepSpeechTimeoutRef.current = null;
         };
 
         utterance.onerror = (event) => {
+          markGuidedNarrationFinished();
           console.error("[sleep-gate] narration failed", {
             language: localizedLanguage,
             key: nextLine.key,
@@ -4959,8 +5012,8 @@ function MeditationPageContent() {
               setAmbientVideoFailed(false);
             }}
             onPause={() => {
-              if (!isCompleteRef.current) {
-                setIsPaused(true);
+              if (guidedNarrationActiveRef.current) {
+                console.debug("[release-gate] media yielded to narration");
               }
             }}
             onEnded={() => {
@@ -4987,8 +5040,8 @@ function MeditationPageContent() {
               setAmbientVideoFailed(false);
             }}
             onPause={() => {
-              if (!isCompleteRef.current) {
-                setIsPaused(true);
+              if (guidedNarrationActiveRef.current) {
+                console.debug("[gratitude-gate] media yielded to narration");
               }
             }}
             onEnded={() => {
@@ -5015,8 +5068,8 @@ function MeditationPageContent() {
               setAmbientVideoFailed(false);
             }}
             onPause={() => {
-              if (!isCompleteRef.current) {
-                setIsPaused(true);
+              if (guidedNarrationActiveRef.current) {
+                console.debug("[sleep-gate] media yielded to narration");
               }
             }}
             onEnded={() => {
