@@ -271,43 +271,18 @@ function BasicProgramContent() {
             </div>
           </div>
         ) : null}
-        {dashboardState ? (
-          <BasicHome
-            cumulativeVisitDays={dashboardState.cumulativeVisitDays}
-            cumulativeRecoveryRecords={dashboardState.cumulativeRecoveryRecords}
-            todayDistinctGateCount={dashboardState.todayDistinctGateCount}
-            gardenGrowthMoment={dashboardState.growthMoment}
-            planKey={plan}
-            membershipResolved={planResolved}
-            defaultRhythm={defaultRhythm}
-            membershipSummary={membershipSummary}
-          />
-        ) : (
-          <div role={dashboardLoadState === "error" ? "alert" : "status"} className="rounded-2xl border border-gold/30 bg-[#09131d]/84 px-4 py-5 text-sm text-white/82">
-            <p>
-              {dashboardLoadState === "error"
-                ? language === "kr"
-                  ? "가든 기록을 불러오지 못했습니다. 기록이 확인되면 여기에 표시됩니다."
-                  : language === "jp"
-                    ? "ガーデンの記録を読み込めませんでした。確認でき次第、ここに表示されます。"
-                    : "We could not load your Garden progress. It will appear here once confirmed."
-                : language === "kr"
-                  ? "가든 기록을 불러오고 있습니다..."
-                  : language === "jp"
-                    ? "ガーデンの記録を読み込んでいます..."
-                    : "Loading your Garden progress..."}
-            </p>
-            {dashboardLoadState === "error" ? (
-              <button
-                type="button"
-                className="mt-2 rounded-full border border-gold/45 px-3 py-1.5 text-xs font-semibold text-gold transition hover:bg-gold/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
-                onClick={() => setDashboardRetry((value) => value + 1)}
-              >
-                {language === "kr" ? "다시 시도" : language === "jp" ? "再試行" : "Try again"}
-              </button>
-            ) : null}
-          </div>
-        )}
+        <BasicHome
+          cumulativeVisitDays={dashboardState?.cumulativeVisitDays}
+          cumulativeRecoveryRecords={dashboardState?.cumulativeRecoveryRecords}
+          todayDistinctGateCount={dashboardState?.todayDistinctGateCount}
+          gardenGrowthMoment={dashboardState?.growthMoment}
+          gardenStatus={dashboardState ? "ready" : dashboardLoadState === "error" ? "error" : "loading"}
+          onGardenRetry={() => setDashboardRetry((value) => value + 1)}
+          planKey={plan}
+          membershipResolved={planResolved}
+          defaultRhythm={defaultRhythm}
+          membershipSummary={membershipSummary}
+        />
         {dashboardLoadState === "error" && dashboardState ? (
           <div role="alert" className="mt-4 rounded-2xl border border-gold/30 bg-[#09131d]/84 px-4 py-3 text-sm text-white/82">
             <p>
