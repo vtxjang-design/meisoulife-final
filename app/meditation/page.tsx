@@ -27,11 +27,8 @@ import {
 import { getStructuredMorningSpeechSettings } from "@/lib/morning-gate-voice";
 import {
   getGuidedSpeechQueueAction,
-  GUIDED_SPEECH_START_TIMEOUT_MS,
   GUIDED_SPEECH_UNLOCK_TEXT,
-  GUIDED_SPEECH_UNLOCK_VOLUME,
-  IOS_GUIDED_SPEECH_HANDOFF_MS,
-  usesIOSSpeechAudioSession
+  GUIDED_SPEECH_UNLOCK_VOLUME
 } from "@/lib/guided-speech";
 import { getRhythmJourneyContent, journeyAudioMap } from "@/lib/rhythm-journey";
 import { getBasicPracticeByRouteType, getBasicPracticeBySession } from "@/lib/basic-rhythm";
@@ -1591,9 +1588,6 @@ function MeditationPageContent() {
   const gratitudeSpeechUnlockedRef = useRef(false);
   const sleepSpeechUnlockedRef = useRef(false);
   const guidedNarrationActiveRef = useRef(false);
-  const guidedNarrationStartedRef = useRef(false);
-  const guidedNarrationStartTimeoutRef = useRef<number | null>(null);
-  const guidedNarrationWatchdogRef = useRef<number | null>(null);
   const releaseJapaneseVoiceSessionRef = useRef(createJapaneseEveningVoiceSession<SpeechSynthesisVoice>());
   const gratitudeJapaneseVoiceSessionRef = useRef(createJapaneseEveningVoiceSession<SpeechSynthesisVoice>());
   const sleepJapaneseVoiceSessionRef = useRef(createJapaneseEveningVoiceSession<SpeechSynthesisVoice>());
@@ -1846,16 +1840,6 @@ function MeditationPageContent() {
     }
 
     guidedNarrationActiveRef.current = false;
-    guidedNarrationStartedRef.current = false;
-
-    if (guidedNarrationStartTimeoutRef.current !== null) {
-      window.clearTimeout(guidedNarrationStartTimeoutRef.current);
-      guidedNarrationStartTimeoutRef.current = null;
-    }
-    if (guidedNarrationWatchdogRef.current !== null) {
-      window.clearTimeout(guidedNarrationWatchdogRef.current);
-      guidedNarrationWatchdogRef.current = null;
-    }
 
     if (structuredSpeechTimeoutRef.current) {
       window.clearTimeout(structuredSpeechTimeoutRef.current);
@@ -2927,97 +2911,16 @@ function MeditationPageContent() {
     }
   }
 
-  function shouldYieldMediaToIOSNarration() {
-    return (
-      typeof navigator !== "undefined" &&
-      usesIOSSpeechAudioSession(navigator.userAgent || "", navigator.platform || "", navigator.maxTouchPoints)
-    );
-  }
-
-  function yieldActiveGateMediaForNarration() {
-    if (isAffirmationGate) {
-      affirmationVideoRef.current?.pause();
-    } else if (isVisionGate) {
-      visionVideoRef.current?.pause();
-    } else if (isEnergyGate) {
-      pauseAmbientNatureAudio(ambientAudioRef);
-    } else if (isFocusGate) {
-      focusVideoRef.current?.pause();
-    } else if (isCalmGate) {
-      calmVideoRef.current?.pause();
-    } else if (isReleaseGate) {
-      releaseVideoRef.current?.pause();
-    } else if (isGratitudeGate) {
-      gratitudeVideoRef.current?.pause();
-    } else if (isSleepGate) {
-      sleepVideoRef.current?.pause();
-    }
-  }
-
   function markGuidedNarrationStarted() {
     guidedNarrationActiveRef.current = true;
-    guidedNarrationStartedRef.current = true;
-
-    if (guidedNarrationWatchdogRef.current !== null) {
-      window.clearTimeout(guidedNarrationWatchdogRef.current);
-      guidedNarrationWatchdogRef.current = null;
-    }
   }
 
   function markGuidedNarrationFinished() {
     guidedNarrationActiveRef.current = false;
-    guidedNarrationStartedRef.current = false;
-
-    if (guidedNarrationStartTimeoutRef.current !== null) {
-      window.clearTimeout(guidedNarrationStartTimeoutRef.current);
-      guidedNarrationStartTimeoutRef.current = null;
-    }
-    if (guidedNarrationWatchdogRef.current !== null) {
-      window.clearTimeout(guidedNarrationWatchdogRef.current);
-      guidedNarrationWatchdogRef.current = null;
-    }
 
     window.setTimeout(() => {
       resumeActiveGateMediaAfterNarration();
     }, 80);
-  }
-
-  function speakGuidedUtterance(
-    synth: SpeechSynthesis,
-    utterance: SpeechSynthesisUtterance,
-    canStart: () => boolean
-  ) {
-    const startSpeech = () => {
-      guidedNarrationStartTimeoutRef.current = null;
-
-      if (!canStart()) {
-        markGuidedNarrationFinished();
-        return;
-      }
-
-      if (synth.paused) {
-        synth.resume();
-      }
-
-      guidedNarrationWatchdogRef.current = window.setTimeout(() => {
-        guidedNarrationWatchdogRef.current = null;
-        if (!guidedNarrationStartedRef.current) {
-          synth.cancel();
-          markGuidedNarrationFinished();
-        }
-      }, GUIDED_SPEECH_START_TIMEOUT_MS);
-      synth.speak(utterance);
-    };
-
-    if (shouldYieldMediaToIOSNarration()) {
-      guidedNarrationActiveRef.current = true;
-      guidedNarrationStartedRef.current = false;
-      yieldActiveGateMediaForNarration();
-      guidedNarrationStartTimeoutRef.current = window.setTimeout(startSpeech, IOS_GUIDED_SPEECH_HANDOFF_MS);
-      return;
-    }
-
-    startSpeech();
   }
 
   async function playEnergyGateVideo() {
@@ -3776,14 +3679,10 @@ function MeditationPageContent() {
             structuredSpeechTimeoutRef.current = null;
           };
 
-          speakGuidedUtterance(
-            synth,
-            utterance,
-            () =>
-              structuredSpeechSequenceRef.current === speechSequence &&
-              !isPausedRef.current &&
-              !isCompleteRef.current
-          );
+          if (synth.paused) {
+            synth.resume();
+          }
+          synth.speak(utterance);
         };
 
         structuredSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(0), speechDelayMs);
@@ -3925,14 +3824,10 @@ function MeditationPageContent() {
           focusSpeechTimeoutRef.current = null;
         };
 
-        speakGuidedUtterance(
-          synth,
-          utterance,
-          () =>
-            focusSpeechSequenceRef.current === speechSequence &&
-            !isPausedRef.current &&
-            !isCompleteRef.current
-        );
+        if (synth.paused) {
+          synth.resume();
+        }
+        synth.speak(utterance);
       };
 
       focusSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(0), speechDelayMs);
@@ -4032,14 +3927,10 @@ function MeditationPageContent() {
           calmSpeechTimeoutRef.current = null;
         };
 
-        speakGuidedUtterance(
-          synth,
-          utterance,
-          () =>
-            calmSpeechSequenceRef.current === speechSequence &&
-            !isPausedRef.current &&
-            !isCompleteRef.current
-        );
+        if (synth.paused) {
+          synth.resume();
+        }
+        synth.speak(utterance);
       };
 
       calmSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(0), speechDelayMs);
@@ -4139,14 +4030,10 @@ function MeditationPageContent() {
           releaseSpeechTimeoutRef.current = null;
         };
 
-        speakGuidedUtterance(
-          synth,
-          utterance,
-          () =>
-            releaseSpeechSequenceRef.current === speechSequence &&
-            !isPausedRef.current &&
-            !isCompleteRef.current
-        );
+        if (synth.paused) {
+          synth.resume();
+        }
+        synth.speak(utterance);
       };
 
       releaseSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(0), speechDelayMs);
@@ -4246,14 +4133,10 @@ function MeditationPageContent() {
           gratitudeSpeechTimeoutRef.current = null;
         };
 
-        speakGuidedUtterance(
-          synth,
-          utterance,
-          () =>
-            gratitudeSpeechSequenceRef.current === speechSequence &&
-            !isPausedRef.current &&
-            !isCompleteRef.current
-        );
+        if (synth.paused) {
+          synth.resume();
+        }
+        synth.speak(utterance);
       };
 
       gratitudeSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(0), speechDelayMs);
@@ -4353,14 +4236,10 @@ function MeditationPageContent() {
           sleepSpeechTimeoutRef.current = null;
         };
 
-        speakGuidedUtterance(
-          synth,
-          utterance,
-          () =>
-            sleepSpeechSequenceRef.current === speechSequence &&
-            !isPausedRef.current &&
-            !isCompleteRef.current
-        );
+        if (synth.paused) {
+          synth.resume();
+        }
+        synth.speak(utterance);
       };
 
       sleepSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(0), speechDelayMs);
