@@ -27,6 +27,8 @@ type BasicHomeProps = {
   cumulativeRecoveryRecords?: number;
   todayDistinctGateCount?: number;
   gardenGrowthMoment?: BasicGardenGrowthMoment | null;
+  gardenStatus?: "loading" | "ready" | "error";
+  onGardenRetry?: () => void;
   planKey?: PlanKey;
   membershipResolved?: boolean;
   defaultRhythm?: "morning" | "day" | "night";
@@ -64,6 +66,9 @@ const pageCopy = {
     gardenLabel: "私のリカバリーガーデン",
     gardenHeadline: "今日までの回復が、\nここに静かに残っています。",
     gardenBody: "記録されている回復だけを、静かに表示しています。",
+    gardenLoading: "ガーデンの記録を読み込んでいます...",
+    gardenUnavailable: "ガーデンの記録を読み込めませんでした。ほかのBASICコンテンツはそのままご利用いただけます。",
+    gardenRetry: "再試行",
     todayResting: "今日の庭は、あなたのリズムを静かに待っています。",
     todayFirst: "最初の回復の光が、庭に届きました。",
     todaySecond: "今日、あなたのリズムがゆっくり戻っています。",
@@ -122,6 +127,9 @@ const pageCopy = {
     gardenLabel: "나의 리커버리 가든",
     gardenHeadline: "오늘까지의 회복이,\n여기에 조용히 남아 있습니다.",
     gardenBody: "이미 기록된 회복만 조용히 보여줍니다.",
+    gardenLoading: "가든 기록을 불러오고 있습니다...",
+    gardenUnavailable: "가든 기록을 불러오지 못했습니다. 다른 BASIC 콘텐츠는 계속 이용할 수 있습니다.",
+    gardenRetry: "다시 시도",
     todayResting: "오늘의 가든은 당신의 리듬을 조용히 기다리고 있습니다.",
     todayFirst: "첫 번째 회복의 빛이 가든에 닿았습니다.",
     todaySecond: "오늘 당신의 리듬이 천천히 돌아오고 있습니다.",
@@ -180,6 +188,9 @@ const pageCopy = {
     gardenLabel: "MY RECOVERY GARDEN",
     gardenHeadline: "Your recorded recovery\nis resting here, quietly.",
     gardenBody: "This view quietly shows only recovery already recorded in your account.",
+    gardenLoading: "Loading your Garden progress...",
+    gardenUnavailable: "We could not load your Garden progress. The rest of BASIC remains available.",
+    gardenRetry: "Try again",
     todayResting: "Your Garden is quietly waiting for your rhythm today.",
     todayFirst: "The first light of recovery has reached your Garden.",
     todaySecond: "Your rhythm is slowly returning today.",
@@ -314,6 +325,8 @@ export function BasicHome({
   cumulativeRecoveryRecords = 0,
   todayDistinctGateCount = 0,
   gardenGrowthMoment = null,
+  gardenStatus = "ready",
+  onGardenRetry,
   defaultRhythm,
   membershipSummary
 }: BasicHomeProps) {
@@ -696,10 +709,28 @@ export function BasicHome({
         {portalError ? <p className="mt-1.5 text-xs text-[#f3c7b8]">{portalError}</p> : null}
       </section>
 
-      <section
-        data-basic-garden
-        className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.09),transparent_36%),radial-gradient(circle_at_78%_16%,rgba(216,192,138,0.12),transparent_32%),linear-gradient(180deg,rgba(9,34,59,0.78),rgba(7,27,50,0.90)_54%,rgba(5,18,34,0.97))] px-4 py-3.5 shadow-[0_24px_72px_rgba(0,0,0,0.16)] sm:px-6 sm:py-[1.375rem]"
-      >
+      {gardenStatus !== "ready" ? (
+        <section
+          data-basic-garden-unavailable={gardenStatus}
+          role={gardenStatus === "error" ? "alert" : "status"}
+          className="rounded-[24px] border border-gold/30 bg-[#09131d]/84 px-5 py-5 text-sm text-white/82"
+        >
+          <p>{gardenStatus === "error" ? copy.gardenUnavailable : copy.gardenLoading}</p>
+          {gardenStatus === "error" && onGardenRetry ? (
+            <button
+              type="button"
+              className="mt-3 rounded-full border border-gold/45 px-3 py-1.5 text-xs font-semibold text-gold transition hover:bg-gold/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+              onClick={onGardenRetry}
+            >
+              {copy.gardenRetry}
+            </button>
+          ) : null}
+        </section>
+      ) : (
+        <section
+          data-basic-garden
+          className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(127,255,212,0.09),transparent_36%),radial-gradient(circle_at_78%_16%,rgba(216,192,138,0.12),transparent_32%),linear-gradient(180deg,rgba(9,34,59,0.78),rgba(7,27,50,0.90)_54%,rgba(5,18,34,0.97))] px-4 py-3.5 shadow-[0_24px_72px_rgba(0,0,0,0.16)] sm:px-6 sm:py-[1.375rem]"
+        >
         <div className="flex flex-col gap-2.5 lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-5">
           <div className="order-1">
             <div className="flex items-start justify-between gap-3 lg:hidden">
@@ -745,7 +776,8 @@ export function BasicHome({
           </div>
         </div>
         <span className="sr-only">{`${copy.todayStateLabel}: ${todayGarden.completedGateCount} of 3. ${todayGardenMessage} ${copy.sessionCountLabel}: ${gardenVisual.recordedCheckIns}. ${gardenCountMessage}`}</span>
-      </section>
+        </section>
+      )}
       <section
         data-basic-recommendation
         className="rounded-[28px] border border-[rgba(216,192,138,0.16)] bg-[radial-gradient(circle_at_84%_10%,rgba(216,192,138,0.12),transparent_28%),radial-gradient(circle_at_18%_0%,rgba(127,255,212,0.10),transparent_32%),linear-gradient(180deg,rgba(8,40,69,0.80),rgba(6,27,51,0.92)_58%,rgba(5,18,34,0.98))] px-4 py-5 shadow-[0_22px_58px_rgba(0,0,0,0.18)] sm:px-6 sm:py-[1.45rem]"
