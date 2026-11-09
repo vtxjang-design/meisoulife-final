@@ -4,6 +4,9 @@ import Link from "next/link";
 import { MembershipGuard } from "@/components/membership-guard";
 import { useLanguage } from "@/lib/i18n";
 
+const ILCHI_STUDIO_DIRECTORY_URL = "https://ilchibrainyoga.com/studio/";
+const MEISO_LIFE_LINE_URL = process.env.NEXT_PUBLIC_LINE_FREE_URL || "https://lin.ee/z8Lzvvs";
+
 const copy = {
   jp: {
     back: "BASICへ戻る",
@@ -44,6 +47,11 @@ const copy = {
     testimonialNotice: "個人の体験であり、感じ方や変化には個人差があります。すべての方に同じ結果を保証するものではありません。",
     consultationTitle: "詳しく知りたい方へ",
     consultation: "プログラムの内容、日程、参加条件については、無料個別相談で詳しくご案内します。無理に参加をおすすめすることはありません。",
+    studioTitle: "お近くのスタジオを探す",
+    studioDescription: "全国のILCHI Brain Yoga公式スタジオ一覧から、地域ごとの所在地と連絡先をご確認いただけます。",
+    studioButton: "全国のスタジオ一覧を見る",
+    consultationButton: "LINEで無料相談を申し込む",
+    connectionNotice: "スタジオ情報はILCHI Brain Yoga公式サイトで、個別相談はMeisoLife公式LINEでご案内します。",
     disclaimer: "特定の健康改善や心理的変化を保証するものではありません。支払方法、キャンセル・返金条件は、お申し込み前にご確認ください。"
   },
   kr: {
@@ -85,6 +93,11 @@ const copy = {
     testimonialNotice: "개인의 체험이며 느끼는 점과 변화에는 개인차가 있습니다. 모든 참여자에게 같은 결과를 보장하지 않습니다.",
     consultationTitle: "자세히 알고 싶은 분께",
     consultation: "프로그램 내용, 일정과 참여 조건은 무료 개별상담에서 자세히 안내합니다. 참여를 강요하지 않습니다.",
+    studioTitle: "가까운 스튜디오 찾기",
+    studioDescription: "ILCHI Brain Yoga 공식 전국 스튜디오 목록에서 지역별 주소와 연락처를 확인할 수 있습니다.",
+    studioButton: "전국 스튜디오 목록 보기",
+    consultationButton: "LINE으로 무료상담 신청하기",
+    connectionNotice: "스튜디오 정보는 ILCHI Brain Yoga 공식 사이트에서, 개별상담은 MeisoLife 공식 LINE에서 안내합니다.",
     disclaimer: "특정한 건강 개선이나 심리적 변화를 보장하지 않습니다. 결제, 취소 및 환불 조건은 신청 전에 확인해 주세요."
   },
   en: {
@@ -126,6 +139,11 @@ const copy = {
     testimonialNotice: "These are individual experiences. Perceptions and changes vary, and the same results are not guaranteed for every participant.",
     consultationTitle: "For more information",
     consultation: "A free individual consultation explains the program, schedule, and participation requirements. There is no pressure to enroll.",
+    studioTitle: "Find a nearby studio",
+    studioDescription: "Use the official ILCHI Brain Yoga nationwide directory to check locations and contact details by area.",
+    studioButton: "View the nationwide studio directory",
+    consultationButton: "Request a free consultation on LINE",
+    connectionNotice: "Studio information is provided on the official ILCHI Brain Yoga website. Individual consultations are handled through the official MeisoLife LINE account.",
     disclaimer: "This program does not guarantee specific health or psychological outcomes. Please confirm payment, cancellation, and refund terms before applying."
   }
 } as const;
@@ -198,9 +216,38 @@ function KomeiCourseContent() {
             <p className="mt-4 text-xs leading-5 text-white/46">{text.testimonialNotice}</p>
           </section>
 
-          <section className="mt-8 rounded-[22px] border border-[rgba(216,192,138,0.18)] bg-[rgba(216,192,138,0.07)] px-5 py-5 sm:px-6 sm:py-6">
+          <section data-komei-connections className="mt-8 rounded-[22px] border border-[rgba(216,192,138,0.18)] bg-[rgba(216,192,138,0.07)] px-5 py-5 sm:px-6 sm:py-6">
             <h2 className="font-serif text-xl text-[rgba(244,231,192,0.94)]">{text.consultationTitle}</h2>
             <p className="mt-2 text-sm leading-6 text-white/72 sm:text-[15px]">{text.consultation}</p>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <div className="rounded-[18px] border border-white/[0.09] bg-[rgba(5,26,48,0.48)] p-4 sm:p-5">
+                <h3 className="text-base font-semibold text-white/90">{text.studioTitle}</h3>
+                <p className="mt-2 text-sm leading-6 text-white/60">{text.studioDescription}</p>
+                <a
+                  data-komei-studio-link
+                  href={ILCHI_STUDIO_DIRECTORY_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-white/[0.14] bg-white/[0.06] px-5 py-3 text-center text-sm font-semibold text-white/86 transition hover:bg-white/[0.1] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+                >
+                  {text.studioButton}
+                  <span aria-hidden="true" className="ml-2">↗</span>
+                </a>
+              </div>
+              <div className="flex rounded-[18px] border border-[rgba(216,192,138,0.18)] bg-[rgba(216,192,138,0.065)] p-4 sm:p-5">
+                <a
+                  data-komei-consultation-link
+                  href={MEISO_LIFE_LINE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-[48px] w-full items-center justify-center self-end rounded-full border border-gold/35 bg-gold/10 px-5 py-3 text-center text-sm font-semibold text-gold transition hover:bg-gold/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+                >
+                  {text.consultationButton}
+                  <span aria-hidden="true" className="ml-2">↗</span>
+                </a>
+              </div>
+            </div>
+            <p className="mt-4 text-xs leading-5 text-white/48">{text.connectionNotice}</p>
           </section>
 
           <p className="mt-6 text-xs leading-5 text-white/46">{text.disclaimer}</p>

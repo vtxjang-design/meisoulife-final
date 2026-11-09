@@ -173,6 +173,14 @@ test("BASIC presents the optional Komei course without making it a required path
   assert.match(komeiCoursePageSource, /東京地域/);
   assert.doesNotMatch(komeiCoursePageSource, /松本スタジオ|吉祥寺スタジオ|Matsumoto studio|Kichijoji studio/);
   assert.match(komeiCoursePageSource, /すべての方に同じ結果を保証するものではありません/);
+  assert.match(komeiCoursePageSource, /data-komei-connections/);
+  assert.match(komeiCoursePageSource, /data-komei-studio-link/);
+  assert.match(komeiCoursePageSource, /https:\/\/ilchibrainyoga\.com\/studio\//);
+  assert.match(komeiCoursePageSource, /data-komei-consultation-link/);
+  assert.match(komeiCoursePageSource, /https:\/\/lin\.ee\/z8Lzvvs/);
+  assert.match(komeiCoursePageSource, /target="_blank"/);
+  assert.match(komeiCoursePageSource, /rel="noopener noreferrer"/);
+  assert.doesNotMatch(komeiCoursePageSource, /TEL\s*\d|電話番号/);
   assert.doesNotMatch(basicHomeSource, /光ブコトレーニング/);
 });
 
