@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 53925)
-Total output lines: 5619
-
 "use client";
 
 import Link from "next/link";
@@ -2473,7 +2470,553 @@ function MeditationPageContent() {
     if (existingAudio && existingSource !== source) {
       logJourneyAudio("replace audio instance", { from: existingSource, to: source });
       existingAudio.pause();
-    …3925 tokens truncated… (!isReleaseGate || typeof window === "undefined" || !("speechSynthesis" in window)) {
+      existingAudio.currentTime = 0;
+      journeyAudioRef.current = null;
+    }
+
+    let audio = journeyAudioRef.current;
+    if (!audio) {
+      audio = new Audio(source);
+      audio.loop = false;
+      audio.preload = "auto";
+      audio.muted = false;
+      audio.dataset.meisoSrc = source;
+      journeyAudioRef.current = audio;
+      logJourneyAudio("create audio instance", { source });
+    }
+
+    const resolvedSource = typeof window !== "undefined" ? new URL(source, window.location.origin).href : source;
+    if (audio.currentSrc !== resolvedSource && audio.src !== resolvedSource) {
+      audio.src = source;
+      logJourneyAudio("assign src", { source });
+    }
+
+    audio.preload = "auto";
+    audio.dataset.meisoSrc = source;
+    audio.volume = 0.9;
+    audio.muted = false;
+
+    return audio;
+  }
+
+  async function handleAmbientStartResult(result: { started: boolean; error?: unknown }, manual = false) {
+    if (journeyMode && journeyDay) {
+      if (process.env.NODE_ENV !== "production") {
+        console.log("[Journey Audio] journeyMode:", journeyMode);
+        console.log("[Journey Audio] journeyDay:", journeyDay);
+        console.log("[Journey Audio] src:", ambientAudioSource);
+        console.log("[Journey Audio] pending:", safeSessionStorageGet(JOURNEY_AUDIO_PENDING_KEY));
+        console.log("[Journey Audio] audio element:", ambientAudioRef.current);
+      }
+    }
+
+    if (result.started) {
+      if (journeyMode) {
+        console.log("[Journey Audio] play started");
+        if (journeySettlingTimeoutRef.current !== null) {
+          window.clearTimeout(journeySettlingTimeoutRef.current);
+        }
+        setIsJourneySettling(true);
+        journeySettlingTimeoutRef.current = window.setTimeout(() => {
+          setIsJourneySettling(false);
+          journeySettlingTimeoutRef.current = null;
+        }, JOURNEY_SETTLING_MS);
+      }
+
+      setShowAmbientRetry(false);
+      setNeedsUserStart(false);
+      setRequiresExplicitAudioStart(false);
+      setIsPaused(false);
+      setSoundEnabled(true);
+      setNatureSoundPreference(true);
+      setPendingStructuredAmbientStart(false);
+
+      safeSessionStorageRemove(JOURNEY_AUDIO_PENDING_KEY);
+      safeSessionStorageRemove(JOURNEY_AUDIO_DAY_KEY);
+      safeSessionStorageRemove(STRUCTURED_AMBIENT_PENDING_KEY);
+
+      return;
+    }
+
+    if (journeyMode) {
+      setSoundEnabled(false);
+      setNatureSoundPreference(false);
+      setNeedsUserStart(true);
+      setIsPaused(true);
+      setIsJourneySettling(false);
+      console.warn("[Journey Audio] play failed");
+      if (result.error) {
+        console.error(`[Journey Audio] ${manual ? "manual start" : "autoplay"} failed:`, result.error);
+      }
+
+      if (typeof window !== "undefined") {
+        console.warn("[Journey Audio] exact pending state kept for manual retry");
+      }
+    } else if (isStructuredMorningGate) {
+      setShowAmbientRetry(true);
+      setPendingStructuredAmbientStart(false);
+      if (manual) {
+        setNeedsUserStart(false);
+        setIsPaused(false);
+        setRequiresExplicitAudioStart(false);
+      } else {
+        setNeedsUserStart(true);
+        setIsPaused(true);
+      }
+      if (result.error) {
+        console.error("[Morning Gate Audio] autoplay failed:", result.error);
+      }
+    } else {
+      setShowAmbientRetry(true);
+    }
+  }
+
+  async function handleJourneyAudioStart() {
+    const resolvedJourneyAudioSource =
+      journeyMode && journeyDay ? resolveJourneyAudioSource(journeyAudioMap[journeyDay]) : undefined;
+
+    if (!journeyMode || !resolvedJourneyAudioSource || typeof window === "undefined" || typeof Audio === "undefined") {
+      return;
+    }
+
+    logJourneyAudio("button click", { resolvedJourneyAudioSource });
+    setHasUserGesture(true);
+    setRequiresExplicitAudioStart(false);
+
+    if (audioContextRef.current?.state === "suspended") {
+      try {
+        await audioContextRef.current.resume();
+      } catch (error) {
+        console.warn("[journey-audio] failed to resume audio context", error);
+      }
+    }
+
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      try {
+        window.speechSynthesis.getVoices();
+      } catch (error) {
+        console.warn("[journey-audio] speech synthesis unavailable during unlock", error);
+      }
+    }
+
+    try {
+      const audio = ensureJourneyAudio(resolvedJourneyAudioSource);
+      stopJourneyAudio();
+      audio.load();
+      logJourneyAudio("play start", { resolvedJourneyAudioSource });
+      await audio.play();
+      logJourneyAudio("play success", { resolvedJourneyAudioSource });
+
+      if (journeySettlingTimeoutRef.current !== null) {
+        window.clearTimeout(journeySettlingTimeoutRef.current);
+        journeySettlingTimeoutRef.current = null;
+      }
+      setSecondsLeft(totalSeconds);
+      setShowAmbientRetry(false);
+      setNeedsUserStart(false);
+      setIsPaused(false);
+      setIsJourneyPlaybackActive(true);
+      setIsJourneyStartButtonFading(true);
+      setSoundEnabled(true);
+      setNatureSoundPreference(true);
+      setIsJourneySettling(false);
+
+      if (journeyStartButtonTimeoutRef.current !== null) {
+        window.clearTimeout(journeyStartButtonTimeoutRef.current);
+      }
+      journeyStartButtonTimeoutRef.current = window.setTimeout(() => {
+        setShowJourneyStartButton(false);
+        setIsJourneyStartButtonFading(false);
+        journeyStartButtonTimeoutRef.current = null;
+      }, 650);
+
+      safeSessionStorageRemove(JOURNEY_AUDIO_PENDING_KEY);
+      safeSessionStorageRemove(JOURNEY_AUDIO_DAY_KEY);
+      safeSessionStorageRemove(STRUCTURED_AMBIENT_PENDING_KEY);
+    } catch (error) {
+      stopJourneyAudio();
+      logJourneyAudio("play rejection", { resolvedJourneyAudioSource, error });
+      setSoundEnabled(false);
+      setNeedsUserStart(true);
+      setIsPaused(true);
+      setIsJourneyPlaybackActive(false);
+      setShowJourneyStartButton(true);
+      setIsJourneyStartButtonFading(false);
+      setIsJourneySettling(false);
+      if (process.env.NODE_ENV !== "production") {
+        console.error("[Journey Audio] manual start failed:", error);
+      }
+    }
+  }
+
+  async function playAffirmationGateVideo(options?: { restartFromBeginning?: boolean }) {
+    if (!isAffirmationGate || typeof window === "undefined") {
+      return;
+    }
+
+    const video = affirmationVideoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    try {
+      preparePlaybackMediaElement(video, {
+        muted: false,
+        volume: AWAKENING_GATE_VIDEO_VOLUME,
+        playsInline: true,
+        preload: "metadata"
+      });
+      if (options?.restartFromBeginning ?? false) {
+        video.currentTime = 0;
+      }
+      await video.play();
+      setAmbientVideoFailed(false);
+    } catch (error) {
+      console.warn("[awakening-gate] video playback failed", error);
+      setAmbientVideoFailed(true);
+    }
+  }
+
+  async function playFocusGateVideo(options?: { restartFromBeginning?: boolean }) {
+    if (!isFocusGate || typeof window === "undefined") {
+      return;
+    }
+
+    const video = focusVideoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    try {
+      preparePlaybackMediaElement(video, {
+        muted: false,
+        volume: FOCUS_GATE_VIDEO_VOLUME,
+        playsInline: true,
+        preload: "metadata"
+      });
+      if (options?.restartFromBeginning ?? false) {
+        video.currentTime = 0;
+      }
+      await video.play();
+      setAmbientVideoFailed(false);
+    } catch (error) {
+      console.warn("[focus-gate] video playback failed", error);
+      setAmbientVideoFailed(true);
+    }
+  }
+
+  async function playCalmGateVideo(options?: { restartFromBeginning?: boolean }) {
+    if (!isCalmGate || typeof window === "undefined") {
+      return;
+    }
+
+    const video = calmVideoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    try {
+      preparePlaybackMediaElement(video, {
+        muted: false,
+        volume: CALM_GATE_VIDEO_VOLUME,
+        playsInline: true,
+        preload: "metadata"
+      });
+      if (options?.restartFromBeginning ?? false) {
+        video.currentTime = 0;
+      }
+      await video.play();
+      setAmbientVideoFailed(false);
+    } catch (error) {
+      console.warn("[calm-gate] video playback failed", error);
+      setAmbientVideoFailed(true);
+    }
+  }
+
+  async function playRechargeGateVideo(options?: { restartFromBeginning?: boolean }) {
+    if (!isRechargeGate || typeof window === "undefined") {
+      return false;
+    }
+
+    const video = rechargeVideoRef.current;
+
+    if (!video) {
+      return false;
+    }
+
+    try {
+      preparePlaybackMediaElement(video, {
+        muted: false,
+        volume: RECHARGE_GATE_VIDEO_VOLUME,
+        playsInline: true,
+        preload: "auto"
+      });
+      if (options?.restartFromBeginning ?? false) {
+        video.currentTime = 0;
+      }
+      await video.play();
+      if (options?.restartFromBeginning ?? false) {
+        const fullscreenTarget = video as HTMLVideoElement & {
+          webkitEnterFullscreen?: () => void;
+          webkitRequestFullscreen?: () => Promise<void> | void;
+        };
+        try {
+          if (document.fullscreenEnabled && video.requestFullscreen) {
+            await video.requestFullscreen();
+          } else if (fullscreenTarget.webkitRequestFullscreen) {
+            await fullscreenTarget.webkitRequestFullscreen();
+          } else if (fullscreenTarget.webkitEnterFullscreen) {
+            fullscreenTarget.webkitEnterFullscreen();
+          }
+        } catch (error) {
+          console.warn("[recharge-gate] fullscreen unavailable", error);
+        }
+      }
+      setAmbientVideoFailed(false);
+      return true;
+    } catch (error) {
+      console.warn("[recharge-gate] video playback failed", error);
+      setAmbientVideoFailed(true);
+      return false;
+    }
+  }
+
+  async function playReleaseGateVideo(options?: { restartFromBeginning?: boolean }) {
+    if (!isReleaseGate || typeof window === "undefined") {
+      return;
+    }
+
+    const video = releaseVideoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    try {
+      preparePlaybackMediaElement(video, {
+        muted: false,
+        volume: EVENING_RELEASE_VIDEO_VOLUME,
+        playsInline: true,
+        preload: "auto"
+      });
+      if (options?.restartFromBeginning ?? false) {
+        video.currentTime = 0;
+      }
+      await video.play();
+      setAmbientVideoFailed(false);
+    } catch (error) {
+      console.warn("[release-gate] video playback failed", error);
+      setAmbientVideoFailed(true);
+    }
+  }
+
+  async function playGratitudeGateVideo(options?: { restartFromBeginning?: boolean }) {
+    if (!isGratitudeGate || typeof window === "undefined") {
+      return;
+    }
+
+    const video = gratitudeVideoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    try {
+      preparePlaybackMediaElement(video, {
+        muted: false,
+        volume: EVENING_GRATITUDE_VIDEO_VOLUME,
+        playsInline: true,
+        preload: "auto"
+      });
+      if (options?.restartFromBeginning ?? false) {
+        video.currentTime = 0;
+      }
+      await video.play();
+      setAmbientVideoFailed(false);
+    } catch (error) {
+      console.warn("[gratitude-gate] video playback failed", error);
+      setAmbientVideoFailed(true);
+    }
+  }
+
+  async function playSleepGateVideo(options?: { restartFromBeginning?: boolean }) {
+    if (!isSleepGate || typeof window === "undefined") {
+      return;
+    }
+
+    const video = sleepVideoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    try {
+      preparePlaybackMediaElement(video, {
+        muted: false,
+        volume: EVENING_SLEEP_VIDEO_VOLUME,
+        playsInline: true,
+        preload: "auto"
+      });
+      if (options?.restartFromBeginning ?? false) {
+        video.currentTime = 0;
+      }
+      await video.play();
+      setAmbientVideoFailed(false);
+    } catch (error) {
+      console.warn("[sleep-gate] video playback failed", error);
+      setAmbientVideoFailed(true);
+    }
+  }
+
+  function resumeActiveGateMediaAfterNarration() {
+    if (isPausedRef.current || isCompleteRef.current) {
+      return;
+    }
+
+    if (isStructuredMorningGate) {
+      void resumeStructuredMorningAmbient();
+    } else if (isFocusGate) {
+      void playFocusGateVideo();
+    } else if (isCalmGate) {
+      void playCalmGateVideo();
+    } else if (isReleaseGate) {
+      void playReleaseGateVideo();
+    } else if (isGratitudeGate) {
+      void playGratitudeGateVideo();
+    } else if (isSleepGate) {
+      void playSleepGateVideo();
+    }
+  }
+
+  function markGuidedNarrationStarted() {
+    guidedNarrationActiveRef.current = true;
+  }
+
+  function markGuidedNarrationFinished() {
+    guidedNarrationActiveRef.current = false;
+
+    window.setTimeout(() => {
+      resumeActiveGateMediaAfterNarration();
+    }, 80);
+  }
+
+  async function playEnergyGateVideo() {
+    if (!isEnergyGate || typeof window === "undefined") {
+      return;
+    }
+
+    const video = energyVideoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    try {
+      preparePlaybackMediaElement(video, {
+        muted: true,
+        volume: 1,
+        playsInline: true,
+        preload: "metadata"
+      });
+      video.currentTime = 0;
+      await video.play();
+      setAmbientVideoFailed(false);
+    } catch (error) {
+      console.warn("[energy-gate] video playback failed", error);
+      setAmbientVideoFailed(true);
+    }
+  }
+
+  async function playVisionGateVideo(options?: { restartFromBeginning?: boolean }) {
+    if (!isVisionGate || typeof window === "undefined") {
+      return;
+    }
+
+    const video = visionVideoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    try {
+      preparePlaybackMediaElement(video, {
+        muted: false,
+        volume: VISION_GATE_VIDEO_VOLUME,
+        playsInline: true,
+        preload: "metadata"
+      });
+      if (options?.restartFromBeginning ?? false) {
+        video.currentTime = 0;
+      }
+      await video.play();
+      setAmbientVideoFailed(false);
+    } catch (error) {
+      console.warn("[vision-gate] video playback failed", error);
+      setAmbientVideoFailed(true);
+    }
+  }
+
+  function unlockStructuredMorningSpeech() {
+    if (!isStructuredMorningGate || typeof window === "undefined" || !("speechSynthesis" in window)) {
+      return;
+    }
+
+    try {
+      const synth = window.speechSynthesis;
+      const settings = getStructuredMorningSpeechSettings(language, structuredMorningDoor);
+      synth.getVoices();
+
+      if (structuredSpeechUnlockedRef.current) {
+        return;
+      }
+
+      structuredSpeechUnlockedRef.current = true;
+      primeSpeechSynthesisFromUserGesture(synth, settings);
+    } catch (error) {
+      console.warn("[morning-gate] failed to unlock speech synthesis", error);
+    }
+  }
+
+  function unlockFocusGateSpeech() {
+    if (!isFocusGate || typeof window === "undefined" || !("speechSynthesis" in window)) {
+      return;
+    }
+
+    try {
+      const synth = window.speechSynthesis;
+      const settings = getFocusGateSpeechSettings(localizedLanguage);
+      synth.getVoices();
+
+      if (focusSpeechUnlockedRef.current) {
+        return;
+      }
+
+      focusSpeechUnlockedRef.current = true;
+      primeSpeechSynthesisFromUserGesture(synth, settings);
+    } catch (error) {
+      console.warn("[focus-gate] failed to unlock speech synthesis", error);
+    }
+  }
+
+  function cancelFocusGateSpeech() {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+      return;
+    }
+
+    if (focusSpeechTimeoutRef.current) {
+      window.clearTimeout(focusSpeechTimeoutRef.current);
+      focusSpeechTimeoutRef.current = null;
+    }
+
+    focusSpeechSequenceRef.current += 1;
+    window.speechSynthesis.cancel();
+  }
+
+  function unlockReleaseGateSpeech() {
+    if (!isReleaseGate || typeof window === "undefined" || !("speechSynthesis" in window)) {
       return;
     }
 
