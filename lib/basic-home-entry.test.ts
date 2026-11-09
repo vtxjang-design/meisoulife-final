@@ -168,7 +168,10 @@ test("BASIC presents the optional Komei course without making it a required path
   assert.match(komeiCoursePageSource, /光明セッション/);
   assert.match(komeiCoursePageSource, /補習トレーニング/);
   assert.match(komeiCoursePageSource, /data-komei-testimonials/);
-  assert.equal((komeiCoursePageSource.match(/source: "長野・松本スタジオ参加者"|source: "東京・吉祥寺スタジオ参加者"/g) ?? []).length, 2);
+  assert.equal((komeiCoursePageSource.match(/source: "長野地域・参加者 A"|source: "東京地域・参加者 B"/g) ?? []).length, 2);
+  assert.match(komeiCoursePageSource, /長野地域/);
+  assert.match(komeiCoursePageSource, /東京地域/);
+  assert.doesNotMatch(komeiCoursePageSource, /松本スタジオ|吉祥寺スタジオ|Matsumoto studio|Kichijoji studio/);
   assert.match(komeiCoursePageSource, /すべての方に同じ結果を保証するものではありません/);
   assert.doesNotMatch(basicHomeSource, /光ブコトレーニング/);
 });
