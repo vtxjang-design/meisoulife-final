@@ -104,6 +104,7 @@ const pageCopy = {
     komeiEyebrow: "OPTIONAL DEEPENING PROGRAM",
     komeiTitle: "光明チャクラコース",
     komeiLead: "自分自身と、より深く向き合うための3か月プログラムです。",
+    komeiDetails: "詳しく見る",
     komeiBody: "マインドフリー瞑想と光明セッションを通して、自分の内面を見つめる時間をつくります。",
     komeiDurationLabel: "期間",
     komeiDuration: "3か月",
@@ -165,6 +166,7 @@ const pageCopy = {
     komeiEyebrow: "선택형 심화 프로그램",
     komeiTitle: "광명 차크라 코스",
     komeiLead: "자신과 더 깊이 마주하기 위한 3개월 프로그램입니다.",
+    komeiDetails: "자세히 보기",
     komeiBody: "마인드프리 명상과 광명 세션을 통해 자신의 내면을 바라보는 시간을 만듭니다.",
     komeiDurationLabel: "기간",
     komeiDuration: "3개월",
@@ -226,6 +228,7 @@ const pageCopy = {
     komeiEyebrow: "OPTIONAL DEEPENING PROGRAM",
     komeiTitle: "Komei Chakra Course",
     komeiLead: "A three-month program for meeting yourself more deeply.",
+    komeiDetails: "View details",
     komeiBody: "Mind Free meditation and Komei sessions create space to gently explore your inner life.",
     komeiDurationLabel: "Duration",
     komeiDuration: "3 months",
@@ -980,35 +983,21 @@ export function BasicHome({
 
       <section
         data-basic-komei-course
-        className="relative overflow-hidden rounded-[28px] border border-[rgba(216,192,138,0.18)] bg-[radial-gradient(circle_at_82%_10%,rgba(216,192,138,0.14),transparent_30%),radial-gradient(circle_at_18%_0%,rgba(127,255,212,0.08),transparent_34%),linear-gradient(180deg,rgba(10,37,61,0.88),rgba(6,25,46,0.97))] px-5 py-6 shadow-[0_22px_58px_rgba(0,0,0,0.18)] sm:px-7 sm:py-7"
+        className="relative overflow-hidden rounded-[24px] border border-[rgba(216,192,138,0.18)] bg-[radial-gradient(circle_at_82%_10%,rgba(216,192,138,0.12),transparent_34%),linear-gradient(180deg,rgba(10,37,61,0.84),rgba(6,25,46,0.96))] px-5 py-5 shadow-[0_18px_48px_rgba(0,0,0,0.16)] sm:flex sm:items-center sm:justify-between sm:gap-8 sm:px-7 sm:py-6"
       >
-        <div className="max-w-3xl">
+        <div className="max-w-2xl">
           <p className="text-xs uppercase tracking-[0.28em] text-[rgba(216,192,138,0.76)]">{copy.komeiEyebrow}</p>
-          <h2 className="mt-2 font-serif text-[1.55rem] leading-tight text-[rgba(244,250,255,0.97)] sm:text-[2rem]">{copy.komeiTitle}</h2>
-          <p className="mt-3 text-[15px] font-medium leading-6 text-[rgba(244,250,255,0.88)] sm:text-base">{copy.komeiLead}</p>
-          <p className="mt-2 text-sm leading-6 text-[rgba(233,242,248,0.7)] sm:text-[15px]">{copy.komeiBody}</p>
+          <h2 className="mt-2 font-serif text-[1.45rem] leading-tight text-[rgba(244,250,255,0.97)] sm:text-[1.75rem]">{copy.komeiTitle}</h2>
+          <p className="mt-2 text-sm leading-6 text-[rgba(233,242,248,0.72)] sm:text-[15px]">{copy.komeiLead}</p>
         </div>
-
-        <dl className="mt-5 grid grid-cols-2 gap-px overflow-hidden rounded-[18px] border border-white/[0.08] bg-white/[0.08] sm:grid-cols-4">
-          {[
-            [copy.komeiDurationLabel, copy.komeiDuration],
-            [copy.komeiMethodLabel, copy.komeiMethod],
-            [copy.komeiPriceLabel, copy.komeiPrice],
-            [copy.komeiContentLabel, copy.komeiContent]
-          ].map(([label, value]) => (
-            <div key={label} className="min-w-0 bg-[rgba(7,29,51,0.94)] px-4 py-4">
-              <dt className="text-[10px] uppercase tracking-[0.18em] text-[rgba(233,242,248,0.46)]">{label}</dt>
-              <dd className="mt-1.5 text-sm leading-5 text-[rgba(244,250,255,0.9)]">{value}</dd>
-            </div>
-          ))}
-        </dl>
-
-        <div className="mt-5 space-y-2 text-sm leading-6 text-[rgba(233,242,248,0.72)]">
-          <p>{copy.komeiOperator}</p>
-          <p>{copy.komeiOptional}</p>
-          <p className="text-[rgba(244,231,192,0.84)]">{copy.komeiConsultation}</p>
-          <p className="pt-1 text-xs leading-5 text-[rgba(233,242,248,0.48)]">{copy.komeiDisclaimer}</p>
-        </div>
+        <Link
+          data-basic-komei-details-link
+          href="/program/basic/komei"
+          className="mt-5 inline-flex min-h-[46px] shrink-0 items-center justify-center gap-2 rounded-full border border-[rgba(216,192,138,0.38)] bg-[rgba(216,192,138,0.10)] px-5 py-2.5 text-sm font-semibold text-[rgba(244,231,192,0.94)] transition hover:border-[rgba(216,192,138,0.58)] hover:bg-[rgba(216,192,138,0.16)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold sm:mt-0"
+        >
+          <span>{copy.komeiDetails}</span>
+          <span aria-hidden="true">→</span>
+        </Link>
       </section>
     </section>
   );
