@@ -1,3 +1,6 @@
+Warning: truncated output (original token count: 53925)
+Total output lines: 5619
+
 "use client";
 
 import Link from "next/link";
@@ -90,7 +93,11 @@ const AWAKENING_GATE_VIDEO_SRC = "/video/morning-gate/awakening-gate-1.mp4";
 const ENERGY_GATE_VIDEO_SRC = "/basic/morning%20gate/energy%20gate8.mp4";
 const VISION_GATE_VIDEO_SRC = "/basic/morning-gate/vision-gate-7.mp4";
 const FOCUS_GATE_VIDEO_SRC = "/one-minute-reset/basic/daytime/focus-gate.mp4";
-const CALM_GATE_VIDEO_SRC = "/one-minute-reset/basic/daytime/calm-gate.mp4";
+const CALM_GATE_VIDEO_SRC: Record<"jp" | "kr" | "en", string> = {
+  jp: "/one-minute-reset/basic/daytime/calm-gate-jp.mp4",
+  kr: "/one-minute-reset/basic/daytime/calm-gate-kr.mp4",
+  en: "/one-minute-reset/basic/daytime/calm-gate-en.mp4"
+};
 const RECHARGE_GATE_VIDEO_SRC = "/basic/daytime-gate/recharge-gate8.mp4";
 const RECHARGE_GATE_GUIDE_IMAGE_SRC = "/basic/daytime-gate/recharge%20gate.png";
 const EVENING_RELEASE_VIDEO_SRC = "/evening-gate/evening%20gate1.mp4";
@@ -99,7 +106,7 @@ const EVENING_SLEEP_VIDEO_SRC = "/basic/evening-gate/sleep%20gate1.mp4";
 const AWAKENING_GATE_VIDEO_VOLUME = 0.36;
 const VISION_GATE_VIDEO_VOLUME = 0.15;
 const FOCUS_GATE_VIDEO_VOLUME = 0.16;
-const CALM_GATE_VIDEO_VOLUME = 0.15;
+const CALM_GATE_VIDEO_VOLUME = 1;
 const RECHARGE_GATE_VIDEO_VOLUME = 0.18;
 const EVENING_RELEASE_VIDEO_VOLUME = 0.14;
 const EVENING_GRATITUDE_VIDEO_VOLUME = 0.14;
@@ -396,6 +403,12 @@ const calmGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
     { at: 48, key: "calm-7", text: "You do not need\nto do anything", speechDelayMs: 760 },
     { at: 54, key: "calm-8", text: "Carry this ease\nback into your day", speechDelayMs: 760 }
   ]
+};
+
+const calmGateAiNarrationDisclosure: Record<"jp" | "kr" | "en", string> = {
+  jp: "このナレーションにはAI生成音声を使用しています。",
+  kr: "이 나레이션에는 AI 생성 음성이 사용되었습니다.",
+  en: "This narration uses an AI-generated voice."
 };
 
 const releaseGateNarration: Record<"jp" | "kr" | "en", GuidedCalmLine[]> = {
@@ -1211,36 +1224,6 @@ function getFocusGateSpeechSettings(language: "jp" | "kr" | "en") {
   };
 }
 
-function getCalmGateSpeechSettings(language: "jp" | "kr" | "en") {
-  if (language === "kr") {
-    return {
-      lang: "ko-KR",
-      rate: 0.66,
-      pitch: 0.96,
-      volume: 1,
-      preferredNames: ["Yuna", "Sora", "Google 한국어", "Siri"]
-    };
-  }
-
-  if (language === "en") {
-    return {
-      lang: "en-US",
-      rate: 0.7,
-      pitch: 0.98,
-      volume: 1,
-      preferredNames: ["Samantha", "Ava", "Victoria", "Google US English", "Siri"]
-    };
-  }
-
-  return {
-    lang: "ja-JP",
-    rate: 0.64,
-    pitch: 0.9,
-    volume: 1,
-    preferredNames: ["Kyoko", "Otoya", "Google 日本語", "Siri"]
-  };
-}
-
 function getReleaseGateSpeechSettings(language: "jp" | "kr" | "en") {
   if (language === "kr") {
     return {
@@ -1494,6 +1477,7 @@ function MeditationPageContent() {
   const requiresProtectedMembership = requiredMembershipPlan !== null;
   const focusGateLines = focusGateNarration[localizedLanguage];
   const calmGateLines = calmGateNarration[localizedLanguage];
+  const calmGateVideoSource = CALM_GATE_VIDEO_SRC[localizedLanguage];
   const releaseGateLines = releaseGateNarration[localizedLanguage];
   const gratitudeGateLines = gratitudeGateNarration[localizedLanguage];
   const sleepGateLines = sleepGateNarration[localizedLanguage];
@@ -1583,7 +1567,6 @@ function MeditationPageContent() {
   const sleepSpeechSequenceRef = useRef(0);
   const structuredSpeechUnlockedRef = useRef(false);
   const focusSpeechUnlockedRef = useRef(false);
-  const calmSpeechUnlockedRef = useRef(false);
   const releaseSpeechUnlockedRef = useRef(false);
   const gratitudeSpeechUnlockedRef = useRef(false);
   const sleepSpeechUnlockedRef = useRef(false);
@@ -2490,574 +2473,7 @@ function MeditationPageContent() {
     if (existingAudio && existingSource !== source) {
       logJourneyAudio("replace audio instance", { from: existingSource, to: source });
       existingAudio.pause();
-      existingAudio.currentTime = 0;
-      journeyAudioRef.current = null;
-    }
-
-    let audio = journeyAudioRef.current;
-    if (!audio) {
-      audio = new Audio(source);
-      audio.loop = false;
-      audio.preload = "auto";
-      audio.muted = false;
-      audio.dataset.meisoSrc = source;
-      journeyAudioRef.current = audio;
-      logJourneyAudio("create audio instance", { source });
-    }
-
-    const resolvedSource = typeof window !== "undefined" ? new URL(source, window.location.origin).href : source;
-    if (audio.currentSrc !== resolvedSource && audio.src !== resolvedSource) {
-      audio.src = source;
-      logJourneyAudio("assign src", { source });
-    }
-
-    audio.preload = "auto";
-    audio.dataset.meisoSrc = source;
-    audio.volume = 0.9;
-    audio.muted = false;
-
-    return audio;
-  }
-
-  async function handleAmbientStartResult(result: { started: boolean; error?: unknown }, manual = false) {
-    if (journeyMode && journeyDay) {
-      if (process.env.NODE_ENV !== "production") {
-        console.log("[Journey Audio] journeyMode:", journeyMode);
-        console.log("[Journey Audio] journeyDay:", journeyDay);
-        console.log("[Journey Audio] src:", ambientAudioSource);
-        console.log("[Journey Audio] pending:", safeSessionStorageGet(JOURNEY_AUDIO_PENDING_KEY));
-        console.log("[Journey Audio] audio element:", ambientAudioRef.current);
-      }
-    }
-
-    if (result.started) {
-      if (journeyMode) {
-        console.log("[Journey Audio] play started");
-        if (journeySettlingTimeoutRef.current !== null) {
-          window.clearTimeout(journeySettlingTimeoutRef.current);
-        }
-        setIsJourneySettling(true);
-        journeySettlingTimeoutRef.current = window.setTimeout(() => {
-          setIsJourneySettling(false);
-          journeySettlingTimeoutRef.current = null;
-        }, JOURNEY_SETTLING_MS);
-      }
-
-      setShowAmbientRetry(false);
-      setNeedsUserStart(false);
-      setRequiresExplicitAudioStart(false);
-      setIsPaused(false);
-      setSoundEnabled(true);
-      setNatureSoundPreference(true);
-      setPendingStructuredAmbientStart(false);
-
-      safeSessionStorageRemove(JOURNEY_AUDIO_PENDING_KEY);
-      safeSessionStorageRemove(JOURNEY_AUDIO_DAY_KEY);
-      safeSessionStorageRemove(STRUCTURED_AMBIENT_PENDING_KEY);
-
-      return;
-    }
-
-    if (journeyMode) {
-      setSoundEnabled(false);
-      setNatureSoundPreference(false);
-      setNeedsUserStart(true);
-      setIsPaused(true);
-      setIsJourneySettling(false);
-      console.warn("[Journey Audio] play failed");
-      if (result.error) {
-        console.error(`[Journey Audio] ${manual ? "manual start" : "autoplay"} failed:`, result.error);
-      }
-
-      if (typeof window !== "undefined") {
-        console.warn("[Journey Audio] exact pending state kept for manual retry");
-      }
-    } else if (isStructuredMorningGate) {
-      setShowAmbientRetry(true);
-      setPendingStructuredAmbientStart(false);
-      if (manual) {
-        setNeedsUserStart(false);
-        setIsPaused(false);
-        setRequiresExplicitAudioStart(false);
-      } else {
-        setNeedsUserStart(true);
-        setIsPaused(true);
-      }
-      if (result.error) {
-        console.error("[Morning Gate Audio] autoplay failed:", result.error);
-      }
-    } else {
-      setShowAmbientRetry(true);
-    }
-  }
-
-  async function handleJourneyAudioStart() {
-    const resolvedJourneyAudioSource =
-      journeyMode && journeyDay ? resolveJourneyAudioSource(journeyAudioMap[journeyDay]) : undefined;
-
-    if (!journeyMode || !resolvedJourneyAudioSource || typeof window === "undefined" || typeof Audio === "undefined") {
-      return;
-    }
-
-    logJourneyAudio("button click", { resolvedJourneyAudioSource });
-    setHasUserGesture(true);
-    setRequiresExplicitAudioStart(false);
-
-    if (audioContextRef.current?.state === "suspended") {
-      try {
-        await audioContextRef.current.resume();
-      } catch (error) {
-        console.warn("[journey-audio] failed to resume audio context", error);
-      }
-    }
-
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      try {
-        window.speechSynthesis.getVoices();
-      } catch (error) {
-        console.warn("[journey-audio] speech synthesis unavailable during unlock", error);
-      }
-    }
-
-    try {
-      const audio = ensureJourneyAudio(resolvedJourneyAudioSource);
-      stopJourneyAudio();
-      audio.load();
-      logJourneyAudio("play start", { resolvedJourneyAudioSource });
-      await audio.play();
-      logJourneyAudio("play success", { resolvedJourneyAudioSource });
-
-      if (journeySettlingTimeoutRef.current !== null) {
-        window.clearTimeout(journeySettlingTimeoutRef.current);
-        journeySettlingTimeoutRef.current = null;
-      }
-      setSecondsLeft(totalSeconds);
-      setShowAmbientRetry(false);
-      setNeedsUserStart(false);
-      setIsPaused(false);
-      setIsJourneyPlaybackActive(true);
-      setIsJourneyStartButtonFading(true);
-      setSoundEnabled(true);
-      setNatureSoundPreference(true);
-      setIsJourneySettling(false);
-
-      if (journeyStartButtonTimeoutRef.current !== null) {
-        window.clearTimeout(journeyStartButtonTimeoutRef.current);
-      }
-      journeyStartButtonTimeoutRef.current = window.setTimeout(() => {
-        setShowJourneyStartButton(false);
-        setIsJourneyStartButtonFading(false);
-        journeyStartButtonTimeoutRef.current = null;
-      }, 650);
-
-      safeSessionStorageRemove(JOURNEY_AUDIO_PENDING_KEY);
-      safeSessionStorageRemove(JOURNEY_AUDIO_DAY_KEY);
-      safeSessionStorageRemove(STRUCTURED_AMBIENT_PENDING_KEY);
-    } catch (error) {
-      stopJourneyAudio();
-      logJourneyAudio("play rejection", { resolvedJourneyAudioSource, error });
-      setSoundEnabled(false);
-      setNeedsUserStart(true);
-      setIsPaused(true);
-      setIsJourneyPlaybackActive(false);
-      setShowJourneyStartButton(true);
-      setIsJourneyStartButtonFading(false);
-      setIsJourneySettling(false);
-      if (process.env.NODE_ENV !== "production") {
-        console.error("[Journey Audio] manual start failed:", error);
-      }
-    }
-  }
-
-  async function playAffirmationGateVideo(options?: { restartFromBeginning?: boolean }) {
-    if (!isAffirmationGate || typeof window === "undefined") {
-      return;
-    }
-
-    const video = affirmationVideoRef.current;
-
-    if (!video) {
-      return;
-    }
-
-    try {
-      preparePlaybackMediaElement(video, {
-        muted: false,
-        volume: AWAKENING_GATE_VIDEO_VOLUME,
-        playsInline: true,
-        preload: "metadata"
-      });
-      if (options?.restartFromBeginning ?? false) {
-        video.currentTime = 0;
-      }
-      await video.play();
-      setAmbientVideoFailed(false);
-    } catch (error) {
-      console.warn("[awakening-gate] video playback failed", error);
-      setAmbientVideoFailed(true);
-    }
-  }
-
-  async function playFocusGateVideo(options?: { restartFromBeginning?: boolean }) {
-    if (!isFocusGate || typeof window === "undefined") {
-      return;
-    }
-
-    const video = focusVideoRef.current;
-
-    if (!video) {
-      return;
-    }
-
-    try {
-      preparePlaybackMediaElement(video, {
-        muted: false,
-        volume: FOCUS_GATE_VIDEO_VOLUME,
-        playsInline: true,
-        preload: "metadata"
-      });
-      if (options?.restartFromBeginning ?? false) {
-        video.currentTime = 0;
-      }
-      await video.play();
-      setAmbientVideoFailed(false);
-    } catch (error) {
-      console.warn("[focus-gate] video playback failed", error);
-      setAmbientVideoFailed(true);
-    }
-  }
-
-  async function playCalmGateVideo(options?: { restartFromBeginning?: boolean }) {
-    if (!isCalmGate || typeof window === "undefined") {
-      return;
-    }
-
-    const video = calmVideoRef.current;
-
-    if (!video) {
-      return;
-    }
-
-    try {
-      preparePlaybackMediaElement(video, {
-        muted: false,
-        volume: CALM_GATE_VIDEO_VOLUME,
-        playsInline: true,
-        preload: "metadata"
-      });
-      if (options?.restartFromBeginning ?? false) {
-        video.currentTime = 0;
-      }
-      await video.play();
-      setAmbientVideoFailed(false);
-    } catch (error) {
-      console.warn("[calm-gate] video playback failed", error);
-      setAmbientVideoFailed(true);
-    }
-  }
-
-  async function playRechargeGateVideo(options?: { restartFromBeginning?: boolean }) {
-    if (!isRechargeGate || typeof window === "undefined") {
-      return false;
-    }
-
-    const video = rechargeVideoRef.current;
-
-    if (!video) {
-      return false;
-    }
-
-    try {
-      preparePlaybackMediaElement(video, {
-        muted: false,
-        volume: RECHARGE_GATE_VIDEO_VOLUME,
-        playsInline: true,
-        preload: "auto"
-      });
-      if (options?.restartFromBeginning ?? false) {
-        video.currentTime = 0;
-      }
-      await video.play();
-      if (options?.restartFromBeginning ?? false) {
-        const fullscreenTarget = video as HTMLVideoElement & {
-          webkitEnterFullscreen?: () => void;
-          webkitRequestFullscreen?: () => Promise<void> | void;
-        };
-        try {
-          if (document.fullscreenEnabled && video.requestFullscreen) {
-            await video.requestFullscreen();
-          } else if (fullscreenTarget.webkitRequestFullscreen) {
-            await fullscreenTarget.webkitRequestFullscreen();
-          } else if (fullscreenTarget.webkitEnterFullscreen) {
-            fullscreenTarget.webkitEnterFullscreen();
-          }
-        } catch (error) {
-          console.warn("[recharge-gate] fullscreen unavailable", error);
-        }
-      }
-      setAmbientVideoFailed(false);
-      return true;
-    } catch (error) {
-      console.warn("[recharge-gate] video playback failed", error);
-      setAmbientVideoFailed(true);
-      return false;
-    }
-  }
-
-  async function playReleaseGateVideo(options?: { restartFromBeginning?: boolean }) {
-    if (!isReleaseGate || typeof window === "undefined") {
-      return;
-    }
-
-    const video = releaseVideoRef.current;
-
-    if (!video) {
-      return;
-    }
-
-    try {
-      preparePlaybackMediaElement(video, {
-        muted: false,
-        volume: EVENING_RELEASE_VIDEO_VOLUME,
-        playsInline: true,
-        preload: "auto"
-      });
-      if (options?.restartFromBeginning ?? false) {
-        video.currentTime = 0;
-      }
-      await video.play();
-      setAmbientVideoFailed(false);
-    } catch (error) {
-      console.warn("[release-gate] video playback failed", error);
-      setAmbientVideoFailed(true);
-    }
-  }
-
-  async function playGratitudeGateVideo(options?: { restartFromBeginning?: boolean }) {
-    if (!isGratitudeGate || typeof window === "undefined") {
-      return;
-    }
-
-    const video = gratitudeVideoRef.current;
-
-    if (!video) {
-      return;
-    }
-
-    try {
-      preparePlaybackMediaElement(video, {
-        muted: false,
-        volume: EVENING_GRATITUDE_VIDEO_VOLUME,
-        playsInline: true,
-        preload: "auto"
-      });
-      if (options?.restartFromBeginning ?? false) {
-        video.currentTime = 0;
-      }
-      await video.play();
-      setAmbientVideoFailed(false);
-    } catch (error) {
-      console.warn("[gratitude-gate] video playback failed", error);
-      setAmbientVideoFailed(true);
-    }
-  }
-
-  async function playSleepGateVideo(options?: { restartFromBeginning?: boolean }) {
-    if (!isSleepGate || typeof window === "undefined") {
-      return;
-    }
-
-    const video = sleepVideoRef.current;
-
-    if (!video) {
-      return;
-    }
-
-    try {
-      preparePlaybackMediaElement(video, {
-        muted: false,
-        volume: EVENING_SLEEP_VIDEO_VOLUME,
-        playsInline: true,
-        preload: "auto"
-      });
-      if (options?.restartFromBeginning ?? false) {
-        video.currentTime = 0;
-      }
-      await video.play();
-      setAmbientVideoFailed(false);
-    } catch (error) {
-      console.warn("[sleep-gate] video playback failed", error);
-      setAmbientVideoFailed(true);
-    }
-  }
-
-  function resumeActiveGateMediaAfterNarration() {
-    if (isPausedRef.current || isCompleteRef.current) {
-      return;
-    }
-
-    if (isStructuredMorningGate) {
-      void resumeStructuredMorningAmbient();
-    } else if (isFocusGate) {
-      void playFocusGateVideo();
-    } else if (isCalmGate) {
-      void playCalmGateVideo();
-    } else if (isReleaseGate) {
-      void playReleaseGateVideo();
-    } else if (isGratitudeGate) {
-      void playGratitudeGateVideo();
-    } else if (isSleepGate) {
-      void playSleepGateVideo();
-    }
-  }
-
-  function markGuidedNarrationStarted() {
-    guidedNarrationActiveRef.current = true;
-  }
-
-  function markGuidedNarrationFinished() {
-    guidedNarrationActiveRef.current = false;
-
-    window.setTimeout(() => {
-      resumeActiveGateMediaAfterNarration();
-    }, 80);
-  }
-
-  async function playEnergyGateVideo() {
-    if (!isEnergyGate || typeof window === "undefined") {
-      return;
-    }
-
-    const video = energyVideoRef.current;
-
-    if (!video) {
-      return;
-    }
-
-    try {
-      preparePlaybackMediaElement(video, {
-        muted: true,
-        volume: 1,
-        playsInline: true,
-        preload: "metadata"
-      });
-      video.currentTime = 0;
-      await video.play();
-      setAmbientVideoFailed(false);
-    } catch (error) {
-      console.warn("[energy-gate] video playback failed", error);
-      setAmbientVideoFailed(true);
-    }
-  }
-
-  async function playVisionGateVideo(options?: { restartFromBeginning?: boolean }) {
-    if (!isVisionGate || typeof window === "undefined") {
-      return;
-    }
-
-    const video = visionVideoRef.current;
-
-    if (!video) {
-      return;
-    }
-
-    try {
-      preparePlaybackMediaElement(video, {
-        muted: false,
-        volume: VISION_GATE_VIDEO_VOLUME,
-        playsInline: true,
-        preload: "metadata"
-      });
-      if (options?.restartFromBeginning ?? false) {
-        video.currentTime = 0;
-      }
-      await video.play();
-      setAmbientVideoFailed(false);
-    } catch (error) {
-      console.warn("[vision-gate] video playback failed", error);
-      setAmbientVideoFailed(true);
-    }
-  }
-
-  function unlockStructuredMorningSpeech() {
-    if (!isStructuredMorningGate || typeof window === "undefined" || !("speechSynthesis" in window)) {
-      return;
-    }
-
-    try {
-      const synth = window.speechSynthesis;
-      const settings = getStructuredMorningSpeechSettings(language, structuredMorningDoor);
-      synth.getVoices();
-
-      if (structuredSpeechUnlockedRef.current) {
-        return;
-      }
-
-      structuredSpeechUnlockedRef.current = true;
-      primeSpeechSynthesisFromUserGesture(synth, settings);
-    } catch (error) {
-      console.warn("[morning-gate] failed to unlock speech synthesis", error);
-    }
-  }
-
-  function unlockFocusGateSpeech() {
-    if (!isFocusGate || typeof window === "undefined" || !("speechSynthesis" in window)) {
-      return;
-    }
-
-    try {
-      const synth = window.speechSynthesis;
-      const settings = getFocusGateSpeechSettings(localizedLanguage);
-      synth.getVoices();
-
-      if (focusSpeechUnlockedRef.current) {
-        return;
-      }
-
-      focusSpeechUnlockedRef.current = true;
-      primeSpeechSynthesisFromUserGesture(synth, settings);
-    } catch (error) {
-      console.warn("[focus-gate] failed to unlock speech synthesis", error);
-    }
-  }
-
-  function cancelFocusGateSpeech() {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) {
-      return;
-    }
-
-    if (focusSpeechTimeoutRef.current) {
-      window.clearTimeout(focusSpeechTimeoutRef.current);
-      focusSpeechTimeoutRef.current = null;
-    }
-
-    focusSpeechSequenceRef.current += 1;
-    window.speechSynthesis.cancel();
-  }
-
-  function unlockCalmGateSpeech() {
-    if (!isCalmGate || typeof window === "undefined" || !("speechSynthesis" in window)) {
-      return;
-    }
-
-    try {
-      const synth = window.speechSynthesis;
-      const settings = getCalmGateSpeechSettings(localizedLanguage);
-      synth.getVoices();
-
-      if (calmSpeechUnlockedRef.current) {
-        return;
-      }
-
-      calmSpeechUnlockedRef.current = true;
-      primeSpeechSynthesisFromUserGesture(synth, settings);
-    } catch (error) {
-      console.warn("[calm-gate] failed to unlock speech synthesis", error);
-    }
-  }
-
-  function unlockReleaseGateSpeech() {
-    if (!isReleaseGate || typeof window === "undefined" || !("speechSynthesis" in window)) {
+    …3925 tokens truncated… (!isReleaseGate || typeof window === "undefined" || !("speechSynthesis" in window)) {
       return;
     }
 
@@ -3851,92 +3267,6 @@ function MeditationPageContent() {
 
     spokenCalmKeysRef.current.add(nextLine.key);
     setCalmGateMessage(nextLine.text);
-
-    if (!("speechSynthesis" in window)) {
-      return;
-    }
-
-    try {
-      const settings = getCalmGateSpeechSettings(localizedLanguage);
-      const synth = window.speechSynthesis;
-      calmSpeechSequenceRef.current += 1;
-      const speechSequence = calmSpeechSequenceRef.current;
-
-      if (calmSpeechTimeoutRef.current) {
-        window.clearTimeout(calmSpeechTimeoutRef.current);
-        calmSpeechTimeoutRef.current = null;
-      }
-
-      const speechDelayMs = nextLine.speechDelayMs ?? 560;
-
-      const queueSpeak = (attempt: number) => {
-        if (
-          calmSpeechSequenceRef.current !== speechSequence ||
-          isPausedRef.current ||
-          isCompleteRef.current
-        ) {
-          return;
-        }
-
-        const queueAction = getGuidedSpeechQueueAction(synth, attempt, 12);
-        if (queueAction !== "speak") {
-          if (queueAction === "cancel-and-retry") {
-            synth.cancel();
-          }
-          if (queueAction !== "stop") {
-            calmSpeechTimeoutRef.current = window.setTimeout(
-              () => queueSpeak(attempt + 1),
-              queueAction === "retry" ? 160 : 120
-            );
-          }
-          return;
-        }
-
-        const utterance = new SpeechSynthesisUtterance(nextLine.speechText ?? nextLine.text);
-        utterance.lang = settings.lang;
-        utterance.rate = settings.rate;
-        utterance.pitch = settings.pitch;
-        utterance.volume = settings.volume;
-
-        const selectedVoice =
-          localizedLanguage === "jp"
-            ? primeJapaneseEveningVoiceSession("gratitude", { lock: true })
-            : pickStructuredMorningVoice(
-                synth.getVoices(),
-                settings.lang,
-                settings.preferredNames
-              );
-
-        if (selectedVoice) {
-          utterance.voice = selectedVoice;
-        }
-
-        utterance.onstart = markGuidedNarrationStarted;
-        utterance.onend = () => {
-          markGuidedNarrationFinished();
-          calmSpeechTimeoutRef.current = null;
-        };
-
-        utterance.onerror = (event) => {
-          markGuidedNarrationFinished();
-          console.error("[calm-gate] narration failed", {
-            language: localizedLanguage,
-            key: nextLine.key,
-            error: event.error
-          });
-          calmSpeechTimeoutRef.current = null;
-        };
-
-        if (synth.paused) {
-          synth.resume();
-        }
-        synth.speak(utterance);
-      };
-
-      calmSpeechTimeoutRef.current = window.setTimeout(() => queueSpeak(0), speechDelayMs);
-    } catch (error) {
-      console.warn("[calm-gate] speech synthesis unavailable", error);
-    }
   }, [calmGateLines, elapsedTotalSeconds, isCalmGate, isComplete, isPaused, localizedLanguage, needsUserStart]);
 
   useEffect(() => {
@@ -4666,7 +3996,6 @@ function MeditationPageContent() {
       setIsPaused(false);
       unlockStructuredMorningSpeech();
       unlockFocusGateSpeech();
-      unlockCalmGateSpeech();
       unlockReleaseGateSpeech();
       unlockGratitudeGateSpeech();
       unlockSleepGateSpeech();
@@ -5079,17 +4408,17 @@ function MeditationPageContent() {
           />
         ) : !ambientVideoFailed && isCalmGate ? (
           <video
-            key="calm-gate-video"
+            key={`calm-gate-video-${localizedLanguage}`}
             ref={calmVideoRef}
             className="absolute inset-0 z-0 h-full w-full object-cover opacity-[0.86] brightness-[0.96] contrast-[1.02] saturate-[0.98]"
             autoPlay
             loop
             playsInline
-            preload="metadata"
+            preload="auto"
             onLoadedData={() => console.log("Calm Gate video loaded")}
             onError={() => setAmbientVideoFailed(true)}
           >
-            <source src={CALM_GATE_VIDEO_SRC} type="video/mp4" />
+            <source src={calmGateVideoSource} type="video/mp4" />
           </video>
         ) : !ambientVideoFailed && !isStructuredMorningGate ? (
           <video
@@ -5506,12 +4835,12 @@ function MeditationPageContent() {
                   </p>
                 </div>
               ) : isCalmGate ? (
-                <div className="mt-10 flex min-h-[5.25rem] w-full items-start justify-center px-3 sm:px-4">
-                  <p
-                    key={calmGateMessage ?? "calm-gate-empty"}
-                    className={gateCommentTextClass}
-                  >
+                <div className="mt-10 flex min-h-[5.25rem] w-full flex-col items-center justify-start px-3 sm:px-4">
+                  <p key={calmGateMessage ?? "calm-gate-empty"} className={gateCommentTextClass}>
                     {formatGateComment(calmGateMessage, localizedLanguage)}
+                  </p>
+                  <p className="mt-3 text-center text-[10px] leading-4 text-white/38 sm:text-xs">
+                    {calmGateAiNarrationDisclosure[localizedLanguage]}
                   </p>
                 </div>
               ) : isReleaseGate ? (
