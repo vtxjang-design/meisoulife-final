@@ -33,11 +33,11 @@ const copy = {
     testimonialsIntro: "以下は、提供資料に掲載された参加者個人の感想を、意味を保ちながら読みやすく編集したものです。",
     testimonials: [
       {
-        source: "長野・松本スタジオ参加者",
+        source: "長野地域・参加者 A",
         quote: "以前よりも気持ちを切り替えやすくなり、日常を前向きに過ごせるようになったと感じています。家族との関わりにも穏やかな変化を感じ、自分が明るくなることで周りの人を自然に受け入れやすくなりました。"
       },
       {
-        source: "東京・吉祥寺スタジオ参加者",
+        source: "東京地域・参加者 B",
         quote: "トレーニングを通して足裏や姿勢への意識が高まり、歩くときに安定感を感じるようになりました。日常の中でも背筋を意識し、自然な姿勢で歩きやすくなったと感じています。"
       }
     ],
@@ -74,11 +74,11 @@ const copy = {
     testimonialsIntro: "아래 내용은 제공된 자료에 실린 참여자의 개인적인 소감을 의미를 유지하면서 읽기 쉽게 정리한 것입니다.",
     testimonials: [
       {
-        source: "나가노·마쓰모토 스튜디오 참여자",
+        source: "나가노 지역·참여자 A",
         quote: "이전보다 마음을 전환하기 쉬워지고 일상을 긍정적으로 보내게 되었다고 느꼈습니다. 가족과의 관계에서도 편안한 변화를 느꼈고, 내가 밝아지면서 주변 사람을 자연스럽게 받아들이기 쉬워졌습니다."
       },
       {
-        source: "도쿄·기치조지 스튜디오 참여자",
+        source: "도쿄 지역·참여자 B",
         quote: "트레이닝을 통해 발바닥과 자세를 더 의식하게 되었고 걸을 때 안정감을 느끼게 되었습니다. 일상에서도 허리를 펴는 것을 의식하며 자연스러운 자세로 걷기 쉬워졌다고 느꼈습니다."
       }
     ],
@@ -115,11 +115,11 @@ const copy = {
     testimonialsIntro: "These personal reflections were adapted for clarity from the participant accounts in the materials provided, while preserving their meaning.",
     testimonials: [
       {
-        source: "Participant, Matsumoto studio in Nagano",
+        source: "Participant A · Nagano area",
         quote: "I feel better able to shift my state of mind and approach daily life more positively. I also noticed a gentler change in my relationship with my family, and as I became brighter, it felt easier to accept the people around me naturally."
       },
       {
-        source: "Participant, Kichijoji studio in Tokyo",
+        source: "Participant B · Tokyo area",
         quote: "The training helped me become more aware of my feet and posture, and I began to feel steadier while walking. In daily life, I find it easier to remember an upright, natural posture."
       }
     ],
