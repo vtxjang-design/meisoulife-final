@@ -52,6 +52,7 @@ const {
 
 const basicHomeSource = readFileSync(new URL("../components/basic-home.tsx", import.meta.url), "utf8");
 const basicProgramPageSource = readFileSync(new URL("../app/program/basic/page.tsx", import.meta.url), "utf8");
+const komeiCoursePageSource = readFileSync(new URL("../app/program/basic/komei/page.tsx", import.meta.url), "utf8");
 const basicRhythmSourceForAssertions = readFileSync(new URL("./basic-rhythm.ts", import.meta.url), "utf8");
 const siteHeaderSource = readFileSync(new URL("../components/site-header.tsx", import.meta.url), "utf8");
 const globalsCssSource = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
@@ -155,9 +156,13 @@ test("recovery garden is rendered once and localized for JP KR and EN", () => {
 test("BASIC presents the optional Komei course without making it a required path", () => {
   assert.equal((basicHomeSource.match(/data-basic-komei-course/g) ?? []).length, 1);
   assert.match(basicHomeSource, /光明チャクラコース/);
-  assert.match(basicHomeSource, /133,000円/);
-  assert.match(basicHomeSource, /MeisoLife BASICとは別料金の特別プログラムです/);
-  assert.match(basicHomeSource, /MeisoLife・ILCHI Brain Yoga/);
+  assert.match(basicHomeSource, /data-basic-komei-details-link/);
+  assert.match(basicHomeSource, /href="\/program\/basic\/komei"/);
+  assert.doesNotMatch(basicHomeSource, /\{copy\.komeiPrice\}/);
+  assert.match(komeiCoursePageSource, /133,000円/);
+  assert.match(komeiCoursePageSource, /MeisoLife BASICの月額会費とは別料金/);
+  assert.match(komeiCoursePageSource, /MeisoLife・ILCHI Brain Yoga/);
+  assert.match(komeiCoursePageSource, /<MembershipGuard requiredPlan="basic" showLogout=\{false\}>/);
   assert.doesNotMatch(basicHomeSource, /光ブコトレーニング/);
 });
 
