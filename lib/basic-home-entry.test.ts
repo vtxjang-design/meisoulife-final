@@ -163,6 +163,13 @@ test("BASIC presents the optional Komei course without making it a required path
   assert.match(komeiCoursePageSource, /MeisoLife BASICの月額会費とは別料金/);
   assert.match(komeiCoursePageSource, /MeisoLife・ILCHI Brain Yoga/);
   assert.match(komeiCoursePageSource, /<MembershipGuard requiredPlan="basic" showLogout=\{false\}>/);
+  assert.match(komeiCoursePageSource, /data-komei-program-journey/);
+  assert.match(komeiCoursePageSource, /事前トレーニング/);
+  assert.match(komeiCoursePageSource, /光明セッション/);
+  assert.match(komeiCoursePageSource, /補習トレーニング/);
+  assert.match(komeiCoursePageSource, /data-komei-testimonials/);
+  assert.equal((komeiCoursePageSource.match(/source: "長野・松本スタジオ参加者"|source: "東京・吉祥寺スタジオ参加者"/g) ?? []).length, 2);
+  assert.match(komeiCoursePageSource, /すべての方に同じ結果を保証するものではありません/);
   assert.doesNotMatch(basicHomeSource, /光ブコトレーニング/);
 });
 
