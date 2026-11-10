@@ -90,10 +90,11 @@ const AWAKENING_GATE_VIDEO_SRC = "/video/morning-gate/awakening-gate-1.mp4";
 const ENERGY_GATE_VIDEO_SRC = "/basic/morning%20gate/energy%20gate8.mp4";
 const VISION_GATE_VIDEO_SRC = "/basic/morning-gate/vision-gate-7.mp4";
 const FOCUS_GATE_VIDEO_SRC = "/one-minute-reset/basic/daytime/focus-gate.mp4";
-const CALM_GATE_VIDEO_SRC: Record<"jp" | "kr" | "en", string> = {
-  jp: "/one-minute-reset/basic/daytime/calm-gate-jp.mp4",
-  kr: "/one-minute-reset/basic/daytime/calm-gate-kr.mp4",
-  en: "/one-minute-reset/basic/daytime/calm-gate-en.mp4"
+const CALM_GATE_VIDEO_SRC = "/one-minute-reset/basic/daytime/calm-gate-video.mp4";
+const CALM_GATE_AUDIO_SRC: Record<"jp" | "kr" | "en", string> = {
+  jp: "/one-minute-reset/basic/daytime/calm-gate-jp.m4a",
+  kr: "/one-minute-reset/basic/daytime/calm-gate-kr.m4a",
+  en: "/one-minute-reset/basic/daytime/calm-gate-en.m4a"
 };
 const RECHARGE_GATE_VIDEO_SRC = "/basic/daytime-gate/recharge-gate8.mp4";
 const RECHARGE_GATE_GUIDE_IMAGE_SRC = "/basic/daytime-gate/recharge%20gate.png";
@@ -1474,7 +1475,8 @@ function MeditationPageContent() {
   const requiresProtectedMembership = requiredMembershipPlan !== null;
   const focusGateLines = focusGateNarration[localizedLanguage];
   const calmGateLines = calmGateNarration[localizedLanguage];
-  const calmGateVideoSource = CALM_GATE_VIDEO_SRC[localizedLanguage];
+  const calmGateVideoSource = CALM_GATE_VIDEO_SRC;
+  const calmGateAudioSource = CALM_GATE_AUDIO_SRC[localizedLanguage];
   const releaseGateLines = releaseGateNarration[localizedLanguage];
   const gratitudeGateLines = gratitudeGateNarration[localizedLanguage];
   const sleepGateLines = sleepGateNarration[localizedLanguage];
@@ -1524,6 +1526,7 @@ function MeditationPageContent() {
   const journeyAudioRef = useRef<HTMLAudioElement | null>(null);
   const focusVideoRef = useRef<HTMLVideoElement | null>(null);
   const calmVideoRef = useRef<HTMLVideoElement | null>(null);
+  const calmAudioRef = useRef<HTMLAudioElement | null>(null);
   const calmVideoRecoveryTimeoutRef = useRef<number | null>(null);
   const rechargeVideoRef = useRef<HTMLVideoElement | null>(null);
   const releaseVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -1896,7 +1899,7 @@ function MeditationPageContent() {
     }
 
     if (isCalmGate) {
-      resetVideo(calmVideoRef.current);
+      pauseCalmGateMedia(resetTime);
       return;
     }
 
@@ -2714,26 +2717,53 @@ function MeditationPageContent() {
     }
 
     const video = calmVideoRef.current;
+    const audio = calmAudioRef.current;
 
-    if (!video) {
+    if (!video || !audio) {
       return;
     }
 
     try {
       preparePlaybackMediaElement(video, {
-        muted: false,
-        volume: CALM_GATE_VIDEO_VOLUME,
+        muted: true,
+        volume: 0,
         playsInline: true,
         preload: "metadata"
       });
+      audio.muted = false;
+      audio.volume = CALM_GATE_VIDEO_VOLUME;
+      audio.preload = "auto";
       if (options?.restartFromBeginning ?? false) {
         video.currentTime = 0;
+        audio.currentTime = 0;
+      } else if (Math.abs(video.currentTime - audio.currentTime) > 0.35) {
+        video.currentTime = audio.currentTime;
       }
-      await video.play();
+      const audioPlayback = audio.play();
+      const videoPlayback = video.play();
+      await audioPlayback;
+      await videoPlayback.catch((error) => {
+        console.warn("[calm-gate] muted video playback failed while audio continues", error);
+      });
       setAmbientVideoFailed(false);
     } catch (error) {
-      console.warn("[calm-gate] video playback failed", error);
-      setAmbientVideoFailed(true);
+      console.warn("[calm-gate] audio playback failed", error);
+      setNeedsUserStart(true);
+      setRequiresExplicitAudioStart(true);
+      setIsPaused(true);
+    }
+  }
+
+  function pauseCalmGateMedia(resetTime = false) {
+    const video = calmVideoRef.current;
+    const audio = calmAudioRef.current;
+
+    video?.pause();
+    audio?.pause();
+
+    if (resetTime) {
+      if (video) video.currentTime = 0;
+      if (audio) audio.currentTime = 0;
     }
   }
 
@@ -2755,19 +2785,20 @@ function MeditationPageContent() {
     calmVideoRecoveryTimeoutRef.current = window.setTimeout(() => {
       calmVideoRecoveryTimeoutRef.current = null;
       const video = calmVideoRef.current;
+      const audio = calmAudioRef.current;
 
-      if (!video || isPausedRef.current || isCompleteRef.current || video.ended) {
+      if (!audio || isPausedRef.current || isCompleteRef.current || audio.ended) {
         return;
       }
 
-      preparePlaybackMediaElement(video, {
-        muted: false,
-        volume: CALM_GATE_VIDEO_VOLUME,
-        playsInline: true,
-        preload: "auto"
-      });
+      audio.muted = false;
+      audio.volume = CALM_GATE_VIDEO_VOLUME;
+      audio.preload = "auto";
+      if (video && Math.abs(video.currentTime - audio.currentTime) > 0.35) {
+        video.currentTime = audio.currentTime;
+      }
 
-      void video.play().catch((error) => {
+      void audio.play().then(() => video?.play()).catch((error) => {
         console.warn("[calm-gate] iOS playback recovery needs another tap", error);
         setNeedsUserStart(true);
         setRequiresExplicitAudioStart(true);
@@ -3183,6 +3214,11 @@ function MeditationPageContent() {
         calmVideo.pause();
         calmVideo.currentTime = 0;
       }
+      const calmAudio = calmAudioRef.current;
+      if (calmAudio) {
+        calmAudio.pause();
+        calmAudio.currentTime = 0;
+      }
 
       const releaseVideo = releaseVideoRef.current;
       if (releaseVideo) {
@@ -3332,7 +3368,7 @@ function MeditationPageContent() {
     }
 
     if (isCalmGate) {
-      calmVideoRef.current?.pause();
+      pauseCalmGateMedia();
       return;
     }
 
@@ -3457,10 +3493,7 @@ function MeditationPageContent() {
           video.pause();
         }
       } else if (isCalmGate) {
-        const video = calmVideoRef.current;
-        if (video) {
-          video.pause();
-        }
+        pauseCalmGateMedia();
       } else if (isReleaseGate) {
         const video = releaseVideoRef.current;
         if (video) {
@@ -4349,10 +4382,7 @@ function MeditationPageContent() {
         window.speechSynthesis.cancel();
       }
     } else if (isCalmGate) {
-      const video = calmVideoRef.current;
-      if (video) {
-        video.pause();
-      }
+      pauseCalmGateMedia();
       if (typeof window !== "undefined" && "speechSynthesis" in window) {
         calmSpeechSequenceRef.current += 1;
         window.speechSynthesis.cancel();
@@ -4430,11 +4460,7 @@ function MeditationPageContent() {
       if (isStructuredMorningGate) {
         await stopStructuredMorningAmbient();
       } else if (isCalmGate) {
-        const video = calmVideoRef.current;
-        if (video) {
-          video.pause();
-          video.currentTime = 0;
-        }
+        pauseCalmGateMedia(true);
         if (typeof window !== "undefined" && "speechSynthesis" in window) {
           calmSpeechSequenceRef.current += 1;
           window.speechSynthesis.cancel();
@@ -4994,29 +5020,50 @@ function MeditationPageContent() {
             onError={() => setAmbientVideoFailed(true)}
           />
         ) : !ambientVideoFailed && isCalmGate ? (
-          <video
-            key={`calm-gate-video-${localizedLanguage}`}
-            ref={calmVideoRef}
-            src={calmGateVideoSource}
-            className="absolute inset-0 z-0 h-full w-full object-cover opacity-[0.86] brightness-[0.96] contrast-[1.02] saturate-[0.98]"
-            playsInline
-            preload="auto"
-            onLoadedData={() => console.log("Calm Gate video loaded")}
-            onPlaying={() => {
-              if (calmVideoRecoveryTimeoutRef.current !== null) {
-                window.clearTimeout(calmVideoRecoveryTimeoutRef.current);
-                calmVideoRecoveryTimeoutRef.current = null;
-              }
-              setNeedsUserStart(false);
-              setRequiresExplicitAudioStart(false);
-              setIsPaused(false);
-              setAmbientVideoFailed(false);
-            }}
-            onPause={scheduleCalmGatePlaybackRecovery}
-            onStalled={scheduleCalmGatePlaybackRecovery}
-            onEnded={() => setSecondsLeft(0)}
-            onError={() => setAmbientVideoFailed(true)}
-          />
+          <>
+            <video
+              key="calm-gate-muted-video"
+              ref={calmVideoRef}
+              src={calmGateVideoSource}
+              className="absolute inset-0 z-0 h-full w-full object-cover opacity-[0.86] brightness-[0.96] contrast-[1.02] saturate-[0.98]"
+              muted
+              playsInline
+              preload="metadata"
+              onLoadedData={() => console.log("Calm Gate video loaded")}
+              onError={() => setAmbientVideoFailed(true)}
+            />
+            <audio
+              key={`calm-gate-audio-${localizedLanguage}`}
+              ref={calmAudioRef}
+              src={calmGateAudioSource}
+              preload="auto"
+              onPlaying={() => {
+                if (calmVideoRecoveryTimeoutRef.current !== null) {
+                  window.clearTimeout(calmVideoRecoveryTimeoutRef.current);
+                  calmVideoRecoveryTimeoutRef.current = null;
+                }
+                setNeedsUserStart(false);
+                setRequiresExplicitAudioStart(false);
+                setIsPaused(false);
+                setAmbientVideoFailed(false);
+              }}
+              onPause={scheduleCalmGatePlaybackRecovery}
+              onStalled={scheduleCalmGatePlaybackRecovery}
+              onWaiting={scheduleCalmGatePlaybackRecovery}
+              onTimeUpdate={(event) => {
+                const video = calmVideoRef.current;
+                if (video && Math.abs(video.currentTime - event.currentTarget.currentTime) > 0.35) {
+                  video.currentTime = event.currentTarget.currentTime;
+                }
+              }}
+              onEnded={() => setSecondsLeft(0)}
+              onError={() => {
+                setNeedsUserStart(true);
+                setRequiresExplicitAudioStart(true);
+                setIsPaused(true);
+              }}
+            />
+          </>
         ) : !ambientVideoFailed && !isStructuredMorningGate ? (
           <video
             className="absolute inset-0 z-0 h-full w-full object-cover opacity-85"
