@@ -33,3 +33,23 @@ test("Calm Gate uses localized single-track videos instead of browser speech syn
     assert.ok(statSync(asset).size > 1_000_000, `${language} Calm Gate master video should contain production media`);
   }
 });
+
+test("Calm Gate keeps its authorized iOS media element alive after an unexpected pause", () => {
+  const calmVideoMarkup = meditationPageSource.slice(
+    meditationPageSource.indexOf('key={`calm-gate-video-${localizedLanguage}`}'),
+    meditationPageSource.indexOf(") : !ambientVideoFailed && !isStructuredMorningGate")
+  );
+  const recoverySource = meditationPageSource.slice(
+    meditationPageSource.indexOf("function scheduleCalmGatePlaybackRecovery"),
+    meditationPageSource.indexOf("async function playRechargeGateVideo")
+  );
+
+  assert.match(calmVideoMarkup, /src=\{calmGateVideoSource\}/);
+  assert.doesNotMatch(calmVideoMarkup, /<source|autoPlay|loop/);
+  assert.match(calmVideoMarkup, /onPause=\{scheduleCalmGatePlaybackRecovery\}/);
+  assert.match(calmVideoMarkup, /onStalled=\{scheduleCalmGatePlaybackRecovery\}/);
+  assert.match(recoverySource, /isPausedRef\.current/);
+  assert.match(recoverySource, /isCompleteRef\.current/);
+  assert.match(recoverySource, /video\.play\(\)\.catch/);
+  assert.match(recoverySource, /setRequiresExplicitAudioStart\(true\)/);
+});

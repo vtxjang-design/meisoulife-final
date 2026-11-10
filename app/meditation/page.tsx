@@ -1524,6 +1524,7 @@ function MeditationPageContent() {
   const journeyAudioRef = useRef<HTMLAudioElement | null>(null);
   const focusVideoRef = useRef<HTMLVideoElement | null>(null);
   const calmVideoRef = useRef<HTMLVideoElement | null>(null);
+  const calmVideoRecoveryTimeoutRef = useRef<number | null>(null);
   const rechargeVideoRef = useRef<HTMLVideoElement | null>(null);
   const releaseVideoRef = useRef<HTMLVideoElement | null>(null);
   const gratitudeVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -2736,6 +2737,45 @@ function MeditationPageContent() {
     }
   }
 
+  function scheduleCalmGatePlaybackRecovery() {
+    if (
+      typeof window === "undefined" ||
+      isPausedRef.current ||
+      isCompleteRef.current ||
+      needsUserStart ||
+      !soundEnabled
+    ) {
+      return;
+    }
+
+    if (calmVideoRecoveryTimeoutRef.current !== null) {
+      window.clearTimeout(calmVideoRecoveryTimeoutRef.current);
+    }
+
+    calmVideoRecoveryTimeoutRef.current = window.setTimeout(() => {
+      calmVideoRecoveryTimeoutRef.current = null;
+      const video = calmVideoRef.current;
+
+      if (!video || isPausedRef.current || isCompleteRef.current || video.ended) {
+        return;
+      }
+
+      preparePlaybackMediaElement(video, {
+        muted: false,
+        volume: CALM_GATE_VIDEO_VOLUME,
+        playsInline: true,
+        preload: "auto"
+      });
+
+      void video.play().catch((error) => {
+        console.warn("[calm-gate] iOS playback recovery needs another tap", error);
+        setNeedsUserStart(true);
+        setRequiresExplicitAudioStart(true);
+        setIsPaused(true);
+      });
+    }, 180);
+  }
+
   async function playRechargeGateVideo(options?: { restartFromBeginning?: boolean }) {
     if (!isRechargeGate || typeof window === "undefined") {
       return false;
@@ -3136,6 +3176,10 @@ function MeditationPageContent() {
 
       const calmVideo = calmVideoRef.current;
       if (calmVideo) {
+        if (calmVideoRecoveryTimeoutRef.current !== null) {
+          window.clearTimeout(calmVideoRecoveryTimeoutRef.current);
+          calmVideoRecoveryTimeoutRef.current = null;
+        }
         calmVideo.pause();
         calmVideo.currentTime = 0;
       }
@@ -4953,16 +4997,26 @@ function MeditationPageContent() {
           <video
             key={`calm-gate-video-${localizedLanguage}`}
             ref={calmVideoRef}
+            src={calmGateVideoSource}
             className="absolute inset-0 z-0 h-full w-full object-cover opacity-[0.86] brightness-[0.96] contrast-[1.02] saturate-[0.98]"
-            autoPlay
-            loop
             playsInline
             preload="auto"
             onLoadedData={() => console.log("Calm Gate video loaded")}
+            onPlaying={() => {
+              if (calmVideoRecoveryTimeoutRef.current !== null) {
+                window.clearTimeout(calmVideoRecoveryTimeoutRef.current);
+                calmVideoRecoveryTimeoutRef.current = null;
+              }
+              setNeedsUserStart(false);
+              setRequiresExplicitAudioStart(false);
+              setIsPaused(false);
+              setAmbientVideoFailed(false);
+            }}
+            onPause={scheduleCalmGatePlaybackRecovery}
+            onStalled={scheduleCalmGatePlaybackRecovery}
+            onEnded={() => setSecondsLeft(0)}
             onError={() => setAmbientVideoFailed(true)}
-          >
-            <source src={calmGateVideoSource} type="video/mp4" />
-          </video>
+          />
         ) : !ambientVideoFailed && !isStructuredMorningGate ? (
           <video
             className="absolute inset-0 z-0 h-full w-full object-cover opacity-85"
