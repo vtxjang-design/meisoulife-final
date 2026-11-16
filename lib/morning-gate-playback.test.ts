@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import {
+  formatMorningGateRemainingTime,
   getMorningGateRemainingSeconds,
   resolveMorningGateCaption,
   resolveMorningGateMasterSource
@@ -31,14 +32,23 @@ test("selects the dedicated pre-mixed master for every Morning Gate language", (
 test("captions resolve from the audible audio timeline at canonical cue onsets", () => {
   const lines = [
     { at: 60, key: "first", text: "First" },
-    { at: 66.5, key: "second", text: "Second" }
+    { at: 66.75, key: "second", text: "Second" }
   ];
 
   assert.equal(resolveMorningGateCaption(lines, 59.999), null);
   assert.equal(resolveMorningGateCaption(lines, 60)?.key, "first");
-  assert.equal(resolveMorningGateCaption(lines, 66.499)?.key, "first");
-  assert.equal(resolveMorningGateCaption(lines, 66.5)?.key, "second");
-  assert.equal(getMorningGateRemainingSeconds(66.5), 113.5);
+  assert.equal(resolveMorningGateCaption(lines, 66.749)?.key, "first");
+  assert.equal(resolveMorningGateCaption(lines, 66.75)?.key, "second");
+  assert.equal(getMorningGateRemainingSeconds(66.75), 113.25);
+});
+
+test("Morning timer floors the audio timeline and always formats strict MM:SS", () => {
+  assert.equal(formatMorningGateRemainingTime(0), "03:00");
+  assert.equal(formatMorningGateRemainingTime(32.291811500683565), "02:27");
+  assert.equal(formatMorningGateRemainingTime(179.001), "00:00");
+  assert.equal(formatMorningGateRemainingTime(180), "00:00");
+  assert.match(formatMorningGateRemainingTime(147.708188499316435), /^\d{2}:\d{2}$/);
+  assert.doesNotMatch(formatMorningGateRemainingTime(147.708188499316435), /\./);
 });
 
 test("Morning playback uses one stable persistent audio element and preserves currentTime on resume", () => {
@@ -47,6 +57,25 @@ test("Morning playback uses one stable persistent audio element and preserves cu
   assert.doesNotMatch(morningPlaybackRegion, /new Audio\(|createElement\(["']audio/);
   assert.doesNotMatch(morningResumeRegion, /currentTime\s*=/);
   assert.match(morningResumeRegion, /restartFromBeginning: false/);
+});
+
+test("Morning timeline follows audio currentTime for playback, seeking, completion, and video sync", () => {
+  assert.match(meditationPageSource, /function syncStructuredMorningTimeline\(audio: HTMLAudioElement\)/);
+  assert.match(meditationPageSource, /morningPlaybackPositionRef\.current = currentTime/);
+  assert.match(meditationPageSource, /setSecondsLeft\(getMorningGateRemainingSeconds\(currentTime\)\)/);
+  assert.match(meditationPageSource, /video\.currentTime = currentTime/);
+  assert.match(meditationPageSource, /onTimeUpdate=\{\(event\) => \{[\s\S]*syncStructuredMorningTimeline\(event\.currentTarget\)/);
+  assert.match(meditationPageSource, /onSeeking=\{\(event\) => \{[\s\S]*syncStructuredMorningTimeline\(event\.currentTarget\)/);
+  assert.match(meditationPageSource, /onSeeked=\{\(event\) => \{[\s\S]*syncStructuredMorningTimeline\(event\.currentTarget\)/);
+  assert.match(meditationPageSource, /onEnded=\{\(\) => \{[\s\S]*morningPlaybackPositionRef\.current = AFFIRMATION_TOTAL_SECONDS;[\s\S]*setSecondsLeft\(0\)/);
+});
+
+test("Morning language changes restore the same audio position without remounting the element", () => {
+  assert.match(meditationPageSource, /const sourceChanged = morningPlaybackSourceRef\.current !== structuredMorningAudioSource/);
+  assert.match(meditationPageSource, /const sameGate = morningPlaybackGateRef\.current === structuredMorningGate/);
+  assert.match(meditationPageSource, /const restoreTime = sourceChanged && sameGate \? morningPlaybackPositionRef\.current : 0/);
+  assert.match(meditationPageSource, /audio\.currentTime = restoreTime/);
+  assert.doesNotMatch(meditationPageSource, /key=\{`morning-gate-audio/);
 });
 
 test("Morning production playback does not synthesize or Web-Audio-decode narration", () => {

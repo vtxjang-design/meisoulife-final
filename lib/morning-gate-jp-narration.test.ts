@@ -16,7 +16,7 @@ test("Japanese Morning Gate cues keep connected phrases and approved breath timi
   assert.match(meditationPageSource, /speechText: "きょうといういちにちが、\\nいま、ここからはじまります。"/);
   assert.match(meditationPageSource, /at: 54, key: "open-4"[\s\S]*?at: 64, key: "open-5"/);
   assert.match(meditationPageSource, /at: 80, key: "open-6"[\s\S]*?at: 90, key: "open-7"/);
-  assert.match(meditationPageSource, /at: 60, key: "vision-1"[\s\S]*?at: 66\.5, key: "vision-2"/);
+  assert.match(meditationPageSource, /at: 60, key: "vision-1"[\s\S]*?at: 66\.75, key: "vision-2"/);
 });
 
 test("Awakening and Energy use the approved final production schedule", () => {
@@ -33,8 +33,8 @@ test("Awakening and Energy use the approved final production schedule", () => {
 });
 
 test("Korean and English Vision Gate cues use the approved safety-margin onsets", () => {
-  assert.match(meditationPageSource, /at: 62, key: "vision-1", text: "오늘은\\n멀리 내다보기보다"[\s\S]*?at: 69\.75, key: "vision-2", text: "조용히\\n방향을 떠올립니다"/);
-  assert.match(meditationPageSource, /at: 62, key: "vision-1", text: "Today\\nyou do not need\\nto look too far ahead"[\s\S]*?at: 69\.75, key: "vision-2", text: "Just remember\\nyour direction"/);
+  assert.match(meditationPageSource, /at: 62, key: "vision-1", text: "오늘은\\n멀리 내다보기보다"[\s\S]*?at: 70\.25, key: "vision-2", text: "조용히\\n방향을 떠올립니다"/);
+  assert.match(meditationPageSource, /at: 62, key: "vision-1", text: "Today\\nyou do not need\\nto look too far ahead"[\s\S]*?at: 70\.25, key: "vision-2", text: "Just remember\\nyour direction"/);
 });
 
 test("Japanese Energy Gate avoids back-to-back Dahnjeon wording", () => {
@@ -53,5 +53,6 @@ test("Japanese Morning Gate copy avoids the previous translated phrasing", () =>
 test("Morning Gate captions follow the persistent audio timeline", () => {
   const captionEffectSource = meditationPageSource.slice(meditationPageSource.indexOf("const activeLine = resolveMorningGateCaption"), meditationPageSource.indexOf("}, [elapsedTotalSeconds, isStructuredMorningGate, morningGateCopy]);"));
   assert.match(captionEffectSource, /setAffirmationMessage\(activeLine\?\.text \?\? null\)/);
-  assert.match(meditationPageSource, /onTimeUpdate=\{\(event\) => \{[\s\S]*getMorningGateRemainingSeconds\(event\.currentTarget\.currentTime\)/);
+  assert.match(meditationPageSource, /onTimeUpdate=\{\(event\) => \{[\s\S]*syncStructuredMorningTimeline\(event\.currentTarget\)/);
+  assert.match(meditationPageSource, /setSecondsLeft\(getMorningGateRemainingSeconds\(currentTime\)\)/);
 });

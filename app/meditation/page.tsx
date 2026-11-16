@@ -25,6 +25,7 @@ import {
   supportsMeditationVibration
 } from "@/lib/meditation-completion";
 import {
+  formatMorningGateRemainingTime,
   getMorningGateRemainingSeconds,
   resolveMorningGateCaption,
   resolveMorningGateMasterSource,
@@ -597,7 +598,7 @@ const affirmationGateCopy = {
     ],
     closingLines: [
       {
-        at: 162.25,
+        at: 161.5,
         key: "close-1",
         text: "今日という一日が\n今、ここから始まります",
         speechText: "きょうといういちにちが、\nいま、ここからはじまります。",
@@ -638,7 +639,7 @@ const affirmationGateCopy = {
       { at: 154, key: "affirm-3", text: "그저\n여기 있는 나를\n가만히 느껴봅니다", speechDelayMs: 520 }
     ],
     closingLines: [
-      { at: 162.25, key: "close-1", text: "오늘이라는 하루는\n지금 여기에서 시작됩니다", speechDelayMs: 700 },
+      { at: 161.5, key: "close-1", text: "오늘이라는 하루는\n지금 여기에서 시작됩니다", speechDelayMs: 700 },
       { at: 169.5, key: "close-2", text: "당신 본래의 리듬으로", speechDelayMs: 760 },
       { at: 175.25, key: "close-3", text: "다녀오세요", speechDelayMs: 820 }
     ]
@@ -671,10 +672,10 @@ const affirmationGateCopy = {
     affirmationLines: [
       { at: 120, key: "affirm-1", text: "With the breath\nyour body begins to wake", speechDelayMs: 460 },
       { at: 138, key: "affirm-2", text: "Nothing needs to change\nright now", speechDelayMs: 520 },
-      { at: 154, key: "affirm-3", text: "Just feel yourself here", speechDelayMs: 520 }
+      { at: 153.5, key: "affirm-3", text: "Just feel yourself here", speechDelayMs: 520 }
     ],
     closingLines: [
-      { at: 162.25, key: "close-1", text: "This day begins\nhere", speechDelayMs: 700 },
+      { at: 161.5, key: "close-1", text: "This day begins\nhere", speechDelayMs: 700 },
       { at: 169.5, key: "close-2", text: "In your own natural rhythm", speechDelayMs: 760 },
       { at: 175.25, key: "close-3", text: "Go gently", speechDelayMs: 820 }
     ]
@@ -830,7 +831,7 @@ const visionGateCopy = {
     ],
     visionLines: [
       { at: 60, key: "vision-1", text: "今日は\n遠い先まで見通そうとせず", speechText: "きょうは、\nとおいさきまで、\nみとおそうとせず。", speechDelayMs: 520 },
-      { at: 66.5, key: "vision-2", text: "大切にしたい方向を\n静かに確かめます", speechText: "たいせつにしたいほうこうを、\nしずかにたしかめます。", speechDelayMs: 560 },
+      { at: 66.75, key: "vision-2", text: "大切にしたい方向を\n静かに確かめます", speechText: "たいせつにしたいほうこうを、\nしずかにたしかめます。", speechDelayMs: 560 },
       { at: 96, key: "vision-3", text: "昨日は\nもう過ぎました", speechText: "昨日は、\nもう過ぎました", speechDelayMs: 540 },
       { at: 112, key: "vision-4", text: "明日は\nまだ来ていません", speechText: "明日は、\nまだ来ていません", speechDelayMs: 540 },
       { at: 128, key: "vision-5", text: "今\nここにあるのは\nこの瞬間です", speechText: "今、\nここにあるのは、\nこの瞬間です", speechDelayMs: 560 },
@@ -838,7 +839,7 @@ const visionGateCopy = {
       { at: 164, key: "vision-7", text: "進む道は\n静かに続いています", speechText: "すすむみちは、\nしずかにつづいています。", speechDelayMs: 620 }
     ],
     closingLines: [
-      { at: 173.75, key: "close-1", text: "今日は\n一歩で十分です", speechText: "今日は、\n一歩で十分です", speechDelayMs: 760 }
+      { at: 172.25, key: "close-1", text: "今日は\n一歩で十分です", speechText: "今日は、\n一歩で十分です", speechDelayMs: 760 }
     ]
   },
   kr: {
@@ -865,7 +866,7 @@ const visionGateCopy = {
     ],
     visionLines: [
       { at: 62, key: "vision-1", text: "오늘은\n멀리 내다보기보다", speechDelayMs: 520 },
-      { at: 69.75, key: "vision-2", text: "조용히\n방향을 떠올립니다", speechDelayMs: 560 },
+      { at: 70.25, key: "vision-2", text: "조용히\n방향을 떠올립니다", speechDelayMs: 560 },
       { at: 96, key: "vision-3", text: "어제는\n이미 지나갔습니다", speechDelayMs: 540 },
       { at: 112, key: "vision-4", text: "내일은\n아직 오지 않았습니다", speechDelayMs: 540 },
       { at: 128, key: "vision-5", text: "지금\n여기에 있는 것은\n이 순간입니다", speechDelayMs: 560 },
@@ -873,7 +874,7 @@ const visionGateCopy = {
       { at: 164, key: "vision-7", text: "당신의 길은\n사라지지 않았습니다", speechDelayMs: 620 }
     ],
     closingLines: [
-      { at: 173.75, key: "close-1", text: "오늘은\n한 걸음이면 충분합니다", speechDelayMs: 760 }
+      { at: 172.25, key: "close-1", text: "오늘은\n한 걸음이면 충분합니다", speechDelayMs: 760 }
     ]
   },
   en: {
@@ -900,7 +901,7 @@ const visionGateCopy = {
     ],
     visionLines: [
       { at: 62, key: "vision-1", text: "Today\nyou do not need\nto look too far ahead", speechDelayMs: 520 },
-      { at: 69.75, key: "vision-2", text: "Just remember\nyour direction", speechDelayMs: 560 },
+      { at: 70.25, key: "vision-2", text: "Just remember\nyour direction", speechDelayMs: 560 },
       { at: 96, key: "vision-3", text: "Yesterday\nhas already passed", speechDelayMs: 540 },
       { at: 112, key: "vision-4", text: "Tomorrow\nhas not yet arrived", speechDelayMs: 540 },
       { at: 128, key: "vision-5", text: "What is here now\nis this moment", speechDelayMs: 560 },
@@ -908,7 +909,7 @@ const visionGateCopy = {
       { at: 164, key: "vision-7", text: "Your path\nhas not disappeared", speechDelayMs: 620 }
     ],
     closingLines: [
-      { at: 173.75, key: "close-1", text: "One step is enough\nfor today", speechDelayMs: 760 }
+      { at: 172.25, key: "close-1", text: "One step is enough\nfor today", speechDelayMs: 760 }
     ]
   }
 } as const;
@@ -1455,6 +1456,9 @@ function MeditationPageContent() {
   const energyVideoRef = useRef<HTMLVideoElement | null>(null);
   const visionVideoRef = useRef<HTMLVideoElement | null>(null);
   const morningAudioRef = useRef<HTMLAudioElement | null>(null);
+  const morningPlaybackPositionRef = useRef(0);
+  const morningPlaybackSourceRef = useRef<string | null>(null);
+  const morningPlaybackGateRef = useRef<MorningGateKey | null>(null);
   const completionHandledRef = useRef(false);
   const spokenFocusKeysRef = useRef<Set<string>>(new Set());
   const spokenCalmKeysRef = useRef<Set<string>>(new Set());
@@ -1938,6 +1942,17 @@ function MeditationPageContent() {
         : affirmationVideoRef.current;
   }
 
+  function syncStructuredMorningTimeline(audio: HTMLAudioElement) {
+    const currentTime = Math.min(Math.max(audio.currentTime, 0), AFFIRMATION_TOTAL_SECONDS);
+    morningPlaybackPositionRef.current = currentTime;
+    setSecondsLeft(getMorningGateRemainingSeconds(currentTime));
+
+    const video = getStructuredMorningVideo();
+    if (video && Math.abs(video.currentTime - currentTime) > 0.25) {
+      video.currentTime = currentTime;
+    }
+  }
+
   async function startStructuredMorningAmbient(options?: { restartFromBeginning?: boolean }) {
     const audio = morningAudioRef.current;
     logStructuredMorningAmbientState("structured-start-before");
@@ -1948,6 +1963,7 @@ function MeditationPageContent() {
 
     if (options?.restartFromBeginning) {
       audio.currentTime = 0;
+      morningPlaybackPositionRef.current = 0;
       setSecondsLeft(AFFIRMATION_TOTAL_SECONDS);
     }
 
@@ -1993,6 +2009,7 @@ function MeditationPageContent() {
     if (audio) {
       audio.pause();
       audio.currentTime = 0;
+      morningPlaybackPositionRef.current = 0;
     }
     const video = getStructuredMorningVideo();
     if (video) {
@@ -4587,14 +4604,41 @@ function MeditationPageContent() {
             src={structuredMorningAudioSource}
             preload="auto"
             onTimeUpdate={(event) => {
-              setSecondsLeft(getMorningGateRemainingSeconds(event.currentTarget.currentTime));
+              syncStructuredMorningTimeline(event.currentTarget);
+            }}
+            onSeeking={(event) => {
+              syncStructuredMorningTimeline(event.currentTarget);
+            }}
+            onSeeked={(event) => {
+              syncStructuredMorningTimeline(event.currentTarget);
             }}
             onLoadedMetadata={(event) => {
-              if (event.currentTarget.currentTime === 0) {
-                setSecondsLeft(AFFIRMATION_TOTAL_SECONDS);
+              const audio = event.currentTarget;
+              const sourceChanged = morningPlaybackSourceRef.current !== structuredMorningAudioSource;
+              const sameGate = morningPlaybackGateRef.current === structuredMorningGate;
+              const restoreTime = sourceChanged && sameGate ? morningPlaybackPositionRef.current : 0;
+
+              morningPlaybackSourceRef.current = structuredMorningAudioSource;
+              morningPlaybackGateRef.current = structuredMorningGate;
+              audio.currentTime = restoreTime;
+              syncStructuredMorningTimeline(audio);
+
+              if (restoreTime > 0 && !isPausedRef.current && !isCompleteRef.current) {
+                void audio.play().then(() => {
+                  const video = getStructuredMorningVideo();
+                  if (video) {
+                    video.currentTime = audio.currentTime;
+                    void video.play().catch(() => undefined);
+                  }
+                }).catch(() => {
+                  setNeedsUserStart(true);
+                  setRequiresExplicitAudioStart(true);
+                  setIsPaused(true);
+                });
               }
             }}
             onEnded={() => {
+              morningPlaybackPositionRef.current = AFFIRMATION_TOTAL_SECONDS;
               setSecondsLeft(0);
               getStructuredMorningVideo()?.pause();
             }}
@@ -4935,7 +4979,11 @@ function MeditationPageContent() {
                     className={`absolute inset-0 rounded-full border border-white/10 bg-white/[0.03] transition-transform duration-[4000] ease-in-out ${circleScaleClass}`}
                   />
                   <div className="relative z-10 text-center">
-                    <p className="text-5xl font-serif text-white/88 sm:text-6xl">{formatRemainingTime(secondsLeft)}</p>
+                    <p className="text-5xl font-serif text-white/88 sm:text-6xl">
+                      {isStructuredMorningGate
+                        ? formatMorningGateRemainingTime(elapsedTotalSeconds, AFFIRMATION_TOTAL_SECONDS)
+                        : formatRemainingTime(secondsLeft)}
+                    </p>
                   </div>
                 </div>
               ) : (

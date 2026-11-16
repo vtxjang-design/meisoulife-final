@@ -55,3 +55,11 @@ export function resolveMorningGateCaption(
 export function getMorningGateRemainingSeconds(currentTime: number, duration = 180) {
   return Math.max(0, duration - Math.min(Math.max(currentTime, 0), duration));
 }
+
+export function formatMorningGateRemainingTime(currentTime: number, duration = 180) {
+  const remainingSeconds = Math.floor(getMorningGateRemainingSeconds(currentTime, duration));
+  const minutes = Math.floor(remainingSeconds / 60);
+  const seconds = remainingSeconds % 60;
+
+  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
