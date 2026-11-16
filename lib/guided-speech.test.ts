@@ -44,16 +44,17 @@ test("guided speech starts immediately when the queue is ready", () => {
   );
 });
 
-test("program start primes narration inside the user gesture before the first await", () => {
+test("Morning program start uses the persistent master before any browser speech unlock", () => {
   const handlerStart = meditationPageSource.indexOf("async function handleProgramAudioStart()");
   const handlerEnd = meditationPageSource.indexOf("function handlePauseToggle()", handlerStart);
   const handlerSource = meditationPageSource.slice(handlerStart, handlerEnd);
-  const firstUnlock = handlerSource.indexOf("unlockStructuredMorningSpeech();");
+  const morningStart = handlerSource.indexOf("startStructuredMorningAmbient({ restartFromBeginning: true })");
   const firstAwait = handlerSource.indexOf("await unlockCompletionChime();");
 
   assert.ok(handlerStart >= 0);
-  assert.ok(firstUnlock >= 0);
-  assert.ok(firstAwait > firstUnlock);
+  assert.ok(morningStart >= 0);
+  assert.ok(firstAwait > morningStart);
+  assert.doesNotMatch(handlerSource, /unlockStructuredMorningSpeech/);
 });
 
 test("guided narration never speaks immediately after canceling the mobile queue", () => {
