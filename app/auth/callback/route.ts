@@ -18,7 +18,10 @@ export async function GET(request: NextRequest) {
 
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
     console.error("[auth-callback] Missing Supabase public environment variables");
-    return NextResponse.redirect(new URL("/login?debug=1", request.url));
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("next", next);
+    loginUrl.searchParams.set("auth_error", "service_unavailable");
+    return NextResponse.redirect(loginUrl);
   }
 
   const response = NextResponse.redirect(new URL(next, request.url));

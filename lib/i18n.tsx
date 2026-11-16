@@ -933,6 +933,7 @@ export const siteCopy = {
       signupError: "現在、接続を確認しています。",
       loading: "処理中...",
       error: "ログインに失敗しました。メールとパスワードを確認してください。",
+      serviceUnavailable: "現在、ログインサービスに接続できません。しばらくしてからもう一度お試しください。",
       basicPaymentEmailNotice: "お支払い時と同じメールアドレスをご使用ください。"
     },
     meditationPage: {
@@ -1856,6 +1857,7 @@ export const siteCopy = {
       signupError: "현재 연결 상태를 확인하고 있습니다.",
       loading: "처리 중...",
       error: "로그인에 실패했습니다. 이메일과 비밀번호를 확인해 주세요.",
+      serviceUnavailable: "현재 로그인 서비스에 연결할 수 없습니다. 잠시 후 다시 시도해 주세요.",
       basicPaymentEmailNotice: "결제할 때 사용한 이메일을 입력해 주세요."
     },
     meditationPage: {
@@ -2779,6 +2781,7 @@ export const siteCopy = {
       signupError: "Login will be available soon.",
       loading: "Processing...",
       error: "Login failed. Please check your email and password.",
+      serviceUnavailable: "The login service is currently unavailable. Please try again shortly.",
       basicPaymentEmailNotice: "Use the same email address used for payment."
     },
     meditationPage: {

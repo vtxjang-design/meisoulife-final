@@ -34,13 +34,16 @@ function loginFailureRedirect(request: NextRequest, next: string) {
   return NextResponse.redirect(loginUrl, { status: 303 });
 }
 
+function authenticationUnavailableRedirect(request: NextRequest, next: string) {
+  const loginUrl = new URL("/login", request.url);
+  loginUrl.searchParams.set("next", next);
+  loginUrl.searchParams.set("auth_error", "service_unavailable");
+  return NextResponse.redirect(loginUrl, { status: 303 });
+}
+
 export async function POST(request: NextRequest) {
   if (!isSameOriginPost(request)) {
     return NextResponse.json({ error: "invalid_request" }, { status: 403 });
-  }
-
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-    return NextResponse.json({ error: "authentication_unavailable" }, { status: 503 });
   }
 
   const formData = await request.formData();
@@ -50,6 +53,10 @@ export async function POST(request: NextRequest) {
   const email = typeof emailValue === "string" ? emailValue.trim().toLowerCase() : "";
   const password = typeof passwordValue === "string" ? passwordValue : "";
   const next = resolveSafeReturnPath(typeof nextValue === "string" ? nextValue : null);
+
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    return authenticationUnavailableRedirect(request, next);
+  }
 
   if (!email || !password) {
     return loginFailureRedirect(request, next);

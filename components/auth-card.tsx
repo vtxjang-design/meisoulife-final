@@ -35,13 +35,15 @@ export function AuthCard({ mode }: AuthCardProps) {
 
     if (mode === "login" && params.get("auth_error") === "invalid_credentials") {
       setMessage(copy.loginPage.error);
+    } else if (mode === "login" && params.get("auth_error") === "service_unavailable") {
+      setMessage(copy.loginPage.serviceUnavailable);
     }
 
     recordAuthDiagnostic("login_page_loaded", {
       mode,
       preservedNextRoute: next
     });
-  }, [copy.loginPage.error, mode]);
+  }, [copy.loginPage.error, copy.loginPage.serviceUnavailable, mode]);
 
   function buildResetRedirectTarget() {
     const next = resolveSafeInternalNextPath(nextPath);

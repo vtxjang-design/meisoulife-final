@@ -11,6 +11,7 @@ const memberContentSource = readFileSync(
 const authCardSource = readFileSync(new URL("../components/auth-card.tsx", import.meta.url), "utf8");
 const middlewareSource = readFileSync(new URL("../middleware.ts", import.meta.url), "utf8");
 const serverLoginRouteSource = readFileSync(new URL("../app/auth/login/route.ts", import.meta.url), "utf8");
+const authCallbackRouteSource = readFileSync(new URL("../app/auth/callback/route.ts", import.meta.url), "utf8");
 
 test("browser authentication uses the SSR cookie bridge", () => {
   assert.match(browserClientSource, /createBrowserClient/);
@@ -38,6 +39,15 @@ test("server password login validates origin and next before setting cookies and
   assert.match(serverLoginRouteSource, /await supabase\.auth\.signInWithPassword\(\{ email, password \}\)/);
   assert.match(serverLoginRouteSource, /auth_error", "invalid_credentials"/);
   assert.doesNotMatch(serverLoginRouteSource, /console\.(log|warn|error)/);
+});
+
+test("missing authentication configuration returns users to login with a clear recoverable error", () => {
+  assert.match(serverLoginRouteSource, /function authenticationUnavailableRedirect/);
+  assert.match(serverLoginRouteSource, /auth_error", "service_unavailable"/);
+  assert.doesNotMatch(serverLoginRouteSource, /NextResponse\.json\(\{ error: "authentication_unavailable"/);
+  assert.match(authCallbackRouteSource, /auth_error", "service_unavailable"/);
+  assert.match(authCardSource, /params\.get\("auth_error"\) === "service_unavailable"/);
+  assert.match(authCardSource, /copy\.loginPage\.serviceUnavailable/);
 });
 
 test("member entry resolves entitlement without repairing membership records", () => {
